@@ -18,7 +18,7 @@
 using System.ComponentModel;
 using System.Globalization;
 
-namespace System
+namespace System.Design.Cryptography
 {
     /// <summary>
     /// Provides a type converter to convert <see cref="EncryptedValue"/> objects to and from various other representations.

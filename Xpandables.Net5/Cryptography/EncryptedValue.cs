@@ -18,7 +18,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace System
+namespace System.Design.Cryptography
 {
     /// <summary>
     /// Defines a representation of an encrypted value, its key and its salt.
