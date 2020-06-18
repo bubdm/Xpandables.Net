@@ -107,5 +107,4 @@ namespace System.Design.Interception
             }
         }
     }
-
 }

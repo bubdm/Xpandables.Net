@@ -17,55 +17,45 @@
 ************************************************************************************************************/
 using Microsoft.Extensions.DependencyInjection;
 using System.Design.Behaviors;
+using System.Design.Http;
 
 namespace System.Design.DependencyInjection
 {
     /// <summary>
-    /// Provides method to register correlation collection.
+    /// Provides method to register services.
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="ICorrelationCollection{TKey, TValue}"/> to the services with scoped life time.
+        /// Adds identity data behavior to commands and queries that are decorated with the <see cref="IBehaviorIdentity"/> to the services.
         /// </summary>
+        /// <typeparam name="TIdentityProvider">The identity type provider.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXCorrelationCollection(this IServiceCollection services)
+        public static IServiceCollection AddXIdentityBehavior<TIdentityProvider>(this IServiceCollection services)
+            where TIdentityProvider : class, IIdentityProvider
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.AddScoped(typeof(ICorrelationCollection<,>), typeof(CorrelationCollection<,>));
-            return services;
+            return services.AddXIdentityBehavior(typeof(TIdentityProvider));
         }
 
         /// <summary>
-        /// Adds the <see cref="ICorrelationContext"/> to the services with scoped life time.
+        /// Adds identity data behavior to commands and queries that are decorated with the <see cref="IBehaviorIdentity"/> to the services
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <param name="identityProviderType">The identity expression provider type provider.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXCorrelationContext(this IServiceCollection services)
+        /// <exception cref="ArgumentNullException">The <paramref name="identityProviderType"/> is null.</exception>
+        public static IServiceCollection AddXIdentityBehavior(this IServiceCollection services, Type identityProviderType)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = identityProviderType ?? throw new ArgumentNullException(nameof(identityProviderType));
 
-            services.AddScoped<CorrelationContext>();
-            services.AddScoped<ICorrelationContext>(provider => provider.GetRequiredService<CorrelationContext>());
-            return services;
-        }
+            services.AddScoped(typeof(IIdentityProvider), identityProviderType);
+            services.AddScoped<HttpTokenContainer>();
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandIdentityBehavior<>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryIdentityBehavior<,>));
 
-        /// <summary>
-        /// Adds correlation behavior to commands and queries that are decorated with the <see cref="IBehaviorCorrelation"/> to the services
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXCorrelationBehavior(this IServiceCollection services)
-        {
-            if (services is null) throw new ArgumentNullException(nameof(services));
-
-            services.AddScoped<CorrelationContext>();
-            services.AddScoped<ICorrelationContext>(provider => provider.GetRequiredService<CorrelationContext>());
-
-            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandCorrelationBehavior<>));
-            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryCorrelationBehavior<,>));
             return services;
         }
     }
