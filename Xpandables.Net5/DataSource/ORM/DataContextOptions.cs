@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +14,8 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Design.DataSource;
+
+using System.Design.ORM;
 
 namespace System.Design.DependencyInjection
 {

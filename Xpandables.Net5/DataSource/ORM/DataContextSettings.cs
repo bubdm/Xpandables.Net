@@ -15,7 +15,7 @@
  *
 ************************************************************************************************************/
 
-namespace System.Design.DataSource
+namespace System.Design.ORM
 {
     /// <summary>
     /// Provides with the base class for <see cref="IDataContext"/> settings.

@@ -21,7 +21,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace System.Design.DataSource
+namespace System.Design.ORM
 {
     /// <summary>
     /// Allows an application author to manage domain objects using EntityFrameworkCore.

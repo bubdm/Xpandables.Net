@@ -16,9 +16,10 @@
  *
 ************************************************************************************************************/
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace System.Design.DataSource.SQL.Executables
+namespace System.Design.SQL.Executables
 {
     /// <summary>
     /// Executes a query and return one record of specific type.
@@ -38,7 +39,7 @@ namespace System.Design.DataSource.SQL.Executables
         {
             component.Command.CommandType = CommandType.Text;
             component.Command.CommandText = argument.Command.ParseSql();
-            DataParameterBuilder.Build(component.Command, argument.Parameters);
+            DataParameterBuilder.Build(component.Command, argument.Parameters?.ToArray());
 
             var result = await component.Command.ExecuteScalarAsync(argument.Options.CancellationToken).ConfigureAwait(false);
 

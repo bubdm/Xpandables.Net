@@ -15,7 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-namespace System.Design.DataSource
+namespace System.Design.ORM
 {
     /// <summary>
     /// Provides with a method to return the ambient data context instance.

@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.Data.Common;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Allows an application author to return a data provider factory from the specified provider type.

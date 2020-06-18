@@ -16,8 +16,8 @@
  *
 ************************************************************************************************************/
 using Microsoft.Extensions.DependencyInjection;
-using System.Design.DataSource.SQL;
-using System.Design.DataSource.SQL.Executables;
+using System.Design.SQL;
+using System.Design.SQL.Executables;
 
 namespace System.Design.DependencyInjection
 {

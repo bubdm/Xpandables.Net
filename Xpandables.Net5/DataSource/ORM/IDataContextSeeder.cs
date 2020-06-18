@@ -15,7 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-namespace System.Design.DataSource
+namespace System.Design.ORM
 {
     /// <summary>
     /// Allows an application author to dynamically seed a data context before it's retrieved.

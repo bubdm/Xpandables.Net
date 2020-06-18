@@ -18,7 +18,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace System.Design.DataSource
+namespace System.Design.ORM
 {
     /// <summary>
     /// The <see cref="DataContextProvider{TDataContext, TDataContextSettings}"/> helper class.

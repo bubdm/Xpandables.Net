@@ -19,7 +19,7 @@ using System.Collections;
 using System.Data;
 using System.Reflection;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Provides with custom information for a mapping associated with a property.

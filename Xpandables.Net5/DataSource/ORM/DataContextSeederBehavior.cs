@@ -15,7 +15,9 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-namespace System.Design.DataSource
+using System.Design.ORM;
+
+namespace System.Design.Behaviors
 {
     /// <summary>
     /// This class allows the application author to add seed support to data context.

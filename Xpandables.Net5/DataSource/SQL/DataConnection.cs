@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Contains data base connection information. Use <see cref="DataConnectionBuilder"/> to build connection.

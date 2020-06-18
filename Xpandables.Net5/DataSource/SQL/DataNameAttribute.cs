@@ -15,7 +15,7 @@
  *
 ************************************************************************************************************/
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Defines the name of the property/field on the target data source.

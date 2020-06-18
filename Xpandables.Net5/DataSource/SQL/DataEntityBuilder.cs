@@ -21,7 +21,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Provides with a method to build implementations of <see cref="DataEntity"/> and <see cref="DataEntity{T}"/>.

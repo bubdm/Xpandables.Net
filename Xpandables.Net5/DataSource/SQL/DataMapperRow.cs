@@ -20,7 +20,7 @@ using System.Data;
 using System.Linq;
 using System.Threading;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Provides with methods to map a data row or record to an entity.

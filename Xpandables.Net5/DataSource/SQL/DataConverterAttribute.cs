@@ -15,7 +15,7 @@
  *
 ************************************************************************************************************/
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Specifies what type to use as a converter for the property this attribute is bound to.

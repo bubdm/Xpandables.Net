@@ -19,7 +19,7 @@ using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Defines a method to add parameters to a command.
@@ -103,8 +103,8 @@ namespace System.Design.DataSource.SQL
             => new string(
                 source
                 .Where(c =>
-                    (char.IsLetterOrDigit(c)
-                    || c == '_'))
+                    char.IsLetterOrDigit(c)
+                    || c == '_')
                 .ToArray());
     }
 }

@@ -15,7 +15,7 @@
  *
 ************************************************************************************************************/
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Allows application author to build <see cref="DataConnection"/>.

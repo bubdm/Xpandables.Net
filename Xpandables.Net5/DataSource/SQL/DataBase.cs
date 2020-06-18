@@ -20,7 +20,7 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Provides with a default implementation of <see cref="DataBase"/>.

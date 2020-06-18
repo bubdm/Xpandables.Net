@@ -21,7 +21,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace System.Design.DataSource
+namespace System.Design.ORM
 {
     public abstract partial class DataContext : DbContext
     {

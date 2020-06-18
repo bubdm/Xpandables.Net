@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Design.Cryptography;
 using System.Linq;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Implementation of a mapping associated with a class.

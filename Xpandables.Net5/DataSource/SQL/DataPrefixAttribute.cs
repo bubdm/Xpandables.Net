@@ -15,7 +15,7 @@
  *
 ************************************************************************************************************/
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Defines the prefix of the property/field on the target data source.

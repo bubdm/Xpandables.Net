@@ -20,7 +20,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace System.Design.DataSource.SQL.Executables
+namespace System.Design.SQL.Executables
 {
     /// <summary>
     /// Executes a stored procedure and return number or records affected.
@@ -39,7 +39,7 @@ namespace System.Design.DataSource.SQL.Executables
         {
             component.Command.CommandText = component.CommandType == CommandType.StoredProcedure ? argument.Command : argument.Command.ParseSql();
             component.Command.CommandType = component.CommandType;
-            DataParameterBuilder.Build(component.Command, argument.Parameters);
+            DataParameterBuilder.Build(component.Command, argument.Parameters?.ToArray());
 
             component.Command.CommandText = argument.Command.Split('@')[0].Trim();
             component.Command.CommandTimeout = 0;

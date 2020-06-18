@@ -15,10 +15,11 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Provides with a method to build implementations of
@@ -79,7 +80,7 @@ namespace System.Design.DataSource.SQL
             BuildParameters(DataPropertySource source)
         {
             var property = source.PropertyInfo ?? throw new ArgumentNullException(nameof(source));
-            var keys = source.IdentyProperties ?? Array.Empty<string>();
+            var keys = source.IdentyProperties ?? new ReadOnlyCollection<string>( Array.Empty<string>());
 
             var ownerAttr = property.ReflectedType?.GetCustomAttribute<DataPrefixAttribute>();
             var propertyAttr = property.GetCustomAttribute<DataPrefixAttribute>();

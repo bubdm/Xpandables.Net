@@ -16,9 +16,10 @@
  *
 ************************************************************************************************************/
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace System.Design.DataSource.SQL.Executables
+namespace System.Design.SQL.Executables
 {
     /// <summary>
     ///  Executes a stored procedure or query and return a single result.
@@ -37,7 +38,7 @@ namespace System.Design.DataSource.SQL.Executables
         {
             component.Command.CommandType = component.CommandType;
             component.Command.CommandText = component.CommandType == CommandType.StoredProcedure ? argument.Command : argument.Command.ParseSql();
-            DataParameterBuilder.Build(component.Command, argument.Parameters);
+            DataParameterBuilder.Build(component.Command, argument.Parameters?.ToArray());
 
             var result = await component.Command.ExecuteScalarAsync(argument.Options.CancellationToken).ConfigureAwait(false);
 

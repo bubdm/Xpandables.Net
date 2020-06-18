@@ -19,7 +19,7 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Provides with a method to access a collection of <see cref="DataConnection"/>.

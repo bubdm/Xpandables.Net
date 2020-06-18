@@ -20,7 +20,7 @@ using System.Data.Common;
 using System.IO;
 using System.Reflection;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// The default implementation to return data provider factory from provider type.

@@ -20,7 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 
-namespace System.Design.DataSource
+namespace System.Design.ORM
 {
     /// <summary>
     /// The <see cref="DataContextDesignTimeFactory{TDataContext, TDataContextSettings, TDataContextProvider}"/> helper class.

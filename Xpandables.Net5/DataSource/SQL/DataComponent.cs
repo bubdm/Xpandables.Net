@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Contains component execution for <see cref="DataExecutable{T}"/>.

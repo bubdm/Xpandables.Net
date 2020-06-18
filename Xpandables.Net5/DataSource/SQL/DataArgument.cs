@@ -15,7 +15,10 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-namespace System.Design.DataSource.SQL
+using System.Collections.ObjectModel;
+using System.Linq;
+
+namespace System.Design.SQL
 {
     /// <summary>
     /// Contains the argument execution for <see cref="DataExecutable{T}"/>.
@@ -34,7 +37,7 @@ namespace System.Design.DataSource.SQL
         {
             Options = options ?? throw new ArgumentNullException(nameof(options));
             Command = command ?? throw new ArgumentNullException(nameof(command));
-            Parameters = parameters;
+            Parameters = parameters?.Any() == true ? new ReadOnlyCollection<object>(parameters) : default;
         }
 
         /// <summary>
@@ -50,6 +53,6 @@ namespace System.Design.DataSource.SQL
         /// <summary>
         /// Gets the parameters to be used with the <see cref="DataExecutable{T}"/>.
         /// </summary>
-        public object[]? Parameters { get; }
+        public ReadOnlyCollection<object>? Parameters { get; }
     }
 }

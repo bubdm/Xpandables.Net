@@ -20,7 +20,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace System.Design.DataSource.SQL.Executables
+namespace System.Design.SQL.Executables
 {
     /// <summary>
     ///  Executes a stored procedure or query and return a data table.
@@ -40,7 +40,7 @@ namespace System.Design.DataSource.SQL.Executables
             using var dataSet = new DataSet();
             component.Command.CommandText = component.CommandType == CommandType.StoredProcedure ? argument.Command : argument.Command.ParseSql();
             component.Command.CommandType = component.CommandType;
-            DataParameterBuilder.Build(component.Command, argument.Parameters);
+            DataParameterBuilder.Build(component.Command, argument.Parameters?.ToArray());
 
             if (component.CommandType == CommandType.StoredProcedure)
             {

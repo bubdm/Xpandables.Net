@@ -15,9 +15,10 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace System.Design.DataSource.SQL.Executables
+namespace System.Design.SQL.Executables
 {
     /// <summary>
     /// Executes a transaction and return number or records affected.
@@ -35,7 +36,7 @@ namespace System.Design.DataSource.SQL.Executables
         public override async Task<int> ExecuteAsync(DataComponent component, DataArgument argument)
         {
             component.Command.CommandText = argument.Command.ParseSql();
-            DataParameterBuilder.Build(component.Command, argument.Parameters);
+            DataParameterBuilder.Build(component.Command, argument.Parameters?.ToArray());
 
             int result;
             if (argument.Options.IsIdentityRetrieved)

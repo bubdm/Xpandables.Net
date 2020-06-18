@@ -18,7 +18,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Provides methods to access the <see cref="DataBaseContext"/>.

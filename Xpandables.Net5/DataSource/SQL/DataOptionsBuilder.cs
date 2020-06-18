@@ -22,7 +22,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Allows application author to build <see cref="DataOptions"/>.

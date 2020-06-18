@@ -21,7 +21,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Linq;
 using System.Reflection;
 
-namespace System.Design.DataSource
+namespace System.Design.ORM
 {
     /// <summary>
     ///  Provides with methods used to extend <see cref="IDataContext"/>.

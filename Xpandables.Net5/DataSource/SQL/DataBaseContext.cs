@@ -17,11 +17,11 @@
 ************************************************************************************************************/
 using System.Collections.Generic;
 using System.Data;
-using System.Design.DataSource.SQL.Executables;
+using System.Design.SQL.Executables;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Provides methods to executes command to data base.

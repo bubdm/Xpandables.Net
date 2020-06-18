@@ -16,14 +16,13 @@
 ************************************************************************************************************/
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace System.Design.DataSource
+namespace System.Design.ORM
 {
     /// <summary>
     /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/>

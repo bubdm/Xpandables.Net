@@ -22,7 +22,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Maps data to entities.
@@ -102,10 +102,12 @@ namespace System.Design.DataSource.SQL
                         break;
                 }
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception exception)
             {
                 exceptions.Enqueue(exception);
             }
+#pragma warning restore CA1031 // Do not catch general exception types
 
             if (exceptions.Count > 0)
                 throw new AggregateException(exceptions);

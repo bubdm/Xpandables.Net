@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.Data;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Allows an application author to set an entity property with a data reader / data row value.

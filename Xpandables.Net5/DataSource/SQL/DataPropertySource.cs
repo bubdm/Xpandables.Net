@@ -15,9 +15,11 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reflection;
 
-namespace System.Design.DataSource.SQL
+namespace System.Design.SQL
 {
     /// <summary>
     /// Provides with information to build a property.
@@ -34,7 +36,9 @@ namespace System.Design.DataSource.SQL
         {
             PropertyInfo = propertyInfo ?? throw new ArgumentNullException(nameof(propertyInfo));
             Options = options ?? throw new ArgumentNullException(nameof(options));
-            IdentyProperties = identyProperties ?? Array.Empty<string>();
+            IdentyProperties = identyProperties?.Any() == true
+                ? new ReadOnlyCollection<string>(identyProperties)
+                : new ReadOnlyCollection<string>(Array.Empty<string>());
         }
 
         /// <summary>
@@ -50,6 +54,6 @@ namespace System.Design.DataSource.SQL
         /// <summary>
         /// Gets a collection of properties defined as identifiers.
         /// </summary>
-        public string[] IdentyProperties { get; }
+        public ReadOnlyCollection<string> IdentyProperties { get; }
     }
 }
