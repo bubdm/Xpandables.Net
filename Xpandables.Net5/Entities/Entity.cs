@@ -24,6 +24,10 @@ using System.Security.Cryptography;
 [assembly: InternalsVisibleTo("Xpandables.EntityFrameworkCore")]
 namespace System
 {
+    /// <summary>
+    /// The domain object base implementation that provides an identifier and a key generator for derived class.
+    /// This is an <see langword="abstract"/>class.
+    /// </summary>
     [DebuggerDisplay("Id = {Id}")]
     public abstract class Entity
     {

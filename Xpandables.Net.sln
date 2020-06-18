@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30128.36
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5", "Xpandables.Net5\Xpandables.Net5.csproj", "{6B0C8853-2679-4A97-8773-4E1B15B08CFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.Tests", "Xpandables.Net.Tests\Xpandables.Net.Tests.csproj", "{A550D0F8-F87E-4A8F-B1D7-9262BDA38347}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,10 +17,6 @@ Global
 		{6B0C8853-2679-4A97-8773-4E1B15B08CFC}.Debug|x64.ActiveCfg = Debug|x64
 		{6B0C8853-2679-4A97-8773-4E1B15B08CFC}.Release|Any CPU.ActiveCfg = Release|x64
 		{6B0C8853-2679-4A97-8773-4E1B15B08CFC}.Release|x64.ActiveCfg = Release|x64
-		{A550D0F8-F87E-4A8F-B1D7-9262BDA38347}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{A550D0F8-F87E-4A8F-B1D7-9262BDA38347}.Debug|x64.ActiveCfg = Debug|x64
-		{A550D0F8-F87E-4A8F-B1D7-9262BDA38347}.Release|Any CPU.ActiveCfg = Release|x64
-		{A550D0F8-F87E-4A8F-B1D7-9262BDA38347}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
