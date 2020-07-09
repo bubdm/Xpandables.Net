@@ -15,58 +15,57 @@
  *
 ************************************************************************************************************/
 
-namespace System
+using System;
+using System.Diagnostics.CodeAnalysis;
+
+namespace Xpandables.Net5.Assertion
 {
     /// <summary>
     /// Provides with methods contract for building exceptions.
     /// </summary>
     public static class ContractExceptionBuilders
     {
-        internal static IInstanceCreator InstanceCreator = new InstanceCreator();
-
-        internal static Func<Contract<T>, ArgumentNullException> BuildArgumentNullException<T>()
+        internal static Func<Contract<TValue>, ArgumentNullException> BuildArgumentNullException<TValue>()
             => contract => new ArgumentNullException(contract.ParameterName);
 
-        internal static Func<Contract<T>, ArgumentException> BuildArgumentException<T>()
+        internal static Func<Contract<TValue>, ArgumentException> BuildArgumentException<TValue>()
             => contract => new ArgumentException(contract.ParameterName);
 
-        internal static Func<Contract<T>, ArgumentOutOfRangeException> BuildArgumentOutOfRangeException<T>()
+        internal static Func<Contract<TValue>, ArgumentOutOfRangeException> BuildArgumentOutOfRangeException<TValue>()
             => contract => new ArgumentOutOfRangeException(contract.ParameterName);
 
-        internal static Func<Contract<T>, InvalidOperationException> BuildInvalidOperationException<T>()
+        internal static Func<Contract<TValue>, InvalidOperationException> BuildInvalidOperationException<TValue>()
             => contract => new InvalidOperationException(contract.ParameterName);
 
-        static ContractExceptionBuilders() => InstanceCreator.OnException += exceptionCapture => exceptionCapture.Throw();
-
         /// <summary>
-        /// Build an exception of the type-specific.
+        /// Returns an exception delegate of the type-specific.
         /// </summary>
-        /// <typeparam name="T">The type of the value.</typeparam>
+        /// <typeparam name="TValue">The type of the value.</typeparam>
         /// <typeparam name="TException">The type of the exception.</typeparam>
-        /// <returns></returns>
-        public static Func<Contract<T>, TException?> ExceptionDelegateBuilder<T, TException>()
+        /// <returns>An instance of <typeparamref name="TException"/> exception.</returns>
+        [return: NotNull]
+        public static Func<Contract<TValue>, TException> ExceptionDelegateBuilder<TValue, TException>()
             where TException : Exception
-            => contract => InstanceCreator.Create(typeof(TException), contract.ParameterName) as TException;
+            => contract => (TException)Activator.CreateInstance(typeof(TException), contract.ParameterName)!;
 
         /// <summary>
-        /// Generic exception builder for contract.
+        /// Returns an exception of the type-specific from the specified contract.
         /// </summary>
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <typeparam name="TException">The type of the exception to build.</typeparam>
         /// <param name="contract">The contract instance.</param>
         /// <param name="exceptionCreator">The exception builder.</param>
         /// <returns>An instance of <typeparamref name="TException"/> exception.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="contract"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="exceptionCreator"/> is null.</exception>
+        /// <exception cref="ContractException">The <paramref name="exceptionCreator"/> is null.</exception>
+        [return: NotNull]
         public static TException ExceptionBuilder<T, TException>(
             this Contract<T> contract,
-            Func<Contract<T>, TException?> exceptionCreator)
+            [NotNull] Func<Contract<T>, TException> exceptionCreator)
             where TException : Exception
         {
-            if (contract is null) throw new ArgumentNullException(nameof(contract));
-            if (exceptionCreator is null) throw new ArgumentNullException(nameof(exceptionCreator));
-
-            return exceptionCreator.Invoke(contract) ?? throw new ArgumentNullException($"{exceptionCreator} returns a null exception value.");
+            _ = exceptionCreator ?? throw new ContractException(new ArgumentNullException(nameof(exceptionCreator)));
+            return exceptionCreator.Invoke(contract)
+                    ?? throw new ContractException(new ArgumentNullException($"{exceptionCreator} returns a null exception value."));
         }
     }
 }
