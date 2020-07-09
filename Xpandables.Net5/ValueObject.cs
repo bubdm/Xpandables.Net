@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Xpandables.Net5
@@ -34,6 +35,7 @@ namespace Xpandables.Net5
         /// When implemented in derived class, this method will provide the list of components that comprise that class.
         /// </summary>
         /// <returns>An enumerable components of the derived class.</returns>
+        [return: NotNull]
         protected abstract IEnumerable<object> GetEqualityComponents();
 
         /// <summary>
