@@ -188,6 +188,7 @@ namespace Xpandables.Net5.Assertion
         /// Computes the hash-code for the <see cref="Contract{TValue}"/> instance.
         /// </summary>
         public override int GetHashCode() => Value?.GetHashCode() ?? 0;
+
         /// <summary>
         /// Applies equality operator.
         /// </summary>
