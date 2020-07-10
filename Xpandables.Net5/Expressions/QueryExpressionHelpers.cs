@@ -35,8 +35,8 @@ namespace Xpandables.Net5.Expressions
         /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
         [return: NotNull]
         public static QueryExpression<TSource, TResult> And<TSource, TResult>(
-            [NotNull] this IQueryExpression<TSource, TResult> left,
-            [NotNull] IQueryExpression<TSource, TResult> right)
+             this IQueryExpression<TSource, TResult> left,
+             IQueryExpression<TSource, TResult> right)
             where TSource : class
             => new QueryExpressionAnd<TSource, TResult>(left, right);
 
@@ -50,8 +50,8 @@ namespace Xpandables.Net5.Expressions
         /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
         [return: NotNull]
         public static QueryExpression<TSource, TResult> Or<TSource, TResult>(
-            [NotNull] this IQueryExpression<TSource, TResult> left,
-            [NotNull] IQueryExpression<TSource, TResult> right)
+             this IQueryExpression<TSource, TResult> left,
+             IQueryExpression<TSource, TResult> right)
             where TSource : class => new QueryExpressionOr<TSource, TResult>(left, right);
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Xpandables.Net5.Expressions
         /// <exception cref="ArgumentNullException"></exception>
         [return: NotNull]
         public static QueryExpression<TSource, TResult> Not<TSource, TResult>(
-            [NotNull] this IQueryExpression<TSource, TResult> queryExpression)
+             this IQueryExpression<TSource, TResult> queryExpression)
             where TSource : class => new QueryExpressionNot<TSource, TResult>(queryExpression);
     }
 }

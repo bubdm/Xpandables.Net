@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Xpandables.Net5.Assertion
 {
@@ -37,7 +36,7 @@ namespace Xpandables.Net5.Assertion
         /// <typeparam name="TValue">Type of the value.</typeparam>
         /// <returns>An instance of <see cref="Contract{TValue}"/>.</returns>
         /// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
-        public static Contract<TValue> WhenNull<TValue>(this TValue @this, [NotNull] string thisExpression)
+        public static Contract<TValue> WhenNull<TValue>(this TValue @this, string thisExpression)
             => new Contract<TValue>(@this, value => value is not null, thisExpression);
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace Xpandables.Net5.Assertion
         /// <typeparam name="TValue">Type of the value.</typeparam>
         /// <returns>An instance of <see cref="Contract{TValue}"/>.</returns>
         /// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
-        public static Contract<TValue> WhenNotNull<TValue>(this TValue @this, [NotNull] string thisExpression)
+        public static Contract<TValue> WhenNotNull<TValue>(this TValue @this, string thisExpression)
             => new Contract<TValue>(@this, value => value is null, thisExpression);
 
         /// <summary>
@@ -58,7 +57,7 @@ namespace Xpandables.Net5.Assertion
         /// <param name="thisExpression">The parameter name.</param>
         /// <returns>An instance of <see cref="Contract{TValue}"/> where TValue is <see cref="string"/>.</returns>
         /// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
-        public static Contract<string> WhenNull(this string @this, [NotNull] string thisExpression)
+        public static Contract<string> WhenNull(this string @this, string thisExpression)
             => new Contract<string>(@this, value => !string.IsNullOrWhiteSpace(value), thisExpression);
 
         /// <summary>
@@ -71,7 +70,7 @@ namespace Xpandables.Net5.Assertion
         /// <returns>An instance of <see cref="Contract{TValue}"/>.</returns>
         /// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
         /// <exception cref="ContractException">The <paramref name="condition"/> is null.</exception>
-        public static Contract<TValue> WhenConditionFailed<TValue>(this TValue @this, [NotNull] Func<TValue, bool> condition, [NotNull] string thisExpression)
+        public static Contract<TValue> WhenConditionFailed<TValue>(this TValue @this, Func<TValue, bool> condition, string thisExpression)
             => new Contract<TValue>(@this, condition, thisExpression);
 
         /// <summary>
@@ -84,7 +83,7 @@ namespace Xpandables.Net5.Assertion
         /// <returns>An instance of <see cref="Contract{TValue}"/>.</returns>
         /// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
         public static Contract<TValue> WhenNotGreaterThan<TValue>(
-            this TValue @this, TValue compare, [NotNull] string thisExpression)
+            this TValue @this, TValue compare, string thisExpression)
             where TValue : unmanaged, IComparable, IFormattable, IComparable<TValue>, IEquatable<TValue>
             => new Contract<TValue>(@this, value => value.CompareTo(compare) > 0, thisExpression);
 
@@ -98,7 +97,7 @@ namespace Xpandables.Net5.Assertion
         /// <returns>An instance of <see cref="Contract{TValue}"/>.</returns>
         /// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
         public static Contract<TValue> WhenNotGreaterThanOrEqualTo<TValue>(
-            this TValue @this, TValue compare, [NotNull] string thisExpression)
+            this TValue @this, TValue compare, string thisExpression)
             where TValue : unmanaged, IComparable, IFormattable, IComparable<TValue>, IEquatable<TValue>
             => new Contract<TValue>(@this, value => value.CompareTo(compare) >= 0, thisExpression);
 
@@ -112,7 +111,7 @@ namespace Xpandables.Net5.Assertion
         /// <returns>An instance of <see cref="Contract{TValue}"/>.</returns>
         /// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
         public static Contract<TValue> WhenNotLowerThan<TValue>(
-            this TValue @this, TValue compare, [NotNull] string thisExpression)
+            this TValue @this, TValue compare, string thisExpression)
             where TValue : unmanaged, IComparable, IFormattable, IComparable<TValue>, IEquatable<TValue>
             => new Contract<TValue>(@this, value => value.CompareTo(compare) < 0, thisExpression);
 
@@ -127,7 +126,7 @@ namespace Xpandables.Net5.Assertion
         /// <returns>An instance of <see cref="Contract{TValue}"/>.</returns>
         /// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
         public static Contract<TValue> WhenNotLowerThanOrEqualTo<TValue>(
-            this TValue @this, TValue compare, [NotNull] string thisExpression)
+            this TValue @this, TValue compare, string thisExpression)
             where TValue : unmanaged, IComparable, IFormattable, IComparable<TValue>, IEquatable<TValue>
             => new Contract<TValue>(@this, value => value.CompareTo(compare) <= 0, thisExpression);
 
@@ -142,7 +141,7 @@ namespace Xpandables.Net5.Assertion
         /// <returns>An instance of <see cref="Contract{TValue}"/>.</returns>
         /// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
         public static Contract<TValue> WhenNotInRange<TValue>(
-            this TValue @this, TValue min, TValue max, [NotNull] string thisExpression)
+            this TValue @this, TValue min, TValue max, string thisExpression)
             where TValue : unmanaged, IComparable, IFormattable, IComparable<TValue>, IEquatable<TValue>
             => new Contract<TValue>(@this, value => value.CompareTo(min) >= 0 && value.CompareTo(max) <= 0, thisExpression);
 
@@ -157,7 +156,7 @@ namespace Xpandables.Net5.Assertion
         /// <exception cref="ContractException">The <paramref name="collection"/> is null.</exception>
         /// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
         public static Contract<TValue> WhenNotInCollection<TValue>(
-            this TValue @this, [NotNull] ICollection<TValue> collection, [NotNull] string thisExpression)
+            this TValue @this, ICollection<TValue> collection, string thisExpression)
             => new Contract<TValue>(
                 @this,
                 value => !collection?.Contains(value) ?? throw new ContractException(new ArgumentNullException(nameof(collection))),

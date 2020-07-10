@@ -78,57 +78,57 @@ namespace Xpandables.Net5.Expressions
 
         [return: NotNull]
         public static implicit operator Expression<Func<TSource, TResult>>(
-            [NotNull] QueryExpression<TSource, TResult> queryExpression)
+             QueryExpression<TSource, TResult> queryExpression)
             => queryExpression.GetExpression();
 
         [return: NotNull]
         public static implicit operator Func<TSource, TResult>(
-            [NotNull] QueryExpression<TSource, TResult> queryExpression)
+             QueryExpression<TSource, TResult> queryExpression)
             => queryExpression.GetExpression().Compile();
 
         [return: NotNull]
         public static implicit operator QueryExpression<TSource, TResult>(
-            [NotNull] Expression<Func<TSource, TResult>> expression)
+             Expression<Func<TSource, TResult>> expression)
             => QueryExpressionFactory<TResult>.Create(expression);
 
         [return: NotNull]
         public static QueryExpression<TSource, TResult> operator &(
-            [NotNull] QueryExpression<TSource, TResult> left,
-            [NotNull] QueryExpression<TSource, TResult> right)
+             QueryExpression<TSource, TResult> left,
+             QueryExpression<TSource, TResult> right)
           => new QueryExpressionAnd<TSource, TResult>(left, right);
 
         [return: NotNull]
         public static QueryExpression<TSource, TResult> operator |(
-            [NotNull] QueryExpression<TSource, TResult> left,
-            [NotNull] QueryExpression<TSource, TResult> right)
+             QueryExpression<TSource, TResult> left,
+             QueryExpression<TSource, TResult> right)
             => new QueryExpressionOr<TSource, TResult>(left, right);
 
         public static QueryExpression<TSource, TResult> operator ==(
             bool value,
-            [NotNull] QueryExpression<TSource, TResult> right)
+             QueryExpression<TSource, TResult> right)
             => value ? right : !right;
 
         [return: NotNull]
         public static QueryExpression<TSource, TResult> operator ==(
-            [NotNull] QueryExpression<TSource, TResult> left,
+             QueryExpression<TSource, TResult> left,
             bool value)
             => value ? left : !left;
 
         [return: NotNull]
         public static QueryExpression<TSource, TResult> operator !=(
             bool value,
-            [NotNull] QueryExpression<TSource, TResult> right)
+             QueryExpression<TSource, TResult> right)
             => value ? !right : right;
 
         [return: NotNull]
         public static QueryExpression<TSource, TResult> operator !=(
-            [NotNull] QueryExpression<TSource, TResult> left,
+             QueryExpression<TSource, TResult> left,
             bool value)
             => value ? !left : left;
 
         [return: NotNull]
         public static QueryExpression<TSource, TResult> operator !(
-            [NotNull] QueryExpression<TSource, TResult> left)
+             QueryExpression<TSource, TResult> left)
             => new QueryExpressionNot<TSource, TResult>(left);
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

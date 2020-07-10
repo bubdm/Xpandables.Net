@@ -18,7 +18,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Xpandables.Net5.Assertion
 {
@@ -40,8 +39,8 @@ namespace Xpandables.Net5.Assertion
         /// <exception cref="ContractException">The <paramref name="parameterName"/> is null.</exception>
         public Contract(
             TValue value,
-            [NotNull] Func<TValue, bool> condition,
-            [NotNull] string parameterName)
+             Func<TValue, bool> condition,
+             string parameterName)
         {
             Value = value;
             Condition = condition ?? throw new ContractException(new ArgumentNullException(nameof(condition)));
@@ -51,7 +50,7 @@ namespace Xpandables.Net5.Assertion
         /// <summary>
         /// Gets the parameter name.
         /// </summary>
-        [NotNull]
+
         public readonly string ParameterName { get; }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace Xpandables.Net5.Assertion
         /// <summary>
         /// Gets the condition to be applied.
         /// </summary>
-        [NotNull]
+
         public readonly Func<TValue, bool> Condition { get; }
 
         /// <summary>
@@ -109,7 +108,7 @@ namespace Xpandables.Net5.Assertion
         /// <returns>An <see cref="ArgumentNullException"/> if the value don't match the condition, otherwise the value.</returns>
         /// <exception cref="ContractException">The <paramref name="message"/> is null.</exception>
         [DebuggerStepThrough]
-        public TValue ThrowArgumentNullException([NotNull] string message)
+        public TValue ThrowArgumentNullException(string message)
         {
             _ = message ?? throw new ContractException(new ArgumentNullException(nameof(message)));
             return IsValid ? Value : throw new ArgumentNullException(ParameterName, message);
@@ -123,7 +122,7 @@ namespace Xpandables.Net5.Assertion
         /// <returns>An <see cref="ArgumentException"/> if the value don't match the condition, otherwise the value.</returns>
         /// <exception cref="ContractException">The <paramref name="message"/> is null.</exception>
         [DebuggerStepThrough]
-        public TValue ThrowArgumentException([NotNull] string message)
+        public TValue ThrowArgumentException(string message)
         {
             _ = message ?? throw new ContractException(new ArgumentNullException(nameof(message)));
             return IsValid ? Value : throw new ArgumentException(message, ParameterName);
@@ -145,7 +144,7 @@ namespace Xpandables.Net5.Assertion
         /// <returns>An <see cref="ArgumentOutOfRangeException"/> if the value don't match the predicate, otherwise the value.</returns>
         /// <exception cref="ContractException">The <paramref name="message"/> is null.</exception>
         [DebuggerStepThrough]
-        public TValue ThrowArgumentOutOfRangeException([NotNull] string message)
+        public TValue ThrowArgumentOutOfRangeException(string message)
         {
             _ = message ?? throw new ContractException(new ArgumentNullException(nameof(message)));
             return IsValid ? Value : throw new ArgumentOutOfRangeException(ParameterName, Value, message);

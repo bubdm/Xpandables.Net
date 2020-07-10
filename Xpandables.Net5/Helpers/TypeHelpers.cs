@@ -119,8 +119,8 @@ namespace Xpandables.Net5.Helpers
         /// <exception cref="ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
         public static bool TryLoadAssembly(
             this AssemblyName assemblyName,
-            [MaybeNullWhen(false)] out Assembly loadedAssembly,
-            [MaybeNullWhen(true)] out Exception assemblyException)
+            [MaybeNullWhen(returnValue: false)] out Assembly loadedAssembly,
+            [MaybeNullWhen(returnValue: true)] out Exception assemblyException)
         {
             _ = assemblyName ?? throw new ArgumentNullException(nameof(assemblyName));
 
@@ -171,8 +171,8 @@ namespace Xpandables.Net5.Helpers
         /// <exception cref="ArgumentNullException">The <paramref name="memberName"/> is null.</exception>
         public static bool TryTypeInvokeMember(
             this Type type,
-            [MaybeNullWhen(false)] out object result,
-            [MaybeNullWhen(true)] out Exception invokeException,
+            [MaybeNullWhen(returnValue: false)] out object result,
+            [MaybeNullWhen(returnValue: true)] out Exception invokeException,
             string memberName,
             BindingFlags invokeAttr,
             Binder? binder,
@@ -223,8 +223,8 @@ namespace Xpandables.Net5.Helpers
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         public static bool TryMakeGenericType(
             this Type type,
-            [MaybeNullWhen(false)] out Type genericType,
-            [MaybeNullWhen(true)] out Exception typeException,
+            [MaybeNullWhen(returnValue: false)] out Type genericType,
+            [MaybeNullWhen(returnValue: true)] out Exception typeException,
             params Type[] typeArguments)
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
@@ -258,8 +258,8 @@ namespace Xpandables.Net5.Helpers
         /// <exception cref="ArgumentNullException">The <paramref name="parameterTypes"/> is null.</exception>
         public static bool TryGetConstructorDelegate<TDelegate>(
             this Type type,
-            [MaybeNullWhen(false)] out TDelegate constructorDelegate,
-            [MaybeNullWhen(true)] out Exception constructorException,
+            [MaybeNullWhen(returnValue: false)] out TDelegate constructorDelegate,
+            [MaybeNullWhen(returnValue: true)] out Exception constructorException,
             params Type[] parameterTypes)
             where TDelegate : Delegate
         {
@@ -323,8 +323,8 @@ namespace Xpandables.Net5.Helpers
         /// <exception cref="ArgumentNullException">The <paramref name="typeName"/> is null.</exception>
         public static bool TryGetTypeFromTypeName(
             this string typeName,
-            [MaybeNullWhen(false)] out Type type,
-            [MaybeNullWhen(true)] out Exception typeException)
+            [MaybeNullWhen(returnValue: false)] out Type type,
+            [MaybeNullWhen(returnValue: true)] out Exception typeException)
         {
             _ = typeName ?? throw new ArgumentNullException(nameof(typeName));
 
@@ -364,8 +364,8 @@ namespace Xpandables.Net5.Helpers
         /// <exception cref="ArgumentNullException">The <paramref name="parameterExpressions"/> is null.</exception>
         public static bool TryGetConstructorExpression(
             this ConstructorInfo constructorInfo,
-            [MaybeNullWhen(false)] out Expression constructorExpression,
-            [MaybeNullWhen(true)] out Exception constructorException,
+            [MaybeNullWhen(returnValue: false)] out Expression constructorExpression,
+            [MaybeNullWhen(returnValue: true)] out Exception constructorException,
             params ParameterExpression[] parameterExpressions)
         {
             _ = constructorInfo ?? throw new ArgumentNullException(nameof(constructorInfo));
@@ -396,8 +396,8 @@ namespace Xpandables.Net5.Helpers
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         public static bool TryGetConstructorInfo(
             this Type type,
-            [MaybeNullWhen(false)] out ConstructorInfo constructorInfo,
-            [MaybeNullWhen(true)] out Exception constructorException,
+            [MaybeNullWhen(returnValue: false)] out ConstructorInfo constructorInfo,
+            [MaybeNullWhen(returnValue: true)] out Exception constructorException,
             params Type[] parameterTypes)
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
@@ -437,8 +437,8 @@ namespace Xpandables.Net5.Helpers
         /// <exception cref="ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
         public static bool TryLoadAssembly(
             this string assemblyName,
-            [MaybeNullWhen(false)] out Assembly loadedAssembly,
-            [MaybeNullWhen(true)] out Exception assemblyException)
+            [MaybeNullWhen(returnValue: false)] out Assembly loadedAssembly,
+            [MaybeNullWhen(returnValue: true)] out Exception assemblyException)
         {
             _ = assemblyName ?? throw new ArgumentNullException(nameof(assemblyName));
 
@@ -471,8 +471,8 @@ namespace Xpandables.Net5.Helpers
         /// <exception cref="ArgumentNullException">The <paramref name="typeName"/> is null.</exception>
         public static bool TryGetType(
             this string typeName,
-            [MaybeNullWhen(false)] out Type foundType,
-            [MaybeNullWhen(true)] out Exception typeException)
+            [MaybeNullWhen(returnValue: false)] out Type foundType,
+            [MaybeNullWhen(returnValue: true)] out Exception typeException)
         {
             _ = typeName ?? throw new ArgumentNullException(nameof(typeName));
 
@@ -514,8 +514,8 @@ namespace Xpandables.Net5.Helpers
         public static bool TryGetType(
             this string typeName,
             string assemblyName,
-            [MaybeNullWhen(false)] out Type foundType,
-            [MaybeNullWhen(true)] out Exception typeException)
+            [MaybeNullWhen(returnValue: false)] out Type foundType,
+            [MaybeNullWhen(returnValue: true)] out Exception typeException)
         {
             _ = typeName ?? throw new ArgumentNullException(nameof(typeName));
             _ = assemblyName ?? throw new ArgumentNullException(nameof(assemblyName));

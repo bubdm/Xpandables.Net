@@ -40,7 +40,7 @@ namespace Xpandables.Net5.Notifications
         /// </summary>
         /// <param name="notification">The notification instance to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
-        Task HandleAsync([NotNull] object notification);
+        Task HandleAsync( object notification);
     }
 
     /// <summary>
@@ -57,6 +57,6 @@ namespace Xpandables.Net5.Notifications
         /// </summary>
         /// <param name="notification">The notification instance to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
-        Task HandleAsync([NotNull] TNotification notification);
+        Task HandleAsync( TNotification notification);
     }
 }

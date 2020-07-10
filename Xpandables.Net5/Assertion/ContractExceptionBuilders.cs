@@ -60,7 +60,7 @@ namespace Xpandables.Net5.Assertion
         [return: NotNull]
         public static TException ExceptionBuilder<T, TException>(
             this Contract<T> contract,
-            [NotNull] Func<Contract<T>, TException> exceptionCreator)
+             Func<Contract<T>, TException> exceptionCreator)
             where TException : Exception
         {
             _ = exceptionCreator ?? throw new ContractException(new ArgumentNullException(nameof(exceptionCreator)));

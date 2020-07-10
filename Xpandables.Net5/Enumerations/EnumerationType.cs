@@ -151,7 +151,7 @@ namespace Xpandables.Net5.Enumerations
         /// <param name="enumeration">When this method returns, contains the <typeparamref name="TEnumeration"/> value equivalent
         /// of the string contained in <paramref name="displayName"/>, if the conversion succeeded.</param>
         /// <returns><see langword="true"/> if <paramref name="displayName"/> was converted successfully; otherwise, <see langword="false"/>.</returns>
-        public static bool TryParse<TEnumeration>([NotNull] string displayName, [MaybeNullWhen(false)] out TEnumeration enumeration)
+        public static bool TryParse<TEnumeration>( string displayName, [MaybeNullWhen(false)] out TEnumeration enumeration)
             where TEnumeration : EnumerationType
         {
             enumeration = FromDisplayName<TEnumeration>(displayName);

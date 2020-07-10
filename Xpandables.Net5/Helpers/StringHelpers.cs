@@ -19,10 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net5.Helpers
 {
@@ -98,19 +96,19 @@ namespace Xpandables.Net5.Helpers
         /// <param name="value">The string value.</param>
         /// <param name="result">The string value converted to the specified value type.</param>
         /// <param name="valueTypeException">The handled exception during conversion.</param>
-        /// <returns>Returns <see langword="true"/> if conversion succeeded and <see langword="false"/> otherwise.</returns>
+        /// <returns>Returns <see langword="true"/> if conversion OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null or empty.</exception>
         public static bool TryToValueType<TResult>(
             this string value,
-            [MaybeNullWhen(false)] out TResult result,
-            [MaybeNullWhen(true)] out Exception valueTypeException)
+            [MaybeNullWhen(returnValue: false)] out TResult result,
+            [MaybeNullWhen(returnValue: true)] out Exception valueTypeException)
             where TResult : struct, IComparable, IFormattable, IConvertible, IComparable<TResult>, IEquatable<TResult>
         {
             try
             {
                 valueTypeException = default;
                 result = (TResult)Convert.ChangeType(value, typeof(TResult), CultureInfo.CurrentCulture);
-                return result is { };
+                return true;
             }
             catch (Exception exception) when (exception is InvalidCastException
                                             || exception is FormatException
@@ -134,15 +132,15 @@ namespace Xpandables.Net5.Helpers
         /// by formats, provider, and style.</param>
         /// <param name="dateTimeException">The handled exception during conversion.</param>
         /// <param name="formats">An array of allowable formats of strings.</param>
-        /// <returns>Returns <see langword="true"/> if conversion succeeded and <see langword="false"/> otherwise.</returns>
+        /// <returns>Returns <see langword="true"/> if conversion OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="provider"/> is null.</exception>
         public static bool TryToDateTime(
             this string source,
             IFormatProvider provider,
             DateTimeStyles styles,
-            [NotNullWhen(true)] out DateTime result,
-            [NotNullWhen(false)] out Exception? dateTimeException,
+            [MaybeNullWhen(returnValue: false)] out DateTime result,
+            [MaybeNullWhen(returnValue: true)] out Exception dateTimeException,
             params string[] formats)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
