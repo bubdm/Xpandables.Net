@@ -114,13 +114,13 @@ namespace Xpandables.Net5.Helpers
         /// </summary>
         /// <param name="assemblyName">The assembly name to act with.</param>
         /// <param name="loadedAssembly">The loaded assembly if succeeded.</param>
-        /// <param name="assemblyException">The handled exception during assembly loading.</param>
-        /// <returns>Returns <see langword="true"/> if loading succeeded and <see langword="false"/> otherwise.</returns>
+        /// <param name="assemblyException">The handled exception during assembly loading if fails.</param>
+        /// <returns>Returns <see langword="true"/> if loading OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
         public static bool TryLoadAssembly(
             this AssemblyName assemblyName,
-            [NotNullWhen(true)] out Assembly? loadedAssembly,
-            [NotNullWhen(false)] out Exception? assemblyException)
+            [MaybeNullWhen(false)] out Assembly loadedAssembly,
+            [MaybeNullWhen(true)] out Exception assemblyException)
         {
             _ = assemblyName ?? throw new ArgumentNullException(nameof(assemblyName));
 
@@ -166,11 +166,13 @@ namespace Xpandables.Net5.Helpers
         /// overloads with variable arguments.</param>
         /// <param name="target">The object on which to invoke the specified member.</param>
         /// <param name="args">An array containing the arguments to pass to the member to invoke.</param>
-        /// <returns>Returns <see langword="true"/> if invoke succeeded and <see langword="false"/> otherwise.</returns>
+        /// <returns>Returns <see langword="true"/> if invoke OK and <see langword="false"/> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="memberName"/> is null.</exception>
         public static bool TryTypeInvokeMember(
             this Type type,
-            [NotNullWhen(true)] out object? result,
-            [NotNullWhen(false)] out Exception? invokeException,
+            [MaybeNullWhen(false)] out object result,
+            [MaybeNullWhen(true)] out Exception invokeException,
             string memberName,
             BindingFlags invokeAttr,
             Binder? binder,
@@ -208,7 +210,7 @@ namespace Xpandables.Net5.Helpers
         }
 
         /// <summary>
-        /// tries to substitute the elements of an array of types for the type parameters of the
+        /// Tries to substitute the elements of an array of types for the type parameters of the
         /// current generic type definition and returns a System.Type object representing
         /// the resulting constructed type. If error, return false with exception.
         /// </summary>
@@ -217,12 +219,12 @@ namespace Xpandables.Net5.Helpers
         /// <param name="typeException">The handled type exception.</param>
         /// <param name="typeArguments">An array of types to be substituted for the type parameters of the current generic
         /// type.</param>
-        /// <returns>Returns <see langword="true"/> if make succeeded and <see langword="false"/> otherwise.</returns>
+        /// <returns>Returns <see langword="true"/> if make OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         public static bool TryMakeGenericType(
             this Type type,
-            [NotNullWhen(true)] out Type? genericType,
-            [NotNullWhen(false)] out Exception? typeException,
+            [MaybeNullWhen(false)] out Type genericType,
+            [MaybeNullWhen(true)] out Exception typeException,
             params Type[] typeArguments)
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
@@ -251,13 +253,13 @@ namespace Xpandables.Net5.Helpers
         /// <param name="constructorDelegate">The built constructor delegate.</param>
         /// <param name="constructorException">The handled exception.</param>
         /// <param name="parameterTypes">The collection of parameter types.</param>
-        /// <returns>Returns <see langword="true"/> if make succeeded and <see langword="false"/> otherwise.</returns>
+        /// <returns>Returns <see langword="true"/> if make OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="parameterTypes"/> is null.</exception>
         public static bool TryGetConstructorDelegate<TDelegate>(
             this Type type,
-            [NotNullWhen(true)] out TDelegate? constructorDelegate,
-            [NotNullWhen(false)] out Exception? constructorException,
+            [MaybeNullWhen(false)] out TDelegate constructorDelegate,
+            [MaybeNullWhen(true)] out Exception constructorException,
             params Type[] parameterTypes)
             where TDelegate : Delegate
         {
@@ -317,12 +319,12 @@ namespace Xpandables.Net5.Helpers
         /// <param name="typeName">The type name.</param>
         /// <param name="type">The type result if found.</param>
         /// <param name="typeException">The handled execution exception.</param>
-        /// <returns>Returns<see langword="true"/> if get succeeded and <see langword="false"/> otherwise.</returns>
+        /// <returns>Returns <see langword="true"/> if get OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="typeName"/> is null.</exception>
         public static bool TryGetTypeFromTypeName(
             this string typeName,
-            [NotNullWhen(true)] out Type? type,
-            [NotNullWhen(false)] out Exception? typeException)
+            [MaybeNullWhen(false)] out Type type,
+            [MaybeNullWhen(true)] out Exception typeException)
         {
             _ = typeName ?? throw new ArgumentNullException(nameof(typeName));
 
@@ -357,13 +359,13 @@ namespace Xpandables.Net5.Helpers
         /// <param name="constructorExpression">The built constructor expression.</param>
         /// <param name="constructorException">The handled constructor exception.</param>
         /// <param name="parameterExpressions">A collection of parameter expressions.</param>
-        /// <returns>Returns<see langword="true"/> if make succeeded and <see langword="false"/> otherwise.</returns>
+        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="constructorInfo"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="parameterExpressions"/> is null.</exception>
         public static bool TryGetConstructorExpression(
             this ConstructorInfo constructorInfo,
-            [NotNullWhen(true)] out Expression? constructorExpression,
-            [NotNullWhen(false)] out Exception? constructorException,
+            [MaybeNullWhen(false)] out Expression constructorExpression,
+            [MaybeNullWhen(true)] out Exception constructorException,
             params ParameterExpression[] parameterExpressions)
         {
             _ = constructorInfo ?? throw new ArgumentNullException(nameof(constructorInfo));
@@ -390,12 +392,12 @@ namespace Xpandables.Net5.Helpers
         /// <param name="constructorInfo">The found constructor.</param>
         /// <param name="constructorException">The handled constructor exception.</param>
         /// <param name="parameterTypes">The optional parameters types.</param>
-        /// <returns>Returns<see langword="true"/> if make succeeded and <see langword="false"/> otherwise.</returns>
+        /// <returns>Returns <see langword="true"/> if make OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         public static bool TryGetConstructorInfo(
             this Type type,
-            [NotNullWhen(true)] out ConstructorInfo? constructorInfo,
-            [NotNullWhen(false)] out Exception? constructorException,
+            [MaybeNullWhen(false)] out ConstructorInfo constructorInfo,
+            [MaybeNullWhen(true)] out Exception constructorException,
             params Type[] parameterTypes)
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
@@ -425,9 +427,132 @@ namespace Xpandables.Net5.Helpers
             }
         }
 
-        // Gets a set of Expressions representing the parameters which will be passed to the constructor.
         /// <summary>
-        /// Gets a set of Expressions representing a collection of parameters.
+        /// Tries to load assembly from its name.
+        /// </summary>
+        /// <param name="assemblyName">The full assembly name.</param>
+        /// <param name="loadedAssembly">The loaded assembly if succeeded.</param>
+        /// <param name="assemblyException">The handled exception during assembly loading.</param>
+        /// <returns>Returns <see langword="true"/> if loading OK and <see langword="false"/> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
+        public static bool TryLoadAssembly(
+            this string assemblyName,
+            [MaybeNullWhen(false)] out Assembly loadedAssembly,
+            [MaybeNullWhen(true)] out Exception assemblyException)
+        {
+            _ = assemblyName ?? throw new ArgumentNullException(nameof(assemblyName));
+
+            try
+            {
+                assemblyException = default;
+                loadedAssembly = Assembly.LoadFrom(assemblyName);
+                return true;
+            }
+            catch (Exception exception) when (exception is ArgumentException
+                                            || exception is FileNotFoundException
+                                            || exception is FileLoadException
+                                            || exception is BadImageFormatException
+                                            || exception is PathTooLongException
+                                            || exception is System.Security.SecurityException)
+            {
+                loadedAssembly = default;
+                assemblyException = exception;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries to get type from its string name.
+        /// </summary>
+        /// <param name="typeName">The name of the type to find.</param>
+        /// <param name="foundType">The found type.</param>
+        /// <param name="typeException">The handled type exception.</param>
+        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="typeName"/> is null.</exception>
+        public static bool TryGetType(
+            this string typeName,
+            [MaybeNullWhen(false)] out Type foundType,
+            [MaybeNullWhen(true)] out Exception typeException)
+        {
+            _ = typeName ?? throw new ArgumentNullException(nameof(typeName));
+
+            try
+            {
+                typeException = default;
+                foundType = Type.GetType(typeName, true, true);
+                if (foundType is null)
+                {
+                    typeException = new ArgumentException("Expected type not found.");
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception exception) when (exception is TargetInvocationException
+                                            || exception is TypeLoadException
+                                            || exception is ArgumentException
+                                            || exception is FileNotFoundException
+                                            || exception is FileLoadException
+                                            || exception is BadImageFormatException)
+            {
+                typeException = exception;
+                foundType = default;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries to get the type from string, if not found, try to load from the assembly.
+        /// </summary>
+        /// <param name="typeName">The name of the type to find.</param>
+        /// <param name="assemblyName">The assembly to act on.</param>
+        /// <param name="foundType">The found type.</param>
+        /// <param name="typeException">The handled type exception.</param>
+        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="typeName"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
+        public static bool TryGetType(
+            this string typeName,
+            string assemblyName,
+            [MaybeNullWhen(false)] out Type foundType,
+            [MaybeNullWhen(true)] out Exception typeException)
+        {
+            _ = typeName ?? throw new ArgumentNullException(nameof(typeName));
+            _ = assemblyName ?? throw new ArgumentNullException(nameof(assemblyName));
+
+            if (typeName.TryGetType(out foundType, out typeException))
+                return true;
+
+            if (!assemblyName.TryLoadAssembly(out var assembly, out typeException))
+            {
+                foundType = default;
+                return false;
+            }
+
+            try
+            {
+                typeException = default;
+                foundType = Array
+                    .Find(assembly!
+                        .GetExportedTypes(), type => type.FullName!.Equals(typeName, StringComparison.InvariantCultureIgnoreCase));
+
+                if (foundType is null)
+                {
+                    typeException = new ArgumentException("Expected type not found.");
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception exception) when (exception is NotSupportedException || exception is FileNotFoundException)
+            {
+                typeException = exception;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a set of Expressions representing the parameters which will be passed to the constructor.
         /// </summary>
         /// <param name="parameterTypes">A collection of type to be used to build parameter expressions</param>
         /// <exception cref="ArgumentNullException">The <paramref name="parameterTypes"/> is null.</exception>
@@ -478,6 +603,7 @@ namespace Xpandables.Net5.Helpers
         /// </summary>
         /// <param name="type">The type to act on.</param>
         /// <param name="targetType">The type to check.</param>
+        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="targetType"/> is null.</exception>
         public static bool IsAssignableTo(this Type type, Type targetType)
@@ -509,6 +635,7 @@ namespace Xpandables.Net5.Helpers
         /// </summary>
         /// <param name="type">The type to act on.</param>
         /// <param name="attributeType">The type of the attribute.</param>
+        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="attributeType"/> is null.</exception>
         public static bool HasAttribute(this Type type, Type attributeType)
@@ -525,6 +652,7 @@ namespace Xpandables.Net5.Helpers
         /// <typeparam name="TAttribute">The type of the attribute.</typeparam>
         /// <param name="type">The type to act on.</param>
         /// <param name="predicate">The predicate to use.</param>
+        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
         public static bool HasAttribute<TAttribute>(this Type type, Func<TAttribute, bool> predicate)
@@ -543,6 +671,7 @@ namespace Xpandables.Net5.Helpers
         /// </summary>
         /// <param name="type">The type to act on.</param>
         /// <param name="namespace">The name space.</param>
+        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="namespace"/> is null.</exception>
         public static bool IsInNamespace(this Type type, string @namespace)
@@ -577,6 +706,7 @@ namespace Xpandables.Net5.Helpers
         /// </summary>
         /// <param name="type">The type to act on.</param>
         /// <param name="namespace">The name space.</param>
+        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="namespace"/> is null.</exception>
         public static bool IsInExactNamespace(this Type type, string @namespace)
@@ -592,6 +722,7 @@ namespace Xpandables.Net5.Helpers
         /// </summary>
         /// <param name="type">The type to act on.</param>
         /// <param name="publicOnly">if check public.</param>
+        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         public static bool IsNonAbstractClass(this Type type, bool publicOnly)
         {
@@ -621,6 +752,7 @@ namespace Xpandables.Net5.Helpers
         /// </summary>
         /// <param name="interfaceType">The interface type.</param>
         /// <param name="typeInfo">The target type.</param>
+        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="interfaceType"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="typeInfo"/> is null.</exception>
         public static bool HasMatchingGenericArity(this Type interfaceType, TypeInfo typeInfo)
