@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5", "Xpandabl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{676B6AE2-5C2F-4FB2-A260-8B5EB6B2C3EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net5.Tests", "Tests\Xpandables.Net5.Tests\Xpandables.Net5.Tests.csproj", "{51CC00AC-19F4-4C89-98CE-6685A20907A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.Tests", "Tests\Xpandables.Net5.Tests\Xpandables.Net5.Tests.csproj", "{51CC00AC-19F4-4C89-98CE-6685A20907A7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.DependencyInjection", "Xpandables.Net5.DependencyInjection\Xpandables.Net5.DependencyInjection.csproj", "{D618FD69-E82E-4E23-80D5-A69AC2B0B452}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,14 @@ Global
 		{51CC00AC-19F4-4C89-98CE-6685A20907A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51CC00AC-19F4-4C89-98CE-6685A20907A7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51CC00AC-19F4-4C89-98CE-6685A20907A7}.Release|x64.ActiveCfg = Release|x64
+		{D618FD69-E82E-4E23-80D5-A69AC2B0B452}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D618FD69-E82E-4E23-80D5-A69AC2B0B452}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D618FD69-E82E-4E23-80D5-A69AC2B0B452}.Debug|x64.ActiveCfg = Debug|x64
+		{D618FD69-E82E-4E23-80D5-A69AC2B0B452}.Debug|x64.Build.0 = Debug|x64
+		{D618FD69-E82E-4E23-80D5-A69AC2B0B452}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D618FD69-E82E-4E23-80D5-A69AC2B0B452}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D618FD69-E82E-4E23-80D5-A69AC2B0B452}.Release|x64.ActiveCfg = Release|x64
+		{D618FD69-E82E-4E23-80D5-A69AC2B0B452}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

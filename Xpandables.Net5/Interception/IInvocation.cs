@@ -67,7 +67,7 @@ namespace Xpandables.Net5.Interception
         /// <summary>
         /// Gets the invocation method return type.
         /// </summary>
-        public Type ReturnType => InvocationMethod.ReturnType;
+        public sealed Type ReturnType => InvocationMethod.ReturnType;
 
         /// <summary>
         /// Sets the exception value.
@@ -76,7 +76,7 @@ namespace Xpandables.Net5.Interception
         /// </summary>
         /// <param name="exception">The exception value.</param>
         /// <returns>The current instance with exception value.</returns>
-        public IInvocation AddException(Exception? exception) => this.With(invocation => invocation.Exception = exception);
+        public sealed IInvocation AddException(Exception? exception) => this.With(invocation => invocation.Exception = exception);
 
         /// <summary>
         /// Sets the executed method return value, only for non-void method.
@@ -85,14 +85,14 @@ namespace Xpandables.Net5.Interception
         /// </summary>
         /// <param name="returnValue">The return value to be used.</param>
         /// <returns>The current instance with return value.</returns>
-        public IInvocation AddReturnValue(object? returnValue) => this.With(invocation => invocation.ReturnValue = returnValue);
+        public sealed IInvocation AddReturnValue(object? returnValue) => this.With(invocation => invocation.ReturnValue = returnValue);
 
         /// <summary>
         /// Sets the executed method elapsed time.
         /// </summary>
         /// <param name="elapsedTime">The method elapsed.</param>
         /// <returns>The current instance with the new elapsed time.</returns>
-        public IInvocation AddElapsedTime(TimeSpan elapsedTime) => this.With(invocation => invocation.ElapsedTime = elapsedTime);
+        public sealed IInvocation AddElapsedTime(TimeSpan elapsedTime) => this.With(invocation => invocation.ElapsedTime = elapsedTime);
 
         /// <summary>
         /// Executes the underlying method.
