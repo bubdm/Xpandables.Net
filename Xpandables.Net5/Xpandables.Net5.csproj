@@ -35,11 +35,19 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <WarningsAsErrors />
     <NoWarn>1701;1702;</NoWarn>
+    <OutputPath>bin\x64\Debug\net5.0\</OutputPath>
+    <DocumentationFile>bin\x64\Debug\net5.0\Xpandables.Net5.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <WarningsAsErrors />
     <NoWarn>1701;1702;</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <OutputPath>bin\x64\Release\net5.0\</OutputPath>
+    <DocumentationFile>bin\x64\Release\net5.0\Xpandables.Net5.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

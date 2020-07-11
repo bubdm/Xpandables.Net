@@ -22,7 +22,7 @@ using System.Globalization;
 namespace Xpandables.Net5
 {
     /// <summary>
-    /// Provides a type converter to convert <see cref="RangeValue{T}"/> objects to and from various other representations.
+    /// Provides a type converter to convert <see cref="ValueRange{TValue}"/> objects to and from various other representations.
     /// </summary>
     public sealed class ValueRangeConverter : TypeConverter
     {

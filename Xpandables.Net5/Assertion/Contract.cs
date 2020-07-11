@@ -20,6 +20,8 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
+using Xpandables.Net5.Cryptography;
+
 namespace Xpandables.Net5.Assertion
 {
     /// <summary>
@@ -204,7 +206,7 @@ namespace Xpandables.Net5.Assertion
         public static bool operator !=(Contract<TValue> left, Contract<TValue> right) => !(left == right);
 
         /// <summary>
-        /// Compares <see cref="EncryptedValue"/> with the value.
+        /// Compares <see cref="ValueEncrypted"/> with the value.
         /// </summary>
         /// <param name="other">Option to compare with.</param>
         public bool Equals(Contract<TValue> other)

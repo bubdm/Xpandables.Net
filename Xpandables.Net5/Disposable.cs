@@ -90,7 +90,7 @@ namespace Xpandables.Net5
         /// </param>
         /// <remarks>
         /// <list type="bulle ted">
-        /// <see cref="DisposeAsync(bool)(bool)"/> executes in two distinct scenarios.
+        /// <see cref="DisposeAsync(bool)"/> executes in two distinct scenarios.
         /// <item>If <paramref name="disposing"/> equals <c>true</c>, the method has been called directly
         /// or indirectly by a user's code. Managed and unmanaged resources can be disposed.</item>
         /// <item>If <paramref name="disposing"/> equals <c>false</c>, the method has been called
