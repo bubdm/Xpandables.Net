@@ -8,28 +8,28 @@
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
-    <Product>Xpandables.Net5 @ 2020</Product>
-    <Description>A utility library in .Net5.0  to easily add patterns such as Command, Query, Dispatcher, Interception...</Description>
+    <Product>Xpandables.Net5.HttpRest @ 2020</Product>
+    <Description>A utility library in .Net5.0 to add Http Rest features to Xpandables.Net5.</Description>
     <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
     <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
-    <title>Xpandables.Net5</title>
+    <title>Xpandables.Net5.HttpRest</title>
     <PackageIcon>Xpandables.png</PackageIcon>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
     <PackageVersion>1.0.0-preview</PackageVersion>
-    <PackageId>Xpandables.Net5</PackageId>
-    <PackageTags>ICommand, IDispatcher, IQuery{TResult}, Enumeration, Interception, ICommandHandler{TCommand}, IQueryHandler{TQuery, TResult}, ValueObject...</PackageTags>
+    <PackageId>Xpandables.Net5.HttpRest</PackageId>
+    <PackageTags>IHttpRestClient, IHttpRestClientHandler.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>Add contracts.</PackageReleaseNotes>
+    <PackageReleaseNotes>Initializes project.</PackageReleaseNotes>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AssemblyName>Xpandables.Net5</AssemblyName>
-    <RootNamespace>Xpandables.Net5</RootNamespace>
+    <AssemblyName>Xpandables.Net5.HttpRest</AssemblyName>
+    <RootNamespace>Xpandables.Net5.HttpRest</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <summary>A utility library in .Net to easily add patterns such as Command, Query, Dispatcher, Interception...</summary>
+    <summary>A utility library in .Net to add Http Rest features to Xpandables.Net5.</summary>
     <language>en-GB</language>
 
   </PropertyGroup>
@@ -38,7 +38,7 @@
     <WarningsAsErrors />
     <NoWarn>1701;1702;</NoWarn>
     <OutputPath>bin\x64\Debug\net5.0\</OutputPath>
-    <DocumentationFile>bin\x64\Debug\net5.0\Xpandables.Net5.xml</DocumentationFile>
+    <DocumentationFile>bin\x64\Debug\net5.0\Xpandables.Net5.HttpRest.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
@@ -47,7 +47,7 @@
     <NoWarn>1701;1702;</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <OutputPath>bin\x64\Release\net5.0\</OutputPath>
-    <DocumentationFile>bin\x64\Release\net5.0\Xpandables.Net5.xml</DocumentationFile>
+    <DocumentationFile>bin\x64\Release\net5.0\Xpandables.Net5.HttpRest.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -55,10 +55,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0-preview.6.20305.6" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="5.0.0-preview.3-runtime.20214.6" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0-preview.6.20305.6" />
-    <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0-preview.6.20305.6" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,5 +63,6 @@
       <Pack>True</Pack>
     </None>
   </ItemGroup>
-  
+
+
 </Project>
