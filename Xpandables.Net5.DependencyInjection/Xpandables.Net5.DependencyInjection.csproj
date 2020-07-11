@@ -70,9 +70,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Xpandables.Net5\Xpandables.Net5.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Notifications\" />
-  </ItemGroup>
   
 </Project>
