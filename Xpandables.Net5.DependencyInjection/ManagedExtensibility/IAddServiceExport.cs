@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Xpandables.Net5.DependencyInjection.ManagedExtensibility
+namespace Xpandables.Net5.DependencyInjection
 {
     /// <summary>
     /// Provides with an interface that allows external libraries to register types to the services collection.

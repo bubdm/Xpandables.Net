@@ -21,9 +21,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Reflection;
 
-using Xpandables.Net5.DependencyInjection.ManagedExtensibility;
-
-namespace Xpandables.Standard.ManagedExtensibility
+namespace Xpandables.Net5.DependencyInjection.ManagedExtensibility
 {
     /// <summary>
     /// Provides with methods for building application object using the Managed Extensibility Framework (MEF).

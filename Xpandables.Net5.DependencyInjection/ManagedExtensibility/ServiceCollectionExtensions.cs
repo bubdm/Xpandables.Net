@@ -15,6 +15,8 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using Microsoft.Extensions.DependencyInjection;
+
 using System;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
@@ -22,10 +24,9 @@ using System.Linq;
 using System.Reflection;
 
 using Xpandables.Net5.DependencyInjection.ManagedExtensibility;
-using Xpandables.Standard.ManagedExtensibility;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace
-namespace Microsoft.Extensions.DependencyInjection
+namespace Xpandables.Net5.DependencyInjection
 #pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
