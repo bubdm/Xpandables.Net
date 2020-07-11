@@ -26,7 +26,7 @@ namespace Xpandables.Net5.DependencyInjection
     /// <summary>
     /// Provides method to register correlation collection.
     /// </summary>
-    public static class CreatorServiceCollection
+    public static partial class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds the default <see cref="IInstanceCreator"/> implementation to the services with singleton life time.
