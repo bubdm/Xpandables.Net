@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Xpandables.Net5.Assertion
 {
@@ -50,15 +51,15 @@ namespace Xpandables.Net5.Assertion
         public static Contract<TValue> WhenNotNull<TValue>(this TValue @this, string thisExpression)
             => new Contract<TValue>(@this, value => value is null, thisExpression);
 
-        /// <summary>
-        /// Checks whether the target string is null, empty, or consists only of white-space characters.
-        /// </summary>
-        /// <param name="this">The actual string.</param>
-        /// <param name="thisExpression">The parameter name.</param>
-        /// <returns>An instance of <see cref="Contract{TValue}"/> where TValue is <see cref="string"/>.</returns>
-        /// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
-        public static Contract<string> WhenNull(this string @this, string thisExpression)
-            => new Contract<string>(@this, value => !string.IsNullOrWhiteSpace(value), thisExpression);
+        ///// <summary>
+        ///// Checks whether the target string is null, empty, or consists only of white-space characters.
+        ///// </summary>
+        ///// <param name="this">The actual string.</param>
+        ///// <param name="thisExpression">The parameter name.</param>
+        ///// <returns>An instance of <see cref="Contract{TValue}"/> where TValue is <see cref="string"/>.</returns>
+        ///// <exception cref="ContractException">The <paramref name="thisExpression"/> is null.</exception>
+        //public static Contract<string> WhenNull([AllowNull] this string @this, string thisExpression)
+        //    => new Contract<string>(@this, value => !string.IsNullOrWhiteSpace(value), thisExpression);
 
         /// <summary>
         /// Returns a <see cref="Contract{TValue}"/> that will check whether the condition is <see langword="true"/>.
