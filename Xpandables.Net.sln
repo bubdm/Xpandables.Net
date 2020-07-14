@@ -17,7 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.ManagedExte
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.EntityFramework", "Xpandables.Net5.EntityFramework\Xpandables.Net5.EntityFramework.csproj", "{787AD5C3-D3E5-4C60-A430-6DC2A4096308}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net5.QrCodes", "Xpandables.Net5.QrCodes\Xpandables.Net5.QrCodes.csproj", "{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.QrCodes", "Xpandables.Net5.QrCodes\Xpandables.Net5.QrCodes.csproj", "{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{9F34FE6E-CFC8-4EA3-A70B-2CC2A57157F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Samples.Api", "Xpandables.Samples.Api\Xpandables.Samples.Api.csproj", "{E88EBD97-503E-4BDA-ADB7-6D685B0424FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net5.AspNetCore", "Xpandables.Net5.AspNetCore\Xpandables.Net5.AspNetCore.csproj", "{9C07FFAF-B914-4C49-8D08-0C202B1397A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,12 +86,29 @@ Global
 		{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}.Release|x64.ActiveCfg = Release|x64
 		{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}.Release|x64.Build.0 = Release|x64
+		{E88EBD97-503E-4BDA-ADB7-6D685B0424FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E88EBD97-503E-4BDA-ADB7-6D685B0424FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E88EBD97-503E-4BDA-ADB7-6D685B0424FA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E88EBD97-503E-4BDA-ADB7-6D685B0424FA}.Debug|x64.Build.0 = Debug|Any CPU
+		{E88EBD97-503E-4BDA-ADB7-6D685B0424FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E88EBD97-503E-4BDA-ADB7-6D685B0424FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E88EBD97-503E-4BDA-ADB7-6D685B0424FA}.Release|x64.ActiveCfg = Release|Any CPU
+		{E88EBD97-503E-4BDA-ADB7-6D685B0424FA}.Release|x64.Build.0 = Release|Any CPU
+		{9C07FFAF-B914-4C49-8D08-0C202B1397A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C07FFAF-B914-4C49-8D08-0C202B1397A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C07FFAF-B914-4C49-8D08-0C202B1397A2}.Debug|x64.ActiveCfg = Debug|x64
+		{9C07FFAF-B914-4C49-8D08-0C202B1397A2}.Debug|x64.Build.0 = Debug|x64
+		{9C07FFAF-B914-4C49-8D08-0C202B1397A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C07FFAF-B914-4C49-8D08-0C202B1397A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C07FFAF-B914-4C49-8D08-0C202B1397A2}.Release|x64.ActiveCfg = Release|x64
+		{9C07FFAF-B914-4C49-8D08-0C202B1397A2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{51CC00AC-19F4-4C89-98CE-6685A20907A7} = {676B6AE2-5C2F-4FB2-A260-8B5EB6B2C3EE}
+		{E88EBD97-503E-4BDA-ADB7-6D685B0424FA} = {9F34FE6E-CFC8-4EA3-A70B-2CC2A57157F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DCC3F35D-6D3F-4001-B46B-E264E1185A6E}

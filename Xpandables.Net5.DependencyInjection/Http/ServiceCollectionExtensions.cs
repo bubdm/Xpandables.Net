@@ -18,7 +18,9 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
+using System.Linq;
 
+using Xpandables.Net5.Helpers;
 using Xpandables.Net5.Http;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace
@@ -30,6 +32,32 @@ namespace Xpandables.Net5.DependencyInjection
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
+        const string HttpHeaderAccessorAssemblyName = "Xpandables.Net5.AspNetCore.dll";
+        const string HttpHeaderAccessorName = "HttpHeaderAccessor";
+
+        /// <summary>
+        /// Adds the default HTTP request header values accessor that implements the <see cref="IHttpHeaderAccessor"/> from assembly.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXHttpHeaderAccessorExtended(this IServiceCollection services)
+        {
+            if (HttpHeaderAccessorAssemblyName.TryLoadAssembly(out var assembly, out var exception))
+            {
+                var httpHeaderAccessor = assembly
+                    .GetExportedTypes()
+                    .First(type => type.Name.Equals(HttpHeaderAccessorName, StringComparison.InvariantCulture));
+
+                services.AddScoped(typeof(IHttpHeaderAccessor), httpHeaderAccessor);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Type not found : {HttpHeaderAccessorName}. Add reference to {HttpHeaderAccessorAssemblyName}", exception);
+            }
+
+            return services;
+        }
+
         /// <summary>
         /// Adds a delegate that will be used to provide the authorization token before request execution
         /// using an implementation of <see cref="IHttpTokenAccessor"/>. You can register the default implementation using

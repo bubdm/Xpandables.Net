@@ -71,6 +71,59 @@ namespace Xpandables.Net5.ManagedExtensibility
             }
         }
 
+        /// <summary>
+        /// Uses exports services matching the specified options with application builder and environment.
+        /// </summary>
+        /// <param name="applicationBuilder">The application builder to act on.</param>
+        /// <param name="webHostEnvironment">The web hosting environment instance.</param>
+        /// <param name="options">The export options.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="applicationBuilder"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="webHostEnvironment"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        public static void UseServiceExport(object applicationBuilder, object webHostEnvironment, ExportServiceOptions options)
+        {
+            _ = applicationBuilder ?? throw new ArgumentNullException(nameof(applicationBuilder));
+            _ = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
+            _ = options ?? throw new ArgumentNullException(nameof(options));
+            try
+            {
+                using var directoryCatalog = options.SearchSubDirectories
+                    ? new RecursiveDirectoryCatalog(options.Path, options.SearchPattern)
+                    : (ComposablePartCatalog)new DirectoryCatalog(options.Path, options.SearchPattern);
+
+                var importDefinition = BuildUseImportDefinition();
+
+                using var aggregateCatalog = new AggregateCatalog();
+                aggregateCatalog.Catalogs.Add(directoryCatalog);
+
+                using var compositionContainer = new CompositionContainer(aggregateCatalog);
+                var exportServices = compositionContainer
+                    .GetExports(importDefinition)
+                    .Select(def => def.Value)
+                    .OfType<IUseServiceExport>();
+
+                foreach (var export in exportServices)
+                    export.UseServices(applicationBuilder, webHostEnvironment);
+            }
+            catch (Exception exception) when (exception is NotSupportedException
+                                            || exception is System.IO.DirectoryNotFoundException
+                                            || exception is UnauthorizedAccessException
+                                            || exception is ArgumentException
+                                            || exception is System.IO.PathTooLongException
+                                            || exception is ReflectionTypeLoadException)
+            {
+                throw new InvalidOperationException("Using exports failed. See inner exception.", exception);
+            }
+        }
+
+        private static ImportDefinition BuildUseImportDefinition()
+            => new ImportDefinition(
+                    _ => true,
+                    typeof(IUseServiceExport).FullName,
+                    ImportCardinality.ZeroOrMore,
+                    false,
+                    false);
+
         private static ImportDefinition BuildAddImportDefinition()
             => new ImportDefinition(
                     _ => true,

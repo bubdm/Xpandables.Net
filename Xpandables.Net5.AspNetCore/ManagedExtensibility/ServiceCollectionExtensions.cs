@@ -15,7 +15,8 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 
 using System;
 using System.Linq;
@@ -35,35 +36,38 @@ namespace Xpandables.Net5.DependencyInjection
     {
         const string ExportServiceRegisterAssemblyName = "Xpandables.Net5.ManagedExtensibility.dll";
         const string ExportServiceRegisterName = "ExportServiceRegister";
-        const string AddServiceMethodName = "AddServiceExport";
+        const string UseServiceMethodName = "UseServiceExport";
 
         /// <summary>
-        /// Adds and configures registration of services using the <see cref="IAddServiceExport"/> implementations found in the current application path.
+        /// Adds and configures application services using the<see cref="IUseServiceExport"/> implementations found in the current application path.
         /// This method is used with MEF : Managed Extensibility Framework.
         /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <param name="application">The collection of services.</param>
+        /// <param name="environment">The web hosting environment instance.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="application"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public static IServiceCollection AddXServiceExport(this IServiceCollection services)
+        public static IApplicationBuilder UseXServiceExport(this IApplicationBuilder application, IWebHostEnvironment environment)
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
-            services.AddXServiceExport(_ => { });
-            return services;
+            if (application is null) throw new ArgumentNullException(nameof(application));
+            return application.UseXServiceExport(environment, _ => { });
         }
 
         /// <summary>
-        /// Adds and configures registration of services using the<see cref="IAddServiceExport"/> implementations found in the path.
+        /// Adds and configures application services using the<see cref="IUseServiceExport"/> implementations found in the path.
         /// This method is used with MEF : Managed Extensibility Framework.
         /// </summary>
-        /// <param name="services">The collection of services.</param>
+        /// <param name="application">The application builder instance.</param>
+        /// <param name="environment">The </param>
         /// <param name="configureOptions">A delegate to configure the <see cref="ExportServiceOptions"/>.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="application"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="environment"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="configureOptions"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public static IServiceCollection AddXServiceExport(
-            this IServiceCollection services, Action<ExportServiceOptions> configureOptions)
+        public static IApplicationBuilder UseXServiceExport(
+            this IApplicationBuilder application, IWebHostEnvironment environment, Action<ExportServiceOptions> configureOptions)
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
+            if (application is null) throw new ArgumentNullException(nameof(application));
+            if (environment == null) throw new ArgumentNullException(nameof(environment));
             if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
 
             var definedOptions = new ExportServiceOptions();
@@ -79,14 +83,14 @@ namespace Xpandables.Net5.DependencyInjection
                     .TryTypeInvokeMember(
                         out _,
                         out var ex,
-                        AddServiceMethodName,
+                        UseServiceMethodName,
                         BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod,
                         default,
                         exportServiceRegister,
-                        new object[] { services, definedOptions }))
-                    return services;
+                        new object[] { application, environment, definedOptions }))
+                    return application;
 
-                throw new InvalidOperationException($"{ExportServiceRegisterName}.{AddServiceMethodName} execution failed.", ex);
+                throw new InvalidOperationException($"{ExportServiceRegisterName}.{UseServiceMethodName} execution failed.", ex);
             }
             else
             {
