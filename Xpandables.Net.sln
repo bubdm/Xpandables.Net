@@ -11,7 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.Tests", "Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.DependencyInjection", "Xpandables.Net5.DependencyInjection\Xpandables.Net5.DependencyInjection.csproj", "{D618FD69-E82E-4E23-80D5-A69AC2B0B452}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net5.HttpRest", "Xpandables.Net5.HttpRest\Xpandables.Net5.HttpRest.csproj", "{42314DD4-3B24-46B4-A4B5-C63C769C23E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.HttpRestClient", "Xpandables.Net5.HttpRestClient\Xpandables.Net5.HttpRestClient.csproj", "{42314DD4-3B24-46B4-A4B5-C63C769C23E3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.ManagedExtensibility", "Xpandables.Net5.ManagedExtensibility\Xpandables.Net5.ManagedExtensibility.csproj", "{31451F32-9222-4420-A218-34873719684A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.EntityFramework", "Xpandables.Net5.EntityFramework\Xpandables.Net5.EntityFramework.csproj", "{787AD5C3-D3E5-4C60-A430-6DC2A4096308}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net5.QrCodes", "Xpandables.Net5.QrCodes\Xpandables.Net5.QrCodes.csproj", "{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +56,30 @@ Global
 		{42314DD4-3B24-46B4-A4B5-C63C769C23E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{42314DD4-3B24-46B4-A4B5-C63C769C23E3}.Release|x64.ActiveCfg = Release|x64
 		{42314DD4-3B24-46B4-A4B5-C63C769C23E3}.Release|x64.Build.0 = Release|x64
+		{31451F32-9222-4420-A218-34873719684A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31451F32-9222-4420-A218-34873719684A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31451F32-9222-4420-A218-34873719684A}.Debug|x64.ActiveCfg = Debug|x64
+		{31451F32-9222-4420-A218-34873719684A}.Debug|x64.Build.0 = Debug|x64
+		{31451F32-9222-4420-A218-34873719684A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31451F32-9222-4420-A218-34873719684A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31451F32-9222-4420-A218-34873719684A}.Release|x64.ActiveCfg = Release|x64
+		{31451F32-9222-4420-A218-34873719684A}.Release|x64.Build.0 = Release|x64
+		{787AD5C3-D3E5-4C60-A430-6DC2A4096308}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{787AD5C3-D3E5-4C60-A430-6DC2A4096308}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{787AD5C3-D3E5-4C60-A430-6DC2A4096308}.Debug|x64.ActiveCfg = Debug|x64
+		{787AD5C3-D3E5-4C60-A430-6DC2A4096308}.Debug|x64.Build.0 = Debug|x64
+		{787AD5C3-D3E5-4C60-A430-6DC2A4096308}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{787AD5C3-D3E5-4C60-A430-6DC2A4096308}.Release|Any CPU.Build.0 = Release|Any CPU
+		{787AD5C3-D3E5-4C60-A430-6DC2A4096308}.Release|x64.ActiveCfg = Release|x64
+		{787AD5C3-D3E5-4C60-A430-6DC2A4096308}.Release|x64.Build.0 = Release|x64
+		{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}.Debug|x64.ActiveCfg = Debug|x64
+		{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}.Debug|x64.Build.0 = Debug|x64
+		{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}.Release|x64.ActiveCfg = Release|x64
+		{06C6F432-BDB1-4464-A37B-FA1CA80A1F6E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

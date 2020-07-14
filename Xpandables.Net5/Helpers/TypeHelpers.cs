@@ -171,7 +171,7 @@ namespace Xpandables.Net5.Helpers
         /// <exception cref="ArgumentNullException">The <paramref name="memberName"/> is null.</exception>
         public static bool TryTypeInvokeMember(
             this Type type,
-            [MaybeNullWhen(returnValue: false)] out object result,
+            [MaybeNull] out object result,
             [MaybeNullWhen(returnValue: true)] out Exception invokeException,
             string memberName,
             BindingFlags invokeAttr,
@@ -186,11 +186,6 @@ namespace Xpandables.Net5.Helpers
             {
                 invokeException = default;
                 result = type.InvokeMember(memberName, invokeAttr, binder, target, args, CultureInfo.InvariantCulture);
-                if (result is null)
-                {
-                    invokeException = new ArgumentNullException(nameof(result), "No result !");
-                    return false;
-                }
 
                 return true;
             }

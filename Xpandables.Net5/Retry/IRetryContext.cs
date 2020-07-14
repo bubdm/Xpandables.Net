@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using System;
 
-using Xpandables.Net5.Assertion;
 using Xpandables.Net5.Helpers;
 
 namespace Xpandables.Net5.Retry
@@ -52,10 +51,10 @@ namespace Xpandables.Net5.Retry
         /// </summary>
         /// <param name="timeInterval">The new value.</param>
         /// <returns>The instance with the new time interval.</returns>
-        /// <exception cref="ArgumentException">The <paramref name="timeInterval"/> must be greater or equal to zero.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="timeInterval"/> must be greater or equal to zero.</exception>
         public sealed IRetryContext UpdateTimeInterval(TimeSpan timeInterval)
         {
-            TimeInterval = timeInterval.WhenNotGreaterThan(TimeSpan.FromMilliseconds(0), nameof(timeInterval)).ThrowArgumentOutOfRangeException();
+            TimeInterval = timeInterval.TotalSeconds >= 0 ? timeInterval : throw new ArgumentNullException(nameof(timeInterval));
             return this;
         }
 

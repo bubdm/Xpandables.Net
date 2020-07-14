@@ -20,12 +20,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net5.Helpers;
 using Xpandables.Net5.Optionals;
 
 namespace Xpandables.Net5.Helpers
@@ -67,11 +65,11 @@ namespace Xpandables.Net5.Helpers
         /// <returns>A new <see cref="ReadOnlyCollection{T}"/></returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public static IReadOnlyCollection<TSource> ToReadOnlyCollection<TSource>(this IEnumerable<TSource> source)
-        {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-
-            return new ReadOnlyCollectionBuilder<TSource>(source).ToReadOnlyCollection();
-        }
+            => source switch
+            {
+                null => throw new ArgumentNullException(nameof(source)),
+                _ => new ReadOnlyCollectionBuilder<TSource>(source).ToReadOnlyCollection()
+            };
 
         /// <summary>
         /// Returns the elements of the specified sequence or the value from the producer in a singleton
@@ -84,13 +82,13 @@ namespace Xpandables.Net5.Helpers
         /// otherwise, sourceProducer value.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="sourceProducer"/> is null.</exception>
-        public static IEnumerable<TSource> DefaultIfEmpty<TSource>(this IEnumerable<TSource> source, Func<TSource> sourceProducer)
-        {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (sourceProducer is null) throw new ArgumentNullException(nameof(sourceProducer));
-
-            return source.DefaultIfEmpty(sourceProducer());
-        }
+        public static IEnumerable<TSource> DefaultIfEmpty<TSource>(this IEnumerable<TSource> source, TSource sourceProducer)
+            => (source, sourceProducer) switch
+            {
+                (_, null) => throw new ArgumentNullException(nameof(sourceProducer)),
+                (null, _) => throw new ArgumentNullException(nameof(source)),
+                ({ }, { }) => source.DefaultIfEmpty(sourceProducer)
+            };
 
         /// <summary>
         /// Enumerates the collection source and performs the specified action on each element.
@@ -144,10 +142,11 @@ namespace Xpandables.Net5.Helpers
         /// <returns>The first element from the sequence or an empty result if the sequence contains no elements.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public static Optional<TSource> FirstOrEmpty<TSource>(this IEnumerable<TSource> source)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            return source.FirstOrDefault() is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty();
-        }
+            => source switch
+            {
+                null => throw new ArgumentNullException(nameof(source)),
+                _ => source.FirstOrDefault() is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
+            };
 
         /// <summary>
         /// Returns the first element of the sequence that satisfies the predicate or an empty optional if no such element is found.
@@ -158,13 +157,13 @@ namespace Xpandables.Net5.Helpers
         /// <returns>The first element that satisfies the predicate or an empty optional.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
-        public static Optional<TSource> FirstOrEmpty<TSource>(this IEnumerable<TSource> source, Expression<Func<TSource, bool>> predicate)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            _ = predicate ?? throw new ArgumentNullException(nameof(predicate));
-
-            return source.FirstOrDefault(predicate.Compile()) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty();
-        }
+        public static Optional<TSource> FirstOrEmpty<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+             => (source, predicate) switch
+             {
+                 (_, null) => throw new ArgumentNullException(nameof(predicate)),
+                 (null, _) => throw new ArgumentNullException(nameof(source)),
+                 ({ }, { }) => source.FirstOrDefault(predicate) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
+             };
 
         /// <summary>
         /// Returns the last elements of a sequence or an empty optional if the sequence contains no elements.
@@ -174,10 +173,11 @@ namespace Xpandables.Net5.Helpers
         /// <returns>The last element from the sequence or an empty result if the sequence contains no elements.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public static Optional<TSource> LastOrEmpty<TSource>(this IEnumerable<TSource> source)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            return source.LastOrDefault() is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty();
-        }
+            => source switch
+            {
+                null => throw new ArgumentNullException(nameof(source)),
+                _ => source.LastOrDefault() is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
+            };
 
         /// <summary>
         /// Returns the last element of the sequence that satisfies the predicate or an empty optional if no such element is found.
@@ -188,13 +188,13 @@ namespace Xpandables.Net5.Helpers
         /// <returns>The last element that satisfies the predicate or an empty optional.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
-        public static Optional<TSource> LastOrEmpty<TSource>(this IEnumerable<TSource> source, Expression<Func<TSource, bool>> predicate)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            _ = predicate ?? throw new ArgumentNullException(nameof(predicate));
-
-            return source.LastOrDefault(predicate.Compile()) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty();
-        }
+        public static Optional<TSource> LastOrEmpty<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+            => (source, predicate) switch
+            {
+                (_, null) => throw new ArgumentNullException(nameof(predicate)),
+                (null, _) => throw new ArgumentNullException(nameof(source)),
+                ({ }, { }) => source.LastOrDefault(predicate) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
+            };
 
         /// <summary>
         /// Returns the element at the specified index in a sequence or an empty optional if the index is out of range
@@ -204,9 +204,10 @@ namespace Xpandables.Net5.Helpers
         /// <param name="index">The zero-based index of the element to retrieve.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public static Optional<TSource> ElementAtOrEmpty<TSource>(this IEnumerable<TSource> source, int index)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            return source.ElementAtOrDefault(index) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty();
-        }
+            => source switch
+            {
+                null => throw new ArgumentNullException(nameof(source)),
+                _ => source.ElementAtOrDefault(index) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
+            };
     }
 }

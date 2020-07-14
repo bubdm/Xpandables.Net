@@ -17,8 +17,6 @@
 
 using System;
 
-using Xpandables.Net5.Assertion;
-
 namespace Xpandables.Net5.Retry
 {
     /// <summary>
@@ -48,8 +46,8 @@ namespace Xpandables.Net5.Retry
         internal RetryContext(Exception exception, TimeSpan timeInterval, int retryCount)
         {
             _exception = exception ?? throw new ArgumentNullException(nameof(exception));
-            _timeSpan = timeInterval.WhenNotGreaterThan(TimeSpan.FromMilliseconds(0), nameof(timeInterval)).ThrowArgumentOutOfRangeException();
-            _retryCount = retryCount.WhenNotGreaterThan(0, nameof(retryCount)).ThrowArgumentOutOfRangeException();
+            _timeSpan = timeInterval.TotalSeconds >= 0 ? timeInterval : throw new ArgumentOutOfRangeException(nameof(timeInterval));
+            _retryCount = retryCount > 0 ? retryCount : throw new ArgumentOutOfRangeException(nameof(retryCount));
         }
     }
 }

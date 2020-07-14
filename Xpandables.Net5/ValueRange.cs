@@ -29,68 +29,15 @@ namespace Xpandables.Net5
     [Serializable]
     [DebuggerDisplay("Min = {Min} : Max = {Max}")]
     [TypeConverter(typeof(ValueRangeConverter))]
-    public readonly struct ValueRange<TValue> : IEquatable<ValueRange<TValue>>
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public sealed record ValueRange<TValue>(TValue Min, TValue Max)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         where TValue : unmanaged, IComparable, IFormattable, IConvertible, IComparable<TValue>, IEquatable<TValue>
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="ValueRange{TValue}"/> with the specified values.
-        /// </summary>
-        /// <param name="min">The minimal value of range.</param>
-        /// <param name="max">The maximal value of range.</param>
-        public ValueRange(TValue min, TValue max) => (Min, Max) = (min, max);
-
-        /// <summary>
-        /// Provides with deconstruction for <see cref="ValueRange{T}"/>.
-        /// </summary>
-        /// <param name="min">The output minimal value of range.</param>
-        /// <param name="max">The output maximal value of range.</param>
-        public void Deconstruct(out TValue min, out TValue max) => (min, max) = (Min, Max);
-
-        /// <summary>
-        /// Gets the minimal value of range.
-        /// </summary>
-        public readonly TValue Min { get; }
-
-        /// <summary>
-        /// Gets the maximal value of range.
-        /// </summary>
-        public readonly TValue Max { get; }
-
-        /// <summary>
-        /// Compares the <see cref="ValueRange{T}"/> with other object.
-        /// </summary>
-        /// <param name="obj">Object to compare with.</param>
-        public override bool Equals(object? obj) => obj is ValueRange<TValue> signedValues && this == signedValues;
-
-        /// <summary>
-        /// Computes the hash-code for the <see cref="ValueRange{T}"/> instance.
-        /// </summary>
-        public readonly override int GetHashCode() => Min.GetHashCode() ^ Max.GetHashCode();
-
-        /// <summary>
-        /// Applies equality operator.
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        public static bool operator ==(ValueRange<TValue> left, ValueRange<TValue> right) => left.Equals(right);
-
-        /// <summary>
-        /// Applies non equality operator.
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        public static bool operator !=(ValueRange<TValue> left, ValueRange<TValue> right) => !(left == right);
-
-        /// <summary>
-        /// Compares <see cref="ValueRange{T}"/> with the value of type <typeparamref name="TValue"/>.
-        /// </summary>
-        /// <param name="other">Option to compare with.</param>
-        public bool Equals(ValueRange<TValue> other) => Min.Equals(other.Min) && Max.Equals(other.Max);
-
-        /// <summary>
         /// Creates a string representation of the <see cref="ValueRange{T}"/> separated by ":".
         /// </summary>
-        public readonly override string ToString() => $"{Min}:{Max}";
+        public override string ToString() => $"{Min}:{Max}";
 
         /// <summary>
         /// Creates a string representation of the <see cref="ValueRange{T}"/> using the specified format and provider.
@@ -101,13 +48,13 @@ namespace Xpandables.Net5
         /// <exception cref="ArgumentNullException">The <paramref name="formatProvider"/> is null.</exception>
         /// <exception cref="FormatException">The <paramref name="format"/> is invalid or
         /// the index of a format item is not zero or one.</exception>
-        public readonly string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string format, IFormatProvider formatProvider)
             => string.Format(formatProvider, format, Min, Max);
 
         /// <summary>
         /// Determines whether this range is empty or not.
         /// Returns <see langword="true"/> if so, otherwise returns <see langword="false"/>.
         /// </summary>
-        public readonly bool IsEmpty() => Min.CompareTo(Max) >= 0;
+        public bool IsEmpty() => Min.CompareTo(Max) >= 0;
     }
 }

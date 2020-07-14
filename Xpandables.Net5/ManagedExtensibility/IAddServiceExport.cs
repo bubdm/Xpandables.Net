@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +14,13 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Xpandables.Net5.DependencyInjection
+namespace Xpandables.Net5.ManagedExtensibility
 {
     /// <summary>
     /// Provides with an interface that allows external libraries to register types to the services collection.
     /// This interface is used with MEF : Managed Extensibility Framework.
-    /// The implementation class must be decorated with the attribute <see cref="System.ComponentModel.Composition.ExportAttribute"/>
+    /// The implementation class must be decorated with the attribute <see langword="System.ComponentModel.Composition.ExportAttribute"/>
     /// with the type of <see cref="IAddServiceExport"/> as contract type.
     /// </summary>
     public interface IAddServiceExport
@@ -31,6 +29,6 @@ namespace Xpandables.Net5.DependencyInjection
         /// When implemented, this method should add types to the services collection.
         /// </summary>
         /// <param name="services">The services collection to act on.</param>
-        void AddServices(IServiceCollection services);
+        void AddServices(object services);
     }
 }

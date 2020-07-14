@@ -77,21 +77,6 @@ namespace Xpandables.Net5.Cryptography
 
             IStringCryptography cryptography = new StringCryptography(new StringGenerator());
             return cryptography.Encrypt(source, default, default);
-        }
-
-        /// <summary>
-        /// Compares the encrypted value with the specified one.
-        /// Returns <see langword="true"/> if equality otherwise <see langword="false"/>.
-        /// </summary>
-        /// <param name="encrypted">The encrypted value.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
-        public static bool IsEqualTo(this ValueEncrypted encrypted, string value)
-        {
-            if (value is null) throw new ArgumentNullException(nameof(value));
-
-            IStringCryptography cryptography = new StringCryptography(new StringGenerator());
-            return cryptography.AreEqual(encrypted, value);
-        }
+        }     
     }
 }

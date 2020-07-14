@@ -31,24 +31,27 @@ namespace Xpandables.Net5.ValidatorRules
     /// of <see cref="IValidatorRule{TArgument}"/> or <see cref="ValidatorRule{TArgument}"/> for validation.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
-    public sealed class CommandValidatorBehavior<TCommand> : ICommandHandler<TCommand>
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public sealed record CommandValidatorBehavior<TCommand>(ICommandHandler<TCommand> decoratee, ICompositeValidatorRule<TCommand> validator)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        : ICommandHandler<TCommand>
         where TCommand : class, ICommand, IBehaviorValidation
     {
-        private readonly ICommandHandler<TCommand> _decoratee;
-        private readonly ICompositeValidatorRule<TCommand> _validator;
+        //private readonly ICommandHandler<TCommand> _decoratee;
+        //private readonly ICompositeValidatorRule<TCommand> _validator;
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="CommandValidatorBehavior{TCommand}"/>.
-        /// </summary>
-        /// <param name="decoratee">The decorated command handler.</param>
-        /// <param name="validator">The validator instance.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
-        public CommandValidatorBehavior(ICommandHandler<TCommand> decoratee, ICompositeValidatorRule<TCommand> validator)
-        {
-            _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
-        }
+        ///// <summary>
+        ///// Initializes a new instance of <see cref="CommandValidatorBehavior{TCommand}"/>.
+        ///// </summary>
+        ///// <param name="decoratee">The decorated command handler.</param>
+        ///// <param name="validator">The validator instance.</param>
+        ///// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+        ///// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
+        //public CommandValidatorBehavior(ICommandHandler<TCommand> decoratee, ICompositeValidatorRule<TCommand> validator)
+        //{
+        //    _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
+        //    _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+        //}
 
         /// <summary>
         /// Asynchronously handle the specified command.
@@ -58,8 +61,8 @@ namespace Xpandables.Net5.ValidatorRules
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
         public async Task HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
-            await _validator.ValidateAsync(command).ConfigureAwait(false);
-            await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            await validator.ValidateAsync(command).ConfigureAwait(false);
+            await decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
         }
     }
 }

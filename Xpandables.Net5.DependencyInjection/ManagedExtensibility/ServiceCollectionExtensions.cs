@@ -18,12 +18,11 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
-using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using System.Reflection;
 
-using Xpandables.Net5.DependencyInjection.ManagedExtensibility;
+using Xpandables.Net5.Helpers;
+using Xpandables.Net5.ManagedExtensibility;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net5.DependencyInjection
@@ -34,6 +33,10 @@ namespace Xpandables.Net5.DependencyInjection
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
+        const string ExportServiceRegisterAssemblyName = "Xpandables.Net5.ManagedExtensibility.dll";
+        const string ExportServiceRegisterName = "ExportServiceRegister";
+        const string AddServiceMethodName = "AddServiceExport";
+
         /// <summary>
         /// Adds and configures registration of services using the <see cref="IAddServiceExport"/> implementations found in the current application path.
         /// This method is used with MEF : Managed Extensibility Framework.
@@ -65,50 +68,32 @@ namespace Xpandables.Net5.DependencyInjection
 
             var definedOptions = new ExportServiceOptions();
             configureOptions.Invoke(definedOptions);
-            services.AddServiceExport(definedOptions);
 
-            return services;
-        }
-
-        private static void AddServiceExport(this IServiceCollection services, ExportServiceOptions options)
-        {
-            try
+            if (ExportServiceRegisterAssemblyName.TryLoadAssembly(out var assembly, out var exception))
             {
-                using var directoryCatalog = options.SearchSubDirectories
-                    ? new RecursiveDirectoryCatalog(options.Path, options.SearchPattern)
-                    : (ComposablePartCatalog)new DirectoryCatalog(options.Path, options.SearchPattern);
+                var exportServiceRegister = assembly
+                    .GetExportedTypes()
+                    .First(type => type.Name.Equals(ExportServiceRegisterName, StringComparison.InvariantCulture));
 
-                var importDefinition = BuildAddImportDefinition();
+                if (exportServiceRegister
+                    .TryTypeInvokeMember(
+                        out _,
+                        out var ex,
+                        AddServiceMethodName,
+                        BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod,
+                        default,
+                        exportServiceRegister,
+                        new object[] { services, definedOptions }))
+                    return services;
 
-                using var aggregateCatalog = new AggregateCatalog();
-                aggregateCatalog.Catalogs.Add(directoryCatalog);
-
-                using var compositionContainer = new CompositionContainer(aggregateCatalog);
-                var exportServices = compositionContainer
-                    .GetExports(importDefinition)
-                    .Select(def => def.Value)
-                    .OfType<IAddServiceExport>();
-
-                foreach (var export in exportServices)
-                    export.AddServices(services);
+                throw new InvalidOperationException($"{ExportServiceRegisterName} execution failed.", ex);
             }
-            catch (Exception exception) when (exception is NotSupportedException
-                                            || exception is System.IO.DirectoryNotFoundException
-                                            || exception is UnauthorizedAccessException
-                                            || exception is ArgumentException
-                                            || exception is System.IO.PathTooLongException
-                                            || exception is ReflectionTypeLoadException)
+            else
             {
-                throw new InvalidOperationException("Adding exports failed. See inner exception.", exception);
+                throw new InvalidOperationException(
+                    $"Type not found : {ExportServiceRegisterName}. Add reference to {ExportServiceRegisterAssemblyName}",
+                    exception);
             }
         }
-
-        private static ImportDefinition BuildAddImportDefinition()
-            => new ImportDefinition(
-                    _ => true,
-                    typeof(IAddServiceExport).FullName,
-                    ImportCardinality.ZeroOrMore,
-                    false,
-                    false);
     }
 }

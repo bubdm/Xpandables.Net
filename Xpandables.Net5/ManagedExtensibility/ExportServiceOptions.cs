@@ -18,7 +18,7 @@
 using System;
 using System.Reflection;
 
-namespace Xpandables.Net5.DependencyInjection.ManagedExtensibility
+namespace Xpandables.Net5.ManagedExtensibility
 {
     /// <summary>
     /// Defines options to configure export service.
