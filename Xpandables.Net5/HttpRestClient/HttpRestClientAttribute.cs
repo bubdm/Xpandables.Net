@@ -87,7 +87,7 @@ namespace Xpandables.Net5.HttpRestClient
         /// The default value is <see langword="false"/>.
         /// </summary>
         public bool IsNullable { get; set; }
-         
+
         /// <summary>
         /// Gets or sets the authorization scheme.
         /// The default value is "Bearer".

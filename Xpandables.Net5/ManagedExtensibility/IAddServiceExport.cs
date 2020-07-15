@@ -29,6 +29,7 @@ namespace Xpandables.Net5.ManagedExtensibility
         /// When implemented, this method should add types to the services collection.
         /// </summary>
         /// <param name="services">The services collection to act on.</param>
-        void AddServices(object services);
+        /// <param name="configuration">The application configuration.</param>
+        void AddServices(object services, object configuration);
     }
 }

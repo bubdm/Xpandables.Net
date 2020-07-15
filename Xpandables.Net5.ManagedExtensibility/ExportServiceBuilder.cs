@@ -74,57 +74,6 @@ namespace Xpandables.Net5.ManagedExtensibility
             {
                 throw new InvalidOperationException("Building exports failed. See inner exception.", exception);
             }
-        }
-
-        /// <summary>
-        /// Adds exports services matching the specified options.
-        /// </summary>
-        /// <param name="services">The service collection.</param>
-        /// <param name="options">The export options.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public static void AddServiceExport(object services, ExportServiceOptions options)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            _ = options ?? throw new ArgumentNullException(nameof(options));
-
-            try
-            {
-                using var directoryCatalog = options.SearchSubDirectories
-                    ? new RecursiveDirectoryCatalog(options.Path, options.SearchPattern)
-                    : (ComposablePartCatalog)new DirectoryCatalog(options.Path, options.SearchPattern);
-
-                var importDefinition = BuildAddImportDefinition();
-
-                using var aggregateCatalog = new AggregateCatalog();
-                aggregateCatalog.Catalogs.Add(directoryCatalog);
-
-                using var compositionContainer = new CompositionContainer(aggregateCatalog);
-                var exportServices = compositionContainer
-                    .GetExports(importDefinition)
-                    .Select(def => def.Value)
-                    .OfType<IAddServiceExport>();
-
-                foreach (var export in exportServices)
-                    export.AddServices(services);
-            }
-            catch (Exception exception) when (exception is NotSupportedException
-                                            || exception is System.IO.DirectoryNotFoundException
-                                            || exception is UnauthorizedAccessException
-                                            || exception is ArgumentException
-                                            || exception is System.IO.PathTooLongException
-                                            || exception is ReflectionTypeLoadException)
-            {
-                throw new InvalidOperationException("Adding exports failed. See inner exception.", exception);
-            }
-        }
-
-        private static ImportDefinition BuildAddImportDefinition()
-            => new ImportDefinition(
-                    _ => true,
-                    typeof(IAddServiceExport).FullName,
-                    ImportCardinality.ZeroOrMore,
-                    false,
-                    false);
+        } 
     }
 }

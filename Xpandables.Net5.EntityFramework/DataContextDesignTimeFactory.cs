@@ -56,7 +56,7 @@ namespace Xpandables.Net5.EntityFramework
 
             var services = new ServiceCollection();
             services.Configure<TDataContextSettings>(config.GetSection(typeof(TDataContextSettings).Name));
-            services.AddSingleton<InstanceCreator>();
+            services.AddSingleton<IInstanceCreator, InstanceCreator>();
             services.AddTransient<IDataContextProvider, TDataContextProvider>();
 
             using var serviceprovider = services.BuildServiceProvider();

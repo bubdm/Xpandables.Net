@@ -64,6 +64,7 @@ namespace Xpandables.Net5.EntityFramework
         {
             var options = GetDataContextOptions();
             var dataContext = (TDataContext)InstanceCreator.Create(typeof(TDataContext), options)!;
+
             if (DataContextSettings.EnsuredDeletedBefore && !dataContext.Database.EnsureDeleted())
                 throw new InvalidOperationException($"Unable to delete database before migration {dataContext.Database.ProviderName}");
 

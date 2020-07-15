@@ -137,12 +137,16 @@ namespace Xpandables.Net5.HttpRestClient
             {
                 if (httpResponse.Content is { })
                 {
-                    var result = await httpResponse.Content.ReadFromJsonAsync<TResult>().ConfigureAwait(false);
-                    return HttpRestClientResponse<TResult>
-                        .Success(result, httpResponse.StatusCode)
-                        .AddHeaders(GetHttpResponseHeaders(httpResponse))
-                        .AddVersion(httpResponse.Version)
-                        .AddReasonPhrase(httpResponse.ReasonPhrase);
+                    var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    if (stream is { })
+                    {
+                        var result = stream.DeserializeJsonFromStream<TResult>();// httpResponse.Content.ReadFromJsonAsync<TResult>().ConfigureAwait(false);
+                        return HttpRestClientResponse<TResult>
+                            .Success(result, httpResponse.StatusCode)
+                            .AddHeaders(GetHttpResponseHeaders(httpResponse))
+                            .AddVersion(httpResponse.Version)
+                            .AddReasonPhrase(httpResponse.ReasonPhrase);
+                    }
                 }
 
                 return HttpRestClientResponse<TResult>

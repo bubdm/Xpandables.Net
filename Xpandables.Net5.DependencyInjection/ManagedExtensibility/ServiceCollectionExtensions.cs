@@ -15,9 +15,11 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -38,30 +40,32 @@ namespace Xpandables.Net5.DependencyInjection
         const string AddServiceMethodName = "AddServiceExport";
 
         /// <summary>
-        /// Adds and configures registration of services using the <see cref="IAddServiceExport"/> implementations found in the current application path.
+        /// Adds and configures registration of services using the <see cref="IAddServiceExportExtended"/> implementations found in the current application path.
         /// This method is used with MEF : Managed Extensibility Framework.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <param name="configuration">The application configuration.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public static IServiceCollection AddXServiceExport(this IServiceCollection services)
+        public static IServiceCollection AddXServiceExport(this IServiceCollection services, IConfiguration configuration)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
-            services.AddXServiceExport(_ => { });
+            services.AddXServiceExport(configuration, _ => { });
             return services;
         }
 
         /// <summary>
-        /// Adds and configures registration of services using the<see cref="IAddServiceExport"/> implementations found in the path.
+        /// Adds and configures registration of services using the<see cref="IAddServiceExportExtended"/> implementations found in the path.
         /// This method is used with MEF : Managed Extensibility Framework.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <param name="configuration">The application configuration.</param>
         /// <param name="configureOptions">A delegate to configure the <see cref="ExportServiceOptions"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="configureOptions"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         public static IServiceCollection AddXServiceExport(
-            this IServiceCollection services, Action<ExportServiceOptions> configureOptions)
+            this IServiceCollection services, IConfiguration configuration, Action<ExportServiceOptions> configureOptions)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
             if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
@@ -69,7 +73,11 @@ namespace Xpandables.Net5.DependencyInjection
             var definedOptions = new ExportServiceOptions();
             configureOptions.Invoke(definedOptions);
 
-            if (ExportServiceRegisterAssemblyName.TryLoadAssembly(out var assembly, out var exception))
+#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
+            var assemblyFullPath = Path.Combine(definedOptions.Path, ExportServiceRegisterAssemblyName);
+#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
+
+            if (assemblyFullPath.TryLoadAssembly(out var assembly, out var exception))
             {
                 var exportServiceRegister = assembly
                     .GetExportedTypes()
@@ -83,7 +91,7 @@ namespace Xpandables.Net5.DependencyInjection
                         BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod,
                         default,
                         exportServiceRegister,
-                        new object[] { services, definedOptions }))
+                        new object[] { services, configuration, definedOptions }))
                     return services;
 
                 throw new InvalidOperationException($"{ExportServiceRegisterName}.{AddServiceMethodName} execution failed.", ex);

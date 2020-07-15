@@ -18,8 +18,10 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 
 using Xpandables.Net5.Helpers;
 using Xpandables.Net5.HttpRestClient;
@@ -68,7 +70,11 @@ namespace Xpandables.Net5.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXHttpRestClientIPGeoLocationHandler(this IServiceCollection services)
         {
-            if (HttpRestClientAssemblyName.TryLoadAssembly(out var assembly, out var exception))
+#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
+            var assemblyFullPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, HttpRestClientAssemblyName);
+#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
+
+            if (assemblyFullPath.TryLoadAssembly(out var assembly, out var exception))
             {
                 var httpRestClientHandler = assembly
                     .GetExportedTypes()
@@ -90,7 +96,7 @@ namespace Xpandables.Net5.DependencyInjection
 #pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
                  httpClient.BaseAddress = new Uri("https://ipinfo.io/ip");
 #pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
-                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
              })
             .ConfigurePrimaryHttpMessageHandler<HttpRestClientIPGeoAddressMessage>();
 

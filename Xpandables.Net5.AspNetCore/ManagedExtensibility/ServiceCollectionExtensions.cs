@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -73,7 +74,11 @@ namespace Xpandables.Net5.DependencyInjection
             var definedOptions = new ExportServiceOptions();
             configureOptions.Invoke(definedOptions);
 
-            if (ExportServiceRegisterAssemblyName.TryLoadAssembly(out var assembly, out var exception))
+#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
+            var assemblyFullPath = Path.Combine(definedOptions.Path, ExportServiceRegisterAssemblyName);
+#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
+
+            if (assemblyFullPath.TryLoadAssembly(out var assembly, out var exception))
             {
                 var exportServiceRegister = assembly
                     .GetExportedTypes()

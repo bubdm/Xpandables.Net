@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -28,10 +29,42 @@ namespace Xpandables.Net5.Cryptography
     [Serializable]
     [DebuggerDisplay("Key = {Key}, Value = {Value}, Salt = {Salt}")]
     [TypeConverter(typeof(ValueEncryptedConverter))]
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public sealed record ValueEncrypted(string Key, string Value, string Salt)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    public sealed class ValueEncrypted : ValueObject
     {
+        /// <summary>
+        /// Returns a new instance of <see cref="ValueEncrypted"/> with the key and value.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The encrypted value.</param>
+        /// <param name="salt">The salt value.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="salt"/> is null.</exception>
+        public ValueEncrypted(string key, string value, string salt)
+            => (Key, Value, Salt) =
+            (key ?? throw new ArgumentNullException(nameof(key)),
+            value ?? throw new ArgumentNullException(nameof(value)),
+            salt ?? throw new ArgumentNullException(nameof(salt)));
+
+        /// <summary>
+        /// Provides with deconstruction for <see cref="ValueEncrypted"/>.
+        /// </summary>
+        /// <param name="key">The output key.</param>
+        /// <param name="value">The output value.</param>
+        /// <param name="salt">the output salt value.</param>
+        public void Deconstruct(out string key, out string value, out string salt) => (key, value, salt) = (Key, Value, Salt);
+
+        /// <summary>
+        /// Provides the list of components that comprise that class.
+        /// </summary>
+        /// <returns>An enumerable components of the derived class.</returns>
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Key;
+            yield return Value;
+            yield return Salt;
+        }
+
         /// <summary>
         /// Compares the encrypted value with the specified one.
         /// Returns <see langword="true"/> if equality otherwise <see langword="false"/>.
@@ -45,6 +78,56 @@ namespace Xpandables.Net5.Cryptography
             IStringCryptography cryptography = new StringCryptography(new StringGenerator());
             return cryptography.AreEqual(this, value);
         }
+
+        /// <summary>
+        /// Contains the encryption key.
+        /// </summary>
+        [field: NonSerialized]
+        public string Key { get; }
+
+        /// <summary>
+        /// Contains the base64 encrypted value.
+        /// </summary>
+        [field: NonSerialized]
+        public string Value { get; }
+
+        /// <summary>
+        /// Contains the base64 salt value.
+        /// </summary>
+        [field: NonSerialized]
+        public string Salt { get; }
+
+        /// <summary>
+        /// Compares the <see cref="ValueEncrypted"/> with other object.
+        /// </summary>
+        /// <param name="obj">Object to compare with.</param>
+        public override bool Equals(object? obj) => obj is ValueEncrypted encryptedValue && this == encryptedValue;
+
+        /// <summary>
+        /// Applies equality operator.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        public static bool operator ==(ValueEncrypted left, ValueEncrypted right) => left.Equals(right);
+
+        /// <summary>
+        /// Applies non equality operator.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        public static bool operator !=(ValueEncrypted left, ValueEncrypted right) => !(left == right);
+
+        /// <summary>
+        /// Compares <see cref="ValueEncrypted"/> with the value.
+        /// </summary>
+        /// <param name="other">Option to compare with.</param>
+        public bool Equals(ValueEncrypted other) => (Key, Value, Salt) == (other.Key, other.Value, other.Salt);
+
+        /// <summary>
+        /// Computes the hash-code for the <see cref="ValueEncrypted"/> instance.
+        /// </summary>
+        public override int GetHashCode()
+            => Key.GetHashCode(StringComparison.InvariantCultureIgnoreCase) ^ Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase) ^ Salt.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Creates a string representation of the <see cref="ValueEncrypted"/>.

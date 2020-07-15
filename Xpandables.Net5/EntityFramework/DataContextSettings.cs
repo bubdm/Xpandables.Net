@@ -35,13 +35,15 @@ namespace Xpandables.Net5.EntityFramework
         /// <param name="ensuredDeletedBefore">Determine whether or not the database for the context will be deleted before applying migration.</param>
         /// <param name="useInMemory">Determine whether or not the database is uses in memory</param>
         /// <param name="addSamplesData">Determine whether or not the database will be filled with samples data.</param>
+        /// <param name="applyMigrations">Determine whether or not the database the migrations must be applied.</param>
         /// <param name="connectionString">The database connection string.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="connectionString"/> is null.</exception>
-        public DataContextSettings(bool ensuredDeletedBefore, bool useInMemory, bool addSamplesData, string connectionString)
+        public DataContextSettings(bool ensuredDeletedBefore, bool useInMemory, bool addSamplesData, bool applyMigrations, string connectionString)
         {
             EnsuredDeletedBefore = ensuredDeletedBefore;
             UseInMemory = useInMemory;
             AddSamplesData = addSamplesData;
+            ApplyMigrations = applyMigrations;
             ConnectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 

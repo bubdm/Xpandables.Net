@@ -32,10 +32,11 @@ namespace Xpandables.Net5.ManagedExtensibility
         /// Adds exports services matching the specified options.
         /// </summary>
         /// <param name="services">The service collection.</param>
+        /// <param name="configuration">The application configuration.</param>
         /// <param name="options">The export options.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public static void AddServiceExport(object services, ExportServiceOptions options)
+        public static void AddServiceExport(object services, object configuration, ExportServiceOptions options)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = options ?? throw new ArgumentNullException(nameof(options));
@@ -58,7 +59,7 @@ namespace Xpandables.Net5.ManagedExtensibility
                     .OfType<IAddServiceExport>();
 
                 foreach (var export in exportServices)
-                    export.AddServices(services);
+                    export.AddServices(services, configuration);
             }
             catch (Exception exception) when (exception is NotSupportedException
                                             || exception is System.IO.DirectoryNotFoundException

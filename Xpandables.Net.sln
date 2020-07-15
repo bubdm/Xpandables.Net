@@ -5,10 +5,6 @@ VisualStudioVersion = 16.0.30128.36
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5", "Xpandables.Net5\Xpandables.Net5.csproj", "{6B0C8853-2679-4A97-8773-4E1B15B08CFC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{676B6AE2-5C2F-4FB2-A260-8B5EB6B2C3EE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.Tests", "Tests\Xpandables.Net5.Tests\Xpandables.Net5.Tests.csproj", "{51CC00AC-19F4-4C89-98CE-6685A20907A7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.DependencyInjection", "Xpandables.Net5.DependencyInjection\Xpandables.Net5.DependencyInjection.csproj", "{D618FD69-E82E-4E23-80D5-A69AC2B0B452}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.HttpRestClient", "Xpandables.Net5.HttpRestClient\Xpandables.Net5.HttpRestClient.csproj", "{42314DD4-3B24-46B4-A4B5-C63C769C23E3}"
@@ -25,6 +21,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.AspNetCore"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.Windows", "Xpandables.Net5.Windows\Xpandables.Net5.Windows.csproj", "{4A9CC8CC-0594-43D4-8248-8DFC782E0470}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Domain", "Samples\Xpandables.Samples.Domain\Xpandables.Samples.Domain.csproj", "{5F2D93C0-8926-4340-8FF5-C7E7801D8049}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Infrastructure", "Samples\Xpandables.Samples.Infrastructure\Xpandables.Samples.Infrastructure.csproj", "{1729226A-41B0-4859-B33F-266FCC2EF8A2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Application", "Samples\Xpandables.Samples.Application\Xpandables.Samples.Application.csproj", "{5F94A1F7-3BC7-410A-8F61-C36C2B80F419}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Samples.Api", "Samples\Xpandables.Samples.Api\Xpandables.Samples.Api.csproj", "{B32AFC40-E9AD-4814-8314-A7D777596F5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,13 +43,6 @@ Global
 		{6B0C8853-2679-4A97-8773-4E1B15B08CFC}.Release|Any CPU.ActiveCfg = Release|x64
 		{6B0C8853-2679-4A97-8773-4E1B15B08CFC}.Release|x64.ActiveCfg = Release|x64
 		{6B0C8853-2679-4A97-8773-4E1B15B08CFC}.Release|x64.Build.0 = Release|x64
-		{51CC00AC-19F4-4C89-98CE-6685A20907A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51CC00AC-19F4-4C89-98CE-6685A20907A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51CC00AC-19F4-4C89-98CE-6685A20907A7}.Debug|x64.ActiveCfg = Debug|x64
-		{51CC00AC-19F4-4C89-98CE-6685A20907A7}.Debug|x64.Build.0 = Debug|x64
-		{51CC00AC-19F4-4C89-98CE-6685A20907A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51CC00AC-19F4-4C89-98CE-6685A20907A7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51CC00AC-19F4-4C89-98CE-6685A20907A7}.Release|x64.ActiveCfg = Release|x64
 		{D618FD69-E82E-4E23-80D5-A69AC2B0B452}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D618FD69-E82E-4E23-80D5-A69AC2B0B452}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D618FD69-E82E-4E23-80D5-A69AC2B0B452}.Debug|x64.ActiveCfg = Debug|x64
@@ -102,12 +99,47 @@ Global
 		{4A9CC8CC-0594-43D4-8248-8DFC782E0470}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4A9CC8CC-0594-43D4-8248-8DFC782E0470}.Release|x64.ActiveCfg = Release|x64
 		{4A9CC8CC-0594-43D4-8248-8DFC782E0470}.Release|x64.Build.0 = Release|x64
+		{5F2D93C0-8926-4340-8FF5-C7E7801D8049}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F2D93C0-8926-4340-8FF5-C7E7801D8049}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F2D93C0-8926-4340-8FF5-C7E7801D8049}.Debug|x64.ActiveCfg = Debug|x64
+		{5F2D93C0-8926-4340-8FF5-C7E7801D8049}.Debug|x64.Build.0 = Debug|x64
+		{5F2D93C0-8926-4340-8FF5-C7E7801D8049}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F2D93C0-8926-4340-8FF5-C7E7801D8049}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F2D93C0-8926-4340-8FF5-C7E7801D8049}.Release|x64.ActiveCfg = Release|x64
+		{5F2D93C0-8926-4340-8FF5-C7E7801D8049}.Release|x64.Build.0 = Release|x64
+		{1729226A-41B0-4859-B33F-266FCC2EF8A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1729226A-41B0-4859-B33F-266FCC2EF8A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1729226A-41B0-4859-B33F-266FCC2EF8A2}.Debug|x64.ActiveCfg = Debug|x64
+		{1729226A-41B0-4859-B33F-266FCC2EF8A2}.Debug|x64.Build.0 = Debug|x64
+		{1729226A-41B0-4859-B33F-266FCC2EF8A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1729226A-41B0-4859-B33F-266FCC2EF8A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1729226A-41B0-4859-B33F-266FCC2EF8A2}.Release|x64.ActiveCfg = Release|x64
+		{1729226A-41B0-4859-B33F-266FCC2EF8A2}.Release|x64.Build.0 = Release|x64
+		{5F94A1F7-3BC7-410A-8F61-C36C2B80F419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F94A1F7-3BC7-410A-8F61-C36C2B80F419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F94A1F7-3BC7-410A-8F61-C36C2B80F419}.Debug|x64.ActiveCfg = Debug|x64
+		{5F94A1F7-3BC7-410A-8F61-C36C2B80F419}.Debug|x64.Build.0 = Debug|x64
+		{5F94A1F7-3BC7-410A-8F61-C36C2B80F419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F94A1F7-3BC7-410A-8F61-C36C2B80F419}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F94A1F7-3BC7-410A-8F61-C36C2B80F419}.Release|x64.ActiveCfg = Release|x64
+		{5F94A1F7-3BC7-410A-8F61-C36C2B80F419}.Release|x64.Build.0 = Release|x64
+		{B32AFC40-E9AD-4814-8314-A7D777596F5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B32AFC40-E9AD-4814-8314-A7D777596F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B32AFC40-E9AD-4814-8314-A7D777596F5A}.Debug|x64.ActiveCfg = Debug|x64
+		{B32AFC40-E9AD-4814-8314-A7D777596F5A}.Debug|x64.Build.0 = Debug|x64
+		{B32AFC40-E9AD-4814-8314-A7D777596F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B32AFC40-E9AD-4814-8314-A7D777596F5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B32AFC40-E9AD-4814-8314-A7D777596F5A}.Release|x64.ActiveCfg = Release|x64
+		{B32AFC40-E9AD-4814-8314-A7D777596F5A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{51CC00AC-19F4-4C89-98CE-6685A20907A7} = {676B6AE2-5C2F-4FB2-A260-8B5EB6B2C3EE}
+		{5F2D93C0-8926-4340-8FF5-C7E7801D8049} = {9F34FE6E-CFC8-4EA3-A70B-2CC2A57157F4}
+		{1729226A-41B0-4859-B33F-266FCC2EF8A2} = {9F34FE6E-CFC8-4EA3-A70B-2CC2A57157F4}
+		{5F94A1F7-3BC7-410A-8F61-C36C2B80F419} = {9F34FE6E-CFC8-4EA3-A70B-2CC2A57157F4}
+		{B32AFC40-E9AD-4814-8314-A7D777596F5A} = {9F34FE6E-CFC8-4EA3-A70B-2CC2A57157F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DCC3F35D-6D3F-4001-B46B-E264E1185A6E}

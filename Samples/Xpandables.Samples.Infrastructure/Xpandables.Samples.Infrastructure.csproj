@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Platforms>x64</Platforms>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NoWarn>1701;1702;CA1062;</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0-beta2.final">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0-preview.6.20312.4" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0-preview.6.20305.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Xpandables.Net5.DependencyInjection\Xpandables.Net5.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\Xpandables.Net5.EntityFramework\Xpandables.Net5.EntityFramework.csproj" />
+    <ProjectReference Include="..\Xpandables.Samples.Domain\Xpandables.Samples.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
+</Project>

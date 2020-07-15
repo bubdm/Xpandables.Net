@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Platforms>x64</Platforms>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+    <LangVersion>preview</LangVersion>
+    <UserSecretsId>c003284f-6b03-4e7e-8728-dd3faa9267a3</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0-preview.6.20312.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0-preview.6.20312.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Xpandables.Net5.AspNetCore\Xpandables.Net5.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\Xpandables.Net5.HttpRestClient\Xpandables.Net5.HttpRestClient.csproj" />
+    <ProjectReference Include="..\..\Xpandables.Net5.ManagedExtensibility\Xpandables.Net5.ManagedExtensibility.csproj" />
+    <ProjectReference Include="..\..\Xpandables.Net5\Xpandables.Net5.csproj" />
+    <ProjectReference Include="..\Xpandables.Samples.Application\Xpandables.Samples.Application.csproj" />
+    <ProjectReference Include="..\Xpandables.Samples.Infrastructure\Xpandables.Samples.Infrastructure.csproj" />
+  </ItemGroup>
+
+
+</Project>

@@ -77,8 +77,6 @@ namespace Xpandables.Net5.Cryptography
         /// <exception cref="InvalidOperationException">The decryption failed. See inner exception.</exception>
         string Decrypt(ValueEncrypted encrypted)
         {
-            _ = encrypted ?? throw new ArgumentNullException(nameof(encrypted));
-
             try
             {
                 var toBeDecrypted = Convert.FromBase64String(encrypted.Value);
@@ -134,8 +132,7 @@ namespace Xpandables.Net5.Cryptography
         /// <exception cref="InvalidOperationException">The comparison failed. See inner exception.</exception>
         bool AreEqual(ValueEncrypted encrypted, string value)
         {
-            if (value is null) throw new ArgumentNullException(nameof(value));
-            _ = encrypted ?? throw new ArgumentNullException(nameof(encrypted));
+            _ = value ?? throw new ArgumentNullException(nameof(value));
 
             var comp = Encrypt(value, encrypted.Key, encrypted.Salt);
             return comp == encrypted;
