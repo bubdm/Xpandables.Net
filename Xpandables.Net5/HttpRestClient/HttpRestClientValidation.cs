@@ -17,15 +17,11 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-
-using Xpandables.Net5.Helpers;
 
 namespace Xpandables.Net5.HttpRestClient
 {
     /// <summary>
-    /// Contains HTTP Rest API validation model result.
+    /// Contains HTTP Rest API validation model result that contains member name with its list of error messages.
     /// </summary>
     public sealed partial class HttpRestClientValidation : Dictionary<string, IEnumerable<string>>
     {
@@ -83,59 +79,5 @@ namespace Xpandables.Net5.HttpRestClient
         /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
         public HttpRestClientValidation(IEnumerable<KeyValuePair<string, IEnumerable<string>>> collection)
             : base(collection) { }
-
-        //        /// <summary>
-        //        /// Initializes a new instance of <see cref="HttpRestClientValidationResult"/> that contains the message and the member names.
-        //        /// </summary>
-        //        /// <param name="errors">A collection of member names for the error.</param>
-        //        /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
-        //        [JsonConstructor]
-        //        public HttpRestClientValidationResult(IList<HttpRestClientValidationError> errors)
-        //        {
-        //            Errors = errors ?? throw new ArgumentNullException(nameof(errors));
-        //        }
-
-        //        /// <summary>
-        //        /// Initializes a new instance of <see cref="HttpRestClientValidationResult"/> that contains the validation error.
-        //        /// </summary>
-        //        /// <param name="validationError">the validation error.</param>
-        //        /// <exception cref="ArgumentNullException">The <paramref name="validationError"/> is null.</exception>
-        //        public HttpRestClientValidationResult(HttpRestClientValidationError validationError)
-        //        {
-        //            Errors = new List<HttpRestClientValidationError>
-        //            {
-        //                validationError
-        //            };
-        //        }
-
-        //        /// <summary>
-        //        /// Initializes a new instance of <see cref="HttpRestClientValidationResult"/> that contains the <see cref="ValidationResult"/>.
-        //        /// </summary>
-        //        /// <param name="validationResult">The validation result.</param>
-        //        /// <exception cref="ArgumentNullException">The <paramref name="validationResult"/> is null.</exception>
-        //        public HttpRestClientValidationResult(ValidationResult validationResult)
-        //        {
-        //            _ = validationResult ?? throw new ArgumentNullException(nameof(validationResult));
-        //            Errors = new List<HttpRestClientValidationError>();
-        //            foreach (var memberName in validationResult.MemberNames)
-        //                Errors.Add(new HttpRestClientValidationError(memberName, validationResult.ErrorMessage.SingleToEnumerable()));
-        //        }
-
-        //        /// <summary>
-        //        /// Initializes a new instance of <see cref="HttpRestClientValidationResult"/> that contains a delegate used to provide validation errors.
-        //        /// </summary>
-        //        /// <param name="validtionErrorsProvider">The validation errors provider.</param>
-        //        /// <exception cref="ArgumentNullException">The <paramref name="validtionErrorsProvider"/> is null.</exception>
-        //        public HttpRestClientValidationResult(Func<IList<HttpRestClientValidationError>> validtionErrorsProvider)
-        //        {
-        //            Errors = validtionErrorsProvider?.Invoke() ?? throw new ArgumentNullException(nameof(validtionErrorsProvider));
-        //        }
-
-        //        /// <summary>
-        //        /// Gets the collection of validation errors.
-        //        /// </summary>
-        //#pragma warning disable CA2227 // Collection properties should be read only
-        //        public IList<HttpRestClientValidationError> Errors { get; set; }
-        //#pragma warning restore CA2227 // Collection properties should be read only
     }
 }

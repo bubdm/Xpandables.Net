@@ -18,7 +18,7 @@ namespace Xpandables.Samples.Business.Contracts
 
         protected override Expression<Func<User, bool>> BuildExpression() => user => user.Email == Email;
 
-        [Required, StringLength(byte.MaxValue, MinimumLength = 3)]
+        [Required, EmailAddress, StringLength(byte.MaxValue, MinimumLength = 3)]
         [Display(Name = nameof(Email), Description = nameof(Email))]
         public string Email { get; set; }
 

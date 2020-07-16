@@ -36,34 +36,33 @@
             this.Password = new System.Windows.Forms.TextBox();
             this.BtnCancel = new System.Windows.Forms.Button();
             this.BtnConnect = new System.Windows.Forms.Button();
-            this.LoginFormBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.LoginFormErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.Token = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.LoginFormBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LoginFormErrorProvider)).BeginInit();
+            this.Loading = new System.Windows.Forms.Label();
+            this.LoginErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.LoginErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(219, 20);
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label2.Location = new System.Drawing.Point(50, 20);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 15);
+            this.label2.Size = new System.Drawing.Size(417, 32);
             this.label2.TabIndex = 0;
-            this.label2.Text = "label2";
+            this.label2.Text = "Xpandables Connect";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(50, 84);
+            this.label3.Location = new System.Drawing.Point(138, 87);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(38, 15);
+            this.label3.Size = new System.Drawing.Size(81, 15);
             this.label3.TabIndex = 1;
-            this.label3.Text = "label3";
+            this.label3.Text = "Mail Address :";
             // 
             // Email
             // 
-            this.Email.Location = new System.Drawing.Point(242, 84);
+            this.Email.Location = new System.Drawing.Point(256, 84);
             this.Email.Name = "Email";
             this.Email.Size = new System.Drawing.Size(211, 23);
             this.Email.TabIndex = 2;
@@ -71,49 +70,53 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(50, 144);
+            this.label4.Location = new System.Drawing.Point(156, 139);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(38, 15);
+            this.label4.Size = new System.Drawing.Size(63, 15);
             this.label4.TabIndex = 3;
-            this.label4.Text = "label4";
+            this.label4.Text = "Password :";
             // 
             // Password
             // 
-            this.Password.Location = new System.Drawing.Point(242, 136);
+            this.Password.Location = new System.Drawing.Point(256, 136);
             this.Password.Name = "Password";
+            this.Password.PasswordChar = '*';
             this.Password.Size = new System.Drawing.Size(211, 23);
             this.Password.TabIndex = 4;
             // 
             // BtnCancel
             // 
+            this.BtnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.BtnCancel.Location = new System.Drawing.Point(50, 183);
             this.BtnCancel.Name = "BtnCancel";
-            this.BtnCancel.Size = new System.Drawing.Size(173, 37);
+            this.BtnCancel.Size = new System.Drawing.Size(187, 37);
             this.BtnCancel.TabIndex = 5;
             this.BtnCancel.Text = "Cancel";
             this.BtnCancel.UseVisualStyleBackColor = true;
+            this.BtnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
             // 
             // BtnConnect
             // 
-            this.BtnConnect.Location = new System.Drawing.Point(260, 183);
+            this.BtnConnect.Location = new System.Drawing.Point(256, 183);
             this.BtnConnect.Name = "BtnConnect";
-            this.BtnConnect.Size = new System.Drawing.Size(193, 38);
+            this.BtnConnect.Size = new System.Drawing.Size(211, 38);
             this.BtnConnect.TabIndex = 6;
             this.BtnConnect.Text = "Connect";
             this.BtnConnect.UseVisualStyleBackColor = true;
             this.BtnConnect.Click += new System.EventHandler(this.BtnConnect_Click);
             // 
-            // LoginFormErrorProvider
+            // Loading
             // 
-            this.LoginFormErrorProvider.ContainerControl = this;
+            this.Loading.Location = new System.Drawing.Point(50, 227);
+            this.Loading.Name = "Loading";
+            this.Loading.Size = new System.Drawing.Size(417, 45);
+            this.Loading.TabIndex = 7;
+            this.Loading.Text = "loading...";
+            this.Loading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // Token
+            // LoginErrorProvider
             // 
-            this.Token.Location = new System.Drawing.Point(12, 227);
-            this.Token.Name = "Token";
-            this.Token.Size = new System.Drawing.Size(493, 45);
-            this.Token.TabIndex = 7;
-            this.Token.Text = "label1";
+            this.LoginErrorProvider.ContainerControl = this;
             // 
             // LoginForm
             // 
@@ -122,7 +125,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.BtnCancel;
             this.ClientSize = new System.Drawing.Size(517, 281);
-            this.Controls.Add(this.Token);
+            this.Controls.Add(this.Loading);
             this.Controls.Add(this.BtnConnect);
             this.Controls.Add(this.BtnCancel);
             this.Controls.Add(this.Password);
@@ -138,8 +141,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Xpandables Login";
-            ((System.ComponentModel.ISupportInitialize)(this.LoginFormBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LoginFormErrorProvider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LoginErrorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -154,8 +156,7 @@
         private System.Windows.Forms.TextBox Password;
         private System.Windows.Forms.Button BtnCancel;
         private System.Windows.Forms.Button BtnConnect;
-        private System.Windows.Forms.BindingSource LoginFormBindingSource;
-        private System.Windows.Forms.ErrorProvider LoginFormErrorProvider;
-        private System.Windows.Forms.Label Token;
+        private System.Windows.Forms.Label Loading;
+        private System.Windows.Forms.ErrorProvider LoginErrorProvider;
     }
 }

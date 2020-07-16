@@ -61,7 +61,7 @@ namespace Xpandables.Samples.Desktop
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                var mainForm = services.GetRequiredService<LoginForm>();
+                var mainForm = services.GetRequiredService<MainForm>();
                 Application.Run(mainForm);
             }
             catch (Exception exception) when (exception is InvalidOperationException)

@@ -39,4 +39,8 @@
     <ProjectReference Include="..\Xpandables.Net5.Windows\Xpandables.Net5.Windows.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

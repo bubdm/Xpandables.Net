@@ -47,7 +47,7 @@ namespace Xpandables.Net5.AspNetCore.Helpers
         }
 
         /// <summary>
-        /// Return an <see cref="HttpRestClientValidation"/> from a model state.
+        /// Return an <see cref="HttpRestClientValidation"/> from a validation exception.
         /// </summary>
         /// <param name="validationException">The validation exception to act on.</param>
         /// <returns>An instance of <see cref="HttpRestClientValidation"/>.</returns>

@@ -29,7 +29,7 @@ namespace Xpandables.Samples.Business.Handlers
 
         public async Task<SignInResponse> HandleAsync(SignInRequest query, CancellationToken cancellationToken = default)
         {
-            var user = await _dataContext.SetOf(query).FirstAsync(query, cancellationToken).ConfigureAwait(false);
+            var user = await _dataContext.SetOf(query).FirstOrDefaultAsync(query, cancellationToken).ConfigureAwait(false);
 
             if (user?.Password.IsEqualTo(query.Password) != true)
             {

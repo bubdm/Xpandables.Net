@@ -35,7 +35,7 @@ namespace Xpandables.Net5.ValidatorRules
         /// <param name="target">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="target"/> is null.</exception>
         /// <exception cref="ValidationException">Any validation exception.</exception>
-        async Task ValidateAsync(object target)
+        public async Task ValidateAsync(object target)
         {
             Validator.ValidateObject(target, new ValidationContext(target, null, null), true);
             await Task.CompletedTask.ConfigureAwait(false);
@@ -63,6 +63,6 @@ namespace Xpandables.Net5.ValidatorRules
         /// <param name="argument">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
         /// <exception cref="ValidationException">Any validation exception.</exception>
-        async Task ValidateAsync(TArgument argument) => await ValidateAsync(argument).ConfigureAwait(false);
+        public async Task ValidateAsync(TArgument argument) => await ValidateAsync(argument).ConfigureAwait(false);
     }
 }

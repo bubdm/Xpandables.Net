@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -8,6 +10,7 @@ using Xpandables.Net5.HttpRestClient;
 using Xpandables.Net5.Notifications;
 using Xpandables.Net5.Windows.Forms;
 using Xpandables.Samples.Business.Contracts;
+using Xpandables.Samples.Desktop.Helpers;
 
 namespace Xpandables.Samples.Desktop.Views
 {
@@ -15,43 +18,79 @@ namespace Xpandables.Samples.Desktop.Views
     {
         private readonly DynamicDataBinding<Data> dynamicData = new DynamicDataBinding<Data>(new Data());
         private readonly IHttpRestClientHandler _clientHandler;
+        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+        public SignInResponse SignInResponse { get; private set; }
         public LoginForm(IHttpRestClientHandler clientHandler)
         {
             InitializeComponent();
 
             _clientHandler = clientHandler;
-            _clientHandler.Initialize("ApiClient");
+            _clientHandler.Initialize("ApiClient");     
 
             dynamicData.Binding(Email, ctrl => ctrl.Text, data => data.Email);
             dynamicData.Binding(Password, ctrl => ctrl.Text, data => data.Password);
-            dynamicData.Binding(Token, ctrl => ctrl.Text, data => data.Token);
+            dynamicData.Binding(Loading, ctrl => ctrl.Text, data => data.Loading);
             dynamicData.Binding(BtnConnect, ctrl => ctrl.Enabled, data => data.IsBusy, value => !value);
         }
 
-        private async void BtnConnect_Click(object sender, System.EventArgs e)
+        private async void BtnConnect_Click(object sender, EventArgs e)
         {
-            dynamicData.Source.Token = "Login...";
-            dynamicData.Source.IsBusy = true;
+            LoginErrorProvider.Clear();
+
             var request = new SignInRequest(dynamicData.Source.Email, dynamicData.Source.Password);
-            var response = await _clientHandler.HandleAsync(request).ConfigureAwait(true);
-            dynamicData.Source.Token = string.Empty;
+            if (Validators.Validate(request) is { } exception)
+            {
+                foreach (var member in exception.MemberNames)
+                {
+                    if (member == Email.Name) LoginErrorProvider.SetError(Email, exception.ErrorMessage);
+                    if (member == Password.Name) LoginErrorProvider.SetError(Password, exception.ErrorMessage);
+                }
+
+                return;
+            }
+
+            dynamicData.Source.Loading = "Connecting...";
+            dynamicData.Source.IsBusy = true;
+
+            var response = await _clientHandler.HandleAsync(request, cancellationTokenSource.Token).ConfigureAwait(true);
+
+            dynamicData.Source.Loading = string.Empty;
             dynamicData.Source.IsBusy = false;
 
             if (response.IsValid())
             {
-                dynamicData.Source.Token = response.Result.Token;
+                SignInResponse = response.Result;
+                DialogResult = DialogResult.OK;
+                Close();
             }
             else
             {
-                if (response.Exception.ContentIsHttpRestClientValidation() is { } modelResult)
+                if (response.Exception.ContentIsHttpRestClientValidation() is { } validation)
                 {
-                    dynamicData.Source.Token = modelResult.Values.SelectMany(model => model).StringJoin(Environment.NewLine);
+                    foreach (var error in validation)
+                    {
+                        if (error.Key == Email.Name)
+                            LoginErrorProvider.SetError(Email, error.Value.StringJoin(Environment.NewLine));
+
+                        if (error.Key == Password.Name)
+                            LoginErrorProvider.SetError(Password, error.Value.StringJoin(Environment.NewLine));
+                    }
                 }
                 else
                 {
-                    dynamicData.Source.Token = response.Exception?.Message;
+                    dynamicData.Source.Loading = response.Exception?.Message;
                 }
             }
+        }
+
+        private async void BtnCancel_Click(object sender, EventArgs e)
+        {
+            if (dynamicData.Source.IsBusy)
+                cancellationTokenSource.Cancel();
+
+            Close();
+            await Task.CompletedTask.ConfigureAwait(true);
         }
     }
 
@@ -59,12 +98,12 @@ namespace Xpandables.Samples.Desktop.Views
     {
         private string email;
         private string password;
-        private string token;
+        private string loading;
         private bool isBusy;
 
         public string Email { get => email; set => SetProperty(ref email, value); }
         public string Password { get => password; set => SetProperty(ref password, value); }
-        public string Token { get => token; set => SetProperty(ref token, value); }
+        public string Loading { get => loading; set => SetProperty(ref loading, value); }
         public bool IsBusy { get => isBusy; set => SetProperty(ref isBusy, value); }
     }
 }
