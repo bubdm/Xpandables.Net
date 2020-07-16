@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net5.HttpRestClient;
 
-namespace Xpandables.Samples.Application.Services
+namespace Xpandables.Samples.Business.Services
 {
     public sealed record HttpIPService(IConfiguration Configuration, IHttpRestClientIPGeoLocationHandler GeoLocationHandler)
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Xpandables.Net5.Localization;
 using Xpandables.Net5.Localization.Validations;
 
-namespace Xpandables.Samples.Application.Localization
+namespace Xpandables.Samples.Business.Localization
 {
     public sealed class LocalizationResourceProvider : ILocalizationResourceProvider
     {

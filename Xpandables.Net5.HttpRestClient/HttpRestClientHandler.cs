@@ -20,7 +20,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Net.Http.Json;
 
 using Xpandables.Net5.Commands;
 using Xpandables.Net5.Queries;
@@ -69,12 +68,16 @@ namespace Xpandables.Net5.HttpRestClient
         public async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken)
         {
             if (_httpClient is null)
-                throw new InvalidOperationException($"The handler needs to be initializes by calling the {nameof(Initialize)} method.");
+                throw new InvalidOperationException($"The handler needs to be initialized by calling the {nameof(Initialize)} method.");
 
             try
             {
                 using var request = GetHttpRequestMessage(query);
-                using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                using var response = await _httpClient.SendAsync(
+                    request,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken)
+                    .ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
                     return await GetHttpRestClientResponseAsync<TResult>(response).ConfigureAwait(false);
@@ -140,7 +143,7 @@ namespace Xpandables.Net5.HttpRestClient
                     var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
                     if (stream is { })
                     {
-                        var result = stream.DeserializeJsonFromStream<TResult>();// httpResponse.Content.ReadFromJsonAsync<TResult>().ConfigureAwait(false);
+                        var result = stream.DeserializeJsonFromStream<TResult>();
                         return HttpRestClientResponse<TResult>
                             .Success(result, httpResponse.StatusCode)
                             .AddHeaders(GetHttpResponseHeaders(httpResponse))

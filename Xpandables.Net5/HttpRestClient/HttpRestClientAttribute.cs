@@ -17,14 +17,10 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
 
 using Xpandables.Net5.Commands;
-using Xpandables.Net5.Helpers;
 using Xpandables.Net5.Queries;
 
 namespace Xpandables.Net5.HttpRestClient
@@ -93,98 +89,6 @@ namespace Xpandables.Net5.HttpRestClient
         /// The default value is "Bearer".
         /// </summary>
         public string Scheme { get; set; } = "Bearer";
-
-        /// <summary>
-        /// Returns the <see cref="HttpRequestMessage"/> from the attribute.
-        /// </summary>
-        /// <typeparam name="TSource">the type of the source.</typeparam>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public HttpRequestMessage GetHttpRequestMessage<TSource>(TSource source)
-            where TSource : class
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-
-            Path ??= "/";
-            Uri uri;
-            if (source is IQueryStringRequest queryStringRequest)
-            {
-                var queryString = queryStringRequest.GetQueryString();
-                var queryStringUri = Path.AddQueryString(queryString);
-                uri = new Uri(queryStringUri, UriKind.Relative);
-            }
-            else
-            {
-                uri = new Uri(Path, UriKind.Relative);
-            }
-
-#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
-            var httpRequestMessage = new HttpRequestMessage(new HttpMethod(Method), uri);
-#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
-            httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(Accept));
-            httpRequestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(System.Threading.Thread.CurrentThread.CurrentCulture.Name));
-
-            if (!IsNullable)
-            {
-                switch (BodyFormat)
-                {
-                    case BodyFormat.ByteArray:
-                        ValidateImplementation<IByteArrayRequest>(source);
-                        if ((source as IByteArrayRequest)!.GetByteContent() is { } byteContent)
-                            httpRequestMessage.Content = new ByteArrayContent(byteContent);
-                        break;
-                    case BodyFormat.FormUrlEncoded:
-                        ValidateImplementation<IFormUrlEncodedRequest>(source);
-                        if ((source as IFormUrlEncodedRequest)!.GetFormContent() is { } formContent)
-                            httpRequestMessage.Content = new FormUrlEncodedContent(formContent);
-                        break;
-                    case BodyFormat.Multipart:
-                        ValidateImplementation<IMultipartRequest>(source);
-                        var multipartContent = new MultipartFormDataContent();
-                        var multipartSource = source as IMultipartRequest;
-
-                        if (multipartSource!.GetByteContent() is { } mbyteContent)
-#pragma warning disable CA2000 // Dispose objects before losing scope
-                            multipartContent.Add(new ByteArrayContent(mbyteContent));
-#pragma warning restore CA2000 // Dispose objects before losing scope
-
-                        if (multipartSource.GetStringContent() is { } mstringContent)
-#pragma warning disable CA2000 // Dispose objects before losing scope
-                            multipartContent.Add(new StringContent(JsonSerializer.Serialize(mstringContent), Encoding.UTF8, ContentType));
-#pragma warning restore CA2000 // Dispose objects before losing scope
-
-                        httpRequestMessage.Content = multipartContent;
-                        break;
-                    case BodyFormat.Stream:
-                        ValidateImplementation<IStreamRequest>(source);
-                        var memoryStream = new MemoryStream();
-                        using (var jsonWriter = new Utf8JsonWriter(memoryStream, new JsonWriterOptions { Indented = true }))
-                        {
-                            JsonSerializer.Serialize(jsonWriter, source);
-                            jsonWriter.Flush();
-                        }
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-                        httpRequestMessage.Content = new StreamContent(memoryStream);
-                        break;
-                    case BodyFormat.String:
-                        ValidateImplementation<IStringRequest>(source, true);
-                        httpRequestMessage.Content = new StringContent(JsonSerializer.Serialize(source), Encoding.UTF8, ContentType);
-                        break;
-                }
-
-                httpRequestMessage.Content!.Headers.ContentType = new MediaTypeHeaderValue(ContentType);
-            }
-
-            if (IsSecured)
-                httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(Scheme);
-
-            return httpRequestMessage;
-        }
-
-        private static void ValidateImplementation<TInterface>(object source, bool optional = false)
-        {
-            if (!typeof(TInterface).IsAssignableFrom(source.GetType()) && !optional)
-                throw new ArgumentException($"{source.GetType().Name} must implement {typeof(TInterface).Name} interface");
-        }
     }
 
     /// <summary>

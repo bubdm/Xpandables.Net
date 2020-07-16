@@ -1,8 +1,7 @@
-﻿
-using Xpandables.Net5.Entities;
+﻿using Xpandables.Net5.Entities;
 using Xpandables.Net5.HttpRestClient;
 
-namespace Xpandables.Samples.Application.Contracts
+namespace Xpandables.Samples.Business.Contracts
 {
     public sealed class SignInResponse
     {

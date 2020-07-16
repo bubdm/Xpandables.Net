@@ -8,9 +8,9 @@ using System.Reflection;
 using Xpandables.Net5.DependencyInjection;
 using Xpandables.Net5.Helpers;
 using Xpandables.Net5.ManagedExtensibility;
-using Xpandables.Samples.Application.Services;
+using Xpandables.Samples.Business.Services;
 
-namespace Xpandables.Samples.Application
+namespace Xpandables.Samples.Business
 {
     [Export(typeof(IAddServiceExport))]
     public sealed class ServiceExport : AddServiceExportExtended
@@ -37,7 +37,7 @@ namespace Xpandables.Samples.Application
             // interceptor
             //services.AddTransient<SignUpChangeFirstNameInterceptor>();
             //services.AddXInterceptor<SignUpChangeFirstNameInterceptor>(true, _ => true, assemblies);
-            
+
         }
     }
 }

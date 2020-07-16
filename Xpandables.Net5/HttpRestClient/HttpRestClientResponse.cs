@@ -36,7 +36,7 @@ namespace Xpandables.Net5.HttpRestClient
         /// Returns a success HTTP status response.
         /// </summary>
         /// <param name="statusCode">The status code of the response.</param>
-        internal static HttpRestClientResponse Success(HttpStatusCode statusCode = HttpStatusCode.OK)
+        public static HttpRestClientResponse Success(HttpStatusCode statusCode = HttpStatusCode.OK)
             => new HttpRestClientResponse(statusCode);
 
         /// <summary>
@@ -45,13 +45,43 @@ namespace Xpandables.Net5.HttpRestClient
         /// <param name="exception">The handled exception of the response.</param>
         /// <param name="statusCode">The status code of the response.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-        internal static HttpRestClientResponse Failure(Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+        public static HttpRestClientResponse Failure(Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new HttpRestClientResponse(exception, statusCode);
 
         /// <summary>
-        /// Gets the handled response exception (may be <see cref="HttpRestClientException"/>).
+        /// Initializes a new instance of <see cref="HttpRestClientResponse"/> class with the status code.
         /// </summary>
-        public Exception? Exception { get; protected set; }
+        /// <param name="statusCode">The status code of the response.</param>
+        protected HttpRestClientResponse(HttpStatusCode statusCode) => StatusCode = statusCode;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="HttpRestClientResponse"/> class with exception and status code.
+        /// </summary>
+        /// <param name="exception">The handled exception of the response.</param>
+        /// <param name="statusCode">The status code of the response.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
+        protected HttpRestClientResponse(HttpRestClientException exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+        {
+            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
+            StatusCode = statusCode;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="HttpRestClientResponse"/> class with exception and status code.
+        /// </summary>
+        /// <param name="exception">The handled exception of the response.</param>
+        /// <param name="statusCode">The status code of the response.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
+        protected HttpRestClientResponse(Exception exception, HttpStatusCode statusCode)
+        {
+            Exception = new HttpRestClientException(exception.Message, exception);
+            StatusCode = statusCode;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="HttpRestClientException"/> that holds the handled exception.
+        /// </summary>
+        public HttpRestClientException? Exception { get; protected set; }
 
         /// <summary>
         /// Gets the HTTP response version.
@@ -99,27 +129,6 @@ namespace Xpandables.Net5.HttpRestClient
         /// </summary>
         /// <param name="version">the version to be used.</param>
         public HttpRestClientResponse AddVersion(Version version) => this.With(h => h.Version = version);
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="HttpRestClientResponse"/> class with the status code.
-        /// </summary>
-        /// <param name="statusCode">The status code of the response.</param>
-        protected HttpRestClientResponse(HttpStatusCode statusCode)
-        {
-            StatusCode = statusCode;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="HttpRestClientResponse"/> class with exception and status code.
-        /// </summary>
-        /// <param name="exception">The handled exception of the response.</param>
-        /// <param name="statusCode">The status code of the response.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-        protected HttpRestClientResponse(Exception exception, HttpStatusCode statusCode)
-        {
-            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
-            StatusCode = statusCode;
-        }
     }
 
     /// <summary>
@@ -128,24 +137,31 @@ namespace Xpandables.Net5.HttpRestClient
     /// <typeparam name="TResult">The type of the result.</typeparam>
     public class HttpRestClientResponse<TResult> : HttpRestClientResponse
     {
+#pragma warning disable CA1000 // Do not declare static members on generic types
         /// <summary>
         ///  Returns a success HTTP status response.
         /// </summary>
         /// <param name="result">The result instance.</param>
         /// <param name="statusCode">The status response code.</param>
-#pragma warning disable CA1000 // Do not declare static members on generic types
         public static HttpRestClientResponse<TResult> Success(TResult result, HttpStatusCode statusCode = HttpStatusCode.OK)
-#pragma warning restore CA1000 // Do not declare static members on generic types
             => new HttpRestClientResponse<TResult>(result, statusCode);
 
         /// <summary>
         ///  Returns a success HTTP status response.
         /// </summary>
         /// <param name="statusCode">The status response code.</param>
-#pragma warning disable CA1000 // Do not declare static members on generic types
         public static new HttpRestClientResponse<TResult> Success(HttpStatusCode statusCode = HttpStatusCode.OK)
-#pragma warning restore CA1000 // Do not declare static members on generic types
             => new HttpRestClientResponse<TResult>(statusCode);
+
+        /// <summary>
+        /// Returns a failure HTTP status response.
+        /// </summary>
+        /// <param name="exception">The handled exception of the response.</param>
+        /// <param name="statusCode">The status code of the response.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
+        public static new HttpRestClientResponse<TResult> Failure(
+            Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+            => new HttpRestClientResponse<TResult>(exception, statusCode);
 
         /// <summary>
         ///  Returns a failure HTTP status response.
@@ -153,10 +169,42 @@ namespace Xpandables.Net5.HttpRestClient
         /// <param name="exception">The handled exception.</param>
         /// <param name="statusCode">The status response code.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-#pragma warning disable CA1000 // Do not declare static members on generic types
-        public static new HttpRestClientResponse<TResult> Failure(Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
-#pragma warning restore CA1000 // Do not declare static members on generic types
+        public static HttpRestClientResponse<TResult> Failure(
+            HttpRestClientException exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new HttpRestClientResponse<TResult>(exception, statusCode);
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="HttpRestClientResponse{TResult}"/> class with the status code.
+        /// </summary>
+        /// <param name="statusCode">The status code of the response.</param>
+        protected HttpRestClientResponse(HttpStatusCode statusCode)
+            : base(statusCode) => Result = default;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="HttpRestClientResponse{TResult}"/> class with exception and status code.
+        /// </summary>
+        /// <param name="exception">The handled exception of the response.</param>
+        /// <param name="statusCode">The status code of the response.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
+        protected HttpRestClientResponse(HttpRestClientException exception, HttpStatusCode statusCode)
+            : base(exception, statusCode) => Result = default;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="HttpRestClientResponse{TResult}"/> class with exception and status code.
+        /// </summary>
+        /// <param name="exception">The handled exception of the response.</param>
+        /// <param name="statusCode">The status code of the response.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
+        protected HttpRestClientResponse(Exception exception, HttpStatusCode statusCode)
+            : base(exception, statusCode) => Result = default;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="HttpRestClientResponse"/> class with the status code.
+        /// </summary>
+        /// <param name="result">The result instance.</param>
+        /// <param name="statusCode">The status code of the response.</param>
+        protected HttpRestClientResponse(TResult result, HttpStatusCode statusCode)
+            : base(statusCode) => Result = result;
 
         /// <summary>
         /// Gets the HTTP response content.
@@ -182,31 +230,5 @@ namespace Xpandables.Net5.HttpRestClient
         /// </summary>
         /// <param name="version">the version to be used.</param>
         public new HttpRestClientResponse<TResult> AddVersion(Version version) => this.With(h => h.Version = version);
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="HttpRestClientResponse"/> class with the status code.
-        /// </summary>
-        /// <param name="result">The result instance.</param>
-        /// <param name="statusCode">The status code of the response.</param>
-        protected HttpRestClientResponse(TResult result, HttpStatusCode statusCode)
-            : base(statusCode) => Result = result;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="HttpRestClientResponse"/> class with the status code.
-        /// </summary>
-        /// <param name="statusCode">The status code of the response.</param>
-        protected HttpRestClientResponse(HttpStatusCode statusCode)
-            : base(statusCode) { Result = default; }
-
-#nullable disable
-        /// <summary>
-        /// Initializes a new instance of <see cref="HttpRestClientResponse"/> class with exception and status code.
-        /// </summary>
-        /// <param name="exception">The handled exception of the response.</param>
-        /// <param name="statusCode">The status code of the response.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-        protected HttpRestClientResponse(Exception exception, HttpStatusCode statusCode)
-            : base(exception, statusCode) { }
-#nullable enable
     }
 }

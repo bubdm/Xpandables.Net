@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Threading.Tasks;
 
+using Xpandables.Net5.AspNetCore.Helpers;
 using Xpandables.Net5.HttpRestClient;
 
 namespace Xpandables.Samples.Api.Middlewares
@@ -26,7 +27,8 @@ namespace Xpandables.Samples.Api.Middlewares
             {
                 IActionResult actionResult = exception switch
                 {
-                    ValidationException validationException => new BadRequestObjectResult(new HttpRestClientModelResult(validationException.ValidationResult)),
+                    ValidationException validationException => new BadRequestObjectResult(
+                        validationException.GetHttpRestClientValidation()),
                     ArgumentException argumentException => new BadRequestObjectResult(argumentException.Message),
                     OperationCanceledException operationCanceledException => new BadRequestObjectResult(operationCanceledException.Message),
                     DuplicateNameException duplicateNameException => new BadRequestObjectResult(duplicateNameException.Message),

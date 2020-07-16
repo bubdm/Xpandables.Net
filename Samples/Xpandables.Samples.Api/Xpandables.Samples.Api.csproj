@@ -22,7 +22,7 @@
     <ProjectReference Include="..\..\Xpandables.Net5.HttpRestClient\Xpandables.Net5.HttpRestClient.csproj" />
     <ProjectReference Include="..\..\Xpandables.Net5.ManagedExtensibility\Xpandables.Net5.ManagedExtensibility.csproj" />
     <ProjectReference Include="..\..\Xpandables.Net5\Xpandables.Net5.csproj" />
-    <ProjectReference Include="..\Xpandables.Samples.Application\Xpandables.Samples.Application.csproj" />
+    <ProjectReference Include="..\Xpandables.Samples.Application\Xpandables.Samples.Business.csproj" />
     <ProjectReference Include="..\Xpandables.Samples.Infrastructure\Xpandables.Samples.Infrastructure.csproj" />
   </ItemGroup>
 

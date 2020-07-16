@@ -5,12 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net5.EntityFramework;
+using Xpandables.Net5.Helpers;
 using Xpandables.Net5.Http;
 using Xpandables.Net5.Queries;
-using Xpandables.Samples.Application.Contracts;
-using Xpandables.Samples.Application.Services;
+using Xpandables.Samples.Business.Contracts;
+using Xpandables.Samples.Business.Localization;
+using Xpandables.Samples.Business.Services;
 
-namespace Xpandables.Samples.Application.Handlers
+namespace Xpandables.Samples.Business.Handlers
 {
     public sealed class SignInRequestHandler : IQueryHandler<SignInRequest, SignInResponse>
     {
@@ -28,6 +30,15 @@ namespace Xpandables.Samples.Application.Handlers
         public async Task<SignInResponse> HandleAsync(SignInRequest query, CancellationToken cancellationToken = default)
         {
             var user = await _dataContext.SetOf(query).FirstAsync(query, cancellationToken).ConfigureAwait(false);
+
+            if (user?.Password.IsEqualTo(query.Password) != true)
+            {
+                throw this.GetValidationException(
+                    ErrorMessages.UserNotExist.StringFormat(query.Email),
+                    query.Email,
+                    nameof(query.Email), nameof(query.Password));
+            }
+
             var token = user.GetToken(_tokenEngine);
             var location = await _httpIPService.GetIPGeoLocationAsync().ConfigureAwait(false);
 

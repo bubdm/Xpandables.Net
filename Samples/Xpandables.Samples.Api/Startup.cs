@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Xpandables.Net5.DependencyInjection;
 using Xpandables.Samples.Api.Configurations;
 using Xpandables.Samples.Api.Middlewares;
+using Xpandables.Samples.Business.Localization;
 
 namespace Xpandables.Samples.Api
 {
@@ -28,8 +30,9 @@ namespace Xpandables.Samples.Api
         {
             services.AddSingleton<IConfigureOptions<AuthenticationOptions>, XpandablesAuthenticationOptions>();
             services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, XpandablesJwtBearerOptions>();
+            //services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
-            services.AddXLocalizationResources<Application.Localization.LocalizationResourceProvider>();
+            services.AddXLocalizationResources<LocalizationResourceProvider>();
 
             services.AddControllers();
 

@@ -5,7 +5,7 @@ using Xpandables.Net5.Identities;
 using Xpandables.Samples.Domain;
 using Xpandables.Samples.Domain.Models;
 
-namespace Xpandables.Samples.Application.Contracts
+namespace Xpandables.Samples.Business.Contracts
 {
     public abstract class RequestIdentityBase : IdentityExpression<TokenClaims, User>
     {

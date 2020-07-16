@@ -9,7 +9,7 @@ using System.Text;
 
 using Xpandables.Net5.Http;
 
-namespace Xpandables.Samples.Application.Services
+namespace Xpandables.Samples.Business.Services
 {
     public sealed class HttpTokenEngine : IHttpTokenEngine
     {

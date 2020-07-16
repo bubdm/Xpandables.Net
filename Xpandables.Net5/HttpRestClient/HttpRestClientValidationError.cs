@@ -24,16 +24,16 @@ namespace Xpandables.Net5.HttpRestClient
     /// <summary>
     /// Contains the HTTP Rest API model error.
     /// </summary>
-    public sealed class HttpRestClientModelError
+    public sealed class HttpRestClientValidationError
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="HttpRestClientModelResult"/> that contains errors message and the member name.
+        /// Initializes a new instance of <see cref="HttpRestClientValidationError"/> that contains errors message and the member name.
         /// </summary>
         /// <param name="memberName">The member name for the error.</param>
         /// <param name="errorsMessage">A collection of errors message.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="memberName"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="errorsMessage"/> is null or empty.</exception>
-        public HttpRestClientModelError(string memberName, IEnumerable<string> errorsMessage)
+        public HttpRestClientValidationError(string memberName, IEnumerable<string> errorsMessage)
         {
             MemberName = memberName ?? throw new ArgumentNullException(nameof(memberName));
             ErrorsMessage = errorsMessage?.ToList() ?? throw new ArgumentNullException(nameof(errorsMessage));

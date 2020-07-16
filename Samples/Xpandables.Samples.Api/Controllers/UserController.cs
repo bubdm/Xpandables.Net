@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net5.Dispatchers;
-using Xpandables.Samples.Application.Contracts;
+using Xpandables.Samples.Business.Contracts;
 
 namespace Xpandables.Samples.Api.Controllers
 {

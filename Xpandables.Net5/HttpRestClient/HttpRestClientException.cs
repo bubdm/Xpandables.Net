@@ -22,28 +22,27 @@ namespace Xpandables.Net5.HttpRestClient
     /// <summary>
     /// Represents an HTTP Rest API exception.
     /// </summary>
-#pragma warning disable CA1032 // Implement standard exception constructors
     public sealed class HttpRestClientException : Exception
-#pragma warning restore CA1032 // Implement standard exception constructors
     {
-        /// <summary>
-        /// Initializes a instance of <see cref="HttpRestClientException"/> class with the content.
-        /// </summary>
-        /// <param name="content">The exception content.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="content"/> is null.</exception>
-        public HttpRestClientException(string content)
-        {
-            Content = content ?? throw new ArgumentNullException(nameof(content));
-        }
-
         /// <summary>
         /// Initializes the default instance of <see cref="HttpRestClientException"/> class.
         /// </summary>
         public HttpRestClientException() { }
 
         /// <summary>
-        /// Gets or sets the exception content.
+        /// Initializes a new instance of the System.Exception class with a specified error message.
         /// </summary>
-        public string? Content { get; set; }
+        /// <param name="message">The message that describes the error.</param>
+        public HttpRestClientException(string message) : base(message) { }
+
+        /// <summary>
+        /// Initializes a new instance of the System.Exception class with a specified error
+        /// message and a reference to the inner exception that is the cause of this exception.
+        /// </summary>
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="innerException"> The exception that is the cause of the current exception, or a null reference
+        /// (Nothing in Visual Basic) if no inner exception is specified.</param>
+        public HttpRestClientException(string message, Exception innerException)
+            : base(message, innerException) { }
     }
 }

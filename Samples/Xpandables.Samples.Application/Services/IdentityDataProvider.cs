@@ -4,7 +4,7 @@ using Xpandables.Net5.Http;
 using Xpandables.Net5.Identities;
 using Xpandables.Samples.Domain.Models;
 
-namespace Xpandables.Samples.Application.Services
+namespace Xpandables.Samples.Business.Services
 {
     public class IdentityDataProvider : IIdentityProvider
     {
