@@ -33,10 +33,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Samples\Xpandables.Samples.Application\Xpandables.Samples.Business.csproj" />
-    <ProjectReference Include="..\Xpandables.Net5.DependencyInjection\Xpandables.Net5.DependencyInjection.csproj" />
-    <ProjectReference Include="..\Xpandables.Net5.HttpRestClient\Xpandables.Net5.HttpRestClient.csproj" />
-    <ProjectReference Include="..\Xpandables.Net5.Windows\Xpandables.Net5.Windows.csproj" />
+    <ProjectReference Include="..\..\Xpandables.Net5.HttpRestClient\Xpandables.Net5.HttpRestClient.csproj" />
+    <ProjectReference Include="..\..\Xpandables.Net5.Windows\Xpandables.Net5.Windows.csproj" />
+    <ProjectReference Include="..\Xpandables.Samples.Application\Xpandables.Samples.Business.csproj" />
   </ItemGroup>
 
   <ItemGroup>

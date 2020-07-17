@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Business
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Api", "Samples\Xpandables.Samples.Api\Xpandables.Samples.Api.csproj", "{B32AFC40-E9AD-4814-8314-A7D777596F5A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Desktop", "Xpandables.Samples.Desktop\Xpandables.Samples.Desktop.csproj", "{667F6A87-695E-4A2E-9C87-9481CF020488}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Desktop", "Samples\Xpandables.Samples.Desktop\Xpandables.Samples.Desktop.csproj", "{667F6A87-695E-4A2E-9C87-9481CF020488}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
