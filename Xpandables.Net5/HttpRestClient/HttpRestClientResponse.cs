@@ -19,11 +19,8 @@ using System;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Runtime.CompilerServices;
 
 using Xpandables.Net5.Helpers;
-
-[assembly: InternalsVisibleTo("Xpandables.Net5.HttpRestClient")]
 
 namespace Xpandables.Net5.HttpRestClient
 {

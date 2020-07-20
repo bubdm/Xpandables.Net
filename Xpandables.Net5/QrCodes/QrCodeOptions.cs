@@ -16,11 +16,9 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Runtime.CompilerServices;
 
 using Xpandables.Net5.Helpers;
 
-[assembly: InternalsVisibleTo("Xpandables.Net5.DependencyInjection")]
 namespace Xpandables.Net5.QrCodes
 {
     /// <summary>

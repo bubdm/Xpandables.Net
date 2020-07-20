@@ -19,10 +19,8 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
-[assembly:InternalsVisibleTo("Xpandables.Net5.EntityFramework")]
 namespace Xpandables.Net5.Entities
 {
     /// <summary>

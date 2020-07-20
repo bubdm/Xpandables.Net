@@ -1,29 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Platforms>x64</Platforms>
     <PublishTrimmed>true</PublishTrimmed>
     <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
-    <Product>Xpandables.Net5 @ 2020</Product>
+    <Product>Xpandables Net5</Product>
     <Description>A utility library in .Net5.0  to easily add patterns such as Command, Query, Dispatcher, Interception...</Description>
     <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
     <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net5</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <FileVersion>1.0.0</FileVersion>
-    <PackageVersion>1.0.0-preview</PackageVersion>
+    <Version>5.0.0-preview.1.0.0</Version>
+    <AssemblyVersion>5.0.0</AssemblyVersion>
+    <FileVersion>5.0.0</FileVersion>
+    <PackageVersion>5.0.0-preview.1.0.0</PackageVersion>
     <PackageId>Xpandables.Net5</PackageId>
     <PackageTags>ICommand, IDispatcher, IQuery{TResult}, Enumeration, Interception, ICommandHandler{TCommand}, IQueryHandler{TQuery, TResult}, ValueObject...</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>Add contracts.</PackageReleaseNotes>
+    <PackageReleaseNotes>Start All-in-one.</PackageReleaseNotes>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AssemblyName>Xpandables.Net5</AssemblyName>
     <RootNamespace>Xpandables.Net5</RootNamespace>
@@ -32,6 +32,10 @@
     <summary>A utility library in .Net to easily add patterns such as Command, Query, Dispatcher, Interception...</summary>
     <language>en-GB</language>
     <NeutralLanguage>en-GB</NeutralLanguage>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Xpandables.Net5.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+    <Company>EFB Entreprises</Company>
 
   </PropertyGroup>
 

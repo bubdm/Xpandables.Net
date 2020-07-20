@@ -27,7 +27,6 @@ using System.Runtime.CompilerServices;
 using Xpandables.Net5.Correlation;
 using Xpandables.Net5.Enumerations;
 
-[assembly: InternalsVisibleTo("Xpandables.Net5.AspNetCore")]
 namespace Xpandables.Net5.Localization
 {
     /// <summary>
@@ -86,7 +85,7 @@ namespace Xpandables.Net5.Localization
         /// Each view model is associated with a resource type name that matches the <see langword="{ViewModelName}Localization"/> or can contains
         /// only one localization file in case of singe file use.
         /// </summary>
-        internal ICorrelationCollection<string, Type> ViewModelResourceTypeCollection
+        public ICorrelationCollection<string, Type> ViewModelResourceTypeCollection
         {
             get
             {
