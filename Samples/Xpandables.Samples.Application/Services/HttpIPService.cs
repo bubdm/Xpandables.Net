@@ -6,14 +6,22 @@ using Xpandables.Net5.HttpRestClient;
 
 namespace Xpandables.Samples.Business.Services
 {
-    public sealed record HttpIPService(IConfiguration Configuration, IHttpRestClientIPGeoLocationHandler GeoLocationHandler)
+    public sealed class HttpIPService
     {
+        private readonly IConfiguration _configuration;
+        private readonly IHttpRestClientIPGeoLocationHandler _geoLocationHandler;
+        public HttpIPService(IConfiguration Configuration, IHttpRestClientIPGeoLocationHandler GeoLocationHandler)
+        {
+            _configuration = Configuration;
+            _geoLocationHandler = GeoLocationHandler;
+        }
+
         public async Task<IPGeoLocationResponse> GetIPGeoLocationAsync()
         {
-            if (Configuration["AccessKey"] is string accessKey)
+            if (_configuration["AccessKey"] is string accessKey)
             {
-                var ipAddress = await GeoLocationHandler.GetIPAddressAsync().ConfigureAwait(false);
-                var response = await GeoLocationHandler.GetIPGeoLocationAsync(new IPGeoLocationRequest(ipAddress.Result, accessKey)).ConfigureAwait(false);
+                var ipAddress = await _geoLocationHandler.GetIPAddressAsync().ConfigureAwait(false);
+                var response = await _geoLocationHandler.GetIPGeoLocationAsync(new IPGeoLocationRequest(ipAddress.Result, accessKey)).ConfigureAwait(false);
 
                 return response.IsValid() ? response.Result : default;
             }

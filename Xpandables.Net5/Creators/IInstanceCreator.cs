@@ -16,33 +16,58 @@
 ************************************************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.ExceptionServices;
+
+using Xpandables.Net5.Helpers;
 
 namespace Xpandables.Net5.Creators
 {
     /// <summary>
-    /// Provides with methods to create instance of specific type at runtime.
+    /// Provides with methods to create instance of specific type at runtime using delegate and cache.
     /// </summary>
     public interface IInstanceCreator
     {
         /// <summary>
-        /// Define an event that will be raised in case of handled exception during a create method execution.
+        /// Contains the instance cache.
         /// </summary>
-        event Action<ExceptionDispatchInfo> OnException;
+        ConcurrentDictionary<string, Delegate> Cache { get; }
 
         /// <summary>
-        /// Returns an instance of the <paramref name="type"/>.
+        /// Define an action that will be called in case of handled exception during a create method execution.
+        /// </summary>
+        Action<ExceptionDispatchInfo>? OnException { get; }
+
+        /// <summary>
+        /// Returns an instance of the <paramref name="type"/> or null if exception.
         /// In case of exception, the <see cref="OnException"/> will be raised.
         /// </summary>
         /// <param name="type">The type to be created.</param>
         /// <returns>An instance of the <paramref name="type"/> if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        object? Create(Type type);
+        [return: MaybeNull]
+        public object Create(Type type)
+        {
+            _ = type ?? throw new ArgumentNullException(nameof(type));
+
+            try
+            {
+                var lambdaConstructor = GetConstructorDelegate<Func<object>>(type, Array.Empty<Type>());
+                return lambdaConstructor.Invoke();
+            }
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch (Exception exception)
+#pragma warning restore CA1031 // Do not catch general exception types
+            {
+                OnException?.Invoke(ExceptionDispatchInfo.Capture(exception));
+                return default;
+            }
+        }
 
         /// <summary>
-        /// Returns an instance of the <paramref name="type"/>.
+        /// Returns an instance of the <paramref name="type"/> or null if exception.
         /// In case of exception, the <see cref="OnException"/> will be raised.
         /// </summary>
         /// <typeparam name="TParam">The type of the parameter to pass to the constructor.</typeparam>
@@ -51,10 +76,28 @@ namespace Xpandables.Net5.Creators
         /// <returns>An instance of the <paramref name="type"/> if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="param"/> is null.</exception>
-        object? Create<TParam>(Type type, TParam param);
+        [return: MaybeNull]
+        public object Create<TParam>(Type type, TParam param)
+        {
+            _ = type ?? throw new ArgumentNullException(nameof(type));
+            _ = param ?? throw new ArgumentNullException(nameof(param));
+
+            try
+            {
+                var lambdaConstructor = GetConstructorDelegate<Func<TParam, object>>(type, new[] { typeof(TParam) });
+                return lambdaConstructor.Invoke(param);
+            }
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch (Exception exception)
+#pragma warning restore CA1031 // Do not catch general exception types
+            {
+                OnException?.Invoke(ExceptionDispatchInfo.Capture(exception));
+                return default;
+            }
+        }
 
         /// <summary>
-        /// Returns an instance of the <paramref name="type"/>.
+        /// Returns an instance of the <paramref name="type"/> or null if exception.
         /// In case of exception, the <see cref="OnException"/> will be raised.
         /// </summary>
         /// <typeparam name="TParam1">The type of the first parameter to pass to the constructor.</typeparam>
@@ -66,10 +109,32 @@ namespace Xpandables.Net5.Creators
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="param1"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="param2"/> is null.</exception>
-        object? Create<TParam1, TParam2>(Type type, TParam1 param1, TParam2 param2);
+        [return: MaybeNull]
+        public object Create<TParam1, TParam2>(Type type, TParam1 param1, TParam2 param2)
+        {
+            _ = type ?? throw new ArgumentNullException(nameof(type));
+            _ = param1 ?? throw new ArgumentNullException(nameof(param1));
+            _ = param2 ?? throw new ArgumentNullException(nameof(param2));
+
+            try
+            {
+                var lambdaConstructor = GetConstructorDelegate<Func<TParam1, TParam2, object>>(
+                    type,
+                    new[] { typeof(TParam1), typeof(TParam2) });
+
+                return lambdaConstructor.Invoke(param1, param2);
+            }
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch (Exception exception)
+#pragma warning restore CA1031 // Do not catch general exception types
+            {
+                OnException?.Invoke(ExceptionDispatchInfo.Capture(exception));
+                return default;
+            }
+        }
 
         /// <summary>
-        /// Returns an instance of the <paramref name="type"/>.
+        /// Returns an instance of the <paramref name="type"/> or null if exception.
         /// In case of exception, the <see cref="OnException"/> will be raised.
         /// </summary>
         /// <typeparam name="TParam1">The type of the first parameter to pass to the constructor.</typeparam>
@@ -84,35 +149,62 @@ namespace Xpandables.Net5.Creators
         /// <exception cref="ArgumentNullException">The <paramref name="param1"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="param2"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="param3"/> is null.</exception>
-        object? Create<TParam1, TParam2, TParam3>(Type type, TParam1 param1, TParam2 param2, TParam3 param3);
+        [return: MaybeNull]
+        public object Create<TParam1, TParam2, TParam3>(Type type, TParam1 param1, TParam2 param2, TParam3 param3)
+        {
+            _ = type ?? throw new ArgumentNullException(nameof(type));
+            _ = param1 ?? throw new ArgumentNullException(nameof(param1));
+            _ = param2 ?? throw new ArgumentNullException(nameof(param2));
+            _ = param3 ?? throw new ArgumentNullException(nameof(param3));
 
-        /// <summary>
-        /// Dynamically creates a class named <see cref="InstanceClass"/> + counter from the <see cref="IEnumerable{InstanceProperty}"/> dynamic properties.
-        /// </summary>
-        /// <param name="properties">The properties list to be used</param>
-        /// <returns><see cref="Type"/> with the specified properties</returns>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <exception cref="NotSupportedException"></exception>
-        /// <exception cref="AmbiguousMatchException"></exception>
-        public static Type CreateClass(IEnumerable<InstanceProperty> properties) => InstanceClassFactory.Instance.GetInstanceClass(properties);
+            try
+            {
+                var lambdaConstructor = GetConstructorDelegate<Func<TParam1, TParam2, TParam3, object>>(
+                    type,
+                    new[] { typeof(TParam1), typeof(TParam2), typeof(TParam3) });
 
-        /// <summary>
-        /// Dynamically creates a class named <see cref="InstanceClass"/> + counter from the list of dynamic properties.
-        /// </summary>
-        /// <param name="properties">The arguments to be used</param>
-        /// <returns><see cref="Type"/> with the specified properties</returns>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <exception cref="NotSupportedException"></exception>
-        /// <exception cref="AmbiguousMatchException"></exception>
-        public static Type CreateClass(params InstanceProperty[] properties) => InstanceClassFactory.Instance.GetInstanceClass(properties);
+                return lambdaConstructor.Invoke(param1, param2, param3);
+            }
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch (Exception exception)
+#pragma warning restore CA1031 // Do not catch general exception types
+            {
+                OnException?.Invoke(ExceptionDispatchInfo.Capture(exception));
+                return default;
+            }
+        }
+
 
         /// <summary>
         /// Clear the constructor cache.
         /// </summary>
-        void ClearCache();
+        public void ClearCache() => Cache.Clear();
+
+        private TDelegate GetConstructorDelegate<TDelegate>(Type type, params Type[] parameterTypes)
+                 where TDelegate : Delegate
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            var key = KeyBuilder(type, parameterTypes);
+            return (TDelegate)Cache.GetOrAdd(key, _ => ConstructDelegate(type, parameterTypes));
+
+            static TDelegate ConstructDelegate(Type t, params Type[] types)
+            {
+                if (t.TryGetConstructorDelegate<TDelegate>(out var constructorDelegate, out var exception, types))
+                    return constructorDelegate!;
+
+                throw exception;
+            }
+        }
+
+        // Build a key for a type
+        private static string KeyBuilder(Type type, params Type[] parameterTypes)
+        {
+            var key = type.FullName!;
+            if (parameterTypes.Length > 0) key += string.Concat(parameterTypes.Select(t => t.Name));
+            if (type.IsGenericType) key += "'1";
+
+            return key;
+        }
     }
 }

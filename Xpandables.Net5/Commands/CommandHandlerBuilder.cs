@@ -44,7 +44,7 @@ namespace Xpandables.Net5.Commands
             => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
 
         /// <summary>
-        /// Asynchronously handle the specified command.
+        /// Asynchronously handle the specified command using the delegate from the constructor.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

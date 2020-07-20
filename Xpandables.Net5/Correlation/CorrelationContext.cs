@@ -21,11 +21,11 @@ using System.Threading.Tasks;
 namespace Xpandables.Net5.Correlation
 {
     /// <summary>
-    /// The implementation of <see cref="ICorrelationContext"/>.
+    /// Default implementation of <see cref="ICorrelationContext"/>. This class depends on <see cref="IServiceProvider"/>.
     /// This class must be used through a behavior and must be registered as follow :
     /// <code>
     ///     services.AddScoped{CorrelationContext};
-    ///     services.AddScoped{ICorrelationContext}(provider=>provider.GetService{CorrelationContext}());
+    ///     services.AddScoped{ICorrelationContext}(provider=>provider.GetRequiredService{CorrelationContext}());
     /// </code>
     /// </summary>
     public sealed class CorrelationContext : ICorrelationContext

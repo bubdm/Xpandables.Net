@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Xpandables.Net5.Helpers;
 using Xpandables.Net5.HttpRestClient;
-using Xpandables.Net5.Notifications;
 using Xpandables.Net5.Windows.Forms;
 using Xpandables.Samples.Business.Contracts;
 using Xpandables.Samples.Desktop.Helpers;
+using Xpandables.Samples.Desktop.Models;
 
 namespace Xpandables.Samples.Desktop.Views
 {
     public partial class LoginForm : Form
     {
-        private readonly DynamicDataBinding<Data> dynamicData = new DynamicDataBinding<Data>(new Data());
+        private readonly DynamicDataBinding<LoginFormModel> dynamicData = new DynamicDataBinding<LoginFormModel>(new LoginFormModel());
         private readonly IHttpRestClientHandler _clientHandler;
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
@@ -26,7 +24,7 @@ namespace Xpandables.Samples.Desktop.Views
             InitializeComponent();
 
             _clientHandler = clientHandler;
-            _clientHandler.Initialize("ApiClient");     
+            _clientHandler.Initialize("ApiClient");
 
             dynamicData.Binding(Email, ctrl => ctrl.Text, data => data.Email);
             dynamicData.Binding(Password, ctrl => ctrl.Text, data => data.Password);
@@ -92,18 +90,5 @@ namespace Xpandables.Samples.Desktop.Views
             Close();
             await Task.CompletedTask.ConfigureAwait(true);
         }
-    }
-
-    public class Data : NotifyPropertyChanged<Data>
-    {
-        private string email;
-        private string password;
-        private string loading;
-        private bool isBusy;
-
-        public string Email { get => email; set => SetProperty(ref email, value); }
-        public string Password { get => password; set => SetProperty(ref password, value); }
-        public string Loading { get => loading; set => SetProperty(ref loading, value); }
-        public bool IsBusy { get => isBusy; set => SetProperty(ref isBusy, value); }
     }
 }

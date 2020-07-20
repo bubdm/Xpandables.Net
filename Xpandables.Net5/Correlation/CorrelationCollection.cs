@@ -23,7 +23,8 @@ using System.Collections.Generic;
 namespace Xpandables.Net5.Correlation
 {
     /// <summary>
-    /// The correlation collection implementation of <see cref="ICorrelationCollection{TKey, TValue}"/>.
+    /// Default implementation of <see cref="ICorrelationCollection{TKey, TValue}"/> that uses a <see cref="ConcurrentDictionary{TKey, TValue}"/>
+    /// to store correlated data. You can customize the storage providing your own implementing of <see cref="ICorrelationCollection{TKey, TValue}"/> interface.
     /// </summary>
     public class CorrelationCollection<TKey, TValue> : ICorrelationCollection<TKey, TValue>
         where TKey : notnull

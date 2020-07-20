@@ -70,13 +70,15 @@ namespace Xpandables.Net5.Cryptography
         /// Returns <see langword="true"/> if equality otherwise <see langword="false"/>.
         /// </summary>
         /// <param name="value">The value to compare with.</param>
+        /// <param name="stringCryptography">The cryptography instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
-        public bool IsEqualTo(string value)
+        /// <exception cref="ArgumentNullException">The <paramref name="stringCryptography"/> is null.</exception>
+        public bool IsEqualTo(string value, IStringCryptography stringCryptography)
         {
-            if (value is null) throw new ArgumentNullException(nameof(value));
+            _ = value ?? throw new ArgumentNullException(nameof(value));
+            _ = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
 
-            IStringCryptography cryptography = new StringCryptography(new StringGenerator());
-            return cryptography.AreEqual(this, value);
+            return stringCryptography.AreEqual(this, value);
         }
 
         /// <summary>
@@ -108,7 +110,8 @@ namespace Xpandables.Net5.Cryptography
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
-        public static bool operator ==(ValueEncrypted left, ValueEncrypted right) => left.Equals(right);
+        public static bool operator ==(ValueEncrypted left, ValueEncrypted right) =>
+            left is null && right is null || !(left is null) && !(right is null) && left.Equals(right);
 
         /// <summary>
         /// Applies non equality operator.
@@ -121,7 +124,7 @@ namespace Xpandables.Net5.Cryptography
         /// Compares <see cref="ValueEncrypted"/> with the value.
         /// </summary>
         /// <param name="other">Option to compare with.</param>
-        public bool Equals(ValueEncrypted other) => (Key, Value, Salt) == (other.Key, other.Value, other.Salt);
+        public bool Equals(ValueEncrypted other) => other is ValueEncrypted && (Key, Value, Salt) == (other.Key, other.Value, other.Salt);
 
         /// <summary>
         /// Computes the hash-code for the <see cref="ValueEncrypted"/> instance.

@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 using Xpandables.Net5.Enumerations;
 
@@ -52,11 +53,13 @@ namespace Xpandables.Net5.Entities
         /// <summary>
         /// The natural person type.
         /// </summary>
+        [Display(Name = nameof(Natural))]
         public static PersonType Natural => new PersonType(1, nameof(Natural));
 
         /// <summary>
         /// The legal person type.
         /// </summary>
+        [Display(Name = nameof(Legal))]
         public static PersonType Legal => new PersonType(2, nameof(Legal));
     }
 }

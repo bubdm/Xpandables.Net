@@ -21,7 +21,7 @@ using Xpandables.Net5.Queries;
 namespace Xpandables.Net5.Correlation
 {
     /// <summary>
-    /// A marker interface that allows the command/query class to add event after control flow.
+    /// A marker interface that allows the command/query class to add correlation context event after control flow.
     /// In the class handling the query or command, you should reference
     /// the <see cref="ICorrelationContext"/> and set the <see cref="ICorrelationContext.PostEvent"/> and/or
     /// <see cref="ICorrelationContext.RollbackEvent"/>.

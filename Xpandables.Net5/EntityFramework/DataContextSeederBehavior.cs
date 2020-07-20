@@ -25,7 +25,7 @@ namespace Xpandables.Net5.EntityFramework
     /// The class decorates the target <see cref="IDataContextProvider"/> with an implementation of
     /// <see cref="IDataContextSeeder{TDataContext}"/> that will be called before the data context is returned.
     /// </summary>
-    public sealed record DataContextSeederBehavior<TDataContext> : IDataContextProvider
+    public sealed class DataContextSeederBehavior<TDataContext> : IDataContextProvider
         where TDataContext : IDataContext, IBehaviorSeed
     {
         private readonly IDataContextProvider _decoratee;

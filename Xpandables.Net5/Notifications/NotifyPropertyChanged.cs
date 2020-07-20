@@ -32,7 +32,7 @@ namespace Xpandables.Net5.Notifications
     /// </summary>
     /// <typeparam name="T">Type of the derived class.</typeparam>
     [Serializable]
-    public abstract class NotifyPropertyChanged<T> : INotifyPropertyChanged
+    public abstract class NotifyPropertyChanged<T> : Disposable, INotifyPropertyChanged
         where T : class
     {
         /// <summary>

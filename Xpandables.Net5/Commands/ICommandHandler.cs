@@ -22,6 +22,16 @@ using System.Threading.Tasks;
 namespace Xpandables.Net5.Commands
 {
     /// <summary>
+    /// This interface is used as a marker for commands when using the command pattern.
+    /// Class implementation is used with the <see cref="ICommandHandler{TCommand}"/> where
+    /// "TCommand" is <see cref="ICommand"/> class implementation.
+    /// This can also be enhanced with some useful interface decorators.
+    /// </summary>
+#pragma warning disable CA1040 // Avoid empty interfaces
+    public interface ICommand { }
+#pragma warning restore CA1040 // Avoid empty interfaces
+
+    /// <summary>
     /// Allows an application author to define a handler for a specific type command.
     /// The command must implement <see cref="ICommand"/> interface.
     /// The implementation must be thread-safe when working in a multi-threaded environment.

@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -27,21 +28,24 @@ namespace Xpandables.Net5.Cryptography
     /// </summary>
     public interface IStringGenerator
     {
-        private const string source = "abcdefghijklmonpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,;!(-è_çàà)=@%µ£¨//?§/.?";
+        /// <summary>
+        /// The lookup characters used to generate random string.
+        /// </summary>
+        public const string LookupCharacters = "abcdefghijklmonpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,;!(-è_çàà)=@%µ£¨//?§/.?";
 
         /// <summary>
         /// Generates a string of the specified length that contains random characters from the lookup characters.
         /// <para>The implementation uses the <see cref="RNGCryptoServiceProvider"/>.</para>
         /// </summary>
         /// <param name="length">The length of the expected string value.</param>
-        /// <param name="lookupCharacters">The string to be used to pick characters from.</param>
+        /// <param name="lookupCharacters">The string to be used to pick characters from or default one.</param>
         /// <returns>A new string of the specified length with random characters.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="length"/> is lower or equal to zero
-        /// or greater than <see cref="byte.MaxValue"/>.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="length"/> must be greater than zero
+        /// and lower or equal to <see cref="ushort.MaxValue"/>.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="lookupCharacters"/> is null.</exception>
-        string Generate(int length, string lookupCharacters)
+        public string Generate(ushort length, string lookupCharacters = LookupCharacters)
         {
-            if (length <= 0 || length > byte.MaxValue) throw new ArgumentOutOfRangeException(nameof(length));
+            if (length == 0) throw new ArgumentException($"{nameof(length)} must be greater than zero and lower or equal to {ushort.MaxValue}");
             if (string.IsNullOrWhiteSpace(lookupCharacters)) throw new ArgumentNullException(nameof(lookupCharacters));
 
             var stringResult = new StringBuilder(length);
@@ -70,14 +74,14 @@ namespace Xpandables.Net5.Cryptography
         /// Generates a salt base64 string of the specified byte length.
         /// <para>The implementation uses the <see cref="RNGCryptoServiceProvider"/>.</para>
         /// </summary>
-        /// <param name="length">The length of the expected byte value.</param>
+        /// <param name="length">The length of the expected string value.</param>
         /// <returns>A new base64 string from the salt bytes.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="length"/> is lower or equal to zero
-        /// or greater than <see cref="byte.MaxValue"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="length"/> must be greater than zero
+        /// and lower or equal to <see cref="ushort.MaxValue"/>.</exception>
         /// <exception cref="InvalidOperationException">Generating the salt failed. See inner exception.</exception>
-        string GenerateSalt(int length = 32)
+        public string GenerateSalt(ushort length = 32)
         {
-            if (length <= 0 || length > byte.MaxValue) throw new ArgumentOutOfRangeException(nameof(length));
+            if (length == 0) throw new ArgumentException($"{nameof(length)} must be greater than zero and lower or equal to {ushort.MaxValue}");
 
             try
             {
@@ -99,8 +103,9 @@ namespace Xpandables.Net5.Cryptography
         /// </summary>
         /// <param name="length">The length of the expected string value.</param>
         /// <returns>A new string of the specified length with random characters.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="length"/> is lower or equal to zero.</exception>
-        string Generate(int length) => Generate(length, source);
+        /// <exception cref="ArgumentException">The <paramref name="length"/> must be greater than zero
+        /// and lower or equal to <see cref="ushort.MaxValue"/>.</exception>
+        public string Generate(ushort length) => Generate(length, LookupCharacters);
     }
 
     /// <summary>

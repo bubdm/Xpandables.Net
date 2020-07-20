@@ -28,31 +28,31 @@ namespace Xpandables.Net5.Correlation
     /// The target command should implement the <see cref="IBehaviorCorrelation"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ICorrelationContext"/> that
     /// adds an event (post event) to be executed after the main one in the same control flow only if there is no exception,
-    /// and an event (roll back event) to be executed when exception. The target command handler class should reference the
+    /// and an event (roll back event) to be executed when exception. The target command handler class implementation should reference the
     /// <see cref="ICorrelationContext"/> interface in order to set the expected actions.
     /// </summary>
-    /// <typeparam name="TCommand">Type of command.</typeparam>
+    /// <typeparam name="TCommand">Type of the command to be handled.</typeparam>
     public sealed class CommandCorrelationBehavior<TCommand> : ICommandHandler<TCommand>
         where TCommand : class, ICommand, IBehaviorCorrelation
     {
         private readonly ICommandHandler<TCommand> _decoratee;
-        private readonly CorrelationContext _eventRegister;
+        private readonly CorrelationContext _correlationContext;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="CommandCorrelationBehavior{TCommand}"/> class.
+        /// Initializes a new instance of <see cref="CommandCorrelationBehavior{TCommand}"/> class with the correlation context and the command handler to be decorated.
         /// </summary>
-        /// <param name="eventRegister">The event register.</param>
-        /// <param name="decoratee">The decorated command handler.</param>
+        /// <param name="correlationContext">The correlation context.</param>
+        /// <param name="decoratee">The command handler to be decorated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="eventRegister"/> is null.</exception>
-        public CommandCorrelationBehavior(CorrelationContext eventRegister, ICommandHandler<TCommand> decoratee)
+        /// <exception cref="ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
+        public CommandCorrelationBehavior(CorrelationContext correlationContext, ICommandHandler<TCommand> decoratee)
         {
-            _eventRegister = eventRegister ?? throw new ArgumentNullException(nameof(eventRegister));
+            _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
         /// <summary>
-        /// Asynchronously handle the specified command.
+        /// Asynchronously handle the specified command adding post/rollback event to the decorated handler.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -62,11 +62,11 @@ namespace Xpandables.Net5.Correlation
             try
             {
                 await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                await _eventRegister.OnPostEventAsync().ConfigureAwait(false);
+                await _correlationContext.OnPostEventAsync().ConfigureAwait(false);
             }
             catch (Exception exception)
             {
-                await _eventRegister.OnRollbackEventAsync(exception).ConfigureAwait(false);
+                await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
                 throw;
             }
         }

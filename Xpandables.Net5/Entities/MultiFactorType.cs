@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 using Xpandables.Net5.Enumerations;
 
@@ -41,11 +42,13 @@ namespace Xpandables.Net5.Entities
         /// MultiFactor authentication using SMS.
         /// </summary>
 #pragma warning disable CA1707 // Identifiers should not contain underscores
+        [Display(Name = nameof(MFA_SMS))]
         public static MultiFactorType MFA_SMS => new MultiFactorType(1, nameof(MFA_SMS));
 
         /// <summary>
         /// MultiFactor authentication using a Time-based One-time Password Algorithm.
         /// </summary>
+        [Display(Name = nameof(MFA_TOTP))]
         public static MultiFactorType MFA_TOTP => new MultiFactorType(2, nameof(MFA_TOTP));
 #pragma warning restore CA1707 // Identifiers should not contain underscores
     }

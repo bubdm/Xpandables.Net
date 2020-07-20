@@ -45,6 +45,12 @@ namespace Xpandables.Net5.Entities
         public bool IsMan() => this == Man;
 
         /// <summary>
+        /// Determines whether the current instance is a <see cref="Woman"/>.
+        /// </summary>
+        /// <returns><see langword="true"/> if so, otherwise <see langword="false"/></returns>
+        public bool IsWoman() => this == Woman;
+
+        /// <summary>
         /// Determines whether the current instance is a <see cref="Undefined"/>.
         /// </summary>
         /// <returns><see langword="true"/> if so, otherwise <see langword="false"/></returns>
@@ -53,6 +59,7 @@ namespace Xpandables.Net5.Entities
         /// <summary>
         /// The undefined gender.
         /// </summary>
+        [Display(Name = nameof(Undefined))]
         public static Gender Undefined => new Gender(0, nameof(Undefined));
 
         /// <summary>

@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net5.Cryptography;
 using Xpandables.Net5.EntityFramework;
 using Xpandables.Net5.Helpers;
 using Xpandables.Net5.Http;
@@ -19,19 +20,21 @@ namespace Xpandables.Samples.Business.Handlers
         private readonly IDataContext _dataContext;
         private readonly IHttpTokenEngine _tokenEngine;
         private readonly HttpIPService _httpIPService;
+        private readonly IStringCryptography _stringCryptography;
 
-        public SignInRequestHandler(IDataContext dataContext, IHttpTokenEngine tokenEngine, HttpIPService httpIPService)
+        public SignInRequestHandler(IDataContext dataContext, IHttpTokenEngine tokenEngine, HttpIPService httpIPService, IStringCryptography stringCryptography)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _tokenEngine = tokenEngine ?? throw new ArgumentNullException(nameof(tokenEngine));
             _httpIPService = httpIPService ?? throw new ArgumentNullException(nameof(httpIPService));
+            _stringCryptography = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
         }
 
         public async Task<SignInResponse> HandleAsync(SignInRequest query, CancellationToken cancellationToken = default)
         {
             var user = await _dataContext.SetOf(query).FirstOrDefaultAsync(query, cancellationToken).ConfigureAwait(false);
 
-            if (user?.Password.IsEqualTo(query.Password) != true)
+            if (user?.Password.IsEqualTo(query.Password, _stringCryptography) != true)
             {
                 throw this.GetValidationException(
                     ErrorMessages.UserNotExist.StringFormat(query.Email),

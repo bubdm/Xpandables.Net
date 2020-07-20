@@ -13,7 +13,8 @@ namespace Xpandables.Samples.Domain.Models
     {
         public static User Create(string email, string firstName, string lastName, string password, Gender gender, Picture picture)
         {
-            var user = new User(email, Name.Create(firstName, lastName), gender, new StringCryptography(new StringGenerator()).Encrypt(password), picture);
+            IStringCryptography stringCryptography = new StringCryptography(new StringGenerator());
+            var user = new User(email, Name.Create(firstName, lastName), gender, stringCryptography.Encrypt(password), picture);
             user.Activate();
             return user;
         }
