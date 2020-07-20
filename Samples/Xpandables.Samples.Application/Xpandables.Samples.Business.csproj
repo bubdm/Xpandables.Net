@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Xpandables.Net5.DependencyInjection\Xpandables.Net5.DependencyInjection.csproj" />
-    <ProjectReference Include="..\..\Xpandables.Net5.EntityFramework\Xpandables.Net5.EntityFramework.csproj" />
-    <ProjectReference Include="..\..\Xpandables.Net5.ManagedExtensibility\Xpandables.Net5.ManagedExtensibility.csproj" />
-    <ProjectReference Include="..\..\Xpandables.Net5\Xpandables.Net5.csproj" />
     <ProjectReference Include="..\Xpandables.Samples.Domain\Xpandables.Samples.Domain.csproj" />
   </ItemGroup>
 

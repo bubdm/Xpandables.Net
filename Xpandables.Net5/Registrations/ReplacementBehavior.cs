@@ -15,24 +15,36 @@
  *
 ************************************************************************************************************/
 
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using System;
 
-namespace Xpandables.Net5.ManagedExtensibility
+namespace Xpandables.Net5.DependencyInjection.Registrations
 {
     /// <summary>
-    /// Provides with an interface that allows external libraries to register types to the services collection.
-    /// This interface is used with MEF : Managed Extensibility Framework.
-    /// The implementation class must be decorated with the attribute <see langword="System.ComponentModel.Composition.ExportAttribute"/>
-    /// with the type of <see cref="IAddServiceExport"/> as contract type.
+    /// Determines how the service will be replaced.
     /// </summary>
-    public interface IAddServiceExport
+    [Flags]
+#pragma warning disable CA1714 // Flags enums should have plural names
+    public enum ReplacementBehavior
+#pragma warning restore CA1714 // Flags enums should have plural names
     {
         /// <summary>
-        /// When implemented, this method should add types to the services collection.
+        /// Replace existing services by service type.
         /// </summary>
-        /// <param name="services">The services collection to act on.</param>
-        /// <param name="configuration">The application configuration.</param>
-        void AddServices(IServiceCollection services, IConfiguration configuration);
+        Default = 0,
+
+        /// <summary>
+        /// Replace existing services by service type (default).
+        /// </summary>
+        ServiceType = 1,
+
+        /// <summary>
+        /// Replace existing services by implementation type.
+        /// </summary>
+        ImplementationType = 2,
+
+        /// <summary>
+        /// Replace existing services by either service- or implementation type.
+        /// </summary>
+        All = ServiceType | ImplementationType
     }
 }

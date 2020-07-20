@@ -70,7 +70,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Xpandables.Net5.DependencyInjection\Xpandables.Net5.DependencyInjection.csproj" />
+    <ProjectReference Include="..\Xpandables.Net5\Xpandables.Net5.csproj" />
   </ItemGroup>
 
 </Project>

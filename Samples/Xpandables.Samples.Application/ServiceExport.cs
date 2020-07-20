@@ -13,9 +13,9 @@ using Xpandables.Samples.Business.Services;
 namespace Xpandables.Samples.Business
 {
     [Export(typeof(IAddServiceExport))]
-    public sealed class ServiceExport : AddServiceExportExtended
+    public sealed class ServiceExport : IAddServiceExport
     {
-        public override void AddServices(IServiceCollection services, IConfiguration configuration)
+        public void AddServices(IServiceCollection services, IConfiguration configuration)
         {
             var assemblies = Assembly.GetExecutingAssembly().SingleToEnumerable().ToArray();
 

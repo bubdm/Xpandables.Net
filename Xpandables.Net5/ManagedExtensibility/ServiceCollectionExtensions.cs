@@ -15,15 +15,17 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 using System;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
+using Xpandables.Net5.Helpers;
 using Xpandables.Net5.ManagedExtensibility;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace
@@ -36,56 +38,65 @@ namespace Xpandables.Net5.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds and configures application services using the<see cref="IUseServiceExport"/> implementations found in the current application path.
+        /// Adds and configures registration of services using the <see cref="IAddServiceExport"/> implementations found in the current application path.
         /// This method is used with MEF : Managed Extensibility Framework.
         /// </summary>
-        /// <param name="application">The collection of services.</param>
-        /// <param name="environment">The web hosting environment instance.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="application"/> is null.</exception>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public static IApplicationBuilder UseXServiceExport(this IApplicationBuilder application, IWebHostEnvironment environment)
+        public static IServiceCollection AddXServiceExport(this IServiceCollection services, IConfiguration configuration)
         {
-            if (application is null) throw new ArgumentNullException(nameof(application));
-            return application.UseXServiceExport(environment, _ => { });
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            services.AddXServiceExport(configuration, _ => { });
+            return services;
         }
 
         /// <summary>
-        /// Adds and configures application services using the<see cref="IUseServiceExport"/> implementations found in the path.
+        /// Adds and configures registration of services using the<see cref="IAddServiceExport"/> implementations found in the path.
         /// This method is used with MEF : Managed Extensibility Framework.
         /// </summary>
-        /// <param name="application">The application builder instance.</param>
-        /// <param name="environment">The </param>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="configuration">The application configuration.</param>
         /// <param name="configureOptions">A delegate to configure the <see cref="ExportServiceOptions"/>.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="application"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="environment"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="configureOptions"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public static IApplicationBuilder UseXServiceExport(
-            this IApplicationBuilder application, IWebHostEnvironment environment, Action<ExportServiceOptions> configureOptions)
+        public static IServiceCollection AddXServiceExport(
+            this IServiceCollection services, IConfiguration configuration, Action<ExportServiceOptions> configureOptions)
         {
-            if (application is null) throw new ArgumentNullException(nameof(application));
-            if (environment == null) throw new ArgumentNullException(nameof(environment));
-            if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _ = configureOptions ?? throw new ArgumentNullException(nameof(configureOptions));
 
             var definedOptions = new ExportServiceOptions();
             configureOptions.Invoke(definedOptions);
-            application.UseServiceExport(environment, definedOptions);
+            services.AddServiceExport(configuration, definedOptions);
 
-            return application;
+            return services;
         }
 
-        private static void UseServiceExport(this IApplicationBuilder applicationBuilder, IWebHostEnvironment webHostEnvironment, ExportServiceOptions options)
+        /// <summary>
+        /// Adds exports services matching the specified options.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="options">The export options.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        public static void AddServiceExport(this IServiceCollection services, IConfiguration configuration, ExportServiceOptions options)
         {
-            _ = applicationBuilder ?? throw new ArgumentNullException(nameof(applicationBuilder));
-            _ = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = options ?? throw new ArgumentNullException(nameof(options));
+
             try
             {
                 using var directoryCatalog = options.SearchSubDirectories
                     ? new RecursiveDirectoryCatalog(options.Path, options.SearchPattern)
                     : (ComposablePartCatalog)new DirectoryCatalog(options.Path, options.SearchPattern);
 
-                var importDefinition = BuildUseImportDefinition();
+                var importDefinition = BuildAddImportDefinition();
 
                 using var aggregateCatalog = new AggregateCatalog();
                 aggregateCatalog.Catalogs.Add(directoryCatalog);
@@ -94,10 +105,10 @@ namespace Xpandables.Net5.DependencyInjection
                 var exportServices = compositionContainer
                     .GetExports(importDefinition)
                     .Select(def => def.Value)
-                    .OfType<IUseServiceExport>();
+                    .OfType<IAddServiceExport>();
 
                 foreach (var export in exportServices)
-                    export.UseServices(applicationBuilder, webHostEnvironment);
+                    export.AddServices(services, configuration);
             }
             catch (Exception exception) when (exception is NotSupportedException
                                             || exception is System.IO.DirectoryNotFoundException
@@ -106,14 +117,14 @@ namespace Xpandables.Net5.DependencyInjection
                                             || exception is System.IO.PathTooLongException
                                             || exception is ReflectionTypeLoadException)
             {
-                throw new InvalidOperationException("Using exports failed. See inner exception.", exception);
+                throw new InvalidOperationException("Adding exports failed. See inner exception.", exception);
             }
         }
 
-        private static ImportDefinition BuildUseImportDefinition()
+        private static ImportDefinition BuildAddImportDefinition()
             => new ImportDefinition(
                     _ => true,
-                    typeof(IUseServiceExport).FullName,
+                    typeof(IAddServiceExport).FullName,
                     ImportCardinality.ZeroOrMore,
                     false,
                     false);

@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,21 +15,22 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
+using System.ComponentModel.Composition.Primitives;
+using System.Linq;
 
 namespace Xpandables.Net5.ManagedExtensibility
 {
     /// <summary>
-    /// Provides with an interface that allows external libraries to configure application services.
-    /// This interface is used with MEF : Managed Extensibility Framework.
-    /// The implementation class must be decorated with the attribute <see langword="Export(typeof(IUseServiceExport))"/>.
+    /// Defines a <see cref="ComposablePartCatalog"/> implementation that always returns an empty collection of parts.
     /// </summary>
-    public interface IUseServiceExport
+    public sealed class EmptyCatalog : ComposablePartCatalog
     {
         /// <summary>
-        /// When implemented, this method should configure application services.
+        /// Gets the part definitions that are contained in the catalog.
         /// </summary>
-        /// <param name="applicationBuilder">The application builder to act on.</param>
-        /// <param name="webHostEnvironment">The web hosting environment instance.</param>
-        void UseServices(object applicationBuilder, object webHostEnvironment);
+        /// <returns>The <see cref="ComposablePartDefinition" /> contained in the <see cref="ComposablePartCatalog" />.</returns>
+        /// <exception cref="ObjectDisposedException">The <see cref="ComposablePartCatalog" /> object has been disposed of.</exception>
+        public override IQueryable<ComposablePartDefinition> Parts => Enumerable.Empty<ComposablePartDefinition>().AsQueryable();
     }
 }

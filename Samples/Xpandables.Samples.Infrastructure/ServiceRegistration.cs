@@ -10,9 +10,9 @@ using Xpandables.Net5.ManagedExtensibility;
 namespace Xpandables.Samples.Infrastructure
 {
     [Export(typeof(IAddServiceExport))]
-    public sealed class ServiceRegistration : AddServiceExportExtended
+    public sealed class ServiceRegistration : IAddServiceExport
     {
-        public override void AddServices(IServiceCollection services, IConfiguration configuration)
+        public void AddServices(IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<DataContextSettings>(configuration.GetSection(nameof(DataContextSettings)));
             services.AddXStringGeneratorCryptography();
