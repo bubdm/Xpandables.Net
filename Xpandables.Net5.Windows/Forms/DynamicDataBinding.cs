@@ -19,58 +19,59 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Windows.Forms;
 
-using Xpandables.Net5.Expressions;
+using Xpandables.Net.Expressions;
 
-namespace Xpandables.Net5.Windows.Forms
+namespace Xpandables.Net.Windows.Forms
 {
     /// <summary>
     /// Provides with a mechanism to dynamically bind data in Windows Form.
     /// </summary>
-    /// <typeparam name="TSource">The data source type to be used as data-source</typeparam>
-    public sealed class DynamicDataBinding<TSource> : Disposable
-        where TSource : class
+    /// <typeparam name="TData">The data source type to be used as data-source</typeparam>
+    public sealed class DynamicDataBinding<TData> : Disposable
+        where TData : class
     {
         private bool _isDisposed;
-        private readonly System.Windows.Forms.BindingSource _bindingSource = new System.Windows.Forms.BindingSource();
+        private readonly BindingSource _bindingSource = new BindingSource();
 
         /// <summary>
         /// Initializes a new instance of <see cref="DynamicDataBinding{TSource}"/> with a data source.
         /// </summary>
-        /// <param name="source">The data source instance.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public DynamicDataBinding(TSource source) => _bindingSource.DataSource = source ?? throw new ArgumentNullException(nameof(source));
+        /// <param name="data">The data source instance.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="data"/> is null.</exception>
+        public DynamicDataBinding(TData data) => _bindingSource.DataSource = data ?? throw new ArgumentNullException(nameof(data));
 
         /// <summary>
         /// Gets the data source instance.
         /// </summary>
-        public TSource Source => (TSource)_bindingSource.DataSource;
+        public TData Data => (TData)_bindingSource.DataSource;
 
         /// <summary>
         /// Creates a binding between a property of a collection of controls and a property of a data source.
         /// </summary>
         /// <typeparam name="TControl">The control <typeparamref name="TControl"/>.</typeparam>
         /// <typeparam name="TControlProperty">The control property type.</typeparam>
-        /// <typeparam name="TModelProperty">The data source property type.</typeparam>
+        /// <typeparam name="TDataProperty">The data source property type.</typeparam>
         /// <param name="controls">Contains a collection of control instances.</param>
         /// <param name="controlPropertyAccessor">Contains the expression used to specify the control property.</param>
-        /// <param name="sourcePropertyAccessor">Contains the expression used to specify the source property to bind to control property.</param>
+        /// <param name="dataPropertyAccessor">Contains the expression used to specify the source property to bind to control property.</param>
         /// <param name="controlTransformAccessor">Contains the expression for applying a custom source property transformation.
         /// It's used to specify the binding format event. It can be null.</param>
-        /// <param name="sourceUpdateMode">Contains the data source update mode.</param>
+        /// <param name="dataUpdateMode">Contains the data source update mode.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="controls"/> is null or empty.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="sourcePropertyAccessor"/> is null.</exception>
-        public void MultipleBinding<TControl, TControlProperty, TModelProperty>(
+        /// <exception cref="ArgumentNullException">The <paramref name="dataPropertyAccessor"/> is null.</exception>
+        public void MultipleBinding<TControl, TControlProperty, TDataProperty>(
             IEnumerable<TControl> controls,
             Expression<Func<TControl, TControlProperty>> controlPropertyAccessor,
-            Expression<Func<TSource, TModelProperty>> sourcePropertyAccessor,
-            Func<TModelProperty, TControlProperty>? controlTransformAccessor = default,
-            System.Windows.Forms.DataSourceUpdateMode sourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged)
-            where TControl : System.Windows.Forms.Control
+            Expression<Func<TData, TDataProperty>> dataPropertyAccessor,
+            Func<TDataProperty, TControlProperty>? controlTransformAccessor = default,
+            DataSourceUpdateMode dataUpdateMode = DataSourceUpdateMode.OnPropertyChanged)
+            where TControl : Control
         {
             if (controls?.Any() != true) throw new ArgumentNullException(nameof(controls));
             foreach (var control in controls)
-                Binding(control, controlPropertyAccessor, sourcePropertyAccessor, controlTransformAccessor, sourceUpdateMode);
+                Binding(control, controlPropertyAccessor, dataPropertyAccessor, controlTransformAccessor, dataUpdateMode);
         }
 
         /// <summary>
@@ -78,29 +79,29 @@ namespace Xpandables.Net5.Windows.Forms
         /// </summary>
         /// <typeparam name="TControl">The control <typeparamref name="TControl"/>.</typeparam>
         /// <typeparam name="TControlProperty">The control property type.</typeparam>
-        /// <typeparam name="TModelProperty">The data source property type.</typeparam>
+        /// <typeparam name="TDataProperty">The data source property type.</typeparam>
         /// <param name="control">Contains the instance of the control.</param>
         /// <param name="controlPropertyAccessor">Contains the expression used to specify the control property.</param>
-        /// <param name="sourcePropertyAccessor">Contains the expression used to specify the source property to bind to control property.</param>
+        /// <param name="dataPropertyAccessor">Contains the expression used to specify the source property to bind to control property.</param>
         /// <param name="controlTransformAccessor">Contains the expression for applying a custom source property transformation.
         /// It's used to specify the binding format event. It can be null.</param>
-        /// <param name="sourceUpdateMode">Contains the data source update mode.</param>
+        /// <param name="dataUpdateMode">Contains the data source update mode.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="control"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="sourcePropertyAccessor"/> is null.</exception>
-        public void Binding<TControl, TControlProperty, TModelProperty>(
+        /// <exception cref="ArgumentNullException">The <paramref name="dataPropertyAccessor"/> is null.</exception>
+        public void Binding<TControl, TControlProperty, TDataProperty>(
             TControl control,
             Expression<Func<TControl, TControlProperty>> controlPropertyAccessor,
-            Expression<Func<TSource, TModelProperty>> sourcePropertyAccessor,
-            Func<TModelProperty, TControlProperty>? controlTransformAccessor = default,
-            System.Windows.Forms.DataSourceUpdateMode sourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged)
-            where TControl : System.Windows.Forms.Control
+            Expression<Func<TData, TDataProperty>> dataPropertyAccessor,
+            Func<TDataProperty, TControlProperty>? controlTransformAccessor = default,
+            DataSourceUpdateMode dataUpdateMode = DataSourceUpdateMode.OnPropertyChanged)
+            where TControl : Control
         {
             var propertyName = controlPropertyAccessor?.GetMemberName() ?? throw new ArgumentNullException(nameof(controlPropertyAccessor));
-            var sourcePropetyName = sourcePropertyAccessor?.GetMemberName() ?? throw new ArgumentNullException(nameof(sourcePropertyAccessor));
-            var binding = control?.DataBindings.Add(propertyName, _bindingSource, sourcePropetyName, true, sourceUpdateMode)
+            var sourcePropetyName = dataPropertyAccessor?.GetMemberName() ?? throw new ArgumentNullException(nameof(dataPropertyAccessor));
+            var binding = control?.DataBindings.Add(propertyName, _bindingSource, sourcePropetyName, true, dataUpdateMode)
                 ?? throw new ArgumentNullException(nameof(control));
             if (controlTransformAccessor is { })
-                binding.Format += (sender, e) => e.Value = controlTransformAccessor((TModelProperty)e.Value);
+                binding.Format += (sender, e) => e.Value = controlTransformAccessor((TDataProperty)e.Value);
         }
 
         /// <summary>

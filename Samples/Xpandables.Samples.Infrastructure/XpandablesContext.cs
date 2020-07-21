@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Xpandables.Net5.Entities;
-using Xpandables.Net5.EntityFramework;
+using Xpandables.Net.Entities;
+using Xpandables.Net.EntityFramework;
 using Xpandables.Samples.Domain.Models;
 
 namespace Xpandables.Samples.Infrastructure

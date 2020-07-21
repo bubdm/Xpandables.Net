@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
-using Xpandables.Net5.DependencyInjection;
+using Xpandables.Net.DependencyInjection;
 using Xpandables.Samples.Api.Configurations;
 using Xpandables.Samples.Api.Middlewares;
 using Xpandables.Samples.Business.Localization;
@@ -49,7 +49,7 @@ namespace Xpandables.Samples.Api
             services.AddXDispatcher();
 
             // IP Geo-Location
-            services.AddXHttpRestClientIPGeoLocationHandler();
+            services.AddXHttpRestClientGeoLocationHandler();
 
             services
                 .AddAuthentication()

@@ -60,7 +60,7 @@ namespace Xpandables.Samples.Infrastructure.Migrations
 
             modelBuilder.Entity("Xpandables.Samples.Domain.Models.User", b =>
                 {
-                    b.OwnsOne("Xpandables.Net5.Cryptography.ValueEncrypted", "Password", b1 =>
+                    b.OwnsOne("Xpandables.Net.Cryptography.ValueEncrypted", "Password", b1 =>
                         {
                             b1.Property<string>("UserId")
                                 .HasColumnType("nvarchar(450)");
@@ -85,7 +85,7 @@ namespace Xpandables.Samples.Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Xpandables.Net5.Entities.Name", "Name", b1 =>
+                    b.OwnsOne("Xpandables.Net.Entities.Name", "Name", b1 =>
                         {
                             b1.Property<string>("UserId")
                                 .HasColumnType("nvarchar(450)");
@@ -108,7 +108,7 @@ namespace Xpandables.Samples.Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Xpandables.Net5.Entities.Picture", "Picture", b1 =>
+                    b.OwnsOne("Xpandables.Net.Entities.Picture", "Picture", b1 =>
                         {
                             b1.Property<string>("UserId")
                                 .HasColumnType("nvarchar(450)");

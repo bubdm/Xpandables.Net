@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-using Xpandables.Net5.Identities;
+using Xpandables.Net.Identities;
 using Xpandables.Samples.Domain;
 using Xpandables.Samples.Domain.Models;
 

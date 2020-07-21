@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
-using Xpandables.Net5.Cryptography;
-using Xpandables.Net5.Entities;
-using Xpandables.Net5.Http;
+using Xpandables.Net.Cryptography;
+using Xpandables.Net.Entities;
+using Xpandables.Net.Http;
 
 namespace Xpandables.Samples.Domain.Models
 {

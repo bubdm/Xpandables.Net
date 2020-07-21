@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using Xpandables.Net5.ValidatorRules;
+using Xpandables.Net.ValidatorRules;
 
 namespace Xpandables.Samples.Desktop.Helpers
 {

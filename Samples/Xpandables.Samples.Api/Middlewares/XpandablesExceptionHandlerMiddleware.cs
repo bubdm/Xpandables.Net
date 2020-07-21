@@ -10,8 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Threading.Tasks;
 
-using Xpandables.Net5.AspNetCore.Helpers;
-using Xpandables.Net5.HttpRestClient;
+using Xpandables.NetCore.Helpers;
 
 namespace Xpandables.Samples.Api.Middlewares
 {

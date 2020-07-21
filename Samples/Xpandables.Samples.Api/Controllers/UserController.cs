@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net5.Dispatchers;
+using Xpandables.Net.Dispatchers;
 using Xpandables.Samples.Business.Contracts;
 
 namespace Xpandables.Samples.Api.Controllers

@@ -1,8 +1,8 @@
 ﻿
 using System.Drawing;
 
-using Xpandables.Net5.Entities;
-using Xpandables.Net5.Notifications;
+using Xpandables.Net.Entities;
+using Xpandables.Net.Notifications;
 
 namespace Xpandables.Samples.Desktop.Models
 {

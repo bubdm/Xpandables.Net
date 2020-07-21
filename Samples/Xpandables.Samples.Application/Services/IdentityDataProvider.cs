@@ -1,7 +1,7 @@
 ﻿using System;
 
-using Xpandables.Net5.Http;
-using Xpandables.Net5.Identities;
+using Xpandables.Net.Http;
+using Xpandables.Net.Identities;
 using Xpandables.Samples.Domain.Models;
 
 namespace Xpandables.Samples.Business.Services

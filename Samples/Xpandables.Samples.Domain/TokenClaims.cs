@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
-using Xpandables.Net5;
-using Xpandables.Net5.Entities;
-using Xpandables.Net5.Enumerations;
+using Xpandables.Net;
+using Xpandables.Net.Entities;
+using Xpandables.Net.Enumerations;
 
 namespace Xpandables.Samples.Domain
 {

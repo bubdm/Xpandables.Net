@@ -7,7 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-using Xpandables.Net5.Http;
+using Xpandables.Net.Http;
 
 namespace Xpandables.Samples.Business.Services
 {

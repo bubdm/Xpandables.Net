@@ -1,5 +1,5 @@
 ﻿
-using Xpandables.Net5.EntityFramework;
+using Xpandables.Net.EntityFramework;
 
 namespace Xpandables.Samples.Infrastructure
 {

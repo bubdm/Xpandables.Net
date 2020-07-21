@@ -2,10 +2,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
-using Xpandables.Net5.Expressions;
-using Xpandables.Net5.HttpRestClient;
-using Xpandables.Net5.Queries;
-using Xpandables.Net5.ValidatorRules;
+using Xpandables.Net.Expressions;
+using Xpandables.Net.HttpRestClient;
+using Xpandables.Net.Queries;
+using Xpandables.Net.ValidatorRules;
 using Xpandables.Samples.Domain.Models;
 
 namespace Xpandables.Samples.Business.Contracts

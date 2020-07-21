@@ -1,5 +1,5 @@
 ﻿
-using Xpandables.Net5.Notifications;
+using Xpandables.Net.Notifications;
 
 namespace Xpandables.Samples.Desktop.Models
 {

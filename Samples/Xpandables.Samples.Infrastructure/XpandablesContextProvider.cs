@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-using Xpandables.Net5.Creators;
-using Xpandables.Net5.EntityFramework;
+using Xpandables.Net.Creators;
+using Xpandables.Net.EntityFramework;
 
 namespace Xpandables.Samples.Infrastructure
 {

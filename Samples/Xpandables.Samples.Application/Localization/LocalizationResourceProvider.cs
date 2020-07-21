@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Xpandables.Net5.Localization;
-using Xpandables.Net5.Localization.Validations;
+using Xpandables.Net.Localization;
+using Xpandables.Net.Localization.Validations;
 
 namespace Xpandables.Samples.Business.Localization
 {

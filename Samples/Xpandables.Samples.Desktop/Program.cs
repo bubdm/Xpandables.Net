@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Windows.Forms;
 
-using Xpandables.Net5.DependencyInjection;
+using Xpandables.Net.HttpRestClient;
 using Xpandables.Samples.Desktop.Settings;
 using Xpandables.Samples.Desktop.Views;
 
@@ -38,9 +38,8 @@ namespace Xpandables.Samples.Desktop
 
                     services.AddScoped<MainForm>();
                     services.AddScoped<LoginForm>();
-                    services.AddXHttpRestClientHandler();
 
-                    services.AddHttpClient("ApiClient", (serviceProvider, httpClient) =>
+                    services.AddHttpClient<IHttpRestClientHandler, HttpRestClientHandler>("ApiClient", (serviceProvider, httpClient) =>
                     {
                         var apiSettings = serviceProvider.GetRequiredService<IOptions<ApiSettings>>().Value;
                         httpClient.BaseAddress = new Uri($"{apiSettings.Url}/");

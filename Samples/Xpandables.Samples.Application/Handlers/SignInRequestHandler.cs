@@ -4,11 +4,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net5.Cryptography;
-using Xpandables.Net5.EntityFramework;
-using Xpandables.Net5.Helpers;
-using Xpandables.Net5.Http;
-using Xpandables.Net5.Queries;
+using Xpandables.Net.Cryptography;
+using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Helpers;
+using Xpandables.Net.Http;
+using Xpandables.Net.Queries;
 using Xpandables.Samples.Business.Contracts;
 using Xpandables.Samples.Business.Localization;
 using Xpandables.Samples.Business.Services;

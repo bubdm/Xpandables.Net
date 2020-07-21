@@ -2,26 +2,29 @@
 
 using System.Threading.Tasks;
 
-using Xpandables.Net5.HttpRestClient;
+using Xpandables.Net.HttpRestClient;
 
 namespace Xpandables.Samples.Business.Services
 {
     public sealed class HttpIPService
     {
         private readonly IConfiguration _configuration;
-        private readonly IHttpRestClientIPGeoLocationHandler _geoLocationHandler;
-        public HttpIPService(IConfiguration Configuration, IHttpRestClientIPGeoLocationHandler GeoLocationHandler)
+        private readonly IHttpRestClientIPLocationHandler _ipLocationHandler;
+        private readonly IHttpRestClientGeoLocationHandler _geoLocationHandler;
+        public HttpIPService(
+            IConfiguration Configuration, IHttpRestClientIPLocationHandler GeoLocationHandler, IHttpRestClientGeoLocationHandler geoLocationHandler)
         {
             _configuration = Configuration;
-            _geoLocationHandler = GeoLocationHandler;
+            _ipLocationHandler = GeoLocationHandler;
+            _geoLocationHandler = geoLocationHandler;
         }
 
-        public async Task<IPGeoLocationResponse> GetIPGeoLocationAsync()
+        public async Task<GeoLocationResponse> GetIPGeoLocationAsync()
         {
             if (_configuration["AccessKey"] is string accessKey)
             {
-                var ipAddress = await _geoLocationHandler.GetIPAddressAsync().ConfigureAwait(false);
-                var response = await _geoLocationHandler.GetIPGeoLocationAsync(new IPGeoLocationRequest(ipAddress.Result, accessKey)).ConfigureAwait(false);
+                var ipAddress = await _ipLocationHandler.GetIPAddressAsync().ConfigureAwait(false);
+                var response = await _geoLocationHandler.GetGeoLocationAsync(new GeoLocationRequest(ipAddress.Result, accessKey)).ConfigureAwait(false);
 
                 return response.IsValid() ? response.Result : default;
             }

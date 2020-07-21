@@ -5,9 +5,9 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Reflection;
 
-using Xpandables.Net5.DependencyInjection;
-using Xpandables.Net5.Helpers;
-using Xpandables.Net5.ManagedExtensibility;
+using Xpandables.Net.DependencyInjection;
+using Xpandables.Net.Helpers;
+using Xpandables.Net.ManagedExtensibility;
 using Xpandables.Samples.Business.Services;
 
 namespace Xpandables.Samples.Business
@@ -32,6 +32,8 @@ namespace Xpandables.Samples.Business
             services.AddXIdentityBehavior();
             services.AddXHttpTokenEngine<HttpTokenEngine>();
 
+            services.AddXHttpRestClientGeoLocationHandler();
+            services.AddXHttpRestClientIPLocationHandler();
             services.AddScoped<HttpIPService>();
 
             // interceptor

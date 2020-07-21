@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using System;
 using System.ComponentModel.Composition;
 
-using Xpandables.Net5.DependencyInjection;
-using Xpandables.Net5.EntityFramework;
-using Xpandables.Net5.ManagedExtensibility;
+using Xpandables.Net.DependencyInjection;
+using Xpandables.Net.EntityFramework;
+using Xpandables.Net.ManagedExtensibility;
 
 namespace Xpandables.Samples.Infrastructure
 {
@@ -14,6 +15,7 @@ namespace Xpandables.Samples.Infrastructure
     {
         public void AddServices(IServiceCollection services, IConfiguration configuration)
         {
+            _ = configuration ?? throw new ArgumentNullException(nameof(configuration));
             services.Configure<DataContextSettings>(configuration.GetSection(nameof(DataContextSettings)));
             services.AddXStringGeneratorCryptography();
             services.AddXInstanceCreator();

@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-using Xpandables.Net5.Windows.Forms;
+using Xpandables.Net.Windows.Forms;
 using Xpandables.Samples.Desktop.Models;
 using Xpandables.Samples.Desktop.Views;
 
@@ -38,11 +38,11 @@ namespace Xpandables.Samples.Desktop
             }
             else
             {
-                dynamicData.Source.Token = loginForm.SignInResponse?.Token;
-                dynamicData.Source.FirstName = loginForm.SignInResponse?.FirstName;
-                dynamicData.Source.LastName = loginForm.SignInResponse?.LastName;
-                dynamicData.Source.Email = loginForm.SignInResponse?.Email;
-                dynamicData.Source.Gender = loginForm.SignInResponse.Gender;
+                dynamicData.Data.Token = loginForm.SignInResponse?.Token;
+                dynamicData.Data.FirstName = loginForm.SignInResponse?.FirstName;
+                dynamicData.Data.LastName = loginForm.SignInResponse?.LastName;
+                dynamicData.Data.Email = loginForm.SignInResponse?.Email;
+                dynamicData.Data.Gender = loginForm.SignInResponse.Gender;
             }
         }
 
@@ -50,11 +50,11 @@ namespace Xpandables.Samples.Desktop
         {
             if (PictureOpenFileDialog.ShowDialog() == DialogResult.OK)
             {
-                dynamicData.Source.Picture = Image.FromFile(PictureOpenFileDialog.FileName);
-                dynamicData.Source.PictureInfo =
+                dynamicData.Data.Picture = Image.FromFile(PictureOpenFileDialog.FileName);
+                dynamicData.Data.PictureInfo =
                     new StringBuilder()
                         .Append("File : ").AppendLine(PictureOpenFileDialog.FileName)
-                        .Append("Size : ").AppendLine($"{dynamicData.Source.Picture.Size}")
+                        .Append("Size : ").AppendLine($"{dynamicData.Data.Picture.Size}")
                         .ToString();
             }
         }

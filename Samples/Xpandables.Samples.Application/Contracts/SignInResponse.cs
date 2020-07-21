@@ -1,11 +1,11 @@
-﻿using Xpandables.Net5.Entities;
-using Xpandables.Net5.HttpRestClient;
+﻿using Xpandables.Net.Entities;
+using Xpandables.Net.HttpRestClient;
 
 namespace Xpandables.Samples.Business.Contracts
 {
     public sealed class SignInResponse
     {
-        public SignInResponse(string token, string email, string lastName, string firstName, Gender gender, IPGeoLocationResponse iPGeoLocation)
+        public SignInResponse(string token, string email, string lastName, string firstName, Gender gender, GeoLocationResponse iPGeoLocation)
             => (Token, Email, FirstName, LastName, Gender, IPGeoLocation) = (token, email, firstName, lastName, gender, iPGeoLocation);
 
         public string Token { get; set; }
@@ -13,6 +13,6 @@ namespace Xpandables.Samples.Business.Contracts
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public string Gender { get; set; }
-        public IPGeoLocationResponse IPGeoLocation { get; set; }
+        public GeoLocationResponse IPGeoLocation { get; set; }
     }
 }

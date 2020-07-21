@@ -25,9 +25,9 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using System.Xaml;
 
-using Xpandables.Net5.Localization;
+using Xpandables.Net.Localization;
 
-namespace Xpandables.Net5.Windows.Wpf
+namespace Xpandables.Net.Windows.Wpf
 {
     /// <summary>
     /// WPF localization converter for display attribute that uses the <see cref="ILocalizationResourceProvider"/>  as resource.

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30128.36
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5", "Xpandables.Net5\Xpandables.Net5.csproj", "{6B0C8853-2679-4A97-8773-4E1B15B08CFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net", "Xpandables.Net\Xpandables.Net.csproj", "{6B0C8853-2679-4A97-8773-4E1B15B08CFC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{9F34FE6E-CFC8-4EA3-A70B-2CC2A57157F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.AspNetCore", "Xpandables.Net5.AspNetCore\Xpandables.Net5.AspNetCore.csproj", "{9C07FFAF-B914-4C49-8D08-0C202B1397A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.NetCore", "Xpandables.NetCore\Xpandables.NetCore.csproj", "{9C07FFAF-B914-4C49-8D08-0C202B1397A2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net5.Windows", "Xpandables.Net5.Windows\Xpandables.Net5.Windows.csproj", "{4A9CC8CC-0594-43D4-8248-8DFC782E0470}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Windows", "Xpandables.Net5.Windows\Xpandables.Net.Windows.csproj", "{4A9CC8CC-0594-43D4-8248-8DFC782E0470}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Domain", "Samples\Xpandables.Samples.Domain\Xpandables.Samples.Domain.csproj", "{5F2D93C0-8926-4340-8FF5-C7E7801D8049}"
 EndProject
