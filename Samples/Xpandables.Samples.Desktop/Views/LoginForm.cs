@@ -12,30 +12,29 @@ using Xpandables.Samples.Desktop.Models;
 
 namespace Xpandables.Samples.Desktop.Views
 {
-    public partial class LoginForm : Form
+    public partial class LoginForm : ViewData<LoginFormModel>
     {
-        private readonly DynamicDataBinding<LoginFormModel> dynamicData = new DynamicDataBinding<LoginFormModel>(new LoginFormModel());
         private readonly IHttpRestClientHandler _clientHandler;
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         public SignInResponse SignInResponse { get; private set; }
-        public LoginForm(IHttpRestClientHandler clientHandler)
+        public LoginForm(IHttpRestClientHandler clientHandler) : base()
         {
             InitializeComponent();
-            this.
+
             _clientHandler = clientHandler;
 
-            dynamicData.Binding(Email, ctrl => ctrl.Text, data => data.Email);
-            dynamicData.Binding(Password, ctrl => ctrl.Text, data => data.Password);
-            dynamicData.Binding(Loading, ctrl => ctrl.Text, data => data.Loading);
-            dynamicData.Binding(BtnConnect, ctrl => ctrl.Enabled, data => data.IsBusy, value => !value);
+            Binding(Email, ctrl => ctrl.Text, data => data.Email);
+            Binding(Password, ctrl => ctrl.Text, data => data.Password);
+            Binding(Loading, ctrl => ctrl.Text, data => data.Loading);
+            Binding(BtnConnect, ctrl => ctrl.Enabled, data => data.IsBusy, value => !value);
         }
 
         private async void BtnConnect_Click(object sender, EventArgs e)
         {
             LoginErrorProvider.Clear();
 
-            var request = new SignInRequest(dynamicData.Data.Email, dynamicData.Data.Password);
+            var request = new SignInRequest(Data.Email, Data.Password);
             if (Validators.Validate(request) is { } exception)
             {
                 foreach (var member in exception.MemberNames)
@@ -47,13 +46,13 @@ namespace Xpandables.Samples.Desktop.Views
                 return;
             }
 
-            dynamicData.Data.Loading = "Connecting...";
-            dynamicData.Data.IsBusy = true;
+            Data.Loading = "Connecting...";
+            Data.IsBusy = true;
 
             var response = await _clientHandler.HandleAsync(request, cancellationTokenSource.Token).ConfigureAwait(true);
 
-            dynamicData.Data.Loading = string.Empty;
-            dynamicData.Data.IsBusy = false;
+            Data.Loading = string.Empty;
+            Data.IsBusy = false;
 
             if (response.IsValid())
             {
@@ -76,14 +75,14 @@ namespace Xpandables.Samples.Desktop.Views
                 }
                 else
                 {
-                    dynamicData.Data.Loading = response.Exception?.Message;
+                    Data.Loading = response.Exception?.Message;
                 }
             }
         }
 
         private async void BtnCancel_Click(object sender, EventArgs e)
         {
-            if (dynamicData.Data.IsBusy)
+            if (Data.IsBusy)
                 cancellationTokenSource.Cancel();
 
             Close();

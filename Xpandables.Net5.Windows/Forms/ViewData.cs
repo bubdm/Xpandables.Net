@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Windows.Forms;
@@ -28,24 +29,18 @@ namespace Xpandables.Net.Windows.Forms
     /// <summary>
     /// Provides with a mechanism to dynamically bind data in Windows Form.
     /// </summary>
-    /// <typeparam name="TData">The data source type to be used as data-source</typeparam>
-    public sealed class DynamicDataBinding<TData> : Disposable
-        where TData : class
+    /// <typeparam name="TData">The data source type to be used for binding.</typeparam>
+    public abstract class ViewData<TData> : Form
+        where TData : class, INotifyPropertyChanged, new()
     {
-        private bool _isDisposed;
-        private readonly BindingSource _bindingSource = new BindingSource();
-
         /// <summary>
-        /// Initializes a new instance of <see cref="DynamicDataBinding{TSource}"/> with a data source.
+        /// Initializes a new instance of <see cref="ViewData{TData}"/> class that initializes the data to its default value and the binding source.
         /// </summary>
-        /// <param name="data">The data source instance.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="data"/> is null.</exception>
-        public DynamicDataBinding(TData data) => _bindingSource.DataSource = data ?? throw new ArgumentNullException(nameof(data));
-
-        /// <summary>
-        /// Gets the data source instance.
-        /// </summary>
-        public TData Data => (TData)_bindingSource.DataSource;
+        protected ViewData()
+        {
+            Data = new TData();
+            BindingSource = new BindingSource() { DataSource = Data };
+        }
 
         /// <summary>
         /// Creates a binding between a property of a collection of controls and a property of a data source.
@@ -87,23 +82,41 @@ namespace Xpandables.Net.Windows.Forms
         /// It's used to specify the binding format event. It can be null.</param>
         /// <param name="dataUpdateMode">Contains the data source update mode.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="control"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="controlPropertyAccessor"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataPropertyAccessor"/> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="controlPropertyAccessor"/> returns null value.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="dataPropertyAccessor"/> returns null value.</exception>
         public void Binding<TControl, TControlProperty, TDataProperty>(
             TControl control,
             Expression<Func<TControl, TControlProperty>> controlPropertyAccessor,
             Expression<Func<TData, TDataProperty>> dataPropertyAccessor,
             Func<TDataProperty, TControlProperty>? controlTransformAccessor = default,
             DataSourceUpdateMode dataUpdateMode = DataSourceUpdateMode.OnPropertyChanged)
-            where TControl : Control
+            where TControl : class, IBindableComponent
         {
-            var propertyName = controlPropertyAccessor?.GetMemberName() ?? throw new ArgumentNullException(nameof(controlPropertyAccessor));
-            var sourcePropetyName = dataPropertyAccessor?.GetMemberName() ?? throw new ArgumentNullException(nameof(dataPropertyAccessor));
-            var binding = control?.DataBindings.Add(propertyName, _bindingSource, sourcePropetyName, true, dataUpdateMode)
-                ?? throw new ArgumentNullException(nameof(control));
+            _ = control ?? throw new ArgumentNullException(nameof(control));
+            _ = controlPropertyAccessor ?? throw new ArgumentNullException(nameof(controlPropertyAccessor));
+            _ = dataPropertyAccessor ?? throw new ArgumentNullException(nameof(dataPropertyAccessor));
+
+            var propertyName = controlPropertyAccessor.GetMemberName() ?? throw new ArgumentException($"{nameof(controlPropertyAccessor)} returns null");
+            var sourcePropetyName = dataPropertyAccessor.GetMemberName() ?? throw new ArgumentException($"{nameof(dataPropertyAccessor)} returns null");
+
+            var binding = control.DataBindings.Add(propertyName, BindingSource, sourcePropetyName, true, dataUpdateMode);
             if (controlTransformAccessor is { })
                 binding.Format += (sender, e) => e.Value = controlTransformAccessor((TDataProperty)e.Value);
         }
 
+        /// <summary>
+        /// Gets the data source current instance.
+        /// </summary>
+        protected TData Data { get; }
+
+        /// <summary>
+        /// Gets the binding source instance.
+        /// </summary>
+        protected BindingSource BindingSource { get; }
+
+        private bool _isDisposed;
         /// <summary>
         /// Protected implementation of Dispose pattern.
         /// </summary>
@@ -123,7 +136,7 @@ namespace Xpandables.Net.Windows.Forms
         {
             if (_isDisposed) return;
             if (disposing)
-                _bindingSource?.Dispose();
+                BindingSource?.Dispose();
 
             _isDisposed = true;
             base.Dispose(disposing);
