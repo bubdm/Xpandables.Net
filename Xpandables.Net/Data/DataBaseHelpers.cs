@@ -18,8 +18,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Data.Executables;
 
 namespace Xpandables.Net.Data
 {
@@ -28,6 +32,347 @@ namespace Xpandables.Net.Data
     /// </summary>
     public static class DataBaseHelpers
     {
+        /// <summary>
+        /// Executes a command/query with the specified executable <typeparamref name="TExecutable" /> type
+        /// and returns a result of <typeparamref name="TResult" /> type using default execution options.
+        /// The <typeparamref name="TExecutable" /> type must implement <see cref="DataExecutable{T}" /> interface.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TExecutable">The type of the executable. The class must implement <see cref="DataExecutable{T}" /> interface.</typeparam>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="commandText">The query or store procedure name.</param>
+        /// <param name="commandType">The command type.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<TResult> ExecuteAsync<TResult, TExecutable>(
+            this IDataBase dataBase,
+            string commandText,
+            CommandType commandType,
+            CancellationToken cancellationToken,
+            params object[] parameters)
+            where TExecutable : DataExecutable<TResult>
+            => await dataBase.ExecuteAsync<TResult, TExecutable>(
+                new DataOptionsBuilder().BuildDefault(), commandText, commandType, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the specified query as transactional query using the parameters and options and returns the number of records affected.
+        /// Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
+        /// </summary>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="options">The database options.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<int> ExecuteTransactionAsync(
+            this IDataBase dataBase,
+            DataOptions options,
+            string commandText,
+            CancellationToken cancellationToken,
+            params object[] parameters)
+            => await dataBase.ExecuteAsync<int, DataExecutableTransaction>(
+                options, commandText, CommandType.Text, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the specified query as transactional query using the parameters and default option
+        /// and returns the number of records affected.
+        /// Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
+        /// </summary>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<int> ExecuteTransactionAsync(
+            this IDataBase dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+            => await dataBase.ExecuteTransactionAsync(
+                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the specified command to the database using parameters and options and returns a data table.
+        /// </summary>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="options">The database options.</param>
+        /// <param name="commandText">The command to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<DataTable> ExecuteQueryTableAsync(
+            this IDataBase dataBase,
+            DataOptions options,
+            string commandText,
+            CancellationToken cancellationToken,
+            params object[] parameters)
+            => await dataBase.ExecuteAsync<DataTable, DataExecutableTable>(
+                options, commandText, CommandType.Text, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the specified query to the database using parameters and default options
+        /// and returns a data table.
+        /// </summary>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<DataTable> ExecuteQueryTableAsync(
+            this IDataBase dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+            => await dataBase.ExecuteQueryTableAsync(
+                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the specified stored procedure to the database using parameters and options and returns a data table.
+        /// </summary>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="options">The database options.</param>
+        /// <param name="commandText">The stored procedure to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<DataTable> ExecuteProcedureTableAsync(
+            this IDataBase dataBase,
+            DataOptions options,
+            string commandText,
+            CancellationToken cancellationToken,
+            params object[] parameters)
+            => await dataBase.ExecuteAsync<DataTable, DataExecutableTable>(
+                options, commandText, CommandType.StoredProcedure, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the specified stored procedure to the database using parameters and default options
+        /// </summary>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="commandText">The stored procedure to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<DataTable> ExecuteProcedureTableAsync(
+            this IDataBase dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+            => await dataBase.ExecuteProcedureTableAsync(
+                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the specify query to the database using options and returns a result of
+        /// the specific-type.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="options">The database options.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<TResult?> ExecuteQueryAsync<TResult>(
+            this IDataBase dataBase,
+            DataOptions options,
+            string commandText,
+            CancellationToken cancellationToken,
+            params object[] parameters)
+            where TResult : class, new()
+            => (await dataBase.ExecuteAsync<List<TResult>, DataExecutableMapper<TResult>>(
+                options, commandText, CommandType.Text, cancellationToken, parameters)
+                .ConfigureAwait(false))
+                ?.FirstOrDefault();
+
+        /// <summary>
+        /// Executes the specify query to the database using default options
+        /// and returns a result of the specific-type.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<TResult?> ExecuteQueryAsync<TResult>(
+            this IDataBase dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+            where TResult : class, new()
+            => await dataBase.ExecuteQueryAsync<TResult>(
+                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the specify query to the database using options and returns a collection of results of
+        /// the specific-type.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="options">The database options.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<List<TResult>> ExecuteQueriesAsync<TResult>(
+            this IDataBase dataBase,
+            DataOptions options,
+            string commandText,
+            CancellationToken cancellationToken,
+            params object[] parameters)
+            where TResult : class, new()
+            => await dataBase.ExecuteAsync<List<TResult>, DataExecutableMapper<TResult>>(
+                options, commandText, CommandType.Text, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the specify query to the database using default options
+        /// and returns a collection of results of the specific-type.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<List<TResult>> ExecuteQueriesAsync<TResult>(
+            this IDataBase dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+            where TResult : class, new()
+            => await dataBase.ExecuteQueriesAsync<TResult>(
+                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the stored procedure by its name using options and returns the number of affected rows.
+        /// Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
+        /// </summary>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="options">The database options.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<int> ExecuteProcedureAsync(
+            this IDataBase dataBase,
+            DataOptions options,
+            string commandText,
+            CancellationToken cancellationToken,
+            params object[] parameters)
+            => await dataBase.ExecuteAsync<int, DataExecutableProcedure>(
+                options, commandText, CommandType.StoredProcedure, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the stored procedure by its name using default options
+        /// and returns the number of affected rows.
+        /// Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
+        /// </summary>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<int> ExecuteProcedureAsync(
+            this IDataBase dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+            => await dataBase.ExecuteProcedureAsync(
+                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the stored procedure by its name using default options
+        /// and returns a collection of results of the specific-type.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<List<TResult>> ExecuteProceduresAsync<TResult>(
+            this IDataBase dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+            where TResult : class, new()
+            => await dataBase.ExecuteProceduresAsync<TResult>(
+                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes the stored procedure by its name using options and returns a collection of results of
+        /// the specific-type.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="options">The database options.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<List<TResult>> ExecuteProceduresAsync<TResult>(
+            this IDataBase dataBase,
+            DataOptions options,
+            string commandText,
+            CancellationToken cancellationToken,
+            params object[] parameters)
+            where TResult : class, new()
+            => await dataBase.ExecuteAsync<List<TResult>, DataExecutableMapper<TResult>>(
+                options, commandText, CommandType.StoredProcedure, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes a query that returns a single value of specific type.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="options">The database options.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<TResult> ExecuteSingleAsync<TResult>(
+            this IDataBase dataBase,
+            DataOptions options,
+            string commandText,
+            CancellationToken cancellationToken,
+            params object[] parameters)
+            => await dataBase.ExecuteAsync<TResult, DataExecutableSingle<TResult>>(
+                options, commandText, CommandType.Text, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+        /// <summary>
+        /// Executes a query that returns a single value of specific type using default options.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="dataBase">The target database.</param>
+        /// <param name="commandText">The query to be executed.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
+        public static async Task<TResult> ExecuteSingleAsync<TResult>(
+            this IDataBase dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+            => await dataBase.ExecuteSingleAsync<TResult>(
+                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
         /// <summary>
         /// Determines whether or not the target data record contains the specified column name.
         /// </summary>
@@ -83,109 +428,5 @@ namespace Xpandables.Net.Data
 
             return query;
         }
-
-        /// <summary>
-        /// Executes the specified query as transactional query using the parameters and default option
-        /// and returns the number of records affected.
-        /// Use <see langword="DataOptionsBuilder().UseRetrievedIdentity"/> to retrieve the newly created identity.
-        /// </summary>
-        /// <param name="dataBase"></param>
-        /// <param name="sqlQuery">The query to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="sqlQuery"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<int> ExecuteTransactionAsync(this DataBase dataBase, string sqlQuery, params object[] parameters)
-            => await dataBase.ExecuteTransactionAsync(new DataOptionsBuilder().BuildDefault(), sqlQuery, parameters).ConfigureAwait(false);
-
-        /// <summary>
-        /// Executes the specified query to the database using parameters and default options
-        /// and returns a data table.
-        /// </summary>
-        /// <param name="dataBase"></param>
-        /// <param name="sqlQuery">The query to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="sqlQuery"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<DataTable> ExecuteQueryTableAsync(this DataBase dataBase, string sqlQuery, params object[] parameters)
-            => await dataBase.ExecuteQueryTableAsync(new DataOptionsBuilder().BuildDefault(), sqlQuery, parameters).ConfigureAwait(false);
-
-        /// <summary>
-        /// Executes the specified stored procedure to the database using parameters and default options
-        /// </summary>
-        /// <param name="dataBase"></param>
-        /// <param name="storedProc">The stored procedure to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="storedProc"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<DataTable> ExecuteProcedureTableAsync(this DataBase dataBase, string storedProc, params object[] parameters)
-            => await dataBase.ExecuteProcedureTableAsync(new DataOptionsBuilder().BuildDefault(), storedProc, parameters).ConfigureAwait(false);
-
-        /// <summary>
-        /// Executes the specify query to the database using default options
-        /// and returns a result of the specific-type.
-        /// </summary>
-        /// <typeparam name="T">The type of the result.</typeparam>
-        /// <param name="dataBase"></param>
-        /// <param name="sqlQuery">The query to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="sqlQuery"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<T?> ExecuteQueryAsync<T>(this DataBase dataBase, string sqlQuery, params object[] parameters)
-            where T : class, new()
-            => await dataBase.ExecuteQueryAsync<T>(new DataOptionsBuilder().BuildDefault(), sqlQuery, parameters).ConfigureAwait(false);
-
-        /// <summary>
-        /// Executes the specify query to the database using default options
-        /// and returns a collection of results of the specific-type.
-        /// </summary>
-        /// <typeparam name="T">The type of the result.</typeparam>
-        /// <param name="dataBase"></param>
-        /// <param name="sqlQuery">The query to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="sqlQuery"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<List<T>> ExecuteQueriesAsync<T>(this DataBase dataBase, string sqlQuery, params object[] parameters)
-            where T : class, new()
-            => await dataBase.ExecuteQueriesAsync<T>(new DataOptionsBuilder().BuildDefault(), sqlQuery, parameters).ConfigureAwait(false);
-
-        /// <summary>
-        /// Executes the stored procedure by its name using default options
-        /// and returns the number of affected rows.
-        /// Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
-        /// </summary>
-        /// <param name="dataBase"></param>
-        /// <param name="storedProc">The store procedure name.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="storedProc"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<int> ExecuteProcedureAsync(this DataBase dataBase, string storedProc, params object[] parameters)
-            => await dataBase.ExecuteProcedureAsync(new DataOptionsBuilder().BuildDefault(), storedProc, parameters).ConfigureAwait(false);
-
-        /// <summary>
-        /// Executes the stored procedure by its name using default options
-        /// and returns a collection of results of
-        /// the specific-type.
-        /// </summary>
-        /// <typeparam name="T">The type of the result.</typeparam>
-        /// <param name="dataBase"></param>
-        /// <param name="storedProc">The store procedure name.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="storedProc"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<List<T>> ExecuteProceduresAsync<T>(this DataBase dataBase, string storedProc, params object[] parameters)
-            where T : class, new()
-            => await dataBase.ExecuteProceduresAsync<T>(new DataOptionsBuilder().BuildDefault(), storedProc, parameters).ConfigureAwait(false);
-
-        /// <summary>
-        /// Executes a query that returns a single value of specific type using default options.
-        /// </summary>
-        /// <typeparam name="T">The type of the result.</typeparam>
-        /// <param name="dataBase"></param>
-        /// <param name="sqlQuery">The query definition.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="sqlQuery"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<T> ExecuteSingleAsync<T>(this DataBase dataBase, string sqlQuery, params object[] parameters)
-            => await dataBase.ExecuteSingleAsync<T>(new DataOptionsBuilder().BuildDefault(), sqlQuery, parameters).ConfigureAwait(false);
     }
 }

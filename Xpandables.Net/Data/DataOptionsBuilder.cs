@@ -23,6 +23,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 
+using Xpandables.Net.Data.Attributes;
+using Xpandables.Net.Data.Elements;
+
 namespace Xpandables.Net.Data
 {
     /// <summary>
@@ -35,7 +38,7 @@ namespace Xpandables.Net.Data
         private ReaderOption _readerOption;
         private CancellationToken _cancellationToken = CancellationToken.None;
         private bool _isTransactionEnabled;
-        private Func<DataProperty, bool>? _isMappable;
+        private Func<IDataProperty, bool>? _isMappable;
         private readonly ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> _dataNames
             = new ConcurrentDictionary<Type, ConcurrentDictionary<string, string>>();
         private readonly ConcurrentDictionary<Type, HashSet<string>> _exceptNames = new ConcurrentDictionary<Type, HashSet<string>>();
@@ -93,12 +96,12 @@ namespace Xpandables.Net.Data
         /// Adds a delegate that determines whether or not a property should be mapped.
         /// The delegate will received an instance of the processing property and should return <see langword="true"/> if the property should be
         /// mapped, otherwise <see langword="false"/>. This action should be used for complex mapping and be aware of the performance impact.
-        /// <para>The definition here takes priority over all attributes <see cref="DataExceptAttribute"/>
-        /// and other <see cref="AddExceptName{T}(Expression{Func{T, string}})"/>.</para>
+        /// <para>The definition here takes priority over all attributes <see cref="DataNotMappedAttribute"/>
+        /// and other <see cref="AddNotMappedName{T}(Expression{Func{T, string}})"/>.</para>
         /// </summary>
         /// <param name="mappable">The delegate that determine if a property is used or not.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="mappable"/> is null.</exception>
-        public DataOptionsBuilder AddMappable(Func<DataProperty, bool> mappable)
+        public DataOptionsBuilder AddMappable(Func<IDataProperty, bool> mappable)
         {
             _isMappable = mappable ?? throw new ArgumentNullException(nameof(mappable));
             return this;
@@ -144,7 +147,7 @@ namespace Xpandables.Net.Data
 
         /// <summary>
         /// Specifies that selected property of the model must not be bound to the result.
-        /// Behaves like the <see cref="DataExceptAttribute"/> attribute but takes priority over this attribute.
+        /// Behaves like the <see cref="DataNotMappedAttribute"/> attribute but takes priority over this attribute.
         /// You can add many mappers for various properties.
         /// </summary>
         /// <typeparam name="T">The type of the target model.</typeparam>
@@ -152,7 +155,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">The <paramref name="propertySelector"/> is null.</exception>
         /// <exception cref="ArgumentException">The property can no be found in the target type.</exception>
         /// <exception cref="ArgumentException">The property already exist in the filter of target type.</exception>
-        public DataOptionsBuilder AddExceptName<T>(Expression<Func<T, string>> propertySelector)
+        public DataOptionsBuilder AddNotMappedName<T>(Expression<Func<T, string>> propertySelector)
             where T : class
         {
             if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
@@ -176,7 +179,7 @@ namespace Xpandables.Net.Data
 
         /// <summary>
         /// Specifies that selected properties of the model must not be bound to the result.
-        /// Behaves like the <see cref="DataExceptAttribute"/> attribute but takes priority over this attribute.
+        /// Behaves like the <see cref="DataNotMappedAttribute"/> attribute but takes priority over this attribute.
         /// Does not works for nested type, you have to provide not mapped for nested types.
         /// You can add many mappers for various types.
         /// </summary>
@@ -184,20 +187,20 @@ namespace Xpandables.Net.Data
         /// <param name="propertySelectors">The collection of model properties selector. We advise use of <see langword="nameof(model.PropertyName)"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="propertySelectors"/> is null or empty.</exception>
         /// <exception cref="ArgumentException">The property already exist in the filter of target type.</exception>
-        public DataOptionsBuilder AddExceptNames<T>(params Expression<Func<T, string>>[] propertySelectors)
+        public DataOptionsBuilder AddNotMappedNames<T>(params Expression<Func<T, string>>[] propertySelectors)
             where T : class
         {
             if (propertySelectors?.Any() != true) throw new ArgumentNullException($"{nameof(propertySelectors)} is null or empty");
 
             foreach (var propertySelector in propertySelectors)
-                AddExceptName(propertySelector);
+                AddNotMappedName(propertySelector);
 
             return this;
         }
 
         /// <summary>
         /// Specifies that collection of property names of the model must not be bound to the result.
-        /// Behaves like the <see cref="DataExceptAttribute"/> attribute but takes priority over this attribute.
+        /// Behaves like the <see cref="DataNotMappedAttribute"/> attribute but takes priority over this attribute.
         /// Does not works for nested type, you have to provide not mapped for nested types.
         /// You can add many mappers for various types.
         /// </summary>
@@ -206,7 +209,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">the <paramref name="propertyNames"/> is null or empty.</exception>
         /// <exception cref="ArgumentException">The model does not contains the specified property.</exception>
         /// <exception cref="ArgumentException">The property already exist in the filter of target type.</exception>
-        public DataOptionsBuilder AddExceptNames<T>(params string[] propertyNames)
+        public DataOptionsBuilder AddNotMappedNames<T>(params string[] propertyNames)
             where T : class
         {
             if (propertyNames?.Any() != true) throw new ArgumentNullException($"{nameof(propertyNames)} is null or empty");

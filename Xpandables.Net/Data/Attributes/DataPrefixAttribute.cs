@@ -17,27 +17,27 @@
 
 using System;
 
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Attributes
 {
     /// <summary>
-    /// Defines the name of the property/field on the target data source.
+    /// Defines the prefix of the property/field on the target data source.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class DataNameAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    public sealed class DataPrefixAttribute : Attribute
     {
         /// <summary>
-        /// Defines the name of the property/field to be used on a data source.
+        /// Defines the prefix of the property/field to be used on a data source.
         /// </summary>
-        /// <param name="name">The name value.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="name"/> is null.</exception>
-        public DataNameAttribute(string name)
+        /// <param name="prefix">The prefix value.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="prefix"/> is null.</exception>
+        public DataPrefixAttribute(string prefix)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Prefix = prefix ?? throw new ArgumentNullException(nameof(prefix));
         }
 
         /// <summary>
-        /// Gets the value of the name string used to map the data source column with.
+        /// Gets the value of the prefix string used to map the data source column with.
         /// </summary>
-        public string Name { get; }
+        public string Prefix { get; }
     }
 }

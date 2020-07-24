@@ -15,10 +15,12 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using Microsoft.Extensions.DependencyInjection;
+
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
+using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Data.Executables;
@@ -26,131 +28,172 @@ using Xpandables.Net.Data.Executables;
 namespace Xpandables.Net.Data
 {
     /// <summary>
-    /// Provides methods to executes command to data base.
+    /// Provides with a default implementation of <see cref="IDataBase"/>.
     /// </summary>
-    public sealed class DataBase : DataBaseCommon
+    public sealed class DataBase : IDataBase
     {
-#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
-        /// <summary>
-        /// Initializes a new instance of <see cref="DataBase" /> with the specified settings.
-        /// </summary>
-        /// <param name="dataProviderFactoryProvider">The settings to be used.</param>
-        /// <param name="dataConnection">The data base settings.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="dataProviderFactoryProvider" /> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="dataConnection" /> is not valid.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="dataConnection" /> provider is not valid.</exception>
-        public DataBase(IDataProviderFactoryProvider dataProviderFactoryProvider, DataConnection dataConnection)
-            : base(dataProviderFactoryProvider, dataConnection) { }
+        private readonly Lazy<DbProviderFactory> _dbProviderFactory;
+        private readonly IDataFactoryProvider _datarFactoryProvider;
+        private readonly IDataConnectionProvider _connectionProvider;
+
+        private readonly DataConnection _dataConnection;
 
         /// <summary>
-        /// Executes the specified query as transactional query using the parameters and options and returns the number of records affected.
-        /// Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
+        /// 
         /// </summary>
-        /// <param name="options">The database options.</param>
-        /// <param name="sqlQuery">The query to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="sqlQuery"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async Task<int> ExecuteTransactionAsync(DataOptions options, string sqlQuery, params object[] parameters)
-            => await ExecuteAsync<int, DataExecutableTransaction>(options, sqlQuery, CommandType.Text, parameters).ConfigureAwait(false);
+        /// <param name="dataFactoryProvider"></param>
+        /// <param name="connectionProvider"></param>
+        public DataBase(IDataFactoryProvider dataFactoryProvider, IDataConnectionProvider connectionProvider)
+        {
+            _connectionProvider = connectionProvider ?? throw new ArgumentNullException(nameof(connectionProvider));
+            _datarFactoryProvider = dataFactoryProvider ?? throw new ArgumentNullException(nameof(dataFactoryProvider));
+
+
+            _dataConnection = _connectionProvider.GetDataConnection() ?? throw new ArgumentNullException(nameof(connectionProvider));
+            if (!_dataConnection.IsValid(out var exception)) throw new ArgumentException("Database connection not valid.", exception);
+
+            _dbProviderFactory = new Lazy<DbProviderFactory>(
+                () => dataFactoryProvider.GetProviderFactory(_dataConnection.GetProviderType())
+                ?? throw new InvalidOperationException($"Unable to find the specified data base provider.{_dataConnection.ProviderName}"));
+        }
 
         /// <summary>
-        /// Executes the specified command to the database using parameters and options and returns a data table.
+        /// Executes a command/query with the specified executable <typeparamref name="TExecutable" /> type
+        /// and returns a result of <typeparamref name="TResult" /> type.
+        /// The <typeparamref name="TExecutable" /> type must implement <see cref="IDataExecutable{T}" /> interface.
         /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TExecutable">The type of the executable. The class must implement <see cref="IDataExecutable{T}" /> interface.</typeparam>
         /// <param name="options">The database options.</param>
-        /// <param name="sqlQuery">The command to be executed.</param>
+        /// <param name="commandText">The query or store procedure name.</param>
+        /// <param name="commandType">The command type.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="sqlQuery"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="options" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async Task<DataTable> ExecuteQueryTableAsync(DataOptions options, string sqlQuery, params object[] parameters)
-            => await ExecuteAsync<DataTable, DataExecutableTable>(options, sqlQuery, CommandType.Text, parameters).ConfigureAwait(false);
+        public async Task<TResult> ExecuteAsync<TResult, TExecutable>(
+            DataOptions options,
+            string commandText,
+            CommandType commandType,
+            CancellationToken cancellationToken,
+            params object[] parameters) where TExecutable : IDataExecutable<TResult>
+        {
+            var executable = _datarFactoryProvider.GetService<TExecutable>()
+                ?? throw new InvalidOperationException(
+                    "Exception encountered while attempting to execute command.",
+                    new ArgumentException($"{typeof(TExecutable).Name} implementation not registered. Use services.AddTransient<TExecutable>()."));
+
+            return await ExecuteAsync(executable, options, commandText, commandType, cancellationToken, parameters).ConfigureAwait(false);
+        }
 
         /// <summary>
-        /// Executes the specified stored procedure to the database using parameters and options and returns a data table.
+        /// Provides with resources for executable and runs that instance.
         /// </summary>
-        /// <param name="options">The database options.</param>
-        /// <param name="storedProc">The stored procedure to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
+        /// <typeparam name="TResult">The type of the result of executable.</typeparam>
+        /// <param name="executable">The executable instance.</param>
+        /// <param name="options">The execution options.</param>
+        /// <param name="commandText">The query or command to apply.</param>
+        /// <param name="commandType">The command type.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters to be used.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="executable"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="storedProc"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async Task<DataTable> ExecuteProcedureTableAsync(DataOptions options, string storedProc, params object[] parameters)
-            => await ExecuteAsync<DataTable, DataExecutableTable>(options, storedProc, CommandType.StoredProcedure, parameters).ConfigureAwait(false);
+        private async Task<TResult> ExecuteAsync<TResult>(
+            IDataExecutable<TResult> executable,
+            DataOptions options,
+            string commandText,
+            CommandType commandType,
+            CancellationToken cancellationToken,
+            params object[] parameters)
+        {
+            var transaction = default(DbTransaction);
+            try
+            {
+                using var connection = BuildConnection(_dbProviderFactory.Value, _dataConnection.GetConnectionString());
+                using var command = connection.CreateCommand();
+                using var adapter = _dbProviderFactory.Value.CreateDataAdapter();
+
+                command.CommandType = commandType;
+                if (connection.State != ConnectionState.Open)
+                    await connection.OpenAsync().ConfigureAwait(false);
+
+                if (options.IsTransactionEnabled)
+                {
+                    transaction = connection.BeginTransaction(options.IsolationLevel);
+                    command.Transaction = transaction;
+                }
+
+                var component = new DataExecutableContext.DataComponent(command, adapter);
+                var arguments = new DataExecutableContext.DataArgument(options, commandText, parameters);
+                var context = new DataExecutableContext(arguments, component);
+
+                return await executable.ExecuteAsync(context, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                if (options.IsTransactionEnabled)
+                {
+                    try
+                    {
+                        transaction?.Rollback();
+                    }
+                    catch (Exception sqlException)
+                    {
+                        throw new InvalidOperationException(
+                            "Exception encountered while attempting to roll back the transaction.",
+                            new AggregateException(new[] { exception, sqlException }));
+                    }
+                }
+
+                throw new InvalidOperationException("Exception encountered while attempting to execute command.", exception);
+            }
+            finally
+            {
+                if (options.IsTransactionEnabled)
+                    transaction?.Dispose();
+            }
+        }
 
         /// <summary>
-        /// Executes the specify query to the database using options and returns a result of
-        /// the specific-type.
+        /// Provides with a database connection using the provider and the connection string.
         /// </summary>
-        /// <typeparam name="T">The type of the result.</typeparam>
-        /// <param name="options">The database options.</param>
-        /// <param name="sqlQuery">The query to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="sqlQuery"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async Task<T?> ExecuteQueryAsync<T>(DataOptions options, string sqlQuery, params object[] parameters)
-            where T : class, new()
-            => (await ExecuteAsync<List<T>, DataExecutableMapper<T>>(options, sqlQuery, CommandType.Text, parameters).ConfigureAwait(false))
-                ?.FirstOrDefault();
+        /// <param name="dbProviderFactory">The database provider factory.</param>
+        /// <param name="connectionString">The connection string to act with.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="dbProviderFactory"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="connectionString"/> is null.</exception>
+        private static DbConnection BuildConnection(DbProviderFactory dbProviderFactory, string connectionString)
+        {
+            var dbConnection = dbProviderFactory.CreateConnection();
+            dbConnection.ConnectionString = connectionString;
+            dbConnection.Open();
+            SpeedSqlServerResult(dbConnection);
+            return dbConnection;
+        }
 
         /// <summary>
-        /// Executes the specify query to the database using options and returns a collection of results of
-        /// the specific-type.
+        /// Speeds the connection result for SQL server only.
         /// </summary>
-        /// <typeparam name="T">The type of the result.</typeparam>
-        /// <param name="options">The database options.</param>
-        /// <param name="sqlQuery">The query to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="sqlQuery"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async Task<List<T>> ExecuteQueriesAsync<T>(DataOptions options, string sqlQuery, params object[] parameters)
-            where T : class, new()
-            => await ExecuteAsync<List<T>, DataExecutableMapper<T>>(options, sqlQuery, CommandType.Text, parameters).ConfigureAwait(false);
-
-        /// <summary>
-        /// Executes the stored procedure by its name using options and returns the number of affected rows.
-        /// Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
-        /// </summary>
-        /// <param name="options">The database options.</param>
-        /// <param name="storedProcedureName">The store procedure name.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="storedProcedureName"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async Task<int> ExecuteProcedureAsync(DataOptions options, string storedProcedureName, params object[] parameters)
-            => await ExecuteAsync<int, DataExecutableProcedure>(options, storedProcedureName, CommandType.StoredProcedure, parameters).ConfigureAwait(false);
-
-        /// <summary>
-        /// Executes the stored procedure by its name using options and returns a collection of results of
-        /// the specific-type.
-        /// </summary>
-        /// <typeparam name="T">The type of the result.</typeparam>
-        /// <param name="options">The database options.</param>
-        /// <param name="storedProcedureName">The store procedure name.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="storedProcedureName"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async Task<List<T>> ExecuteProceduresAsync<T>(DataOptions options, string storedProcedureName, params object[] parameters)
-            where T : class, new()
-            => await ExecuteAsync<List<T>, DataExecutableMapper<T>>(options, storedProcedureName, CommandType.StoredProcedure, parameters)
-            .ConfigureAwait(false);
-
-        /// <summary>
-        /// Executes a query that returns a single value of specific type.
-        /// </summary>
-        /// <typeparam name="T">The type of the result.</typeparam>
-        /// <param name="options">The database options.</param>
-        /// <param name="sqlQuery">The query definition.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="sqlQuery"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async Task<T> ExecuteSingleAsync<T>(DataOptions options, string sqlQuery, params object[] parameters)
-            => await ExecuteAsync<T, DataExecutableSingle<T>>(options, sqlQuery, CommandType.Text, parameters).ConfigureAwait(false);
-#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
+        /// <param name="connection">the connection to speed.</param>
+        private static void SpeedSqlServerResult(DbConnection connection)
+        {
+            if (connection.GetType().Name.Equals("SqlConnection", StringComparison.OrdinalIgnoreCase))
+            {
+                using var cmd = connection.CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText =
+                    @"
+                    SET ANSI_NULLS ON
+                    SET ANSI_PADDING ON
+                    SET ANSI_WARNINGS ON
+                    SET ARITHABORT ON
+                    SET CONCAT_NULL_YIELDS_NULL ON
+                    SET QUOTED_IDENTIFIER ON
+                    SET NUMERIC_ROUNDABORT OFF";
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

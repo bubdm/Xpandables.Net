@@ -31,10 +31,37 @@ namespace Xpandables.Net.DependencyInjection
 #pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
+    /// Provides with lazy instance resolution.
+    /// </summary>
+    /// <typeparam name="T">The type to be resolved.</typeparam>
+    public sealed class LazyResolved<T> : Lazy<T>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LazyResolved{T}" /> class that uses a preinitialized specified value from the service provider.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider used for preinitialized value.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="serviceProvider"/> is null.</exception>
+        public LazyResolved(IServiceProvider serviceProvider) : base(serviceProvider.GetRequiredService<T>()) { }
+    }
+
+    /// <summary>
     /// Provides with methods to add decorator to classes.
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Ensures that any <see cref="Lazy{T}"/> requested service will return <see cref="LazyResolved{T}"/> wrapping the original registered type.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXLazyTransient(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddTransient(typeof(Lazy<>), typeof(LazyResolved<>));
+            return services;
+        }
+
         /// <summary>
         /// Determines whether or not the collection of services already contain the specified service type.
         /// </summary>

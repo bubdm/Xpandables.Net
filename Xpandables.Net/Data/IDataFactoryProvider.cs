@@ -22,9 +22,9 @@ namespace Xpandables.Net.Data
 {
     /// <summary>
     /// Allows an application author to return a data provider factory from the specified provider type.
-    /// A default implementation is <see cref="DataProviderFactoryProvider"/>.
+    /// The default implementation is <see cref="DataFactoryProvider"/>.
     /// </summary>
-    public interface IDataProviderFactoryProvider : IServiceProvider
+    public interface IDataFactoryProvider : IServiceProvider
     {
         /// <summary>
         /// Returns an instance of the data provider factory matching the specified provider type.

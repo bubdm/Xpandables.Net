@@ -38,7 +38,7 @@ namespace Xpandables.Net.Creators
         /// <summary>
         /// Define an action that will be called in case of handled exception during a create method execution.
         /// </summary>
-        Action<ExceptionDispatchInfo>? OnException { get; }
+        Action<ExceptionDispatchInfo>? OnException { get; set; }
 
         /// <summary>
         /// Returns an instance of the <paramref name="type"/> or null if exception.
@@ -217,7 +217,7 @@ namespace Xpandables.Net.Creators
         /// <summary>
         /// Define an action that will be called in case of handled exception during a create method execution.
         /// </summary>
-        public Action<ExceptionDispatchInfo>? OnException { get; }
+        public Action<ExceptionDispatchInfo>? OnException { get; set; }
 
         /// <summary>
         /// Contains the instance cache.

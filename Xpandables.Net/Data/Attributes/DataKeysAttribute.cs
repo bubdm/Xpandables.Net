@@ -17,7 +17,7 @@
 
 using System;
 
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Attributes
 {
     /// <summary>
     /// Denotes one or more properties that uniquely identify the decorated class.

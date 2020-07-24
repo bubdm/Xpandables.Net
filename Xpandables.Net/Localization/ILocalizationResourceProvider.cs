@@ -85,15 +85,15 @@ namespace Xpandables.Net.Localization
         /// Each view model is associated with a resource type name that matches the <see langword="{ViewModelName}Localization"/> or can contains
         /// only one localization file in case of singe file use.
         /// </summary>
-        public ICorrelationCollection<string, Type> ViewModelResourceTypeCollection
+        public CorrelationCollection<string, Type> ViewModelResourceTypeCollection
         {
             get
             {
-                ICorrelationCollection<string, Type> correlationCollection = new CorrelationCollection<string, Type>();
+                CorrelationCollection<string, Type> correlationCollection = new CorrelationCollection<string, Type>();
                 if (!ViewModelResourceTypes.Any()) Trace.WriteLine($"{nameof(ViewModelResourceTypes)} is empty.");
 
                 foreach (var type in ViewModelResourceTypes)
-                    correlationCollection.AddOrUpdateValue(type.Name, type);
+                    correlationCollection.AddOrUpdate(type.Name, type, (_, value) => value);
 
                 return correlationCollection;
             }

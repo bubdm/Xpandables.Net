@@ -20,7 +20,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Elements
 {
     /// <summary>
     /// Provides with information to build a property.

@@ -15,20 +15,19 @@
  *
 ************************************************************************************************************/
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Xpandables.Net.Data
 {
     /// <summary>
-    /// Defines a delegate to be used to build entity identity.
+    /// Allows an application author to return a <see cref="DataConnection"/> to be used with <see cref="DataBase"/>.
     /// </summary>
-    /// <param name="entity">The target entity to act on.</param>
-    /// <returns>A string that uniquely identifies the specified entity.</returns>
-    public delegate string DataIdentityBuilder(DataEntity entity);
-
-    /// <summary>
-    /// Defines a delegate to be used for converting data row value to a specific type.
-    /// </summary>
-    /// <param name="property">The data property descriptor.</param>
-    /// <param name="rowValue">The data row value.</param>
-    /// <returns>A converted value from the data row value.</returns>
-    public delegate object? DataPropertyConverter(DataProperty property, object rowValue);
+    public interface IDataConnectionProvider
+    {
+        /// <summary>
+        /// Returns the expected <see cref="DataConnection"/> for the current control flow.
+        /// </summary>
+        [return: MaybeNull]
+        DataConnection GetDataConnection();
+    }
 }

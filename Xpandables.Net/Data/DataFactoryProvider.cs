@@ -27,16 +27,16 @@ namespace Xpandables.Net.Data
     /// <summary>
     /// The default implementation to return data provider factory from provider type.
     /// </summary>
-    public sealed class DataProviderFactoryProvider : IDataProviderFactoryProvider
+    public sealed class DataFactoryProvider : IDataFactoryProvider
     {
         private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataProviderFactoryProvider"/>.
+        /// Initializes a new instance of <see cref="DataFactoryProvider"/>.
         /// </summary>
         /// <param name="serviceProvider">The service provider to use.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="serviceProvider"/> is null.</exception>
-        public DataProviderFactoryProvider(IServiceProvider serviceProvider)
+        public DataFactoryProvider(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }

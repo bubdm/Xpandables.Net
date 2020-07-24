@@ -17,7 +17,9 @@
 
 using System;
 
-namespace Xpandables.Net.Data
+using Xpandables.Net.Data.Elements;
+
+namespace Xpandables.Net.Data.Attributes
 {
     /// <summary>
     /// Specifies what type to use as a converter for the property this attribute is bound to.
@@ -57,13 +59,14 @@ namespace Xpandables.Net.Data
             if (!typeof(IDataConverter).IsAssignableFrom(type))
                 throw new ArgumentException($"{type.FullName} does not implement {nameof(IDataConverter)} interface.");
 
-            ConverterTypeName = type.FullName!;
+            var converterObj = type.GetProperty(nameof(IDataConverter.PropertyConverter), System.Reflection.BindingFlags.Public).GetValue(null);
+            Converter = (DataPropertyConverter)converterObj;
         }
 
         /// <summary>
         /// Gets the fully qualified type name of the System.Type to use as a converter for
         /// the object this attribute is bound to.
         /// </summary>
-        public string ConverterTypeName { get; }
+        public DataPropertyConverter Converter { get; }
     }
 }

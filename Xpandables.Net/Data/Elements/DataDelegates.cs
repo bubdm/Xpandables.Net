@@ -15,18 +15,20 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Data.Elements;
-
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Elements
 {
     /// <summary>
-    /// Allows an application author to return a data mapper property converter.
+    /// Defines a delegate to be used to build entity identity.
     /// </summary>
-    public interface IDataConverter
-    {
-        /// <summary>
-        /// Gets the data mapper property converter instance.
-        /// </summary>
-        DataPropertyConverter PropertyConverter { get; }
-    }
+    /// <param name="entity">The target entity to act on.</param>
+    /// <returns>A string that uniquely identifies the specified entity.</returns>
+    public delegate string DataIdentityBuilder(IDataEntity entity);
+
+    /// <summary>
+    /// Defines a delegate to be used for converting data row value to a specific type.
+    /// </summary>
+    /// <param name="property">The data property descriptor.</param>
+    /// <param name="rowValue">The data row value.</param>
+    /// <returns>A converted value from the data row value.</returns>
+    public delegate object? DataPropertyConverter(IDataProperty property, object? rowValue);
 }

@@ -17,11 +17,11 @@
 
 using System;
 
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Attributes
 {
     /// <summary>
     /// Defines that the decorated property should not be mapped with the target data source.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class DataExceptAttribute : Attribute { }
+    public sealed class DataNotMappedAttribute : Attribute { }
 }

@@ -21,6 +21,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 
+using Xpandables.Net.Data.Elements;
+
 namespace Xpandables.Net.Data
 {
     /// <summary>
@@ -65,13 +67,13 @@ namespace Xpandables.Net.Data
     /// </summary>
     public sealed class DataOptions
     {
-        internal DataOptions(bool isTransactionEnabled, IsolationLevel isolationLevel, Func<DataProperty, bool>? isMappable, ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> dataNames, ConcurrentDictionary<Type, HashSet<string>> exceptNames, ConcurrentDictionary<Type, DataPropertyConverter> converters, ThreadOption threadOptions, ReaderOption readerOptions, DataIdentityBuilder? identityBuilder, bool isIdentityRetrieved, CancellationToken cancellationToken)
+        internal DataOptions(bool isTransactionEnabled, IsolationLevel isolationLevel, Func<IDataProperty, bool>? conditionalMapping, ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> mappedNames, ConcurrentDictionary<Type, HashSet<string>> notMappedNames, ConcurrentDictionary<Type, DataPropertyConverter> converters, ThreadOption threadOptions, ReaderOption readerOptions, DataIdentityBuilder? identityBuilder, bool isIdentityRetrieved, CancellationToken cancellationToken)
         {
             IsTransactionEnabled = isTransactionEnabled;
             IsolationLevel = isolationLevel;
-            IsMappable = isMappable;
-            DataNames = dataNames ?? throw new ArgumentNullException(nameof(dataNames));
-            ExceptNames = exceptNames ?? throw new ArgumentNullException(nameof(exceptNames));
+            ConditionalMapping = conditionalMapping;
+            MappedNames = mappedNames ?? throw new ArgumentNullException(nameof(mappedNames));
+            NotMappedNames = notMappedNames ?? throw new ArgumentNullException(nameof(notMappedNames));
             Converters = converters ?? throw new ArgumentNullException(nameof(converters));
             ThreadOptions = threadOptions;
             ReaderOptions = readerOptions;
@@ -95,31 +97,24 @@ namespace Xpandables.Net.Data
         /// Defines the delegate that determines whether or not a property should be mapped.
         /// Its default behavior return <see langword="true"/>.
         /// </summary>
-        public Func<DataProperty, bool>? IsMappable { get; }
+        public Func<IDataProperty, bool>? ConditionalMapping { get; }
 
         /// <summary>
         /// Determines whether or not the conditional mapping has been defined. The default value is <see langword="false"/>.
         /// if so, contains <see langword="true"/>, otherwise contains <see langword="false"/>.
         /// </summary>
-        public bool IsMappableEnabled => IsMappable is { };
-
-        /// <summary>
-        /// Returns the generic type of conditional mapper.
-        /// </summary>
-        /// <typeparam name="T">The type of property.</typeparam>
-        public Func<DataProperty<T>, bool>? IsMappableGeneric<T>()
-            where T : class, new() => IsMappable;
-
+        public bool IsConditionalMappingEnabled => ConditionalMapping is { };
+     
         /// <summary>
         /// Contains a collection of manual names mapping.
         /// </summary>
-        public ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> DataNames { get; }
+        public ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> MappedNames { get; }
             = new ConcurrentDictionary<Type, ConcurrentDictionary<string, string>>();
 
         /// <summary>
         /// Contains a collection of manual names from types that should not to be mapped.
         /// </summary>
-        public ConcurrentDictionary<Type, HashSet<string>> ExceptNames { get; }
+        public ConcurrentDictionary<Type, HashSet<string>> NotMappedNames { get; }
             = new ConcurrentDictionary<Type, HashSet<string>>();
 
         /// <summary>
@@ -147,7 +142,7 @@ namespace Xpandables.Net.Data
         /// <summary>
         /// Determines whether or not the filtered delegate has been defined. The default value is <see langword="false"/>
         /// </summary>
-        public bool ContainsExceptNames => !ExceptNames.IsEmpty;
+        public bool ContainsNotMappedNames => !NotMappedNames.IsEmpty;
 
         /// <summary>
         /// Contains the entity identity builder delegate.

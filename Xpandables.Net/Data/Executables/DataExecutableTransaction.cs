@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Data.Executables
@@ -29,31 +30,29 @@ namespace Xpandables.Net.Data.Executables
         /// <summary>
         /// Asynchronously executes an action to the database and returns a result of specific-type.
         /// </summary>
-        /// <param name="component">The target component instance.</param>
-        /// <param name="argument">The target argument instance.</param>
+        /// <param name="context">The target executable context instance.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task representing the asynchronous operation</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="component" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="argument" /> is null.</exception>
-        public override async Task<int> ExecuteAsync(DataComponent component, DataArgument argument)
+        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
+        public override async Task<int> ExecuteAsync(DataExecutableContext context, CancellationToken cancellationToken = default)
         {
-#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
-            component.Command.CommandText = argument.Command.ParseSql();
-#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
-            DataParameterBuilder.Build(component.Command, argument.Parameters?.ToArray());
+            context.Component.Command.CommandText = context.Argument.CommandText.ParseSql();
+
+            DataParameterBuilder.Build(context.Component.Command, context.Argument.Parameters?.ToArray());
 
             int result;
-            if (argument.Options.IsIdentityRetrieved)
+            if (context.Argument.Options.IsIdentityRetrieved)
             {
-                component.Command.CommandText += "; SELECT CAST(SCOPE_IDENTITY() AS int)";
-                result = (int)await component.Command.ExecuteScalarAsync(argument.Options.CancellationToken).ConfigureAwait(false);
+                context.Component.Command.CommandText += "; SELECT CAST(SCOPE_IDENTITY() AS int)";
+                result = (int)await context.Component.Command.ExecuteScalarAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
             }
             else
             {
-                result = await component.Command.ExecuteNonQueryAsync(argument.Options.CancellationToken).ConfigureAwait(false);
+                result = await context.Component.Command.ExecuteNonQueryAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
             }
 
-            if (argument.Options.IsTransactionEnabled)
-                component.Command.Transaction?.Commit();
+            if (context.Argument.Options.IsTransactionEnabled)
+                context.Component.Command.Transaction?.Commit();
 
             return result;
         }

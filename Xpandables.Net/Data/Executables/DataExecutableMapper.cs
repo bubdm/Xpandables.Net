@@ -20,24 +20,27 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Data.Mappers;
 
 namespace Xpandables.Net.Data.Executables
 {
     /// <summary>
     ///  Executes a stored procedure or query and return the result on a collection of specific type.
     /// </summary>
-    /// <typeparam name="T">The type of result.</typeparam>
-    public sealed class DataExecutableMapper<T> : DataExecutable<List<T>>
-         where T : class, new()
+    /// <typeparam name="TResult">The type of result.</typeparam>
+    public sealed class DataExecutableMapper<TResult> : DataExecutable<List<TResult>>
+         where TResult : class, new()
     {
-        private readonly DataMapper _dataMapper;
+        private readonly IDataMapper _dataMapper;
 
         /// <summary>
         /// Initializes a new instance of <see cref="DataExecutableMapper{T}"/>.
         /// </summary>
         /// <param name="dataMapper">the mapper to be used.</param>
-        public DataExecutableMapper(DataMapper dataMapper)
+        public DataExecutableMapper(IDataMapper dataMapper)
         {
             _dataMapper = dataMapper ?? throw new ArgumentNullException(nameof(dataMapper));
         }
@@ -45,58 +48,56 @@ namespace Xpandables.Net.Data.Executables
         /// <summary>
         /// Asynchronously executes an action to the database and returns a result of specific-type.
         /// </summary>
-        /// <param name="component">The target component instance.</param>
-        /// <param name="argument">The target argument instance.</param>
+        /// <param name="context">The target executable context instance.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task representing the asynchronous operation</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="component" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="argument" /> is null.</exception>
-        public override async Task<List<T>> ExecuteAsync(DataComponent component, DataArgument argument)
+        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
+        public override async Task<List<TResult>> ExecuteAsync(DataExecutableContext context, CancellationToken cancellationToken = default)
         {
-#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
-            component.Command.CommandText = component.CommandType == CommandType.StoredProcedure ? argument.Command : argument.Command.ParseSql();
-#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
-            component.Command.CommandType = component.CommandType;
-            DataParameterBuilder.Build(component.Command, argument.Parameters?.ToArray());
+            context.Component.Command.CommandText =
+                context.Component.Command.CommandType == CommandType.StoredProcedure
+                ? context.Argument.CommandText
+                : context.Argument.CommandText.ParseSql();
 
-            if (component.CommandType == CommandType.StoredProcedure)
+            DataParameterBuilder.Build(context.Component.Command, context.Argument.Parameters?.ToArray());
+
+            if (context.Component.Command.CommandType == CommandType.StoredProcedure)
             {
-                component.Command.CommandTimeout = 0;
-#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
-                component.Command.CommandText = argument.Command.Split('@')[0].Trim();
-#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
+                context.Component.Command.CommandTimeout = 0;
+                context.Component.Command.CommandText = context.Argument.CommandText.Split('@')[0].Trim();
             }
 
-            if (component.CommandType == CommandType.Text
-                && argument.Parameters?.All(p => p is DbParameter) == true
-                && component.Command.Connection.IsSqlConnection())
+            if (context.Component.Command.CommandType == CommandType.Text
+                && context.Argument.Parameters?.All(p => p is DbParameter) == true
+                && context.Component.Command.Connection.IsSqlConnection())
             {
-                component.Command.Prepare();
+                context.Component.Command.Prepare();
             }
 
-            var result = new List<T>();
-            switch (argument.Options.ReaderOptions)
+            var result = new List<TResult>();
+            switch (context.Argument.Options.ReaderOptions)
             {
                 case ReaderOption.DataAdapter:
                     using (var dataSet = new DataSet())
                     {
-                        component.Adapter.SelectCommand = component.Command;
-                        component.Adapter.AcceptChangesDuringFill = false;
-                        component.Adapter.FillLoadOption = LoadOption.OverwriteChanges;
-                        component.Adapter.Fill(dataSet);
+                        context.Component.Adapter.SelectCommand = context.Component.Command;
+                        context.Component.Adapter.AcceptChangesDuringFill = false;
+                        context.Component.Adapter.FillLoadOption = LoadOption.OverwriteChanges;
+                        context.Component.Adapter.Fill(dataSet);
 
-                        if (argument.Options.IsTransactionEnabled)
-                            component.Command.Transaction.Commit();
+                        if (context.Argument.Options.IsTransactionEnabled)
+                            context.Component.Command.Transaction.Commit();
 
                         using var dataTable = dataSet.Tables[0];
-                        result = _dataMapper.Map<T>(dataTable, argument.Options);
+                        result = _dataMapper.Map<TResult>(dataTable, context.Argument.Options);
                     }
 
                     break;
 
                 case ReaderOption.DataReader:
-                    using (var reader = await component.Command.ExecuteReaderAsync(argument.Options.CancellationToken).ConfigureAwait(false))
+                    using (var reader = await context.Component.Command.ExecuteReaderAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false))
                     {
-                        result = _dataMapper.Map<T>(GetRecords(), argument.Options);
+                        result = _dataMapper.Map<TResult>(GetRecords(), context.Argument.Options);
                         IEnumerable<IDataRecord> GetRecords()
                         {
                             if (reader.HasRows)

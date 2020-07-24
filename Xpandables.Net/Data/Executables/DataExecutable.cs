@@ -16,24 +16,40 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Data.Executables
 {
     /// <summary>
-    /// Allows an application author to defines an executable process for <see cref="DataBase"/>.
+    /// Allows an application author to defines an executable process for <see cref="IDataBase"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the result.</typeparam>
-    public abstract class DataExecutable<T>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
+    public interface IDataExecutable<TResult>
     {
         /// <summary>
         /// Asynchronously executes an action to the database and returns a result of specific-type.
         /// </summary>
-        /// <param name="component">The target component instance.</param>
-        /// <param name="argument">The target argument instance.</param>
+        /// <param name="context">The target executable context instance.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task representing the asynchronous operation</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="component"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        public abstract Task<T> ExecuteAsync(DataComponent component, DataArgument argument);
+        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
+        Task<TResult> ExecuteAsync(DataExecutableContext context, CancellationToken cancellationToken = default);
+    }
+
+    /// <summary>
+    /// Defines the abstract implementation of <see cref="IDataExecutable{TResult}"/> class.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
+    public abstract class DataExecutable<TResult> : IDataExecutable<TResult>
+    {
+        /// <summary>
+        /// Asynchronously executes an action to the database and returns a result of specific-type.
+        /// </summary>
+        /// <param name="context">The target executable context instance.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task representing the asynchronous operation</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
+        public abstract Task<TResult> ExecuteAsync(DataExecutableContext context, CancellationToken cancellationToken = default);
     }
 }

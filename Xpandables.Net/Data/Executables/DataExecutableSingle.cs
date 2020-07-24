@@ -18,6 +18,7 @@
 using System;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Data.Executables
@@ -25,30 +26,30 @@ namespace Xpandables.Net.Data.Executables
     /// <summary>
     ///  Executes a stored procedure or query and return a single result.
     /// </summary>
-    public sealed class DataExecutableSingle<T> : DataExecutable<T>
+    public sealed class DataExecutableSingle<TResult> : DataExecutable<TResult>
     {
         /// <summary>
         /// Asynchronously executes an action to the database and returns a result of specific-type.
         /// </summary>
-        /// <param name="component">The target component instance.</param>
-        /// <param name="argument">The target argument instance.</param>
+        /// <param name="context">The target executable context instance.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task representing the asynchronous operation</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="component" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="argument" /> is null.</exception>
-        public override async Task<T> ExecuteAsync(DataComponent component, DataArgument argument)
+        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
+        public override async Task<TResult> ExecuteAsync(DataExecutableContext context, CancellationToken cancellationToken = default)
         {
-            component.Command.CommandType = component.CommandType;
-#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
-            component.Command.CommandText = component.CommandType == CommandType.StoredProcedure ? argument.Command : argument.Command.ParseSql();
-#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
-            DataParameterBuilder.Build(component.Command, argument.Parameters?.ToArray());
+            context.Component.Command.CommandText =
+                context.Component.Command.CommandType == CommandType.StoredProcedure
+                ? context.Argument.CommandText
+                : context.Argument.CommandText.ParseSql();
 
-            var result = await component.Command.ExecuteScalarAsync(argument.Options.CancellationToken).ConfigureAwait(false);
+            DataParameterBuilder.Build(context.Component.Command, context.Argument.Parameters?.ToArray());
 
-            if (argument.Options.IsTransactionEnabled)
-                component.Command.Transaction.Commit();
+            var result = await context.Component.Command.ExecuteScalarAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
-            return (T)result;
+            if (context.Argument.Options.IsTransactionEnabled)
+                context.Component.Command.Transaction.Commit();
+
+            return (TResult)result;
         }
     }
 }

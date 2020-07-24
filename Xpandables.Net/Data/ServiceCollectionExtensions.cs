@@ -20,69 +20,37 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 
 using Xpandables.Net.Data;
+using Xpandables.Net.Data.Elements;
 using Xpandables.Net.Data.Executables;
-using Xpandables.Net.DependencyInjection.Data;
+using Xpandables.Net.Data.Mappers;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
 #pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
-    /// Service collection registration methods for <see cref="DataBaseCommon"/>
+    /// Service collection registration methods for <see cref="IDataBase"/>
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds all default services for <see cref="DataBase"/> use.
         /// </summary>
+        /// <typeparam name="TDataConnectionProvider">The data connection provider type.</typeparam>
         /// <param name="services">the collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDataBase(this IServiceCollection services)
+        public static IServiceCollection AddXDataBase<TDataConnectionProvider>(this IServiceCollection services)
+            where TDataConnectionProvider : class, IDataConnectionProvider
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddXDataBaseServices();
-            services.AddXDataBaseAccessors();
-            services.AddXDataBaseExecutables();
-            return services;
-        }
+            services.AddTransient<IDataConnectionProvider, TDataConnectionProvider>();
 
-        /// <summary>
-        /// Adds all services need to work with data properties and entities.
-        /// </summary>
-        /// <param name="services">the collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDataBaseServices(this IServiceCollection services)
-        {
-            services.AddScoped<DataPropertyBuilder>();
-            services.AddScoped<DataEntityBuilder>();
-            services.AddScoped<DataMapper>();
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the services to build the <see cref="DataBase"/>.
-        /// </summary>
-        /// <param name="services">the collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDataBaseAccessors(this IServiceCollection services)
-        {
-            if (services is null) throw new ArgumentNullException(nameof(services));
-
-            services.AddScoped<IDataProviderFactoryProvider, DataProviderFactoryProvider>();
-            services.AddScoped<DataBaseAccessor>();
-            services.AddScoped<IDataConnectionAccessor, DataConnectionAccessor>();
-            return services;
-        }
-
-        /// <summary>
-        /// Adds all the default <see cref="DataExecutable{T}"/> implementations.
-        /// </summary>
-        /// <param name="services">the collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDataBaseExecutables(this IServiceCollection services)
-        {
-            if (services is null) throw new ArgumentNullException(nameof(services));
+            services.AddScoped<IDataFactoryProvider, DataFactoryProvider>();
+            services.AddScoped<IDataPropertyBuilder, DataPropertyBuilder>();
+            services.AddScoped<IDataEntityBuilder, DataEntityBuilder>();
+            services.AddScoped<IDataMapperRow, DataMapperRow>();
+            services.AddScoped<IDataMapper, DataMapper>();
 
             services.AddTransient<DataExecutableProcedure>();
             services.AddTransient(typeof(DataExecutableMapper<>));
@@ -92,6 +60,6 @@ namespace Xpandables.Net.DependencyInjection
             services.AddTransient(typeof(DataExecutableSingle<>));
 
             return services;
-        }
+        } 
     }
 }
