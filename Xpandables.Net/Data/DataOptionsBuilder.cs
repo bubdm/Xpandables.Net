@@ -47,6 +47,12 @@ namespace Xpandables.Net.Data
         private bool _isIdentityRetrieved;
 
         /// <summary>
+        /// Initializes a new instance of <see cref="DataOptionsBuilder"/> class
+        /// used to build a <see cref="DataOptions"/>.
+        /// </summary>
+        public DataOptionsBuilder() { }
+
+        /// <summary>
         /// Returns a new instance of <see cref="DataOptions"/> using registered information.
         /// </summary>
         public DataOptions Build()
@@ -248,7 +254,7 @@ namespace Xpandables.Net.Data
         /// The delegate will receive an instance of the target property and the value from the data row.
         /// You can add many converters for various type.
         /// <para>The <typeparamref name="TType"/> should be a primitive type, <see cref="DateTime"/> or a <see cref="string"/> type.</para>
-        /// The definition here takes priority over the mapper attributes.
+        /// The definition here takes priority over the <see cref="DataConverterAttribute"/> attribute.
         /// </summary>
         /// <typeparam name="TType">The type of the property the converter should be applied to its value.</typeparam>
         /// <param name="converter">The delegate to be used to convert a data row value for the target <typeparamref name="TType"/> type.</param>

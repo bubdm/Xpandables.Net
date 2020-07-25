@@ -55,7 +55,7 @@ namespace Xpandables.Net.Data
             {
                 var commandSplit = command.CommandText.Split('@').ToList();
                 var parameterSourceNames = Array.Empty<string>();
-                if (commandSplit.Count > 1)
+                if (commandSplit.Count >= 1)
                 {
                     commandSplit.RemoveAt(0);
                     parameterSourceNames = commandSplit.Select(param => param.Split(' ')[0].Replace(",", "").RemoveExtraChars().Trim()).Distinct().ToArray();

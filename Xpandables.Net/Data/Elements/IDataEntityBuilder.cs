@@ -109,7 +109,7 @@ namespace Xpandables.Net.Data.Elements
         {
             var typeExpression = Expression.Parameter(typeof(Type));
             var optionExpression = Expression.Parameter(typeof(DataOptions));
-            var propertyExpression = Expression.Parameter(typeof(DataPropertyBuilder));
+            var propertyExpression = Expression.Parameter(typeof(IDataPropertyBuilder));
             var creatorExpression = Expression.Parameter(typeof(IInstanceCreator));
 
             var parameters = new ParameterExpression[] { typeExpression, optionExpression, propertyExpression, creatorExpression };

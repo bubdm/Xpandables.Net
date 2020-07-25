@@ -60,7 +60,9 @@ namespace Xpandables.Net.Data.Executables
             if (context.Argument.Options.IsIdentityRetrieved)
             {
                 context.Component.Command.CommandText += "; SELECT CAST(SCOPE_IDENTITY() AS int);";
-                result = (int)await context.Component.Command.ExecuteScalarAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
+                var execution = await context.Component.Command.ExecuteScalarAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
+
+                result = execution is DBNull || execution is null ? 0 : (int)execution;
             }
             else
             {

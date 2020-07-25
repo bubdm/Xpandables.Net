@@ -77,7 +77,7 @@ namespace Xpandables.Net.Data
             string commandText,
             CommandType commandType,
             CancellationToken cancellationToken,
-            params object[] parameters) where TExecutable : IDataExecutable<TResult>
+            params object[] parameters) where TExecutable : class, IDataExecutable<TResult>
         {
             var executable = _datarFactoryProvider.GetService<TExecutable>()
                 ?? throw new InvalidOperationException(

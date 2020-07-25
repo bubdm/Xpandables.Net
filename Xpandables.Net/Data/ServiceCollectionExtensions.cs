@@ -47,10 +47,11 @@ namespace Xpandables.Net.DependencyInjection
             services.AddTransient<IDataConnectionProvider, TDataConnectionProvider>();
 
             services.AddScoped<IDataFactoryProvider, DataFactoryProvider>();
-            services.AddScoped<IDataPropertyBuilder, DataPropertyBuilder>();
-            services.AddScoped<IDataEntityBuilder, DataEntityBuilder>();
-            services.AddScoped<IDataMapperRow, DataMapperRow>();
+            services.AddTransient<IDataPropertyBuilder, DataPropertyBuilder>();
+            services.AddTransient<IDataEntityBuilder, DataEntityBuilder>();
+            services.AddTransient<IDataMapperRow, DataMapperRow>();
             services.AddScoped<IDataMapper, DataMapper>();
+            services.AddScoped<IDataBase, DataBase>();
 
             services.AddTransient<DataExecutableProcedure>();
             services.AddTransient(typeof(DataExecutableMapper<>));
@@ -60,6 +61,6 @@ namespace Xpandables.Net.DependencyInjection
             services.AddTransient(typeof(DataExecutableSingle<>));
 
             return services;
-        } 
+        }
     }
 }

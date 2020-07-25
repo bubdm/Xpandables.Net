@@ -28,6 +28,7 @@ namespace Xpandables.Samples.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
             services.AddSingleton<IConfigureOptions<AuthenticationOptions>, XpandablesAuthenticationOptions>();
             services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, XpandablesJwtBearerOptions>();
             //services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
@@ -40,10 +41,9 @@ namespace Xpandables.Samples.Api
             services.AddXHttpHeaderAccessor();
             services.AddXInstanceCreator();
 
-            services.AddXServiceExport(Configuration);
+            services.AddXCorrelationCollection();
 
-            // database context sql access
-            services.AddXDataBase();
+            services.AddXServiceExport(Configuration);        
 
             // dispatcher
             services.AddXDispatcher();

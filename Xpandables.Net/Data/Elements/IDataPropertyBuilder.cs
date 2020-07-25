@@ -53,7 +53,7 @@ namespace Xpandables.Net.Data.Elements
         {
             var property = builderSource.PropertyInfo;
             var type = property.PropertyType;
-            var propertyName = type.Name;
+            var propertyName = property.Name;
 
             var ownerAttr = property.ReflectedType?.GetCustomAttribute<DataPrefixAttribute>();
             var propertyAttr = property.GetCustomAttribute<DataPrefixAttribute>();

@@ -23,7 +23,7 @@ namespace Xpandables.Net.Data.Attributes
 {
     /// <summary>
     /// Specifies what type to use as a converter for the property this attribute is bound to.
-    /// <para>The specified type must implement the <see cref="IDataConverter"/> interface.</para>
+    /// <para>The specified type must match the <see cref="DataPropertyConverter"/> delegate signature.</para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public sealed class DataConverterAttribute : Attribute
@@ -42,30 +42,35 @@ namespace Xpandables.Net.Data.Attributes
         ///
         /// public class Foo
         /// {
-        ///     [DataConverter(typeof(DecimalPropertyConverter))]
+        ///     [DataConverter(typeof(DecimalPropertyConverter), nameof(DecimalPropertyConverter.Convert))]
         ///     public decimal Amount {get; set;}
         /// }
         /// </code>
         /// </item>
         /// </list>
         /// </example>
-        /// <param name="type">The type converter. The type must implement the <see cref="IDataConverter"/> interface.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="type"/> does not implement <see cref="IDataConverter"/>.</exception>
-        public DataConverterAttribute(Type type)
+        /// <param name="ownerType">The type that contains the converter method.</param>
+        /// <param name="methodName">The name of the method to be used. The method should be static.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="ownerType"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="methodName"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">Unable to get the delegate converter. See inner exception.</exception>
+        public DataConverterAttribute(Type ownerType, string methodName)
         {
-            if (type is null)
-                throw new ArgumentNullException(nameof(type));
-            if (!typeof(IDataConverter).IsAssignableFrom(type))
-                throw new ArgumentException($"{type.FullName} does not implement {nameof(IDataConverter)} interface.");
+            _ = ownerType ?? throw new ArgumentNullException(nameof(ownerType));
+            _ = methodName ?? throw new ArgumentNullException(nameof(methodName));
 
-            var converterObj = type.GetProperty(nameof(IDataConverter.PropertyConverter), System.Reflection.BindingFlags.Public).GetValue(null);
-            Converter = (DataPropertyConverter)converterObj;
+            try
+            {
+                Converter = (DataPropertyConverter)Delegate.CreateDelegate(typeof(DataPropertyConverter), ownerType.GetMethod(methodName));
+            }
+            catch (Exception exception)
+            {
+                throw new InvalidOperationException($"Unable to get the delegate converter : {ownerType.Name}.{methodName}", exception);
+            }
         }
 
         /// <summary>
-        /// Gets the fully qualified type name of the System.Type to use as a converter for
-        /// the object this attribute is bound to.
+        /// Gets the fully delegate to use as a converter for the object this attribute is bound to.
         /// </summary>
         public DataPropertyConverter Converter { get; }
     }

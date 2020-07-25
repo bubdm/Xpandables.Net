@@ -25,17 +25,17 @@ using Xpandables.Net.Data.Executables;
 namespace Xpandables.Net.Data
 {
     /// <summary>
-    /// Provides with a method to execute command to a database.
+    /// Provides with a method to execute command to a database using an implementation of <see cref="IDataExecutable{TResult}"/> interface.
     /// </summary>
     public interface IDataBase
     {
         /// <summary>
         /// Executes a command/query with the specified executable <typeparamref name="TExecutable" /> type
         /// and returns a result of <typeparamref name="TResult" /> type.
-        /// The <typeparamref name="TExecutable" /> type must implement <see cref="DataExecutable{T}" /> interface.
+        /// The <typeparamref name="TExecutable" /> type must implement <see cref="IDataExecutable{T}" /> interface.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <typeparam name="TExecutable">The type of the executable. The class must implement <see cref="DataExecutable{T}" /> interface.</typeparam>
+        /// <typeparam name="TExecutable">The type of the executable. The class must implement <see cref="IDataExecutable{T}" /> interface.</typeparam>
         /// <param name="options">The database options.</param>
         /// <param name="commandText">The query or store procedure name.</param>
         /// <param name="commandType">The command type.</param>
@@ -50,6 +50,6 @@ namespace Xpandables.Net.Data
             CommandType commandType,
             CancellationToken cancellationToken,
             params object[] parameters)
-            where TExecutable : IDataExecutable<TResult>;
+            where TExecutable : class, IDataExecutable<TResult>;
     }
 }

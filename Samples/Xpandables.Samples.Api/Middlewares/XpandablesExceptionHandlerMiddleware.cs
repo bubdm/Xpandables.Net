@@ -36,7 +36,7 @@ namespace Xpandables.Samples.Api.Middlewares
                     KeyNotFoundException keyNotFoundException => new NotFoundObjectResult(keyNotFoundException.Message),
                     InvalidOperationException invalidOperationException =>
                         invalidOperationException.InnerException is { }
-                            ? new BadRequestObjectResult(invalidOperationException.InnerException.Message)
+                            ? new BadRequestObjectResult(invalidOperationException.InnerException.ToString())
                             : new BadRequestObjectResult(invalidOperationException.Message),
                     _ => new BadRequestObjectResult("Internal Server Error.Please try later.")
                     { StatusCode = StatusCodes.Status500InternalServerError }

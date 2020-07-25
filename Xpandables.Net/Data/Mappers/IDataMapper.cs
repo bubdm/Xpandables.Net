@@ -48,6 +48,8 @@ namespace Xpandables.Net.Data.Mappers
             _ = source ?? throw new ArgumentNullException(nameof(source));
             _ = options ?? throw new ArgumentNullException(nameof(options));
 
+            Entities.Clear();
+
             var exceptions = new ConcurrentQueue<Exception>();
             var parallelOptions = new ParallelOptions
             {

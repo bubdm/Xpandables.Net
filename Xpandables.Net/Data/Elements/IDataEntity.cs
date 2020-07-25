@@ -31,6 +31,11 @@ namespace Xpandables.Net.Data.Elements
         object? Entity { get; }
 
         /// <summary>
+        /// Gets the property on parent entity if exist.
+        /// </summary>
+        IDataProperty? ParentProperty { get; }
+
+        /// <summary>
         /// Gets the parent entity if exist.
         /// </summary>
         object? ParentEntity { get; }
@@ -63,10 +68,11 @@ namespace Xpandables.Net.Data.Elements
         void BuildIdentity();
 
         /// <summary>
-        /// Sets the parent of the current entity.
+        /// Sets the parent property of the current entity.
         /// </summary>
-        /// <param name="entity">The entity parent.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
-        IDataEntity SetParent(object entity);
+        /// <param name="entity">The parent entity.</param>
+        /// <param name="parentProperty">The property parent.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="parentProperty"/> is null.</exception>
+        IDataEntity SetParent(object entity, IDataProperty parentProperty);
     }
 }

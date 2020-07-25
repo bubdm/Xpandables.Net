@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Reflection;
 
+using Xpandables.Net.Data;
 using Xpandables.Net.DependencyInjection;
 using Xpandables.Net.Helpers;
 using Xpandables.Net.ManagedExtensibility;
@@ -18,6 +19,8 @@ namespace Xpandables.Samples.Business
         public void AddServices(IServiceCollection services, IConfiguration configuration)
         {
             var assemblies = Assembly.GetExecutingAssembly().SingleToEnumerable().ToArray();
+
+            services.Configure<DataConnection>(configuration.GetSection(nameof(DataConnection)));
 
             services.AddXQueryHandlerWrapper();
             services.AddXQueryHandlers(assemblies);
@@ -35,6 +38,9 @@ namespace Xpandables.Samples.Business
             services.AddXHttpRestClientGeoLocationHandler();
             services.AddXHttpRestClientIPLocationHandler();
             services.AddScoped<HttpIPService>();
+
+            // database context sql access
+            services.AddXDataBase<DataConnectionProvider>();
 
             // interceptor
             //services.AddTransient<SignUpChangeFirstNameInterceptor>();

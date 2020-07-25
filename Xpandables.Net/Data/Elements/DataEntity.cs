@@ -46,11 +46,18 @@ namespace Xpandables.Net.Data.Elements
             => Properties = properties ?? throw new ArgumentNullException(nameof(properties));
 
         /// <summary>
-        /// Sets the parent of the current entity.
+        /// Sets the parent property of the current entity.
         /// </summary>
-        /// <param name="entity">The entity parent.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
-        public IDataEntity SetParent(object entity) => this.With(e => e.ParentEntity = entity);
+        /// <param name="parentEntity">The parent entity.</param>
+        /// <param name="parentProperty">The property parent.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="parentProperty"/> is null.</exception>
+        public IDataEntity SetParent(object parentEntity, IDataProperty parentProperty)
+        {
+            ParentEntity = parentEntity;
+            ParentProperty = parentProperty;
+
+            return this;
+        }
 
         /// <summary>
         /// Builds the identity using the current entity instance.
@@ -99,6 +106,11 @@ namespace Xpandables.Net.Data.Elements
         /// Gets the entity instance.
         /// </summary>
         public object? Entity { get; protected set; }
+
+        /// <summary>
+        /// Gets the property on parent entity if exist.
+        /// </summary>
+        public IDataProperty? ParentProperty { get; protected set; }
 
         /// <summary>
         /// Gets the parent entity if exist.

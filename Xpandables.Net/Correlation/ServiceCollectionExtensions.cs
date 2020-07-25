@@ -41,7 +41,8 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped(typeof(ICorrelationCollection<,>), typeof(CorrelationCollection<,>));
+            services.AddScoped(typeof(CorrelationCollection<,>));
+            //services.AddScoped(typeof(ICorrelationCollection<,>), provider => provider.GetRequiredService(typeof(CorrelationCollection<,>)));
             return services;
         }
 

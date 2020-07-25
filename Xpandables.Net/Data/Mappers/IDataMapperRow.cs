@@ -67,12 +67,13 @@ namespace Xpandables.Net.Data.Mappers
 
                     foreach (var reference in entity.Properties.Where(property => !property.IsPrimitive))
                     {
-                        var nestedEntity = EntityBuilder.Build(reference.Type, options).SetParent(entity.Entity!);
+                        var nestedEntity = EntityBuilder.Build(reference.Type, options).SetParent(entity.Entity!, reference);
                         stack.Push(nestedEntity);
                     }
 
                     if (entity.IsNestedEntity)
-                        entity.SetElement(entity.Entity!, entity.ParentEntity!, InstanceCreator);
+                        entity.ParentProperty!.SetElement(entity.Entity, entity.ParentEntity!
+                            , InstanceCreator);
                 }
 
                 Entities.AddOrUpdate(master.Identity!, master, (_, value) => value);
@@ -89,11 +90,11 @@ namespace Xpandables.Net.Data.Mappers
             switch (data)
             {
                 case IDataRecord dataRecord:
-                    foreach (IDataElementSetter primitive in primitives)
+                    foreach (IDataProperty primitive in primitives)
                         primitive.SetData(dataRecord, entity.Entity!, instanceCreator);
                     break;
                 case DataRow dataRow:
-                    foreach (IDataElementSetter primitive in primitives)
+                    foreach (IDataProperty primitive in primitives)
                         primitive.SetData(dataRow, entity.Entity!, instanceCreator);
                     break;
             }

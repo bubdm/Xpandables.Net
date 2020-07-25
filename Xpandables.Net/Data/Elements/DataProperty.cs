@@ -119,7 +119,17 @@ namespace Xpandables.Net.Data.Elements
         /// <exception cref="ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Setting the element failed. See inner exception.</exception>
         public void SetData(IDataRecord dataRecord, object target, IInstanceCreator instanceCreator)
-            => ((IDataElementSetter)this).SetData(dataRecord, target, instanceCreator);
+        {
+            _ = dataRecord ?? throw new ArgumentNullException(nameof(dataRecord));
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+
+            if (dataRecord.Contains(DataFullName))
+            {
+                var index = dataRecord.GetOrdinal(DataFullName);
+                if (!dataRecord.IsDBNull(index))
+                    SetElement(dataRecord.GetValue(index), target, instanceCreator);
+            }
+        }
 
         /// <summary>
         /// Sets the data row to the property.
@@ -132,7 +142,15 @@ namespace Xpandables.Net.Data.Elements
         /// <exception cref="ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Setting the element failed. See inner exception.</exception>
         public void SetData(DataRow dataRow, object target, IInstanceCreator instanceCreator)
-            => ((IDataElementSetter)this).SetData(dataRow, target, instanceCreator);
+        {
+            _ = dataRow ?? throw new ArgumentNullException(nameof(dataRow));
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+
+            if (dataRow.Table.Columns.Contains(DataFullName))
+            {
+                SetElement(dataRow[DataFullName], target, instanceCreator);
+            }
+        }
 
         /// <summary>
         /// Sets the target element with the value.
