@@ -9099,6 +9099,17 @@
             <returns>A new list of qr-codes</returns>
             <exception cref="T:System.InvalidOperationException">Generating images failed. See inner exception.</exception>
         </member>
+        <member name="M:Xpandables.Net.QrCodes.IQrCodeImageGenerator.Generate(System.Collections.Generic.IEnumerable{System.String},System.Drawing.Color,System.Drawing.Color,System.Int32)">
+            <summary>
+            Generates a list of qr-codes.
+            </summary>
+            <param name="textCodeList">The list of qr-codes text to generate image.</param>
+            <param name="pixelsPerModule">The pixels per module.</param>
+            <param name="darkColor">The dark color of the qr-code.</param>
+            <param name="lightColor">The light color of the qr-code.</param>
+            <returns>A new list of qr-codes</returns>
+            <exception cref="T:System.InvalidOperationException">Generating images failed. See inner exception.</exception>
+        </member>
         <member name="T:Xpandables.Net.QrCodes.IQrCodeTextGenerator">
             <summary>
             Provides a method to generate qr-codes.
@@ -12493,11 +12504,14 @@
             You must derive from this class to implement a custom generator that match your requirement.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.QrCodes.QrCodeImageGenerator.Generate(System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:Xpandables.Net.QrCodes.QrCodeImageGenerator.Generate(System.Collections.Generic.IEnumerable{System.String},System.Drawing.Color,System.Drawing.Color,System.Int32)">
             <summary>
             Generates a list of qr-codes.
             </summary>
             <param name="textCodeList">The list of qr-codes text to generate image.</param>
+            <param name="pixelsPerModule">The pixels per module.</param>
+            <param name="darkColor">The dark color of the qr-code.</param>
+            <param name="lightColor">The light color of the qr-code.</param>
             <returns>A new list of qr-codes</returns>
             <exception cref="T:System.InvalidOperationException">Generating images failed. See inner exception.</exception>
         </member>

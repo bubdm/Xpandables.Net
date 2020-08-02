@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace Xpandables.Net.QrCodes
@@ -25,7 +26,7 @@ namespace Xpandables.Net.QrCodes
     /// Provides a method to generate qr-code image.
     /// An implementation could be found in <see langword="Xpandables.QrCode"/> library.
     /// </summary>
-    public interface IQrCodeImageGenerator: IDisposable
+    public interface IQrCodeImageGenerator : IDisposable
     {
         /// <summary>
         /// Generates a list of qr-codes.
@@ -33,6 +34,18 @@ namespace Xpandables.Net.QrCodes
         /// <param name="textCodeList">The list of qr-codes text to generate image.</param>
         /// <returns>A new list of qr-codes</returns>
         /// <exception cref="InvalidOperationException">Generating images failed. See inner exception.</exception>
-        public IEnumerable<byte[]> Generate(IEnumerable<string> textCodeList) => Enumerable.Empty<byte[]>();
+        public IEnumerable<byte[]> Generate(IEnumerable<string> textCodeList) => Generate(textCodeList, Color.Black, Color.White, 20);
+
+        /// <summary>
+        /// Generates a list of qr-codes.
+        /// </summary>
+        /// <param name="textCodeList">The list of qr-codes text to generate image.</param>
+        /// <param name="pixelsPerModule">The pixels per module.</param>
+        /// <param name="darkColor">The dark color of the qr-code.</param>
+        /// <param name="lightColor">The light color of the qr-code.</param>
+        /// <returns>A new list of qr-codes</returns>
+        /// <exception cref="InvalidOperationException">Generating images failed. See inner exception.</exception>
+        public IEnumerable<byte[]> Generate(IEnumerable<string> textCodeList, Color darkColor, Color lightColor, int pixelsPerModule = 20)
+            => Enumerable.Empty<byte[]>();
     }
 }

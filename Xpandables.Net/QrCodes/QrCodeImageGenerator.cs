@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 using Xpandables.Net.QrCodes.Presenter;
 
@@ -30,21 +31,24 @@ namespace Xpandables.Net.QrCodes
     public class QrCodeImageGenerator : Disposable, IQrCodeImageGenerator
     {
         private readonly QRCodeGenerator _qRCodeGenerator = new QRCodeGenerator();
-
+  
         /// <summary>
         /// Generates a list of qr-codes.
         /// </summary>
         /// <param name="textCodeList">The list of qr-codes text to generate image.</param>
+        /// <param name="pixelsPerModule">The pixels per module.</param>
+        /// <param name="darkColor">The dark color of the qr-code.</param>
+        /// <param name="lightColor">The light color of the qr-code.</param>
         /// <returns>A new list of qr-codes</returns>
         /// <exception cref="InvalidOperationException">Generating images failed. See inner exception.</exception>
-        public virtual IEnumerable<byte[]> Generate(IEnumerable<string> textCodeList)
+        public virtual IEnumerable<byte[]> Generate(IEnumerable<string> textCodeList, Color darkColor, Color lightColor, int pixelsPerModule = 20)
         {
             foreach (var source in textCodeList)
             {
                 using var qrCodeData = _qRCodeGenerator.CreateQrCode(source, QRCodeGenerator.ECCLevel.Q, true);
 #pragma warning disable CA2000 // Dispose objects before losing scope
                 using var qrCode = new QrCode(qrCodeData);
-                using var image = qrCode.GetGraphic(20);
+                using var image = qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, true);
                 yield return image.ToByte();
             }
         }
