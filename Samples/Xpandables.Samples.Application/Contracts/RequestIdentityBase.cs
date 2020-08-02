@@ -7,7 +7,7 @@ using Xpandables.Samples.Domain.Models;
 
 namespace Xpandables.Samples.Business.Contracts
 {
-    public abstract class RequestIdentityBase : IdentityExpression<TokenClaims, User>
+    public abstract class RequestIdentityBase : IdentityDataExpression<TokenClaims, User>
     {
         protected override Expression<Func<User, bool>> BuildExpression()
             => user => user.Email == Identity.Email && user.IsActive && !user.IsDeleted;

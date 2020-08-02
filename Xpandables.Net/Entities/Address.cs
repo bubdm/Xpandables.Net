@@ -24,7 +24,7 @@ namespace Xpandables.Net.Entities
     /// <summary>
     /// Defines an <see cref="Address"/> class that holds basic properties.
     /// </summary>
-    public sealed class Address : ValueObject
+    public class Address : ValueObject
     {
         /// <summary>
         /// Gets the street name.
@@ -41,7 +41,7 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Gets the street number.
         /// </summary>
-        public string StreetNumber { get; private set; }
+        public string? StreetNumber { get; private set; }
 
         /// <summary>
         /// Gets the country name.
@@ -70,16 +70,24 @@ namespace Xpandables.Net.Entities
             => string.Format(formatProvider, format, Street, StreetNumber, City, ZipCode, Country);
 
         /// <summary>
-        /// 
+        /// Creates a new instance of <see cref="Address"/> with specified values.
         /// </summary>
-        /// <param name="street"></param>
-        /// <param name="city"></param>
-        /// <param name="streetNumber"></param>
-        /// <param name="country"></param>
-        /// <param name="zipCode"></param>
-        /// <returns></returns>
-        public static Address Create(string street, string city, string streetNumber, string country, string zipCode)
+        /// <param name="street">The street address.</param>
+        /// <param name="city">The city address.</param>
+        /// <param name="streetNumber">The street number address.</param>
+        /// <param name="country">The country address.</param>
+        /// <param name="zipCode">The zip address.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="street"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="city"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="country"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="zipCode"/> is null.</exception>
+        public static Address Create(string street, string city, string? streetNumber, string country, string zipCode)
             => new Address(street, city, streetNumber, country, zipCode);
+
+        /// <summary>
+        /// Creates a default <see cref="Address"/> instance with NO Value.
+        /// </summary>
+        public static Address Default() => Create("NO STREET", "NO CITY", "NONE", "NO COUNTRY", "NO ZIPCODE");
 
         /// <summary>
         /// Updates the street name and return the current instance.
@@ -104,8 +112,8 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Updates the street number and return the current instance.
         /// </summary>
-        /// <param name="streetNumber">The new street number.</param>
-        public Address EditStreetNumber(string streetNumber)
+        /// <param name="streetNumber">The street number.</param>
+        public Address EditStreetNumber(string? streetNumber)
         {
             StreetNumber = streetNumber;
             return this;
@@ -131,7 +139,19 @@ namespace Xpandables.Net.Entities
             return this;
         }
 
-        private Address(string street, string city, string streetNumber, string country, string zipCode)
+        /// <summary>
+        /// Initializes a new instance of <see cref="Address"/> class.
+        /// </summary>
+        /// <param name="street">The street address.</param>
+        /// <param name="city">The city address.</param>
+        /// <param name="streetNumber">The street number address.</param>
+        /// <param name="country">The country address.</param>
+        /// <param name="zipCode">The zip address.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="street"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="city"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="country"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="zipCode"/> is null.</exception>
+        protected Address(string street, string city, string? streetNumber, string country, string zipCode)
         {
             Street = street ?? throw new ArgumentNullException(nameof(street));
             City = city ?? throw new ArgumentNullException(nameof(city));

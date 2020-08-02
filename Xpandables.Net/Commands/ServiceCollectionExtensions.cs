@@ -22,11 +22,69 @@ using System.Linq;
 using System.Reflection;
 
 using Xpandables.Net.Commands;
+using Xpandables.Net.Correlation;
+using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Helpers;
+using Xpandables.Net.Identities;
+using Xpandables.Net.Queries;
+using Xpandables.Net.Retry;
+using Xpandables.Net.Transactions;
+using Xpandables.Net.ValidatorRules;
+using Xpandables.Net.VisitorRules;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
 #pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
+    /// <summary>
+    /// Defines options to configure command/query handlers.
+    /// </summary>
+    public sealed class CommandQueryOptions
+    {
+        /// <summary>
+        /// Enables validation behavior to commands and queries that are decorated with the <see cref="IBehaviorValidation"/>.
+        /// </summary>
+        public CommandQueryOptions UseValidatorBehavior() => this.With(cq => cq.IsValidatorEnabled = true);
+
+        /// <summary>
+        /// Enables visitor behavior to commands and queries that implement the <see cref="IVisitable"/> interface.
+        /// </summary>
+        public CommandQueryOptions UseVisitorBehavior() => this.With(cq => cq.IsVisitorEnabled = true);
+
+        /// <summary>
+        /// Enables persistence behavior to commands and queries that are decorated with the <see cref="IBehaviorPersistence"/> .
+        /// </summary>
+        public CommandQueryOptions UsePersistenceBehavior() => this.With(cq => cq.IsPersistenceEnabled = true);
+
+        /// <summary>
+        /// Enables correlation behavior to commands and queries that are decorated with the <see cref="IBehaviorCorrelation"/>.
+        /// </summary>
+        public CommandQueryOptions UseCorrelationBehavior() => this.With(cq => cq.IsCorrelationEnabled = true);
+
+        /// <summary>
+        /// Enables retry behavior to commands and queries that are decorated with the <see cref="IBehaviorRetry"/>.
+        /// </summary>
+        public CommandQueryOptions UseRetryBehavior() => this.With(cq => cq.IsRetryEnabled = true);
+
+        /// <summary>
+        /// Enables transaction behavior to commands and queries that are decorated with the <see cref="IBehaviorTransaction"/>.
+        /// </summary>
+        public CommandQueryOptions UseTransactionBehavior() => this.With(cq => cq.IsTransactionEnabled = true);
+
+        /// <summary>
+        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IBehaviorIdentity"/>.
+        /// </summary>
+        public CommandQueryOptions UseIdentityBehavior() => this.With(cq => cq.IsIdentityDataEnabled = true);
+
+        internal bool IsValidatorEnabled { get; private set; }
+        internal bool IsVisitorEnabled { get; private set; }
+        internal bool IsTransactionEnabled { get; private set; }
+        internal bool IsPersistenceEnabled { get; private set; }
+        internal bool IsCorrelationEnabled { get; private set; }
+        internal bool IsRetryEnabled { get; private set; }
+        internal bool IsIdentityDataEnabled { get; private set; }
+    }
+
     /// <summary>
     /// Provides method to register commands queries.
     /// </summary>
@@ -50,6 +108,57 @@ namespace Xpandables.Net.DependencyInjection
                     .Where(_ => !_.IsGenericType))
                     .AsImplementedInterfaces()
                     .WithTransientLifetime());
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds and configures the <see cref="ICommandHandler{TCommand}"/> and <see cref="IQueryHandler{TQuery, TResult}"/> behaviors.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="configureOptions">A delegate to configure the <see cref="CommandQueryOptions"/>.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types.</param>///
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXCommandQueriesHandlers(
+            this IServiceCollection services, Action<CommandQueryOptions> configureOptions, params Assembly[] assemblies)
+        {
+            if (services is null) throw new ArgumentNullException(nameof(services));
+            if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
+
+            services.AddXQueryHandlerWrapper();
+            services.AddXCommandHandlers(assemblies);
+            services.AddXQueryHandlers(assemblies);
+
+            var definedOptions = new CommandQueryOptions();
+            configureOptions.Invoke(definedOptions);
+
+            if (definedOptions.IsCorrelationEnabled)
+                services.AddXCorrelationBehavior();
+
+            if (definedOptions.IsRetryEnabled)
+                services.AddXRetryBehavior();
+
+            if (definedOptions.IsTransactionEnabled)
+                services.AddXTransactionBehavior();
+
+            if (definedOptions.IsPersistenceEnabled)
+                services.AddXPersistenceBehavior();
+
+            if (definedOptions.IsVisitorEnabled)
+            {
+                services.AddXVisitorRules(assemblies);
+                services.AddXVisitorBehavior();
+            }
+
+            if (definedOptions.IsValidatorEnabled)
+            {
+                services.AddXValidatorRules(assemblies);
+                services.AddXValidatorRuleBehavior();
+            }
+
+            if (definedOptions.IsIdentityDataEnabled)
+                services.AddXIdentityBehavior();
 
             return services;
         }

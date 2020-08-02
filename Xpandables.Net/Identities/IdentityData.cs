@@ -68,13 +68,13 @@ namespace Xpandables.Net.Identities
     /// <summary>
     /// Defines an implementation of <see cref="IIdentityExpression{TUser, TSource}"/> with a property that holds identity information
     /// of generic type in a security context.
-    /// This class implements the <see cref="IQueryExpression{TSource}"/> interface.
+    /// This class implements the <see cref="IQueryExpression{TSource}"/> interface and derives from <see cref="IdentityData{TIdentity}"/>.
     /// You must override the <see cref="BuildExpression"/> method in order to provide a custom behavior.
     /// This class is used with <see cref="IBehaviorIdentity"/> and its decorator class.
     /// </summary>
     /// <typeparam name="TIdentity">The type of the identity data.</typeparam>
     /// /// <typeparam name="TSource">The type of the data source</typeparam>
-    public abstract class IdentityExpression<TIdentity, TSource> : IdentityData<TIdentity>, IIdentityExpression<TIdentity, TSource>
+    public abstract class IdentityDataExpression<TIdentity, TSource> : IdentityData<TIdentity>, IIdentityExpression<TIdentity, TSource>
         where TIdentity : class
         where TSource : class
     {
@@ -85,16 +85,16 @@ namespace Xpandables.Net.Identities
 
         /// <summary>
         /// When implemented in derived class, this method will return the expression
-        /// to be used for the <see langword="Where"/> clause in a query.
+        /// to be used for the <see langword="Where"/> clause in a query to a db context.
         /// </summary>
         protected virtual Expression<Func<TSource, bool>> BuildExpression() => _ => true;
 
 #pragma warning disable CS1591
 #pragma warning disable CA2225
-        public static implicit operator Expression<Func<TSource, bool>>(IdentityExpression<TIdentity, TSource> criteria)
+        public static implicit operator Expression<Func<TSource, bool>>(IdentityDataExpression<TIdentity, TSource> criteria)
              => criteria?.GetExpression() ?? (_ => true);
 
-        public static implicit operator Func<TSource, bool>(IdentityExpression<TIdentity, TSource> criteria)
+        public static implicit operator Func<TSource, bool>(IdentityDataExpression<TIdentity, TSource> criteria)
             => criteria?.GetExpression().Compile() ?? (_ => true);
     }
 }

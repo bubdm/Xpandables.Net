@@ -50,13 +50,13 @@ namespace Xpandables.Net.Correlation
     public interface ICorrelationContext : IServiceProvider
     {
         /// <summary>
-        /// The event that will be executed after the main one in the same control flow only if there is no exception.
-        /// The event will contain the control flow return value for non-void method.
+        /// The event that will be raised after the main one in the same control flow only if there is no exception.
+        /// The event will contain the control flow "return value" for non-void method.
         /// </summary>
         event CorrelationPostEvent PostEvent;
 
         /// <summary>
-        /// The event that will be executed after the main one when exception. The event will contain the control flow handled exception.
+        /// The event that will be raised after the main one when exception. The event will contain the control flow handled exception.
         /// </summary>
         event CorrelationRollbackEvent RollbackEvent;
     }

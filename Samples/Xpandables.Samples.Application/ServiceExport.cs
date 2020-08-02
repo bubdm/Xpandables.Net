@@ -9,6 +9,7 @@ using Xpandables.Net.Data;
 using Xpandables.Net.DependencyInjection;
 using Xpandables.Net.Helpers;
 using Xpandables.Net.ManagedExtensibility;
+using Xpandables.Samples.Business.Interceptors;
 using Xpandables.Samples.Business.Services;
 
 namespace Xpandables.Samples.Business
@@ -18,7 +19,7 @@ namespace Xpandables.Samples.Business
     {
         public void AddServices(IServiceCollection services, IConfiguration configuration)
         {
-            var assemblies = Assembly.GetExecutingAssembly().SingleToEnumerable().ToArray();
+            var assemblies = typeof(SignInRequestInterceptor).Assembly.SingleToEnumerable().ToArray();
 
             services.Configure<DataConnection>(configuration.GetSection(nameof(DataConnection)));
 
@@ -43,8 +44,8 @@ namespace Xpandables.Samples.Business
             services.AddXDataBase<DataConnectionProvider>();
 
             // interceptor
-            //services.AddTransient<SignUpChangeFirstNameInterceptor>();
-            //services.AddXInterceptor<SignUpChangeFirstNameInterceptor>(true, _ => true, assemblies);
+            services.AddTransient<SignInRequestInterceptor>();
+            services.AddXInterceptor<SignInRequestInterceptor>(true, _ => true, assemblies);
 
         }
     }

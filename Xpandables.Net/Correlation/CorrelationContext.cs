@@ -41,13 +41,13 @@ namespace Xpandables.Net.Correlation
             => _provider = provider ?? throw new ArgumentNullException(nameof(provider));
 
         /// <summary>
-        /// The event that will be executed after the main one in the same control flow only if there is no exception.
+        /// The event that will be raised after the main one in the same control flow only if there is no exception.
         /// The event will received the control flow return value for non-void method.
         /// </summary>
         public event CorrelationPostEvent PostEvent = async (_, __) => await Task.CompletedTask.ConfigureAwait(false);
 
         /// <summary>
-        /// The event that will be executed after the main one when exception. The event will received the control flow handled exception.
+        /// The event that will be raised after the main one when exception. The event will received the control flow handled exception.
         /// </summary>
         public event CorrelationRollbackEvent RollbackEvent = async (_, __) => await Task.CompletedTask.ConfigureAwait(false);
 

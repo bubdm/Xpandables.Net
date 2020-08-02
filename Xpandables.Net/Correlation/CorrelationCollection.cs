@@ -20,10 +20,11 @@ using System.Collections.Concurrent;
 namespace Xpandables.Net.Correlation
 {
     /// <summary>
-    /// Default implementation of <see cref="ICorrelationCollection{TKey, TValue}"/> that uses a <see cref="ConcurrentDictionary{TKey, TValue}"/>
-    /// to store correlated data. You can customize the storage providing your own implementing of <see cref="ICorrelationCollection{TKey, TValue}"/> interface.
+    /// Provides a collection of objects that need to be shared across asynchronous control flows.
     /// </summary>
-    public class CorrelationCollection<TKey, TValue> : ConcurrentDictionary<TKey, TValue>, ICorrelationCollection<TKey, TValue>
+    /// <typeparam name="TKey">The type of the key.</typeparam>
+    /// <typeparam name="TValue">The type of the value.</typeparam>
+    public class CorrelationCollection<TKey, TValue> : ConcurrentDictionary<TKey, TValue>
         where TKey : notnull
     {
         /// <summary>

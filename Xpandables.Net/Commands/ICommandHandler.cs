@@ -25,7 +25,7 @@ namespace Xpandables.Net.Commands
     /// This interface is used as a marker for commands when using the command pattern.
     /// Class implementation is used with the <see cref="ICommandHandler{TCommand}"/> where
     /// "TCommand" is <see cref="ICommand"/> class implementation.
-    /// This can also be enhanced with some useful interface decorators.
+    /// This can also be enhanced with some useful decorators.
     /// </summary>
 #pragma warning disable CA1040 // Avoid empty interfaces
     public interface ICommand { }
@@ -41,7 +41,7 @@ namespace Xpandables.Net.Commands
         where TCommand : class, ICommand
     {
         /// <summary>
-        /// Asynchronously handle the specified command.
+        /// Asynchronously handles the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

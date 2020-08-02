@@ -115,7 +115,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = predicate ?? throw new ArgumentNullException(nameof(predicate));
-            if (interceptorType is null) throw new ArgumentNullException(nameof(interceptorType));
+            _ = interceptorType ?? throw new ArgumentNullException(nameof(interceptorType));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             foreach (var serviceType in assemblies

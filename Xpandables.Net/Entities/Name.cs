@@ -48,6 +48,11 @@ namespace Xpandables.Net.Entities
         /// <exception cref="ArgumentNullException">The <paramref name="firstName"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="lastName"/> is null.</exception>
         public static Name Create(string firstName, string lastName) => new Name(lastName, firstName);
+        
+        /// <summary>
+        /// Creates a default instance of <see cref="Name"/> with NO value.
+        /// </summary>
+        public static Name Default() => Create("NO FIRSTNAME", "NO LASTNAME");
 
         /// <summary>
         /// Provides with deconstruction for <see cref="Name"/>.

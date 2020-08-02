@@ -26,7 +26,7 @@ namespace Xpandables.Net.Identities
     /// <summary>
     /// This class allows the application author to add secured data support to command control flow.
     /// The target command should implement the <see cref="IBehaviorIdentity"/> and inherit from <see cref="IdentityData"/>,
-    /// <see cref="IdentityData{TData}"/> or <see cref="IdentityExpression{TData, TSource}"/> in order to activate the behavior.
+    /// <see cref="IdentityData{TData}"/> or <see cref="IdentityDataExpression{TData, TSource}"/> in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IIdentityProvider"/>, that you should
     /// provide an implementation and use an extension method for registration.
     /// The decorator will set the <see cref="IdentityData.Identity"/> property with the

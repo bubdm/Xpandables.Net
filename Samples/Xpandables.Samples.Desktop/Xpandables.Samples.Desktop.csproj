@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Xpandables.Net5.Windows\Xpandables.Net.Windows.csproj" />
+    <ProjectReference Include="..\..\Xpandables.Net.Windows\Xpandables.Net.Windows.csproj" />
     <ProjectReference Include="..\Xpandables.Samples.Application\Xpandables.Samples.Business.csproj" />
   </ItemGroup>
 

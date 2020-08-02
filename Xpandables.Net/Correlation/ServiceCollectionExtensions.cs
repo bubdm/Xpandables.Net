@@ -33,7 +33,7 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="ICorrelationCollection{TKey, TValue}"/> to the services with scoped life time.
+        /// Adds the <see cref="CorrelationCollection{TKey, TValue}"/> to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -42,7 +42,6 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped(typeof(CorrelationCollection<,>));
-            //services.AddScoped(typeof(ICorrelationCollection<,>), provider => provider.GetRequiredService(typeof(CorrelationCollection<,>)));
             return services;
         }
 

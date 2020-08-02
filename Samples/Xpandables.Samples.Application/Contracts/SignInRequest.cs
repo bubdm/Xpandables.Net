@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 
 using Xpandables.Net.Expressions;
 using Xpandables.Net.HttpRestClient;
+using Xpandables.Net.Interception;
 using Xpandables.Net.Queries;
 using Xpandables.Net.ValidatorRules;
 using Xpandables.Samples.Domain.Models;

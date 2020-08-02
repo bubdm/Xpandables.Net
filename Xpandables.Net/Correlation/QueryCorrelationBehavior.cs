@@ -27,8 +27,8 @@ namespace Xpandables.Net.Correlation
     /// This class allows the application author to add post/rollback event support to query control flow.
     /// The target query should implement the <see cref="IBehaviorCorrelation"/> interface in order to activate the behavior.
     /// The class decorates the target query handler with an implementation of <see cref="ICorrelationContext"/> that
-    /// adds an event (post event) to be executed after the main one in the same control flow only if there is no exception,
-    /// and an event (roll back event) to be executed when exception. The target query handler class should reference the
+    /// adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
+    /// and an event (roll back event) to be raised when exception. The target query handler class should reference the
     /// <see cref="ICorrelationContext"/> interface in order to set the expected actions.
     /// </summary>
     /// <typeparam name="TQuery">Type of the query.</typeparam>

@@ -11,6 +11,7 @@ using Xpandables.Net.Data.Elements;
 using Xpandables.Net.EntityFramework;
 using Xpandables.Net.Helpers;
 using Xpandables.Net.Http;
+using Xpandables.Net.Interception;
 using Xpandables.Net.Queries;
 using Xpandables.Samples.Business.Contracts;
 using Xpandables.Samples.Business.Localization;
@@ -18,7 +19,7 @@ using Xpandables.Samples.Business.Services;
 
 namespace Xpandables.Samples.Business.Handlers
 {
-    public sealed class SignInRequestHandler : IQueryHandler<SignInRequest, SignInResponse>
+    public sealed class SignInRequestHandler : IQueryHandler<SignInRequest, SignInResponse>, IBehaviorInterceptor
     {
         private readonly IDataContext _dataContext;
         private readonly IHttpTokenEngine _tokenEngine;
