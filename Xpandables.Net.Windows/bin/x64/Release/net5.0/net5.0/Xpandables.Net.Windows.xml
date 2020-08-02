@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Xpandables.Net.Windows</name>
+    </assembly>
+    <members>
+        <member name="T:Xpandables.Net.Windows.Forms.ViewData`1">
+            <summary>
+            Provides with a mechanism to dynamically bind data in Windows Form.
+            </summary>
+            <typeparam name="TData">The data source type to be used for binding.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Windows.Forms.ViewData`1.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Windows.Forms.ViewData`1"/> class that initializes the data to its default value and the binding source.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Windows.Forms.ViewData`1.MultipleBinding``3(System.Collections.Generic.IEnumerable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Linq.Expressions.Expression{System.Func{`0,``2}},System.Func{``2,``1},System.Windows.Forms.DataSourceUpdateMode)">
+            <summary>
+            Creates a binding between a property of a collection of controls and a property of a data source.
+            </summary>
+            <typeparam name="TControl">The control <typeparamref name="TControl"/>.</typeparam>
+            <typeparam name="TControlProperty">The control property type.</typeparam>
+            <typeparam name="TDataProperty">The data source property type.</typeparam>
+            <param name="controls">Contains a collection of control instances.</param>
+            <param name="controlPropertyAccessor">Contains the expression used to specify the control property.</param>
+            <param name="dataPropertyAccessor">Contains the expression used to specify the source property to bind to control property.</param>
+            <param name="controlTransformAccessor">Contains the expression for applying a custom source property transformation.
+            It's used to specify the binding format event. It can be null.</param>
+            <param name="dataUpdateMode">Contains the data source update mode.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="controls"/> is null or empty.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataPropertyAccessor"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Windows.Forms.ViewData`1.Binding``3(``0,System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Linq.Expressions.Expression{System.Func{`0,``2}},System.Func{``2,``1},System.Windows.Forms.DataSourceUpdateMode)">
+            <summary>
+            Creates a binding between a property of a control and a property of a data source.
+            </summary>
+            <typeparam name="TControl">The control <typeparamref name="TControl"/>.</typeparam>
+            <typeparam name="TControlProperty">The control property type.</typeparam>
+            <typeparam name="TDataProperty">The data source property type.</typeparam>
+            <param name="control">Contains the instance of the control.</param>
+            <param name="controlPropertyAccessor">Contains the expression used to specify the control property.</param>
+            <param name="dataPropertyAccessor">Contains the expression used to specify the source property to bind to control property.</param>
+            <param name="controlTransformAccessor">Contains the expression for applying a custom source property transformation.
+            It's used to specify the binding format event. It can be null.</param>
+            <param name="dataUpdateMode">Contains the data source update mode.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="control"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="controlPropertyAccessor"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataPropertyAccessor"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="controlPropertyAccessor"/> returns null value.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="dataPropertyAccessor"/> returns null value.</exception>
+        </member>
+        <member name="P:Xpandables.Net.Windows.Forms.ViewData`1.Data">
+            <summary>
+            Gets the data source current instance.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Windows.Forms.ViewData`1.BindingSource">
+            <summary>
+            Gets the binding source instance.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Windows.Forms.ViewData`1.Dispose(System.Boolean)">
+            <summary>
+            Protected implementation of Dispose pattern.
+            </summary>
+            <param name="disposing"><see langword="true" /> to release both managed and unmanaged resources;
+            <see langword="false" /> to release only unmanaged resources.
+            </param>
+            <remarks>
+            <list type="bulle ted">
+            <see cref="M:Xpandables.Net.Windows.Forms.ViewData`1.Dispose(System.Boolean)" /> executes in two distinct scenarios.
+            <item>If <paramref name="disposing" /> equals <c>true</c>, the method has been called directly
+            or indirectly by a user's code. Managed and unmanaged resources can be disposed.</item>
+            <item>If <paramref name="disposing" /> equals <c>false</c>, the method has been called
+            by the runtime from inside the finalizer and you should not reference other objects.
+            Only unmanaged resources can be disposed.</item></list>
+            </remarks>
+        </member>
+        <member name="T:Xpandables.Net.Windows.Wpf.DisplayAttributeLocalizationConverter">
+            <summary>
+            WPF localization converter for display attribute that uses the <see cref="T:Xpandables.Net.Localization.ILocalizationResourceProvider"/>  as resource.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Windows.Wpf.DisplayAttributeLocalizationConverter.ProvideValue(System.IServiceProvider)">
+            <summary>
+            When implemented in a derived class,
+            returns an object that is provided as the value of the target property for this markup extension.
+            </summary>
+            <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
+            <returns>The object value to set on the property where the extension is applied.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Windows.Wpf.DisplayAttributeLocalizationConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Converts a value.
+            </summary>
+            <param name="value">The value produced by the binding source.</param>
+            <param name="targetType">The type of the binding target property.</param>
+            <param name="parameter">The converter parameter to use.</param>
+            <param name="culture">The culture to use in the converter.</param>
+            <returns>A converted value. If the method returns <see langword="null" />, the valid null value is used.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Windows.Wpf.DisplayAttributeLocalizationConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Converts a value. There's not convert back.
+            </summary>
+            <param name="value">The value that is produced by the binding target.</param>
+            <param name="targetType">The type to convert to.</param>
+            <param name="parameter">The converter parameter to use.</param>
+            <param name="culture">The culture to use in the converter.</param>
+            <returns>A converted value. If the method returns <see langword="null" />, the valid null value is used.</returns>
+        </member>
+    </members>
+</doc>

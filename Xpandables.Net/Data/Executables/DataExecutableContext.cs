@@ -54,7 +54,9 @@ namespace Xpandables.Net.Data.Executables
         /// <summary>
         /// Contains the argument execution for <see cref="IDataExecutable{T}"/>.
         /// </summary>
+#pragma warning disable CA1034 // Nested types should not be visible
         public sealed class DataArgument
+#pragma warning restore CA1034 // Nested types should not be visible
         {
             /// <summary>
             /// Initializes a new instance of <see cref="DataArgument"/>.
@@ -90,7 +92,9 @@ namespace Xpandables.Net.Data.Executables
         /// <summary>
         /// Contains component execution for <see cref="DataExecutable{T}"/>.
         /// </summary>
+#pragma warning disable CA1034 // Nested types should not be visible
         public sealed class DataComponent : ValueObject
+#pragma warning restore CA1034 // Nested types should not be visible
         {
             /// <summary>
             /// Initializes a new instance of <see cref="DataComponent"/>.

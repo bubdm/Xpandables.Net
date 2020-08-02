@@ -35,6 +35,7 @@ namespace Xpandables.Net.DependencyInjection
     /// </summary>
     /// <typeparam name="T">The type to be resolved.</typeparam>
     public sealed class LazyResolved<T> : Lazy<T>
+        where T : notnull
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LazyResolved{T}" /> class that uses a preinitialized specified value from the service provider.
@@ -396,7 +397,10 @@ namespace Xpandables.Net.DependencyInjection
             if (descriptor.ImplementationType != null)
                 return ActivatorUtilities.GetServiceOrCreateInstance(serviceProvider, descriptor.ImplementationType);
 
-            return descriptor.ImplementationFactory(serviceProvider);
+            if (descriptor.ImplementationFactory is { })
+                return descriptor.ImplementationFactory(serviceProvider);
+
+            throw new InvalidOperationException($"Unable to get instance from descriptor.");
         }
     }
 }

@@ -1,0 +1,16 @@
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\bin\x64\Debug\net5.0\net5.0\Xpandables.NetCore.deps.json
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\bin\x64\Debug\net5.0\net5.0\Xpandables.NetCore.dll
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\bin\x64\Debug\net5.0\net5.0\Xpandables.NetCore.pdb
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\bin\x64\Debug\net5.0\net5.0\Xpandables.NetCore.xml
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\bin\x64\Debug\net5.0\net5.0\Xpandables.Net.dll
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\bin\x64\Debug\net5.0\net5.0\Xpandables.Net.pdb
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\bin\x64\Debug\net5.0\net5.0\Xpandables.Net.xml
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\bin\x64\Debug\net5.0\net5.0\en-GB\Xpandables.Net.resources.dll
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\bin\x64\Debug\net5.0\net5.0\fr\Xpandables.Net.resources.dll
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\obj\x64\Debug\net5.0\Xpandables.NetCore.csprojAssemblyReference.cache
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\obj\x64\Debug\net5.0\Xpandables.NetCore.AssemblyInfoInputs.cache
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\obj\x64\Debug\net5.0\Xpandables.NetCore.AssemblyInfo.cs
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\obj\x64\Debug\net5.0\Xpandables.NetCore.csproj.CoreCompileInputs.cache
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\obj\x64\Debug\net5.0\Xpandables.NetCore.csproj.CopyComplete
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\obj\x64\Debug\net5.0\Xpandables.NetCore.dll
+D:\GitHub\Xpandables.Net\Xpandables.NetCore\obj\x64\Debug\net5.0\Xpandables.NetCore.pdb

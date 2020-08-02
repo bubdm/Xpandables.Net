@@ -1,0 +1,15 @@
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\bin\Debug\net5.0\Xpandables.Samples.Desktop.exe
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\bin\Debug\net5.0\Xpandables.Samples.Desktop.deps.json
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\bin\Debug\net5.0\Xpandables.Samples.Desktop.runtimeconfig.json
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\bin\Debug\net5.0\Xpandables.Samples.Desktop.runtimeconfig.dev.json
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\bin\Debug\net5.0\Xpandables.Samples.Desktop.dll
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\bin\Debug\net5.0\Xpandables.Samples.Desktop.pdb
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\obj\Debug\net5.0\Xpandables.Samples.Desktop.csprojAssemblyReference.cache
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\obj\Debug\net5.0\Xpandables.Samples.Desktop.MainForm.resources
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\obj\Debug\net5.0\Xpandables.Samples.Desktop.csproj.GenerateResource.cache
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\obj\Debug\net5.0\Xpandables.Samples.Desktop.AssemblyInfoInputs.cache
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\obj\Debug\net5.0\Xpandables.Samples.Desktop.AssemblyInfo.cs
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\obj\Debug\net5.0\Xpandables.Samples.Desktop.csproj.CoreCompileInputs.cache
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\obj\Debug\net5.0\Xpandables.Samples.Desktop.dll
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\obj\Debug\net5.0\Xpandables.Samples.Desktop.pdb
+D:\GitHub\Xpandables.Net\Xpandables.Samples.Desktop\obj\Debug\net5.0\Xpandables.Samples.Desktop.genruntimeconfig.cache

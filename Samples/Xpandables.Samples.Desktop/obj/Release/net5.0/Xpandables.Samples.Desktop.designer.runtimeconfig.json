@@ -1,0 +1,18 @@
+{
+  "runtimeOptions": {
+    "tfm": "net5.0",
+    "framework": {
+      "name": "Microsoft.WindowsDesktop.App",
+      "version": "5.0.0-preview.6.20308.1"
+    },
+    "additionalProbingPaths": [
+      "C:\\Users\\fewan\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\fewan\\.nuget\\packages",
+      "D:\\Microsoft\\Xamarin\\NuGet"
+    ],
+    "configProperties": {
+      "System.Runtime.TieredCompilation.QuickJit": true,
+      "Microsoft.NETCore.DotNetHostPolicy.SetAppPaths": true
+    }
+  }
+}

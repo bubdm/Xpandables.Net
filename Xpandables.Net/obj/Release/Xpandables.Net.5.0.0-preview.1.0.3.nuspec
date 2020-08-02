@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Xpandables.Net</id>
+    <version>5.0.0-preview.1.0.3</version>
+    <title>Xpandables.Net</title>
+    <authors>Francis-Black EWANE</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">Apache-2.0</license>
+    <licenseUrl>https://licenses.nuget.org/Apache-2.0</licenseUrl>
+    <icon>Xpandables.png</icon>
+    <projectUrl>https://github.com/Francescolis/Xpandables.Net</projectUrl>
+    <description>A utility library in .Net5 to easily add patterns such as Command, Query, Dispatcher, Interception...</description>
+    <copyright>Copyright © 2020 Francis-Black EWANE</copyright>
+    <tags>ICommand, IDispatcher, IQuery{TResult}, Enumeration, Interception, ICommandHandler{TCommand}, IQueryHandler{TQuery, TResult}, ValueObject...</tags>
+    <repository url="https://github.com/Francescolis/Xpandables.Net" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="Microsoft.EntityFrameworkCore.Relational" version="5.0.0-preview.7.20365.15" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration" version="5.0.0-preview.7.20364.11" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.EnvironmentVariables" version="5.0.0-preview.7.20364.11" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.FileExtensions" version="5.0.0-preview.7.20364.11" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.Json" version="5.0.0-preview.7.20364.11" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.DependencyInjection" version="5.0.0-preview.7.20364.11" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="5.0.0-preview.7.20364.11" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.DependencyModel" version="5.0.0-preview.3-runtime.20214.6" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Http" version="5.0.0-preview.7.20364.11" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Options.ConfigurationExtensions" version="5.0.0-preview.7.20364.11" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
+        <dependency id="System.ComponentModel.Composition" version="5.0.0-preview.7.20364.11" exclude="Build,Analyzers" />
+        <dependency id="System.Drawing.Common" version="5.0.0-preview.7.20364.11" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Release\netstandard2.1\en-GB\Xpandables.Net.resources.dll" target="lib\netstandard2.1\en-GB\Xpandables.Net.resources.dll" />
+    <file src="D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Release\netstandard2.1\fr\Xpandables.Net.resources.dll" target="lib\netstandard2.1\fr\Xpandables.Net.resources.dll" />
+    <file src="D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Release\netstandard2.1\Xpandables.Net.dll" target="lib\netstandard2.1\Xpandables.Net.dll" />
+    <file src="D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Release\netstandard2.1\Xpandables.Net.xml" target="lib\netstandard2.1\Xpandables.Net.xml" />
+    <file src="D:\GitHub\Xpandables.Net\Xpandables.png" target="Xpandables.png" />
+  </files>
+</package>
