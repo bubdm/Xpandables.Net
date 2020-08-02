@@ -15,10 +15,10 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.NetCore</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>5.0.0-preview.1.0.1</Version>
+    <Version>5.0.0-preview.1.0.2</Version>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0</FileVersion>
-    <PackageVersion>5.0.0-preview.1.0.1</PackageVersion>
+    <PackageVersion>5.0.0-preview.1.0.2</PackageVersion>
     <PackageId>Xpandables.NetCore</PackageId>
     <PackageTags>.Net Core NetCore</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
