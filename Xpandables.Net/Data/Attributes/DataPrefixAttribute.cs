@@ -30,10 +30,7 @@ namespace Xpandables.Net.Data.Attributes
         /// </summary>
         /// <param name="prefix">The prefix value.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="prefix"/> is null.</exception>
-        public DataPrefixAttribute(string prefix)
-        {
-            Prefix = prefix ?? throw new ArgumentNullException(nameof(prefix));
-        }
+        public DataPrefixAttribute(string prefix) => Prefix = prefix ?? throw new ArgumentNullException(nameof(prefix));
 
         /// <summary>
         /// Gets the value of the prefix string used to map the data source column with.

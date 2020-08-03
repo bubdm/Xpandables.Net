@@ -30,10 +30,7 @@ namespace Xpandables.Net.Data.Attributes
         /// </summary>
         /// <param name="name">The name value.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="name"/> is null.</exception>
-        public DataNameAttribute(string name)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-        }
+        public DataNameAttribute(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
 
         /// <summary>
         /// Gets the value of the name string used to map the data source column with.

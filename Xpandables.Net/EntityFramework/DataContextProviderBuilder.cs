@@ -16,6 +16,8 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.EntityFramework
 {
@@ -25,7 +27,7 @@ namespace Xpandables.Net.EntityFramework
     /// </summary>
     public sealed class DataContextProviderBuilder : IDataContextProvider
     {
-        private readonly Func<IDataContext> _provider;
+        private readonly Func<CancellationToken, Task<IDataContext>> _provider;
 
         /// <summary>
         /// Initializes a new instance of <see cref="DataContextProviderBuilder"/> class with the delegate to be used
@@ -36,15 +38,14 @@ namespace Xpandables.Net.EntityFramework
         /// the <see cref="IDataContextProvider"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="provider"/> is null.</exception>
-        public DataContextProviderBuilder(Func<IDataContext> provider)
-        {
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-        }
+        public DataContextProviderBuilder(Func<CancellationToken, Task<IDataContext>> provider)
+            => _provider = provider ?? throw new ArgumentNullException(nameof(provider));
 
         /// <summary>
         /// Returns an instance that contains the ambient data context according to the environment.
         /// </summary>
         /// <returns>An instance of context that implements <see cref="IDataContext" />.</returns>
-        public IDataContext GetDataContext() => _provider();
+        public async Task<IDataContext> GetDataContextAsync(CancellationToken cancellationToken = default)
+            => await _provider(cancellationToken).ConfigureAwait(false);
     }
 }

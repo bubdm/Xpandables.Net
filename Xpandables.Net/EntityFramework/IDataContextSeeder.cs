@@ -15,6 +15,9 @@
  *
 ************************************************************************************************************/
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
@@ -22,7 +25,7 @@ namespace Xpandables.Net.EntityFramework
     /// This is useful when you need a data context not to be empty.
     /// The target data context should be decorated with the <see cref="IBehaviorSeed"/> interface and
     /// the class seeder implementation should be
-    /// registered to services collections with the extension method <see langword="AddXDataContext{TDataContextAccessor}"/>
+    /// registered to services collections with the extension method <see cref="DependencyInjection.ServiceCollectionExtensions.AddXDataContext{TDataContextProvider}(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
     /// using options.
     /// </summary>
     /// <typeparam name="TDataContext">The type of the data context that
@@ -31,12 +34,13 @@ namespace Xpandables.Net.EntityFramework
         where TDataContext : IDataContext, IBehaviorSeed
     {
         /// <summary>
-        /// Seeds the specified data context as you wish.
+        /// Asynchronously seeds the specified data context as you wish.
         /// Warning : Do not throw exception from this method unless it's absolutely necessary.
         /// This method get called by the <see cref="DataContextSeederBehavior{TDataContext}"/>.
         /// </summary>
         /// <param name="dataContext">The data context instance to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A seeded data context.</returns>
-        TDataContext Seed(TDataContext dataContext);
+        Task SeedAsync(TDataContext dataContext, CancellationToken cancellationToken = default);
     }
 }

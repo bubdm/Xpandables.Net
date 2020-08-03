@@ -30,7 +30,7 @@ namespace Xpandables.Net.Identities
     {
         /// <summary>
         /// Contains an instance of secured data.
-        /// This value is provided by an implementation of <see cref="IIdentityProvider"/> using a decorator.
+        /// This value is provided by an implementation of <see cref="IIdentityDataProvider"/> using a decorator.
         /// </summary>
         object Identity { get; }
 
@@ -53,7 +53,7 @@ namespace Xpandables.Net.Identities
     {
         /// <summary>
         /// Contains an instance of identity data.
-        /// This value is provided by an implementation of <see cref="IIdentityProvider"/> using a decorator.
+        /// This value is provided by an implementation of <see cref="IIdentityDataProvider"/> using a decorator.
         /// </summary>
         new TData Identity { get; }
 

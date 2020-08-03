@@ -97,7 +97,7 @@ namespace Xpandables.Net.Enumerations
             where TEnumeration : EnumerationType
         {
             _ = displayName ?? throw new ArgumentNullException(nameof(displayName));
-            Func<TEnumeration, bool> predicateFind = new Func<TEnumeration, bool>(PredicateExecute);
+            var predicateFind = new Func<TEnumeration, bool>(PredicateExecute);
 
             return GetAll<TEnumeration>().FirstOrDefault(predicateFind);
 
@@ -118,7 +118,7 @@ namespace Xpandables.Net.Enumerations
             _ = enumerationType ?? throw new ArgumentNullException(nameof(enumerationType));
             _ = displayName ?? throw new ArgumentNullException(nameof(displayName));
 
-            Func<EnumerationType, bool> predicateFind = new Func<EnumerationType, bool>(PredicateExecute);
+            var predicateFind = new Func<EnumerationType, bool>(PredicateExecute);
 
             return GetAll(enumerationType).OfType<EnumerationType>().FirstOrDefault(predicateFind);
 
@@ -135,7 +135,7 @@ namespace Xpandables.Net.Enumerations
         public static TEnumeration? FromValue<TEnumeration>(int value)
             where TEnumeration : EnumerationType
         {
-            Func<TEnumeration, bool> predicateFind = new Func<TEnumeration, bool>(PredicateExecute);
+            var predicateFind = new Func<TEnumeration, bool>(PredicateExecute);
 
             return GetAll<TEnumeration>().FirstOrDefault(predicateFind);
 
@@ -185,7 +185,7 @@ namespace Xpandables.Net.Enumerations
         public static object? FromValue(Type enumerationType, int value)
         {
             _ = enumerationType ?? throw new ArgumentNullException(nameof(enumerationType));
-            Func<EnumerationType, bool> predicateFind = new Func<EnumerationType, bool>(PredicateExecute);
+            var predicateFind = new Func<EnumerationType, bool>(PredicateExecute);
 
             return GetAll(enumerationType).OfType<EnumerationType>().FirstOrDefault(predicateFind);
 

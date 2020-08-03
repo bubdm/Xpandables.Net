@@ -36,10 +36,7 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <param name="serviceProvider">The service provider to use.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="serviceProvider"/> is null.</exception>
-        public DataFactoryProvider(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        }
+        public DataFactoryProvider(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
         /// <summary>
         /// Returns an instance of the data provider factory matching the specified provider type.

@@ -44,17 +44,17 @@ namespace Xpandables.Net.QrCodes.Presenter
             /// <summary>
             /// Gets the payload version.
             /// </summary>
-            public virtual int Version { get { return -1; } }
+            public virtual int Version => -1;
 
             /// <summary>
             /// Gets the generator level.
             /// </summary>
-            public virtual QRCodeGenerator.ECCLevel EccLevel { get { return QRCodeGenerator.ECCLevel.M; } }
+            public virtual QRCodeGenerator.ECCLevel EccLevel => QRCodeGenerator.ECCLevel.M;
 
             /// <summary>
             /// gets the generator mode.
             /// </summary>
-            public virtual QRCodeGenerator.EciMode EciMode { get { return QRCodeGenerator.EciMode.Default; } }
+            public virtual QRCodeGenerator.EciMode EciMode => QRCodeGenerator.EciMode.Default;
 
             /// <summary>
             /// Returns a string that represents the current object.
@@ -904,18 +904,12 @@ namespace Xpandables.Net.QrCodes.Presenter
                 /// <summary>
                 ///
                 /// </summary>
-                public string? UnstructureMessage
-                {
-                    get { return !string.IsNullOrEmpty(unstructuredMessage) ? unstructuredMessage.Replace("\n", "") : null; }
-                }
+                public string? UnstructureMessage => !string.IsNullOrEmpty(unstructuredMessage) ? unstructuredMessage.Replace("\n", "") : null;
 
                 /// <summary>
                 ///
                 /// </summary>
-                public string? BillInformation
-                {
-                    get { return !string.IsNullOrEmpty(billInformation) ? billInformation.Replace("\n", "") : null; }
-                }
+                public string? BillInformation => !string.IsNullOrEmpty(billInformation) ? billInformation.Replace("\n", "") : null;
 
                 /// <summary>
                 ///
@@ -993,10 +987,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 /// <summary>
                 ///
                 /// </summary>
-                public string? ReferenceText
-                {
-                    get { return !string.IsNullOrEmpty(reference) ? reference.Replace("\n", "") : null; }
-                }
+                public string? ReferenceText => !string.IsNullOrEmpty(reference) ? reference.Replace("\n", "") : null;
 
                 /// <summary>
                 /// Reference type. When using a QR-IBAN you have to use either "QRR" or "SCOR"
@@ -1089,10 +1080,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 /// <summary>
                 ///
                 /// </summary>
-                public bool IsQrIban
-                {
-                    get { return ibanType == IbanType.QrIban; }
-                }
+                public bool IsQrIban => ibanType == IbanType.QrIban;
 
                 /// <summary>Returns a string that represents the current object.</summary>
                 /// <returns>A string that represents the current object.</returns>
@@ -3472,15 +3460,15 @@ namespace Xpandables.Net.QrCodes.Presenter
             /// <summary>
             /// Gets the payload version.
             /// </summary>
-            public override int Version { get { return 15; } }
+            public override int Version => 15;
             /// <summary>
             /// Gets the generator level.
             /// </summary>
-            public override QRCodeGenerator.ECCLevel EccLevel { get { return QRCodeGenerator.ECCLevel.M; } }
+            public override QRCodeGenerator.ECCLevel EccLevel => QRCodeGenerator.ECCLevel.M;
             /// <summary>
             /// gets the generator mode.
             /// </summary>
-            public override QRCodeGenerator.EciMode EciMode { get { return QRCodeGenerator.EciMode.Iso8859_2; } }
+            public override QRCodeGenerator.EciMode EciMode => QRCodeGenerator.EciMode.Iso8859_2;
 
             private string LimitLength(string value, int maxLength)
             {

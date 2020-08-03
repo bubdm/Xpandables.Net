@@ -63,7 +63,7 @@ namespace Xpandables.Net.HttpRestClient
 
             try
             {
-                using var request = GetHttpRequestMessage(query);
+                using var request = await GetHttpRequestMessageAsync(query, cancellationToken).ConfigureAwait(false);
                 using var response = await HttpClient.SendAsync(
                     request,
                     HttpCompletionOption.ResponseHeadersRead,
@@ -102,7 +102,7 @@ namespace Xpandables.Net.HttpRestClient
 
             try
             {
-                using var request = GetHttpRequestMessage(command);
+                using var request = await GetHttpRequestMessageAsync(command, cancellationToken).ConfigureAwait(false);
                 using var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)

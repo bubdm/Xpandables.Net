@@ -35,14 +35,31 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// Adds the identity data type to the services.
         /// </summary>
-        /// <typeparam name="TIdentityProvider">The identity type provider.</typeparam>
+        /// <typeparam name="TIdentityProvider">The identity data type provider.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIdentityProvider<TIdentityProvider>(this IServiceCollection services)
-            where TIdentityProvider : class, IIdentityProvider
+        public static IServiceCollection AddXIdentityDataProvider<TIdentityProvider>(this IServiceCollection services)
+            where TIdentityProvider : class, IIdentityDataProvider
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            return services.AddScoped<IIdentityProvider, TIdentityProvider>();
+            return services.AddScoped<IIdentityDataProvider, TIdentityProvider>();
+        }
+
+        /// <summary>
+        /// Adds the identity data type to the services.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="identityProviderType">The identity data provider type.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="identityProviderType"/> is null.</exception>
+        public static IServiceCollection AddXIdentityDataProvider(this IServiceCollection services, Type identityProviderType)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = identityProviderType ?? throw new ArgumentNullException(nameof(identityProviderType));
+
+            if (!typeof(IIdentityDataProvider).IsAssignableFrom(identityProviderType))
+                throw new ArgumentException($"{nameof(identityProviderType)} must implement {nameof(IIdentityDataProvider)}.");
+            return services.AddScoped(typeof(IIdentityDataProvider), identityProviderType);
         }
 
         /// <summary>

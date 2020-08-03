@@ -20,6 +20,10 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Xpandables.Net.Helpers;
 
 namespace Xpandables.Net.Cryptography
 {
@@ -67,6 +71,20 @@ namespace Xpandables.Net.Cryptography
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The encryption failed. See inner exception.</exception>
         public ValueEncrypted Encrypt(string value, string? key = default, string? salt = default)
+            => AsynchronousHelpers.RunSync(() => EncryptAsync(value, key, salt));
+
+        /// <summary>
+        /// Returns an encrypted string from the value string using the specified key and the salt value.
+        /// If <paramref name="key"/> or <paramref name="salt"/> is not provided, a default value will be used.
+        /// The process uses the <see cref="RijndaelManaged"/> algorithm with the <see cref="SHA256"/>.
+        /// </summary>
+        /// <param name="value">The value to be encrypted.</param>
+        /// <param name="key">The optional key value to be used for encryption.</param>
+        /// <param name="salt">The optional salt base64 string value to be used for encryption.</param>
+        /// <returns>An encrypted object that contains the encrypted value, its key and its salt.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">The encryption failed. See inner exception.</exception>
+        public async Task<ValueEncrypted> EncryptAsync(string value, string? key = default, string? salt = default)
         {
             if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
             key ??= StringGenerator.Generate(12);
@@ -96,7 +114,7 @@ namespace Xpandables.Net.Cryptography
 
                     using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateEncryptor(), CryptoStreamMode.Write))
                     {
-                        cryptoStream.Write(toBeEncrypted, 0, toBeEncrypted.Length);
+                        await cryptoStream.WriteAsync(toBeEncrypted.AsMemory(0, toBeEncrypted.Length), CancellationToken.None).ConfigureAwait(false);
                     }
 
                     var encrypted = memoryStream.ToArray();
@@ -137,7 +155,16 @@ namespace Xpandables.Net.Cryptography
         /// <param name="encrypted">The object that contains encrypted information.</param>
         /// <returns>A decrypted string from the encrypted object.</returns>
         /// <exception cref="InvalidOperationException">The decryption failed. See inner exception.</exception>
-        public string Decrypt(ValueEncrypted encrypted)
+        public string Decrypt(ValueEncrypted encrypted) => AsynchronousHelpers.RunSync(() => DecryptAsync(encrypted));
+
+        /// <summary>
+        /// Returns an decrypted string from the encrypted object.
+        /// The process uses the <see cref="RijndaelManaged"/> algorithm with the <see cref="SHA256"/>.
+        /// </summary>
+        /// <param name="encrypted">The object that contains encrypted information.</param>
+        /// <returns>A decrypted string from the encrypted object.</returns>
+        /// <exception cref="InvalidOperationException">The decryption failed. See inner exception.</exception>
+        public async Task<string> DecryptAsync(ValueEncrypted encrypted)
         {
             try
             {
@@ -162,7 +189,7 @@ namespace Xpandables.Net.Cryptography
 
                     using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(), CryptoStreamMode.Write))
                     {
-                        cryptoStream.Write(toBeDecrypted, 0, toBeDecrypted.Length);
+                        await cryptoStream.WriteAsync(toBeDecrypted.AsMemory(0, toBeDecrypted.Length), CancellationToken.None).ConfigureAwait(false);
                     }
 
                     var decrypted = memoryStream.ToArray();

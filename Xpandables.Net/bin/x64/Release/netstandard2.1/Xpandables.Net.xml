@@ -89,10 +89,16 @@
             Enables transaction behavior to commands and queries that are decorated with the <see cref="T:Xpandables.Net.Transactions.IBehaviorTransaction"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.DependencyInjection.CommandQueryOptions.UseIdentityBehavior">
+        <member name="M:Xpandables.Net.DependencyInjection.CommandQueryOptions.UseIdentityBehavior``1">
             <summary>
             Enables identity data behavior to commands and queries that are decorated with the <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/>.
             </summary>
+        </member>
+        <member name="M:Xpandables.Net.DependencyInjection.CommandQueryOptions.UseIdentityBehavior(System.Type)">
+            <summary>
+            Enables identity data behavior to commands and queries that are decorated with the <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/>.
+            </summary>
+            <param name="identityDataProvider">The identity data provider type.</param>
         </member>
         <member name="T:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions">
             <summary>
@@ -432,13 +438,22 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="services"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="tokenEngineType"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions.AddXIdentityProvider``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions.AddXIdentityDataProvider``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             Adds the identity data type to the services.
             </summary>
-            <typeparam name="TIdentityProvider">The identity type provider.</typeparam>
+            <typeparam name="TIdentityProvider">The identity data type provider.</typeparam>
             <param name="services">The collection of services.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions.AddXIdentityDataProvider(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Type)">
+            <summary>
+            Adds the identity data type to the services.
+            </summary>
+            <param name="services">The collection of services.</param>
+            <param name="identityProviderType">The identity data provider type.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="services"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="identityProviderType"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions.AddXIdentityBehavior(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
@@ -1651,6 +1666,19 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The encryption failed. See inner exception.</exception>
         </member>
+        <member name="M:Xpandables.Net.Cryptography.IStringCryptography.EncryptAsync(System.String,System.String,System.String)">
+            <summary>
+            Returns an encrypted string from the value string using the specified key and the salt value.
+            If <paramref name="key"/> or <paramref name="salt"/> is not provided, a default value will be used.
+            The process uses the <see cref="T:System.Security.Cryptography.RijndaelManaged"/> algorithm with the <see cref="T:System.Security.Cryptography.SHA256"/>.
+            </summary>
+            <param name="value">The value to be encrypted.</param>
+            <param name="key">The optional key value to be used for encryption.</param>
+            <param name="salt">The optional salt base64 string value to be used for encryption.</param>
+            <returns>An encrypted object that contains the encrypted value, its key and its salt.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The encryption failed. See inner exception.</exception>
+        </member>
         <member name="M:Xpandables.Net.Cryptography.IStringCryptography.Decrypt(System.String,System.String,System.String)">
             <summary>
             Returns an decrypted string from the encrypted value.
@@ -1666,6 +1694,15 @@
             <exception cref="T:System.InvalidOperationException">The decryption failed. See inner exception.</exception>
         </member>
         <member name="M:Xpandables.Net.Cryptography.IStringCryptography.Decrypt(Xpandables.Net.Cryptography.ValueEncrypted)">
+            <summary>
+            Returns an decrypted string from the encrypted object.
+            The process uses the <see cref="T:System.Security.Cryptography.RijndaelManaged"/> algorithm with the <see cref="T:System.Security.Cryptography.SHA256"/>.
+            </summary>
+            <param name="encrypted">The object that contains encrypted information.</param>
+            <returns>A decrypted string from the encrypted object.</returns>
+            <exception cref="T:System.InvalidOperationException">The decryption failed. See inner exception.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Cryptography.IStringCryptography.DecryptAsync(Xpandables.Net.Cryptography.ValueEncrypted)">
             <summary>
             Returns an decrypted string from the encrypted object.
             The process uses the <see cref="T:System.Security.Cryptography.RijndaelManaged"/> algorithm with the <see cref="T:System.Security.Cryptography.SHA256"/>.
@@ -2047,7 +2084,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBase.BuildConnection(System.Data.Common.DbProviderFactory,System.String)">
+        <member name="M:Xpandables.Net.Data.DataBase.BuildConnectionAsync(System.Data.Common.DbProviderFactory,System.String)">
             <summary>
             Provides with a database connection using the provider and the connection string.
             </summary>
@@ -2056,7 +2093,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="dbProviderFactory"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="connectionString"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBase.SpeedSqlServerResult(System.Data.Common.DbConnection)">
+        <member name="M:Xpandables.Net.Data.DataBase.SpeedSqlServerResultAsync(System.Data.Common.DbConnection)">
             <summary>
             Speeds the connection result for SQL server only.
             </summary>
@@ -4866,10 +4903,11 @@
             <param name="dataContextSettings">The data context settings.</param>
             <param name="instanceCreator">The instance creator.</param>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextProvider`2.GetDataContext">
+        <member name="M:Xpandables.Net.EntityFramework.DataContextProvider`2.GetDataContextAsync(System.Threading.CancellationToken)">
             <summary>
-            Returns an instance that contains the ambient data context according to the environment.
+            Asynchronously returns an instance that will contain the ambient data context according to the environment.
             </summary>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <returns>An instance of <see cref="T:Xpandables.Net.EntityFramework.IDataContext" />.</returns>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.DataContextProvider`2.GetDataContextOptions">
@@ -4884,7 +4922,7 @@
             interface without dedicated class.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextProviderBuilder.#ctor(System.Func{Xpandables.Net.EntityFramework.IDataContext})">
+        <member name="M:Xpandables.Net.EntityFramework.DataContextProviderBuilder.#ctor(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task{Xpandables.Net.EntityFramework.IDataContext}})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextProviderBuilder"/> class with the delegate to be used
             as <see cref="T:Xpandables.Net.EntityFramework.IDataContextProvider"/> implementation.
@@ -4895,7 +4933,7 @@
             method such as thrown exceptions.</para></param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="provider"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextProviderBuilder.GetDataContext">
+        <member name="M:Xpandables.Net.EntityFramework.DataContextProviderBuilder.GetDataContextAsync(System.Threading.CancellationToken)">
             <summary>
             Returns an instance that contains the ambient data context according to the environment.
             </summary>
@@ -5142,10 +5180,11 @@
             You need to register the class implementation to the services collection using and extension method.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContextProvider.GetDataContext">
+        <member name="M:Xpandables.Net.EntityFramework.IDataContextProvider.GetDataContextAsync(System.Threading.CancellationToken)">
             <summary>
-            Returns an instance that contains the ambient data context according to the environment.
+            Asynchronously returns an instance that will contain the ambient data context according to the environment.
             </summary>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <returns>An instance of context that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContext" />.</returns>
         </member>
         <member name="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1">
@@ -5154,19 +5193,20 @@
             This is useful when you need a data context not to be empty.
             The target data context should be decorated with the <see cref="T:Xpandables.Net.EntityFramework.IBehaviorSeed"/> interface and
             the class seeder implementation should be
-            registered to services collections with the extension method <see langword="AddXDataContext{TDataContextAccessor}"/>
+            registered to services collections with the extension method <see cref="M:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions.AddXDataContext``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
             using options.
             </summary>
             <typeparam name="TDataContext">The type of the data context that
             implements <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> and <see cref="T:Xpandables.Net.EntityFramework.IBehaviorSeed"/>.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContextSeeder`1.Seed(`0)">
+        <member name="M:Xpandables.Net.EntityFramework.IDataContextSeeder`1.SeedAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Seeds the specified data context as you wish.
+            Asynchronously seeds the specified data context as you wish.
             Warning : Do not throw exception from this method unless it's absolutely necessary.
             This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederBehavior`1"/>.
             </summary>
             <param name="dataContext">The data context instance to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <returns>A seeded data context.</returns>
         </member>
         <member name="T:Xpandables.Net.EntityFramework.QueryPersistenceBehavior`2">
@@ -5743,6 +5783,28 @@
             <param name="action">Action to invoke for each element.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <returns>A task that represents the asynchronous operation.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Helpers.EnumerableHelpers.ParallelForEachAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Func{``0,System.Threading.Tasks.Task},System.Int32,System.Threading.Tasks.TaskScheduler,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously executes a <see langword="foreach"/> (For Each in Visual Basic) operation with thread-local data on an
+            <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/> in which iterations may run in parallel and the state of the loop can be monitored and manipulated.
+            </summary>
+            <typeparam name="TSource">Type of the element in the sequence.</typeparam>
+            <param name="source">The source of the sequence.</param>
+            <param name="actionBody">The action to invoke with each data element received.</param>
+            <param name="maxDegreeOfParallelism">the maximum number of messages that may be processed by the block concurrently.</param>
+            <param name="scheduler">The <see cref="T:System.Threading.Tasks.TaskScheduler"/> to use for scheduling tasks.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        </member>
+        <member name="M:Xpandables.Net.Helpers.EnumerableHelpers.ParallelForEachAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.Tasks.Dataflow.ActionBlock{``0},System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously executes a <see langword="foreach"/> (For Each in Visual Basic) operation with thread-local data on an
+            <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/> in which iterations may run in parallel and the state of the loop can be monitored and manipulated.
+            </summary>
+            <typeparam name="TSource">Type of the element in the sequence.</typeparam>
+            <param name="source">The source of the sequence.</param>
+            <param name="actionBlock">The action to invoke with each data element received.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         </member>
         <member name="M:Xpandables.Net.Helpers.EnumerableHelpers.FirstOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
@@ -6939,13 +7001,14 @@
             Helpers for <see cref="T:Xpandables.Net.HttpRestClient.IHttpRestClientHandler"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientHelpers.GetHttpRequestMessage``1(Xpandables.Net.HttpRestClient.HttpRestClientAttribute,``0)">
+        <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientHelpers.GetHttpRequestMessageAsync``1(Xpandables.Net.HttpRestClient.HttpRestClientAttribute,``0,System.Threading.CancellationToken)">
             <summary>
             Returns the <see cref="T:System.Net.Http.HttpRequestMessage"/> from the attribute.
             </summary>
             <typeparam name="TSource">the type of the source.</typeparam>
             <param name="attribute">The <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientAttribute"/> attribute.</param>
             <param name="source">The source of data.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientHelpers.TryDeserializeObject``1(System.String,``0@,System.Exception@,Newtonsoft.Json.JsonSerializerSettings)">
@@ -7694,14 +7757,14 @@
             This class allows the application author to add secured data support to command control flow.
             The target command should implement the <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/> and inherit from <see cref="T:Xpandables.Net.Identities.IdentityData"/>,
             <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/> in order to activate the behavior.
-            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider"/>, that you should
+            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>, that you should
             provide an implementation and use an extension method for registration.
             The decorator will set the <see cref="P:Xpandables.Net.Identities.IdentityData.Identity"/> property with the
-            <see cref="M:Xpandables.Net.Identities.IIdentityProvider.GetIdentity"/> before the handler execution.
+            <see cref="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity"/> before the handler execution.
             </summary>
             <typeparam name="TCommand">Type of command.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Identities.CommandIdentityBehavior`1.#ctor(Xpandables.Net.Identities.IIdentityProvider,Xpandables.Net.Commands.ICommandHandler{`0})">
+        <member name="M:Xpandables.Net.Identities.CommandIdentityBehavior`1.#ctor(Xpandables.Net.Identities.IIdentityDataProvider,Xpandables.Net.Commands.ICommandHandler{`0})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Identities.CommandIdentityBehavior`1"/> class.
             </summary>
@@ -7723,7 +7786,7 @@
             A marker interface that allows the command/query class to be filled with an identity. The class should derive from
             <see cref="T:Xpandables.Net.Identities.IdentityData"/>, <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/>
             for a query-bale class. You need to provide with an
-            implementation for <see cref="T:Xpandables.Net.Identities.IIdentityProvider"/>
+            implementation for <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>
             and register the expected class using the correct extension method.
             </summary>
         </member>
@@ -7737,7 +7800,7 @@
         <member name="P:Xpandables.Net.Identities.IdentityData.Identity">
             <summary>
             Contains an instance of identity data.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider" /> using a decorator.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider" /> using a decorator.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Identities.IdentityData.SetIdentity(System.Object)">
@@ -7758,7 +7821,7 @@
         <member name="P:Xpandables.Net.Identities.IdentityData`1.Identity">
             <summary>
             Contains an instance of identity data.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider" /> using a decorator.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider" /> using a decorator.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Identities.IdentityDataExpression`2">
@@ -7792,7 +7855,7 @@
         <member name="P:Xpandables.Net.Identities.IIdentityData.Identity">
             <summary>
             Contains an instance of secured data.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider"/> using a decorator.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/> using a decorator.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Identities.IIdentityData.SetIdentity(System.Object)">
@@ -7812,7 +7875,7 @@
         <member name="P:Xpandables.Net.Identities.IIdentityData`1.Identity">
             <summary>
             Contains an instance of identity data.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider"/> using a decorator.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/> using a decorator.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Identities.IIdentityData`1.SetIdentity(`0)">
@@ -7831,14 +7894,14 @@
             <typeparam name="TIdentity">The type of the identity data.</typeparam>
             <typeparam name="TSource">The type of the data source</typeparam>
         </member>
-        <member name="T:Xpandables.Net.Identities.IIdentityProvider">
+        <member name="T:Xpandables.Net.Identities.IIdentityDataProvider">
             <summary>
             Provides with a method to retrieve identity.
             You should provide an implementation of this interface that will be used with the <see cref="T:Xpandables.Net.Identities.CommandIdentityBehavior`1"/>
             or <see cref="T:Xpandables.Net.Identities.QueryIdentityBehavior`2"/> decorator to fill the target instance with the identity.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Identities.IIdentityProvider.GetIdentity">
+        <member name="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity">
             <summary>
             Returns an instance that contains identity or throw an exception if not found.
             </summary>
@@ -7849,15 +7912,15 @@
             This class allows the application author to add secured information support to query control flow.
             The target query should implement the <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/> and inherit from <see cref="T:Xpandables.Net.Identities.IdentityData"/>,
             <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/> in order to activate the behavior.
-            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider"/>, that you should
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>, that you should
             provide an implementation and use the extension method for registration.
             The decorator will set the <see cref="P:Xpandables.Net.Identities.IdentityData.Identity"/> property with the
-            <see cref="M:Xpandables.Net.Identities.IIdentityProvider.GetIdentity"/> before the handler execution.
+            <see cref="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity"/> before the handler execution.
             </summary>
             <typeparam name="TQuery">Type of the query.</typeparam>
             <typeparam name="TResult">Type of the query.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Identities.QueryIdentityBehavior`2.#ctor(Xpandables.Net.Identities.IIdentityProvider,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+        <member name="M:Xpandables.Net.Identities.QueryIdentityBehavior`2.#ctor(Xpandables.Net.Identities.IIdentityDataProvider,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Identities.QueryIdentityBehavior`2"/>.
             </summary>

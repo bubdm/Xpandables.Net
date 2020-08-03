@@ -145,10 +145,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="value">The enumeration value.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="displayName" /> is null.</exception>
         private GeoLocationLanguage(string displayName, string language, int value)
-            : base(displayName, value)
-        {
-            Language = language;
-        }
+            : base(displayName, value) => Language = language;
 
         /// <summary>
         /// Gets the language name.

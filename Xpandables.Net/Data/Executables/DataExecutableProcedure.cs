@@ -54,7 +54,7 @@ namespace Xpandables.Net.Data.Executables
             context.Component.Command.Parameters.Add(returnValParameter);
 
             if (context.Component.Command.Connection.IsSqlConnection() && context.Argument.Parameters?.All(p => p is DbParameter) == true)
-                context.Component.Command.Prepare();
+                await context.Component.Command.PrepareAsync(cancellationToken).ConfigureAwait(false);
 
             int result;
             if (context.Argument.Options.IsIdentityRetrieved)
@@ -71,7 +71,7 @@ namespace Xpandables.Net.Data.Executables
             }
 
             if (context.Argument.Options.IsTransactionEnabled)
-                context.Component.Command.Transaction.Commit();
+                await context.Component.Command.Transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
 
             return result;
         }

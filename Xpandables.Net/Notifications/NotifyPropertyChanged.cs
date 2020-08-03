@@ -101,7 +101,7 @@ namespace Xpandables.Net.Notifications
 
             void PropagatePropertyChangedOnDependents(string property)
             {
-                Action<string> onPropertyChangedAction = new Action<string>(OnPropertyChanged);
+                var onPropertyChangedAction = new Action<string>(OnPropertyChanged);
 
                 (from keyValues in Dependencies
                  from dependent in keyValues.Value
@@ -193,7 +193,7 @@ namespace Xpandables.Net.Notifications
 
                     if (dependencies.TryGetValue(dependency, out var notifiers))
                     {
-                        Predicate<string> predicateProperty = new Predicate<string>(PredicateFindProperty);
+                        var predicateProperty = new Predicate<string>(PredicateFindProperty);
                         if (notifiers.Find(predicateProperty) is { })
                         {
                             throw new InvalidOperationException("Duplicate dependency found.",
@@ -204,7 +204,7 @@ namespace Xpandables.Net.Notifications
                     }
                     else
                     {
-                        Predicate<string> predicateFind = new Predicate<string>(PredicateFindDependency);
+                        var predicateFind = new Predicate<string>(PredicateFindDependency);
                         if (dependencies.TryGetValue(property.Name, out var propertyNotifiers)
                             && propertyNotifiers.Find(predicateFind) != null)
                         {

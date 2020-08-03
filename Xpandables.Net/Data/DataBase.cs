@@ -112,7 +112,7 @@ namespace Xpandables.Net.Data
             var transaction = default(DbTransaction);
             try
             {
-                using var connection = BuildConnection(_dbProviderFactory.Value, _dataConnection.GetConnectionString());
+                using var connection = await BuildConnectionAsync(_dbProviderFactory.Value, _dataConnection.GetConnectionString()).ConfigureAwait(false);
                 using var command = connection.CreateCommand();
                 using var adapter = _dbProviderFactory.Value.CreateDataAdapter();
 
@@ -122,7 +122,7 @@ namespace Xpandables.Net.Data
 
                 if (options.IsTransactionEnabled)
                 {
-                    transaction = connection.BeginTransaction(options.IsolationLevel);
+                    transaction = await connection.BeginTransactionAsync(options.IsolationLevel, cancellationToken).ConfigureAwait(false);
                     command.Transaction = transaction;
                 }
 
@@ -164,12 +164,12 @@ namespace Xpandables.Net.Data
         /// <param name="connectionString">The connection string to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="dbProviderFactory"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="connectionString"/> is null.</exception>
-        private static DbConnection BuildConnection(DbProviderFactory dbProviderFactory, string connectionString)
+        private static async Task<DbConnection> BuildConnectionAsync(DbProviderFactory dbProviderFactory, string connectionString)
         {
             var dbConnection = dbProviderFactory.CreateConnection();
             dbConnection.ConnectionString = connectionString;
-            dbConnection.Open();
-            SpeedSqlServerResult(dbConnection);
+            await dbConnection.OpenAsync().ConfigureAwait(false);
+            await SpeedSqlServerResultAsync(dbConnection).ConfigureAwait(false);
             return dbConnection;
         }
 
@@ -177,7 +177,7 @@ namespace Xpandables.Net.Data
         /// Speeds the connection result for SQL server only.
         /// </summary>
         /// <param name="connection">the connection to speed.</param>
-        private static void SpeedSqlServerResult(DbConnection connection)
+        private static async Task SpeedSqlServerResultAsync(DbConnection connection)
         {
             if (connection.GetType().Name.Equals("SqlConnection", StringComparison.OrdinalIgnoreCase))
             {
@@ -192,7 +192,7 @@ namespace Xpandables.Net.Data
                     SET CONCAT_NULL_YIELDS_NULL ON
                     SET QUOTED_IDENTIFIER ON
                     SET NUMERIC_ROUNDABORT OFF";
-                cmd.ExecuteNonQuery();
+                await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
         }
     }

@@ -27,16 +27,16 @@ namespace Xpandables.Net.Identities
     /// This class allows the application author to add secured data support to command control flow.
     /// The target command should implement the <see cref="IBehaviorIdentity"/> and inherit from <see cref="IdentityData"/>,
     /// <see cref="IdentityData{TData}"/> or <see cref="IdentityDataExpression{TData, TSource}"/> in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="IIdentityProvider"/>, that you should
+    /// The class decorates the target command handler with an implementation of <see cref="IIdentityDataProvider"/>, that you should
     /// provide an implementation and use an extension method for registration.
     /// The decorator will set the <see cref="IdentityData.Identity"/> property with the
-    /// <see cref="IIdentityProvider.GetIdentity"/> before the handler execution.
+    /// <see cref="IIdentityDataProvider.GetIdentity"/> before the handler execution.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     public sealed class CommandIdentityBehavior<TCommand> : ICommandHandler<TCommand>
         where TCommand : class, IIdentityData, ICommand, IBehaviorIdentity
     {
-        private readonly IIdentityProvider _identityProvider;
+        private readonly IIdentityDataProvider _identityProvider;
         private readonly ICommandHandler<TCommand> _decoratee;
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Xpandables.Net.Identities
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="identityProvider"/> is null.</exception>
-        public CommandIdentityBehavior(IIdentityProvider identityProvider, ICommandHandler<TCommand> decoratee)
+        public CommandIdentityBehavior(IIdentityDataProvider identityProvider, ICommandHandler<TCommand> decoratee)
         {
             _identityProvider = identityProvider ?? throw new ArgumentNullException(nameof(identityProvider));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));

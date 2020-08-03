@@ -74,7 +74,14 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IBehaviorIdentity"/>.
         /// </summary>
-        public CommandQueryOptions UseIdentityBehavior() => this.With(cq => cq.IsIdentityDataEnabled = true);
+        public CommandQueryOptions UseIdentityBehavior<TIdentityDataProvider>() => this.With(cq => cq.IsIdentityDataEnabled = typeof(TIdentityDataProvider));
+
+        /// <summary>
+        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IBehaviorIdentity"/>.
+        /// </summary>
+        /// <param name="identityDataProvider">The identity data provider type.</param>
+        public CommandQueryOptions UseIdentityBehavior(Type identityDataProvider)
+            => this.With(cq => cq.IsIdentityDataEnabled = identityDataProvider ?? throw new ArgumentNullException(nameof(identityDataProvider)));
 
         internal bool IsValidatorEnabled { get; private set; }
         internal bool IsVisitorEnabled { get; private set; }
@@ -82,7 +89,7 @@ namespace Xpandables.Net.DependencyInjection
         internal bool IsPersistenceEnabled { get; private set; }
         internal bool IsCorrelationEnabled { get; private set; }
         internal bool IsRetryEnabled { get; private set; }
-        internal bool IsIdentityDataEnabled { get; private set; }
+        internal Type? IsIdentityDataEnabled { get; private set; }
     }
 
     /// <summary>
@@ -157,8 +164,11 @@ namespace Xpandables.Net.DependencyInjection
                 services.AddXValidatorRuleBehavior();
             }
 
-            if (definedOptions.IsIdentityDataEnabled)
+            if (definedOptions.IsIdentityDataEnabled is { })
+            {
+                services.AddXIdentityDataProvider(definedOptions.IsIdentityDataEnabled);
                 services.AddXIdentityBehavior();
+            }
 
             return services;
         }

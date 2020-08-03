@@ -26,10 +26,7 @@ namespace Xpandables.Net.DependencyInjection.Registrations.Internals
 {
     internal class ImplementationTypeFilter : IImplementationTypeFilter
     {
-        public ImplementationTypeFilter(IEnumerable<Type> types)
-        {
-            Types = types;
-        }
+        public ImplementationTypeFilter(IEnumerable<Type> types) => Types = types;
 
         internal IEnumerable<Type> Types { get; private set; }
 

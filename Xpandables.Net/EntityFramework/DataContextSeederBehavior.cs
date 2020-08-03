@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.EntityFramework
 {
@@ -44,11 +45,10 @@ namespace Xpandables.Net.EntityFramework
             _seeder = dataContextSeeder ?? throw new ArgumentNullException(nameof(dataContextSeeder));
         }
 
-        IDataContext IDataContextProvider.GetDataContext()
+        async Task<IDataContext> IDataContextProvider.GetDataContextAsync(System.Threading.CancellationToken cancellationToken)
         {
-            var context = _decoratee.GetDataContext();
-            _seeder.Seed((TDataContext)context);
-            context.Persist();
+            var context = await _decoratee.GetDataContextAsync(cancellationToken).ConfigureAwait(false);
+            await _seeder.SeedAsync((TDataContext)context, cancellationToken).ConfigureAwait(false);
 
             return context;
         }

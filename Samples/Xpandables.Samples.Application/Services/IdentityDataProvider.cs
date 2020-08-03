@@ -6,14 +6,11 @@ using Xpandables.Samples.Domain.Models;
 
 namespace Xpandables.Samples.Business.Services
 {
-    public class IdentityDataProvider : IIdentityProvider
+    public class IdentityDataProvider : IIdentityDataProvider
     {
         private readonly HttpTokenContainer _securedTokenContainer;
 
-        public IdentityDataProvider(HttpTokenContainer securedTokenContainer)
-        {
-            _securedTokenContainer = securedTokenContainer ?? throw new ArgumentNullException(nameof(securedTokenContainer));
-        }
+        public IdentityDataProvider(HttpTokenContainer securedTokenContainer) => _securedTokenContainer = securedTokenContainer ?? throw new ArgumentNullException(nameof(securedTokenContainer));
 
         public object GetIdentity()
         {

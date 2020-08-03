@@ -1705,10 +1705,7 @@ namespace Xpandables.Net.QrCodes.Presenter
 
         private class Polynom
         {
-            public Polynom()
-            {
-                PolyItems = new List<PolynomItem>();
-            }
+            public Polynom() => PolyItems = new List<PolynomItem>();
 
             public List<PolynomItem> PolyItems { get; set; }
 

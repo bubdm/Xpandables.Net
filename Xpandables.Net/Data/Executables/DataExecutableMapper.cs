@@ -40,10 +40,7 @@ namespace Xpandables.Net.Data.Executables
         /// Initializes a new instance of <see cref="DataExecutableMapper{T}"/>.
         /// </summary>
         /// <param name="dataMapper">the mapper to be used.</param>
-        public DataExecutableMapper(IDataMapper dataMapper)
-        {
-            _dataMapper = dataMapper ?? throw new ArgumentNullException(nameof(dataMapper));
-        }
+        public DataExecutableMapper(IDataMapper dataMapper) => _dataMapper = dataMapper ?? throw new ArgumentNullException(nameof(dataMapper));
 
         /// <summary>
         /// Asynchronously executes an action to the database and returns a result of specific-type.
@@ -71,7 +68,7 @@ namespace Xpandables.Net.Data.Executables
                 && context.Argument.Parameters?.All(p => p is DbParameter) == true
                 && context.Component.Command.Connection.IsSqlConnection())
             {
-                context.Component.Command.Prepare();
+                await context.Component.Command.PrepareAsync(cancellationToken).ConfigureAwait(false);
             }
 
             var result = new List<TResult>();
@@ -86,7 +83,7 @@ namespace Xpandables.Net.Data.Executables
                         context.Component.Adapter.Fill(dataSet);
 
                         if (context.Argument.Options.IsTransactionEnabled)
-                            context.Component.Command.Transaction.Commit();
+                            await context.Component.Command.Transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
 
                         using var dataTable = dataSet.Tables[0];
                         result = _dataMapper.Map<TResult>(dataTable, context.Argument.Options);
@@ -97,12 +94,12 @@ namespace Xpandables.Net.Data.Executables
                 case ReaderOption.DataReader:
                     using (var reader = await context.Component.Command.ExecuteReaderAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false))
                     {
-                        result = _dataMapper.Map<TResult>(GetRecords(), context.Argument.Options);
-                        IEnumerable<IDataRecord> GetRecords()
+                        result = _dataMapper.Map<TResult>(GetRecordsAsync(), context.Argument.Options);
+                        async IAsyncEnumerable<IDataRecord> GetRecordsAsync()
                         {
                             if (reader.HasRows)
                             {
-                                while (reader.Read())
+                                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                                     yield return reader;
                             }
                         }

@@ -89,10 +89,16 @@
             Enables transaction behavior to commands and queries that are decorated with the <see cref="T:Xpandables.Net.Transactions.IBehaviorTransaction"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.DependencyInjection.CommandQueryOptions.UseIdentityBehavior">
+        <member name="M:Xpandables.Net.DependencyInjection.CommandQueryOptions.UseIdentityBehavior``1">
             <summary>
             Enables identity data behavior to commands and queries that are decorated with the <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/>.
             </summary>
+        </member>
+        <member name="M:Xpandables.Net.DependencyInjection.CommandQueryOptions.UseIdentityBehavior(System.Type)">
+            <summary>
+            Enables identity data behavior to commands and queries that are decorated with the <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/>.
+            </summary>
+            <param name="identityDataProvider">The identity data provider type.</param>
         </member>
         <member name="T:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions">
             <summary>
@@ -432,13 +438,22 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="services"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="tokenEngineType"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions.AddXIdentityProvider``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions.AddXIdentityDataProvider``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             Adds the identity data type to the services.
             </summary>
-            <typeparam name="TIdentityProvider">The identity type provider.</typeparam>
+            <typeparam name="TIdentityProvider">The identity data type provider.</typeparam>
             <param name="services">The collection of services.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions.AddXIdentityDataProvider(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Type)">
+            <summary>
+            Adds the identity data type to the services.
+            </summary>
+            <param name="services">The collection of services.</param>
+            <param name="identityProviderType">The identity data provider type.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="services"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="identityProviderType"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions.AddXIdentityBehavior(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
@@ -7694,14 +7709,14 @@
             This class allows the application author to add secured data support to command control flow.
             The target command should implement the <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/> and inherit from <see cref="T:Xpandables.Net.Identities.IdentityData"/>,
             <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/> in order to activate the behavior.
-            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider"/>, that you should
+            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>, that you should
             provide an implementation and use an extension method for registration.
             The decorator will set the <see cref="P:Xpandables.Net.Identities.IdentityData.Identity"/> property with the
-            <see cref="M:Xpandables.Net.Identities.IIdentityProvider.GetIdentity"/> before the handler execution.
+            <see cref="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity"/> before the handler execution.
             </summary>
             <typeparam name="TCommand">Type of command.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Identities.CommandIdentityBehavior`1.#ctor(Xpandables.Net.Identities.IIdentityProvider,Xpandables.Net.Commands.ICommandHandler{`0})">
+        <member name="M:Xpandables.Net.Identities.CommandIdentityBehavior`1.#ctor(Xpandables.Net.Identities.IIdentityDataProvider,Xpandables.Net.Commands.ICommandHandler{`0})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Identities.CommandIdentityBehavior`1"/> class.
             </summary>
@@ -7723,7 +7738,7 @@
             A marker interface that allows the command/query class to be filled with an identity. The class should derive from
             <see cref="T:Xpandables.Net.Identities.IdentityData"/>, <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/>
             for a query-bale class. You need to provide with an
-            implementation for <see cref="T:Xpandables.Net.Identities.IIdentityProvider"/>
+            implementation for <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>
             and register the expected class using the correct extension method.
             </summary>
         </member>
@@ -7737,7 +7752,7 @@
         <member name="P:Xpandables.Net.Identities.IdentityData.Identity">
             <summary>
             Contains an instance of identity data.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider" /> using a decorator.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider" /> using a decorator.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Identities.IdentityData.SetIdentity(System.Object)">
@@ -7758,7 +7773,7 @@
         <member name="P:Xpandables.Net.Identities.IdentityData`1.Identity">
             <summary>
             Contains an instance of identity data.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider" /> using a decorator.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider" /> using a decorator.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Identities.IdentityDataExpression`2">
@@ -7792,7 +7807,7 @@
         <member name="P:Xpandables.Net.Identities.IIdentityData.Identity">
             <summary>
             Contains an instance of secured data.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider"/> using a decorator.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/> using a decorator.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Identities.IIdentityData.SetIdentity(System.Object)">
@@ -7812,7 +7827,7 @@
         <member name="P:Xpandables.Net.Identities.IIdentityData`1.Identity">
             <summary>
             Contains an instance of identity data.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider"/> using a decorator.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/> using a decorator.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Identities.IIdentityData`1.SetIdentity(`0)">
@@ -7831,14 +7846,14 @@
             <typeparam name="TIdentity">The type of the identity data.</typeparam>
             <typeparam name="TSource">The type of the data source</typeparam>
         </member>
-        <member name="T:Xpandables.Net.Identities.IIdentityProvider">
+        <member name="T:Xpandables.Net.Identities.IIdentityDataProvider">
             <summary>
             Provides with a method to retrieve identity.
             You should provide an implementation of this interface that will be used with the <see cref="T:Xpandables.Net.Identities.CommandIdentityBehavior`1"/>
             or <see cref="T:Xpandables.Net.Identities.QueryIdentityBehavior`2"/> decorator to fill the target instance with the identity.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Identities.IIdentityProvider.GetIdentity">
+        <member name="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity">
             <summary>
             Returns an instance that contains identity or throw an exception if not found.
             </summary>
@@ -7849,15 +7864,15 @@
             This class allows the application author to add secured information support to query control flow.
             The target query should implement the <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/> and inherit from <see cref="T:Xpandables.Net.Identities.IdentityData"/>,
             <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/> in order to activate the behavior.
-            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityProvider"/>, that you should
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>, that you should
             provide an implementation and use the extension method for registration.
             The decorator will set the <see cref="P:Xpandables.Net.Identities.IdentityData.Identity"/> property with the
-            <see cref="M:Xpandables.Net.Identities.IIdentityProvider.GetIdentity"/> before the handler execution.
+            <see cref="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity"/> before the handler execution.
             </summary>
             <typeparam name="TQuery">Type of the query.</typeparam>
             <typeparam name="TResult">Type of the query.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Identities.QueryIdentityBehavior`2.#ctor(Xpandables.Net.Identities.IIdentityProvider,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+        <member name="M:Xpandables.Net.Identities.QueryIdentityBehavior`2.#ctor(Xpandables.Net.Identities.IIdentityDataProvider,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Identities.QueryIdentityBehavior`2"/>.
             </summary>

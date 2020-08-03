@@ -23,6 +23,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 using Xpandables.Net.Optionals;
 
@@ -132,6 +133,59 @@ namespace Xpandables.Net.Helpers
             {
                 await enumeratorAsync.DisposeAsync().ConfigureAwait(false);
             }
+        }
+
+        /// <summary>
+        /// Asynchronously executes a <see langword="foreach"/> (For Each in Visual Basic) operation with thread-local data on an
+        /// <see cref="IAsyncEnumerable{T}"/> in which iterations may run in parallel and the state of the loop can be monitored and manipulated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the element in the sequence.</typeparam>
+        /// <param name="source">The source of the sequence.</param>
+        /// <param name="actionBody">The action to invoke with each data element received.</param>
+        /// <param name="maxDegreeOfParallelism">the maximum number of messages that may be processed by the block concurrently.</param>
+        /// <param name="scheduler">The <see cref="TaskScheduler"/> to use for scheduling tasks.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        public static async Task ParallelForEachAsync<TSource>(
+            this IAsyncEnumerable<TSource> source, Func<TSource, Task> actionBody, int maxDegreeOfParallelism = DataflowBlockOptions.Unbounded, TaskScheduler? scheduler = default, CancellationToken cancellationToken = default)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            _ = actionBody ?? throw new ArgumentNullException(nameof(actionBody));
+
+            var options = new ExecutionDataflowBlockOptions
+            {
+                MaxDegreeOfParallelism = maxDegreeOfParallelism,
+                CancellationToken = cancellationToken
+            };
+
+            if (scheduler != null)
+                options.TaskScheduler = scheduler;
+
+            var block = new ActionBlock<TSource>(actionBody, options);
+            await foreach (var item in source)
+                await block.SendAsync(item).ConfigureAwait(false);
+
+            block.Complete();
+            await block.Completion.ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Asynchronously executes a <see langword="foreach"/> (For Each in Visual Basic) operation with thread-local data on an
+        /// <see cref="IAsyncEnumerable{T}"/> in which iterations may run in parallel and the state of the loop can be monitored and manipulated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the element in the sequence.</typeparam>
+        /// <param name="source">The source of the sequence.</param>
+        /// <param name="actionBlock">The action to invoke with each data element received.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        public static async Task ParallelForEachAsync<TSource>(
+            this IAsyncEnumerable<TSource> source, ActionBlock<TSource> actionBlock, CancellationToken cancellationToken = default)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            _ = actionBlock ?? throw new ArgumentNullException(nameof(actionBlock));
+
+            await foreach (var item in source)
+                await actionBlock.SendAsync(item, cancellationToken).ConfigureAwait(false);
+
+            actionBlock.Complete();
+            await actionBlock.Completion.ConfigureAwait(false);
         }
 
         /// <summary>

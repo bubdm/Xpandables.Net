@@ -45,7 +45,7 @@ namespace Xpandables.Net.Data.Executables
             var result = await context.Component.Command.ExecuteScalarAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
             if (context.Argument.Options.IsTransactionEnabled)
-                context.Component.Command.Transaction.Commit();
+                await context.Component.Command.Transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
 
             return (TResult)result;
         }

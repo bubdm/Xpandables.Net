@@ -25,7 +25,7 @@ namespace Xpandables.Net.Identities
     /// You should provide an implementation of this interface that will be used with the <see cref="CommandIdentityBehavior{TCommand}"/>
     /// or <see cref="QueryIdentityBehavior{TQuery, TResult}"/> decorator to fill the target instance with the identity.
     /// </summary>
-    public interface IIdentityProvider
+    public interface IIdentityDataProvider
     {
         /// <summary>
         /// Returns an instance that contains identity or throw an exception if not found.

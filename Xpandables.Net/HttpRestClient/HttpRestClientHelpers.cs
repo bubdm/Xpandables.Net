@@ -26,6 +26,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Helpers;
@@ -43,8 +44,10 @@ namespace Xpandables.Net.HttpRestClient
         /// <typeparam name="TSource">the type of the source.</typeparam>
         /// <param name="attribute">The <see cref="HttpRestClientAttribute"/> attribute.</param>
         /// <param name="source">The source of data.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        internal static HttpRequestMessage GetHttpRequestMessage<TSource>(this HttpRestClientAttribute attribute, TSource source)
+        internal static async Task<HttpRequestMessage> GetHttpRequestMessageAsync<TSource>(
+            this HttpRestClientAttribute attribute, TSource source, CancellationToken cancellationToken = default)
             where TSource : class
         {
             _ = attribute ?? throw new ArgumentNullException(nameof(attribute));
@@ -108,7 +111,7 @@ namespace Xpandables.Net.HttpRestClient
                         using (var jsonTextWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.None })
                         {
                             JsonSerializer.CreateDefault().Serialize(jsonTextWriter, source);
-                            jsonTextWriter.Flush();
+                            await jsonTextWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
                         }
                         memoryStream.Seek(0, SeekOrigin.Begin);
                         httpRequestMessage.Content = new StreamContent(memoryStream);
@@ -135,11 +138,11 @@ namespace Xpandables.Net.HttpRestClient
                 throw new ArgumentException($"{source.GetType().Name} must implement {typeof(TInterface).Name} interface");
         }
 
-        internal static HttpRequestMessage GetHttpRequestMessage<TSource>(TSource source)
+        internal static async Task<HttpRequestMessage> GetHttpRequestMessageAsync<TSource>(TSource source, CancellationToken cancellationToken = default)
             where TSource : class
         {
             var attribute = GetHttpClientDescriptionAttribute(source);
-            return attribute.GetHttpRequestMessage(source);
+            return await attribute.GetHttpRequestMessageAsync(source, cancellationToken).ConfigureAwait(false);
         }
 
         internal static HttpRestClientAttribute GetHttpClientDescriptionAttribute<TSource>(TSource source)

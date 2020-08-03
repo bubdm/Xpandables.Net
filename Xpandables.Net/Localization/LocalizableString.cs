@@ -41,10 +41,7 @@ namespace Xpandables.Net.Localization
         ///     The name of the property being localized.  This name
         ///     will be used within exceptions thrown as a result of localization failures.
         /// </param>
-        public LocalizableString(string propertyName)
-        {
-            _propertyName = propertyName;
-        }
+        public LocalizableString(string propertyName) => _propertyName = propertyName;
 
         /// <summary>
         ///     Gets or sets the value of this localizable string.  This value can be

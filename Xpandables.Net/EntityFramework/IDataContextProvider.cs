@@ -15,6 +15,9 @@
  *
 ************************************************************************************************************/
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
@@ -24,9 +27,10 @@ namespace Xpandables.Net.EntityFramework
     public interface IDataContextProvider
     {
         /// <summary>
-        /// Returns an instance that contains the ambient data context according to the environment.
+        /// Asynchronously returns an instance that will contain the ambient data context according to the environment.
         /// </summary>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An instance of context that implements <see cref="IDataContext" />.</returns>
-        IDataContext GetDataContext();
+        Task<IDataContext> GetDataContextAsync(CancellationToken cancellationToken = default);
     }
 }

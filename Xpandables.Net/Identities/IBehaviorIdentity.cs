@@ -21,7 +21,7 @@ namespace Xpandables.Net.Identities
     /// A marker interface that allows the command/query class to be filled with an identity. The class should derive from
     /// <see cref="IdentityData"/>, <see cref="IdentityData{TUser}"/> or <see cref="IdentityDataExpression{TUser, TSource}"/>
     /// for a query-bale class. You need to provide with an
-    /// implementation for <see cref="IIdentityProvider"/>
+    /// implementation for <see cref="IIdentityDataProvider"/>
     /// and register the expected class using the correct extension method.
     /// </summary>
 #pragma warning disable CA1040 // Avoid empty interfaces

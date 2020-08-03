@@ -19,6 +19,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Xpandables.Net.Creators;
 
@@ -57,19 +59,20 @@ namespace Xpandables.Net.EntityFramework
         }
 
         /// <summary>
-        /// Returns an instance that contains the ambient data context according to the environment.
+        /// Asynchronously returns an instance that will contain the ambient data context according to the environment.
         /// </summary>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An instance of <see cref="IDataContext" />.</returns>
-        public IDataContext GetDataContext()
+        public async Task<IDataContext> GetDataContextAsync(CancellationToken cancellationToken = default)
         {
             var options = GetDataContextOptions();
             var dataContext = (TDataContext)InstanceCreator.Create(typeof(TDataContext), options)!;
 
-            if (DataContextSettings.EnsuredDeletedBefore && !dataContext.Database.EnsureDeleted())
+            if (DataContextSettings.EnsuredDeletedBefore && !await dataContext.Database.EnsureDeletedAsync(cancellationToken).ConfigureAwait(false))
                 throw new InvalidOperationException($"Unable to delete database before migration {dataContext.Database.ProviderName}");
 
             if (!DataContextSettings.UseInMemory && DataContextSettings.ApplyMigrations)
-                dataContext.Database.Migrate();
+                await dataContext.Database.MigrateAsync(cancellationToken).ConfigureAwait(false);
 
             return dataContext;
         }

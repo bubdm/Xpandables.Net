@@ -120,10 +120,10 @@ namespace Xpandables.Net.DependencyInjection
             var definedOptions = new DataContextOptions();
             configureOptions.Invoke(definedOptions);
 
-            services.AddScoped(serviceProvider =>
+            services.AddScoped(async serviceProvider =>
             {
                 var dataContextProvider = serviceProvider.GetRequiredService<IDataContextProvider>();
-                var dataContext = dataContextProvider.GetDataContext();
+                var dataContext = await dataContextProvider.GetDataContextAsync().ConfigureAwait(false);
 
                 dataContext.OnPersistenceException(definedOptions.IsPersistenceExceptionHandlerEnabled);
                 return dataContext;

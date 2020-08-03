@@ -32,7 +32,7 @@ namespace Xpandables.Samples.Business
             services.AddXValidatorRuleBehavior();
 
             services.AddXHttpTokenContainer();
-            services.AddXIdentityProvider<IdentityDataProvider>();
+            services.AddXIdentityDataProvider<IdentityDataProvider>();
             services.AddXIdentityBehavior();
             services.AddXHttpTokenEngine<HttpTokenEngine>();
 

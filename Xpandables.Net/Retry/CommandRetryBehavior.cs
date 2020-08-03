@@ -78,7 +78,7 @@ namespace Xpandables.Net.Retry
 
                     try
                     {
-                        Thread.Sleep(retryContext.TimeInterval);
+                        await Task.Delay(retryContext.TimeInterval, cancellationToken).ConfigureAwait(false);
                         await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
                         retryContext.RetryIsNotFailed();
                     }

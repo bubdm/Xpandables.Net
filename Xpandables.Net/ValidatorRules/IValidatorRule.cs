@@ -45,7 +45,7 @@ namespace Xpandables.Net.ValidatorRules
         /// Determines the zero-base order in which the validator will be executed.
         /// The default value is zero.
         /// </summary>
-        int Order { get => 0; }
+        int Order => 0;
     }
 
     /// <summary>

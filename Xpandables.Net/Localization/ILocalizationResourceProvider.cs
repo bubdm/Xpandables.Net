@@ -89,7 +89,7 @@ namespace Xpandables.Net.Localization
         {
             get
             {
-                CorrelationCollection<string, Type> correlationCollection = new CorrelationCollection<string, Type>();
+                var correlationCollection = new CorrelationCollection<string, Type>();
                 if (!ViewModelResourceTypes.Any()) Trace.WriteLine($"{nameof(ViewModelResourceTypes)} is empty.");
 
                 foreach (var type in ViewModelResourceTypes)

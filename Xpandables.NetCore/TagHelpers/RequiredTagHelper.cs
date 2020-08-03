@@ -36,10 +36,7 @@ namespace Xpandables.NetCore.TagHelpers
         /// <see cref="TagHelper.Order" />. Lower values are executed first.
         /// </summary>
         /// <remarks>Default order is <c>0</c>.</remarks>
-        public override int Order
-        {
-            get { return int.MaxValue; }
-        }
+        public override int Order => int.MaxValue;
 
         /// <summary>
         /// Gets or sets the asp-for expression.

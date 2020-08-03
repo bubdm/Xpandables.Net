@@ -24,6 +24,7 @@ using System;
 using System.IO;
 
 using Xpandables.Net.Creators;
+using Xpandables.Net.Helpers;
 
 namespace Xpandables.Net.EntityFramework
 {
@@ -61,7 +62,8 @@ namespace Xpandables.Net.EntityFramework
 
             using var serviceprovider = services.BuildServiceProvider();
             var dataContextProvider = serviceprovider.GetRequiredService<IDataContextProvider>();
-            return (TDataContext)dataContextProvider.GetDataContext();
+            var dataContext = AsynchronousHelpers.RunSync(() => dataContextProvider.GetDataContextAsync());
+            return (TDataContext)dataContext;
         }
     }
 }
