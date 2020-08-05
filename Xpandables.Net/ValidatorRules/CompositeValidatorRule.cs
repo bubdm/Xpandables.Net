@@ -40,11 +40,10 @@ namespace Xpandables.Net.ValidatorRules
             => _validators = validators ?? Enumerable.Empty<IValidatorRule<TArgument>>();
 
         /// <summary>
-        /// Asynchronously applies all validators to the argument and throws the <see cref="System.ComponentModel.DataAnnotations.ValidationException" /> if necessary.
+        /// Asynchronously applies all validators to the argument and throws the <see langword="ValidationException" /> if necessary.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument" /> is null.</exception>
-        /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Any validation exception.</exception>
         public async Task ValidateAsync(TArgument argument)
         {
             var tasks = _validators.OrderBy(o => o.Order).Select(validator => validator.ValidateAsync(argument));

@@ -21,7 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 
-using Xpandables.Net.Helpers;
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Creators
 {

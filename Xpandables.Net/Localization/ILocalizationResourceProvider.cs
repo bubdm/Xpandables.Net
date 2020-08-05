@@ -17,12 +17,10 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
-using System.Runtime.CompilerServices;
 
 using Xpandables.Net.Correlation;
 using Xpandables.Net.Enumerations;
@@ -44,15 +42,15 @@ namespace Xpandables.Net.Localization
         /// pageName.cshtml.cs contains the pageNameModel and the localization file is named pageNameLocalization.resx.
         /// <para></para>
         /// This behavior is available for the following attributes :
-        /// <para><see cref="DisplayAttribute"/> :</para>
-        /// <see cref="DisplayAttribute.Name"/> (just set to any value) will be bounded to the <see langword="Display{PropertyName}"/>
+        /// <para><see langword="DisplayAttribute"/> :</para>
+        /// <see langword="DisplayAttribute.Name"/> (just set to any value) will be bounded to the <see langword="Display{PropertyName}"/>
         /// as key in the resource file.
-        /// <see cref="DisplayAttribute.Prompt"/> (just set to any value) will be bounded to the <see langword="Prompt{PropertyName}"/>
+        /// <see langword="DisplayAttribute.Prompt"/> (just set to any value) will be bounded to the <see langword="Prompt{PropertyName}"/>
         /// as key in the resource file.
-        /// <see cref="DisplayAttribute.Description"/> (just set to any value) will be bound to the <see langword="Description{PropertyName}"/>
+        /// <see langword="DisplayAttribute.Description"/> (just set to any value) will be bound to the <see langword="Description{PropertyName}"/>
         /// as key in the resource file.
-        /// <para><see cref="LocalizedDisplayFormatAttribute"/> :</para>
-        /// <see cref="LocalizedDisplayFormatAttribute.DataFormatString"/> (just set to any value) will be bounded to the <see langword="Format{PropertyName}"/>
+        /// <para><see langword="LocalizedDisplayFormatAttribute"/> :</para>
+        /// <see langword="LocalizedDisplayFormatAttribute.DataFormatString"/> (just set to any value) will be bounded to the <see langword="Format{PropertyName}"/>
         /// as key in the resource file.
         /// <see langword="LocalizedDisplayFormatAttribute.NullDisplayText"/> (just set to any value) will be bounded to the
         /// <see langword="NullDisplay{PropertyName}"/> as key in the resource file.

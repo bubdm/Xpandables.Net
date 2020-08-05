@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Xpandables.Net.Entities;
 using Xpandables.Net.EntityFramework;
@@ -9,8 +12,10 @@ namespace Xpandables.Samples.Infrastructure
 {
     public sealed class XpandablesContextInitializer : IDataContextSeeder<XpandablesContext>
     {
-        public XpandablesContext Seed(XpandablesContext dataContext)
+        public async Task SeedAsync(XpandablesContext dataContext, CancellationToken cancellationToken = default)
         {
+            _ = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+
             if (!dataContext.Users.Any())
             {
                 dataContext.Users.AddRange(new List<User>
@@ -19,10 +24,8 @@ namespace Xpandables.Samples.Infrastructure
                     UserFactory.Create("mail@mail.com", "first1", "last1","passsword", Gender.Man, Picture.Default())
                 });
 
-                dataContext.Persist();
+                await dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
             }
-
-            return dataContext;
         }
     }
 }

@@ -16,13 +16,11 @@
  *
 ************************************************************************************************************/
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
-
 using Xpandables.Net.Commands;
-using Xpandables.Net.Helpers;
+using Xpandables.Net.Extensions;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Dispatchers
@@ -68,7 +66,7 @@ namespace Xpandables.Net.Dispatchers
                 await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception) when (!(exception is ArgumentException)
-                                            && !(exception is ValidationException)
+                                            && !exception.GetType().Name.Contains("ValidationException")
                                             && !(exception is NotImplementedException)
                                             && !(exception is OperationCanceledException)
                                             && !(exception is InvalidOperationException))
@@ -105,7 +103,7 @@ namespace Xpandables.Net.Dispatchers
                 return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception) when (!(exception is ArgumentException)
-                                            && !(exception is ValidationException)
+                                            && !exception.GetType().Name.Contains("ValidationException")
                                             && !(exception is NotImplementedException)
                                             && !(exception is OperationCanceledException)
                                             && !(exception is InvalidOperationException))
@@ -143,7 +141,7 @@ namespace Xpandables.Net.Dispatchers
                 return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception) when (!(exception is ArgumentException)
-                                            && !(exception is ValidationException)
+                                            && !exception.GetType().Name.Contains("ValidationException")
                                             && !(exception is NotImplementedException)
                                             && !(exception is OperationCanceledException)
                                             && !(exception is InvalidOperationException))

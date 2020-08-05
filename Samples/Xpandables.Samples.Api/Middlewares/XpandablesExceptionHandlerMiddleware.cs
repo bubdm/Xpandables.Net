@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.IdentityModel.Tokens;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Threading.Tasks;
 
-using Xpandables.NetCore.Helpers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.IdentityModel.Tokens;
+
+using Xpandables.NetCore.HttpRestClient;
 
 namespace Xpandables.Samples.Api.Middlewares
 {

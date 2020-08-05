@@ -21,7 +21,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Helpers;
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Interception
 {

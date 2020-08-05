@@ -28,5 +28,6 @@
     <PkgMicrosoft_CodeQuality_Analyzers Condition=" '$(PkgMicrosoft_CodeQuality_Analyzers)' == '' ">C:\Users\fewan\.nuget\packages\microsoft.codequality.analyzers\3.3.0-beta2.final</PkgMicrosoft_CodeQuality_Analyzers>
     <PkgMicrosoft_CodeAnalysis_VersionCheckAnalyzer Condition=" '$(PkgMicrosoft_CodeAnalysis_VersionCheckAnalyzer)' == '' ">C:\Users\fewan\.nuget\packages\microsoft.codeanalysis.versioncheckanalyzer\3.3.0-beta2.final</PkgMicrosoft_CodeAnalysis_VersionCheckAnalyzer>
     <PkgMicrosoft_CodeAnalysis_FxCopAnalyzers Condition=" '$(PkgMicrosoft_CodeAnalysis_FxCopAnalyzers)' == '' ">C:\Users\fewan\.nuget\packages\microsoft.codeanalysis.fxcopanalyzers\3.3.0-beta2.final</PkgMicrosoft_CodeAnalysis_FxCopAnalyzers>
+    <PkgNewtonsoft_Json Condition=" '$(PkgNewtonsoft_Json)' == '' ">C:\Users\fewan\.nuget\packages\newtonsoft.json\10.0.1</PkgNewtonsoft_Json>
   </PropertyGroup>
 </Project>

@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Copyright © 2020 Francis-Black EWANE")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("A utility library in .Net.0  to extend Windows Forms and WPF behaviors.")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("5.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("5.0.0-preview.1.0.3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("5.0.0-preview.1.0.5")]
 [assembly: System.Reflection.AssemblyProductAttribute("Xpandables.Net.Windows @ 2020")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Xpandables.Net.Windows")]
 [assembly: System.Reflection.AssemblyVersionAttribute("5.0.0")]

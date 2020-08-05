@@ -16,7 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.ValidatorRules
@@ -29,15 +28,12 @@ namespace Xpandables.Net.ValidatorRules
     public interface IValidatorRule
     {
         /// <summary>
-        /// Asynchronous applies validation process and throws the <see cref="ValidationException"/> if necessary.
-        /// <para>The default implementation use <see cref="Validator.ValidateObject(object, ValidationContext, bool)"/>.</para>
+        /// Asynchronous applies validation process and throws the <see langword="ValidationException"/> if necessary.
         /// </summary>
         /// <param name="target">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="target"/> is null.</exception>
-        /// <exception cref="ValidationException">Any validation exception.</exception>
         public async Task ValidateAsync(object target)
         {
-            Validator.ValidateObject(target, new ValidationContext(target, null, null), true);
             await Task.CompletedTask.ConfigureAwait(false);
         }
 
@@ -58,11 +54,10 @@ namespace Xpandables.Net.ValidatorRules
         where TArgument : class
     {
         /// <summary>
-        /// Asynchronously applies validation the argument and throws the <see cref="ValidationException"/> if necessary.
+        /// Asynchronously applies validation the argument and throws the <see langword="ValidationException"/> if necessary.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <exception cref="ValidationException">Any validation exception.</exception>
         public async Task ValidateAsync(TArgument argument) => await ValidateAsync(argument).ConfigureAwait(false);
     }
 }

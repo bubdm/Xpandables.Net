@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Helpers;
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Optionals
 {

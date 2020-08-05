@@ -23,7 +23,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Helpers;
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Cryptography
 {
@@ -71,7 +71,7 @@ namespace Xpandables.Net.Cryptography
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The encryption failed. See inner exception.</exception>
         public ValueEncrypted Encrypt(string value, string? key = default, string? salt = default)
-            => AsynchronousHelpers.RunSync(() => EncryptAsync(value, key, salt));
+            => AsyncExtensions.RunSync(() => EncryptAsync(value, key, salt));
 
         /// <summary>
         /// Returns an encrypted string from the value string using the specified key and the salt value.
@@ -155,7 +155,7 @@ namespace Xpandables.Net.Cryptography
         /// <param name="encrypted">The object that contains encrypted information.</param>
         /// <returns>A decrypted string from the encrypted object.</returns>
         /// <exception cref="InvalidOperationException">The decryption failed. See inner exception.</exception>
-        public string Decrypt(ValueEncrypted encrypted) => AsynchronousHelpers.RunSync(() => DecryptAsync(encrypted));
+        public string Decrypt(ValueEncrypted encrypted) => AsyncExtensions.RunSync(() => DecryptAsync(encrypted));
 
         /// <summary>
         /// Returns an decrypted string from the encrypted object.

@@ -38,8 +38,14 @@
               "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Infrastructure\\Xpandables.Samples.Infrastructure.csproj": {
                 "projectPath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Infrastructure\\Xpandables.Samples.Infrastructure.csproj"
               },
-              "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj": {
-                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj"
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.HttpRestClient\\Xpandables.NetCore.HttpRestClient.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.HttpRestClient\\Xpandables.NetCore.HttpRestClient.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Http\\Xpandables.NetCore.Http.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Http\\Xpandables.NetCore.Http.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Localization\\Xpandables.NetCore.Localization.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Localization\\Xpandables.NetCore.Localization.csproj"
               }
             }
           }
@@ -114,6 +120,18 @@
             "projectReferences": {
               "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Domain\\Xpandables.Samples.Domain.csproj": {
                 "projectPath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Domain\\Xpandables.Samples.Domain.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility.DependencyInjection\\Xpandables.Net.Extensibility.DependencyInjection.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility.DependencyInjection\\Xpandables.Net.Extensibility.DependencyInjection.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient.DependencyInjection\\Xpandables.Net.HttpRestClient.DependencyInjection.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient.DependencyInjection\\Xpandables.Net.HttpRestClient.DependencyInjection.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\Xpandables.Net.HttpRestClient.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\Xpandables.Net.HttpRestClient.csproj"
               }
             }
           }
@@ -183,6 +201,9 @@
         "frameworks": {
           "net5.0": {
             "projectReferences": {
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj"
+              },
               "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
                 "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj"
               }
@@ -254,6 +275,12 @@
             "projectReferences": {
               "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Domain\\Xpandables.Samples.Domain.csproj": {
                 "projectPath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Domain\\Xpandables.Samples.Domain.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework.DependencyInjection\\Xpandables.Net.EntityFramework.DependencyInjection.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework.DependencyInjection\\Xpandables.Net.EntityFramework.DependencyInjection.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility.DependencyInjection\\Xpandables.Net.Extensibility.DependencyInjection.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility.DependencyInjection\\Xpandables.Net.Extensibility.DependencyInjection.csproj"
               }
             }
           }
@@ -297,8 +324,853 @@
         }
       }
     },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj",
+        "projectName": "Xpandables.Net.DependencyInjection",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            },
+            "Microsoft.Extensions.DependencyModel": {
+              "target": "Package",
+              "version": "[5.0.0-preview.3-runtime.20214.6, )"
+            },
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj",
+        "projectName": "Xpandables.Net.Entities",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.CodeAnalysis.FxCopAnalyzers": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.3.0-beta2.final, )"
+            },
+            "System.ComponentModel.Annotations": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework.DependencyInjection\\Xpandables.Net.EntityFramework.DependencyInjection.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework.DependencyInjection\\Xpandables.Net.EntityFramework.DependencyInjection.csproj",
+        "projectName": "Xpandables.Net.EntityFramework.DependencyInjection",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework.DependencyInjection\\Xpandables.Net.EntityFramework.DependencyInjection.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework.DependencyInjection\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            },
+            "Microsoft.Extensions.Configuration.EnvironmentVariables": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            },
+            "Microsoft.Extensions.Configuration.FileExtensions": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            },
+            "Microsoft.Extensions.Options.ConfigurationExtensions": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj",
+        "projectName": "Xpandables.Net.EntityFramework",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Relational": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20365.15, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility.DependencyInjection\\Xpandables.Net.Extensibility.DependencyInjection.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility.DependencyInjection\\Xpandables.Net.Extensibility.DependencyInjection.csproj",
+        "projectName": "Xpandables.Net.Extensibility.DependencyInjection",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility.DependencyInjection\\Xpandables.Net.Extensibility.DependencyInjection.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility.DependencyInjection\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility\\Xpandables.Net.Extensibility.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility\\Xpandables.Net.Extensibility.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility\\Xpandables.Net.Extensibility.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility\\Xpandables.Net.Extensibility.csproj",
+        "projectName": "Xpandables.Net.Extensibility",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility\\Xpandables.Net.Extensibility.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "System.ComponentModel.Composition": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensions\\Xpandables.Net.Extensions.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensions\\Xpandables.Net.Extensions.csproj",
+        "projectName": "Xpandables.Net.Extensions",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensions\\Xpandables.Net.Extensions.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensions\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.CodeAnalysis.FxCopAnalyzers": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.3.0-beta2.final, )"
+            },
+            "System.Text.Encodings.Web": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            },
+            "System.Threading.Tasks.Dataflow": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient.DependencyInjection\\Xpandables.Net.HttpRestClient.DependencyInjection.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient.DependencyInjection\\Xpandables.Net.HttpRestClient.DependencyInjection.csproj",
+        "projectName": "Xpandables.Net.HttpRestClient.DependencyInjection",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient.DependencyInjection\\Xpandables.Net.HttpRestClient.DependencyInjection.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient.DependencyInjection\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\Xpandables.Net.HttpRestClient.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\Xpandables.Net.HttpRestClient.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\Xpandables.Net.HttpRestClient.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\Xpandables.Net.HttpRestClient.csproj",
+        "projectName": "Xpandables.Net.HttpRestClient",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\Xpandables.Net.HttpRestClient.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensions\\Xpandables.Net.Extensions.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensions\\Xpandables.Net.Extensions.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.HttpRestClient\\Xpandables.NetCore.HttpRestClient.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.HttpRestClient\\Xpandables.NetCore.HttpRestClient.csproj",
+        "projectName": "Xpandables.NetCore.HttpRestClient",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.HttpRestClient\\Xpandables.NetCore.HttpRestClient.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.HttpRestClient\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "projectReferences": {
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\Xpandables.Net.HttpRestClient.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\Xpandables.Net.HttpRestClient.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "dependencies": {
+            "Microsoft.CodeAnalysis.FxCopAnalyzers": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.3.0-beta2.final, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Http\\Xpandables.NetCore.Http.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Http\\Xpandables.NetCore.Http.csproj",
+        "projectName": "Xpandables.NetCore.Http",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Http\\Xpandables.NetCore.Http.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Http\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "projectReferences": {
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "dependencies": {
+            "Microsoft.CodeAnalysis.FxCopAnalyzers": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.3.0-beta2.final, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Localization\\Xpandables.NetCore.Localization.csproj": {
+      "version": "5.0.0-preview.1.0.6",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Localization\\Xpandables.NetCore.Localization.csproj",
+        "projectName": "Xpandables.NetCore.Localization",
+        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Localization\\Xpandables.NetCore.Localization.csproj",
+        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Localization\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\GitHub\\Xpandables\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "projectReferences": {
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj"
+              },
+              "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj": {
+                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "dependencies": {
+            "Microsoft.CodeAnalysis.FxCopAnalyzers": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.3.0-beta2.final, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj": {
-      "version": "5.0.0-preview.1.0.3",
+      "version": "5.0.0-preview.1.0.6",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj",
         "projectName": "Xpandables.NetCore",
@@ -368,7 +1240,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
-      "version": "5.0.0-preview.1.0.3",
+      "version": "5.0.0-preview.1.0.6",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
         "projectName": "Xpandables.Net",
@@ -409,62 +1281,6 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[3.3.0-beta2.final, )"
-            },
-            "Microsoft.EntityFrameworkCore.Relational": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20365.15, )"
-            },
-            "Microsoft.Extensions.Configuration": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.Configuration.EnvironmentVariables": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.Configuration.FileExtensions": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.Configuration.Json": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.DependencyInjection": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.DependencyInjection.Abstractions": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.DependencyModel": {
-              "target": "Package",
-              "version": "[5.0.0-preview.3-runtime.20214.6, )"
-            },
-            "Microsoft.Extensions.Http": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.Options.ConfigurationExtensions": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[12.0.3, )"
-            },
-            "System.ComponentModel.Composition": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "System.Drawing.Common": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "System.Threading.Tasks.Dataflow": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
             }
           },
           "imports": [

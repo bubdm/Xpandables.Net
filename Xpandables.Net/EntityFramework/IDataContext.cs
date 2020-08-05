@@ -23,7 +23,6 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Entities;
 using Xpandables.Net.Expressions;
 
 namespace Xpandables.Net.EntityFramework

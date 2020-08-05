@@ -30,7 +30,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.Authentication.JwtBearer": "5.0.0-preview.7.20365.19",
           "System.Data.SqlClient": "4.8.1",
-          "Xpandables.NetCore": "5.0.0-preview.1.0.3",
+          "Xpandables.NetCore": "5.0.0-preview.1.0.4",
           "Xpandables.Samples.Business": "1.0.0",
           "Xpandables.Samples.Infrastructure": "1.0.0",
           "Microsoft.AspNetCore.Antiforgery": "5.0.0.0",
@@ -292,7 +292,7 @@
           "System.Threading.Channels": "5.0.0.0",
           "System.Threading.Reference": "5.0.0.0",
           "System.Threading.Overlapped": "5.0.0.0",
-          "System.Threading.Tasks.Dataflow": "5.0.0.0",
+          "System.Threading.Tasks.Dataflow.Reference": "5.0.0.0",
           "System.Threading.Tasks.Reference": "5.0.0.0",
           "System.Threading.Tasks.Extensions.Reference": "5.0.0.0",
           "System.Threading.Tasks.Parallel": "5.0.0.0",
@@ -1281,6 +1281,11 @@
           "System.Runtime": "4.3.0"
         }
       },
+      "System.Threading.Tasks.Dataflow/5.0.0-preview.7.20364.11": {
+        "compile": {
+          "lib/netstandard2.0/System.Threading.Tasks.Dataflow.dll": {}
+        }
+      },
       "System.Threading.Tasks.Extensions/4.3.0": {
         "dependencies": {
           "System.Collections": "4.3.0",
@@ -1363,7 +1368,7 @@
           "System.Xml.XmlDocument": "4.3.0"
         }
       },
-      "Xpandables.Net/5.0.0-preview.1.0.3": {
+      "Xpandables.Net/5.0.0-preview.1.0.4": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Relational": "5.0.0-preview.7.20365.15",
           "Microsoft.Extensions.Configuration": "5.0.0-preview.7.20364.11",
@@ -1377,7 +1382,8 @@
           "Microsoft.Extensions.Options.ConfigurationExtensions": "5.0.0-preview.7.20364.11",
           "Newtonsoft.Json": "12.0.3",
           "System.ComponentModel.Composition": "5.0.0-preview.7.20364.11",
-          "System.Drawing.Common": "5.0.0-preview.7.20364.11"
+          "System.Drawing.Common": "5.0.0-preview.7.20364.11",
+          "System.Threading.Tasks.Dataflow": "5.0.0-preview.7.20364.11"
         },
         "runtime": {
           "Xpandables.Net.dll": {}
@@ -1394,9 +1400,9 @@
           "Xpandables.Net.dll": {}
         }
       },
-      "Xpandables.NetCore/5.0.0-preview.1.0.3": {
+      "Xpandables.NetCore/5.0.0-preview.1.0.4": {
         "dependencies": {
-          "Xpandables.Net": "5.0.0-preview.1.0.3"
+          "Xpandables.Net": "5.0.0-preview.1.0.4"
         },
         "runtime": {
           "Xpandables.NetCore.dll": {}
@@ -1428,7 +1434,7 @@
       },
       "Xpandables.Samples.Domain/1.0.0": {
         "dependencies": {
-          "Xpandables.Net": "5.0.0-preview.1.0.3"
+          "Xpandables.Net": "5.0.0-preview.1.0.4"
         },
         "runtime": {
           "Xpandables.Samples.Domain.dll": {}
@@ -3003,7 +3009,7 @@
         },
         "compileOnly": true
       },
-      "System.Threading.Tasks.Dataflow/5.0.0.0": {
+      "System.Threading.Tasks.Dataflow.Reference/5.0.0.0": {
         "compile": {
           "System.Threading.Tasks.Dataflow.dll": {}
         },
@@ -3876,6 +3882,13 @@
       "path": "system.threading.tasks/4.3.0",
       "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
     },
+    "System.Threading.Tasks.Dataflow/5.0.0-preview.7.20364.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-q7Sjnqh698RS75dTyT/TT+vM+mav1tN/6FMLugo2S8rmhhlhc5n19+eYEnv8yAadxjl7qJzl3R0IHm8eMgz5bw==",
+      "path": "system.threading.tasks.dataflow/5.0.0-preview.7.20364.11",
+      "hashPath": "system.threading.tasks.dataflow.5.0.0-preview.7.20364.11.nupkg.sha512"
+    },
     "System.Threading.Tasks.Extensions/4.3.0": {
       "type": "package",
       "serviceable": true,
@@ -3918,12 +3931,12 @@
       "path": "system.xml.xmlserializer/4.3.0",
       "hashPath": "system.xml.xmlserializer.4.3.0.nupkg.sha512"
     },
-    "Xpandables.Net/5.0.0-preview.1.0.3": {
+    "Xpandables.Net/5.0.0-preview.1.0.4": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Xpandables.NetCore/5.0.0-preview.1.0.3": {
+    "Xpandables.NetCore/5.0.0-preview.1.0.4": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -5238,7 +5251,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "System.Threading.Tasks.Dataflow/5.0.0.0": {
+    "System.Threading.Tasks.Dataflow.Reference/5.0.0.0": {
       "type": "referenceassembly",
       "serviceable": false,
       "sha512": ""

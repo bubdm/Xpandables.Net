@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "Xpandables.Net/5.0.0-preview.1.0.3": {
+      "Xpandables.Net/5.0.0-preview.1.0.4": {
         "dependencies": {
           "Microsoft.CodeAnalysis.FxCopAnalyzers": "3.3.0-beta2.final",
           "Microsoft.EntityFrameworkCore.Relational": "5.0.0-preview.7.20365.15",
@@ -477,7 +477,7 @@
     }
   },
   "libraries": {
-    "Xpandables.Net/5.0.0-preview.1.0.3": {
+    "Xpandables.Net/5.0.0-preview.1.0.4": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

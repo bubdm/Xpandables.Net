@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Windows\\Xpandables.Net.Windows.csproj": {
-      "version": "5.0.0-preview.1.0.3",
+      "version": "5.0.0-preview.1.0.6",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Windows\\Xpandables.Net.Windows.csproj",
         "projectName": "Xpandables.Net.Windows",
@@ -75,7 +75,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
-      "version": "5.0.0-preview.1.0.3",
+      "version": "5.0.0-preview.1.0.6",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
         "projectName": "Xpandables.Net",
@@ -116,62 +116,6 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[3.3.0-beta2.final, )"
-            },
-            "Microsoft.EntityFrameworkCore.Relational": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20365.15, )"
-            },
-            "Microsoft.Extensions.Configuration": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.Configuration.EnvironmentVariables": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.Configuration.FileExtensions": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.Configuration.Json": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.DependencyInjection": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.DependencyInjection.Abstractions": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.DependencyModel": {
-              "target": "Package",
-              "version": "[5.0.0-preview.3-runtime.20214.6, )"
-            },
-            "Microsoft.Extensions.Http": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Microsoft.Extensions.Options.ConfigurationExtensions": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[12.0.3, )"
-            },
-            "System.ComponentModel.Composition": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "System.Drawing.Common": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            },
-            "System.Threading.Tasks.Dataflow": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
             }
           },
           "imports": [

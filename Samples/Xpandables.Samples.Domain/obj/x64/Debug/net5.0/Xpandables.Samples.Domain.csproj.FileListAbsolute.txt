@@ -13,3 +13,6 @@ D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Domain\bin\x64\Debug\net5.0\
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Domain\bin\x64\Debug\net5.0\Xpandables.Net.xml
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Domain\bin\x64\Debug\net5.0\en-GB\Xpandables.Net.resources.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Domain\bin\x64\Debug\net5.0\fr\Xpandables.Net.resources.dll
+D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Domain\bin\x64\Debug\net5.0\Xpandables.Net.Entities.dll
+D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Domain\bin\x64\Debug\net5.0\Xpandables.Net.Entities.pdb
+D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Domain\bin\x64\Debug\net5.0\Xpandables.Net.Entities.xml

@@ -17,7 +17,7 @@
 
 using System;
 
-using Xpandables.Net.Helpers;
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.EntityFramework
 {

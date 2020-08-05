@@ -25,7 +25,7 @@ namespace Xpandables.Net.EntityFramework
     /// This is useful when you need a data context not to be empty.
     /// The target data context should be decorated with the <see cref="IBehaviorSeed"/> interface and
     /// the class seeder implementation should be
-    /// registered to services collections with the extension method <see cref="DependencyInjection.ServiceCollectionExtensions.AddXDataContext{TDataContextProvider}(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
+    /// registered to services collections with the extension method <see langword="ServiceCollectionExtensions.AddXDataContext{TDataContextProvider}(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
     /// using options.
     /// </summary>
     /// <typeparam name="TDataContext">The type of the data context that

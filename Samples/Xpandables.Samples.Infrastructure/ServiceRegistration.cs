@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-using System;
+﻿using System;
 using System.ComponentModel.Composition;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.DependencyInjection;
 using Xpandables.Net.EntityFramework;
-using Xpandables.Net.ManagedExtensibility;
+using Xpandables.Net.Extensibility;
 
 namespace Xpandables.Samples.Infrastructure
 {

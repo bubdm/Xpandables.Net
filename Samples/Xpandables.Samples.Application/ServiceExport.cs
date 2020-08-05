@@ -1,14 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.ComponentModel.Composition;
+using System.Linq;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Reflection;
-
-using Xpandables.Net.Data;
 using Xpandables.Net.DependencyInjection;
-using Xpandables.Net.Helpers;
-using Xpandables.Net.ManagedExtensibility;
+using Xpandables.Net.Extensibility;
+using Xpandables.Net.Extensions;
 using Xpandables.Samples.Business.Interceptors;
 using Xpandables.Samples.Business.Services;
 
@@ -21,19 +19,16 @@ namespace Xpandables.Samples.Business
         {
             var assemblies = typeof(SignInRequestInterceptor).Assembly.SingleToEnumerable().ToArray();
 
-            services.Configure<DataConnection>(configuration.GetSection(nameof(DataConnection)));
+            //services.Configure<DataConnection>(configuration.GetSection(nameof(DataConnection)));
 
-            services.AddXQueryHandlerWrapper();
-            services.AddXQueryHandlers(assemblies);
-            services.AddXCommandHandlers(assemblies);
-
-            services.AddXPersistenceBehavior();
-            services.AddXValidatorRules(assemblies);
-            services.AddXValidatorRuleBehavior();
+            services.AddXCommandQueriesHandlers(options =>
+            {
+                options.UsePersistenceBehavior();
+                options.UseValidatorBehavior();
+                options.UseIdentityBehavior<IdentityDataProvider>();
+            }, assemblies);
 
             services.AddXHttpTokenContainer();
-            services.AddXIdentityDataProvider<IdentityDataProvider>();
-            services.AddXIdentityBehavior();
             services.AddXHttpTokenEngine<HttpTokenEngine>();
 
             services.AddXHttpRestClientGeoLocationHandler();
@@ -41,7 +36,7 @@ namespace Xpandables.Samples.Business
             services.AddScoped<HttpIPService>();
 
             // database context sql access
-            services.AddXDataBase<DataConnectionProvider>();
+            //services.AddXDataBase<DataConnectionProvider>();
 
             // interceptor
             services.AddTransient<SignInRequestInterceptor>();
