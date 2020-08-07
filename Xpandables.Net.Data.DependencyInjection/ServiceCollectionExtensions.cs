@@ -15,14 +15,15 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.Data;
 using Xpandables.Net.Data.Elements;
 using Xpandables.Net.Data.Executables;
 using Xpandables.Net.Data.Mappers;
+using Xpandables.Net.Data.Providers;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
@@ -34,18 +35,15 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds all default services for <see cref="DataBase"/> use.
+        /// Adds all default services for <see cref="IDataBase"/> use.
         /// </summary>
-        /// <typeparam name="TDataConnectionProvider">The data connection provider type.</typeparam>
         /// <param name="services">the collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDataBase<TDataConnectionProvider>(this IServiceCollection services)
-            where TDataConnectionProvider : class, IDataConnectionProvider
+        public static IServiceCollection AddXDataBase(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient<IDataConnectionProvider, TDataConnectionProvider>();
-
+            services.AddScoped<IDataBase, DataBase>();
             services.AddScoped<IDataFactoryProvider, DataFactoryProvider>();
             services.AddTransient<IDataPropertyBuilder, DataPropertyBuilder>();
             services.AddTransient<IDataEntityBuilder, DataEntityBuilder>();
