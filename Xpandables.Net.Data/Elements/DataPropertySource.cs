@@ -20,6 +20,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
+using Xpandables.Net.Data.Options;
+
 namespace Xpandables.Net.Data.Elements
 {
     /// <summary>

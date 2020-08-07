@@ -19,14 +19,14 @@ using System;
 
 using Xpandables.Net.Enumerations;
 
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Providers
 {
     /// <summary>
     /// Defines the properties for data base access provider and derives from <see cref="EnumerationType"/>.
     /// Its contains information about the <see cref="ProviderFactoryTypeName"/> used to build the target provider and
     /// the <see cref="DisplayName"/> that matches the assembly name of the target provider.
     /// <para>
-    /// Provides with a list of data providers. You can derive from this class in order to extend the type.
+    /// You can extend this class and provide with a list of data providers.
     /// </para>
     /// </summary>
     public class DataProviderType : EnumerationType

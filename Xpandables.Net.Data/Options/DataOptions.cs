@@ -23,7 +23,7 @@ using System.Threading;
 
 using Xpandables.Net.Data.Elements;
 
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Options
 {
     /// <summary>
     /// Determines the way to retrieve data from the database.
@@ -67,7 +67,7 @@ namespace Xpandables.Net.Data
     /// </summary>
     public sealed class DataOptions
     {
-        internal DataOptions(bool isTransactionEnabled, IsolationLevel isolationLevel, Func<IDataProperty, bool>? conditionalMapping, ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> mappedNames, ConcurrentDictionary<Type, HashSet<string>> notMappedNames, ConcurrentDictionary<Type, DataPropertyConverter> converters, ThreadOption threadOptions, ReaderOption readerOptions, DataIdentityBuilder? identityBuilder, bool isIdentityRetrieved, CancellationToken cancellationToken)
+        internal DataOptions(bool isTransactionEnabled, IsolationLevel isolationLevel, Func<IDataProperty, bool>? conditionalMapping, ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> mappedNames, ConcurrentDictionary<Type, HashSet<string>> notMappedNames, ConcurrentDictionary<Type, DataPropertyConverter> converters, bool isIdentityRetrieved, CancellationToken cancellationToken)
         {
             IsTransactionEnabled = isTransactionEnabled;
             IsolationLevel = isolationLevel;
@@ -75,10 +75,7 @@ namespace Xpandables.Net.Data
             MappedNames = mappedNames ?? throw new ArgumentNullException(nameof(mappedNames));
             NotMappedNames = notMappedNames ?? throw new ArgumentNullException(nameof(notMappedNames));
             Converters = converters ?? throw new ArgumentNullException(nameof(converters));
-            ThreadOptions = threadOptions;
-            ReaderOptions = readerOptions;
             CancellationToken = cancellationToken;
-            IdentityBuilder = identityBuilder;
             IsIdentityRetrieved = isIdentityRetrieved;
         }
 
@@ -104,7 +101,7 @@ namespace Xpandables.Net.Data
         /// if so, contains <see langword="true"/>, otherwise contains <see langword="false"/>.
         /// </summary>
         public bool IsConditionalMappingEnabled => ConditionalMapping is { };
-     
+
         /// <summary>
         /// Contains a collection of manual names mapping.
         /// </summary>
@@ -124,16 +121,6 @@ namespace Xpandables.Net.Data
             = new ConcurrentDictionary<Type, DataPropertyConverter>();
 
         /// <summary>
-        /// Defines the thread execution options. The default value is <see cref="ThreadOption.Normal"/>.
-        /// </summary>
-        public ThreadOption ThreadOptions { get; }
-
-        /// <summary>
-        /// Defines the data type option to use to retrieve data from database. The default value is <see cref="ReaderOption.DataAdapter"/>.
-        /// </summary>
-        public ReaderOption ReaderOptions { get; }
-
-        /// <summary>
         /// Contains the cancellation token to be used.
         /// The default value is <see cref="CancellationToken.None"/>.
         /// </summary>
@@ -143,11 +130,6 @@ namespace Xpandables.Net.Data
         /// Determines whether or not the filtered delegate has been defined. The default value is <see langword="false"/>
         /// </summary>
         public bool ContainsNotMappedNames => !NotMappedNames.IsEmpty;
-
-        /// <summary>
-        /// Contains the entity identity builder delegate.
-        /// </summary>
-        public DataIdentityBuilder? IdentityBuilder { get; }
 
         /// <summary>
         /// Determines whether or not to retrieve the newly created identity from SQL command.

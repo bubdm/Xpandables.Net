@@ -19,12 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Correlation;
 using Xpandables.Net.Data.Elements;
+using Xpandables.Net.Data.Options;
 using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Data.Mappers
@@ -40,12 +39,10 @@ namespace Xpandables.Net.Data.Mappers
         /// <typeparam name="TEntity">The type of expected result.</typeparam>
         /// <param name="source">The data source to act on.</param>
         /// <param name="options">Defines the execution options.</param>
-        /// <param name="cancellationToken"></param>
         /// <returns>An enumerable that contains the result of mapping.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public async IAsyncEnumerable<TEntity> MapAsync<TEntity>(
-            IAsyncEnumerable<IDataRecord> source, DataOptions options, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<TEntity> MapAsync<TEntity>(IAsyncEnumerable<IDataRecord> source, DataOptions options)
             where TEntity : class, new()
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -58,10 +55,10 @@ namespace Xpandables.Net.Data.Mappers
                   record => DataMapperRow.Map<TEntity>(record, options),
                   Environment.ProcessorCount * 4,
                   TaskScheduler.FromCurrentSynchronizationContext(),
-                  cancellationToken)
+                  options.CancellationToken)
               .ConfigureAwait(false);
 
-            foreach (var data in Entities.Select(entity => (TEntity)entity.Value.Entity!))
+            await foreach (var data in Entities.Select(entity => (TEntity)entity.Value.Entity!).ToAsyncEnumerable())
                 yield return data;
         }
 

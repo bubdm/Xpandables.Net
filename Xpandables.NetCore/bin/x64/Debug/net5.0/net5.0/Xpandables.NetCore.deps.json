@@ -6,10 +6,10 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "Xpandables.NetCore/5.0.0-preview.1.0.5": {
+      "Xpandables.NetCore/5.0.0-preview.1.0.6": {
         "dependencies": {
           "Microsoft.CodeAnalysis.FxCopAnalyzers": "3.3.0-beta2.final",
-          "Xpandables.Net": "5.0.0-preview.1.0.5"
+          "Xpandables.Net": "5.0.0-preview.1.0.6"
         },
         "runtime": {
           "Xpandables.NetCore.dll": {}
@@ -27,7 +27,7 @@
       "Microsoft.CodeQuality.Analyzers/3.3.0-beta2.final": {},
       "Microsoft.NetCore.Analyzers/3.3.0-beta2.final": {},
       "Microsoft.NetFramework.Analyzers/3.3.0-beta2.final": {},
-      "Xpandables.Net/5.0.0-preview.1.0.5": {
+      "Xpandables.Net/5.0.0-preview.1.0.6": {
         "runtime": {
           "Xpandables.Net.dll": {}
         },
@@ -43,7 +43,7 @@
     }
   },
   "libraries": {
-    "Xpandables.NetCore/5.0.0-preview.1.0.5": {
+    "Xpandables.NetCore/5.0.0-preview.1.0.6": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -83,7 +83,7 @@
       "path": "microsoft.netframework.analyzers/3.3.0-beta2.final",
       "hashPath": "microsoft.netframework.analyzers.3.3.0-beta2.final.nupkg.sha512"
     },
-    "Xpandables.Net/5.0.0-preview.1.0.5": {
+    "Xpandables.Net/5.0.0-preview.1.0.6": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

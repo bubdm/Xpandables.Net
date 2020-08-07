@@ -26,7 +26,7 @@ namespace Xpandables.Net.Data.Elements
     /// <summary>
     /// Defines an entity property.
     /// </summary>
-    public interface IDataProperty : IDataElement, IDataElementSetter
+    public interface IDataProperty : IDataElement
     {
         /// <summary>
         /// Gets the target property name.
@@ -65,7 +65,7 @@ namespace Xpandables.Net.Data.Elements
 
         /// <summary>
         /// Gets the delegate used to convert the data row value to the expected type of property.
-        /// The default behavior just returns the value.
+        /// The default behavior will return the value.
         /// </summary>
         DataPropertyConverter Converter { get; }
 
@@ -79,7 +79,7 @@ namespace Xpandables.Net.Data.Elements
         /// <exception cref="ArgumentNullException">The <paramref name="target"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Setting the element failed. See inner exception.</exception>
-        public new void SetData(IDataRecord dataRecord, object target, IInstanceCreator instanceCreator)
+        public void SetData(IDataRecord dataRecord, object target, IInstanceCreator instanceCreator)
         {
             _ = dataRecord ?? throw new ArgumentNullException(nameof(dataRecord));
             _ = target ?? throw new ArgumentNullException(nameof(target));
@@ -90,7 +90,7 @@ namespace Xpandables.Net.Data.Elements
                 if (!dataRecord.IsDBNull(index))
                     SetElement(dataRecord.GetValue(index), target, instanceCreator);
             }
-        }  
+        }
 
         /// <summary>
         /// Sets the target element with the value.

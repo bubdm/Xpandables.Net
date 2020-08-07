@@ -20,8 +20,9 @@ using System.Data;
 using System.Data.Common;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.Data.Executables
 {
@@ -34,10 +35,9 @@ namespace Xpandables.Net.Data.Executables
         /// Asynchronously executes an action to the database and returns a result of specific-type.
         /// </summary>
         /// <param name="context">The target executable context instance.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task representing the asynchronous operation</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public override async Task<int> ExecuteAsync(DataExecutableContext context, CancellationToken cancellationToken = default)
+        public override async Task<Optional<int>> ExecuteAsync(DataExecutableContext context)
         {
             context.Component.Command.CommandText =
                 context.Component.Command.CommandType == CommandType.StoredProcedure
@@ -54,7 +54,7 @@ namespace Xpandables.Net.Data.Executables
             context.Component.Command.Parameters.Add(returnValParameter);
 
             if (context.Component.Command.Connection.IsSqlConnection() && context.Argument.Parameters?.All(p => p is DbParameter) == true)
-                await context.Component.Command.PrepareAsync(cancellationToken).ConfigureAwait(false);
+                await context.Component.Command.PrepareAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
             int result;
             if (context.Argument.Options.IsIdentityRetrieved)
@@ -71,7 +71,7 @@ namespace Xpandables.Net.Data.Executables
             }
 
             if (context.Argument.Options.IsTransactionEnabled)
-                await context.Component.Command.Transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                await context.Component.Command.Transaction.CommitAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
             return result;
         }

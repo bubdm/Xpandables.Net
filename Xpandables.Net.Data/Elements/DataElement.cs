@@ -17,8 +17,7 @@
 ************************************************************************************************************/
 using System;
 
-using Xpandables.Net.Creators;
-using Xpandables.Net.Helpers;
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Data.Elements
 {
@@ -59,16 +58,5 @@ namespace Xpandables.Net.Data.Elements
         /// Determine whether the target element is a collection.
         /// </summary>
         public bool IsEnumerable { get; }
-
-        /// <summary>
-        /// Sets the target element with the value.
-        /// </summary>
-        /// <param name="value">The value to be used.</param>
-        /// <param name="target">The target element instance to act on.</param>
-        /// <param name="instanceCreator">The instance creator to be used.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="target" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="instanceCreator" /> is null.</exception>
-        /// <exception cref="InvalidOperationException">Setting the element failed. See inner exception.</exception>
-        public abstract void SetElement(object? value, object target, IInstanceCreator instanceCreator);
     }   
 }

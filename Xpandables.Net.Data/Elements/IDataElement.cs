@@ -100,6 +100,7 @@ namespace Xpandables.Net.Data.Elements
         {
             _ = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
             var exception = default(Exception);
+            instanceCreator.OnException = ex => exception = ex.SourceException;
 
             return instanceCreator?.Create(targetType)
                 ?? throw new InvalidOperationException($"Unable to create an instance of '{targetType.Name}' type. See inner exception", exception);
@@ -114,6 +115,6 @@ namespace Xpandables.Net.Data.Elements
         /// <exception cref="ArgumentNullException">The <paramref name="target" /> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="instanceCreator" /> is null.</exception>
         /// <exception cref="InvalidOperationException">Setting the element failed. See inner exception.</exception>
-        void SetElement(object? value, object target, IInstanceCreator instanceCreator);
-    }   
+        public void SetElement(object? value, object target, IInstanceCreator instanceCreator) { }
+    }
 }

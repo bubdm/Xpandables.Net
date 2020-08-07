@@ -16,25 +16,39 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.Data.Executables
 {
     /// <summary>
     /// Allows an application author to defines an executable process for <see cref="IDataBase"/>.
     /// </summary>
+    public interface IDataExecutable
+    {
+        /// <summary>
+        /// Asynchronously executes an action to the database and returns a result.
+        /// </summary>
+        /// <param name="context">The target executable context instance.</param>
+        /// <returns>A task representing the asynchronous operation</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
+        Task<Optional<object>> ExecuteAsync(DataExecutableContext context);
+    }
+
+    /// <summary>
+    /// Allows an application author to defines an executable process for <see cref="IDataBase"/> for a specific-type result.
+    /// </summary>
     /// <typeparam name="TResult">The type of the result.</typeparam>
-    public interface IDataExecutable<TResult>
+    public interface IDataExecutable<TResult> : IDataExecutable
     {
         /// <summary>
         /// Asynchronously executes an action to the database and returns a result of specific-type.
         /// </summary>
         /// <param name="context">The target executable context instance.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task representing the asynchronous operation</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        Task<TResult> ExecuteAsync(DataExecutableContext context, CancellationToken cancellationToken = default);
+        new Task<Optional<TResult>> ExecuteAsync(DataExecutableContext context);
     }
 
     /// <summary>
@@ -47,9 +61,11 @@ namespace Xpandables.Net.Data.Executables
         /// Asynchronously executes an action to the database and returns a result of specific-type.
         /// </summary>
         /// <param name="context">The target executable context instance.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task representing the asynchronous operation</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public abstract Task<TResult> ExecuteAsync(DataExecutableContext context, CancellationToken cancellationToken = default);
+        public abstract Task<Optional<TResult>> ExecuteAsync(DataExecutableContext context);
+
+        async Task<Optional<object>> IDataExecutable.ExecuteAsync(DataExecutableContext context)
+            => await ExecuteAsync(context).ConfigureAwait(false);
     }
 }

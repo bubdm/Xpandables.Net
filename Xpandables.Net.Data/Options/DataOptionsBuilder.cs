@@ -26,7 +26,7 @@ using System.Threading;
 using Xpandables.Net.Data.Attributes;
 using Xpandables.Net.Data.Elements;
 
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Options
 {
     /// <summary>
     /// Allows application author to build <see cref="DataOptions"/>.
@@ -34,8 +34,6 @@ namespace Xpandables.Net.Data
     public sealed class DataOptionsBuilder
     {
         private IsolationLevel _isolationLevel = IsolationLevel.ReadUncommitted;
-        private ThreadOption _threadOptions;
-        private ReaderOption _readerOption;
         private CancellationToken _cancellationToken = CancellationToken.None;
         private bool _isTransactionEnabled;
         private Func<IDataProperty, bool>? _isMappable;
@@ -43,7 +41,6 @@ namespace Xpandables.Net.Data
             = new ConcurrentDictionary<Type, ConcurrentDictionary<string, string>>();
         private readonly ConcurrentDictionary<Type, HashSet<string>> _exceptNames = new ConcurrentDictionary<Type, HashSet<string>>();
         private readonly ConcurrentDictionary<Type, DataPropertyConverter> _converters = new ConcurrentDictionary<Type, DataPropertyConverter>();
-        private DataIdentityBuilder? _identityBuilder;
         private bool _isIdentityRetrieved;
 
         /// <summary>
@@ -63,9 +60,6 @@ namespace Xpandables.Net.Data
                 _dataNames,
                 _exceptNames,
                 _converters,
-                _threadOptions,
-                _readerOption,
-                _identityBuilder,
                 _isIdentityRetrieved,
                 _cancellationToken);
 
@@ -80,9 +74,6 @@ namespace Xpandables.Net.Data
                 _dataNames,
                 _exceptNames,
                 _converters,
-                ThreadOption.Normal,
-                ReaderOption.DataAdapter,
-                default,
                 false,
                 _cancellationToken);
 
@@ -233,21 +224,7 @@ namespace Xpandables.Net.Data
             }
 
             return this;
-        }
-
-        /// <summary>
-        /// Adds a delegate to be used to build entity identity.
-        /// The value is used to uniquely identify an entity instance.
-        /// The delegate will received an instance of the target entity.
-        /// The definition here takes priority over the <see cref="DataKeysAttribute"/> attributes.
-        /// </summary>
-        /// <param name="identityBuilder">The delegate to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="identityBuilder"/> is null.</exception>
-        public DataOptionsBuilder AddIdentityBuilder(DataIdentityBuilder identityBuilder)
-        {
-            _identityBuilder = identityBuilder ?? throw new ArgumentNullException(nameof(identityBuilder));
-            return this;
-        }
+        } 
 
         /// <summary>
         /// Adds a delegate to be used for converting data row value to the target type.
@@ -275,28 +252,7 @@ namespace Xpandables.Net.Data
             _converters.AddOrUpdate(typeof(TType), converter, (_, __) => converter);
             return this;
         }
-
-        /// <summary>
-        /// Defines the execution thread options.
-        /// </summary>
-        /// <param name="threadOptions">the thread options to be used.</param>
-        public DataOptionsBuilder AddThreadOptions(ThreadOption threadOptions)
-        {
-            _threadOptions = threadOptions;
-            return this;
-        }
-
-        /// <summary>
-        /// Defines the data type option to retrieve data from database.
-        /// Only for 'select' methods.
-        /// </summary>
-        /// <param name="readerOptions">the thread options to be used.</param>
-        public DataOptionsBuilder AddReaderOptions(ReaderOption readerOptions)
-        {
-            _readerOption = readerOptions;
-            return this;
-        }
-
+      
         /// <summary>
         /// Defines the cancellation token for the execution.
         /// The default used value is <see cref="CancellationToken.None"/>.

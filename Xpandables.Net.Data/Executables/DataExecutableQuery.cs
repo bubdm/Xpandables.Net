@@ -16,10 +16,10 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Data;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.Data.Executables
 {
@@ -33,10 +33,9 @@ namespace Xpandables.Net.Data.Executables
         /// Asynchronously executes an action to the database and returns a result of specific-type.
         /// </summary>
         /// <param name="context">The target executable context instance.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task representing the asynchronous operation</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public override async Task<TResult> ExecuteAsync(DataExecutableContext context, CancellationToken cancellationToken = default)
+        public override async Task<Optional<TResult>> ExecuteAsync(DataExecutableContext context)
         {
             context.Component.Command.CommandText = context.Argument.CommandText.ParseSql();
 
@@ -45,9 +44,13 @@ namespace Xpandables.Net.Data.Executables
             var result = await context.Component.Command.ExecuteScalarAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
             if (context.Argument.Options.IsTransactionEnabled)
-                await context.Component.Command.Transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                await context.Component.Command.Transaction.CommitAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
-            return (TResult)result;
+            return result switch
+            {
+                TResult value => value,
+                _ => Optional<TResult>.Empty()
+            };
         }
     }
 }

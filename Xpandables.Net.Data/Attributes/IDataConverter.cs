@@ -15,19 +15,18 @@
  *
 ************************************************************************************************************/
 
-using System.Diagnostics.CodeAnalysis;
+using Xpandables.Net.Data.Elements;
 
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Attributes
 {
     /// <summary>
-    /// Allows an application author to return a <see cref="DataConnection"/> to be used with <see cref="DataBase"/>.
+    /// Allows an application author to return a data mapper property converter.
     /// </summary>
-    public interface IDataConnectionProvider
+    public interface IDataConverter
     {
         /// <summary>
-        /// Returns the expected <see cref="DataConnection"/> for the current control flow.
+        /// Gets the data mapper property converter instance.
         /// </summary>
-        [return: MaybeNull]
-        DataConnection GetDataConnection();
+        DataPropertyConverter PropertyConverter { get; }
     }
 }

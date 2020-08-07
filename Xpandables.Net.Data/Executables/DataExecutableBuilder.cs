@@ -16,8 +16,9 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.Data.Executables
 {
@@ -26,9 +27,9 @@ namespace Xpandables.Net.Data.Executables
     /// interface without dedicated class.
     /// </summary>
     /// <typeparam name="TResult">The type of the result.</typeparam>
-    public sealed class DataExecutableBuilder<TResult> : IDataExecutable<TResult>
+    public sealed class DataExecutableBuilder<TResult> : DataExecutable<TResult>
     {
-        private readonly Func<DataExecutableContext, CancellationToken, Task<TResult>> _executable;
+        private readonly Func<DataExecutableContext, Task<TResult>> _executable;
 
         /// <summary>
         /// Initializes a new instance of <see cref="DataExecutableBuilder{TResult}"/> class with the delegate to be used
@@ -39,17 +40,16 @@ namespace Xpandables.Net.Data.Executables
         /// the <see cref="IDataExecutable{TResult}"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="executable"/> is null.</exception>
-        public DataExecutableBuilder(Func<DataExecutableContext, CancellationToken, Task<TResult>> executable)
+        public DataExecutableBuilder(Func<DataExecutableContext, Task<TResult>> executable)
             => _executable = executable ?? throw new ArgumentNullException(nameof(executable));
 
         /// <summary>
         /// Asynchronously executes an action to the database and returns a result of specific-type.
         /// </summary>
         /// <param name="context">The target executable context instance.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task representing the asynchronous operation</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public async Task<TResult> ExecuteAsync(DataExecutableContext context, CancellationToken cancellationToken = default)
-            => await _executable(context, cancellationToken).ConfigureAwait(false);
+        public override async Task<Optional<TResult>> ExecuteAsync(DataExecutableContext context)
+            => await _executable(context).ConfigureAwait(false);
     }
 }

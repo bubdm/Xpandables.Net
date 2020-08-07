@@ -21,6 +21,8 @@ using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Linq;
 
+using Xpandables.Net.Data.Options;
+
 namespace Xpandables.Net.Data.Executables
 {
     /// <summary>
@@ -84,13 +86,13 @@ namespace Xpandables.Net.Data.Executables
             public string CommandText { get; }
 
             /// <summary>
-            /// Gets the parameters to be used with the <see cref="DataExecutable{T}"/>.
+            /// Gets the parameters to be used with the <see cref="IDataExecutable{T}"/>.
             /// </summary>
             public ReadOnlyCollection<object>? Parameters { get; }
         }
 
         /// <summary>
-        /// Contains component execution for <see cref="DataExecutable{T}"/>.
+        /// Contains component execution for <see cref="IDataExecutable{T}"/>.
         /// </summary>
 #pragma warning disable CA1034 // Nested types should not be visible
         public sealed class DataComponent : ValueObject

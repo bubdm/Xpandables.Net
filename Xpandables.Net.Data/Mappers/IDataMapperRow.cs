@@ -24,6 +24,7 @@ using System.Threading;
 using Xpandables.Net.Correlation;
 using Xpandables.Net.Creators;
 using Xpandables.Net.Data.Elements;
+using Xpandables.Net.Data.Options;
 
 namespace Xpandables.Net.Data.Mappers
 {

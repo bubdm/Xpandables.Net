@@ -15,18 +15,16 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Data.Elements;
-
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Connections
 {
     /// <summary>
-    /// Allows an application author to return a data mapper property converter.
+    /// Allows an application author to return a <see cref="IDataConnection"/> to be used with <see cref="IDataBase"/>.
     /// </summary>
-    public interface IDataConverter
+    public interface IDataConnectionProvider
     {
         /// <summary>
-        /// Gets the data mapper property converter instance.
+        /// Returns the expected <see cref="IDataConnection"/> for the current control flow.
         /// </summary>
-        DataPropertyConverter PropertyConverter { get; }
+        IDataConnection GetDataConnection();
     }
 }

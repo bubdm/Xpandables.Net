@@ -17,44 +17,38 @@
 
 using System;
 
-namespace Xpandables.Net.Data
+using Xpandables.Net.Data.Providers;
+
+namespace Xpandables.Net.Data.Connections
 {
     /// <summary>
-    /// Allows application author to build <see cref="DataConnection"/>.
+    /// Allows application author to build <see cref="IDataConnection"/>.
     /// </summary>
     public sealed class DataConnectionBuilder
     {
-        private string? _connectionStringSource;
-        private string? _poolName;
-        private string? _providerName;
+        private string _connectionStringSource = string.Empty;
+        private string _poolName = string.Empty;
+        private DataProviderType _providerType = DataProviderType.MSSQL;
         private string? _userId;
         private string? _userPassword;
         private bool _useIntegratedSecurity;
 
         /// <summary>
-        /// Returns a new instance of <see cref="DataConnection"/> using registered information.
+        /// Returns a new <see cref="IDataConnection"/> using registered information.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Building the <see cref="DataConnection"/> failed. See inner exception.</exception>
-        public DataConnection Build()
-        {
-            var dataConnection = new DataConnection(_connectionStringSource, _poolName, _providerName, _userId, _userPassword, _useIntegratedSecurity);
-            if (!dataConnection.IsValid(out var exception))
-                throw new InvalidOperationException("Building the data connection failed. See inner exception", exception);
-
-            return dataConnection;
-        }
+        /// <exception cref="ArgumentNullException">Connection string, poll name or provider type is null.</exception>
+        /// <exception cref="ArgumentException">User identifier and/or user password expected.</exception>
+        public IDataConnection Build()
+            => new IDataConnection(_connectionStringSource, _poolName, _providerType, _userId, _userPassword, _useIntegratedSecurity);
 
         /// <summary>
         /// Adds the connection string source (without security information).
         /// </summary>
         /// <param name="connectionStringSource">The connection string.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="connectionStringSource"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="connectionStringSource"/> contains security information.</exception>
         public DataConnectionBuilder AddConnectionString(string connectionStringSource)
         {
             _connectionStringSource = connectionStringSource ?? throw new ArgumentNullException(nameof(connectionStringSource));
-            if (connectionStringSource.Contains("User Id") || connectionStringSource.Contains("Password"))
-                throw new ArgumentException("Connection String Source contains security information.");
             return this;
         }
 
@@ -70,24 +64,13 @@ namespace Xpandables.Net.Data
         }
 
         /// <summary>
-        /// Adds the known provider name.
-        /// </summary>
-        /// <param name="providerName">The provider name.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="providerName"/> is null.</exception>
-        public DataConnectionBuilder AddProviderName(string providerName)
-        {
-            _providerName = providerName ?? throw new ArgumentNullException(nameof(providerName));
-            return this;
-        }
-
-        /// <summary>
         /// Adds the known provider name from the provider type.
         /// </summary>
         /// <param name="providerType">The provider type to be used.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="providerType"/> is null.</exception>
         public DataConnectionBuilder AddProviderName(DataProviderType providerType)
         {
-            _providerName = providerType?.DisplayName ?? throw new ArgumentNullException(nameof(providerType));
+            _providerType = providerType ?? throw new ArgumentNullException(nameof(providerType));
             return this;
         }
 

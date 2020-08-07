@@ -19,8 +19,9 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.Data.Executables
 {
@@ -33,10 +34,9 @@ namespace Xpandables.Net.Data.Executables
         /// Asynchronously executes an action to the database and returns a result of specific-type.
         /// </summary>
         /// <param name="context">The target executable context instance.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task representing the asynchronous operation</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public override async Task<DataTable> ExecuteAsync(DataExecutableContext context, CancellationToken cancellationToken = default)
+        public override async Task<Optional<DataTable>> ExecuteAsync(DataExecutableContext context)
         {
             using var dataSet = new DataSet();
             context.Component.Command.CommandText =
@@ -56,7 +56,7 @@ namespace Xpandables.Net.Data.Executables
                  && context.Argument.Parameters?.All(p => p is DbParameter) == true
                  && context.Component.Command.Connection.IsSqlConnection())
             {
-                await context.Component.Command.PrepareAsync(cancellationToken).ConfigureAwait(false);
+                await context.Component.Command.PrepareAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
             }
 
             context.Component.Adapter.SelectCommand = context.Component.Command;
@@ -64,12 +64,14 @@ namespace Xpandables.Net.Data.Executables
             context.Component.Adapter.FillLoadOption = LoadOption.OverwriteChanges;
             context.Component.Adapter.Fill(dataSet);
 
-            var result = dataSet.Tables[0];
-
             if (context.Argument.Options.IsTransactionEnabled)
-                await context.Component.Command.Transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                await context.Component.Command.Transaction.CommitAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
-            return await Task.FromResult(result).ConfigureAwait(false);
+            return (dataSet.Tables.Count > 0) switch
+            {
+                true => dataSet.Tables[0],
+                _ => Optional<DataTable>.Empty()
+            };
         }
     }
 }

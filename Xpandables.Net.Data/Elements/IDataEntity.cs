@@ -17,6 +17,11 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
+using Xpandables.Net.Creators;
+using Xpandables.Net.Cryptography;
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Data.Elements
 {
@@ -25,20 +30,24 @@ namespace Xpandables.Net.Data.Elements
     /// </summary>
     public interface IDataEntity : IDataElement
     {
+        private const string Key = "ABCDEFG0123456789";
+        private static readonly IStringGenerator _stringGenerator = new StringGenerator();
+        private static readonly IStringCryptography _stringCryptography = new StringCryptography(_stringGenerator);
+
         /// <summary>
         /// Gets the entity instance.
         /// </summary>
-        object? Entity { get; }
+        object? Entity { get; protected set; }
 
         /// <summary>
         /// Gets the property on parent entity if exist.
         /// </summary>
-        IDataProperty? ParentProperty { get; }
+        IDataProperty? ParentProperty { get; protected set; }
 
         /// <summary>
         /// Gets the parent entity if exist.
         /// </summary>
-        object? ParentEntity { get; }
+        object? ParentEntity { get; protected set; }
 
         /// <summary>
         /// Determines whether the current entity is a nested entity.
@@ -54,7 +63,7 @@ namespace Xpandables.Net.Data.Elements
         /// <summary>
         /// Gets the identity that is unique for the entity.
         /// </summary>
-        string? Identity { get; }
+        string? Identity { get; protected set; }
 
         /// <summary>
         /// Determine whether or not the underlying object is already signed.
@@ -65,14 +74,57 @@ namespace Xpandables.Net.Data.Elements
         /// Builds the identity using the current entity instance.
         /// The entity must be already assigned.
         /// </summary>
-        void BuildIdentity();
+        public void BuildIdentity()
+        {
+            if (IsIdentified) return;
+
+            string value = _stringGenerator.Generate(32, Key);
+            if (Properties.Any(property => property.IsIdentity))
+            {
+                if (Entity is null)
+                    throw new InvalidOperationException($"Unable to build identity from an empty entity : {Type.Name}");
+
+                value = Properties
+                    .Where(property => property.IsIdentity)
+                    .Select(property =>
+                            Entity
+                            .GetType()
+                            .GetProperty(property.PropertyName)
+                            ?.GetValue(Entity, null)
+                            ?.ToString())
+                    .StringJoin(';')
+                    .Trim();
+            }
+
+            if (string.IsNullOrWhiteSpace(value))
+                value = _stringGenerator.Generate(32, Key);
+
+            Identity = _stringCryptography.Encrypt(value, Key).Value;
+        }
 
         /// <summary>
         /// Sets the parent property of the current entity.
         /// </summary>
-        /// <param name="entity">The parent entity.</param>
+        /// <param name="parentEntity">The parent entity.</param>
         /// <param name="parentProperty">The property parent.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="parentProperty"/> is null.</exception>
-        IDataEntity SetParent(object entity, IDataProperty parentProperty);
+        public IDataEntity SetParent(object parentEntity, IDataProperty parentProperty)
+        {
+            ParentEntity = parentEntity;
+            ParentProperty = parentProperty;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the target entity with the value.
+        /// </summary>
+        /// <param name="value">The value to be used.</param>
+        /// <param name="target">The target element instance to act on.</param>
+        /// <param name="instanceCreator">The instance creator to be used.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="target" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="instanceCreator" /> is null.</exception>
+        /// <exception cref="InvalidOperationException">Setting the element failed. See inner exception.</exception>
+        public new void SetElement(object? value, object target, IInstanceCreator instanceCreator) => Entity = target;
     }
 }

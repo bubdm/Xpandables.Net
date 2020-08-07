@@ -20,23 +20,19 @@ using System.Data.Common;
 using System.IO;
 using System.Reflection;
 
-using Xpandables.Net.Helpers;
+using Xpandables.Net.Extensions;
 
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Providers
 {
     /// <summary>
     /// The default implementation to return data provider factory from provider type.
     /// </summary>
     public sealed class DataFactoryProvider : IDataFactoryProvider
     {
-        private readonly IServiceProvider _serviceProvider;
-
         /// <summary>
         /// Initializes a new instance of <see cref="DataFactoryProvider"/>.
         /// </summary>
-        /// <param name="serviceProvider">The service provider to use.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="serviceProvider"/> is null.</exception>
-        public DataFactoryProvider(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        public DataFactoryProvider() { }
 
         /// <summary>
         /// Returns an instance of the data provider factory matching the specified provider type.
@@ -88,17 +84,8 @@ namespace Xpandables.Net.Data
                 (null, null) => throw new NotSupportedException()
             };
 
-#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
             static string FormatDisplayName(string displayName)
                 => Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, $"{ displayName}.dll");
-#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
         }
-
-        /// <summary>
-        /// Gets the service object of the specified type.
-        /// </summary>
-        /// <param name="serviceType">An object that specifies the type of service object to get.</param>
-        /// <returns>A service object of type serviceType. -or- null if there is no service object of type serviceType.</returns>
-        public object? GetService(Type serviceType) => _serviceProvider.GetService(serviceType);
     }
 }

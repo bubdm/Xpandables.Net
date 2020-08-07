@@ -70,6 +70,12 @@ namespace Xpandables.Net.Optionals
         }
 
         /// <summary>
+        /// Determines whether the internal value is an enumerable.
+        /// </summary>
+        /// <returns><see langword="true"/> if so, otherwise <see langword="false"/>.</returns>
+        public bool ValueIsEnumerable() => typeof(T).IsEnumerable();
+
+        /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>

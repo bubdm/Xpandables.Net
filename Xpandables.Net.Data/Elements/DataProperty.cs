@@ -16,10 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections;
-using System.Data;
-
-using Xpandables.Net.Creators;
 
 namespace Xpandables.Net.Data.Elements
 {
@@ -107,85 +103,5 @@ namespace Xpandables.Net.Data.Elements
         /// The default behavior just returns the value.
         /// </summary>
         public DataPropertyConverter Converter { get; }
-
-        /// <summary>
-        /// Sets the data reader to the property.
-        /// </summary>
-        /// <param name="dataRecord">The data reader to act on.</param>
-        /// <param name="target">the entity to save to.</param>
-        /// <param name="instanceCreator">The instance creator to be used.</param>
-        /// <exception cref="ArgumentNullException">the <paramref name="dataRecord"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="target"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Setting the element failed. See inner exception.</exception>
-        public void SetData(IDataRecord dataRecord, object target, IInstanceCreator instanceCreator)
-        {
-            _ = dataRecord ?? throw new ArgumentNullException(nameof(dataRecord));
-            _ = target ?? throw new ArgumentNullException(nameof(target));
-
-            if (dataRecord.Contains(DataFullName))
-            {
-                var index = dataRecord.GetOrdinal(DataFullName);
-                if (!dataRecord.IsDBNull(index))
-                    SetElement(dataRecord.GetValue(index), target, instanceCreator);
-            }
-        }
-
-        /// <summary>
-        /// Sets the data row to the property.
-        /// </summary>
-        /// <param name="dataRow">The data row to act on.</param>
-        /// <param name="target">the entity to save to.</param>
-        /// <param name="instanceCreator">The instance creator to be used.</param>
-        /// <exception cref="ArgumentNullException">the <paramref name="dataRow"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="target"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Setting the element failed. See inner exception.</exception>
-        public void SetData(DataRow dataRow, object target, IInstanceCreator instanceCreator)
-        {
-            _ = dataRow ?? throw new ArgumentNullException(nameof(dataRow));
-            _ = target ?? throw new ArgumentNullException(nameof(target));
-
-            if (dataRow.Table.Columns.Contains(DataFullName))
-            {
-                SetElement(dataRow[DataFullName], target, instanceCreator);
-            }
-        }
-
-        /// <summary>
-        /// Sets the target element with the value.
-        /// </summary>
-        /// <param name="value">The value to be used.</param>
-        /// <param name="target">The target element instance to act on.</param>
-        /// <param name="instanceCreator">The instance creator to be used.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="target" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="instanceCreator" /> is null.</exception>
-        /// <exception cref="InvalidOperationException">Setting the element failed. See inner exception.</exception>
-        public override void SetElement(object? value, object target, IInstanceCreator instanceCreator)
-        {
-            value = value is DBNull ? null : value;
-            value = Converter(this, value);
-
-            try
-            {
-                if (IsEnumerable)
-                {
-                    if (Getter.DynamicInvoke(target) is null)
-                        Setter.DynamicInvoke(target, ((IDataElement)this).CreateStronglyElement(instanceCreator));
-
-                    ((IList)Getter.DynamicInvoke(target)).Add(value);
-                }
-                else
-                {
-                    Setter.DynamicInvoke(target, value);
-                }
-            }
-            catch (Exception exception)
-            {
-                throw new InvalidOperationException(
-                    $"Mapping the property '{target.GetType().Name}.{PropertyName}' of type '{Type.Name}' failed. Data row name '{DataFullName}', Data row value : '{value}'",
-                    exception);
-            }
-        }
     }
 }

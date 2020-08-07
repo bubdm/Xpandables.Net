@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v5.0": {
+    "net5.0": {
       "Microsoft.CodeAnalysis.FxCopAnalyzers/3.3.0-beta2.final": {
         "type": "package",
         "dependencies": {
@@ -569,7 +569,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v5.0": [
+    "net5.0": [
       "Microsoft.CodeAnalysis.FxCopAnalyzers >= 3.3.0-beta2.final",
       "Xpandables.Net >= 5.0.0-preview.1.0.6",
       "Xpandables.Net.Entities >= 5.0.0-preview.1.0.6"

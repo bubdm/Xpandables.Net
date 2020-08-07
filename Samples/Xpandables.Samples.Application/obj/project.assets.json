@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v5.0": {
+    "net5.0": {
       "Microsoft.CSharp/4.5.0": {
         "type": "package",
         "compile": {
@@ -458,7 +458,7 @@
       },
       "Xpandables.Samples.Domain/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v5.0",
+        "framework": "net5.0",
         "dependencies": {
           "Xpandables.Net": "5.0.0-preview.1.0.6",
           "Xpandables.Net.Entities": "5.0.0-preview.1.0.6"
@@ -1274,7 +1274,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v5.0": [
+    "net5.0": [
       "Microsoft.IdentityModel.Tokens >= 6.7.1",
       "System.IdentityModel.Tokens.Jwt >= 6.7.1",
       "Xpandables.Net.EntityFramework >= 5.0.0-preview.1.0.6",

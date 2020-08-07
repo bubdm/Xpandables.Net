@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Xpandables.Net.HttpRestClient;
-using Xpandables.Net.Helpers;
 using Xpandables.Net.Windows.Forms;
 using Xpandables.Samples.Business.Contracts;
 using Xpandables.Samples.Desktop.Helpers;
 using Xpandables.Samples.Desktop.Models;
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Samples.Desktop.Views
 {

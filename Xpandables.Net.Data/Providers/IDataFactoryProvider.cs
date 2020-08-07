@@ -18,13 +18,13 @@
 using System;
 using System.Data.Common;
 
-namespace Xpandables.Net.Data
+namespace Xpandables.Net.Data.Providers
 {
     /// <summary>
     /// Allows an application author to return a data provider factory from the specified provider type.
     /// The default implementation is <see cref="DataFactoryProvider"/>.
     /// </summary>
-    public interface IDataFactoryProvider : IServiceProvider
+    public interface IDataFactoryProvider
     {
         /// <summary>
         /// Returns an instance of the data provider factory matching the specified provider type.
