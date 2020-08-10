@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "36pdZ0kcQy39fIyGsnTdkGa7dZT1ow0gflb//mz55hNDosoD6hJL6HI8j6/sse31Cjw2fQbZmE4RmcxgSct9Aw==",
+  "dgSpecHash": "wmRpIpMQVJltVYE9dTrP63AxPbxSjudE7xz1GUjXvtdNe8rIicHnmb/4dNOBU7RtqZh4IK+2D8Qy4flcFOAkLQ==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Infrastructure\\Xpandables.Samples.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -115,14 +115,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\5.0.0-preview.1.0.6\\xpandables.net.5.0.0-preview.1.0.6.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.dependencyinjection\\5.0.0-preview.1.0.6\\xpandables.net.dependencyinjection.5.0.0-preview.1.0.6.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entities\\5.0.0-preview.1.0.6\\xpandables.net.entities.5.0.0-preview.1.0.6.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\5.0.0-preview.1.0.6\\xpandables.net.entityframework.5.0.0-preview.1.0.6.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework.dependencyinjection\\5.0.0-preview.1.0.6\\xpandables.net.entityframework.dependencyinjection.5.0.0-preview.1.0.6.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.extensibility\\5.0.0-preview.1.0.6\\xpandables.net.extensibility.5.0.0-preview.1.0.6.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.extensibility.dependencyinjection\\5.0.0-preview.1.0.6\\xpandables.net.extensibility.dependencyinjection.5.0.0-preview.1.0.6.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
   "logs": []
 }

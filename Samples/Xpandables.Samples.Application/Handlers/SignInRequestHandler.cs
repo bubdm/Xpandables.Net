@@ -97,7 +97,9 @@ namespace Xpandables.Samples.Business.Handlers
                 token, user.Email, user.Name.LastName, user.Name.FirstName, user.Gender, location);
         }
 
+#pragma warning disable CA1034 // Nested types should not be visible
         public class XUser
+#pragma warning restore CA1034 // Nested types should not be visible
         {
             public string Email { get; set; }
 
@@ -110,7 +112,9 @@ namespace Xpandables.Samples.Business.Handlers
             public string Gender { get; set; }
         }
 
+#pragma warning disable CA1034 // Nested types should not be visible
         public class Tester
+#pragma warning restore CA1034 // Nested types should not be visible
         {
             public static object Converter(IDataProperty property, object rowValue)
             {
@@ -121,7 +125,9 @@ namespace Xpandables.Samples.Business.Handlers
             }
         }
 
+#pragma warning disable CA1034 // Nested types should not be visible
         public class XName
+#pragma warning restore CA1034 // Nested types should not be visible
         {
             [DataName("Name_LastName")]
             public string LastName { get; set; }

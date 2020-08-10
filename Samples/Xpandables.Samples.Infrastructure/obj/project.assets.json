@@ -1683,7 +1683,7 @@
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
       },
-      "Xpandables.Net/5.0.0-preview.1.0.6": {
+      "Xpandables.Net/5.0.0-preview.1.0.7": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "compile": {
@@ -1693,14 +1693,14 @@
           "bin/placeholder/Xpandables.Net.dll": {}
         }
       },
-      "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.6": {
+      "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.7": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "5.0.0-preview.7.20364.11",
           "Microsoft.Extensions.DependencyModel": "5.0.0-preview.3-runtime.20214.6",
           "Microsoft.Extensions.Http": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net": "5.0.0-preview.1.0.6"
+          "Xpandables.Net": "5.0.0-preview.1.0.7"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.DependencyInjection.dll": {}
@@ -1709,12 +1709,12 @@
           "bin/placeholder/Xpandables.Net.DependencyInjection.dll": {}
         }
       },
-      "Xpandables.Net.Entities/5.0.0-preview.1.0.6": {
+      "Xpandables.Net.Entities/5.0.0-preview.1.0.7": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "System.ComponentModel.Annotations": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net": "5.0.0-preview.1.0.6"
+          "Xpandables.Net": "5.0.0-preview.1.0.7"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.Entities.dll": {}
@@ -1723,12 +1723,12 @@
           "bin/placeholder/Xpandables.Net.Entities.dll": {}
         }
       },
-      "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.6": {
+      "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.7": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Relational": "5.0.0-preview.7.20365.15",
-          "Xpandables.Net": "5.0.0-preview.1.0.6"
+          "Xpandables.Net": "5.0.0-preview.1.0.7"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.EntityFramework.dll": {}
@@ -1737,7 +1737,7 @@
           "bin/placeholder/Xpandables.Net.EntityFramework.dll": {}
         }
       },
-      "Xpandables.Net.EntityFramework.DependencyInjection/5.0.0-preview.1.0.6": {
+      "Xpandables.Net.EntityFramework.DependencyInjection/5.0.0-preview.1.0.7": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -1746,8 +1746,8 @@
           "Microsoft.Extensions.Configuration.FileExtensions": "5.0.0-preview.7.20364.11",
           "Microsoft.Extensions.Configuration.Json": "5.0.0-preview.7.20364.11",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.6",
-          "Xpandables.Net.EntityFramework": "5.0.0-preview.1.0.6"
+          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.7",
+          "Xpandables.Net.EntityFramework": "5.0.0-preview.1.0.7"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.EntityFramework.DependencyInjection.dll": {}
@@ -1756,7 +1756,7 @@
           "bin/placeholder/Xpandables.Net.EntityFramework.DependencyInjection.dll": {}
         }
       },
-      "Xpandables.Net.Extensibility/5.0.0-preview.1.0.6": {
+      "Xpandables.Net.Extensibility/5.0.0-preview.1.0.7": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -1769,13 +1769,13 @@
           "bin/placeholder/Xpandables.Net.Extensibility.dll": {}
         }
       },
-      "Xpandables.Net.Extensibility.DependencyInjection/5.0.0-preview.1.0.6": {
+      "Xpandables.Net.Extensibility.DependencyInjection/5.0.0-preview.1.0.7": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.6",
-          "Xpandables.Net.Extensibility": "5.0.0-preview.1.0.6"
+          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.7",
+          "Xpandables.Net.Extensibility": "5.0.0-preview.1.0.7"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.Extensibility.DependencyInjection.dll": {}
@@ -1788,8 +1788,8 @@
         "type": "project",
         "framework": "net5.0",
         "dependencies": {
-          "Xpandables.Net": "5.0.0-preview.1.0.6",
-          "Xpandables.Net.Entities": "5.0.0-preview.1.0.6"
+          "Xpandables.Net": "5.0.0-preview.1.0.7",
+          "Xpandables.Net.Entities": "5.0.0-preview.1.0.7"
         },
         "compile": {
           "bin/placeholder/Xpandables.Samples.Domain.dll": {}
@@ -6650,37 +6650,37 @@
         "system.xml.xmlserializer.nuspec"
       ]
     },
-    "Xpandables.Net/5.0.0-preview.1.0.6": {
+    "Xpandables.Net/5.0.0-preview.1.0.7": {
       "type": "project",
       "path": "../../Xpandables.Net/Xpandables.Net.csproj",
       "msbuildProject": "../../Xpandables.Net/Xpandables.Net.csproj"
     },
-    "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.6": {
+    "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.7": {
       "type": "project",
       "path": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj"
     },
-    "Xpandables.Net.Entities/5.0.0-preview.1.0.6": {
+    "Xpandables.Net.Entities/5.0.0-preview.1.0.7": {
       "type": "project",
       "path": "../../Xpandables.Net.Entities/Xpandables.Net.Entities.csproj",
       "msbuildProject": "../../Xpandables.Net.Entities/Xpandables.Net.Entities.csproj"
     },
-    "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.6": {
+    "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.7": {
       "type": "project",
       "path": "../../Xpandables.Net.EntityFramework/Xpandables.Net.EntityFramework.csproj",
       "msbuildProject": "../../Xpandables.Net.EntityFramework/Xpandables.Net.EntityFramework.csproj"
     },
-    "Xpandables.Net.EntityFramework.DependencyInjection/5.0.0-preview.1.0.6": {
+    "Xpandables.Net.EntityFramework.DependencyInjection/5.0.0-preview.1.0.7": {
       "type": "project",
       "path": "../../Xpandables.Net.EntityFramework.DependencyInjection/Xpandables.Net.EntityFramework.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.EntityFramework.DependencyInjection/Xpandables.Net.EntityFramework.DependencyInjection.csproj"
     },
-    "Xpandables.Net.Extensibility/5.0.0-preview.1.0.6": {
+    "Xpandables.Net.Extensibility/5.0.0-preview.1.0.7": {
       "type": "project",
       "path": "../../Xpandables.Net.Extensibility/Xpandables.Net.Extensibility.csproj",
       "msbuildProject": "../../Xpandables.Net.Extensibility/Xpandables.Net.Extensibility.csproj"
     },
-    "Xpandables.Net.Extensibility.DependencyInjection/5.0.0-preview.1.0.6": {
+    "Xpandables.Net.Extensibility.DependencyInjection/5.0.0-preview.1.0.7": {
       "type": "project",
       "path": "../../Xpandables.Net.Extensibility.DependencyInjection/Xpandables.Net.Extensibility.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.Extensibility.DependencyInjection/Xpandables.Net.Extensibility.DependencyInjection.csproj"
@@ -6695,8 +6695,8 @@
     "net5.0": [
       "Microsoft.CodeAnalysis.FxCopAnalyzers >= 3.3.0-beta2.final",
       "Microsoft.EntityFrameworkCore.SqlServer >= 5.0.0-preview.7.20365.15",
-      "Xpandables.Net.EntityFramework.DependencyInjection >= 5.0.0-preview.1.0.6",
-      "Xpandables.Net.Extensibility.DependencyInjection >= 5.0.0-preview.1.0.6",
+      "Xpandables.Net.EntityFramework.DependencyInjection >= 5.0.0-preview.1.0.7",
+      "Xpandables.Net.Extensibility.DependencyInjection >= 5.0.0-preview.1.0.7",
       "Xpandables.Samples.Domain >= 1.0.0"
     ]
   },
