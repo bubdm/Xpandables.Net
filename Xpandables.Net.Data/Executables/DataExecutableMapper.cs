@@ -74,9 +74,13 @@ namespace Xpandables.Net.Data.Executables
 
             using (var reader = await context.Component.Command.ExecuteReaderAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false))
             {
-                if (reader.HasRows)
-                    while (await reader.ReadAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false))
-                        _dataMapper.Map<TResult>(reader, context.Argument.Options);
+                await _dataMapper.MapAsync<TResult>(GetRecordsAsync(), context.Argument.Options).ConfigureAwait(false);
+                async IAsyncEnumerable<IDataRecord> GetRecordsAsync()
+                {
+                    if (reader.HasRows)
+                        while (await reader.ReadAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false))
+                            yield return reader;
+                }
             }
 
             await foreach (var entity in _dataMapper.Entities.Values.ToAsyncEnumerable())

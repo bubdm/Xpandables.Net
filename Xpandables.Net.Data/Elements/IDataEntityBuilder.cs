@@ -132,7 +132,7 @@ namespace Xpandables.Net.Data.Elements
             var type = GetEntityType(source);
 
             var sourceProperties = type.GetProperties()
-                .Where(propertyInfo => propertyInfo.GetGetMethod() != null && propertyInfo.GetSetMethod() != null)
+                .Where(propertyInfo => propertyInfo.GetGetMethod(true) != null && propertyInfo.GetSetMethod(true) != null)
                 .ToArray();
 
             var properties = options.IsConditionalMappingEnabled switch

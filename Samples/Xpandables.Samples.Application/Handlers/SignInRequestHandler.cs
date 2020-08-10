@@ -20,6 +20,7 @@ using Xpandables.Net.Queries;
 using Xpandables.Samples.Business.Contracts;
 using Xpandables.Samples.Business.Localization;
 using Xpandables.Samples.Business.Services;
+using Xpandables.Samples.Domain.Models;
 
 namespace Xpandables.Samples.Business.Handlers
 {
@@ -63,16 +64,23 @@ namespace Xpandables.Samples.Business.Handlers
 
             var xusers = await _dataBase
                 .UseConnection(connection)
-                .ExecuteMappedQueriesAsync<XUser>(options, "Select top 1 * from users")
+                .ExecuteMappedQueriesAsync<XUser>(options, "Select * from users")
                 .ToListAsync()
                 .ConfigureAwait(false);
 
-            //var options1 = new DataOptionsBuilder()
-            //    .Build();
+            var options1 = new DataOptionsBuilder()
+                .Build();
 
-            //var count = await _dataBase.ExecuteTransactionAsync(options1, "update users set name_lastname='last name' where email=@email", cancellationToken, query.Email).ConfigureAwait(false);
+            var count = await _dataBase
+                .UseConnection(connection)
+                .ExecuteTransactionAsync(options1, "update users set name_lastname='last name new' where email=@email", query.Email)
+                .ConfigureAwait(false);
 
-            //var xusers1 = await _dataBase.ExecuteQueriesAsync<XUser>(options, "Select * from users", cancellationToken).ConfigureAwait(false);
+            var xusers1 = await _dataBase
+                .UseConnection(connection)
+                .ExecuteMappedQueriesAsync<XUser>(options, "Select * from users")
+                .ToListAsync()
+                .ConfigureAwait(false);
 
             if (user?.Password.IsEqualTo(query.Password, _stringCryptography) != true)
             {

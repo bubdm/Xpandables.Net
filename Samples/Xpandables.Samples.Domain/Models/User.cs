@@ -25,6 +25,8 @@ namespace Xpandables.Samples.Domain.Models
 
     public sealed class User : Entity
     {
+        public User() { }
+
         internal User(string email, Name name, Gender gender, ValueEncrypted password, Picture picture)
             : this(email, gender)
         {

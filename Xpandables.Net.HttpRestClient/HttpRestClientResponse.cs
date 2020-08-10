@@ -93,9 +93,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <summary>
         /// Gets all headers of the HTTP response.
         /// </summary>
-#pragma warning disable CA2227 // Collection properties should be read only
         public NameValueCollection? Headers { get; protected set; }
-#pragma warning restore CA2227 // Collection properties should be read only
 
         /// <summary>
         /// Gets the response status code.
@@ -134,7 +132,6 @@ namespace Xpandables.Net.HttpRestClient
     /// <typeparam name="TResult">The type of the result.</typeparam>
     public class HttpRestClientResponse<TResult> : HttpRestClientResponse
     {
-#pragma warning disable CA1000 // Do not declare static members on generic types
         /// <summary>
         ///  Returns a success HTTP status response.
         /// </summary>
