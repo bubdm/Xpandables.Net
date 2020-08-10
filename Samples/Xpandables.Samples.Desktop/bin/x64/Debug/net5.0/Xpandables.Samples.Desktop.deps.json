@@ -7,11 +7,6 @@
   "targets": {
     ".NETCoreApp,Version=v5.0": {
       "Xpandables.Samples.Desktop/1.0.0": {
-        "dependencies": {
-          "Microsoft.Extensions.Hosting": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net.Windows": "5.0.0-preview.1.0.6",
-          "Xpandables.Samples.Business": "1.0.0"
-        },
         "runtime": {
           "Xpandables.Samples.Desktop.dll": {}
         }
@@ -513,6 +508,14 @@
           }
         }
       },
+      "System.Linq.Async/4.1.1": {
+        "runtime": {
+          "lib/netcoreapp3.0/System.Linq.Async.dll": {
+            "assemblyVersion": "4.1.0.0",
+            "fileVersion": "4.1.1.36654"
+          }
+        }
+      },
       "System.Security.AccessControl/5.0.0-preview.7.20364.11": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0-preview.7.20364.11",
@@ -535,6 +538,25 @@
           "fr/Xpandables.Net.resources.dll": {
             "locale": "fr"
           }
+        }
+      },
+      "Xpandables.Net.Data/5.0.0-preview.1.0.6": {
+        "dependencies": {
+          "System.Linq.Async": "4.1.1",
+          "Xpandables.Net": "5.0.0-preview.1.0.6",
+          "Xpandables.Net.Extensions": "5.0.0-preview.1.0.6"
+        },
+        "runtime": {
+          "Xpandables.Net.Data.dll": {}
+        }
+      },
+      "Xpandables.Net.Data.DependencyInjection/5.0.0-preview.1.0.6": {
+        "dependencies": {
+          "Xpandables.Net.Data": "5.0.0-preview.1.0.6",
+          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.6"
+        },
+        "runtime": {
+          "Xpandables.Net.Data.DependencyInjection.dll": {}
         }
       },
       "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.6": {
@@ -625,6 +647,8 @@
         "dependencies": {
           "Microsoft.IdentityModel.Tokens": "6.7.1",
           "System.IdentityModel.Tokens.Jwt": "6.7.1",
+          "Xpandables.Net.Data": "5.0.0-preview.1.0.6",
+          "Xpandables.Net.Data.DependencyInjection": "5.0.0-preview.1.0.6",
           "Xpandables.Net.EntityFramework": "5.0.0-preview.1.0.6",
           "Xpandables.Net.Extensibility.DependencyInjection": "5.0.0-preview.1.0.6",
           "Xpandables.Net.HttpRestClient": "5.0.0-preview.1.0.6",
@@ -982,6 +1006,13 @@
       "path": "system.identitymodel.tokens.jwt/6.7.1",
       "hashPath": "system.identitymodel.tokens.jwt.6.7.1.nupkg.sha512"
     },
+    "System.Linq.Async/4.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+MYrr8Jz8ayKhOJrqh+9EH4y2qcKYUehxKXE3j4IG5to4FlXz6HF0CgBUtYqrcbW5uOaCEUoZ+SVnp4dEIAi6Q==",
+      "path": "system.linq.async/4.1.1",
+      "hashPath": "system.linq.async.4.1.1.nupkg.sha512"
+    },
     "System.Security.AccessControl/5.0.0-preview.7.20364.11": {
       "type": "package",
       "serviceable": true,
@@ -1025,6 +1056,16 @@
       "hashPath": "system.threading.tasks.dataflow.5.0.0-preview.7.20364.11.nupkg.sha512"
     },
     "Xpandables.Net/5.0.0-preview.1.0.6": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Xpandables.Net.Data/5.0.0-preview.1.0.6": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Xpandables.Net.Data.DependencyInjection/5.0.0-preview.1.0.6": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

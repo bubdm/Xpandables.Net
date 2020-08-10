@@ -7,13 +7,6 @@
   "targets": {
     ".NETCoreApp,Version=v5.0": {
       "Xpandables.Samples.Infrastructure/1.0.0": {
-        "dependencies": {
-          "Microsoft.CodeAnalysis.FxCopAnalyzers": "3.3.0-beta2.final",
-          "Microsoft.EntityFrameworkCore.SqlServer": "5.0.0-preview.7.20365.15",
-          "Xpandables.Net.EntityFramework.DependencyInjection": "5.0.0-preview.1.0.6",
-          "Xpandables.Net.Extensibility.DependencyInjection": "5.0.0-preview.1.0.6",
-          "Xpandables.Samples.Domain": "1.0.0"
-        },
         "runtime": {
           "Xpandables.Samples.Infrastructure.dll": {}
         }

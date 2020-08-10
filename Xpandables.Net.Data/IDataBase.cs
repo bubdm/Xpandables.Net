@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Data.Connections;
@@ -30,31 +29,30 @@ using Xpandables.Net.Optionals;
 namespace Xpandables.Net.Data
 {
     /// <summary>
-    /// Provides with a method to execute command to a database using an implementation of <see cref="IDataExecutable{TResult}"/> interface.
+    /// Provides with methods to execute command against a database using an implementation of <see cref="IDataExecutable{TResult}"/> interface.
     /// </summary>
-    [Guid("B6D4EDC7-3548-442F-B5CA-7050A24DB32D")]
-    [ComImport()]
-    [CoClass(typeof(DataBase))]
     public interface IDataBase
     {
         internal IDataFactoryProvider DataFactoryProvider { get; }
         internal IDataExecutableProvider DataExecutableProvider { get; }
 
         /// <summary>
-        /// 
+        /// Uses the <see cref="IDataConnection"/> to access database.
         /// </summary>
         /// <param name="dataConnection">The connection to be used You can use the <see cref="DataConnectionBuilder"/> to build a new instance.</param>
-        /// <returns></returns>
+        /// <returns>A new instance that implements <see cref="IDataBaseConnection"/> with the specified <see cref="IDataConnection"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
         public IDataBaseConnection UseConnection(IDataConnection dataConnection)
-            => new IDataBaseConnection(dataConnection, DataFactoryProvider, DataExecutableProvider);
+            => new DataBaseConnection(dataConnection, DataFactoryProvider, DataExecutableProvider);
 
         /// <summary>
-        /// 
+        /// Uses the <see cref="IDataConnectionProvider"/> to access database.
         /// </summary>
-        /// <param name="dataConnectionProvider"></param>
-        /// <returns></returns>
+        /// <param name="dataConnectionProvider">The provider used to retrieve the expected data connection.</param>
+        /// <returns>A new instance that implements <see cref="IDataBaseConnection"/> with the specified <see cref="IDataConnection"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataConnectionProvider"/> is null.</exception>
         public IDataBaseConnection UseConnection(IDataConnectionProvider dataConnectionProvider)
-            => new IDataBaseConnection(dataConnectionProvider.GetDataConnection(), DataFactoryProvider, DataExecutableProvider);
+            => new DataBaseConnection(dataConnectionProvider.GetDataConnection(), DataFactoryProvider, DataExecutableProvider);
 
         /// <summary>
         /// Asynchronously executes a command/query with the specified executable <typeparamref name="TExecutable" /> type to the database
@@ -78,9 +76,12 @@ namespace Xpandables.Net.Data
             CommandType commandType,
             params object[] parameters)
             where TExecutable : class, IDataExecutable<TResult>
-                => await new IDataBaseConnection(dataConnection, DataFactoryProvider, DataExecutableProvider)
-                    .ExecuteAsync<TResult, TExecutable>(options, commandText, commandType, parameters)
-                    .ConfigureAwait(false);
+        {
+            IDataBaseConnection dataBaseConnection = new DataBaseConnection(dataConnection, DataFactoryProvider, DataExecutableProvider);
+            return await dataBaseConnection
+                .ExecuteAsync<TResult, TExecutable>(options, commandText, commandType, parameters)
+                .ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Asynchronously executes a command/query with the specified executable <typeparamref name="TExecutableMapped" /> type to the database
@@ -106,7 +107,8 @@ namespace Xpandables.Net.Data
             params object[] parameters)
             where TExecutableMapped : class, IDataExecutableMapper<TResult>
         {
-            await foreach (var result in new IDataBaseConnection(dataConnection, DataFactoryProvider, DataExecutableProvider)
+            IDataBaseConnection dataBaseConnection = new DataBaseConnection(dataConnection, DataFactoryProvider, DataExecutableProvider);
+            await foreach (var result in dataBaseConnection
                 .ExecuteMappedAsync<TResult, TExecutableMapped>(options, commandText, commandType, parameters))
                 yield return result;
         }

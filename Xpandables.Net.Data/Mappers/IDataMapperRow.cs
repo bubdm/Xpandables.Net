@@ -29,17 +29,17 @@ using Xpandables.Net.Data.Options;
 namespace Xpandables.Net.Data.Mappers
 {
     /// <summary>
-    /// Provides with methods to map a data row or record to an entity.
+    /// Provides with a method to map a record to an entity.
     /// </summary>
     public interface IDataMapperRow
     {
         private static SpinLock _spinLock;
 
         /// <summary>
-        /// Maps an entity with the data row or record value.
+        /// Maps an entity with the record value.
         /// </summary>
         /// <typeparam name="TEntity">The entity type.</typeparam>
-        /// <param name="dataRecord">The data row or record to be used.</param>
+        /// <param name="dataRecord">The record to be used.</param>
         /// <param name="options">The execution options to act with.</param>
         /// <exception cref="ArgumentNullException">the <paramref name="dataRecord"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
@@ -65,6 +65,7 @@ namespace Xpandables.Net.Data.Mappers
                     var primitives = entity.Properties.Where(property => property.IsPrimitive);
                     foreach (IDataProperty primitive in primitives)
                         primitive.SetData(dataRecord, entity.Entity!, InstanceCreator);
+
                     entity.BuildIdentity();
 
                     if (Entities.TryGetValue(entity.Identity!, out var foundEntity)) entity = foundEntity;

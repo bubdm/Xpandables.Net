@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Data.Executables;
@@ -44,7 +43,6 @@ namespace Xpandables.Net.Data
         /// <param name="dataBase">The target database.</param>
         /// <param name="commandText">The query or store procedure name.</param>
         /// <param name="commandType">The command type.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
@@ -52,11 +50,9 @@ namespace Xpandables.Net.Data
             this IDataBaseConnection dataBase,
             string commandText,
             CommandType commandType,
-            CancellationToken cancellationToken,
             params object[] parameters)
             where TExecutable : class, IDataExecutable<TResult>
-            => await dataBase.ExecuteAsync<TResult, TExecutable>(
-                new DataOptionsBuilder().BuildDefault(), commandText, commandType, cancellationToken, parameters)
+            => await dataBase.ExecuteAsync<TResult, TExecutable>(new DataOptionsBuilder().BuildDefault(), commandText, commandType, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>
@@ -66,7 +62,6 @@ namespace Xpandables.Net.Data
         /// <param name="dataBase">The target database.</param>
         /// <param name="options">The database options.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
@@ -75,10 +70,8 @@ namespace Xpandables.Net.Data
             this IDataBaseConnection dataBase,
             DataOptions options,
             string commandText,
-            CancellationToken cancellationToken,
             params object[] parameters)
-            => await dataBase.ExecuteAsync<int, DataExecutableTransaction>(
-                options, commandText, CommandType.Text, cancellationToken, parameters)
+            => await dataBase.ExecuteAsync<int, DataExecutableTransaction>(options, commandText, CommandType.Text, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>
@@ -88,14 +81,12 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <param name="dataBase">The target database.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async Task<Optional<int>> ExecuteTransactionAsync(
-            this IDataBaseConnection dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
-            => await dataBase.ExecuteTransactionAsync(
-                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+            this IDataBaseConnection dataBase, string commandText, params object[] parameters)
+            => await dataBase.ExecuteTransactionAsync(new DataOptionsBuilder().BuildDefault(), commandText, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>
@@ -104,7 +95,6 @@ namespace Xpandables.Net.Data
         /// <param name="dataBase">The target database.</param>
         /// <param name="options">The database options.</param>
         /// <param name="commandText">The command to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
@@ -113,10 +103,8 @@ namespace Xpandables.Net.Data
             this IDataBaseConnection dataBase,
             DataOptions options,
             string commandText,
-            CancellationToken cancellationToken,
             params object[] parameters)
-            => await dataBase.ExecuteAsync<DataTable, DataExecutableTable>(
-                options, commandText, CommandType.Text, cancellationToken, parameters)
+            => await dataBase.ExecuteAsync<DataTable, DataExecutableTable>(options, commandText, CommandType.Text, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>
@@ -125,14 +113,12 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <param name="dataBase">The target database.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async Task<Optional<DataTable>> ExecuteQueryTableAsync(
-            this IDataBaseConnection dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
-            => await dataBase.ExecuteQueryTableAsync(
-                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+            this IDataBaseConnection dataBase, string commandText, params object[] parameters)
+            => await dataBase.ExecuteQueryTableAsync(new DataOptionsBuilder().BuildDefault(), commandText, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>
@@ -141,7 +127,6 @@ namespace Xpandables.Net.Data
         /// <param name="dataBase">The target database.</param>
         /// <param name="options">The database options.</param>
         /// <param name="commandText">The stored procedure to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
@@ -150,10 +135,8 @@ namespace Xpandables.Net.Data
             this IDataBaseConnection dataBase,
             DataOptions options,
             string commandText,
-            CancellationToken cancellationToken,
             params object[] parameters)
-            => await dataBase.ExecuteAsync<DataTable, DataExecutableTable>(
-                options, commandText, CommandType.StoredProcedure, cancellationToken, parameters)
+            => await dataBase.ExecuteAsync<DataTable, DataExecutableTable>(options, commandText, CommandType.StoredProcedure, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>
@@ -161,14 +144,12 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <param name="dataBase">The target database.</param>
         /// <param name="commandText">The stored procedure to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async Task<Optional<DataTable>> ExecuteProcedureTableAsync(
-            this IDataBaseConnection dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
-            => await dataBase.ExecuteProcedureTableAsync(
-                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+            this IDataBaseConnection dataBase, string commandText, params object[] parameters)
+            => await dataBase.ExecuteProcedureTableAsync(new DataOptionsBuilder().BuildDefault(), commandText, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>
@@ -178,15 +159,13 @@ namespace Xpandables.Net.Data
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="dataBase">The target database.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static IAsyncEnumerable<TResult> ExecuteProceduresAsync<TResult>(
-            this IDataBaseConnection dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+        public static IAsyncEnumerable<TResult> ExecuteMappedProceduresAsync<TResult>(
+            this IDataBaseConnection dataBase, string commandText, params object[] parameters)
             where TResult : class, new()
-            => dataBase.ExecuteProceduresAsync<TResult>(
-                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters);
+            => dataBase.ExecuteMappedProceduresAsync<TResult>(new DataOptionsBuilder().BuildDefault(), commandText, parameters);
 
         /// <summary>
         /// Executes the stored procedure by its name using options and returns a collection of results of
@@ -196,20 +175,17 @@ namespace Xpandables.Net.Data
         /// <param name="dataBase">The target database.</param>
         /// <param name="options">The database options.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static IAsyncEnumerable<TResult> ExecuteProceduresAsync<TResult>(
+        public static IAsyncEnumerable<TResult> ExecuteMappedProceduresAsync<TResult>(
             this IDataBaseConnection dataBase,
             DataOptions options,
             string commandText,
-            CancellationToken cancellationToken,
             params object[] parameters)
             where TResult : class, new()
-            => dataBase.ExecuteMappedAsync<TResult, DataExecutableMapper<TResult>>(
-                options, commandText, CommandType.StoredProcedure, cancellationToken, parameters);
+            => dataBase.ExecuteMappedAsync<TResult, DataExecutableMapper<TResult>>(options, commandText, CommandType.StoredProcedure, parameters);
 
         /// <summary>
         /// Executes the specify query to the database using options and returns a result of
@@ -219,20 +195,19 @@ namespace Xpandables.Net.Data
         /// <param name="dataBase">The target database.</param>
         /// <param name="options">The database options.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<Optional<TResult>> ExecuteQueryAsync<TResult>(
+        public static async Task<Optional<TResult>> ExecuteMappedQueryAsync<TResult>(
             this IDataBaseConnection dataBase,
             DataOptions options,
             string commandText,
-            CancellationToken cancellationToken,
             params object[] parameters)
             where TResult : class, new()
             => await dataBase.ExecuteMappedAsync<TResult, DataExecutableMapper<TResult>>(
-                options, commandText, CommandType.Text, cancellationToken, parameters).SingleOrDefaultAsync();
+                options, commandText, CommandType.Text, parameters)
+                .SingleOrDefaultAsync();
 
         /// <summary>
         /// Executes the specify query to the database using default options
@@ -241,15 +216,13 @@ namespace Xpandables.Net.Data
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="dataBase">The target database.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<Optional<TResult>> ExecuteQueryAsync<TResult>(
-            this IDataBaseConnection dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+        public static async Task<Optional<TResult>> ExecuteMappedQueryAsync<TResult>(
+            this IDataBaseConnection dataBase, string commandText, params object[] parameters)
             where TResult : class, new()
-            => await dataBase.ExecuteQueryAsync<TResult>(
-                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+            => await dataBase.ExecuteMappedQueryAsync<TResult>(new DataOptionsBuilder().BuildDefault(), commandText, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>
@@ -260,20 +233,18 @@ namespace Xpandables.Net.Data
         /// <param name="dataBase">The target database.</param>
         /// <param name="options">The database options.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static IAsyncEnumerable<TResult> ExecuteQueriesAsync<TResult>(
+        public static IAsyncEnumerable<TResult> ExecuteMappedQueriesAsync<TResult>(
             this IDataBaseConnection dataBase,
             DataOptions options,
             string commandText,
-            CancellationToken cancellationToken,
             params object[] parameters)
             where TResult : class, new()
             => dataBase.ExecuteMappedAsync<TResult, DataExecutableMapper<TResult>>(
-                options, commandText, CommandType.Text, cancellationToken, parameters);
+                options, commandText, CommandType.Text, parameters);
 
         /// <summary>
         /// Executes the specify query to the database using default options
@@ -282,15 +253,14 @@ namespace Xpandables.Net.Data
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="dataBase">The target database.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static IAsyncEnumerable<TResult> ExecuteQueriesAsync<TResult>(
-            this IDataBaseConnection dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+        public static IAsyncEnumerable<TResult> ExecuteMappedQueriesAsync<TResult>(
+            this IDataBaseConnection dataBase, string commandText, params object[] parameters)
             where TResult : class, new()
-            => dataBase.ExecuteQueriesAsync<TResult>(
-                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters);
+            => dataBase.ExecuteMappedQueriesAsync<TResult>(
+                new DataOptionsBuilder().BuildDefault(), commandText, parameters);
 
         /// <summary>
         /// Executes the stored procedure by its name using options and returns the number of affected rows.
@@ -299,7 +269,6 @@ namespace Xpandables.Net.Data
         /// <param name="dataBase">The target database.</param>
         /// <param name="options">The database options.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
@@ -308,10 +277,9 @@ namespace Xpandables.Net.Data
             this IDataBaseConnection dataBase,
             DataOptions options,
             string commandText,
-            CancellationToken cancellationToken,
             params object[] parameters)
             => await dataBase.ExecuteAsync<int, DataExecutableProcedure>(
-                options, commandText, CommandType.StoredProcedure, cancellationToken, parameters)
+                options, commandText, CommandType.StoredProcedure, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>
@@ -321,14 +289,12 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <param name="dataBase">The target database.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async Task<Optional<int>> ExecuteProcedureAsync(
-            this IDataBaseConnection dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
-            => await dataBase.ExecuteProcedureAsync(
-                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+            this IDataBaseConnection dataBase, string commandText, params object[] parameters)
+            => await dataBase.ExecuteProcedureAsync(new DataOptionsBuilder().BuildDefault(), commandText, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>
@@ -338,7 +304,6 @@ namespace Xpandables.Net.Data
         /// <param name="dataBase">The target database.</param>
         /// <param name="options">The database options.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
@@ -347,10 +312,8 @@ namespace Xpandables.Net.Data
             this IDataBaseConnection dataBase,
             DataOptions options,
             string commandText,
-            CancellationToken cancellationToken,
             params object[] parameters)
-            => await dataBase.ExecuteAsync<TResult, DataExecutableSingle<TResult>>(
-                options, commandText, CommandType.Text, cancellationToken, parameters)
+            => await dataBase.ExecuteAsync<TResult, DataExecutableSingle<TResult>>(options, commandText, CommandType.Text, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>
@@ -359,14 +322,13 @@ namespace Xpandables.Net.Data
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="dataBase">The target database.</param>
         /// <param name="commandText">The query to be executed.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async Task<Optional<TResult>> ExecuteSingleAsync<TResult>(
-            this IDataBaseConnection dataBase, string commandText, CancellationToken cancellationToken, params object[] parameters)
+            this IDataBaseConnection dataBase, string commandText, params object[] parameters)
             => await dataBase.ExecuteSingleAsync<TResult>(
-                new DataOptionsBuilder().BuildDefault(), commandText, cancellationToken, parameters)
+                new DataOptionsBuilder().BuildDefault(), commandText, parameters)
                 .ConfigureAwait(false);
 
         /// <summary>

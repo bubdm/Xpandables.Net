@@ -18,18 +18,16 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Correlation;
 using Xpandables.Net.Data.Elements;
 using Xpandables.Net.Data.Options;
-using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Data.Mappers
 {
     /// <summary>
-    /// Provides with a method to map a source to entities.
+    /// Provides with methods to map a source to entities.
     /// </summary>
     public interface IDataMapper
     {
@@ -39,10 +37,9 @@ namespace Xpandables.Net.Data.Mappers
         /// <typeparam name="TEntity">The type of expected result.</typeparam>
         /// <param name="source">The data source to act on.</param>
         /// <param name="options">Defines the execution options.</param>
-        /// <returns>An enumerable that contains the result of mapping.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public async IAsyncEnumerable<TEntity> MapAsync<TEntity>(IAsyncEnumerable<IDataRecord> source, DataOptions options)
+        public async Task MapAsync<TEntity>(IAsyncEnumerable<IDataRecord> source, DataOptions options)
             where TEntity : class, new()
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -50,16 +47,25 @@ namespace Xpandables.Net.Data.Mappers
 
             Entities.Clear();
 
-            await source
-              .ParallelForEachAsync(
-                  record => DataMapperRow.Map<TEntity>(record, options),
-                  Environment.ProcessorCount * 4,
-                  TaskScheduler.FromCurrentSynchronizationContext(),
-                  options.CancellationToken)
-              .ConfigureAwait(false);
+            await foreach (var row in source)
+                DataMapperRow.Map<TEntity>(row, options);
+        }
 
-            await foreach (var data in Entities.Select(entity => (TEntity)entity.Value.Entity!).ToAsyncEnumerable())
-                yield return data;
+        /// <summary>
+        /// Maps the record to the specified type.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of expected result.</typeparam>
+        /// <param name="record">The data source to act on.</param>
+        /// <param name="options">Defines the execution options.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="record"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        public void Map<TEntity>(IDataRecord record, DataOptions options)
+            where TEntity : class, new()
+        {
+            _ = record ?? throw new ArgumentNullException(nameof(record));
+            _ = options ?? throw new ArgumentNullException(nameof(options));
+
+            DataMapperRow.Map<TEntity>(record, options);
         }
 
         /// <summary>

@@ -43,5 +43,18 @@ namespace Xpandables.Net.DependencyInjection
             services.AddScoped<IHttpHeaderAccessor, HttpHeaderAccessor>();
             return services;
         }
+
+        /// <summary>
+        /// Adds the default HTTP request file validation that implements the <see cref="IHttpFormFileEngine"/>.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXHttpFormFileEngine(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddTransient<IHttpFormFileEngine, HttpFormFileEngine>();
+            return services;
+        }
     }
 }

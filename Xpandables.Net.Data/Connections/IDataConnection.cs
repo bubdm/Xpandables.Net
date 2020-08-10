@@ -27,9 +27,6 @@ namespace Xpandables.Net.Data.Connections
     /// <summary>
     ///  Represents a set of values data base connection properties.
     /// </summary>
-    [Guid("A376338E-EA22-43E6-BA19-D7DE7537420D")]
-    [ComImport()]
-    [CoClass(typeof(DataConnection))]
     public interface IDataConnection
     {
         /// <summary>

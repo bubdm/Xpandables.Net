@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Data.Connections;
@@ -32,11 +31,8 @@ using Xpandables.Net.Optionals;
 namespace Xpandables.Net.Data
 {
     /// <summary>
-    /// 
+    /// Provides with methods to execute command against a database using the defined <see cref="IDataConnection"/>.
     /// </summary>
-    [Guid("81A48A20-AF38-409C-9D3A-95561BAC080F")]
-    [ComImport()]
-    [CoClass(typeof(DataBaseConnected))]
     public interface IDataBaseConnection : IDataBase
     {
         internal IDataConnection DataConnection { get; }
@@ -139,7 +135,7 @@ namespace Xpandables.Net.Data
                 ?? throw new ArgumentException($"{typeof(TExecutableMapped).Name} not found !");
 
             var transaction = default(DbTransaction);
-            var results = AsyncEnumerable.Empty<TResult>();
+            var results = new List<TResult>();
             try
             {
                 using var connection = await BuildDbConnectionAsync(DbProviderFactory.Value, DataConnection).ConfigureAwait(false);
@@ -160,7 +156,8 @@ namespace Xpandables.Net.Data
                 var arguments = new DataExecutableContext.DataArgument(options, commandText, parameters);
                 var context = new DataExecutableContext(arguments, component);
 
-                results = executableMapped.ExecuteMappedAsync(context);
+                results = await executableMapped.ExecuteMappedAsync(context, options.CancellationToken)
+                    .ToListAsync(options.CancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -186,7 +183,7 @@ namespace Xpandables.Net.Data
                     transaction?.Dispose();
             }
 
-            await foreach (var result in results)
+            await foreach (var result in results.ToAsyncEnumerable())
                 yield return result;
         }
 
@@ -233,14 +230,23 @@ namespace Xpandables.Net.Data
     /// <summary>
     /// Default implementation of <see cref="IDataBaseConnection"/>.
     /// </summary>
-    public sealed class DataBaseConnected : IDataBaseConnection
+    public sealed class DataBaseConnection : IDataBaseConnection
     {
         private readonly IDataConnection _dataConnection;
         private readonly Lazy<DbProviderFactory> _dbProviderFactory;
         private readonly IDataExecutableProvider _dataExecutableProvider;
         private readonly IDataFactoryProvider _dataFactoryProvider;
 
-        internal DataBaseConnected(IDataConnection dataConnection, IDataFactoryProvider dataFactoryProvider, IDataExecutableProvider dataExecutableProvider)
+        /// <summary>
+        /// Initializes a new instance of <see cref="DataBaseConnection"/> with specified properties.
+        /// </summary>
+        /// <param name="dataConnection">The data connection to be sued.</param>
+        /// <param name="dataFactoryProvider">The data factory provider.</param>
+        /// <param name="dataExecutableProvider">The data executable provider.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataFactoryProvider"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
+        internal DataBaseConnection(IDataConnection dataConnection, IDataFactoryProvider dataFactoryProvider, IDataExecutableProvider dataExecutableProvider)
         {
             _dataConnection = dataConnection ?? throw new ArgumentNullException(nameof(dataConnection));
             _dataFactoryProvider = dataFactoryProvider ?? throw new ArgumentNullException(nameof(dataFactoryProvider));

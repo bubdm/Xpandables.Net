@@ -103,7 +103,7 @@ namespace Xpandables.Net.Data.Elements
         }
 
         /// <summary>
-        /// Sets the parent property of the current entity.
+        /// Sets the parent properties of the current entity.
         /// </summary>
         /// <param name="parentEntity">The parent entity.</param>
         /// <param name="parentProperty">The property parent.</param>

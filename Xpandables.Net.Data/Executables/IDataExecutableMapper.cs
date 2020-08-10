@@ -18,6 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace Xpandables.Net.Data.Executables
 {
@@ -30,9 +32,11 @@ namespace Xpandables.Net.Data.Executables
         /// Asynchronously executes an action to the database and returns the result of objects.
         /// </summary>
         /// <param name="context">The target executable context instance.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An asynchronous enumeration of objects.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public async IAsyncEnumerable<object> ExecuteMappedAsync(DataExecutableContext context)
+        public async IAsyncEnumerable<object> ExecuteMappedAsync(
+            DataExecutableContext context, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await AsyncEnumerable.Empty<object>().CountAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
             yield break;
@@ -49,17 +53,20 @@ namespace Xpandables.Net.Data.Executables
         /// Asynchronously executes an action to the database and returns the result mapped to the specific-type.
         /// </summary>
         /// <param name="context">The target executable context instance.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An asynchronous enumeration of <typeparamref name="TResult"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public new async IAsyncEnumerable<TResult> ExecuteMappedAsync(DataExecutableContext context)
+        public new async IAsyncEnumerable<TResult> ExecuteMappedAsync(
+            DataExecutableContext context, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await AsyncEnumerable.Empty<TResult>().CountAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
             yield break;
         }
 
-        async IAsyncEnumerable<object> IDataExecutableMapper.ExecuteMappedAsync(DataExecutableContext context)
+        async IAsyncEnumerable<object> IDataExecutableMapper.ExecuteMappedAsync(
+            DataExecutableContext context, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            await foreach (var result in ExecuteMappedAsync(context))
+            await foreach (var result in ExecuteMappedAsync(context, cancellationToken))
                 yield return result!;
         }
     }

@@ -24,44 +24,7 @@ using System.Threading;
 using Xpandables.Net.Data.Elements;
 
 namespace Xpandables.Net.Data.Options
-{
-    /// <summary>
-    /// Determines the way to retrieve data from the database.
-    /// </summary>
-    public enum ReaderOption
-    {
-        /// <summary>
-        /// Reads data using the data adapter type. This is the default value.
-        /// </summary>
-        DataAdapter,
-
-        /// <summary>
-        /// Reads data using the data reader type.
-        /// </summary>
-        DataReader
-    }
-
-    /// <summary>
-    /// Determines the algorithm to be applied.
-    /// </summary>
-    public enum ThreadOption
-    {
-        /// <summary>
-        /// A normal for each...
-        /// </summary>
-        Normal,
-
-        /// <summary>
-        /// Use of partitioner with parallel execution. Not available when used with <see cref="ReaderOption.DataReader"/>.
-        /// </summary>
-        SpeedUp,
-
-        /// <summary>
-        /// Use of parallel. Not available when used with <see cref="ReaderOption.DataReader"/>.
-        /// </summary>
-        Expensive
-    }
-
+{  
     /// <summary>
     /// Contains execution behaviors. Use <see cref="DataOptionsBuilder"/> to build options.
     /// </summary>

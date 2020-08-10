@@ -176,3 +176,10 @@ D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.HttpRestClient.xml
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.HttpRestClient.DependencyInjection.pdb
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.HttpRestClient.DependencyInjection.xml
+D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\System.Linq.Async.dll
+D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.Data.DependencyInjection.dll
+D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.Data.dll
+D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.Data.pdb
+D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.Data.xml
+D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.Data.DependencyInjection.pdb
+D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.Data.DependencyInjection.xml

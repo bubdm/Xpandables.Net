@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "BCZRNyD5L4njc3qnMstkvCyVTS5z5KA/u/6qkUSa+ty+/MF1a74KF7cThloMGVW8Ar4i5dHkNafwmsz1/L+TPg==",
+  "dgSpecHash": "fE8V4cJB93jLrBvbTi2TZ+L60kPerD2QugpAMK+UnLcHEnOPEhUCQXcp20cBj72g/r3ON6Vk8Cck6A1QIGPRqQ==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Api\\Xpandables.Samples.Api.csproj",
   "expectedPackageFiles": [
@@ -73,6 +73,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.io.filesystem\\4.3.0\\system.io.filesystem.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.io.filesystem.primitives\\4.3.0\\system.io.filesystem.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.linq\\4.3.0\\system.linq.4.3.0.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.linq.async\\4.1.1\\system.linq.async.4.1.1.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.net.nameresolution\\4.3.0\\system.net.nameresolution.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.net.primitives\\4.3.0\\system.net.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.private.datacontractserialization\\4.3.0\\system.private.datacontractserialization.4.3.0.nupkg.sha512",
@@ -114,7 +115,20 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\5.0.0-preview.1.0.6\\xpandables.net.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.dependencyinjection\\5.0.0-preview.1.0.6\\xpandables.net.dependencyinjection.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entities\\5.0.0-preview.1.0.6\\xpandables.net.entities.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\5.0.0-preview.1.0.6\\xpandables.net.entityframework.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework.dependencyinjection\\5.0.0-preview.1.0.6\\xpandables.net.entityframework.dependencyinjection.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.extensibility\\5.0.0-preview.1.0.6\\xpandables.net.extensibility.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.extensibility.dependencyinjection\\5.0.0-preview.1.0.6\\xpandables.net.extensibility.dependencyinjection.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.extensions\\5.0.0-preview.1.0.6\\xpandables.net.extensions.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.httprestclient\\5.0.0-preview.1.0.6\\xpandables.net.httprestclient.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.netcore\\5.0.0-preview.1.0.6\\xpandables.netcore.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.netcore.http\\5.0.0-preview.1.0.6\\xpandables.netcore.http.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.netcore.httprestclient\\5.0.0-preview.1.0.6\\xpandables.netcore.httprestclient.5.0.0-preview.1.0.6.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.netcore.localization\\5.0.0-preview.1.0.6\\xpandables.netcore.localization.5.0.0-preview.1.0.6.nupkg.sha512"
   ],
   "logs": []
 }

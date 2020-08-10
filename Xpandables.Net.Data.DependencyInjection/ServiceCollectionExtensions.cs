@@ -45,6 +45,7 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddScoped<IDataBase, DataBase>();
             services.AddScoped<IDataFactoryProvider, DataFactoryProvider>();
+            services.AddScoped<IDataExecutableProvider, DataExecutableProvider>();
             services.AddTransient<IDataPropertyBuilder, DataPropertyBuilder>();
             services.AddTransient<IDataEntityBuilder, DataEntityBuilder>();
             services.AddTransient<IDataMapperRow, DataMapperRow>();

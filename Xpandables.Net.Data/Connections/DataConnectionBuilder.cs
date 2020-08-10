@@ -39,7 +39,7 @@ namespace Xpandables.Net.Data.Connections
         /// <exception cref="ArgumentNullException">Connection string, poll name or provider type is null.</exception>
         /// <exception cref="ArgumentException">User identifier and/or user password expected.</exception>
         public IDataConnection Build()
-            => new IDataConnection(_connectionStringSource, _poolName, _providerType, _userId, _userPassword, _useIntegratedSecurity);
+            => new DataConnection(_connectionStringSource, _poolName, _providerType, _userId, _userPassword, _useIntegratedSecurity);
 
         /// <summary>
         /// Adds the connection string source (without security information).
@@ -68,7 +68,7 @@ namespace Xpandables.Net.Data.Connections
         /// </summary>
         /// <param name="providerType">The provider type to be used.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="providerType"/> is null.</exception>
-        public DataConnectionBuilder AddProviderName(DataProviderType providerType)
+        public DataConnectionBuilder AddProviderType(DataProviderType providerType)
         {
             _providerType = providerType ?? throw new ArgumentNullException(nameof(providerType));
             return this;

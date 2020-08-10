@@ -36,7 +36,7 @@ namespace Xpandables.Samples.Business
             services.AddScoped<HttpIPService>();
 
             // database context sql access
-            //services.AddXDataBase<DataConnectionProvider>();
+            services.AddXDataBase();
 
             // interceptor
             services.AddTransient<SignInRequestInterceptor>();

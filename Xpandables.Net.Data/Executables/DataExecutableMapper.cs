@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 using Xpandables.Net.Data.Mappers;
 
@@ -44,9 +46,11 @@ namespace Xpandables.Net.Data.Executables
         /// Asynchronously executes an action to the database and returns the result mapped to the specific-type.
         /// </summary>
         /// <param name="context">The target executable context instance.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An asynchronous enumeration of <typeparamref name="TResult"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public async IAsyncEnumerable<TResult> ExecuteMappedAsync(DataExecutableContext context)
+        public async IAsyncEnumerable<TResult> ExecuteMappedAsync(
+            DataExecutableContext context, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             context.Component.Command.CommandText =
                 context.Component.Command.CommandType == CommandType.StoredProcedure
@@ -68,22 +72,15 @@ namespace Xpandables.Net.Data.Executables
                 await context.Component.Command.PrepareAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
             }
 
-            var results = AsyncEnumerable.Empty<TResult>();
             using (var reader = await context.Component.Command.ExecuteReaderAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false))
             {
-                results = _dataMapper.MapAsync<TResult>(GetRecordsAsync(), context.Argument.Options);
-                async IAsyncEnumerable<IDataRecord> GetRecordsAsync()
-                {
-                    if (reader.HasRows)
-                    {
-                        while (await reader.ReadAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false))
-                            yield return reader;
-                    }
-                }
+                if (reader.HasRows)
+                    while (await reader.ReadAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false))
+                        _dataMapper.Map<TResult>(reader, context.Argument.Options);
             }
 
-            await foreach (var result in results)
-                yield return result;
+            await foreach (var entity in _dataMapper.Entities.Values.ToAsyncEnumerable())
+                yield return (TResult)entity.Entity!;
         }
     }
 }
