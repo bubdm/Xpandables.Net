@@ -20,11 +20,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
+using Xpandables.Net.Extensions;
+
 namespace Xpandables.Net.QrCodes
 {
     /// <summary>
-    /// Provides a method to generate qr-code image.
-    /// An implementation could be found in <see langword="Xpandables.QrCode"/> library.
+    /// Provides methods to generate qr-code images.
     /// </summary>
     public interface IQrCodeImageGenerator : IDisposable
     {
@@ -35,6 +36,26 @@ namespace Xpandables.Net.QrCodes
         /// <returns>A new list of qr-codes</returns>
         /// <exception cref="InvalidOperationException">Generating images failed. See inner exception.</exception>
         public IEnumerable<byte[]> Generate(IEnumerable<string> textCodeList) => Generate(textCodeList, Color.Black, Color.White, 20);
+
+        /// <summary>
+        /// Generates a qr-code.
+        /// </summary>
+        /// <param name="textCode">The qr-code text to generate image.</param>
+        /// <returns>A new qr-code</returns>
+        /// <exception cref="InvalidOperationException">Generating image failed. See inner exception.</exception>
+        public byte[] Generate(string textCode) => Generate(textCode, Color.Black, Color.White, 20);
+
+        /// <summary>
+        /// Generates a qr-code.
+        /// </summary>
+        /// <param name="textCode">The qr-code text to generate image.</param>
+        /// <param name="pixelsPerModule">The pixels per module.</param>
+        /// <param name="darkColor">The dark color of the qr-code.</param>
+        /// <param name="lightColor">The light color of the qr-code.</param>
+        /// <returns>A new qr-code</returns>
+        /// <exception cref="InvalidOperationException">Generating image failed. See inner exception.</exception>
+        public byte[] Generate(string textCode, Color darkColor, Color lightColor, int pixelsPerModule = 20)
+            => Generate(textCode.SingleToEnumerable(), darkColor, lightColor).First();
 
         /// <summary>
         /// Generates a list of qr-codes.

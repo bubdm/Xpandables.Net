@@ -708,7 +708,7 @@
           "lib/netstandard2.0/System.Threading.Tasks.Dataflow.dll": {}
         }
       },
-      "Xpandables.Net/5.0.0-preview.1.0.7": {
+      "Xpandables.Net/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "compile": {
@@ -718,13 +718,13 @@
           "bin/placeholder/Xpandables.Net.dll": {}
         }
       },
-      "Xpandables.Net.Data/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.Data/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "System.Linq.Async": "4.1.1",
-          "Xpandables.Net": "5.0.0-preview.1.0.7",
-          "Xpandables.Net.Extensions": "5.0.0-preview.1.0.7"
+          "Xpandables.Net": "5.0.0-preview.1.0.8",
+          "Xpandables.Net.Extensions": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.Data.dll": {}
@@ -733,12 +733,12 @@
           "bin/placeholder/Xpandables.Net.Data.dll": {}
         }
       },
-      "Xpandables.Net.Data.DependencyInjection/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.Data.DependencyInjection/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
-          "Xpandables.Net.Data": "5.0.0-preview.1.0.7",
-          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.7"
+          "Xpandables.Net.Data": "5.0.0-preview.1.0.8",
+          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.Data.DependencyInjection.dll": {}
@@ -747,14 +747,14 @@
           "bin/placeholder/Xpandables.Net.Data.DependencyInjection.dll": {}
         }
       },
-      "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "5.0.0-preview.7.20364.11",
           "Microsoft.Extensions.DependencyModel": "5.0.0-preview.3-runtime.20214.6",
           "Microsoft.Extensions.Http": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net": "5.0.0-preview.1.0.7"
+          "Xpandables.Net": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.DependencyInjection.dll": {}
@@ -763,12 +763,12 @@
           "bin/placeholder/Xpandables.Net.DependencyInjection.dll": {}
         }
       },
-      "Xpandables.Net.Entities/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.Entities/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "System.ComponentModel.Annotations": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net": "5.0.0-preview.1.0.7"
+          "Xpandables.Net": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.Entities.dll": {}
@@ -777,12 +777,12 @@
           "bin/placeholder/Xpandables.Net.Entities.dll": {}
         }
       },
-      "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Relational": "5.0.0-preview.7.20365.15",
-          "Xpandables.Net": "5.0.0-preview.1.0.7"
+          "Xpandables.Net": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.EntityFramework.dll": {}
@@ -791,7 +791,7 @@
           "bin/placeholder/Xpandables.Net.EntityFramework.dll": {}
         }
       },
-      "Xpandables.Net.Extensibility/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.Extensibility/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -804,13 +804,13 @@
           "bin/placeholder/Xpandables.Net.Extensibility.dll": {}
         }
       },
-      "Xpandables.Net.Extensibility.DependencyInjection/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.Extensibility.DependencyInjection/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.7",
-          "Xpandables.Net.Extensibility": "5.0.0-preview.1.0.7"
+          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.8",
+          "Xpandables.Net.Extensibility": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.Extensibility.DependencyInjection.dll": {}
@@ -819,7 +819,7 @@
           "bin/placeholder/Xpandables.Net.Extensibility.DependencyInjection.dll": {}
         }
       },
-      "Xpandables.Net.Extensions/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.Extensions/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -833,13 +833,13 @@
           "bin/placeholder/Xpandables.Net.Extensions.dll": {}
         }
       },
-      "Xpandables.Net.HttpRestClient/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.HttpRestClient/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
-          "Xpandables.Net": "5.0.0-preview.1.0.7",
-          "Xpandables.Net.Extensions": "5.0.0-preview.1.0.7"
+          "Xpandables.Net": "5.0.0-preview.1.0.8",
+          "Xpandables.Net.Extensions": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.HttpRestClient.dll": {}
@@ -848,13 +848,13 @@
           "bin/placeholder/Xpandables.Net.HttpRestClient.dll": {}
         }
       },
-      "Xpandables.Net.HttpRestClient.DependencyInjection/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.HttpRestClient.DependencyInjection/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "Microsoft.Extensions.Http": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.7",
-          "Xpandables.Net.HttpRestClient": "5.0.0-preview.1.0.7"
+          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.8",
+          "Xpandables.Net.HttpRestClient": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.HttpRestClient.DependencyInjection.dll": {}
@@ -863,11 +863,11 @@
           "bin/placeholder/Xpandables.Net.HttpRestClient.DependencyInjection.dll": {}
         }
       },
-      "Xpandables.Net.Windows/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.Windows/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": "net5.0",
         "dependencies": {
-          "Xpandables.Net": "5.0.0-preview.1.0.7"
+          "Xpandables.Net": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.Windows.dll": {}
@@ -885,12 +885,12 @@
         "dependencies": {
           "Microsoft.IdentityModel.Tokens": "6.7.2-preview-10803222715",
           "System.IdentityModel.Tokens.Jwt": "6.7.2-preview-10803222715",
-          "Xpandables.Net.Data": "5.0.0-preview.1.0.7",
-          "Xpandables.Net.Data.DependencyInjection": "5.0.0-preview.1.0.7",
-          "Xpandables.Net.EntityFramework": "5.0.0-preview.1.0.7",
-          "Xpandables.Net.Extensibility.DependencyInjection": "5.0.0-preview.1.0.7",
-          "Xpandables.Net.HttpRestClient": "5.0.0-preview.1.0.7",
-          "Xpandables.Net.HttpRestClient.DependencyInjection": "5.0.0-preview.1.0.7",
+          "Xpandables.Net.Data": "5.0.0-preview.1.0.8",
+          "Xpandables.Net.Data.DependencyInjection": "5.0.0-preview.1.0.8",
+          "Xpandables.Net.EntityFramework": "5.0.0-preview.1.0.8",
+          "Xpandables.Net.Extensibility.DependencyInjection": "5.0.0-preview.1.0.8",
+          "Xpandables.Net.HttpRestClient": "5.0.0-preview.1.0.8",
+          "Xpandables.Net.HttpRestClient.DependencyInjection": "5.0.0-preview.1.0.8",
           "Xpandables.Samples.Domain": "1.0.0"
         },
         "compile": {
@@ -904,8 +904,8 @@
         "type": "project",
         "framework": "net5.0",
         "dependencies": {
-          "Xpandables.Net": "5.0.0-preview.1.0.7",
-          "Xpandables.Net.Entities": "5.0.0-preview.1.0.7"
+          "Xpandables.Net": "5.0.0-preview.1.0.8",
+          "Xpandables.Net.Entities": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Samples.Domain.dll": {}
@@ -2227,62 +2227,62 @@
         "version.txt"
       ]
     },
-    "Xpandables.Net/5.0.0-preview.1.0.7": {
+    "Xpandables.Net/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net/Xpandables.Net.csproj",
       "msbuildProject": "../../Xpandables.Net/Xpandables.Net.csproj"
     },
-    "Xpandables.Net.Data/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.Data/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.Data/Xpandables.Net.Data.csproj",
       "msbuildProject": "../../Xpandables.Net.Data/Xpandables.Net.Data.csproj"
     },
-    "Xpandables.Net.Data.DependencyInjection/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.Data.DependencyInjection/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.Data.DependencyInjection/Xpandables.Net.Data.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.Data.DependencyInjection/Xpandables.Net.Data.DependencyInjection.csproj"
     },
-    "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj"
     },
-    "Xpandables.Net.Entities/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.Entities/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.Entities/Xpandables.Net.Entities.csproj",
       "msbuildProject": "../../Xpandables.Net.Entities/Xpandables.Net.Entities.csproj"
     },
-    "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.EntityFramework/Xpandables.Net.EntityFramework.csproj",
       "msbuildProject": "../../Xpandables.Net.EntityFramework/Xpandables.Net.EntityFramework.csproj"
     },
-    "Xpandables.Net.Extensibility/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.Extensibility/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.Extensibility/Xpandables.Net.Extensibility.csproj",
       "msbuildProject": "../../Xpandables.Net.Extensibility/Xpandables.Net.Extensibility.csproj"
     },
-    "Xpandables.Net.Extensibility.DependencyInjection/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.Extensibility.DependencyInjection/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.Extensibility.DependencyInjection/Xpandables.Net.Extensibility.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.Extensibility.DependencyInjection/Xpandables.Net.Extensibility.DependencyInjection.csproj"
     },
-    "Xpandables.Net.Extensions/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.Extensions/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.Extensions/Xpandables.Net.Extensions.csproj",
       "msbuildProject": "../../Xpandables.Net.Extensions/Xpandables.Net.Extensions.csproj"
     },
-    "Xpandables.Net.HttpRestClient/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.HttpRestClient/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.HttpRestClient/Xpandables.Net.HttpRestClient.csproj",
       "msbuildProject": "../../Xpandables.Net.HttpRestClient/Xpandables.Net.HttpRestClient.csproj"
     },
-    "Xpandables.Net.HttpRestClient.DependencyInjection/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.HttpRestClient.DependencyInjection/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.HttpRestClient.DependencyInjection/Xpandables.Net.HttpRestClient.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.HttpRestClient.DependencyInjection/Xpandables.Net.HttpRestClient.DependencyInjection.csproj"
     },
-    "Xpandables.Net.Windows/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.Windows/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.Windows/Xpandables.Net.Windows.csproj",
       "msbuildProject": "../../Xpandables.Net.Windows/Xpandables.Net.Windows.csproj"
@@ -2301,7 +2301,7 @@
   "projectFileDependencyGroups": {
     "net5.0": [
       "Microsoft.Extensions.Hosting >= 5.0.0-preview.7.20364.11",
-      "Xpandables.Net.Windows >= 5.0.0-preview.1.0.7",
+      "Xpandables.Net.Windows >= 5.0.0-preview.1.0.8",
       "Xpandables.Samples.Business >= 1.0.0"
     ]
   },

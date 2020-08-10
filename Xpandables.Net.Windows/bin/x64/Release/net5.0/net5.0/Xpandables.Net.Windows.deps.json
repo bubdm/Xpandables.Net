@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "Xpandables.Net.Windows/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.Windows/5.0.0-preview.1.0.8": {
         "runtime": {
           "Xpandables.Net.Windows.dll": {}
         }
@@ -39,7 +39,7 @@
     }
   },
   "libraries": {
-    "Xpandables.Net.Windows/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.Windows/5.0.0-preview.1.0.8": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

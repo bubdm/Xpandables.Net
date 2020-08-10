@@ -331,7 +331,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Data.DependencyInjection\\Xpandables.Net.Data.DependencyInjection.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Data.DependencyInjection\\Xpandables.Net.Data.DependencyInjection.csproj",
         "projectName": "Xpandables.Net.Data.DependencyInjection",
@@ -393,7 +393,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Data\\Xpandables.Net.Data.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Data\\Xpandables.Net.Data.csproj",
         "projectName": "Xpandables.Net.Data",
@@ -461,7 +461,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj",
         "projectName": "Xpandables.Net.DependencyInjection",
@@ -534,7 +534,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj",
         "projectName": "Xpandables.Net.Entities",
@@ -605,7 +605,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework.DependencyInjection\\Xpandables.Net.EntityFramework.DependencyInjection.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework.DependencyInjection\\Xpandables.Net.EntityFramework.DependencyInjection.csproj",
         "projectName": "Xpandables.Net.EntityFramework.DependencyInjection",
@@ -689,7 +689,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj",
         "projectName": "Xpandables.Net.EntityFramework",
@@ -754,7 +754,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility.DependencyInjection\\Xpandables.Net.Extensibility.DependencyInjection.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility.DependencyInjection\\Xpandables.Net.Extensibility.DependencyInjection.csproj",
         "projectName": "Xpandables.Net.Extensibility.DependencyInjection",
@@ -822,7 +822,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility\\Xpandables.Net.Extensibility.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensibility\\Xpandables.Net.Extensibility.csproj",
         "projectName": "Xpandables.Net.Extensibility",
@@ -883,7 +883,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensions\\Xpandables.Net.Extensions.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Extensions\\Xpandables.Net.Extensions.csproj",
         "projectName": "Xpandables.Net.Extensions",
@@ -954,7 +954,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient.DependencyInjection\\Xpandables.Net.HttpRestClient.DependencyInjection.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient.DependencyInjection\\Xpandables.Net.HttpRestClient.DependencyInjection.csproj",
         "projectName": "Xpandables.Net.HttpRestClient.DependencyInjection",
@@ -1022,7 +1022,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\Xpandables.Net.HttpRestClient.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.HttpRestClient\\Xpandables.Net.HttpRestClient.csproj",
         "projectName": "Xpandables.Net.HttpRestClient",
@@ -1090,7 +1090,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.HttpRestClient\\Xpandables.NetCore.HttpRestClient.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.HttpRestClient\\Xpandables.NetCore.HttpRestClient.csproj",
         "projectName": "Xpandables.NetCore.HttpRestClient",
@@ -1163,7 +1163,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Http\\Xpandables.NetCore.Http.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Http\\Xpandables.NetCore.Http.csproj",
         "projectName": "Xpandables.NetCore.Http",
@@ -1233,7 +1233,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Localization\\Xpandables.NetCore.Localization.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore.Localization\\Xpandables.NetCore.Localization.csproj",
         "projectName": "Xpandables.NetCore.Localization",
@@ -1306,7 +1306,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj",
         "projectName": "Xpandables.NetCore",
@@ -1376,7 +1376,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
-      "version": "5.0.0-preview.1.0.7",
+      "version": "5.0.0-preview.1.0.8",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
         "projectName": "Xpandables.Net",
