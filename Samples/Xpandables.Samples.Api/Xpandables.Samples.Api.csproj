@@ -15,9 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Xpandables.NetCore.HttpRestClient\Xpandables.NetCore.HttpRestClient.csproj" />
-    <ProjectReference Include="..\..\Xpandables.NetCore.Http\Xpandables.NetCore.Http.csproj" />
-    <ProjectReference Include="..\..\Xpandables.NetCore.Localization\Xpandables.NetCore.Localization.csproj" />
+    <ProjectReference Include="..\..\Xpandables.NetCore\Xpandables.NetCore.csproj" />
     <ProjectReference Include="..\Xpandables.Samples.Application\Xpandables.Samples.Business.csproj" />
     <ProjectReference Include="..\Xpandables.Samples.Infrastructure\Xpandables.Samples.Infrastructure.csproj" />
   </ItemGroup>

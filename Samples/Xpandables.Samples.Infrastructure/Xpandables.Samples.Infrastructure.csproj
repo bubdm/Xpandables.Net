@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Xpandables.Net.EntityFramework.DependencyInjection\Xpandables.Net.EntityFramework.DependencyInjection.csproj" />
-    <ProjectReference Include="..\..\Xpandables.Net.Extensibility.DependencyInjection\Xpandables.Net.Extensibility.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\Xpandables.Net.DependencyInjection\Xpandables.Net.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\Xpandables.Net.EntityFramework\Xpandables.Net.EntityFramework.csproj" />
     <ProjectReference Include="..\Xpandables.Samples.Domain\Xpandables.Samples.Domain.csproj" />
   </ItemGroup>
 

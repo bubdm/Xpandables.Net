@@ -1123,9 +1123,11 @@
       },
       "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.8": {
         "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "5.0.0-preview.7.20364.11",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "5.0.0-preview.7.20364.11",
           "Microsoft.Extensions.DependencyModel": "5.0.0-preview.3-runtime.20214.6",
           "Microsoft.Extensions.Http": "5.0.0-preview.7.20364.11",
+          "System.ComponentModel.Composition": "5.0.0-preview.7.20364.11",
           "Xpandables.Net": "5.0.0-preview.1.0.8"
         },
         "runtime": {
@@ -1135,42 +1137,15 @@
       "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.8": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Relational": "5.0.0-preview.7.20365.15",
-          "Xpandables.Net": "5.0.0-preview.1.0.8"
-        },
-        "runtime": {
-          "Xpandables.Net.EntityFramework.dll": {}
-        }
-      },
-      "Xpandables.Net.EntityFramework.DependencyInjection/5.0.0-preview.1.0.8": {
-        "dependencies": {
           "Microsoft.Extensions.Configuration": "5.0.0-preview.7.20364.11",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "5.0.0-preview.7.20364.11",
           "Microsoft.Extensions.Configuration.FileExtensions": "5.0.0-preview.7.20364.11",
           "Microsoft.Extensions.Configuration.Json": "5.0.0-preview.7.20364.11",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.8",
-          "Xpandables.Net.EntityFramework": "5.0.0-preview.1.0.8"
+          "Xpandables.Net": "5.0.0-preview.1.0.8"
         },
         "runtime": {
-          "Xpandables.Net.EntityFramework.DependencyInjection.dll": {}
-        }
-      },
-      "Xpandables.Net.Extensibility/5.0.0-preview.1.0.8": {
-        "dependencies": {
-          "System.ComponentModel.Composition": "5.0.0-preview.7.20364.11"
-        },
-        "runtime": {
-          "Xpandables.Net.Extensibility.dll": {}
-        }
-      },
-      "Xpandables.Net.Extensibility.DependencyInjection/5.0.0-preview.1.0.8": {
-        "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.8",
-          "Xpandables.Net.Extensibility": "5.0.0-preview.1.0.8"
-        },
-        "runtime": {
-          "Xpandables.Net.Extensibility.DependencyInjection.dll": {}
+          "Xpandables.Net.EntityFramework.dll": {}
         }
       },
       "Xpandables.Samples.Domain/1.0.0": {
@@ -1963,21 +1938,6 @@
       "sha512": ""
     },
     "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.8": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Xpandables.Net.EntityFramework.DependencyInjection/5.0.0-preview.1.0.8": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Xpandables.Net.Extensibility/5.0.0-preview.1.0.8": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Xpandables.Net.Extensibility.DependencyInjection/5.0.0-preview.1.0.8": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

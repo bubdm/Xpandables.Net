@@ -69,7 +69,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Xpandables.Net.Extensibility\Xpandables.Net.Extensibility.csproj" />
     <ProjectReference Include="..\Xpandables.NetCore\Xpandables.NetCore.csproj" />
   </ItemGroup>
 

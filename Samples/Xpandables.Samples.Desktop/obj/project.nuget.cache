@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "VprFvS4HmDZuSVuzRXvzWcQ+SVBd9F9AvmDx7QfIkSWJczhQNwZANekbJIYXg9380ONf0v2QjIdfzFFJQYh5Ng==",
+  "dgSpecHash": "waYHEtAmFmXO1rd/MNRpIUcbCJykXpVVbyr1CHLWQeQeLrVzA25yD1O1paFFkWAP/viCtpQWd8phrf8GJMhn9g==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Desktop\\Xpandables.Samples.Desktop.csproj",
   "expectedPackageFiles": [
@@ -57,9 +57,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.text.json\\4.7.1\\system.text.json.4.7.1.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\5.0.0-preview.1.0.8\\xpandables.net.5.0.0-preview.1.0.8.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.dependencyinjection\\5.0.0-preview.1.0.8\\xpandables.net.dependencyinjection.5.0.0-preview.1.0.8.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\5.0.0-preview.1.0.8\\xpandables.net.entityframework.5.0.0-preview.1.0.8.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.extensibility\\5.0.0-preview.1.0.8\\xpandables.net.extensibility.5.0.0-preview.1.0.8.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.extensibility.dependencyinjection\\5.0.0-preview.1.0.8\\xpandables.net.extensibility.dependencyinjection.5.0.0-preview.1.0.8.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\5.0.0-preview.1.0.8\\xpandables.net.entityframework.5.0.0-preview.1.0.8.nupkg.sha512"
   ],
   "logs": []
 }
