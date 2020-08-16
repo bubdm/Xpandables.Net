@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "AEYtTG0rUMQbe1JfIQ7J6FbkjW+m54A32prygXk1+nOGD5uP58OPGnd62vsn6BaG3aL30MYXwbqQu0RAsPbAnw==",
+  "dgSpecHash": "gtDPMzxkX/saowAKosCQMVeBbRw4Qxb5sJKVgJ73govAYBqy/q/w+pVDEgyFLWW/pXuxZGH/JKT1vDltHCTT5g==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Application\\Xpandables.Samples.Business.csproj",
   "expectedPackageFiles": [
@@ -32,18 +32,18 @@
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\6.7.2-preview-10803222715\\microsoft.identitymodel.jsonwebtokens.6.7.2-preview-10803222715.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.identitymodel.logging\\6.7.2-preview-10803222715\\microsoft.identitymodel.logging.6.7.2-preview-10803222715.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.identitymodel.tokens\\6.7.2-preview-10803222715\\microsoft.identitymodel.tokens.6.7.2-preview-10803222715.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0-preview.7.20364.11\\microsoft.netcore.platforms.5.0.0-preview.7.20364.11.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0-preview.7.20364.11\\microsoft.win32.systemevents.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.collections.immutable\\5.0.0-preview.7.20364.11\\system.collections.immutable.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0-preview.7.20364.11\\system.componentmodel.annotations.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.composition\\5.0.0-preview.7.20364.11\\system.componentmodel.composition.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.diagnostics.diagnosticsource\\5.0.0-preview.7.20364.11\\system.diagnostics.diagnosticsource.5.0.0-preview.7.20364.11.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\5.0.0-preview.7.20364.11\\system.drawing.common.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.7.2-preview-10803222715\\system.identitymodel.tokens.jwt.6.7.2-preview-10803222715.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\5.0.0-preview.7.20364.11\\system.text.encodings.web.5.0.0-preview.7.20364.11.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.text.json\\4.7.1\\system.text.json.4.7.1.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\5.0.0-preview.1.0.8\\xpandables.net.5.0.0-preview.1.0.8.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.dependencyinjection\\5.0.0-preview.1.0.8\\xpandables.net.dependencyinjection.5.0.0-preview.1.0.8.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\5.0.0-preview.1.0.8\\xpandables.net.entityframework.5.0.0-preview.1.0.8.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.text.json\\4.7.1\\system.text.json.4.7.1.nupkg.sha512"
   ],
   "logs": []
 }

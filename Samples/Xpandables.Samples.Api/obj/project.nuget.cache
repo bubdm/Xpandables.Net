@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "QYPwSp6sIxdLQWinAC9fxyudvyiLyuo45NH3Ny7Ah8VnAXHQ8Gdw/kAEQNFtGANdRYpenGBYms1/gTJNZnlPkQ==",
+  "dgSpecHash": "Nihe6vnOBJ5QvVrKvVJY+JeGZBUzgWX6tMw9nryTCw2m86Gnilw2GEufE983UYQ5O7thkyb+HTd4FlzFgyLxpA==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Api\\Xpandables.Samples.Api.csproj",
   "expectedPackageFiles": [
@@ -39,10 +39,10 @@
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.identitymodel.protocols\\6.6.0\\microsoft.identitymodel.protocols.6.6.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\6.6.0\\microsoft.identitymodel.protocols.openidconnect.6.6.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.identitymodel.tokens\\6.7.2-preview-10803222715\\microsoft.identitymodel.tokens.6.7.2-preview-10803222715.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0-preview.7.20364.11\\microsoft.netcore.platforms.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.targets\\1.1.3\\microsoft.netcore.targets.1.1.3.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0-preview.7.20364.11\\microsoft.win32.systemevents.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\runtime.native.system.data.sqlclient.sni\\4.7.0\\runtime.native.system.data.sqlclient.sni.4.7.0.nupkg.sha512",
@@ -65,7 +65,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.diagnostics.diagnosticsource\\5.0.0-preview.7.20364.11\\system.diagnostics.diagnosticsource.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.diagnostics.tools\\4.3.0\\system.diagnostics.tools.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.diagnostics.tracing\\4.3.0\\system.diagnostics.tracing.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\5.0.0-preview.7.20364.11\\system.drawing.common.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.globalization\\4.3.0\\system.globalization.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.globalization.extensions\\4.3.0\\system.globalization.extensions.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.7.2-preview-10803222715\\system.identitymodel.tokens.jwt.6.7.2-preview-10803222715.nupkg.sha512",
@@ -113,11 +113,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\5.0.0-preview.1.0.8\\xpandables.net.5.0.0-preview.1.0.8.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.dependencyinjection\\5.0.0-preview.1.0.8\\xpandables.net.dependencyinjection.5.0.0-preview.1.0.8.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\5.0.0-preview.1.0.8\\xpandables.net.entityframework.5.0.0-preview.1.0.8.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.netcore\\5.0.0-preview.1.0.8\\xpandables.netcore.5.0.0-preview.1.0.8.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
   "logs": []
 }

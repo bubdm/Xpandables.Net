@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "1eEKwWFAbcIuHwS7suYup28p8/RJ33qt1stTJSO2y0ZV0e3TMz0GxvJ7dXnDEMqwLgxImKa+j0++CRoFKpCAYA==",
+  "dgSpecHash": "2fQNrbfCaR34SKQECp6M6dDRM/fuE2itn7G/kORUN1ydSmLS/HBaekPPBhoBiMfNcabcysFzxdv2iK53QjmDzA==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
   "expectedPackageFiles": [
@@ -11,6 +11,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netframework.analyzers\\3.3.0-beta2.final\\microsoft.netframework.analyzers.3.3.0-beta2.final.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0-preview.7.20364.11\\system.componentmodel.annotations.5.0.0-preview.7.20364.11.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\5.0.0-preview.7.20364.11\\system.drawing.common.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\5.0.0-preview.7.20364.11\\system.text.encodings.web.5.0.0-preview.7.20364.11.nupkg.sha512"
   ],
   "logs": []

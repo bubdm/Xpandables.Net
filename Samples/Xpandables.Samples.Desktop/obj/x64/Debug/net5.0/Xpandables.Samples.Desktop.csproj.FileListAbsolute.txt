@@ -137,7 +137,6 @@ D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.DependencyInjection.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.EntityFramework.dll
-D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.HttpRestClient.DependencyInjection.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.Windows.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Samples.Business.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Samples.Domain.dll
@@ -150,8 +149,6 @@ D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.DependencyInjection.xml
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.EntityFramework.pdb
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.EntityFramework.xml
-D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.HttpRestClient.DependencyInjection.pdb
-D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Net.HttpRestClient.DependencyInjection.xml
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\Xpandables.Samples.Domain.pdb
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\en-GB\Xpandables.Samples.Business.resources.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Desktop\bin\x64\Debug\net5.0\fr\Xpandables.Samples.Business.resources.dll

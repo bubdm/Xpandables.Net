@@ -17,7 +17,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute("A utility library in .Net5 to easily add patterns such as Command, Query, Dispatc" +
     "her, Interception...")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("5.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("5.0.0-preview.1.0.8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("5.0.0-preview.2.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("Xpandables Net")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Xpandables.Net")]
 [assembly: System.Reflection.AssemblyVersionAttribute("5.0.0")]

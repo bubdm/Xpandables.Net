@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "sEqPgDGvFnN+qxgXnA7BkCO27oETDtoAPz1KeagQisWx78OVcQd9lvavHuYhTUnoBY2Bh2jj2CK+7uynSrop8w==",
+  "dgSpecHash": "ffFU5cYZ74WZuWTtUytEWqzZYX85Zq2yLtuLsZH8+iD8itAEhRv7Duz7I5GVt/5BA88m4Pw/nqfnsD6p+aLKtw==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj",
   "expectedPackageFiles": [
@@ -8,11 +8,13 @@
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codeanalysis.versioncheckanalyzer\\3.3.0-beta2.final\\microsoft.codeanalysis.versioncheckanalyzer.3.3.0-beta2.final.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codequality.analyzers\\3.3.0-beta2.final\\microsoft.codequality.analyzers.3.3.0-beta2.final.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.analyzers\\3.3.0-beta2.final\\microsoft.netcore.analyzers.3.3.0-beta2.final.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0-preview.7.20364.11\\microsoft.netcore.platforms.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netframework.analyzers\\3.3.0-beta2.final\\microsoft.netframework.analyzers.3.3.0-beta2.final.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0-preview.7.20364.11\\microsoft.win32.systemevents.5.0.0-preview.7.20364.11.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0-preview.7.20364.11\\system.componentmodel.annotations.5.0.0-preview.7.20364.11.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\5.0.0-preview.7.20364.11\\system.text.encodings.web.5.0.0-preview.7.20364.11.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\5.0.0-preview.1.0.8\\xpandables.net.5.0.0-preview.1.0.8.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\5.0.0-preview.7.20364.11\\system.drawing.common.5.0.0-preview.7.20364.11.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\5.0.0-preview.7.20364.11\\system.text.encodings.web.5.0.0-preview.7.20364.11.nupkg.sha512"
   ],
   "logs": []
 }

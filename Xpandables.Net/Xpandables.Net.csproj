@@ -15,10 +15,10 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>5.0.0-preview.1.0.8</Version>
+    <Version>5.0.0-preview.2.0.0</Version>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0</FileVersion>
-    <PackageVersion>5.0.0-preview.1.0.8</PackageVersion>
+    <PackageVersion>5.0.0-preview.2.0.0</PackageVersion>
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand, IDispatcher, IQuery{TResult}, Enumeration, Interception, ICommandHandler{TCommand}, IQueryHandler{TQuery, TResult}, ValueObject...</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
@@ -62,6 +62,7 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0-preview.7.20364.11" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.7.20364.11" />
     <PackageReference Include="System.Text.Encodings.Web" Version="5.0.0-preview.7.20364.11" />
   </ItemGroup>
 
