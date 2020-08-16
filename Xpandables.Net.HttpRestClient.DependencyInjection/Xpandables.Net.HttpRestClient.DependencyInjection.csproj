@@ -67,7 +67,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Xpandables.Net.DependencyInjection\Xpandables.Net.DependencyInjection.csproj" />
-    <ProjectReference Include="..\Xpandables.Net.HttpRestClient\Xpandables.Net.HttpRestClient.csproj" />
   </ItemGroup>
 
 </Project>

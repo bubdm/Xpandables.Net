@@ -15,9 +15,8 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Newtonsoft.Json;
-
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -26,18 +25,61 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Extensions;
+using Newtonsoft.Json;
 
 namespace Xpandables.Net.HttpRestClient
 {
     /// <summary>
     /// Helpers for <see cref="IHttpRestClientHandler"/>.
     /// </summary>
-    public static class HttpRestClientHelpers
+    public static class HttpRestClientExtensions
     {
+        /// <summary>
+        /// Appends the given query keys and values to the Uri.
+        /// </summary>
+        /// <param name="path">The base Uri.</param>
+        /// <param name="queryString">A collection of name value query pairs to append.</param>
+        /// <returns>The combined result.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="path"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="queryString"/> is null.</exception>
+        public static string AddQueryString(this string path, IDictionary<string, string> queryString)
+        {
+            _ = path ?? throw new ArgumentNullException(nameof(path));
+            _ = queryString ?? throw new ArgumentNullException(nameof(queryString));
+
+            var anchorIndex = path.IndexOf('#', StringComparison.InvariantCulture);
+            var uriToBeAppended = path;
+            var anchorText = "";
+
+            // If there is an anchor, then the query string must be inserted before its first occurrence.
+            if (anchorIndex != -1)
+            {
+                anchorText = path[anchorIndex..];
+                uriToBeAppended = path.Substring(0, anchorIndex);
+            }
+
+            var queryIndex = uriToBeAppended.IndexOf('?', StringComparison.InvariantCulture);
+            var hasQuery = queryIndex != -1;
+
+            var sb = new StringBuilder();
+            sb.Append(uriToBeAppended);
+            foreach (var parameter in queryString)
+            {
+                sb.Append(hasQuery ? '&' : '?');
+                sb.Append(UrlEncoder.Default.Encode(parameter.Key));
+                sb.Append('=');
+                sb.Append(UrlEncoder.Default.Encode(parameter.Value));
+                hasQuery = true;
+            }
+
+            sb.Append(anchorText);
+            return sb.ToString();
+        }
+
         /// <summary>
         /// Returns the <see cref="HttpRequestMessage"/> from the attribute.
         /// </summary>
@@ -66,9 +108,7 @@ namespace Xpandables.Net.HttpRestClient
                 uri = new Uri(attribute.Path, UriKind.Relative);
             }
 
-#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
             var httpRequestMessage = new HttpRequestMessage(new HttpMethod(attribute.Method), uri);
-#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
             httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(attribute.Accept));
             httpRequestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(System.Threading.Thread.CurrentThread.CurrentCulture.Name));
 
@@ -92,16 +132,10 @@ namespace Xpandables.Net.HttpRestClient
                         var multipartSource = source as IMultipartRequest;
 
                         if (multipartSource!.GetByteContent() is { } mbyteContent)
-#pragma warning disable CA2000 // Dispose objects before losing scope
                             multipartContent.Add(new ByteArrayContent(mbyteContent));
-#pragma warning restore CA2000 // Dispose objects before losing scope
-
                         if (multipartSource.GetStringContent() is { } mstringContent)
-#pragma warning disable CA2000 // Dispose objects before losing scope
                             multipartContent.Add(new StringContent(
                                 JsonConvert.SerializeObject(mstringContent), Encoding.UTF8, attribute.ContentType));
-#pragma warning restore CA2000 // Dispose objects before losing scope
-
                         httpRequestMessage.Content = multipartContent;
                         break;
                     case BodyFormat.Stream:

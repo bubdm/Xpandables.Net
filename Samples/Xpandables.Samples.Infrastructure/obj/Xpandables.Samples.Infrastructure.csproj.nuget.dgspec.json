@@ -32,9 +32,6 @@
         "frameworks": {
           "net5.0": {
             "projectReferences": {
-              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj": {
-                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj"
-              },
               "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
                 "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj"
               }
@@ -205,77 +202,6 @@
               "version": "[5.0.0-preview.3-runtime.20214.6, )"
             },
             "Microsoft.Extensions.Http": {
-              "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "NETStandard.Library": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.7.20366.6\\RuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj": {
-      "version": "5.0.0-preview.1.0.8",
-      "restore": {
-        "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj",
-        "projectName": "Xpandables.Net.Entities",
-        "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj",
-        "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\obj\\",
-        "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "D:\\Microsoft\\Xamarin\\NuGet\\"
-        ],
-        "configFilePaths": [
-          "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "netstandard2.1"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "D:\\GitHub\\Xpandables\\Packages": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "netstandard2.1": {
-            "projectReferences": {
-              "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
-                "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "allWarningsAsErrors": true
-        }
-      },
-      "frameworks": {
-        "netstandard2.1": {
-          "dependencies": {
-            "Microsoft.CodeAnalysis.FxCopAnalyzers": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[3.3.0-beta2.final, )"
-            },
-            "System.ComponentModel.Annotations": {
               "target": "Package",
               "version": "[5.0.0-preview.7.20364.11, )"
             }
@@ -619,6 +545,18 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[3.3.0-beta2.final, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            },
+            "System.ComponentModel.Annotations": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
+            },
+            "System.Text.Encodings.Web": {
+              "target": "Package",
+              "version": "[5.0.0-preview.7.20364.11, )"
             }
           },
           "imports": [

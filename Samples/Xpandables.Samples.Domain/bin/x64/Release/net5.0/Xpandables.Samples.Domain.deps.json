@@ -24,7 +24,7 @@
       "Microsoft.NetCore.Analyzers/3.3.0-beta2.final": {},
       "Microsoft.NetFramework.Analyzers/3.3.0-beta2.final": {},
       "System.ComponentModel.Annotations/5.0.0-preview.7.20364.11": {},
-      "Xpandables.Net/5.0.0-preview.1.0.7": {
+      "Xpandables.Net/5.0.0-preview.1.0.8": {
         "runtime": {
           "Xpandables.Net.dll": {}
         },
@@ -37,10 +37,10 @@
           }
         }
       },
-      "Xpandables.Net.Entities/5.0.0-preview.1.0.7": {
+      "Xpandables.Net.Entities/5.0.0-preview.1.0.8": {
         "dependencies": {
           "System.ComponentModel.Annotations": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net": "5.0.0-preview.1.0.7"
+          "Xpandables.Net": "5.0.0-preview.1.0.8"
         },
         "runtime": {
           "Xpandables.Net.Entities.dll": {}
@@ -96,12 +96,12 @@
       "path": "system.componentmodel.annotations/5.0.0-preview.7.20364.11",
       "hashPath": "system.componentmodel.annotations.5.0.0-preview.7.20364.11.nupkg.sha512"
     },
-    "Xpandables.Net/5.0.0-preview.1.0.7": {
+    "Xpandables.Net/5.0.0-preview.1.0.8": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Xpandables.Net.Entities/5.0.0-preview.1.0.7": {
+    "Xpandables.Net.Entities/5.0.0-preview.1.0.8": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

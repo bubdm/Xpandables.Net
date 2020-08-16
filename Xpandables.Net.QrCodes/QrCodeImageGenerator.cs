@@ -46,7 +46,6 @@ namespace Xpandables.Net.QrCodes
             foreach (var source in textCodeList)
             {
                 using var qrCodeData = _qRCodeGenerator.CreateQrCode(source, QRCodeGenerator.ECCLevel.Q, true);
-#pragma warning disable CA2000 // Dispose objects before losing scope
                 using var qrCode = new QrCode(qrCodeData);
                 using var image = qrCode.GetGraphic(pixelsPerModule, darkColor, lightColor, true);
                 yield return image.ToByte();

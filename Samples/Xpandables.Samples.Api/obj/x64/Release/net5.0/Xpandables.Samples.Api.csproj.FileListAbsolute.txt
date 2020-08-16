@@ -73,7 +73,6 @@ D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\r
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.pdb
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
-D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\System.Linq.Async.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.Data.DependencyInjection.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.Data.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.DependencyInjection.dll
@@ -82,7 +81,6 @@ D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\X
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.EntityFramework.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.Extensibility.DependencyInjection.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.Extensibility.dll
-D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.Extensions.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.HttpRestClient.DependencyInjection.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.HttpRestClient.dll
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.NetCore.Http.dll
@@ -110,8 +108,6 @@ D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\X
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.Extensibility.xml
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.Extensibility.DependencyInjection.pdb
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.Extensibility.DependencyInjection.xml
-D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.Extensions.pdb
-D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.Extensions.xml
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.HttpRestClient.pdb
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.HttpRestClient.xml
 D:\GitHub\Xpandables.Net\Samples\Xpandables.Samples.Api\bin\x64\Release\net5.0\Xpandables.Net.HttpRestClient.DependencyInjection.pdb

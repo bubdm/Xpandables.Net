@@ -62,11 +62,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Linq.Async" Version="4.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Xpandables.Net.Extensions\Xpandables.Net.Extensions.csproj" />
     <ProjectReference Include="..\Xpandables.Net\Xpandables.Net.csproj" />
   </ItemGroup>
 

@@ -38,6 +38,15 @@
           "build/Microsoft.NetFramework.Analyzers.props": {}
         }
       },
+      "Newtonsoft.Json/12.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        }
+      },
       "System.ComponentModel.Annotations/5.0.0-preview.7.20364.11": {
         "type": "package",
         "compile": {
@@ -47,28 +56,28 @@
           "lib/netstandard2.1/System.ComponentModel.Annotations.dll": {}
         }
       },
+      "System.Text.Encodings.Web/5.0.0-preview.7.20364.11": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.0/System.Text.Encodings.Web.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/System.Text.Encodings.Web.dll": {}
+        }
+      },
       "Xpandables.Net/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
-        "compile": {
-          "bin/placeholder/Xpandables.Net.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Xpandables.Net.dll": {}
-        }
-      },
-      "Xpandables.Net.Entities/5.0.0-preview.1.0.8": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
+          "Newtonsoft.Json": "12.0.3",
           "System.ComponentModel.Annotations": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net": "5.0.0-preview.1.0.8"
+          "System.Text.Encodings.Web": "5.0.0-preview.7.20364.11"
         },
         "compile": {
-          "bin/placeholder/Xpandables.Net.Entities.dll": {}
+          "bin/placeholder/Xpandables.Net.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Xpandables.Net.Entities.dll": {}
+          "bin/placeholder/Xpandables.Net.dll": {}
         }
       }
     }
@@ -467,6 +476,37 @@
         "tools/uninstall.ps1"
       ]
     },
+    "Newtonsoft.Json/12.0.3": {
+      "sha512": "6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
+      "type": "package",
+      "path": "newtonsoft.json/12.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "newtonsoft.json.12.0.3.nupkg.sha512",
+        "newtonsoft.json.nuspec",
+        "packageIcon.png"
+      ]
+    },
     "System.ComponentModel.Annotations/5.0.0-preview.7.20364.11": {
       "sha512": "20SFa6IJj+jnwBe+Egt6SVnYnlOPB7zi2ZVvO20DlgqhVQ+qLPB/VtBA3ISuFNOQojFqLD5FOzgcER7W9cc+jg==",
       "type": "package",
@@ -557,22 +597,40 @@
         "version.txt"
       ]
     },
+    "System.Text.Encodings.Web/5.0.0-preview.7.20364.11": {
+      "sha512": "ohiQMnNqQ6qzyuRBuJcxjd+Syz/8O6PRYseztoTaoL3iYKGvDc0A5UnWFCgn56T1x7NkmFcvnKpv1oNaLz9i1Q==",
+      "type": "package",
+      "path": "system.text.encodings.web/5.0.0-preview.7.20364.11",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/netcoreapp3.0/System.Text.Encodings.Web.dll",
+        "lib/netcoreapp3.0/System.Text.Encodings.Web.xml",
+        "lib/netstandard1.0/System.Text.Encodings.Web.dll",
+        "lib/netstandard1.0/System.Text.Encodings.Web.xml",
+        "lib/netstandard2.0/System.Text.Encodings.Web.dll",
+        "lib/netstandard2.0/System.Text.Encodings.Web.xml",
+        "lib/netstandard2.1/System.Text.Encodings.Web.dll",
+        "lib/netstandard2.1/System.Text.Encodings.Web.xml",
+        "system.text.encodings.web.5.0.0-preview.7.20364.11.nupkg.sha512",
+        "system.text.encodings.web.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
     "Xpandables.Net/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net/Xpandables.Net.csproj",
       "msbuildProject": "../../Xpandables.Net/Xpandables.Net.csproj"
-    },
-    "Xpandables.Net.Entities/5.0.0-preview.1.0.8": {
-      "type": "project",
-      "path": "../../Xpandables.Net.Entities/Xpandables.Net.Entities.csproj",
-      "msbuildProject": "../../Xpandables.Net.Entities/Xpandables.Net.Entities.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net5.0": [
       "Microsoft.CodeAnalysis.FxCopAnalyzers >= 3.3.0-beta2.final",
-      "Xpandables.Net >= 5.0.0-preview.1.0.8",
-      "Xpandables.Net.Entities >= 5.0.0-preview.1.0.8"
+      "Xpandables.Net >= 5.0.0-preview.1.0.8"
     ]
   },
   "packageFolders": {
@@ -607,9 +665,6 @@
       "frameworks": {
         "net5.0": {
           "projectReferences": {
-            "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj": {
-              "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Entities\\Xpandables.Net.Entities.csproj"
-            },
             "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
               "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj"
             }

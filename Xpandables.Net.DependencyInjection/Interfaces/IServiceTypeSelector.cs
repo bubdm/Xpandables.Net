@@ -35,27 +35,21 @@ namespace Xpandables.Net.DependencyInjection.Interfaces
         /// Registers each matching concrete type as <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type to register as.</typeparam>
-#pragma warning disable CA1716 // Identifiers should not match keywords
         ILifetimeSelector As<T>();
-#pragma warning restore CA1716 // Identifiers should not match keywords
 
         /// <summary>
         /// Registers each matching concrete type as each of the specified <paramref name="types" />.
         /// </summary>
         /// <param name="types">The types to register as.</param>
         /// <exception cref="ArgumentNullException">If the <paramref name="types"/> argument is <c>null</c>.</exception>
-#pragma warning disable CA1716 // Identifiers should not match keywords
         ILifetimeSelector As(params Type[] types);
-#pragma warning restore CA1716 // Identifiers should not match keywords
 
         /// <summary>
         /// Registers each matching concrete type as each of the specified <paramref name="types" />.
         /// </summary>
         /// <param name="types">The types to register as.</param>
         /// <exception cref="ArgumentNullException">If the <paramref name="types"/> argument is <c>null</c>.</exception>
-#pragma warning disable CA1716 // Identifiers should not match keywords
         ILifetimeSelector As(IEnumerable<Type> types);
-#pragma warning restore CA1716 // Identifiers should not match keywords
 
         /// <summary>
         /// Registers each matching concrete type as all of its implemented interfaces.
@@ -84,9 +78,7 @@ namespace Xpandables.Net.DependencyInjection.Interfaces
         /// </summary>
         /// <param name="selector">A function to select service types based on implementation types.</param>
         /// <exception cref="ArgumentNullException">If the <paramref name="selector"/> argument is <c>null</c>.</exception>
-#pragma warning disable CA1716 // Identifiers should not match keywords
         ILifetimeSelector As(Func<Type, IEnumerable<Type>> selector);
-#pragma warning restore CA1716 // Identifiers should not match keywords
 
         /// <summary>
         /// Registers each matching concrete type according to their <see cref="ServiceDescriptorAttribute"/>.

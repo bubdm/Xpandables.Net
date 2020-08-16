@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "Xpandables.NetCore/5.0.0-preview.1.0.7": {
+      "Xpandables.NetCore/5.0.0-preview.1.0.8": {
         "runtime": {
           "Xpandables.NetCore.dll": {}
         }
@@ -23,7 +23,22 @@
       "Microsoft.CodeQuality.Analyzers/3.3.0-beta2.final": {},
       "Microsoft.NetCore.Analyzers/3.3.0-beta2.final": {},
       "Microsoft.NetFramework.Analyzers/3.3.0-beta2.final": {},
-      "Xpandables.Net/5.0.0-preview.1.0.7": {
+      "Newtonsoft.Json/12.0.3": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.3.23909"
+          }
+        }
+      },
+      "System.ComponentModel.Annotations/5.0.0-preview.7.20364.11": {},
+      "System.Text.Encodings.Web/5.0.0-preview.7.20364.11": {},
+      "Xpandables.Net/5.0.0-preview.1.0.8": {
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3",
+          "System.ComponentModel.Annotations": "5.0.0-preview.7.20364.11",
+          "System.Text.Encodings.Web": "5.0.0-preview.7.20364.11"
+        },
         "runtime": {
           "Xpandables.Net.dll": {}
         },
@@ -39,7 +54,7 @@
     }
   },
   "libraries": {
-    "Xpandables.NetCore/5.0.0-preview.1.0.7": {
+    "Xpandables.NetCore/5.0.0-preview.1.0.8": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -79,7 +94,28 @@
       "path": "microsoft.netframework.analyzers/3.3.0-beta2.final",
       "hashPath": "microsoft.netframework.analyzers.3.3.0-beta2.final.nupkg.sha512"
     },
-    "Xpandables.Net/5.0.0-preview.1.0.7": {
+    "Newtonsoft.Json/12.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
+      "path": "newtonsoft.json/12.0.3",
+      "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
+    },
+    "System.ComponentModel.Annotations/5.0.0-preview.7.20364.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-20SFa6IJj+jnwBe+Egt6SVnYnlOPB7zi2ZVvO20DlgqhVQ+qLPB/VtBA3ISuFNOQojFqLD5FOzgcER7W9cc+jg==",
+      "path": "system.componentmodel.annotations/5.0.0-preview.7.20364.11",
+      "hashPath": "system.componentmodel.annotations.5.0.0-preview.7.20364.11.nupkg.sha512"
+    },
+    "System.Text.Encodings.Web/5.0.0-preview.7.20364.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ohiQMnNqQ6qzyuRBuJcxjd+Syz/8O6PRYseztoTaoL3iYKGvDc0A5UnWFCgn56T1x7NkmFcvnKpv1oNaLz9i1Q==",
+      "path": "system.text.encodings.web/5.0.0-preview.7.20364.11",
+      "hashPath": "system.text.encodings.web.5.0.0-preview.7.20364.11.nupkg.sha512"
+    },
+    "Xpandables.Net/5.0.0-preview.1.0.8": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

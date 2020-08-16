@@ -63,10 +63,10 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="5.0.0-preview.7.20364.11" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Xpandables.Net.Extensions\Xpandables.Net.Extensions.csproj" />
     <ProjectReference Include="..\Xpandables.Net\Xpandables.Net.csproj" />
   </ItemGroup>
 

@@ -25,9 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Xpandables.Net.DependencyInjection.Interfaces;
 using Xpandables.Net.Extensions;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Provides with lazy instance resolution.

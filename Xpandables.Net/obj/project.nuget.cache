@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "9czx2p9tWfyFDTdjXM5iTInzhTAKRCS4jn7Mw90Nq36DEBe/XCWk/QcOoZNLkZa7PbEmB4XNr7zc0/U1dZ5cdQ==",
+  "dgSpecHash": "1eEKwWFAbcIuHwS7suYup28p8/RJ33qt1stTJSO2y0ZV0e3TMz0GxvJ7dXnDEMqwLgxImKa+j0++CRoFKpCAYA==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
   "expectedPackageFiles": [
@@ -8,7 +8,10 @@
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codeanalysis.versioncheckanalyzer\\3.3.0-beta2.final\\microsoft.codeanalysis.versioncheckanalyzer.3.3.0-beta2.final.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codequality.analyzers\\3.3.0-beta2.final\\microsoft.codequality.analyzers.3.3.0-beta2.final.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.analyzers\\3.3.0-beta2.final\\microsoft.netcore.analyzers.3.3.0-beta2.final.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netframework.analyzers\\3.3.0-beta2.final\\microsoft.netframework.analyzers.3.3.0-beta2.final.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netframework.analyzers\\3.3.0-beta2.final\\microsoft.netframework.analyzers.3.3.0-beta2.final.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0-preview.7.20364.11\\system.componentmodel.annotations.5.0.0-preview.7.20364.11.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\5.0.0-preview.7.20364.11\\system.text.encodings.web.5.0.0-preview.7.20364.11.nupkg.sha512"
   ],
   "logs": []
 }

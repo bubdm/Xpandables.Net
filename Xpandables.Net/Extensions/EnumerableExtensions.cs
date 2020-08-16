@@ -58,6 +58,25 @@ namespace Xpandables.Net.Extensions
         }
 
         /// <summary>
+        /// Asynchronously returns a <see cref="List{T}"/> from <see cref="IAsyncEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the object.</typeparam>
+        /// <param name="source">The source of the sequence.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="List{T}"/> from the asynchronous collection.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public static async ValueTask<List<TSource>> ToListAsync<TSource>(this IAsyncEnumerable<TSource> source, CancellationToken cancellationToken = default)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            var result = new List<TSource>();
+
+            await foreach (var item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+                result.Add(item);
+
+            return result;
+        }
+
+        /// <summary>
         /// Converts an <see cref="IEnumerable{T}"/> to a read only collection.
         /// </summary>
         /// <typeparam name="TSource">The type of the object.</typeparam>

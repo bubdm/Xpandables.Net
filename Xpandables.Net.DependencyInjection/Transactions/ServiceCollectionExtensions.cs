@@ -23,9 +23,7 @@ using Xpandables.Net.Commands;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 
 {
     /// <summary>

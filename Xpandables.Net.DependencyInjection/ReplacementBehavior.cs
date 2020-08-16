@@ -23,9 +23,7 @@ namespace Xpandables.Net.DependencyInjection
     /// Determines how the service will be replaced.
     /// </summary>
     [Flags]
-#pragma warning disable CA1714 // Flags enums should have plural names
     public enum ReplacementBehavior
-#pragma warning restore CA1714 // Flags enums should have plural names
     {
         /// <summary>
         /// Replace existing services by service type.

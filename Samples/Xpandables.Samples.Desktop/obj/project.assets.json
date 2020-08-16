@@ -619,15 +619,6 @@
           "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.dll": {}
         }
       },
-      "System.Linq.Async/4.1.1": {
-        "type": "package",
-        "compile": {
-          "ref/netcoreapp3.0/System.Linq.Async.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/System.Linq.Async.dll": {}
-        }
-      },
       "System.Security.AccessControl/5.0.0-preview.7.20364.11": {
         "type": "package",
         "dependencies": {
@@ -699,52 +690,19 @@
           "lib/netcoreapp3.0/System.Text.Json.dll": {}
         }
       },
-      "System.Threading.Tasks.Dataflow/5.0.0-preview.7.20364.11": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/System.Threading.Tasks.Dataflow.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Threading.Tasks.Dataflow.dll": {}
-        }
-      },
       "Xpandables.Net/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3",
+          "System.ComponentModel.Annotations": "5.0.0-preview.7.20364.11",
+          "System.Text.Encodings.Web": "5.0.0-preview.7.20364.11"
+        },
         "compile": {
           "bin/placeholder/Xpandables.Net.dll": {}
         },
         "runtime": {
           "bin/placeholder/Xpandables.Net.dll": {}
-        }
-      },
-      "Xpandables.Net.Data/5.0.0-preview.1.0.8": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
-        "dependencies": {
-          "System.Linq.Async": "4.1.1",
-          "Xpandables.Net": "5.0.0-preview.1.0.8",
-          "Xpandables.Net.Extensions": "5.0.0-preview.1.0.8"
-        },
-        "compile": {
-          "bin/placeholder/Xpandables.Net.Data.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Xpandables.Net.Data.dll": {}
-        }
-      },
-      "Xpandables.Net.Data.DependencyInjection/5.0.0-preview.1.0.8": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
-        "dependencies": {
-          "Xpandables.Net.Data": "5.0.0-preview.1.0.8",
-          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.8"
-        },
-        "compile": {
-          "bin/placeholder/Xpandables.Net.Data.DependencyInjection.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Xpandables.Net.Data.DependencyInjection.dll": {}
         }
       },
       "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.8": {
@@ -761,20 +719,6 @@
         },
         "runtime": {
           "bin/placeholder/Xpandables.Net.DependencyInjection.dll": {}
-        }
-      },
-      "Xpandables.Net.Entities/5.0.0-preview.1.0.8": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
-        "dependencies": {
-          "System.ComponentModel.Annotations": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net": "5.0.0-preview.1.0.8"
-        },
-        "compile": {
-          "bin/placeholder/Xpandables.Net.Entities.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Xpandables.Net.Entities.dll": {}
         }
       },
       "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.8": {
@@ -819,42 +763,12 @@
           "bin/placeholder/Xpandables.Net.Extensibility.DependencyInjection.dll": {}
         }
       },
-      "Xpandables.Net.Extensions/5.0.0-preview.1.0.8": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
-        "dependencies": {
-          "System.Text.Encodings.Web": "5.0.0-preview.7.20364.11",
-          "System.Threading.Tasks.Dataflow": "5.0.0-preview.7.20364.11"
-        },
-        "compile": {
-          "bin/placeholder/Xpandables.Net.Extensions.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Xpandables.Net.Extensions.dll": {}
-        }
-      },
-      "Xpandables.Net.HttpRestClient/5.0.0-preview.1.0.8": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
-        "dependencies": {
-          "Newtonsoft.Json": "12.0.3",
-          "Xpandables.Net": "5.0.0-preview.1.0.8",
-          "Xpandables.Net.Extensions": "5.0.0-preview.1.0.8"
-        },
-        "compile": {
-          "bin/placeholder/Xpandables.Net.HttpRestClient.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Xpandables.Net.HttpRestClient.dll": {}
-        }
-      },
       "Xpandables.Net.HttpRestClient.DependencyInjection/5.0.0-preview.1.0.8": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "Microsoft.Extensions.Http": "5.0.0-preview.7.20364.11",
-          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.8",
-          "Xpandables.Net.HttpRestClient": "5.0.0-preview.1.0.8"
+          "Xpandables.Net.DependencyInjection": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.HttpRestClient.DependencyInjection.dll": {}
@@ -885,11 +799,8 @@
         "dependencies": {
           "Microsoft.IdentityModel.Tokens": "6.7.2-preview-10803222715",
           "System.IdentityModel.Tokens.Jwt": "6.7.2-preview-10803222715",
-          "Xpandables.Net.Data": "5.0.0-preview.1.0.8",
-          "Xpandables.Net.Data.DependencyInjection": "5.0.0-preview.1.0.8",
           "Xpandables.Net.EntityFramework": "5.0.0-preview.1.0.8",
           "Xpandables.Net.Extensibility.DependencyInjection": "5.0.0-preview.1.0.8",
-          "Xpandables.Net.HttpRestClient": "5.0.0-preview.1.0.8",
           "Xpandables.Net.HttpRestClient.DependencyInjection": "5.0.0-preview.1.0.8",
           "Xpandables.Samples.Domain": "1.0.0"
         },
@@ -904,8 +815,7 @@
         "type": "project",
         "framework": "net5.0",
         "dependencies": {
-          "Xpandables.Net": "5.0.0-preview.1.0.8",
-          "Xpandables.Net.Entities": "5.0.0-preview.1.0.8"
+          "Xpandables.Net": "5.0.0-preview.1.0.8"
         },
         "compile": {
           "bin/placeholder/Xpandables.Samples.Domain.dll": {}
@@ -1965,33 +1875,6 @@
         "system.identitymodel.tokens.jwt.nuspec"
       ]
     },
-    "System.Linq.Async/4.1.1": {
-      "sha512": "+MYrr8Jz8ayKhOJrqh+9EH4y2qcKYUehxKXE3j4IG5to4FlXz6HF0CgBUtYqrcbW5uOaCEUoZ+SVnp4dEIAi6Q==",
-      "type": "package",
-      "path": "system.linq.async/4.1.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net461/System.Linq.Async.dll",
-        "lib/net461/System.Linq.Async.xml",
-        "lib/netcoreapp3.0/System.Linq.Async.dll",
-        "lib/netcoreapp3.0/System.Linq.Async.xml",
-        "lib/netstandard2.0/System.Linq.Async.dll",
-        "lib/netstandard2.0/System.Linq.Async.xml",
-        "lib/netstandard2.1/System.Linq.Async.dll",
-        "lib/netstandard2.1/System.Linq.Async.xml",
-        "ref/net461/System.Linq.Async.dll",
-        "ref/net461/System.Linq.Async.xml",
-        "ref/netcoreapp3.0/System.Linq.Async.dll",
-        "ref/netcoreapp3.0/System.Linq.Async.xml",
-        "ref/netstandard2.0/System.Linq.Async.dll",
-        "ref/netstandard2.0/System.Linq.Async.xml",
-        "ref/netstandard2.1/System.Linq.Async.dll",
-        "ref/netstandard2.1/System.Linq.Async.xml",
-        "system.linq.async.4.1.1.nupkg.sha512",
-        "system.linq.async.nuspec"
-      ]
-    },
     "System.Security.AccessControl/5.0.0-preview.7.20364.11": {
       "sha512": "/JWmXYrDPXVN2317R7kZWt9S5dx2mjKZ0s+Zs1+MGRn6utT+oYpKUEVXoWLjqIWX0wUNu2bwLjudaBirf7J6eA==",
       "type": "package",
@@ -2203,54 +2086,15 @@
         "version.txt"
       ]
     },
-    "System.Threading.Tasks.Dataflow/5.0.0-preview.7.20364.11": {
-      "sha512": "q7Sjnqh698RS75dTyT/TT+vM+mav1tN/6FMLugo2S8rmhhlhc5n19+eYEnv8yAadxjl7qJzl3R0IHm8eMgz5bw==",
-      "type": "package",
-      "path": "system.threading.tasks.dataflow/5.0.0-preview.7.20364.11",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/netstandard1.0/System.Threading.Tasks.Dataflow.dll",
-        "lib/netstandard1.0/System.Threading.Tasks.Dataflow.xml",
-        "lib/netstandard1.1/System.Threading.Tasks.Dataflow.dll",
-        "lib/netstandard1.1/System.Threading.Tasks.Dataflow.xml",
-        "lib/netstandard2.0/System.Threading.Tasks.Dataflow.dll",
-        "lib/netstandard2.0/System.Threading.Tasks.Dataflow.xml",
-        "lib/portable-net45+win8+wpa81/System.Threading.Tasks.Dataflow.dll",
-        "lib/portable-net45+win8+wpa81/System.Threading.Tasks.Dataflow.xml",
-        "system.threading.tasks.dataflow.5.0.0-preview.7.20364.11.nupkg.sha512",
-        "system.threading.tasks.dataflow.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
     "Xpandables.Net/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net/Xpandables.Net.csproj",
       "msbuildProject": "../../Xpandables.Net/Xpandables.Net.csproj"
     },
-    "Xpandables.Net.Data/5.0.0-preview.1.0.8": {
-      "type": "project",
-      "path": "../../Xpandables.Net.Data/Xpandables.Net.Data.csproj",
-      "msbuildProject": "../../Xpandables.Net.Data/Xpandables.Net.Data.csproj"
-    },
-    "Xpandables.Net.Data.DependencyInjection/5.0.0-preview.1.0.8": {
-      "type": "project",
-      "path": "../../Xpandables.Net.Data.DependencyInjection/Xpandables.Net.Data.DependencyInjection.csproj",
-      "msbuildProject": "../../Xpandables.Net.Data.DependencyInjection/Xpandables.Net.Data.DependencyInjection.csproj"
-    },
     "Xpandables.Net.DependencyInjection/5.0.0-preview.1.0.8": {
       "type": "project",
       "path": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj"
-    },
-    "Xpandables.Net.Entities/5.0.0-preview.1.0.8": {
-      "type": "project",
-      "path": "../../Xpandables.Net.Entities/Xpandables.Net.Entities.csproj",
-      "msbuildProject": "../../Xpandables.Net.Entities/Xpandables.Net.Entities.csproj"
     },
     "Xpandables.Net.EntityFramework/5.0.0-preview.1.0.8": {
       "type": "project",
@@ -2266,16 +2110,6 @@
       "type": "project",
       "path": "../../Xpandables.Net.Extensibility.DependencyInjection/Xpandables.Net.Extensibility.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.Extensibility.DependencyInjection/Xpandables.Net.Extensibility.DependencyInjection.csproj"
-    },
-    "Xpandables.Net.Extensions/5.0.0-preview.1.0.8": {
-      "type": "project",
-      "path": "../../Xpandables.Net.Extensions/Xpandables.Net.Extensions.csproj",
-      "msbuildProject": "../../Xpandables.Net.Extensions/Xpandables.Net.Extensions.csproj"
-    },
-    "Xpandables.Net.HttpRestClient/5.0.0-preview.1.0.8": {
-      "type": "project",
-      "path": "../../Xpandables.Net.HttpRestClient/Xpandables.Net.HttpRestClient.csproj",
-      "msbuildProject": "../../Xpandables.Net.HttpRestClient/Xpandables.Net.HttpRestClient.csproj"
     },
     "Xpandables.Net.HttpRestClient.DependencyInjection/5.0.0-preview.1.0.8": {
       "type": "project",

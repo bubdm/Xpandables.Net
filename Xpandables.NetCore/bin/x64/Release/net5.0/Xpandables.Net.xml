@@ -96,6 +96,13 @@
             capacity, and uses the default comparer for the key type.
             </summary>
         </member>
+        <member name="M:Xpandables.Net.Correlation.CorrelationCollection`2.GetAsyncEnumerator(System.Threading.CancellationToken)">
+            <summary>
+            Returns an enumerator that iterates asynchronously through the collection.
+            </summary>
+            <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
+            <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
+        </member>
         <member name="T:Xpandables.Net.Correlation.CorrelationContext">
             <summary>
             Default implementation of <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/>. This class depends on <see cref="T:System.IServiceProvider"/>.
@@ -1759,6 +1766,57 @@
             Returns the expression to be used for the clause <see langword="Where"/> in a query.
             </summary>
         </member>
+        <member name="T:Xpandables.Net.Extensions.AsyncEnumerable`1">
+            <summary>
+            Default implementation of <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Extensions.AsyncEnumerable`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Extensions.AsyncEnumerable`1"/> with the collection.
+            </summary>
+            <param name="collection">The collection to act on.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="collection"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Extensions.AsyncEnumerable`1.GetAsyncEnumerator(System.Threading.CancellationToken)">
+            <summary>
+            Returns an enumerator that iterates asynchronously through the collection.
+            </summary>
+            <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
+            <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
+        </member>
+        <member name="T:Xpandables.Net.Extensions.AsyncEnumerator`1">
+            <summary>
+            Default implement of <see cref="T:System.Collections.Generic.IAsyncEnumerator`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Extensions.AsyncEnumerator`1.#ctor(System.Collections.Generic.IEnumerator{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Extensions.AsyncEnumerator`1"/> with the enumerator.
+            </summary>
+            <param name="inner">The enumerator to act on.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="inner"/> is null.</exception>
+        </member>
+        <member name="P:Xpandables.Net.Extensions.AsyncEnumerator`1.Current">
+            <summary>
+            Gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Extensions.AsyncEnumerator`1.DisposeAsync">
+            <summary>
+             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
+            </summary>
+            <returns>A task that represents the asynchronous dispose operation.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Extensions.AsyncEnumerator`1.MoveNextAsync">
+            <summary>
+             Advances the enumerator asynchronously to the next element of the collection.
+            </summary>
+            <returns> A System.Threading.Tasks.ValueTask`1 that will complete with a result of true if the enumerator was successfully 
+            advanced to the next element, or false if the enumerator has passed the end of the collection.</returns>
+        </member>
         <member name="T:Xpandables.Net.Extensions.AsyncExtensions">
             <summary>
             Provides with methods used to execute asynchronous operation synchronously.
@@ -1801,6 +1859,16 @@
             <returns>An enumerable of the current instance.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
             <exception cref="T:System.ArgumentException">The <paramref name="source"/> is an enumerable.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.ToListAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously returns a <see cref="T:System.Collections.Generic.List`1"/> from <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.
+            </summary>
+            <typeparam name="TSource">The type of the object.</typeparam>
+            <param name="source">The source of the sequence.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>A <see cref="T:System.Collections.Generic.List`1"/> from the asynchronous collection.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.ToReadOnlyCollection``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
@@ -2562,6 +2630,18 @@
             <param name="token">The token string.</param>
             <returns>An collection of claims if OK or an empty type.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="token"/> is null.</exception>
+        </member>
+        <member name="T:Xpandables.Net.IAddable`1">
+            <summary>
+            Represents collection which allows adding items.
+            </summary>
+            <typeparam name="TItem">Type of items in collection.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.IAddable`1.Add(`0)">
+            <summary>
+            Adds item to collection.
+            </summary>
+            <param name="item">Item to be added.</param>
         </member>
         <member name="T:Xpandables.Net.ICanHandle">
             <summary>

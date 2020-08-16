@@ -69,7 +69,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Xpandables.Net.HttpRestClient\Xpandables.Net.HttpRestClient.csproj" />
     <ProjectReference Include="..\Xpandables.NetCore\Xpandables.NetCore.csproj" />
   </ItemGroup>
 

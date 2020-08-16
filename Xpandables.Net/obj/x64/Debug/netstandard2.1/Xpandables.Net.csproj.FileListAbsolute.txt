@@ -1,3 +1,10 @@
+D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\Xpandables.Net.xml
+D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\Xpandables.Net.deps.json
+D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\Xpandables.Net.dll
+D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\Xpandables.Net.pdb
+D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\en-GB\Xpandables.Net.resources.dll
+D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\fr\Xpandables.Net.resources.dll
+D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Debug\netstandard2.1\Xpandables.Net.csprojAssemblyReference.cache
 D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Debug\netstandard2.1\Xpandables.Net.Localization.Validations.DataAnnotations.resources
 D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Debug\netstandard2.1\Xpandables.Net.Properties.Resources.resources
 D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Debug\netstandard2.1\Xpandables.Net.Localization.Validations.DataAnnotations.en-GB.resources
@@ -10,9 +17,3 @@ D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Debug\netstandard2.1\en-GB\Xpand
 D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Debug\netstandard2.1\fr\Xpandables.Net.resources.dll
 D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Debug\netstandard2.1\Xpandables.Net.dll
 D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Debug\netstandard2.1\Xpandables.Net.pdb
-D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\Xpandables.Net.xml
-D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\Xpandables.Net.deps.json
-D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\Xpandables.Net.dll
-D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\Xpandables.Net.pdb
-D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\en-GB\Xpandables.Net.resources.dll
-D:\GitHub\Xpandables.Net\Xpandables.Net\bin\x64\Debug\netstandard2.1\fr\Xpandables.Net.resources.dll

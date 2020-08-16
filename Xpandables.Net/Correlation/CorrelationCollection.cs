@@ -16,6 +16,10 @@
  *
 ************************************************************************************************************/
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading;
+
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Correlation
 {
@@ -24,7 +28,7 @@ namespace Xpandables.Net.Correlation
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TValue">The type of the value.</typeparam>
-    public class CorrelationCollection<TKey, TValue> : ConcurrentDictionary<TKey, TValue>
+    public class CorrelationCollection<TKey, TValue> : ConcurrentDictionary<TKey, TValue>, IAsyncEnumerable<KeyValuePair<TKey, TValue>>
         where TKey : notnull
     {
         /// <summary>
@@ -33,5 +37,13 @@ namespace Xpandables.Net.Correlation
         /// capacity, and uses the default comparer for the key type.
         /// </summary>
         public CorrelationCollection() : base() { }
+
+        /// <summary>
+        /// Returns an enumerator that iterates asynchronously through the collection.
+        /// </summary>
+        /// <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
+        /// <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
+        public IAsyncEnumerator<KeyValuePair<TKey, TValue>> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+            => new AsyncEnumerator<KeyValuePair<TKey, TValue>>(GetEnumerator());
     }
 }
