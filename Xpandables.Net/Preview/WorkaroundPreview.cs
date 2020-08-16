@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +18,7 @@
 
 // TODO : to be removed when fix
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace System.Runtime.CompilerServices
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable ET001 // Type name does not match file name

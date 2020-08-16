@@ -3330,47 +3330,6 @@
             Gets the file format of this picture.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.Entities.RefreshToken">
-            <summary>
-            Contains information for refreshing a token.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.RefreshToken.Value">
-            <summary>
-            Gets the refresh token value.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.RefreshToken.ExpiresOn">
-            <summary>
-            Gets the expiry date.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.RefreshToken.IsExpired(System.DateTime)">
-            <summary>
-            Determines whether the current instance is expired in comparison (greater than) to the specified one.
-            </summary>
-            <param name="compare">The date time to compare with.</param>
-        </member>
-        <member name="M:Xpandables.Net.Entities.RefreshToken.IsMatch(System.String)">
-            <summary>
-            Determines whether the current instance matches the specified one.
-            </summary>
-            <param name="compare">The value to compare with.</param>
-        </member>
-        <member name="M:Xpandables.Net.Entities.RefreshToken.Create(System.String,System.DateTime)">
-            <summary>
-            Creates a new instance of <see cref="T:Xpandables.Net.Entities.RefreshToken"/> with specified values.
-            </summary>
-            <param name="value">The refresh token value.</param>
-            <param name="expiresOn">The expiry date.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.RefreshToken.GetEqualityComponents">
-            <summary>
-            Provides the list of components that comprise that class.
-            </summary>
-            <returns>An enumerable components of the derived class.</returns>
-        </member>
         <member name="T:Xpandables.Net.Entities.RequiredOptionalAttribute">
             <summary>
             Specifies that a data field value is optionally required settings the <see cref="P:Xpandables.Net.Entities.RequiredOptionalAttribute.IsOptional"/> to <see langword="true"/>.

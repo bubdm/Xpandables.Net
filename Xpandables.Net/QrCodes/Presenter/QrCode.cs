@@ -130,9 +130,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 if (drawIconFlag)
                 {
                     iconDestWidth = iconSizePercent * bmp.Width / 100f;
-#pragma warning disable CA1062 // Validate arguments of public methods
                     iconDestHeight = drawIconFlag ? iconDestWidth * icon!.Height / icon.Width : 0;
-#pragma warning restore CA1062 // Validate arguments of public methods
                     iconX = (bmp.Width - iconDestWidth) / 2;
                     iconY = (bmp.Height - iconDestHeight) / 2;
 

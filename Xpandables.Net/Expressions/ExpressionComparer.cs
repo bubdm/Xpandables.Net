@@ -175,9 +175,7 @@ namespace Xpandables.Net.Expressions
             }
         }
 
-        protected virtual bool CompareUnary(UnaryExpression a, UnaryExpression b)
-#pragma warning disable CA1062 // Validate arguments of public methods
-            => a.NodeType == b.NodeType
+        protected virtual bool CompareUnary(UnaryExpression a, UnaryExpression b) => a.NodeType == b.NodeType
                 && a.Method == b.Method
                 && a.IsLifted == b.IsLifted
                 && a.IsLiftedToNull == b.IsLiftedToNull
@@ -197,9 +195,7 @@ namespace Xpandables.Net.Expressions
         protected virtual bool CompareConditional(ConditionalExpression a, ConditionalExpression b)
             => Compare(a.Test, b.Test) && Compare(a.IfTrue, b.IfTrue) && Compare(a.IfFalse, b.IfFalse);
 
-        protected virtual bool CompareConstant(ConstantExpression a, ConstantExpression b)
-#pragma warning disable CS8604 // Possible null reference argument.
-            => (_fnCompare != null) ? _fnCompare(a.Value, b.Value) : Equals(a.Value, b.Value);
+        protected virtual bool CompareConstant(ConstantExpression a, ConstantExpression b) => (_fnCompare != null) ? _fnCompare(a.Value, b.Value) : Equals(a.Value, b.Value);
 
         protected virtual bool CompareParameter(ParameterExpression a, ParameterExpression b)
         {

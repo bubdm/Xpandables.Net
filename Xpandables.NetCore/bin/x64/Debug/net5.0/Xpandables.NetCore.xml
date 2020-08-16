@@ -10110,6 +10110,20 @@
             Bottom position
             </summary>
         </member>
+        <member name="T:Xpandables.NetCore.Startup.StartupExtensions">
+            <summary>
+            Provides with startup extension method.
+            </summary>
+        </member>
+        <member name="M:Xpandables.NetCore.Startup.StartupExtensions.XConfigureOptions``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Registers a configuration instance which TOptions will bind against and adds a transient service of the type specified in <typeparamref name="TOptions"/>.
+            </summary>
+            <typeparam name="TOptions">The type of options being configured.</typeparam>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <param name="configuration">The configuration instance.</param>
+            <returns> The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
         <member name="T:Xpandables.NetCore.TagHelpers.EnumerationTypeTagHelper">
             <summary>
             A helper that uses the <see cref="P:System.ComponentModel.DataAnnotations.DisplayAttribute.Name"/> of an <see cref="P:Xpandables.Net.Enumerations.EnumerationType.DisplayName"/> with localization

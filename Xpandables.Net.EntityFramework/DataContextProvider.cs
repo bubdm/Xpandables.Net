@@ -38,14 +38,12 @@ namespace Xpandables.Net.EntityFramework
         /// <summary>
         /// Contains the <see cref="DataContextSettings"/> instance.
         /// </summary>
-#pragma warning disable CA1051 // Do not declare visible instance fields
         protected readonly TDataContextSettings DataContextSettings;
 
         /// <summary>
         /// Contains the <see cref="IInstanceCreator"/> instance.
         /// </summary>
         protected readonly IInstanceCreator InstanceCreator;
-#pragma warning restore CA1051 // Do not declare visible instance fields
 
         /// <summary>
         /// Initializes a new instance of <see cref="DataContextProvider{TDataContext, TDataContextSettings}"/>.

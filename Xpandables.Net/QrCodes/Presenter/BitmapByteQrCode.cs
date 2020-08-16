@@ -108,9 +108,7 @@ namespace Xpandables.Net.QrCodes.Presenter
         private byte[] HexColorToByteArray(string colorString)
 #pragma warning restore CA1822 // Mark members as static
         {
-#pragma warning disable CA1307 // Specify StringComparison
             if (colorString.StartsWith("#"))
-#pragma warning restore CA1307 // Specify StringComparison
                 colorString = colorString.Substring(1);
             byte[] byteColor = new byte[colorString.Length / 2];
             for (int i = 0; i < byteColor.Length; i++)

@@ -74,7 +74,6 @@ namespace Xpandables.Net.Expressions
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CA2225 // Operator overloads have named alternates
-#pragma warning disable CA1062 // Validate arguments of public methods
 
         [return: NotNull]
         public static implicit operator Expression<Func<TSource, TResult>>(

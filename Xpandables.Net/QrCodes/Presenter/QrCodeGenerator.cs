@@ -914,10 +914,8 @@ namespace Xpandables.Net.QrCodes.Presenter
                     double blackModules = 0;
                     foreach (var row in qrCode.ModuleMatrix)
                     {
-#pragma warning disable CS8605 // Conversion unboxing d'une valeur peut-être null.
                         foreach (bool bit in row)
                         {
-#pragma warning restore CS8605 // Conversion unboxing d'une valeur peut-être null.
                             if (bit)
                             {
                                 blackModules++;

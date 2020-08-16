@@ -25,8 +25,6 @@ using System.Text.RegularExpressions;
 namespace Xpandables.Net.QrCodes.Presenter
 {
 #pragma warning disable CA1034 // Nested types should not be visible
-#pragma warning disable CA1062 // Validate arguments of public methods
-#pragma warning disable CA1307 // Specify StringComparison
 #pragma warning disable CA1707 // Identifiers should not contain underscores
 #pragma warning disable CA1305 // Specify IFormatProvider
 #pragma warning disable CA1304 // Specify CultureInfo
@@ -840,15 +838,7 @@ namespace Xpandables.Net.QrCodes.Presenter
             /// <param name="alternativeProcedure2">Optional command for alternative processing mode - line 2</param>
             public SwissQrCode(Iban iban, Currency currency, Contact creditor, Reference reference,
                 AdditionalInformation? additionalInformation = null, Contact? debitor = null, decimal? amount = null,
-#pragma warning disable IDE0060 // Remove unused parameter
-#pragma warning disable IDE0060 // Remove unused parameter
-#pragma warning disable CA1801 // Review unused parameters
-#pragma warning disable CA1801 // Review unused parameters
                 DateTime? requestedDateOfPayment = null, Contact? ultimateCreditor = null,
-#pragma warning restore CA1801 // Review unused parameters
-#pragma warning restore CA1801 // Review unused parameters
-#pragma warning restore IDE0060 // Remove unused parameter
-#pragma warning restore IDE0060 // Remove unused parameter
                 string? alternativeProcedure1 = null, string? alternativeProcedure2 = null)
             {
                 this.iban = iban;

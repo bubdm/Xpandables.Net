@@ -115,9 +115,7 @@ namespace Xpandables.Net.Entities
         /// Gets the picture byte content.
         /// </summary>
         [Required]
-#pragma warning disable CA1819 // Properties should not return arrays
         public byte[] Content { get; private set; }
-#pragma warning restore CA1819 // Properties should not return arrays
 
         /// <summary>
         /// Gets the height, in pixels, of this picture.
