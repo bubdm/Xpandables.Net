@@ -36,7 +36,5 @@ namespace Xpandables.Net.Correlation
     /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="QueryCorrelationBehavior{TQuery, TResult}"/>.
     /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandCorrelationBehavior{TCommand}"/>.
     /// </summary>
-#pragma warning disable CA1040 // Avoid empty interfaces
     public interface IBehaviorCorrelation { }
-#pragma warning restore CA1040 // Avoid empty interfaces
 }

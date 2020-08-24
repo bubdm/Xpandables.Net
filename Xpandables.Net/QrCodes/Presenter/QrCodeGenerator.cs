@@ -458,7 +458,6 @@ namespace Xpandables.Net.QrCodes.Presenter
             {
                 var size = qrCode.ModuleMatrix.Count;
                 var fStr = ReverseString(formatStr);
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
                 var modules = new[,] {
                     { 8, 0, size - 1, 8 },
                     { 8, 1, size - 2, 8 },
@@ -475,7 +474,6 @@ namespace Xpandables.Net.QrCodes.Presenter
                     { 2, 8, 8, size - 3 },
                     { 1, 8, 8, size - 2 },
                     { 0, 8, 8, size - 1 } };
-#pragma warning restore CA1814 // Prefer jagged arrays over multidimensional
                 for (var i = 0; i < 15; i++)
                 {
                     var p1 = new Point(modules[i, 0], modules[i, 1]);
@@ -499,9 +497,7 @@ namespace Xpandables.Net.QrCodes.Presenter
 
                 foreach (var pattern in methods)
                 {
-#pragma warning disable CA2000 // Dispose objects before losing scope
                     var qrTemp = new QrCodeData(version);
-#pragma warning restore CA2000 // Dispose objects before losing scope
                     for (var y = 0; y < size; y++)
                     {
                         for (var x = 0; x < size; x++)
@@ -1212,7 +1208,7 @@ namespace Xpandables.Net.QrCodes.Presenter
             {
                 var dec = Convert.ToInt32(plainText.Substring(0, 3), CultureInfo.InvariantCulture);
                 codeText += DecToBin(dec, 10);
-                plainText = plainText.Substring(3);
+                plainText = plainText[3..];
             }
             if (plainText.Length == 2)
             {
@@ -1235,7 +1231,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 var token = plainText.Substring(0, 2);
                 var dec = alphanumEncDict[token[0]] * 45 + alphanumEncDict[token[1]];
                 codeText += DecToBin(dec, 11);
-                plainText = plainText.Substring(2);
+                plainText = plainText[2..];
             }
             if (plainText.Length > 0)
             {

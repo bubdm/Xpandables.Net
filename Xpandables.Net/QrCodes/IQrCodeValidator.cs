@@ -39,7 +39,7 @@ namespace Xpandables.Net.QrCodes
             try
             {
                 var part = textCode.Substring(0, 8);
-                var crcSource = textCode.Substring(8);
+                var crcSource = textCode[8..];
                 var crc = new SecurityChecker().ComputeChecksum(Encoding.ASCII.GetBytes(part));
 
                 return IQrCodeTextGenerator.Normalize(crc) == crcSource;

@@ -122,13 +122,9 @@ namespace Xpandables.Net.Optionals
 
         public static bool operator >=(Optional<T> left, Optional<T> right) => left.CompareTo(right) >= 0;
 
-#pragma warning disable CA2225 // Operator overloads have named alternates
         public static implicit operator Optional<T>([AllowNull] T result) => result is { } ? Some(result) : Empty();
-#pragma warning restore CA2225 // Operator overloads have named alternates
 
-#pragma warning disable CA2225 // Operator overloads have named alternates
         public static implicit operator Optional<T>(Optional<Optional<T>> optional) => optional._values[0];
-#pragma warning restore CA2225 // Operator overloads have named alternates
 #pragma warning restore CS1591 // Comment
     }
 }

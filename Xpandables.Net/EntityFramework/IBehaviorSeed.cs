@@ -24,7 +24,5 @@ namespace Xpandables.Net.EntityFramework
     /// <para></para>
     /// The class implementation will be decorated with the <see cref="DataContextSeederBehavior{TDataContext}"/>.
     /// </summary>
-#pragma warning disable CA1040 // Avoid empty interfaces
     public interface IBehaviorSeed { }
-#pragma warning restore CA1040 // Avoid empty interfaces
 }

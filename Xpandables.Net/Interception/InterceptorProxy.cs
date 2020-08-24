@@ -42,9 +42,7 @@ namespace Xpandables.Net.Interception
         /// <returns>An instance that has been wrapped by a proxy.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="instance"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="interceptor"/> is null.</exception>
-#pragma warning disable CA1000 // Do not declare static members on generic types
         public static TInterface Create(TInterface instance, IInterceptor interceptor)
-#pragma warning restore CA1000 // Do not declare static members on generic types
         {
             object proxy = Create<TInterface, InterceptorProxy<TInterface>>();
             ((InterceptorProxy<TInterface>)proxy).SetParameters(instance, interceptor);

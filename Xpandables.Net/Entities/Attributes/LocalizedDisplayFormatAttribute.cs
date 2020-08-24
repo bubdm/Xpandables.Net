@@ -37,10 +37,7 @@ namespace Xpandables.Net.Entities.Attributes
         /// <summary>
         ///  Gets or sets the format string, which may be a resource key string.
         /// </summary>
-#pragma warning disable CA1721 // Property names should not match get methods
-        public new string DataFormatString
-#pragma warning restore CA1721 // Property names should not match get methods
-        {
+        public new string DataFormatString {
             get => _dataFormatString.Value;
             set => _dataFormatString.Value = value;
         }
@@ -68,8 +65,6 @@ namespace Xpandables.Net.Entities.Attributes
         /// but a public static property with a name matching the <see cref="DataFormatString" /> value couldn't be found
         /// on the <see cref="DataFormatStringResourceType" />.
         /// </exception>
-#pragma warning disable CA1721 // Property names should not match get methods
         public string GetDataFormatString() => _dataFormatString.GetLocalizableValue();
-#pragma warning restore CA1721 // Property names should not match get methods
     }
 }

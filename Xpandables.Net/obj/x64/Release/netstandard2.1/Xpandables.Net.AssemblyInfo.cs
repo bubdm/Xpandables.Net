@@ -14,13 +14,13 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EFB Entreprises")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Copyright © 2020 Francis-Black EWANE")]
-[assembly: System.Reflection.AssemblyDescriptionAttribute("A utility library in .Net5 to easily add patterns such as Command, Query, Dispatc" +
-    "her, Interception...")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("5.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("5.0.0-preview.2.0.0")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("A utility library in .NetStandard to easily add patterns such as Command, Query, " +
+    "Dispatcher, Interception...")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("3.1.1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.1.1")]
 [assembly: System.Reflection.AssemblyProductAttribute("Xpandables Net")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Xpandables.Net")]
-[assembly: System.Reflection.AssemblyVersionAttribute("5.0.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("3.1.1")]
 [assembly: System.Reflection.AssemblyMetadataAttribute("RepositoryUrl", "https://github.com/Francescolis/Xpandables.Net")]
 [assembly: System.Resources.NeutralResourcesLanguageAttribute("en-GB")]
 

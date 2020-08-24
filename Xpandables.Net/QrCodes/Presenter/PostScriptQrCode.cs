@@ -108,8 +108,6 @@ namespace Xpandables.Net.QrCodes.Presenter
             var offset = drawQuietZones ? 0 : 4;
             var drawableModulesCount = QrCodeData.ModuleMatrix.Count - (drawQuietZones ? 0 : offset * 2);
             var pointsPerModule = Math.Min(viewBox.Width, viewBox.Height) / (double)drawableModulesCount;
-
-#pragma warning disable CA1305 // Specify IFormatProvider
             string psFile = string.Format(psHeader, new object[] {
                 DateTime.Now.ToString("s"), CleanSvgVal(viewBox.Width), CleanSvgVal(pointsPerModule),
                 epsFormat ? "EPSF-3.0" : string.Empty

@@ -34,7 +34,6 @@ namespace Xpandables.Net.Expressions
         /// <param name="expression">The expression to be used by the instance.</param>
         /// <returns>an new instance of <see cref="QueryExpression{TSource, TResult}"/></returns>
         /// <exception cref="ArgumentNullException">The <paramref name="expression"/> is null.</exception>
-#pragma warning disable CA1000 // Do not declare static members on generic types
         public static QueryExpression<TSource, TResult> Create<TSource>(Expression<Func<TSource, TResult>> expression)
             where TSource : class => new QueryExpressionBuilder<TSource, TResult>(expression);
 

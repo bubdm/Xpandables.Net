@@ -26,8 +26,6 @@ namespace Xpandables.Net.QrCodes.Presenter
 {
 #pragma warning disable CA1034 // Nested types should not be visible
 #pragma warning disable CA1707 // Identifiers should not contain underscores
-#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1304 // Specify CultureInfo
 #pragma warning disable CA1822 // Mark members as static
     /// <summary>
     /// The payload generator.
@@ -425,9 +423,7 @@ namespace Xpandables.Net.QrCodes.Presenter
             /// Generates a link. If not given, http/https protocol will be added.
             /// </summary>
             /// <param name="url">Link url target</param>
-#pragma warning disable CA1054 // Uri parameters should not be strings
             public Url(string url) => this.url = url;
-#pragma warning restore CA1054 // Uri parameters should not be strings
 
             /// <summary>
             /// Returns a string that represents the current object.
@@ -483,9 +479,7 @@ namespace Xpandables.Net.QrCodes.Presenter
             /// </summary>
             /// <param name="url">Url of the bookmark</param>
             /// <param name="title">Title of the bookmark</param>
-#pragma warning disable CA1054 // Uri parameters should not be strings
             public Bookmark(string url, string title)
-#pragma warning restore CA1054 // Uri parameters should not be strings
             {
                 this.url = EscapeInput(url);
                 this.title = EscapeInput(title);
@@ -614,7 +608,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 }
                 else
                 {
-                    var version = outputType.ToString().Substring(5);
+                    var version = outputType.ToString()[5..];
                     if (version.Length > 1)
                         version = version.Insert(1, ".");
                     else
@@ -2637,9 +2631,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 /// <summary>
                 /// Single payment (Überweisung)
                 /// </summary>
-#pragma warning disable CA1041 // Provide ObsoleteAttribute message
                 [Obsolete]
-#pragma warning restore CA1041 // Provide ObsoleteAttribute message
                 singlepayment,
                 /// <summary>
                 /// Single SEPA payment (SEPA-Überweisung)
@@ -2648,9 +2640,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 /// <summary>
                 /// Single debit (Lastschrift)
                 /// </summary>
-#pragma warning disable CA1041 // Provide ObsoleteAttribute message
                 [Obsolete]
-#pragma warning restore CA1041 // Provide ObsoleteAttribute message
                 singledirectdebit,
                 /// <summary>
                 /// Single SEPA debit (SEPA-Lastschrift)
@@ -2659,9 +2649,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 /// <summary>
                 /// Periodic payment (Dauerauftrag)
                 /// </summary>
-#pragma warning disable CA1041 // Provide ObsoleteAttribute message
                 [Obsolete]
-#pragma warning restore CA1041 // Provide ObsoleteAttribute message
                 periodicsinglepayment,
                 /// <summary>
                 /// Periodic SEPA payment (SEPA-Dauerauftrag)
@@ -2884,9 +2872,7 @@ namespace Xpandables.Net.QrCodes.Presenter
             {
                 OneTimePasswordAuthType.TOTP => TimeToString(),
                 OneTimePasswordAuthType.HOTP => HMACToString(),
-#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
                 _ => throw new ArgumentOutOfRangeException(),
-#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
             };
 
             // Note: Issuer:Label must only contain 1 : if either of the Issuer or the Label has a : then it is invalid.
@@ -3577,7 +3563,7 @@ namespace Xpandables.Net.QrCodes.Presenter
             var structurallyValid = Regex.IsMatch(ibanCleared, "^[a-zA-Z]{2}[0-9]{2}([a-zA-Z0-9]?){16,30}$");
 
             //Check IBAN checksum
-            var sum = $"{ibanCleared.Substring(4)}{ibanCleared.Substring(0, 4)}".ToCharArray().Aggregate("", (current, c) => current + (char.IsLetter(c) ? (c - 55).ToString() : c.ToString()));
+            var sum = $"{ibanCleared[4..]}{ibanCleared.Substring(0, 4)}".ToCharArray().Aggregate("", (current, c) => current + (char.IsLetter(c) ? (c - 55).ToString() : c.ToString()));
             if (!decimal.TryParse(sum, out decimal sumDec))
                 return false;
             var checksumValid = sumDec % 97 == 1;

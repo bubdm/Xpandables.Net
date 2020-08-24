@@ -1,18 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "2fQNrbfCaR34SKQECp6M6dDRM/fuE2itn7G/kORUN1ydSmLS/HBaekPPBhoBiMfNcabcysFzxdv2iK53QjmDzA==",
+  "dgSpecHash": "MhqqQIwF31LG1WeeBqZ7598RWdGeMDw8/H268a/vUWR8JuVV81r0crtthyYs536VPVG46IGmg0iHy23msF/MDg==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codeanalysis.fxcopanalyzers\\3.3.0-beta2.final\\microsoft.codeanalysis.fxcopanalyzers.3.3.0-beta2.final.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codeanalysis.versioncheckanalyzer\\3.3.0-beta2.final\\microsoft.codeanalysis.versioncheckanalyzer.3.3.0-beta2.final.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codequality.analyzers\\3.3.0-beta2.final\\microsoft.codequality.analyzers.3.3.0-beta2.final.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.analyzers\\3.3.0-beta2.final\\microsoft.netcore.analyzers.3.3.0-beta2.final.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netframework.analyzers\\3.3.0-beta2.final\\microsoft.netframework.analyzers.3.3.0-beta2.final.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0-preview.7.20364.11\\system.componentmodel.annotations.5.0.0-preview.7.20364.11.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\5.0.0-preview.7.20364.11\\system.drawing.common.5.0.0-preview.7.20364.11.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\5.0.0-preview.7.20364.11\\system.text.encodings.web.5.0.0-preview.7.20364.11.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.annotations\\4.7.0\\system.componentmodel.annotations.4.7.0.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\4.7.1\\system.text.encodings.web.4.7.1.nupkg.sha512"
   ],
   "logs": []
 }

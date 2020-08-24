@@ -42,9 +42,7 @@ namespace Xpandables.Net.Extensions
         public static TResult RunSync<TResult>(this Func<Task<TResult>> func)
         {
             _ = func ?? throw new ArgumentNullException(nameof(func));
-#pragma warning disable CA2008 // Do not create tasks without passing a TaskScheduler
             return _taskFactory.StartNew(func).Unwrap().GetAwaiter().GetResult();
-#pragma warning restore CA2008 // Do not create tasks without passing a TaskScheduler
         }
 
         /// <summary>
@@ -56,9 +54,7 @@ namespace Xpandables.Net.Extensions
         public static TResult RunSync<TResult>(this Task<TResult> task)
         {
             _ = task ?? throw new ArgumentNullException(nameof(task));
-#pragma warning disable CA2008 // Do not create tasks without passing a TaskScheduler
             return _taskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
-#pragma warning restore CA2008 // Do not create tasks without passing a TaskScheduler
         }
 
         /// <summary>
@@ -69,9 +65,7 @@ namespace Xpandables.Net.Extensions
         public static void RunSync(this Task task)
         {
             _ = task ?? throw new ArgumentNullException(nameof(task));
-#pragma warning disable CA2008 // Do not create tasks without passing a TaskScheduler
             _taskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
-#pragma warning restore CA2008 // Do not create tasks without passing a TaskScheduler
         }
     }
 }

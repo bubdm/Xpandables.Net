@@ -21,7 +21,5 @@ namespace Xpandables.Net.Queries
     /// Defines a query that contains a specific-type result when using the query pattern.
     /// </summary>
     /// <typeparam name="TResult">Type of the result of the query.</typeparam>
-#pragma warning disable CA1040 // Avoid empty interfaces
     public interface IQuery<out TResult> { }
-#pragma warning restore CA1040 // Avoid empty interfaces
 }

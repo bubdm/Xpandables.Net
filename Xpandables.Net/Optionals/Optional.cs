@@ -32,9 +32,7 @@ namespace Xpandables.Net.Optionals
     /// If <typeparamref name="T"/> is an enumerable, use the <see cref="GetEnumerable"/> function to access its contain.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-#pragma warning disable CA1716 // Identifiers should not match keywords
     public readonly partial struct Optional<T> : IEnumerable<T>
-#pragma warning restore CA1716 // Identifiers should not match keywords
     {
         private readonly Type[] _genericTypes;
         private readonly T[] _values;
@@ -181,9 +179,7 @@ namespace Xpandables.Net.Optionals
         /// Provides with an optional of the specific type that is empty.
         /// </summary>
         /// <returns>An optional with no value nor exception.</returns>
-#pragma warning disable CA1000 // Do not declare static members on generic types
         public static Optional<T> Empty() => new Optional<T>();
-#pragma warning restore CA1000 // Do not declare static members on generic types
 
         /// <summary>
         /// Provides with an optional that contains a value of specific type.
@@ -191,9 +187,7 @@ namespace Xpandables.Net.Optionals
         /// <param name="result">The value to be used for optional.</param>
         /// <returns>An optional with a value.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="result"/> is null.</exception>
-#pragma warning disable CA1000 // Do not declare static members on generic types
         public static Optional<T> Some(T result)
-#pragma warning restore CA1000 // Do not declare static members on generic types
         {
             _ = result ?? throw new ArgumentNullException(nameof(result));
             return new Optional<T>(new T[] { result });

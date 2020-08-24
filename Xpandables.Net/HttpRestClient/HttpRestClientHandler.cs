@@ -24,19 +24,17 @@ namespace Xpandables.Net.HttpRestClient
     /// This helper class allows the application author to implement the <see cref="IHttpRestClientHandler"/> interface.
     /// You must derive from this class in order to customize its behaviors.
     /// </summary>
-    public class HttpRestClientHandler : Disposable, IHttpRestClientHandler
+    public sealed class HttpRestClientHandler : Disposable, IHttpRestClientHandler
     {
         /// <summary>
         /// Gets the <see cref="HttpClient"/> current instance.
         /// </summary>
-        protected HttpClient HttpClientInstance { get; }
+        public HttpClient HttpClientInstance { get; }
 
         /// <summary>
         /// Contains the <see cref="HttpContent"/> instance for the current handler.
         /// </summary>
-#pragma warning disable CA1033 // Interface methods should be callable by child types
         HttpClient IHttpRestClientHandler.HttpClient => HttpClientInstance;
-#pragma warning restore CA1033 // Interface methods should be callable by child types
 
         /// <summary>
         /// Initializes a new instance of <see cref="HttpRestClientHandler"/> class with the HTTP typed client.

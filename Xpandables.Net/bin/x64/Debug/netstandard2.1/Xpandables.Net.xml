@@ -6507,14 +6507,14 @@
         </member>
         <member name="T:Xpandables.Net.Identities.IdentityData">
             <summary>
-            Defines an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityData"/> with a property that holds identity information
+            Defines an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityData"/> with a protected property that holds identity information
             of any type in a security context.
             This class is used with <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/> and its decorator class.
             </summary>
         </member>
         <member name="P:Xpandables.Net.Identities.IdentityData.Identity">
             <summary>
-            Contains an instance of identity data.
+            Contains the protected instance of identity data.
             This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider" /> using a decorator.
             </summary>
         </member>
@@ -6527,7 +6527,7 @@
         </member>
         <member name="T:Xpandables.Net.Identities.IdentityData`1">
             <summary>
-            Defines an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityData`1"/> with a property that holds identity information
+            Defines an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityData`1"/> with a protected property that holds identity information
             of generic type in a security context.
             This class is used with <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/> and its decorator class.
             </summary>
@@ -6535,13 +6535,13 @@
         </member>
         <member name="P:Xpandables.Net.Identities.IdentityData`1.Identity">
             <summary>
-            Contains an instance of identity data.
+            Contains the protected instance of identity data of <typeparamref name="TIdentity"/> type.
             This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider" /> using a decorator.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Identities.IdentityDataExpression`2">
             <summary>
-            Defines an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityExpression`2"/> with a property that holds identity information
+            Defines an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityExpression`2"/> with a protected property that holds identity information
             of generic type in a security context.
             This class implements the <see cref="T:Xpandables.Net.Expressions.IQueryExpression`1"/> interface and derives from <see cref="T:Xpandables.Net.Identities.IdentityData`1"/>.
             You must override the <see cref="M:Xpandables.Net.Identities.IdentityDataExpression`2.BuildExpression"/> method in order to provide a custom behavior.
@@ -6563,7 +6563,7 @@
         </member>
         <member name="T:Xpandables.Net.Identities.IIdentityData">
             <summary>
-            Provides with a property that holds identity information of any type in a security context.
+            Provides with a protected property that holds identity information of any type in a security context.
             This class is used with <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/> and its decorator class.
             </summary>
         </member>
@@ -6582,7 +6582,7 @@
         </member>
         <member name="T:Xpandables.Net.Identities.IIdentityData`1">
             <summary>
-            Provides with a property that holds identity information of generic type in a security context.
+            Provides with a protected property that holds identity information of generic type in a security context.
             This class is used with <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/> and its decorator class.
             </summary>
             <typeparam name="TData">The type of the data.</typeparam>
@@ -6602,7 +6602,7 @@
         </member>
         <member name="T:Xpandables.Net.Identities.IIdentityExpression`2">
             <summary>
-            Provides with a property that holds identity information of generic type in a security context.
+            Provides with a protected property that holds identity information of generic type in a security context.
             This interface derives from <see cref="T:Xpandables.Net.Expressions.IQueryExpression`1"/> interface.
             This interface is used with <see cref="T:Xpandables.Net.Identities.IBehaviorIdentity"/> and its decorator class.
             </summary>

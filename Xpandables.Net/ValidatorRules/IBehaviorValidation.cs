@@ -29,7 +29,5 @@ namespace Xpandables.Net.ValidatorRules
     /// You need to register the expected behavior to the service collections using the appropriate extension method
     /// for the validation behavior and to register all your custom implementations.
     /// </summary>
-#pragma warning disable CA1040 // Avoid empty interfaces
     public interface IBehaviorValidation { }
-#pragma warning restore CA1040 // Avoid empty interfaces
 }

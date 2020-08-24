@@ -21,7 +21,6 @@ using System.Drawing.Drawing2D;
 
 namespace Xpandables.Net.QrCodes.Presenter
 {
-#pragma warning disable CA2000 // Dispose objects before losing scope
     /// <summary>
     /// The QrCode class.
     /// </summary>

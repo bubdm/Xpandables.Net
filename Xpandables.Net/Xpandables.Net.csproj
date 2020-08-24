@@ -5,20 +5,20 @@
     <Platforms>x64</Platforms>
     <PublishTrimmed>true</PublishTrimmed>
     <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
     <Product>Xpandables Net</Product>
-    <Description>A utility library in .Net5 to easily add patterns such as Command, Query, Dispatcher, Interception...</Description>
+    <Description>A utility library in .NetStandard to easily add patterns such as Command, Query, Dispatcher, Interception...</Description>
     <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
     <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>5.0.0-preview.2.0.0</Version>
-    <AssemblyVersion>5.0.0</AssemblyVersion>
-    <FileVersion>5.0.0</FileVersion>
-    <PackageVersion>5.0.0-preview.2.0.0</PackageVersion>
+    <Version>3.1.1</Version>
+    <AssemblyVersion>3.1.1</AssemblyVersion>
+    <FileVersion>3.1.1</FileVersion>
+    <PackageVersion>3.1.1</PackageVersion>
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand, IDispatcher, IQuery{TResult}, Enumeration, Interception, ICommandHandler{TCommand}, IQueryHandler{TQuery, TResult}, ValueObject...</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
@@ -29,7 +29,7 @@
     <RootNamespace>Xpandables.Net</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <summary>A utility library in .Net5 to easily add patterns such as Command, Query, Dispatcher, Interception...</summary>
+    <summary>A utility library in .NetStandard to easily add patterns such as Command, Query, Dispatcher, Interception...</summary>
     <language>en-GB</language>
     <NeutralLanguage>en-GB</NeutralLanguage>
     <SignAssembly>true</SignAssembly>
@@ -41,7 +41,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <WarningsAsErrors />
-    <NoWarn>1701;1702;SecurityIntelliSenseCS;CA1307;CA1062;CA1801;IDE0060;CA1819;</NoWarn>
+    <NoWarn>1701;1702;CA2225;SecurityIntelliSenseCS;CA1307;CA1062;CA1801;IDE0060;CA1819;</NoWarn>
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DocumentationFile>bin\x64\Debug\netstandard2.1\Xpandables.Net.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -49,28 +49,24 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <WarningsAsErrors />
-    <NoWarn>1701;1702;SecurityIntelliSenseCS;CA1307;CA1062;CA1801;IDE0060;CA1819;</NoWarn>
+    <NoWarn>1701;1702;CA2225;SecurityIntelliSenseCS;CA1307;CA1062;CA1801;IDE0060;CA1819;</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <OutputPath>bin\x64\Release\</OutputPath>
     <DocumentationFile>bin\x64\Release\netstandard2.1\Xpandables.Net.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0-beta2.final">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0-preview.7.20364.11" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.7.20364.11" />
-    <PackageReference Include="System.Text.Encodings.Web" Version="5.0.0-preview.7.20364.11" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\Xpandables.png" Link="Xpandables.png">
       <PackagePath></PackagePath>
       <Pack>True</Pack>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>

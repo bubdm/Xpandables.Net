@@ -29,7 +29,5 @@ namespace Xpandables.Net.Transactions
     /// <para></para>
     /// You need to register the expected behavior to the service collections using the appropriate extension method.
     /// </summary>
-#pragma warning disable CA1040 // Avoid empty interfaces    
     public interface IBehaviorTransaction { }
-#pragma warning restore CA1040 // Avoid empty interfaces
 }

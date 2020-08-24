@@ -164,6 +164,7 @@ namespace Xpandables.Net.EntityFramework
         /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null exception.
         /// If there's not delegate, the handled exception will be re-thrown normally.
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         Func<Exception, Exception?>? PersistenceExceptionHandler { get; }
 
         /// <summary>

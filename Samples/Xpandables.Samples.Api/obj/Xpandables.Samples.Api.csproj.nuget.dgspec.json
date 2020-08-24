@@ -22,15 +22,15 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "netcoreapp3.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "D:\\GitHub\\Xpandables\\Packages": {},
+          "D:\\GitHub\\Xpandables.Net\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net5.0": {
+          "netcoreapp3.1": {
             "projectReferences": {
               "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Application\\Xpandables.Samples.Business.csproj": {
                 "projectPath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Application\\Xpandables.Samples.Business.csproj"
@@ -51,11 +51,11 @@
         }
       },
       "frameworks": {
-        "net5.0": {
+        "netcoreapp3.1": {
           "dependencies": {
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20365.19, )"
+              "version": "[3.1.7, )"
             },
             "System.Data.SqlClient": {
               "target": "Package",
@@ -72,6 +72,16 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.2, 3.1.2]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[3.1.2, 3.1.2]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -102,15 +112,15 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "netstandard2.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "D:\\GitHub\\Xpandables\\Packages": {},
+          "D:\\GitHub\\Xpandables.Net\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net5.0": {
+          "netstandard2.1": {
             "projectReferences": {
               "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Domain\\Xpandables.Samples.Domain.csproj": {
                 "projectPath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Domain\\Xpandables.Samples.Domain.csproj"
@@ -131,15 +141,15 @@
         }
       },
       "frameworks": {
-        "net5.0": {
+        "netstandard2.1": {
           "dependencies": {
             "Microsoft.IdentityModel.Tokens": {
               "target": "Package",
-              "version": "[6.7.2-preview-10803222715, )"
+              "version": "[6.7.1, )"
             },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
-              "version": "[6.7.2-preview-10803222715, )"
+              "version": "[6.7.1, )"
             }
           },
           "imports": [
@@ -153,7 +163,7 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.NETCore.App": {
+            "NETStandard.Library": {
               "privateAssets": "all"
             }
           },
@@ -179,15 +189,15 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "netstandard2.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "D:\\GitHub\\Xpandables\\Packages": {},
+          "D:\\GitHub\\Xpandables.Net\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net5.0": {
+          "netstandard2.1": {
             "projectReferences": {
               "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
                 "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj"
@@ -202,15 +212,7 @@
         }
       },
       "frameworks": {
-        "net5.0": {
-          "dependencies": {
-            "Microsoft.CodeAnalysis.FxCopAnalyzers": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[3.3.0-beta2.final, )"
-            }
-          },
+        "netstandard2.1": {
           "imports": [
             "net461",
             "net462",
@@ -222,7 +224,7 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.NETCore.App": {
+            "NETStandard.Library": {
               "privateAssets": "all"
             }
           },
@@ -248,15 +250,15 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "netstandard2.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "D:\\GitHub\\Xpandables\\Packages": {},
+          "D:\\GitHub\\Xpandables.Net\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net5.0": {
+          "netstandard2.1": {
             "projectReferences": {
               "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Domain\\Xpandables.Samples.Domain.csproj": {
                 "projectPath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Domain\\Xpandables.Samples.Domain.csproj"
@@ -277,7 +279,7 @@
         }
       },
       "frameworks": {
-        "net5.0": {
+        "netstandard2.1": {
           "dependencies": {
             "Microsoft.CodeAnalysis.FxCopAnalyzers": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -287,7 +289,7 @@
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20365.15, )"
+              "version": "[3.1.7, )"
             }
           },
           "imports": [
@@ -301,7 +303,7 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.NETCore.App": {
+            "NETStandard.Library": {
               "privateAssets": "all"
             }
           },
@@ -310,7 +312,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj": {
-      "version": "5.0.0-preview.2.0.0",
+      "version": "3.1.1",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj",
         "projectName": "Xpandables.Net.DependencyInjection",
@@ -331,7 +333,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "D:\\GitHub\\Xpandables\\Packages": {},
+          "D:\\GitHub\\Xpandables.Net\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -352,23 +354,23 @@
           "dependencies": {
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.Extensions.DependencyModel": {
               "target": "Package",
-              "version": "[5.0.0-preview.3-runtime.20214.6, )"
+              "version": "[3.1.6, )"
             },
             "Microsoft.Extensions.Http": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[3.1.7, )"
             },
             "System.ComponentModel.Composition": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[4.7.0, )"
             }
           },
           "imports": [
@@ -391,7 +393,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj": {
-      "version": "5.0.0-preview.2.0.0",
+      "version": "3.1.1",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj",
         "projectName": "Xpandables.Net.EntityFramework",
@@ -412,7 +414,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "D:\\GitHub\\Xpandables\\Packages": {},
+          "D:\\GitHub\\Xpandables.Net\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -433,27 +435,27 @@
           "dependencies": {
             "Microsoft.EntityFrameworkCore.Relational": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20365.15, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.Extensions.Configuration": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.Extensions.Configuration.EnvironmentVariables": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.Extensions.Configuration.FileExtensions": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.Extensions.Configuration.Json": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.Extensions.Options.ConfigurationExtensions": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[3.1.7, )"
             }
           },
           "imports": [
@@ -476,7 +478,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj": {
-      "version": "5.0.0-preview.2.0.0",
+      "version": "3.1.1",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj",
         "projectName": "Xpandables.NetCore",
@@ -493,15 +495,15 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "netcoreapp3.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "D:\\GitHub\\Xpandables\\Packages": {},
+          "D:\\GitHub\\Xpandables.Net\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net5.0": {
+          "netcoreapp3.1": {
             "projectReferences": {
               "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
                 "projectPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj"
@@ -514,13 +516,13 @@
         }
       },
       "frameworks": {
-        "net5.0": {
+        "netcoreapp3.1": {
           "dependencies": {
             "Microsoft.CodeAnalysis.FxCopAnalyzers": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[3.3.0-beta2.final, )"
+              "version": "[3.0.0, )"
             }
           },
           "imports": [
@@ -533,6 +535,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.2, 3.1.2]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -546,7 +554,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
-      "version": "5.0.0-preview.2.0.0",
+      "version": "3.1.1",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
         "projectName": "Xpandables.Net",
@@ -567,7 +575,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "D:\\GitHub\\Xpandables\\Packages": {},
+          "D:\\GitHub\\Xpandables.Net\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -582,27 +590,21 @@
       "frameworks": {
         "netstandard2.1": {
           "dependencies": {
-            "Microsoft.CodeAnalysis.FxCopAnalyzers": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[3.3.0-beta2.final, )"
-            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.3, )"
             },
             "System.ComponentModel.Annotations": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[4.7.0, )"
             },
             "System.Drawing.Common": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[4.7.0, )"
             },
             "System.Text.Encodings.Web": {
               "target": "Package",
-              "version": "[5.0.0-preview.7.20364.11, )"
+              "version": "[4.7.1, )"
             }
           },
           "imports": [

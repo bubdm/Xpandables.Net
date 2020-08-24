@@ -27,9 +27,7 @@ namespace Xpandables.Net.Commands
     /// "TCommand" is <see cref="ICommand"/> class implementation.
     /// This can also be enhanced with some useful decorators.
     /// </summary>
-#pragma warning disable CA1040 // Avoid empty interfaces
     public interface ICommand { }
-#pragma warning restore CA1040 // Avoid empty interfaces
 
     /// <summary>
     /// Allows an application author to define a handler for a specific type command.

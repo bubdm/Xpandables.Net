@@ -24,17 +24,19 @@ using Xpandables.Net.Expressions;
 namespace Xpandables.Net.Identities
 {
     /// <summary>
-    /// Defines an implementation of <see cref="IIdentityData"/> with a property that holds identity information
+    /// Defines an implementation of <see cref="IIdentityData"/> with a protected property that holds identity information
     /// of any type in a security context.
     /// This class is used with <see cref="IBehaviorIdentity"/> and its decorator class.
     /// </summary>
     public abstract class IdentityData : IIdentityData
     {
+        object IIdentityData.Identity => Identity;
+
         /// <summary>
-        /// Contains an instance of identity data.
+        /// Contains the protected instance of identity data.
         /// This value is provided by an implementation of <see cref="IIdentityDataProvider" /> using a decorator.
         /// </summary>
-        public object Identity { get; internal set; } = default!;
+        protected object Identity { get; private set; } = default!;
 
         /// <summary>
         /// Sets the <see cref="IIdentityData.Identity" /> with the specified value.
@@ -46,11 +48,11 @@ namespace Xpandables.Net.Identities
         {
             _ = identity ?? throw new ArgumentNullException(nameof(identity));
             Identity = identity;
-        }
+        }      
     }
 
     /// <summary>
-    /// Defines an implementation of <see cref="IIdentityData{TUser}"/> with a property that holds identity information
+    /// Defines an implementation of <see cref="IIdentityData{TUser}"/> with a protected property that holds identity information
     /// of generic type in a security context.
     /// This class is used with <see cref="IBehaviorIdentity"/> and its decorator class.
     /// </summary>
@@ -58,15 +60,17 @@ namespace Xpandables.Net.Identities
     public abstract class IdentityData<TIdentity> : IdentityData, IIdentityData<TIdentity>
         where TIdentity : class
     {
+        TIdentity IIdentityData<TIdentity>.Identity => Identity;
+
         /// <summary>
-        /// Contains an instance of identity data.
+        /// Contains the protected instance of identity data of <typeparamref name="TIdentity"/> type.
         /// This value is provided by an implementation of <see cref="IIdentityDataProvider" /> using a decorator.
         /// </summary>
-        public new TIdentity Identity => (TIdentity)base.Identity;
+        protected new TIdentity Identity => (TIdentity)base.Identity;
     }
 
     /// <summary>
-    /// Defines an implementation of <see cref="IIdentityExpression{TUser, TSource}"/> with a property that holds identity information
+    /// Defines an implementation of <see cref="IIdentityExpression{TUser, TSource}"/> with a protected property that holds identity information
     /// of generic type in a security context.
     /// This class implements the <see cref="IQueryExpression{TSource}"/> interface and derives from <see cref="IdentityData{TIdentity}"/>.
     /// You must override the <see cref="BuildExpression"/> method in order to provide a custom behavior.

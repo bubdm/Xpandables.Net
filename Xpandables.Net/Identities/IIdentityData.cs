@@ -23,7 +23,7 @@ using Xpandables.Net.Expressions;
 namespace Xpandables.Net.Identities
 {
     /// <summary>
-    /// Provides with a property that holds identity information of any type in a security context.
+    /// Provides with a protected property that holds identity information of any type in a security context.
     /// This class is used with <see cref="IBehaviorIdentity"/> and its decorator class.
     /// </summary>
     public interface IIdentityData
@@ -32,7 +32,7 @@ namespace Xpandables.Net.Identities
         /// Contains an instance of secured data.
         /// This value is provided by an implementation of <see cref="IIdentityDataProvider"/> using a decorator.
         /// </summary>
-        object Identity { get; }
+        protected object Identity { get; }
 
         /// <summary>
         /// Sets the <see cref="Identity"/> with the specified value.
@@ -44,7 +44,7 @@ namespace Xpandables.Net.Identities
     }
 
     /// <summary>
-    /// Provides with a property that holds identity information of generic type in a security context.
+    /// Provides with a protected property that holds identity information of generic type in a security context.
     /// This class is used with <see cref="IBehaviorIdentity"/> and its decorator class.
     /// </summary>
     /// <typeparam name="TData">The type of the data.</typeparam>
@@ -55,7 +55,7 @@ namespace Xpandables.Net.Identities
         /// Contains an instance of identity data.
         /// This value is provided by an implementation of <see cref="IIdentityDataProvider"/> using a decorator.
         /// </summary>
-        new TData Identity { get; }
+        protected new TData Identity { get; }
 
         /// <summary>
         /// Sets the <see cref="Identity"/> with the specified value.
@@ -71,7 +71,7 @@ namespace Xpandables.Net.Identities
     }
 
     /// <summary>
-    /// Provides with a property that holds identity information of generic type in a security context.
+    /// Provides with a protected property that holds identity information of generic type in a security context.
     /// This interface derives from <see cref="IQueryExpression{TSource}"/> interface.
     /// This interface is used with <see cref="IBehaviorIdentity"/> and its decorator class.
     /// </summary>

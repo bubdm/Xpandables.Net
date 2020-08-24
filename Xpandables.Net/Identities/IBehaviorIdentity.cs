@@ -24,7 +24,5 @@ namespace Xpandables.Net.Identities
     /// implementation for <see cref="IIdentityDataProvider"/>
     /// and register the expected class using the correct extension method.
     /// </summary>
-#pragma warning disable CA1040 // Avoid empty interfaces
     public interface IBehaviorIdentity { }
-#pragma warning restore CA1040 // Avoid empty interfaces
 }
