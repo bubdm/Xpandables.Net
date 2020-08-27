@@ -27,15 +27,13 @@ using Xpandables.Net.Creators;
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
-    /// The <see cref="DataContextDesignTimeFactory{TDataContext, TDataContextSettings, TDataContextProvider}"/> helper class.
+    /// The <see cref="DataContextDesignTimeFactory{TDataContext, TDataContextProvider}"/> helper class.
     /// </summary>
     /// <typeparam name="TDataContext">The type of data context to build.</typeparam>
-    /// <typeparam name="TDataContextSettings">The type of data context settings to be used.</typeparam>
     /// <typeparam name="TDataContextProvider">The data context provider.</typeparam>
-    public abstract class DataContextDesignTimeFactory<TDataContext, TDataContextSettings, TDataContextProvider> : IDesignTimeDbContextFactory<TDataContext>
+    public abstract class DataContextDesignTimeFactory<TDataContext, TDataContextProvider> : IDesignTimeDbContextFactory<TDataContext>
         where TDataContext : DataContext
-        where TDataContextSettings : DataContextSettings, new()
-        where TDataContextProvider : DataContextProvider<TDataContext, TDataContextSettings>
+        where TDataContextProvider : DataContextProvider<TDataContext>
     {
         /// <summary>
         /// Creates a new instance of a derived context.
@@ -54,7 +52,7 @@ namespace Xpandables.Net.EntityFramework
                 .Build();
 
             var services = new ServiceCollection();
-            services.Configure<TDataContextSettings>(config.GetSection(typeof(TDataContextSettings).Name));
+            services.Configure<DataContextSettings>(config.GetSection(typeof(DataContextSettings).Name));
             services.AddSingleton<IInstanceCreator, InstanceCreator>();
             services.AddTransient<IDataContextProvider, TDataContextProvider>();
 

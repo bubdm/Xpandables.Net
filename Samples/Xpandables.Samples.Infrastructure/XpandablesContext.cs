@@ -2,6 +2,7 @@
 
 using Xpandables.Net.Entities;
 using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Events;
 using Xpandables.Samples.Domain.Models;
 
 namespace Xpandables.Samples.Infrastructure
@@ -12,6 +13,9 @@ namespace Xpandables.Samples.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            if (modelBuilder is null)
+                throw new System.ArgumentNullException(nameof(modelBuilder));
+
             modelBuilder.Entity<User>().HasKey(new string[] { nameof(User.Id) });
             modelBuilder.Entity<User>().HasIndex(new string[] { nameof(User.Id) }).IsUnique();
             modelBuilder.Entity<User>()
@@ -39,5 +43,10 @@ namespace Xpandables.Samples.Infrastructure
         }
 
         public DbSet<User> Users { get; set; }
+    }
+
+    public sealed class XpandablesLogContext : DataLogContext<DefaultLogEntity>
+    {
+        public XpandablesLogContext(DbContextOptions contextOptions) : base(contextOptions) { }
     }
 }

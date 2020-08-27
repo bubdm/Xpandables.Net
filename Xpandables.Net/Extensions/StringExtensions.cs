@@ -60,6 +60,13 @@ namespace Xpandables.Net.Extensions
         }
 
         /// <summary>
+        /// Serializes the current instance to JSON string.
+        /// </summary>
+        /// <param name="obj">The object to act on.</param>
+        /// <returns>A JSOn string representation of the object.</returns>
+        public static string ToJsonString(this object obj) => Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+
+        /// <summary>
         /// Concatenates all the elements of an <see cref="IEnumerable{T}"/>,
         /// using the specified string separator between each element.
         /// </summary>

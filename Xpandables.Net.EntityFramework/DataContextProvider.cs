@@ -27,18 +27,16 @@ using Xpandables.Net.Creators;
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
-    /// The <see cref="DataContextProvider{TDataContext, TDataContextSettings}"/> helper class.
+    /// The <see cref="DataContextProvider{TDataContext}"/> helper class.
     /// </summary>
     /// <typeparam name="TDataContext">The type of data context to build.</typeparam>
-    /// <typeparam name="TDataContextSettings">The type of data context settings to be used.</typeparam>
-    public abstract class DataContextProvider<TDataContext, TDataContextSettings> : IDataContextProvider
+    public abstract class DataContextProvider<TDataContext> : IDataContextProvider
         where TDataContext : DataContext
-        where TDataContextSettings : DataContextSettings, new()
     {
         /// <summary>
         /// Contains the <see cref="DataContextSettings"/> instance.
         /// </summary>
-        protected readonly TDataContextSettings DataContextSettings;
+        protected readonly DataContextSettings DataContextSettings;
 
         /// <summary>
         /// Contains the <see cref="IInstanceCreator"/> instance.
@@ -46,11 +44,11 @@ namespace Xpandables.Net.EntityFramework
         protected readonly IInstanceCreator InstanceCreator;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataContextProvider{TDataContext, TDataContextSettings}"/>.
+        /// Initializes a new instance of <see cref="DataContextProvider{TDataContext}"/>.
         /// </summary>
         /// <param name="dataContextSettings">The data context settings.</param>
         /// <param name="instanceCreator">The instance creator.</param>
-        protected DataContextProvider(IOptions<TDataContextSettings> dataContextSettings, IInstanceCreator instanceCreator)
+        protected DataContextProvider(IOptions<DataContextSettings> dataContextSettings, IInstanceCreator instanceCreator)
         {
             DataContextSettings = dataContextSettings?.Value ?? throw new ArgumentNullException(nameof(dataContextSettings));
             InstanceCreator = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));

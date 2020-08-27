@@ -23,10 +23,12 @@ using Xpandables.Net.Commands;
 using Xpandables.Net.Correlation;
 using Xpandables.Net.Queries;
 
+#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
+#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
-    /// Provides method to register correlation collection.
+    /// Provides method to register services
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {

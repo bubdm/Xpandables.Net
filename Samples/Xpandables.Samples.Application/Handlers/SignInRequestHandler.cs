@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
+
+using Serilog;
 
 using Xpandables.Net.Cryptography;
 using Xpandables.Net.Data;
@@ -20,7 +21,6 @@ using Xpandables.Net.Queries;
 using Xpandables.Samples.Business.Contracts;
 using Xpandables.Samples.Business.Localization;
 using Xpandables.Samples.Business.Services;
-using Xpandables.Samples.Domain.Models;
 
 namespace Xpandables.Samples.Business.Handlers
 {
@@ -31,18 +31,22 @@ namespace Xpandables.Samples.Business.Handlers
         private readonly HttpIPService _httpIPService;
         private readonly IStringCryptography _stringCryptography;
         private readonly IDataBase _dataBase;
+        private readonly ILogger _logger;
 
-        public SignInRequestHandler(IDataContext dataContext, IDataBase dataBase, IHttpTokenEngine tokenEngine, HttpIPService httpIPService, IStringCryptography stringCryptography)
+        public SignInRequestHandler(IDataContext dataContext, IDataBase dataBase, IHttpTokenEngine tokenEngine, HttpIPService httpIPService, IStringCryptography stringCryptography, ILogger logger)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _tokenEngine = tokenEngine ?? throw new ArgumentNullException(nameof(tokenEngine));
             _httpIPService = httpIPService ?? throw new ArgumentNullException(nameof(httpIPService));
             _stringCryptography = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
             _dataBase = dataBase ?? throw new ArgumentNullException(nameof(dataBase));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<SignInResponse> HandleAsync(SignInRequest query, CancellationToken cancellationToken = default)
         {
+            _logger.Information("Entering the {Handler} with {Query}", GetType().Name, query.ToJsonString());
+
             var user = await _dataContext.SetOf(query).FirstOrDefaultAsync(query, cancellationToken).ConfigureAwait(false);
 
             var options = new DataOptionsBuilder()

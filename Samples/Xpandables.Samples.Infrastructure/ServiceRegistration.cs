@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.DependencyInjection;
 using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Events;
 using Xpandables.Net.Extensibility;
 
 namespace Xpandables.Samples.Infrastructure
@@ -17,10 +18,12 @@ namespace Xpandables.Samples.Infrastructure
         {
             _ = configuration ?? throw new ArgumentNullException(nameof(configuration));
             services.Configure<DataContextSettings>(configuration.GetSection(nameof(DataContextSettings)));
+            services.Configure<DataLogContextSettings>(configuration.GetSection(nameof(DataLogContextSettings)));
             services.AddXStringGeneratorCryptography();
             services.AddXInstanceCreator();
             services.AddXHttpTokenAccessor();
             services.AddXDataContext<XpandablesContextProvider>();
+            services.AddXDataLogContext<XpandablesLogContextProvider>();
             services.AddXSeedBehavior<XpandablesContextInitializer, XpandablesContext>();
         }
     }

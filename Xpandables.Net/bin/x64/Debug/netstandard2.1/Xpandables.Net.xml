@@ -4102,6 +4102,450 @@
             for the enumeration.</exception>
             <exception cref="T:System.NotSupportedException">The conversion cannot be performed.</exception>
         </member>
+        <member name="T:Xpandables.Net.Events.DataLogContextSettings">
+            <summary>
+            Provides with the base option class for <see cref="T:Xpandables.Net.Events.IDataLogContext"/> settings.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Events.DataLogContextSettings.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Events.DataLogContextSettings"/> class.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Events.DataLogContextSettings.#ctor(System.Boolean,System.Boolean,System.Boolean,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Events.DataLogContextSettings"/> with properties.
+            </summary>
+            <param name="ensuredDeletedBefore">Determine whether or not the database for the context will be deleted before applying migration.</param>
+            <param name="useInMemory">Determine whether or not the database is uses in memory</param>
+            <param name="applyMigrations">Determine whether or not the database the migrations must be applied.</param>
+            <param name="connectionString">The database connection string.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="connectionString"/> is null.</exception>
+        </member>
+        <member name="P:Xpandables.Net.Events.DataLogContextSettings.EnsuredDeletedBefore">
+            <summary>
+            Ensures that the database for the context will be deleted before applying migration.
+            The default value is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.DataLogContextSettings.ApplyMigrations">
+            <summary>
+            Ensures that migrations will be applied to the database for the generated context.
+            The default value is <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.DataLogContextSettings.UseInMemory">
+            <summary>
+            Ensures that the database is uses in memory.
+            The default value is <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.DataLogContextSettings.ConnectionString">
+            <summary>
+            The database connection string.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Events.DefaultLogEntity">
+            <summary>
+            The default log entity. You can derive from <see cref="T:Xpandables.Net.Events.LogEntity`1"/> to customize your behaviors.
+            In order to used, the <see cref="T:Xpandables.Net.Events.DefaultLogEntity"/> class must be referenced in the data logger context and the context
+            must implement the <see cref="T:Xpandables.Net.Events.IDataLogContext"/> interface.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Events.DefaultLogEntity.CreateLogEntity">
+            <summary>
+            Initializes a new log entity with default values.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Events.IDataLogContext">
+            <summary>
+            The data context associated to the <see cref="T:Xpandables.Net.Events.ILogEntity"/>.
+            Inherits from <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/>.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Events.IDataLogContext`1">
+            <summary>
+            The data context associated to the <see cref="T:Xpandables.Net.Events.ILogEntity"/>.
+            Inherits from <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/>.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Events.IDataLogContextProvider`1">
+            <summary>
+            Provides with a method to return the ambient data logger context instance.
+            You need to register the class implementation to the services collection using and extension method.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Events.IDataLogContextProvider`1.GetDataLogContextAsync(System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously returns an instance that will contain the ambient data logger context according to the environment.
+            </summary>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>An instance of context that implements <see cref="T:Xpandables.Net.Events.IDataLogContext" />.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Events.IDataLogContextProvider`1.GetDataLogContext">
+            <summary>
+            Returns an instance that will contain the ambient data logger context according to the environment.
+            </summary>
+            <returns>An instance of context that implements <see cref="T:Xpandables.Net.Events.IDataLogContext" />.</returns>
+        </member>
+        <member name="T:Xpandables.Net.Events.ILogEntity">
+            <summary>
+            Provides with the base description for an event log using <see cref="N:Serilog"/>.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.Id">
+            <summary>
+            Contains log identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.EventId">
+            <summary>
+            Contains the event identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.SourceContext">
+            <summary>
+            Contains the source context.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.ActionId">
+            <summary>
+            Contains the action identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.ActionName">
+            <summary>
+            Contains the action name.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.ControllerName">
+            <summary>
+            Contains the controller name.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.RequestId">
+            <summary>
+            Contains the request identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.RequestPath">
+            <summary>
+            Contains the request path.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.Exception">
+            <summary>
+            Contains the handled exception.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.Level">
+            <summary>
+            Contains the level.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.Message">
+            <summary>
+            Contains the message.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.MessageTemplate">
+            <summary>
+            Contains the message template.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.TimeSpan">
+            <summary>
+            Contains the event time span.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.Properties">
+            <summary>
+            Contains the properties in JSON format.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Events.ILogEntity`1">
+            <summary>
+            Provides with the generic base description for an event log using <see cref="N:Serilog"/>.
+            </summary>
+            <typeparam name="T">The type of the log event class.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithMessage(System.String)">
+            <summary>
+            Adds a message to the underlying instance.
+            </summary>
+            <param name="message">The event message.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="message"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithEventId(System.String)">
+            <summary>
+            Adds an event id to the underlying instance.
+            </summary>
+            <param name="eventId">The event id.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithSourceContext(System.String)">
+            <summary>
+            Adds a source context to the underlying instance.
+            </summary>
+            <param name="sourceContext">The source context.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithActionId(System.String)">
+            <summary>
+            Adds an action identifier to the underlying instance.
+            </summary>
+            <param name="actionId">The action identifier.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithActionName(System.String)">
+            <summary>
+            Adds a source context to the underlying instance.
+            </summary>
+            <param name="actionName">The action name.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithControllerName(System.String)">
+            <summary>
+            Adds a controller name to the underlying instance.
+            </summary>
+            <param name="controllerName">The controller name.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithRequestId(System.String)">
+            <summary>
+            Adds a request identifier to the underlying instance.
+            </summary>
+            <param name="requestId">The request identifier.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithRequestPath(System.String)">
+            <summary>
+            Adds a request path to the underlying instance.
+            </summary>
+            <param name="requestPath">The request path.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithMessageTemplate(System.String)">
+            <summary>
+            Adds a message template to the underlying instance.
+            </summary>
+            <param name="messageTemplate">the event message template.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithTimeSpan(System.DateTimeOffset)">
+            <summary>
+            Adds a time span to the underlying instance.
+            </summary>
+            <param name="dateTimeOffset">The event time span.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithException(System.Exception)">
+            <summary>
+            Adds an exception to the underlying instance.
+            </summary>
+            <param name="exception">The event exception.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithLevel(System.String)">
+            <summary>
+            Adds a level to the underlying instance.
+            </summary>
+            <param name="level">The event level.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="level"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithProperties(System.String)">
+            <summary>
+            Adds a JSON object to the underlying instance.
+            </summary>
+            <param name="properties">The JSON properties</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.LoadFrom(Serilog.Events.LogEvent)">
+            <summary>
+            Loads the underlying instance from the <see cref="N:Serilog"/> event.
+            </summary>
+            <param name="logEvent">The event source.</param>
+        </member>
+        <member name="T:Xpandables.Net.Events.LogEntity`1">
+            <summary>
+            Helper class to implement <see cref="T:Xpandables.Net.Events.ILogEntity`1"/>.
+            <para>You must derive from this class to add custom behavior to the event log.</para>
+            </summary>
+            <typeparam name="T">The type of derived class.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.#ctor">
+            <summary>
+            Initialize the logger event with default value.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.KeyGenerator">
+            <summary>
+            Returns a unique identifier for log.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.EventId">
+            <summary>
+            Contains the event identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.SourceContext">
+            <summary>
+            Contains the source context.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.ActionId">
+            <summary>
+            Contains the action identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.ActionName">
+            <summary>
+            Contains the action name.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.ControllerName">
+            <summary>
+            Contains the controller name.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.RequestId">
+            <summary>
+            Contains the request identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.RequestPath">
+            <summary>
+            Contains the request path.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.Exception">
+            <summary>
+            Contains the handled exception.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.Level">
+            <summary>
+            Contains the event level.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.Message">
+            <summary>
+            Contains the event message.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.MessageTemplate">
+            <summary>
+            Contains the event message template.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.TimeSpan">
+            <summary>
+            Contains the event time span.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.Properties">
+            <summary>
+            Contains the properties in JSON format.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithEventId(System.String)">
+            <summary>
+            Adds an event id to the underlying instance.
+            </summary>
+            <param name="eventId">The event id.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithSourceContext(System.String)">
+            <summary>
+            Adds a source context to the underlying instance.
+            </summary>
+            <param name="sourceContext">The source context.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithActionId(System.String)">
+            <summary>
+            Adds an action identifier to the underlying instance.
+            </summary>
+            <param name="actionId">The action identifier.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithActionName(System.String)">
+            <summary>
+            Adds a source context to the underlying instance.
+            </summary>
+            <param name="actionName">The action name.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithControllerName(System.String)">
+            <summary>
+            Adds a controller name to the underlying instance.
+            </summary>
+            <param name="controllerName">The controller name.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithRequestId(System.String)">
+            <summary>
+            Adds a request identifier to the underlying instance.
+            </summary>
+            <param name="requestId">The request identifier.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithRequestPath(System.String)">
+            <summary>
+            Adds a request path to the underlying instance.
+            </summary>
+            <param name="requestPath">The request path.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithMessage(System.String)">
+            <summary>
+            Adds a message to the underlying instance.
+            </summary>
+            <param name="message">The event message.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="message"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithMessageTemplate(System.String)">
+            <summary>
+            Adds a message template to the underlying instance.
+            </summary>
+            <param name="messageTemplate">the event message template.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithTimeSpan(System.DateTimeOffset)">
+            <summary>
+            Adds a time span to the underlying instance.
+            </summary>
+            <param name="dateTimeOffset">The event time span.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithException(System.Exception)">
+            <summary>
+            Adds an exception to the underlying instance.
+            </summary>
+            <param name="exception">The event exception.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithLevel(System.String)">
+            <summary>
+            Adds a level to the underlying instance.
+            </summary>
+            <param name="level">The event level.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="level"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithProperties(System.String)">
+            <summary>
+            Adds a JSON object to the underlying instance.
+            </summary>
+            <param name="properties">The JSON properties</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="properties"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.LoadFrom(Serilog.Events.LogEvent)">
+            <summary>
+            Loads the underlying instance from the event.
+            You must override this to match your requirement.
+            </summary>
+            <param name="logEvent">The event source.</param>
+        </member>
+        <member name="T:Xpandables.Net.Events.LogEntitySink`1">
+            <summary>
+            Provides with a custom emitter for the specified log event type.
+            <para>Using the <see cref="T:Xpandables.Net.Events.IDataLogContext"/> interface to save the log.</para>
+            </summary>
+            <typeparam name="TLogEntity">The type of the log event.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntitySink`1.#ctor(Xpandables.Net.Events.IDataLogContext{`0})">
+            <summary>
+            Initializes the <see cref="T:Xpandables.Net.Events.LogEntitySink`1"/> with the  data context and the log event converter.
+            </summary>
+            <param name="dataLogContext">The data context to act on.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataLogContext"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntitySink`1.Emit(Serilog.Events.LogEvent)">
+            <summary>
+            Emit the provided log event to the sink.
+            </summary>
+            <param name="logEvent">The log event to write.</param>
+        </member>
         <member name="T:Xpandables.Net.Expressions.ExpressionComparer">
             <summary>
             Compare two expressions to determine if they are equivalent
@@ -4582,6 +5026,13 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="cultureInfo"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="args"/> is null or empty.</exception>
             <exception cref="T:System.FormatException">The format is invalid.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Extensions.StringExtensions.ToJsonString(System.Object)">
+            <summary>
+            Serializes the current instance to JSON string.
+            </summary>
+            <param name="obj">The object to act on.</param>
+            <returns>A JSOn string representation of the object.</returns>
         </member>
         <member name="M:Xpandables.Net.Extensions.StringExtensions.StringJoin``1(System.Collections.Generic.IEnumerable{``0},System.String)">
             <summary>

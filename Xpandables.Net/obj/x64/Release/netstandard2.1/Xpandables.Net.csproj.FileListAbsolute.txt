@@ -16,3 +16,4 @@ D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Release\netstandard2.1\en-GB\Xpa
 D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Release\netstandard2.1\fr\Xpandables.Net.resources.dll
 D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Release\netstandard2.1\Xpandables.Net.dll
 D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Release\netstandard2.1\Xpandables.Net.pdb
+D:\GitHub\Xpandables.Net\Xpandables.Net\obj\x64\Release\netstandard2.1\Xpandables.Net.csprojAssemblyReference.cache

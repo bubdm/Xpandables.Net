@@ -22,7 +22,7 @@ namespace Xpandables.Net.EntityFramework
     /// <summary>
     /// Provides with the base option class for <see cref="IDataContext"/> settings.
     /// </summary>
-    public class DataContextSettings
+    public sealed class DataContextSettings
     {
         /// <summary>
         /// Initializes a new instance of <see cref="DataContextSettings"/> class.

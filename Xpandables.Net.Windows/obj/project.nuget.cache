@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "YJyOYEC38kvPj8CE3m2FZnAb+DBs3RQW0tnriwOHRlZaTLMmz2mPCyCTZz7ounWIj/dRcYZrKpHejG+zcsY5Zw==",
+  "dgSpecHash": "JU5l/hWgg7se6iTWVGzEOt7VvLlv7GQIuWE4JRQIrElD2fWbFcfmZVa2o7XlFr4Kyt/6ch5XujKriaKC4IFCSQ==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Windows\\Xpandables.Net.Windows.csproj",
   "expectedPackageFiles": [
@@ -12,6 +12,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netframework.analyzers\\3.3.0-beta2.final\\microsoft.netframework.analyzers.3.3.0-beta2.final.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\serilog\\2.9.0\\serilog.2.9.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.annotations\\4.7.0\\system.componentmodel.annotations.4.7.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\4.7.1\\system.text.encodings.web.4.7.1.nupkg.sha512",
