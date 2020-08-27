@@ -41,6 +41,7 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Adds the <see cref="IDataLogContext"/> using the default <see cref="DefaultLogEntity"/> accessor to the services with scoped life time.
+        /// Also registers the <see cref="Serilog"/> instance.
         /// </summary>
         /// <typeparam name="TDataLogContextProvider">The type of data context accessor
         /// that implements <see cref="IDataLogContextProvider{TLogEntity}"/>.</typeparam>
@@ -55,6 +56,7 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Adds the <see cref="IDataLogContext"/> accessor to the services with scoped life time.
+        /// Also registers the <see cref="Serilog"/> instance.
         /// </summary>
         /// <typeparam name="TDataLogContextProvider">The type of data context accessor
         /// that implements <see cref="IDataLogContextProvider{TLogEntity}"/>.</typeparam>
