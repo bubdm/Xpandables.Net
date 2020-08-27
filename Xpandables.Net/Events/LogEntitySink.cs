@@ -30,7 +30,7 @@ namespace Xpandables.Net.Events
     /// <para>Using the <see cref="IDataLogContext"/> interface to save the log.</para>
     /// </summary>
     /// <typeparam name="TLogEntity">The type of the log event.</typeparam>
-    public sealed class LogEntitySink<TLogEntity> :ILogEventSink
+    public sealed class LogEntitySink<TLogEntity> : ILogEventSink
         where TLogEntity : Entity, ILogEntity<TLogEntity>, new()
     {
         private readonly IDataLogContext _dataContext;

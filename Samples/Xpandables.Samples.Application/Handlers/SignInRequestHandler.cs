@@ -30,16 +30,16 @@ namespace Xpandables.Samples.Business.Handlers
         private readonly IHttpTokenEngine _tokenEngine;
         private readonly HttpIPService _httpIPService;
         private readonly IStringCryptography _stringCryptography;
-        private readonly IDataBase _dataBase;
+        //private readonly IDataBase _dataBase;
         private readonly ILogger _logger;
 
-        public SignInRequestHandler(IDataContext dataContext, IDataBase dataBase, IHttpTokenEngine tokenEngine, HttpIPService httpIPService, IStringCryptography stringCryptography, ILogger logger)
+        public SignInRequestHandler(IDataContext dataContext, IHttpTokenEngine tokenEngine, HttpIPService httpIPService, IStringCryptography stringCryptography, ILogger logger)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _tokenEngine = tokenEngine ?? throw new ArgumentNullException(nameof(tokenEngine));
             _httpIPService = httpIPService ?? throw new ArgumentNullException(nameof(httpIPService));
             _stringCryptography = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
-            _dataBase = dataBase ?? throw new ArgumentNullException(nameof(dataBase));
+            //_dataBase = dataBase ?? throw new ArgumentNullException(nameof(dataBase));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -49,42 +49,42 @@ namespace Xpandables.Samples.Business.Handlers
 
             var user = await _dataContext.SetOf(query).FirstOrDefaultAsync(query, cancellationToken).ConfigureAwait(false);
 
-            var options = new DataOptionsBuilder()
-                .AddConverter<string>((property, row) =>
-                {
-                    if (property.PropertyName == "Gender")
-                        return "Unknown";
+            //var options = new DataOptionsBuilder()
+            //    .AddConverter<string>((property, row) =>
+            //    {
+            //        if (property.PropertyName == "Gender")
+            //            return "Unknown";
 
-                    return row;
-                })
-                .Build();
+            //        return row;
+            //    })
+            //    .Build();
 
-            var connection = new DataConnectionBuilder()
-                .AddConnectionString("Server=(localdb)\\mssqllocaldb;Database=XSamples;Trusted_Connection=True;MultipleActiveResultSets=true")
-                .AddPoolName("LocalDb")
-                .AddProviderType(DataProviderType.MSSQL)
-                .EnableIntegratedSecurity()
-                .Build();
+            //var connection = new DataConnectionBuilder()
+            //    .AddConnectionString("Server=(localdb)\\mssqllocaldb;Database=XSamples;Trusted_Connection=True;MultipleActiveResultSets=true")
+            //    .AddPoolName("LocalDb")
+            //    .AddProviderType(DataProviderType.MSSQL)
+            //    .EnableIntegratedSecurity()
+            //    .Build();
 
-            var xusers = await _dataBase
-                .UseConnection(connection)
-                .ExecuteMappedQueriesAsync<XUser>(options, "Select * from users")
-                .ToListAsync()
-                .ConfigureAwait(false);
+            //var xusers = await _dataBase
+            //    .UseConnection(connection)
+            //    .ExecuteMappedQueriesAsync<XUser>(options, "Select * from users")
+            //    .ToListAsync()
+            //    .ConfigureAwait(false);
 
-            var options1 = new DataOptionsBuilder()
-                .Build();
+            //var options1 = new DataOptionsBuilder()
+            //    .Build();
 
-            var count = await _dataBase
-                .UseConnection(connection)
-                .ExecuteTransactionAsync(options1, "update users set name_lastname='last name new' where email=@email", query.Email)
-                .ConfigureAwait(false);
+            //var count = await _dataBase
+            //    .UseConnection(connection)
+            //    .ExecuteTransactionAsync(options1, "update users set name_lastname='last name new' where email=@email", query.Email)
+            //    .ConfigureAwait(false);
 
-            var xusers1 = await _dataBase
-                .UseConnection(connection)
-                .ExecuteMappedQueriesAsync<XUser>(options, "Select * from users")
-                .ToListAsync()
-                .ConfigureAwait(false);
+            //var xusers1 = await _dataBase
+            //    .UseConnection(connection)
+            //    .ExecuteMappedQueriesAsync<XUser>(options, "Select * from users")
+            //    .ToListAsync()
+            //    .ConfigureAwait(false);
 
             if (user?.Password.IsEqualTo(query.Password, _stringCryptography) != true)
             {
@@ -96,6 +96,8 @@ namespace Xpandables.Samples.Business.Handlers
 
             var token = user.GetToken(_tokenEngine);
             var location = await _httpIPService.GetIPGeoLocationAsync().ConfigureAwait(false);
+
+            _logger.Information("Exiting the {Handler} with {Token}", GetType().Name, token);
 
             return new SignInResponse(
                 token, user.Email, user.Name.LastName, user.Name.FirstName, user.Gender, location);
