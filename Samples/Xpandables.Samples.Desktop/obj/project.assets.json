@@ -718,7 +718,7 @@
           "lib/netcoreapp3.0/System.Text.Json.dll": {}
         }
       },
-      "Xpandables.Net/3.1.1": {
+      "Xpandables.Net/3.1.2": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -735,7 +735,7 @@
           "bin/placeholder/Xpandables.Net.dll": {}
         }
       },
-      "Xpandables.Net.DependencyInjection/3.1.1": {
+      "Xpandables.Net.DependencyInjection/3.1.2": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -744,7 +744,7 @@
           "Microsoft.Extensions.DependencyModel": "3.1.6",
           "Microsoft.Extensions.Http": "3.1.7",
           "System.ComponentModel.Composition": "4.7.0",
-          "Xpandables.Net": "3.1.1"
+          "Xpandables.Net": "3.1.2"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.DependencyInjection.dll": {}
@@ -753,7 +753,7 @@
           "bin/placeholder/Xpandables.Net.DependencyInjection.dll": {}
         }
       },
-      "Xpandables.Net.EntityFramework/3.1.1": {
+      "Xpandables.Net.EntityFramework/3.1.2": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -763,7 +763,7 @@
           "Microsoft.Extensions.Configuration.FileExtensions": "3.1.7",
           "Microsoft.Extensions.Configuration.Json": "3.1.7",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "3.1.7",
-          "Xpandables.Net": "3.1.1"
+          "Xpandables.Net": "3.1.2"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.EntityFramework.dll": {}
@@ -772,11 +772,11 @@
           "bin/placeholder/Xpandables.Net.EntityFramework.dll": {}
         }
       },
-      "Xpandables.Net.Windows/3.1.1": {
+      "Xpandables.Net.Windows/3.1.2": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
-          "Xpandables.Net": "3.1.1"
+          "Xpandables.Net": "3.1.2"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.Windows.dll": {}
@@ -794,8 +794,8 @@
         "dependencies": {
           "Microsoft.IdentityModel.Tokens": "6.7.1",
           "System.IdentityModel.Tokens.Jwt": "6.7.1",
-          "Xpandables.Net.DependencyInjection": "3.1.1",
-          "Xpandables.Net.EntityFramework": "3.1.1",
+          "Xpandables.Net.DependencyInjection": "3.1.2",
+          "Xpandables.Net.EntityFramework": "3.1.2",
           "Xpandables.Samples.Domain": "1.0.0"
         },
         "compile": {
@@ -809,7 +809,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
-          "Xpandables.Net": "3.1.1"
+          "Xpandables.Net": "3.1.2"
         },
         "compile": {
           "bin/placeholder/Xpandables.Samples.Domain.dll": {}
@@ -2137,22 +2137,22 @@
         "version.txt"
       ]
     },
-    "Xpandables.Net/3.1.1": {
+    "Xpandables.Net/3.1.2": {
       "type": "project",
       "path": "../../Xpandables.Net/Xpandables.Net.csproj",
       "msbuildProject": "../../Xpandables.Net/Xpandables.Net.csproj"
     },
-    "Xpandables.Net.DependencyInjection/3.1.1": {
+    "Xpandables.Net.DependencyInjection/3.1.2": {
       "type": "project",
       "path": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj"
     },
-    "Xpandables.Net.EntityFramework/3.1.1": {
+    "Xpandables.Net.EntityFramework/3.1.2": {
       "type": "project",
       "path": "../../Xpandables.Net.EntityFramework/Xpandables.Net.EntityFramework.csproj",
       "msbuildProject": "../../Xpandables.Net.EntityFramework/Xpandables.Net.EntityFramework.csproj"
     },
-    "Xpandables.Net.Windows/3.1.1": {
+    "Xpandables.Net.Windows/3.1.2": {
       "type": "project",
       "path": "../../Xpandables.Net.Windows/Xpandables.Net.Windows.csproj",
       "msbuildProject": "../../Xpandables.Net.Windows/Xpandables.Net.Windows.csproj"
@@ -2171,7 +2171,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
       "Microsoft.Extensions.Hosting >= 3.1.7",
-      "Xpandables.Net.Windows >= 3.1.1",
+      "Xpandables.Net.Windows >= 3.1.2",
       "Xpandables.Samples.Business >= 1.0.0"
     ]
   },

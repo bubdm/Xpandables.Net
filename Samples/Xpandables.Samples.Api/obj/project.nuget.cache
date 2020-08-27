@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "3C3JZa5Gb1rveB1hNS4farHgyQOGO/Lx319TBZEcFy3TgrLAZ5RElo28NLFj9/fQ8TEbvsB3YkRMc/vuNWRvGw==",
+  "dgSpecHash": "Nk5OuY8VfhdMaeEU60WOY0e2xoY7pf6039P58KEUgk5XjrG6Tn7zoMmzNT8nA6GipoEfXXl/5TcpPWsrPmnzBw==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Api\\Xpandables.Samples.Api.csproj",
   "expectedPackageFiles": [
@@ -117,10 +117,6 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\3.1.1\\xpandables.net.3.1.1.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.dependencyinjection\\3.1.1\\xpandables.net.dependencyinjection.3.1.1.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\3.1.1\\xpandables.net.entityframework.3.1.1.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.netcore\\3.1.1\\xpandables.netcore.3.1.1.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.2\\microsoft.netcore.app.host.win-x64.3.1.2.nupkg.sha512"
   ],

@@ -4195,7 +4195,42 @@
         </member>
         <member name="P:Xpandables.Net.Events.ILogEntity.Id">
             <summary>
-            Contains the identifier.
+            Contains log identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.EventId">
+            <summary>
+            Contains the event identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.SourceContext">
+            <summary>
+            Contains the source context.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.ActionId">
+            <summary>
+            Contains the action identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.ActionName">
+            <summary>
+            Contains the action name.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.ControllerName">
+            <summary>
+            Contains the controller name.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.RequestId">
+            <summary>
+            Contains the request identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.ILogEntity.RequestPath">
+            <summary>
+            Contains the request path.
             </summary>
         </member>
         <member name="P:Xpandables.Net.Events.ILogEntity.Exception">
@@ -4241,6 +4276,48 @@
             <param name="message">The event message.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="message"/> is null.</exception>
         </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithEventId(System.String)">
+            <summary>
+            Adds an event id to the underlying instance.
+            </summary>
+            <param name="eventId">The event id.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithSourceContext(System.String)">
+            <summary>
+            Adds a source context to the underlying instance.
+            </summary>
+            <param name="sourceContext">The source context.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithActionId(System.String)">
+            <summary>
+            Adds an action identifier to the underlying instance.
+            </summary>
+            <param name="actionId">The action identifier.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithActionName(System.String)">
+            <summary>
+            Adds a source context to the underlying instance.
+            </summary>
+            <param name="actionName">The action name.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithControllerName(System.String)">
+            <summary>
+            Adds a controller name to the underlying instance.
+            </summary>
+            <param name="controllerName">The controller name.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithRequestId(System.String)">
+            <summary>
+            Adds a request identifier to the underlying instance.
+            </summary>
+            <param name="requestId">The request identifier.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogEntity`1.WithRequestPath(System.String)">
+            <summary>
+            Adds a request path to the underlying instance.
+            </summary>
+            <param name="requestPath">The request path.</param>
+        </member>
         <member name="M:Xpandables.Net.Events.ILogEntity`1.WithMessageTemplate(System.String)">
             <summary>
             Adds a message template to the underlying instance.
@@ -4271,7 +4348,6 @@
             Adds a JSON object to the underlying instance.
             </summary>
             <param name="properties">The JSON properties</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="properties"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.Events.ILogEntity`1.LoadFrom(Serilog.Events.LogEvent)">
             <summary>
@@ -4289,6 +4365,47 @@
         <member name="M:Xpandables.Net.Events.LogEntity`1.#ctor">
             <summary>
             Initialize the logger event with default value.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.KeyGenerator">
+            <summary>
+            Returns a unique identifier for log.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.EventId">
+            <summary>
+            Contains the event identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.SourceContext">
+            <summary>
+            Contains the source context.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.ActionId">
+            <summary>
+            Contains the action identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.ActionName">
+            <summary>
+            Contains the action name.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.ControllerName">
+            <summary>
+            Contains the controller name.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.RequestId">
+            <summary>
+            Contains the request identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Events.LogEntity`1.RequestPath">
+            <summary>
+            Contains the request path.
             </summary>
         </member>
         <member name="P:Xpandables.Net.Events.LogEntity`1.Exception">
@@ -4320,6 +4437,48 @@
             <summary>
             Contains the properties in JSON format.
             </summary>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithEventId(System.String)">
+            <summary>
+            Adds an event id to the underlying instance.
+            </summary>
+            <param name="eventId">The event id.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithSourceContext(System.String)">
+            <summary>
+            Adds a source context to the underlying instance.
+            </summary>
+            <param name="sourceContext">The source context.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithActionId(System.String)">
+            <summary>
+            Adds an action identifier to the underlying instance.
+            </summary>
+            <param name="actionId">The action identifier.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithActionName(System.String)">
+            <summary>
+            Adds a source context to the underlying instance.
+            </summary>
+            <param name="actionName">The action name.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithControllerName(System.String)">
+            <summary>
+            Adds a controller name to the underlying instance.
+            </summary>
+            <param name="controllerName">The controller name.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithRequestId(System.String)">
+            <summary>
+            Adds a request identifier to the underlying instance.
+            </summary>
+            <param name="requestId">The request identifier.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.LogEntity`1.WithRequestPath(System.String)">
+            <summary>
+            Adds a request path to the underlying instance.
+            </summary>
+            <param name="requestPath">The request path.</param>
         </member>
         <member name="M:Xpandables.Net.Events.LogEntity`1.WithMessage(System.String)">
             <summary>
@@ -4372,14 +4531,14 @@
             Provides with a custom emitter for the specified log event type.
             <para>Using the <see cref="T:Xpandables.Net.Events.IDataLogContext"/> interface to save the log.</para>
             </summary>
-            <typeparam name="T">The type of the log event.</typeparam>
+            <typeparam name="TLogEntity">The type of the log event.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Events.LogEntitySink`1.#ctor(Xpandables.Net.Events.IDataLogContext)">
+        <member name="M:Xpandables.Net.Events.LogEntitySink`1.#ctor(Xpandables.Net.Events.IDataLogContext{`0})">
             <summary>
             Initializes the <see cref="T:Xpandables.Net.Events.LogEntitySink`1"/> with the  data context and the log event converter.
             </summary>
-            <param name="dataContext">The data context to act on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
+            <param name="dataLogContext">The data context to act on.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataLogContext"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.Events.LogEntitySink`1.Emit(Serilog.Events.LogEvent)">
             <summary>

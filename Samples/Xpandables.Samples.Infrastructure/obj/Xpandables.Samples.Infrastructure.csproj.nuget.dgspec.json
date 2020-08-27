@@ -145,7 +145,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj": {
-      "version": "3.1.1",
+      "version": "3.1.2",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj",
         "projectName": "Xpandables.Net.DependencyInjection",
@@ -226,7 +226,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj": {
-      "version": "3.1.1",
+      "version": "3.1.2",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj",
         "projectName": "Xpandables.Net.EntityFramework",
@@ -311,7 +311,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
-      "version": "3.1.1",
+      "version": "3.1.2",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
         "projectName": "Xpandables.Net",

@@ -15,12 +15,12 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>3.1.1</Version>
-    <AssemblyVersion>3.1.1</AssemblyVersion>
-    <FileVersion>3.1.1</FileVersion>
-    <PackageVersion>3.1.1</PackageVersion>
+    <Version>3.1.2</Version>
+    <AssemblyVersion>3.1.2</AssemblyVersion>
+    <FileVersion>3.1.2</FileVersion>
+    <PackageVersion>3.1.2</PackageVersion>
     <PackageId>Xpandables.Net</PackageId>
-    <PackageTags>ICommand, IDispatcher, IQuery{TResult}, Enumeration, Interception, ICommandHandler{TCommand}, IQueryHandler{TQuery, TResult}, ValueObject...</PackageTags>
+    <PackageTags>ICommand, IDispatcher, IQuery{TResult}, Enumeration, ILogger, Interception, ICommandHandler{TCommand}, IQueryHandler{TQuery, TResult}, ValueObject...</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<PackageReleaseNotes>Start All-in-one.</PackageReleaseNotes>-->
