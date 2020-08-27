@@ -18,6 +18,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -77,7 +78,13 @@ namespace Xpandables.Net.Optionals
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
-        public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)_values).GetEnumerator();
+        public IEnumerator<T> GetEnumerator()
+        {
+            if (IsValue())
+                return ((IEnumerable<T>)_values).GetEnumerator();
+
+            return Enumerable.Empty<T>().GetEnumerator();
+        }
 
         IEnumerator IEnumerable.GetEnumerator() => _values.GetEnumerator();
 
