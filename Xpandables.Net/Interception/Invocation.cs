@@ -16,7 +16,12 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Interception
 {
@@ -25,13 +30,12 @@ namespace Xpandables.Net.Interception
     /// </summary>
     internal sealed class Invocation : IInvocation
     {
-        private readonly MethodInfo _invocationMethod;
-        private readonly object _invocationInstance;
-        private IParameterCollection _arguments;
-
-        MethodInfo IInvocation.InvocationMethod => _invocationMethod;
-        object IInvocation.InvocationInstance => _invocationInstance;
-        IParameterCollection IInvocation.Arguments { get => _arguments; set => _arguments = value; }
+        public MethodInfo InvocationMethod { get; }
+        public object InvocationInstance { get; }
+        public IParameterCollection Arguments { get; }
+        public Exception? Exception { get; private set; }
+        public object? ReturnValue { get; private set; }
+        public TimeSpan ElapsedTime { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="Invocation"/> with the arguments needed for invocation.
@@ -43,13 +47,43 @@ namespace Xpandables.Net.Interception
         /// <exception cref="ArgumentNullException">The <paramref name="targetInstance"/> is null.</exception>
         internal Invocation(MethodInfo targetMethod, object targetInstance, params object?[]? argsValue)
         {
-            _invocationMethod = targetMethod ?? throw new ArgumentNullException(nameof(targetMethod));
-            _invocationInstance = targetInstance ?? throw new ArgumentNullException(nameof(targetInstance));
-            _arguments = new ParameterCollection(targetMethod, argsValue);
+            InvocationMethod = targetMethod ?? throw new ArgumentNullException(nameof(targetMethod));
+            InvocationInstance = targetInstance ?? throw new ArgumentNullException(nameof(targetInstance));
+            Arguments = new ParameterCollection(targetMethod, argsValue);
         }
 
-        Exception? IInvocation.Exception { get; set; }
-        object? IInvocation.ReturnValue { get; set; }
-        TimeSpan IInvocation.ElapsedTime { get; set; }
+        public IInvocation AddException(Exception? exception) => this.With(invocation => invocation.Exception = exception);
+        public IInvocation AddReturnValue(object? returnValue) => this.With(invocation => invocation.ReturnValue = returnValue);
+        public IInvocation AddElapsedTime(TimeSpan elapsedTime) => this.With(invocation => invocation.ElapsedTime = elapsedTime);
+        public void Proceed()
+        {
+            var watch = Stopwatch.StartNew();
+            watch.Start();
+
+            try
+            {
+                ReturnValue = InvocationMethod.Invoke(
+                                    InvocationInstance,
+                                    Arguments.Select(arg => arg.Value).ToArray());
+
+                if (ReturnValue is Task task && task.Exception != null)
+                    Exception = task.Exception.GetBaseException();
+            }
+            catch (Exception exception) when (exception is TargetException
+                                          || exception is ArgumentNullException
+                                          || exception is TargetInvocationException
+                                          || exception is TargetParameterCountException
+                                          || exception is MethodAccessException
+                                          || exception is InvalidOperationException
+                                          || exception is NotSupportedException)
+            {
+                Exception = exception;
+            }
+            finally
+            {
+                watch.Stop();
+                ElapsedTime = watch.Elapsed;
+            }
+        }
     }
 }

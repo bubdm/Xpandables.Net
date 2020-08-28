@@ -22,6 +22,6 @@ namespace Xpandables.Samples.Api.Controllers
 
         [HttpPost, AllowAnonymous]
         public async Task<SignInResponse> SignIn(SignInRequest signInRequest, CancellationToken cancellationToken)
-                 => await _dispatcher.HandleQueryAsync(signInRequest, cancellationToken).ConfigureAwait(false);
+                 => await _dispatcher.SendQueryAsync(signInRequest, cancellationToken).ConfigureAwait(false);
     }
 }

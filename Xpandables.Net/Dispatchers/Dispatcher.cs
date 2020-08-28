@@ -33,18 +33,18 @@ namespace Xpandables.Net.Dispatchers
     /// </summary>
     public sealed class Dispatcher : IDispatcher
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IDispatcherHandlerProvider _dispatcherHandlerProvider;
 
         /// <summary>
         /// Initializes a new instance of <see cref="Dispatcher"/>.
         /// </summary>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="serviceProvider"/> is null.</exception>
-        public Dispatcher(IServiceProvider serviceProvider)
-            => _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        /// <param name="dispatcherHandlerProvider">The handler service provider.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="dispatcherHandlerProvider"/> is null.</exception>
+        public Dispatcher(IDispatcherHandlerProvider dispatcherHandlerProvider)
+            => _dispatcherHandlerProvider = dispatcherHandlerProvider ?? throw new ArgumentNullException(nameof(dispatcherHandlerProvider));
 
         /// <summary>
-        /// Asynchronously handles the specified command.
+        /// Asynchronously send the specified command to its handler (<see cref="ICommandHandler{TCommand}"/>).
         /// </summary>
         /// <typeparam name="TCommand">Type of the command.</typeparam>
         /// <param name="command">The command to act on.</param>
@@ -53,14 +53,14 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        public async Task HandleCommandAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+        public async Task SendCommandAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
             where TCommand : class, ICommand
         {
             try
             {
                 if (command is null) throw new ArgumentNullException(nameof(command));
 
-                var handler = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>)) as ICommandHandler<TCommand>
+                var handler = _dispatcherHandlerProvider.GetHandler<ICommandHandler<TCommand>>()
                         ?? throw new ArgumentException($"The matching command handler for {typeof(TCommand).Name} is missing.");
 
                 await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
@@ -72,13 +72,14 @@ namespace Xpandables.Net.Dispatchers
                                             && !(exception is InvalidOperationException))
             {
                 throw new InvalidOperationException(
-                    $"{nameof(HandleCommandAsync)} execution failed. See inner exception",
+                    $"{nameof(SendCommandAsync)} execution failed. See inner exception",
                     exception);
             }
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result.
+        /// Asynchronously send the specified query to its handler (<see cref="IQueryHandler{TQuery, TResult}"/>) 
+        /// and returns a result of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TQuery">Type of the query.</typeparam>
         /// <typeparam name="TResult">Type of the result.</typeparam>
@@ -88,7 +89,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        public async Task<TResult> HandleQueryResultAsync<TQuery, TResult>(
+        public async Task<TResult> SendQueryResultAsync<TQuery, TResult>(
             TQuery query,
             CancellationToken cancellationToken = default)
             where TQuery : class, IQuery<TResult>
@@ -97,7 +98,7 @@ namespace Xpandables.Net.Dispatchers
             {
                 if (query is null) throw new ArgumentNullException(nameof(query));
 
-                var handler = _serviceProvider.GetService(typeof(IQueryHandler<TQuery, TResult>)) as IQueryHandler<TQuery, TResult>
+                var handler = _dispatcherHandlerProvider.GetHandler<IQueryHandler<TQuery, TResult>>()
                         ?? throw new ArgumentException($"The matching query handler for {typeof(TQuery).Name} is missing.");
 
                 return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
@@ -109,13 +110,14 @@ namespace Xpandables.Net.Dispatchers
                                             && !(exception is InvalidOperationException))
             {
                 throw new InvalidOperationException(
-                    $"{nameof(HandleQueryResultAsync)} execution failed. See inner exception",
+                    $"{nameof(SendQueryResultAsync)} execution failed. See inner exception",
                     exception);
             }
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result.
+        /// Asynchronously send the specified query to its handler (<see cref="IQueryHandler{TQuery, TResult}"/> where TQuery is <see cref="IQuery{TResult}"/>)
+        /// and returns a result of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TResult">Type of the result.</typeparam>
         /// <param name="query">The query to act on.</param>
@@ -124,7 +126,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        public async Task<TResult> HandleQueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+        public async Task<TResult> SendQueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -135,7 +137,7 @@ namespace Xpandables.Net.Dispatchers
                     throw new InvalidOperationException("Building Query wrapper failed.", typeException);
                 }
 
-                if (!(_serviceProvider.GetService(wrapperType) is IQueryHandlerWrapper<TResult> handler))
+                if (!(_dispatcherHandlerProvider.GetHandler(wrapperType) is IQueryHandlerWrapper<TResult> handler))
                     throw new ArgumentException($"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerBuilder<,>).Name} is registered using the AddXQueryHandlerWrapper method.");
 
                 return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
@@ -147,7 +149,7 @@ namespace Xpandables.Net.Dispatchers
                                             && !(exception is InvalidOperationException))
             {
                 throw new InvalidOperationException(
-                     $"{nameof(HandleQueryAsync)} execution failed. See inner exception",
+                     $"{nameof(SendQueryAsync)} execution failed. See inner exception",
                     exception);
             }
         }

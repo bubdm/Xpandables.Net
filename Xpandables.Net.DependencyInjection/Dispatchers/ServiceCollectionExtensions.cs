@@ -37,6 +37,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
+            services.AddScoped<IDispatcherHandlerProvider, DispatcherHandlerProvider>();
             services.AddScoped<IDispatcher, Dispatcher>();
             return services;
         }
@@ -45,13 +46,16 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the <typeparamref name="TDispatcher"/> type to the services with scoped life time.
         /// </summary>
         /// <typeparam name="TDispatcher">The dispatcher type implementation.</typeparam>
+        /// <typeparam name="TDispatcherHandlerProvider">The dispatcher handler provider type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDispatcher<TDispatcher>(this IServiceCollection services)
+        public static IServiceCollection AddXDispatcher<TDispatcher, TDispatcherHandlerProvider>(this IServiceCollection services)
             where TDispatcher : class, IDispatcher
+            where TDispatcherHandlerProvider : class, IDispatcherHandlerProvider
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
+            services.AddScoped<IDispatcherHandlerProvider, TDispatcherHandlerProvider>();
             services.AddScoped<IDispatcher, TDispatcher>();
             return services;
         }
