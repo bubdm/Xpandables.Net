@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
+using Xpandables.Net.Events;
 using Xpandables.Net.Expressions;
 using Xpandables.Net.HttpRestClient;
 using Xpandables.Net.Queries;
@@ -11,7 +12,7 @@ using Xpandables.Samples.Domain.Models;
 namespace Xpandables.Samples.Business.Contracts
 {
     [HttpRestClient(Path = "api/user/signin", IsSecured = false, BodyFormat = BodyFormat.String, ContentType = ContentType.Json)]
-    public class SignInRequest : QueryExpression<User>, IQuery<SignInResponse>, IBehaviorValidation
+    public class SignInRequest : QueryExpression<User>, IQuery<SignInResponse>, IBehaviorValidation, IBehaviorLogging
     {
         public SignInRequest() { }
         public SignInRequest(string email, string password) => (Email, Password) = (email, password);

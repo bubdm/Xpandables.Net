@@ -4151,6 +4151,31 @@
             for the enumeration.</exception>
             <exception cref="T:System.NotSupportedException">The conversion cannot be performed.</exception>
         </member>
+        <member name="T:Xpandables.Net.Events.CommandLoggingBehavior`1">
+            <summary>
+            This class allows the application author to add logging event support to command control flow.
+            The target command should implement the <see cref="T:Xpandables.Net.Events.IBehaviorLogging"/> interface in order to activate the behavior.
+            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Events.ILogger"/>.
+            </summary>
+            <typeparam name="TCommand">Type of the command to be handled.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Events.CommandLoggingBehavior`1.#ctor(Xpandables.Net.Events.ILogger,Xpandables.Net.Commands.ICommandHandler{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Events.CommandLoggingBehavior`1"/> class with the logger and the command handler to be decorated.
+            </summary>
+            <param name="logger">The logger instance.</param>
+            <param name="decoratee">The command handler to be decorated.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="logger"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Events.CommandLoggingBehavior`1.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handle the specified command adding post/rollback event to the decorated handler.
+            </summary>
+            <param name="command">The command instance to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
+        </member>
         <member name="T:Xpandables.Net.Events.DataLogContextSettings">
             <summary>
             Provides with the base option class for <see cref="T:Xpandables.Net.Events.IDataLogContext"/> settings.
@@ -4204,6 +4229,13 @@
         <member name="M:Xpandables.Net.Events.DefaultLogEntity.CreateLogEntity">
             <summary>
             Initializes a new log entity with default values.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Events.IBehaviorLogging">
+            <summary>
+            A marker interface that allows the class implementation of (<see cref="T:Xpandables.Net.Queries.IQueryHandler`2"/> or <see cref="T:Xpandables.Net.Commands.ICommandHandler`1"/>
+            to be logged using the <see cref="T:Xpandables.Net.Events.IDataLogContext`1"/>.
+            You need to register the expected behavior using the appropriate add data log context extension method and provide an implementation of <see cref="T:Xpandables.Net.Events.ILogger"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Events.IDataLogContext">
@@ -4404,6 +4436,57 @@
             </summary>
             <param name="logEvent">The event source.</param>
         </member>
+        <member name="T:Xpandables.Net.Events.ILogger">
+            <summary>
+            An interface used for writing log events.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogger.OnEntryLogAsync(System.Object,System.Object)">
+            <summary>
+            Asynchronously registers logs on entry.
+            </summary>
+            <param name="sender">The object sender.</param>
+            <param name="argument">The arguments</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogger.OnExceptionLogAsync(System.Object,System.Object,System.Exception)">
+            <summary>
+            Asynchronously registers logs on exception.
+            </summary>
+            <param name="sender">The object sender.</param>
+            <param name="argument">The arguments</param>
+            <param name="exception">The handled exception.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogger.OnExitLogAsync(System.Object,System.Object,System.Object)">
+            <summary>
+            Asynchronously registers logs on exit.
+            </summary>
+            <param name="sender">The object sender.</param>
+            <param name="argument">The arguments</param>
+            <param name="result">The execution result for non-void method.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogger.OnEntryLog(System.Object,System.Object)">
+            <summary>
+            Registers logs on entry.
+            </summary>
+            <param name="sender">The object sender.</param>
+            <param name="argument">The arguments</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogger.OnExceptionLog(System.Object,System.Object,System.Exception)">
+            <summary>
+            Registers logs on exception.
+            </summary>
+            <param name="sender">The object sender.</param>
+            <param name="argument">The arguments</param>
+            <param name="exception">The handled exception.</param>
+        </member>
+        <member name="M:Xpandables.Net.Events.ILogger.OnExitLog(System.Object,System.Object,System.Object)">
+            <summary>
+            Registers logs on exit.
+            </summary>
+            <param name="sender">The object sender.</param>
+            <param name="argument">The arguments</param>
+            <param name="result">The execution result for non-void method.</param>
+        </member>
         <member name="T:Xpandables.Net.Events.LogEntity`1">
             <summary>
             Helper class to implement <see cref="T:Xpandables.Net.Events.ILogEntity`1"/>.
@@ -4594,6 +4677,34 @@
             Emit the provided log event to the sink.
             </summary>
             <param name="logEvent">The log event to write.</param>
+        </member>
+        <member name="T:Xpandables.Net.Events.QueryLoggingBehavior`2">
+            <summary>
+            This class allows the application author to add logging event support to query control flow.
+            The target command should implement the <see cref="T:Xpandables.Net.Events.IBehaviorLogging"/> interface in order to activate the behavior.
+            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Events.ILogger"/>.
+            </summary>
+            <typeparam name="TQuery">Type of the query.</typeparam>
+            <typeparam name="TResult">Type of the result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Events.QueryLoggingBehavior`2.#ctor(Xpandables.Net.Events.ILogger,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Events.QueryLoggingBehavior`2"/> class.
+            </summary>
+            <param name="logger">the logger instance.</param>
+            <param name="decoratee">The decorated query handler.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="logger"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Events.QueryLoggingBehavior`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result type.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
         </member>
         <member name="T:Xpandables.Net.Expressions.ExpressionComparer">
             <summary>

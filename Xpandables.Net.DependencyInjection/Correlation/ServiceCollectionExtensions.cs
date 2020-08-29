@@ -21,6 +21,7 @@ using System;
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.Correlation;
+using Xpandables.Net.Events;
 using Xpandables.Net.Queries;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace

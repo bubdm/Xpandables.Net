@@ -26,6 +26,7 @@ namespace Xpandables.Samples.Business
                 options.UsePersistenceBehavior();
                 options.UseValidatorBehavior();
                 options.UseIdentityBehavior<IdentityDataProvider>();
+                options.UseLoggingBehavior<HttpLogginService>();
             }, assemblies);
 
             services.AddXHttpTokenContainer();

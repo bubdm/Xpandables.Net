@@ -16,11 +16,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Copyright © 2020 Francis-Black EWANE")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("A utility library in .NetStandard to easily add patterns such as Command, Query, " +
     "Dispatcher, Interception...")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("3.1.3")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.1.3")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("3.1.4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.1.4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Xpandables Net")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Xpandables.Net")]
-[assembly: System.Reflection.AssemblyVersionAttribute("3.1.3")]
+[assembly: System.Reflection.AssemblyVersionAttribute("3.1.4")]
 [assembly: System.Reflection.AssemblyMetadataAttribute("RepositoryUrl", "https://github.com/Francescolis/Xpandables.Net")]
 [assembly: System.Resources.NeutralResourcesLanguageAttribute("en-GB")]
 

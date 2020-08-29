@@ -15,15 +15,17 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
 using System.Linq;
 using System.Reflection;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Xpandables.Net.Interception;
 
+#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
+#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Provides method to register interception.

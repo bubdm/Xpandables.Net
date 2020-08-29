@@ -24,6 +24,7 @@ using System.Reflection;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Correlation;
 using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Events;
 using Xpandables.Net.Extensions;
 using Xpandables.Net.Identities;
 using Xpandables.Net.Queries;
@@ -32,7 +33,9 @@ using Xpandables.Net.Transactions;
 using Xpandables.Net.ValidatorRules;
 using Xpandables.Net.VisitorRules;
 
+#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
+#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Defines options to configure command/query handlers.
@@ -72,7 +75,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IBehaviorIdentity"/>.
         /// </summary>
-        public CommandQueryOptions UseIdentityBehavior<TIdentityDataProvider>() => this.With(cq => cq.IsIdentityDataEnabled = typeof(TIdentityDataProvider));
+        public CommandQueryOptions UseIdentityBehavior<TIdentityDataProvider>()
+            where TIdentityDataProvider : class, IIdentityDataProvider => this.With(cq => cq.IsIdentityDataEnabled = typeof(TIdentityDataProvider));
 
         /// <summary>
         /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IBehaviorIdentity"/>.
@@ -81,6 +85,19 @@ namespace Xpandables.Net.DependencyInjection
         public CommandQueryOptions UseIdentityBehavior(Type identityDataProvider)
             => this.With(cq => cq.IsIdentityDataEnabled = identityDataProvider ?? throw new ArgumentNullException(nameof(identityDataProvider)));
 
+        /// <summary>
+        /// Enables logging behavior to commands and queries that are decorated with the <see cref="IBehaviorLogging"/>.
+        /// </summary>
+        public CommandQueryOptions UseLoggingBehavior<TLogger>()
+            where TLogger : class, ILogger => this.With(cq => cq.IsLoggingEnabled = typeof(TLogger));
+
+        /// <summary>
+        /// Enables logging behavior to commands and queries that are decorated with the <see cref="IBehaviorLogging"/>.
+        /// </summary>
+        /// <param name="loggerType">The identity data provider type.</param>
+        public CommandQueryOptions UseLoggingBehavior(Type loggerType)
+            => this.With(cq => cq.IsLoggingEnabled = loggerType ?? throw new ArgumentNullException(nameof(loggerType)));
+
         internal bool IsValidatorEnabled { get; private set; }
         internal bool IsVisitorEnabled { get; private set; }
         internal bool IsTransactionEnabled { get; private set; }
@@ -88,6 +105,7 @@ namespace Xpandables.Net.DependencyInjection
         internal bool IsCorrelationEnabled { get; private set; }
         internal bool IsRetryEnabled { get; private set; }
         internal Type? IsIdentityDataEnabled { get; private set; }
+        internal Type? IsLoggingEnabled { get; private set; }
     }
 
     /// <summary>
@@ -137,6 +155,9 @@ namespace Xpandables.Net.DependencyInjection
 
             var definedOptions = new CommandQueryOptions();
             configureOptions.Invoke(definedOptions);
+
+            if (definedOptions.IsLoggingEnabled is { })
+                services.AddXLoggingBehavior(definedOptions.IsLoggingEnabled);
 
             if (definedOptions.IsCorrelationEnabled)
                 services.AddXCorrelationBehavior();

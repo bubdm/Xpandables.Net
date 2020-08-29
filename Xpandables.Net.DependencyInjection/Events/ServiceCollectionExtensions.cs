@@ -6,7 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Configuration;
 
+using Xpandables.Net.Commands;
 using Xpandables.Net.Events;
+using Xpandables.Net.Queries;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
@@ -17,6 +19,42 @@ namespace Xpandables.Net.DependencyInjection
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds logging behavior to commands and queries that are decorated with the <see cref="IBehaviorLogging"/> to the services
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="loggerType">The logger type.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="loggerType"/> is null.</exception>
+        public static IServiceCollection AddXLoggingBehavior(this IServiceCollection services, Type loggerType)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = loggerType ?? throw new ArgumentNullException(nameof(loggerType));
+
+            if (!typeof(Events.ILogger).IsAssignableFrom(loggerType))
+                throw new ArgumentException($"{nameof(loggerType)} must implement {nameof(Events.ILogger)}.");
+
+            services.AddScoped(typeof(Events.ILogger), loggerType);
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingBehavior<>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryLoggingBehavior<,>));
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds logging behavior to commands and queries that are decorated with the <see cref="IBehaviorLogging"/> to the services
+        /// </summary>
+        /// <typeparam name="TLogger">The type of the logger.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXLoggingBehavior<TLogger>(this IServiceCollection services)
+            where TLogger : class, Events.ILogger
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            return services.AddXLoggingBehavior(typeof(TLogger));
+        }
+
         /// <summary>
         /// Adds the logger using the default <see cref="DefaultLogEntity"/> event to the services with scoped life time.
         /// The <see cref="DefaultLogEntity"/> must be registered in the data context and the context
@@ -93,7 +131,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         [DebuggerStepThrough]
-        private static ILogger CreateLoggerConfiguration<TLogEntity>(IServiceProvider provider)
+        private static Serilog.ILogger CreateLoggerConfiguration<TLogEntity>(IServiceProvider provider)
             where TLogEntity : Entity, ILogEntity<TLogEntity>, new()
             => new LoggerConfiguration()
                 .WriteTo
