@@ -29,7 +29,7 @@ namespace Xpandables.Samples.Business.Services
 
         public async Task OnExitLogAsync(object sender, object argument, object result = default)
         {
-            _logger.Information("Exiting the {Handler} with {Token}", sender.GetType().Name, result);
+            _logger.Information("Exiting the {Handler} with {Token}", sender.GetType().Name, result.ToJsonString());
             await Task.CompletedTask.ConfigureAwait(false);
         }
     }
