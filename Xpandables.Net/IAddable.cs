@@ -19,6 +19,7 @@ namespace Xpandables.Net
 {
     /// <summary>
     /// Represents collection which allows adding items.
+    /// This interface is useful when implementing a serializable custom collection with JSON.
     /// </summary>
     /// <typeparam name="TItem">Type of items in collection.</typeparam>
     public interface IAddable<in TItem>

@@ -31,7 +31,7 @@ namespace Xpandables.Net
     public abstract class ValueObject
     {
         /// <summary>
-        /// When implemented in derived class, this method will provide the list of components that comprise that class.
+        /// When implemented in derived class, this method will provide with the list of components that comprise that class.
         /// </summary>
         /// <returns>An enumerable components of the derived class.</returns>
         protected abstract IEnumerable<object> GetEqualityComponents();

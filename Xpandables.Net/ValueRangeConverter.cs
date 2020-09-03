@@ -22,7 +22,7 @@ using System.Globalization;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// Provides a type converter to convert <see cref="ValueRange{TValue}"/> objects to and from various other representations.
+    /// Provides a type converter to convert <see cref="ValueRange{TValue}"/> objects to <see cref="string"/> and from <see cref="string"/> representations.
     /// </summary>
     public sealed class ValueRangeConverter : TypeConverter
     {
@@ -93,7 +93,7 @@ namespace Xpandables.Net
         }
 
         /// <summary>
-        /// Converts the given value object to the specified destination type.
+        /// Converts the given range value object to the specified destination type string.
         /// </summary>
         /// <param name="context">An <see cref="ITypeDescriptorContext"></see> that provides a format context.</param>
         /// <param name="culture">An optional <see cref="CultureInfo"></see>. If not supplied, the current

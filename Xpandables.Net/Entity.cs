@@ -16,7 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -54,12 +53,12 @@ namespace Xpandables.Net
         public bool IsNew() => string.IsNullOrWhiteSpace(Id);
 
         /// <summary>
-        /// Determines whether or not the underlying instance is deleted.
+        /// Gets a value indicating whether or not the underlying instance is marked as deleted.
         /// </summary>
         public bool IsDeleted { get; protected set; }
 
         /// <summary>
-        /// Determines whether or not the underlying instance is active.
+        /// Gets a value indicating whether or not the underlying instance is marked as active.
         /// </summary>
         public bool IsActive { get; protected set; } = true;
 

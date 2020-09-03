@@ -27,9 +27,9 @@ namespace Xpandables.Net
         /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
         /// The default behavior returns <see langword="true"/>.
         /// </summary>
-        /// <param name="target">The argument to handle.</param>
-        /// <returns><see langword="true"/> if so, otherwise <see langword="false"/></returns>
-        public bool CanHandle(object target) => true;
+        /// <param name="argument">The argument to handle.</param>
+        /// <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
+        public bool CanHandle(object argument) => true;
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ namespace Xpandables.Net
         /// The default behavior returns <see langword="true"/>.
         /// </summary>
         /// <param name="argument">The argument to handle.</param>
-        /// <returns><see langword="true"/> if so, otherwise <see langword="false"/></returns>
+        /// <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
         public bool CanHandle(TArgument argument) => true;
     }
 }

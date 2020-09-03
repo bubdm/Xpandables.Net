@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "L5cxennF89yccs6p4bmUD4+t5SZtJrJfTJ0Tmot2K7nJNbt5cD26U1bvG+KiDOopWNNsjts++j+GRQUKewwxIQ==",
+  "dgSpecHash": "QsgsPCq+Ac/sgSPfHQcz81F2MF6O4OKS7Pfh0XlIrX2zb/ONZxaycgkIA3hZCun0vvVxAY4SXW/o/uJkdbIpbg==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj",
   "expectedPackageFiles": [
@@ -16,7 +16,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.annotations\\4.7.0\\system.componentmodel.annotations.4.7.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\4.7.1\\system.text.encodings.web.4.7.1.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\3.1.4\\xpandables.net.3.1.4.nupkg.sha512"
   ],
   "logs": []
 }

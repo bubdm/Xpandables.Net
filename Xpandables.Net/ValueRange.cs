@@ -33,21 +33,28 @@ namespace Xpandables.Net
         where TValue : unmanaged, IComparable, IFormattable, IConvertible, IComparable<TValue>, IEquatable<TValue>
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="ValueRange{TValue}"/> with the specified values.
+        /// Initializes a new instance of <see cref="ValueRange{TValue}"/> with the specified pair of values.
         /// </summary>
         /// <param name="min">The minimal value of range.</param>
         /// <param name="max">The maximal value of range.</param>
         public ValueRange(TValue min, TValue max) => (Min, Max) = (min, max);
 
         /// <summary>
+        /// Provides with deconstruction for <see cref="ValueRange{TValue}"/>.
+        /// </summary>
+        /// <param name="min">The output minimal value of range.</param>
+        /// <param name="max">The output maximal value of range.</param>
+        public void Deconstruct(out TValue min, out TValue max) => (min, max) = (Min, Max);
+
+        /// <summary>
         /// Gets the minimal value of range.
         /// </summary>
-        public TValue Min { get; private set; }
+        public TValue Min { get; }
 
         /// <summary>
         /// Gets the maximal value of range.
         /// </summary>
-        public TValue Max { get; private set; }
+        public TValue Max { get; }
 
         /// <summary>
         /// Creates a string representation of the <see cref="ValueRange{T}"/> separated by ":".
@@ -100,8 +107,8 @@ namespace Xpandables.Net
 
         /// <summary>
         /// Determines whether this range is empty or not.
-        /// Returns <see langword="true"/> if so, otherwise returns <see langword="false"/>.
         /// </summary>
+        /// <returns>Returns <see langword="true"/> if so, otherwise returns <see langword="false"/>.</returns>
         public bool IsEmpty() => Min.CompareTo(Max) >= 0;
     }
 }
