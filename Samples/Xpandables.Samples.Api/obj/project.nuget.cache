@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "MCesADLZucC1sFkM4Cvb4uDn8ZdvY6e7Xlq29HKb0+F/JEHDJ0uFkr3RmTd9UzVOFwzgc81mg+VbYWopKDL4dg==",
+  "dgSpecHash": "+SdLaezm4zdFFR5O0qT+vSCJ+RwmfQQ1zQ/COLXdhXK8v7n98LGjJA9z2nhj09U74oWGW1zw3RBeYHSkKlhf4g==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Api\\Xpandables.Samples.Api.csproj",
   "expectedPackageFiles": [
@@ -64,7 +64,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.primitives\\4.3.0\\system.componentmodel.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.typeconverter\\4.3.0\\system.componentmodel.typeconverter.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.configuration.configurationmanager\\4.5.0\\system.configuration.configurationmanager.4.5.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.data.sqlclient\\4.8.1\\system.data.sqlclient.4.8.1.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.data.sqlclient\\4.8.2\\system.data.sqlclient.4.8.2.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.diagnostics.debug\\4.3.0\\system.diagnostics.debug.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.diagnostics.diagnosticsource\\4.7.1\\system.diagnostics.diagnosticsource.4.7.1.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.diagnostics.tools\\4.3.0\\system.diagnostics.tools.4.3.0.nupkg.sha512",
@@ -116,11 +116,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\3.1.4\\xpandables.net.3.1.4.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.dependencyinjection\\3.1.4\\xpandables.net.dependencyinjection.3.1.4.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\3.1.4\\xpandables.net.entityframework.3.1.4.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.netcore\\3.1.4\\xpandables.netcore.3.1.4.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
   "logs": []
 }

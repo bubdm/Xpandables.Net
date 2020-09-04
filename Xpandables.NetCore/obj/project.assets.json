@@ -124,7 +124,7 @@
           "lib/netstandard2.1/System.Text.Encodings.Web.dll": {}
         }
       },
-      "Xpandables.Net/3.1.4": {
+      "Xpandables.Net/3.1.5": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -787,7 +787,7 @@
         "version.txt"
       ]
     },
-    "Xpandables.Net/3.1.4": {
+    "Xpandables.Net/3.1.5": {
       "type": "project",
       "path": "../Xpandables.Net/Xpandables.Net.csproj",
       "msbuildProject": "../Xpandables.Net/Xpandables.Net.csproj"
@@ -796,7 +796,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
       "Microsoft.CodeAnalysis.FxCopAnalyzers >= 3.0.0",
-      "Xpandables.Net >= 3.1.4"
+      "Xpandables.Net >= 3.1.5"
     ]
   },
   "packageFolders": {
@@ -804,7 +804,7 @@
     "D:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
-    "version": "3.1.4",
+    "version": "3.1.5",
     "restore": {
       "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj",
       "projectName": "Xpandables.NetCore",
