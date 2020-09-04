@@ -23,7 +23,6 @@ namespace Xpandables.Net.Transactions
     /// <summary>
     /// A marker interface that allows the handler class implementation to be decorated with transaction behavior according to
     /// the decorated class type :
-    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="QueryTransactionBehavior{TQuery, TResult}"/>.
     /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandTransactionBehavior{TCommand}"/>.
     /// You must implement the <see cref="ITransactionScopeProvider"/> to provide the transaction scope.
     /// <para></para>

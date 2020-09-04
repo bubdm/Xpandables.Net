@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,14 +26,14 @@ using Xpandables.Net.Queries;
 namespace Xpandables.Net.Dispatchers
 {
     /// <summary>
-    /// Defines a set of methods to automatically handle <see cref="ICommand"/> and <see cref="IQuery{TResult}"/>
-    /// when targeting <see cref="IQueryHandler{TQuery, TResult}"/> or/and <see cref="ICommandHandler{TCommand}"/>.
+    /// Defines a set of methods to automatically handle <see cref="ICommand"/>, <see cref="IAsyncCommand"/>, <see cref="IAsyncQuery{TResult}"/> and <see cref="IQuery{TResult}"/>
+    /// when targeting <see cref="ICommandHandler{TCommand}"/>, <see cref="IQueryHandler{TQuery, TResult}"/>, <see cref="IAsyncQueryHandler{TQuery, TResult}"/> or/and <see cref="IAsyncCommandHandler{TCommand}"/>.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     public interface IDispatcher
     {
         /// <summary>
-        /// Asynchronously send the specified query to its handler (<see cref="IQueryHandler{TQuery, TResult}"/>) 
+        /// Asynchronously send the specified query to its handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/>) 
         /// and returns a result of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TQuery">Type of the query.</typeparam>
@@ -43,11 +44,24 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        Task<TResult> SendQueryResultAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+        IAsyncEnumerable<TResult> SendQueryResultAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+            where TQuery : class, IAsyncQuery<TResult>;
+
+        /// <summary>
+        /// Send the specified query to its handler (<see cref="IQueryHandler{TQuery, TResult}"/>) 
+        /// and returns a result of <typeparamref name="TResult"/> type.
+        /// </summary>
+        /// <typeparam name="TQuery">Type of the query.</typeparam>
+        /// <typeparam name="TResult">Type of the result.</typeparam>
+        /// <param name="query">The query to act on.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        TResult SendQueryResult<TQuery, TResult>(TQuery query)
             where TQuery : class, IQuery<TResult>;
 
         /// <summary>
-        /// Asynchronously send the specified query to its handler (<see cref="IQueryHandler{TQuery, TResult}"/> where TQuery is <see cref="IQuery{TResult}"/>)
+        /// Asynchronously send the specified query to its handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> where TQuery is <see cref="IQuery{TResult}"/>)
         /// and returns a result of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TResult">Type of the result.</typeparam>
@@ -57,10 +71,21 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        Task<TResult> SendQueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<TResult> SendQueryAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Asynchronously send the specified command to its handler (<see cref="ICommandHandler{TCommand}"/>).
+        /// Send the specified query to its handler (<see cref="IQueryHandler{TQuery, TResult}"/> where TQuery is <see cref="IQuery{TResult}"/>)
+        /// and returns a result of <typeparamref name="TResult"/> type.
+        /// </summary>
+        /// <typeparam name="TResult">Type of the result.</typeparam>
+        /// <param name="query">The query to act on.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        TResult SendQuery<TResult>(IQuery<TResult> query);
+
+        /// <summary>
+        /// Asynchronously send the specified command to its handler (<see cref="IAsyncCommandHandler{TCommand}"/>).
         /// </summary>
         /// <typeparam name="TCommand">Type of the command.</typeparam>
         /// <param name="command">The command to act on.</param>
@@ -70,6 +95,17 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         Task SendCommandAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+            where TCommand : class, IAsyncCommand;
+
+        /// <summary>
+        /// Send the specified command to its handler (<see cref="ICommandHandler{TCommand}"/>).
+        /// </summary>
+        /// <typeparam name="TCommand">Type of the command.</typeparam>
+        /// <param name="command">The command to act on.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        void SendCommand<TCommand>(TCommand command)
             where TCommand : class, ICommand;
     }
 }

@@ -21,7 +21,7 @@ using Xpandables.Net.Queries;
 namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// A marker interface that allows the class implementation of (<see cref="IQueryHandler{TQuery, TResult}"/> or <see cref="ICommandHandler{TCommand}"/>
+    /// A marker interface that allows the class implementation of (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> or <see cref="IAsyncCommandHandler{TCommand}"/>
     /// to be logged using the <see cref="IDataLogContext{TLogEntity}"/>.
     /// You need to register the expected behavior using the appropriate add data log context extension method and provide an implementation of <see cref="ILogger"/>.
     /// </summary>

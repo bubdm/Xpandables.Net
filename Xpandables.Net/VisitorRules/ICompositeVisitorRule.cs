@@ -36,6 +36,15 @@ namespace Xpandables.Net.VisitorRules
         /// <exception cref="ArgumentException">The <paramref name="element"/> does not implement <see cref="IVisitable"/>.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         Task VisitAsync(TElement element);
+
+        /// <summary>
+        /// Applies all found visitors to the element according to the visitor order.
+        /// </summary>
+        /// <param name="element">The element to be visited.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="element"/> does not implement <see cref="IVisitable"/>.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        void Visit(TElement element);
     }
 
     /// <summary>
@@ -52,5 +61,14 @@ namespace Xpandables.Net.VisitorRules
         /// <exception cref="ArgumentException">The <paramref name="target"/> does not implement <see cref="IVisitable"/>.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         Task VisitAsync(object target);
+
+        /// <summary>
+        /// Applies all found visitors to the target element according to the visitor order.
+        /// </summary>
+        /// <param name="target">The target element to be visited.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="target"/> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="target"/> does not implement <see cref="IVisitable"/>.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        void Visit(object target);
     }
 }

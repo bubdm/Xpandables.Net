@@ -33,11 +33,26 @@ namespace Xpandables.Net.Entities
         public string Value { get; private set; }
 
         /// <summary>
+        /// Gets the type of the token : Bearer, Basic....
+        /// </summary>
+        [Required, DataType(DataType.Text)]
+        public string Type { get; private set; }
+
+        /// <summary>
+        /// Gets the token expiry.
+        /// </summary>
+        [Required, DataType(DataType.DateTime)]
+        public DateTime ExpiresOn { get; private set; }
+
+        /// <summary>
         /// Creates an instance of <see cref="Token"/> with the specified value.
         /// </summary>
         /// <param name="value">The token value.</param>
+        /// <param name="type">The token type.</param>
+        /// <param name="expiry">The token expiry.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
-        public static Token Create(string value) => new Token(value);
+        /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        public static Token Create(string value, string type, DateTime expiry) => new Token(value, type, expiry);
 
         /// <summary>
         /// Provides the list of components that comprise that class.
@@ -46,9 +61,11 @@ namespace Xpandables.Net.Entities
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;
+            yield return Type;
+            yield return ExpiresOn;
         }
 
-        private Token(string value)
-            => Value = value ?? throw new ArgumentNullException(nameof(value));
+        private Token(string value, string type, DateTime expiry)
+            => (Value, Type, ExpiresOn) = (value ?? throw new ArgumentNullException(nameof(value)), type ?? throw new ArgumentNullException(nameof(type)), expiry);
     }
 }

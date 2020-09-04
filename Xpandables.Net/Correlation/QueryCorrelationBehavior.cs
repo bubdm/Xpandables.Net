@@ -16,9 +16,8 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
+using Xpandables.Net.Extensions;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Correlation
@@ -53,24 +52,22 @@ namespace Xpandables.Net.Correlation
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result type.
+        /// Handles the specified query and returns the expected result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        public async Task<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
+        public TResult Handle(TQuery query)
         {
             try
             {
-                var result = await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
-                await _correlationContext.OnPostEventAsync(result).ConfigureAwait(false);
-                return result;
+                var results = _decoratee.Handle(query);
+                AsyncExtensions.RunSync(_correlationContext.OnPostEventAsync(results));
+                return results;
             }
             catch (Exception exception)
             {
-                await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
+                AsyncExtensions.RunSync(_correlationContext.OnRollbackEventAsync(exception));
                 throw;
             }
         }

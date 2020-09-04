@@ -16,9 +16,8 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
+using Xpandables.Net.Extensions;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Events
@@ -50,25 +49,23 @@ namespace Xpandables.Net.Events
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result type.
+        /// Handles the specified query and returns the expected result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        public async Task<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
+        public TResult Handle(TQuery query)
         {
             try
             {
-                await _logger.OnEntryLogAsync(_decoratee, query).ConfigureAwait(false);
-                var result = await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
-                await _logger.OnExitLogAsync(_decoratee, query, result).ConfigureAwait(false);
+                AsyncExtensions.RunSync(_logger.OnEntryLogAsync(_decoratee, query));
+                var result = _decoratee.Handle(query);
+                AsyncExtensions.RunSync(_logger.OnExitLogAsync(_decoratee, query, result));
                 return result;
             }
             catch (Exception exception)
             {
-                await _logger.OnExceptionLogAsync(_decoratee, query, exception).ConfigureAwait(false);
+                AsyncExtensions.RunSync(_logger.OnExceptionLogAsync(_decoratee, query, exception));
                 throw;
             }
         }

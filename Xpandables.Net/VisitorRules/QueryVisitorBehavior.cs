@@ -16,8 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Xpandables.Net.Queries;
 
@@ -52,19 +50,17 @@ namespace Xpandables.Net.VisitorRules
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result type.
+        /// Handles the specified query and returns the expected result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        public async Task<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
+        public TResult Handle(TQuery query)
         {
             if (query is null) throw new ArgumentNullException(nameof(query));
 
-            await query.AcceptAsync(_visitor).ConfigureAwait(false);
-            return await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
+            query.Accept(_visitor);
+            return _decoratee.Handle(query);
         }
     }
 }

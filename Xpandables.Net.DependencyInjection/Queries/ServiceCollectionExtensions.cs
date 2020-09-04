@@ -23,7 +23,9 @@ using System.Reflection;
 
 using Xpandables.Net.Queries;
 
+#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
+#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Provides method to register query handler.
@@ -31,7 +33,7 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="IQueryHandler{TQuery, TResult}"/> to the services with transient life time.
+        /// Adds the <see cref="IAsyncQueryHandler{TQuery, TResult}"/> and <see cref="IQueryHandler{TQuery, TResult}"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -44,6 +46,10 @@ namespace Xpandables.Net.DependencyInjection
 
             services.XRegister(scan => scan
                 .FromAssemblies(assemblies)
+                .AddClasses(classes => classes.AssignableTo(typeof(IAsyncQueryHandler<,>))
+                    .Where(_ => !_.IsGenericType))
+                    .AsImplementedInterfaces()
+                    .WithTransientLifetime()
                 .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>))
                     .Where(_ => !_.IsGenericType))
                     .AsImplementedInterfaces()
@@ -62,6 +68,7 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddTransient(typeof(QueryHandlerWrapper<,>));
+            services.AddTransient(typeof(AsyncQueryHandlerWrapper<,>));
             return services;
         }
     }

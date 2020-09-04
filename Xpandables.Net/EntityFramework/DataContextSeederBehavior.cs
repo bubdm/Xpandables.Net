@@ -18,8 +18,6 @@
 using System;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Extensions;
-
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
@@ -58,7 +56,7 @@ namespace Xpandables.Net.EntityFramework
         IDataContext IDataContextProvider.GetDataContext()
         {
             var context = _decoratee.GetDataContext();
-            AsyncExtensions.RunSync(_seeder.SeedAsync((TDataContext)context));
+            _seeder.Seed((TDataContext)context);
 
             return context;
         }

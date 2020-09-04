@@ -22,7 +22,7 @@ using System.Globalization;
 namespace Xpandables.Net.Cryptography
 {
     /// <summary>
-    /// Provides a type converter to convert <see cref="ValueEncrypted"/> objects to and from various other representations.
+    /// Provides a type converter to convert <see cref="ValueEncrypted"/> objects to <see cref="string"/>and from <see cref="string"/> representations.
     /// </summary>
     public sealed class ValueEncryptedConverter : TypeConverter
     {

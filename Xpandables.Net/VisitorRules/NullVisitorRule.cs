@@ -39,5 +39,18 @@ namespace Xpandables.Net.VisitorRules
         /// <exception cref="ArgumentException">The <paramref name="element" /> does not implement <see cref="IVisitable" />.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         public async Task VisitAsync(TElement element) { /* intentionally left empty. */ await Task.CompletedTask.ConfigureAwait(false); }
+
+        /// <summary>
+        /// Declares a Visit operation.
+        /// When overridden in derived class, this method will do the actual job of visiting the specified element.
+        /// The default behavior just call the non-generic <see cref="IVisitorRule.Visit(object)" /> method from base interface
+        /// for validating the element.
+        /// The non-generic method <see cref="IVisitorRule.Visit(object)" /> checks that the argument is not null and implements <see cref="IVisitable" />.
+        /// </summary>
+        /// <param name="element">Element to be visited.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="element" /> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="element" /> does not implement <see cref="IVisitable" />.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        public void Visit(TElement element) { /* intentionally left empty. */ }
     }
 }

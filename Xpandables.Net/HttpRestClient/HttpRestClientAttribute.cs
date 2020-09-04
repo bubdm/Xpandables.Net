@@ -45,6 +45,17 @@ namespace Xpandables.Net.HttpRestClient
         public string? Path { get; set; }
 
         /// <summary>
+        /// Gets or sets the location of data.
+        /// The default value is <see cref="ParameterLocation.Body"/>.
+        /// </summary>
+        public ParameterLocation In { get; set; } = ParameterLocation.Body;
+
+        /// <summary>
+        /// Gets or sets the header / cookie name for <see cref="In"/> = <see cref="ParameterLocation.Cookie"/> or <see cref="ParameterLocation.Header"/>.
+        /// </summary>
+        public string HeaderCookieName { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the method name.
         /// The default value is <see langword="HttpMethod.Post.Method"/>
         /// </summary>
@@ -94,6 +105,37 @@ namespace Xpandables.Net.HttpRestClient
         /// The default value is "Bearer".
         /// </summary>
         public string Scheme { get; set; } = "Bearer";
+    }
+
+    /// <summary>
+    /// The location of the parameter.
+    /// </summary>
+    public enum ParameterLocation
+    {
+        /// <summary>
+        /// Parameters that are appended to the URL.
+        /// </summary>
+        Query,
+
+        /// <summary>
+        /// Custom headers that are expected as part of the request.
+        /// </summary>
+        Header,
+
+        /// <summary>
+        /// Used together with Path Templating, where the parameter value is actually part of the operation's URL
+        /// </summary>
+        Path,
+
+        /// <summary>
+        /// Used to pass a specific cookie value to the API.
+        /// </summary>
+        Cookie,
+
+        /// <summary>
+        /// Used in the content of the request.
+        /// </summary>
+        Body
     }
 
     /// <summary>

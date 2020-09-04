@@ -12,7 +12,7 @@ using Xpandables.Samples.Domain.Models;
 namespace Xpandables.Samples.Business.Contracts
 {
     [HttpRestClient(Path = "api/user/signin", IsSecured = false, BodyFormat = BodyFormat.String, ContentType = ContentType.Json)]
-    public class SignInRequest : QueryExpression<User>, IQuery<SignInResponse>, IBehaviorValidation, IBehaviorLogging
+    public class SignInRequest : QueryExpression<User>, IAsyncQuery<SignInResponse>, IBehaviorValidation, IBehaviorLogging
     {
         public SignInRequest() { }
         public SignInRequest(string email, string password) => (Email, Password) = (email, password);

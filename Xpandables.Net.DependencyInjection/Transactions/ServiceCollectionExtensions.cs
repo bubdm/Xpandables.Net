@@ -15,15 +15,16 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Xpandables.Net.Commands;
-using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
 
+#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
+#pragma warning restore ET002 // Namespace does not match file path or default namespace
 
 {
     /// <summary>
@@ -54,8 +55,8 @@ namespace Xpandables.Net.DependencyInjection
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
 
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandTransactionBehavior<>));
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandTransactionBehavior<>));
-            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryTransactionBehavior<,>));
             return services;
         }
     }

@@ -16,8 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
 
@@ -27,7 +25,7 @@ namespace Xpandables.Net.EntityFramework
     /// This class allows the application author to add persistence support to command control flow.
     /// The target command should implement the <see cref="IBehaviorPersistence"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/> and executes the
-    /// the <see cref="IDataContext.PersistAsync(CancellationToken)"/> after the main one in the same control flow only
+    /// the <see cref="IDataContext.Persist()"/> after the main one in the same control flow only
     /// if there is no exception. You can set the <see cref="IDataContext.PersistenceExceptionHandler"/> with the
     /// <see cref="IDataContext.OnPersistenceException(Func{Exception, Exception?})"/> command, in order to manage
     /// the exception.
@@ -53,15 +51,14 @@ namespace Xpandables.Net.EntityFramework
         }
 
         /// <summary>
-        /// Asynchronously handle the specified command.
+        /// Handles the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        public void Handle(TCommand command)
         {
-            await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            await _dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
+            _decoratee.Handle(command);
+            _dataContext.Persist();
         }
     }
 }

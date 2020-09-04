@@ -31,5 +31,11 @@ namespace Xpandables.Net.ValidatorRules
         /// </summary>
         /// <param name="_">The argument to be validated.</param>
         public async Task ValidateAsync(TArgument _) => await Task.CompletedTask.ConfigureAwait(false);
+
+        /// <summary>
+        /// Default implementation.
+        /// </summary>
+        /// <param name="_">The argument to be validated.</param>
+        public void Validate(TArgument _) { }
     }
 }

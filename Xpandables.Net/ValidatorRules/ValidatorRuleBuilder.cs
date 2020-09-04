@@ -17,7 +17,10 @@
 ************************************************************************************************************/
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.ValidatorRules
 {
@@ -40,10 +43,19 @@ namespace Xpandables.Net.ValidatorRules
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 
         /// <summary>
-        /// Asynchronously applies validation the argument and throws the <see langword="ValidationException"/> if necessary.
+        /// Asynchronously applies validation the argument and throws the <see cref="ValidationException"/> if necessary.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
         public async Task ValidateAsync(TArgument argument) => await _validator(argument).ConfigureAwait(false);
+
+        /// <summary>
+        /// Applies validation the argument and throws the <see cref="ValidationException"/> if necessary.
+        /// </summary>
+        /// <param name="argument">The target argument to be validated.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
+        public void Validate(TArgument argument) => AsyncExtensions.RunSync(_validator(argument));
     }
 }

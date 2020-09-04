@@ -22,7 +22,7 @@ using System.Text;
 namespace Xpandables.Net.Cryptography
 {
     /// <summary>
-    /// Provides with methods to generate strings, encrypt and decrypt string values.
+    /// Provides with methods to generate strings.
     /// Contains a default implementation.
     /// </summary>
     public interface IStringGenerator

@@ -33,8 +33,8 @@ namespace Xpandables.Net.Correlation
     /// <para></para>
     /// You need to register the expected behavior using the appropriate extension method.
     /// <para></para>
-    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="QueryCorrelationBehavior{TQuery, TResult}"/>.
-    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandCorrelationBehavior{TCommand}"/>.
+    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncQueryCorrelationBehavior{TQuery, TResult}"/>.
+    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="AsyncCommandCorrelationBehavior{TCommand}"/>.
     /// </summary>
     public interface IBehaviorCorrelation { }
 }

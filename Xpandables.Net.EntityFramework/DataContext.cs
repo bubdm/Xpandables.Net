@@ -281,5 +281,138 @@ namespace Xpandables.Net.EntityFramework
         /// <param name="persistenceExceptionHandler">The optional delegate instance.</param>
         public void OnPersistenceException(Func<Exception, Exception?>? persistenceExceptionHandler)
             => PersistenceExceptionHandler = persistenceExceptionHandler;
+
+        /// <summary>
+        /// Returns the entity matching the specified identifier or <see langword="null"/> if not found.
+        /// </summary>
+        /// <typeparam name="T">Type of entity.</typeparam>
+        /// <param name="identifier">the entity identifier to search for.</param>
+        /// <returns>An entity of type <typeparamref name="T"/> if found otherwise <see langword="null"/>  .</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="identifier"/> is null.</exception>
+        public T? GetEntityById<T>(string identifier) where T : Entity
+            => Set<T>().FirstOrDefault(entity => entity.Id == identifier);
+
+        /// <summary>
+        /// Adds a domain object to the data storage that will be inserted
+        /// into the database when <see cref="Persist"/> is called.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <param name="entity">The domain object to be added and persisted.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null or empty.</exception>
+        public void AddEntity<T>(T entity) where T : Entity
+            => Set<T>().Add(entity);
+
+        /// <summary>
+        /// Adds a collection of domain objects to the data storage that will be inserted
+        /// into the database when <see cref="IDataContext.Persist" /> is called.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <param name="entities">The domain objects collection to be added and persisted.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="entities" /> is null or empty.</exception>
+        public void AddEntityRange<T>(IEnumerable<T> entities)
+            where T : Entity
+        {
+            if (entities?.Any() != true)
+                throw new ArgumentNullException(nameof(entities));
+
+            AddRange(entities);
+        }
+
+        /// <summary>
+        /// Deletes the domain object matching the specified entity that will be removed from the database when <see cref="Persist"/>
+        /// is called.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <param name="deletedEntity">The entity to be deleted.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="deletedEntity"/> is null.</exception>
+        public void DeleteEntity<T>(T deletedEntity)
+            where T : Entity
+        {
+            if (deletedEntity is null) throw new ArgumentNullException(nameof(deletedEntity));
+            Remove(deletedEntity);
+        }
+
+        /// <summary>
+        /// Deletes the domain objects matching the predicate that will be removed from the database when <see cref="IDataContext.Persist" />
+        /// is called. You can use a third party library with <see langword="IDataContext.SetOf{T}" /> for performance.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <param name="predicate">The predicate to be used to filter domain objects.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="predicate" /> is null.</exception>
+        public void DeleteEntity<T>(Expression<Func<T, bool>> predicate)
+            where T : Entity
+        {
+            if (predicate is null) throw new ArgumentNullException(nameof(predicate));
+            foreach (var entity in Set<T>().Where(predicate))
+                Remove(entity);
+        }
+
+        /// <summary>
+        /// Updates the domain object matching the specify entity.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <param name="updatedEntity">the updated entity.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="updatedEntity"/> is null.</exception>
+        public void UpdateEntity<T>(T updatedEntity)
+            where T : Entity
+        {
+            if (updatedEntity is null) throw new ArgumentNullException(nameof(updatedEntity));
+            Update(updatedEntity);
+        }
+
+        /// <summary>
+        /// Updates the domain objects matching the collection of entities.
+        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
+        /// you don't set will be left alone. If you have property you want to set to its default,
+        /// then you must explicitly set that property's value.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
+        /// <param name="updatedEntities">Contains the collection of updated values.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="updatedEntities" /> is null.</exception>
+        public void UpdateEntityRange<T, TUpdated>(
+            IEnumerable<TUpdated> updatedEntities)
+            where T : Entity
+            where TUpdated : Entity
+        {
+            if (updatedEntities?.Any() != true)
+                throw new ArgumentNullException(nameof(updatedEntities));
+
+            foreach (var updatedEntity in updatedEntities)
+            {
+                if (Set<T>().FirstOrDefault(entity => entity.Id == updatedEntity.Id) is T entity)
+                {
+                    Entry(entity).CurrentValues.SetValues(updatedEntity);
+                    Entry(entity).State = EntityState.Modified;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the domain objects matching the predicate by using the updater.
+        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
+        /// you don't set will be left alone. If you have property you want to set to its default,
+        /// then you must explicitly set that property's value.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
+        /// <param name="predicate">The predicate to be used to filter domain objects.</param>
+        /// <param name="updater">The delegate to be used for updating domain objects.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="predicate" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="updater" /> is null.</exception>
+        public void UpdateEntity<T, TUpdated>(
+            Expression<Func<T, bool>> predicate, Func<T, TUpdated> updater)
+            where T : Entity
+            where TUpdated : class
+        {
+            if (predicate is null) throw new ArgumentNullException(nameof(predicate));
+            if (updater is null) throw new ArgumentNullException(nameof(updater));
+
+            foreach (var entity in Set<T>().Where(predicate))
+            {
+                Entry(entity).CurrentValues.SetValues(updater(entity));
+                Entry(entity).State = EntityState.Modified;
+            }
+        }
     }
 }

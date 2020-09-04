@@ -16,8 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
 
@@ -51,17 +49,16 @@ namespace Xpandables.Net.VisitorRules
         }
 
         /// <summary>
-        /// Asynchronously handle the specified command.
+        /// Handles the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken)
+        public void Handle(TCommand command)
         {
             if (command is null) throw new ArgumentNullException(nameof(command));
 
-            await command.AcceptAsync(_visitor).ConfigureAwait(false);
-            await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            command.Accept(_visitor);
+            _decoratee.Handle(command);
         }
     }
 }

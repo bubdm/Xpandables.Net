@@ -25,9 +25,9 @@ using Xpandables.Net.Extensions;
 namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// <see cref="PatternRequiredAttribute"/> base class for validating value against pattern using regular expression.
+    /// <see cref="PatternRequiredOptionalAttribute"/> base class for validating value against pattern using regular expression.
     /// </summary>
-    public abstract class PatternRequiredAttribute : RequiredAttribute
+    public abstract class PatternRequiredOptionalAttribute : RequiredAttribute
     {
         /// <summary>
         /// Validates the specified value with respect to the current pattern validation attribute.
@@ -38,6 +38,9 @@ namespace Xpandables.Net.Entities
         /// <exception cref="InvalidOperationException">The current attribute is malformed.</exception>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+            if (value is null && IsOptional)
+                return ValidationResult.Success;
+
             _ = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
 
             var isRequiredValid = base.IsValid(value, validationContext);
@@ -68,6 +71,11 @@ namespace Xpandables.Net.Entities
                     ErrorMessageString.StringFormat(validationContext.DisplayName),
                     validationContext.MemberName.SingleToEnumerable());
         }
+
+        /// <summary>
+        /// Gets or sets the value whether or not the decorated property/field/parameter can be null.
+        /// </summary>
+        public bool IsOptional { get; set; }
 
         /// <summary>
         /// Returns the Regex pattern the value must match.

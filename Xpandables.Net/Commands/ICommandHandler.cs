@@ -16,19 +16,9 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Commands
 {
-    /// <summary>
-    /// This interface is used as a marker for commands when using the command pattern.
-    /// Class implementation is used with the <see cref="ICommandHandler{TCommand}"/> where
-    /// "TCommand" is <see cref="ICommand"/> class implementation.
-    /// This can also be enhanced with some useful decorators.
-    /// </summary>
-    public interface ICommand { }
-
     /// <summary>
     /// Allows an application author to define a handler for a specific type command.
     /// The command must implement <see cref="ICommand"/> interface.
@@ -39,11 +29,11 @@ namespace Xpandables.Net.Commands
         where TCommand : class, ICommand
     {
         /// <summary>
-        /// Asynchronously handles the specified command.
+        /// Handles the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        Task HandleAsync(TCommand command, CancellationToken cancellationToken = default);
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        void Handle(TCommand command);
     }
 }

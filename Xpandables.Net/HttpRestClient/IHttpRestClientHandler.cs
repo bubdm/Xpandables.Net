@@ -53,7 +53,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns an <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        public async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             if (HttpClient is null)
                 throw new InvalidOperationException(
@@ -92,7 +92,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns an <see cref="HttpRestClientResponse"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        public async Task<HttpRestClientResponse> HandleAsync(ICommand command, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse> HandleAsync(IAsyncCommand command, CancellationToken cancellationToken = default)
         {
             if (HttpClient is null)
                 throw new InvalidOperationException(

@@ -43,7 +43,7 @@ namespace Xpandables.Net.Entities
         }
         
         /// <summary>
-        /// Determines whether or not the decorated property/field/parameter can be null.
+        /// Gets or sets the value whether or not the decorated property/field/parameter can be null.
         /// </summary>
         public bool IsOptional { get; set; }
     }

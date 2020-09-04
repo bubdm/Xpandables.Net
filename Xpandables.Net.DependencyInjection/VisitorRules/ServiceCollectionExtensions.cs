@@ -25,7 +25,9 @@ using Xpandables.Net.Commands;
 using Xpandables.Net.Queries;
 using Xpandables.Net.VisitorRules;
 
+#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
+#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Provides method to register visitor rules.
@@ -43,7 +45,9 @@ namespace Xpandables.Net.DependencyInjection
             if (services is null) throw new ArgumentNullException(nameof(services));
 
             services.AddTransient(typeof(ICompositeVisitorRule<>), typeof(CompositeVisitorRule<>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandVisitorBehavior<>));
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandVisitorBehavior<>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryVisitorBehavior<,>));
             services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryVisitorBehavior<,>));
             return services;
         }

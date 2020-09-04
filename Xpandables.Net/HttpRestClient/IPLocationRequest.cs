@@ -23,5 +23,5 @@ namespace Xpandables.Net.HttpRestClient
     /// Defines the location IP request.
     /// </summary>
     [HttpRestClient(Path = "", IsNullable = true, IsSecured = false, Method = "Get")]
-    public sealed class IPLocationRequest : IQuery<string> { }
+    public sealed class IPLocationRequest : IAsyncQuery<string> { }
 }

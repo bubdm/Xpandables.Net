@@ -152,8 +152,13 @@ namespace Xpandables.Net.HttpRestClient
                         break;
                     case BodyFormat.String:
                         ValidateImplementation<IStringRequest>(source, true);
-                        httpRequestMessage.Content = new StringContent(
-                            JsonConvert.SerializeObject(source), Encoding.UTF8, attribute.ContentType);
+                        var content = new StringContent(JsonConvert.SerializeObject(source), Encoding.UTF8, attribute.ContentType);
+                        if (attribute.In == ParameterLocation.Cookie)
+                            httpRequestMessage.Properties.Add(attribute.HeaderCookieName, JsonConvert.SerializeObject(source));
+                        else if (attribute.In == ParameterLocation.Header)
+                            httpRequestMessage.Headers.Add(attribute.HeaderCookieName, JsonConvert.SerializeObject(source));
+                        else
+                            httpRequestMessage.Content = content;
                         break;
                 }
 

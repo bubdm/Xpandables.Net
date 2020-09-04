@@ -16,10 +16,9 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Events
 {
@@ -49,26 +48,25 @@ namespace Xpandables.Net.Events
         }
 
         /// <summary>
-        /// Asynchronously handle the specified command adding post/rollback event to the decorated handler.
+        /// Handles the specified command adding post/rollback event to the decorated handler.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        public void Handle(TCommand command)
         {
             try
             {
-                await _logger.OnEntryLogAsync(_decoratee, command).ConfigureAwait(false);
-                await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                AsyncExtensions.RunSync(_logger.OnEntryLogAsync(_decoratee, command));
+                _decoratee.Handle(command);
             }
             catch (Exception exception)
             {
-                await _logger.OnExceptionLogAsync(_decoratee, command, exception).ConfigureAwait(false);
+                AsyncExtensions.RunSync(_logger.OnExceptionLogAsync(_decoratee, command, exception));
                 throw;
             }
             finally
             {
-                await _logger.OnExitLogAsync(_decoratee, command).ConfigureAwait(false);
+                AsyncExtensions.RunSync(_logger.OnExitLogAsync(_decoratee, command));
             }
         }
     }

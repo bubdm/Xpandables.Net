@@ -22,7 +22,9 @@ using System;
 using Xpandables.NetCore.Http;
 using Xpandables.Net.Http;
 
+#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
+#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Provides method to register secured services.

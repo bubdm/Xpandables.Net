@@ -16,13 +16,11 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// This interface allows application authors to avoid use of C# dynamics with query pattern.
+    /// This interface allows application authors to avoid use of C# dynamics with query pattern and allows type inference.
     /// </summary>
     /// <typeparam name="TResult">Type of the result.</typeparam>
     public interface IQueryHandlerWrapper<TResult>
@@ -31,10 +29,9 @@ namespace Xpandables.Net.Queries
         /// Handles the specified query and returns the expected result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        Task<TResult> HandleAsync(IQuery<TResult> query, CancellationToken cancellationToken = default);
+        /// <returns>An object that represents the result of <typeparamref name="TResult"/>.</returns>
+        TResult Handle(IQuery<TResult> query);
     }
 }

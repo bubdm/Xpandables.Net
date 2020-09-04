@@ -17,8 +17,11 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.ValidatorRules
 {
@@ -40,14 +43,27 @@ namespace Xpandables.Net.ValidatorRules
             => _validators = validators ?? Enumerable.Empty<IValidatorRule<TArgument>>();
 
         /// <summary>
-        /// Asynchronously applies all validators to the argument and throws the <see langword="ValidationException" /> if necessary.
+        /// Asynchronously applies all validators to the argument and throws the <see cref="ValidationException" /> if necessary.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument" /> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
         public async Task ValidateAsync(TArgument argument)
         {
             var tasks = _validators.OrderBy(o => o.Order).Select(validator => validator.ValidateAsync(argument));
             await Task.WhenAll(tasks).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Applies all validators to the argument and throws the <see cref="ValidationException" /> if necessary.
+        /// </summary>
+        /// <param name="argument">The target argument to be validated.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="argument" /> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
+        public void Validate(TArgument argument)
+        {
+            _validators.OrderBy(o => o.Order)
+                .ForEach(validator => validator.Validate(argument));
         }
 
         async Task ICompositeValidatorRule.ValidateAsync(object target)
@@ -56,6 +72,16 @@ namespace Xpandables.Net.ValidatorRules
 
             if (target is TArgument argument)
                 await ValidateAsync(argument).ConfigureAwait(false);
+            else
+                throw new ArgumentException($"{nameof(target)} is not of {typeof(TArgument).Name} type.");
+        }
+
+        void ICompositeValidatorRule.Validate(object target)
+        {
+            if (target is null) throw new ArgumentNullException(nameof(target));
+
+            if (target is TArgument argument)
+                Validate(argument);
             else
                 throw new ArgumentException($"{nameof(target)} is not of {typeof(TArgument).Name} type.");
         }

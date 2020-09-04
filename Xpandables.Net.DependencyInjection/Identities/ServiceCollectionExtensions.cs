@@ -71,7 +71,9 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandIdentityBehavior<>));
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandIdentityBehavior<>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryIdentityBehavior<,>));
             services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryIdentityBehavior<,>));
 
             return services;

@@ -16,8 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
 
@@ -51,15 +49,14 @@ namespace Xpandables.Net.ValidatorRules
         }
 
         /// <summary>
-        /// Asynchronously handle the specified command.
+        /// Handles the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken)
+        public void Handle(TCommand command)
         {
-            await _validator.ValidateAsync(command).ConfigureAwait(false);
-            await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            _validator.Validate(command);
+            _decoratee.Handle(command);
         }
     }
 }

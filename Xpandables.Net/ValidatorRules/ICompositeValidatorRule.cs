@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.ValidatorRules
@@ -27,11 +28,20 @@ namespace Xpandables.Net.ValidatorRules
     public interface ICompositeValidatorRule
     {
         /// <summary>
-        /// Asynchronously applies all validators to the argument and throws the <see langword="ValidationException"/> if necessary.
+        /// Asynchronously applies all validators to the argument and throws the <see cref="ValidationException"/> if necessary.
         /// </summary>
         /// <param name="target">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="target"/> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
         Task ValidateAsync(object target);
+
+        /// <summary>
+        /// Applies all validators to the argument and throws the <see cref="ValidationException"/> if necessary.
+        /// </summary>
+        /// <param name="target">The target argument to be validated.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="target"/> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
+        void Validate(object target);
     }
 
     /// <summary>
@@ -43,10 +53,19 @@ namespace Xpandables.Net.ValidatorRules
         where TArgument : class
     {
         /// <summary>
-        /// Asynchronously applies all validators to the argument and throws the <see langword="ValidationException"/> if necessary.
+        /// Asynchronously applies all validators to the argument and throws the <see cref="ValidationException"/> if necessary.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
         Task ValidateAsync(TArgument argument);
+
+        /// <summary>
+        /// Applies all validators to the argument and throws the <see cref="ValidationException"/> if necessary.
+        /// </summary>
+        /// <param name="argument">The target argument to be validated.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
+        void Validate(TArgument argument);
     }
 }

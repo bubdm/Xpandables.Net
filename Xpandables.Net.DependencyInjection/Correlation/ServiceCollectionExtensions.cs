@@ -72,7 +72,9 @@ namespace Xpandables.Net.DependencyInjection
             services.AddScoped<CorrelationContext>();
             services.AddScoped<ICorrelationContext>(provider => provider.GetRequiredService<CorrelationContext>());
 
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandCorrelationBehavior<>));
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandCorrelationBehavior<>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryCorrelationBehavior<,>));
             services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryCorrelationBehavior<,>));
 
             return services;

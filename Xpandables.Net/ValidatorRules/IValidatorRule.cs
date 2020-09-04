@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.ValidatorRules
@@ -28,14 +29,26 @@ namespace Xpandables.Net.ValidatorRules
     public interface IValidatorRule
     {
         /// <summary>
-        /// Asynchronous applies validation process and throws the <see langword="ValidationException"/> if necessary.
+        /// Asynchronous applies validation process and throws the <see cref="ValidationException"/> if necessary.
+        /// The default behavior uses <see cref="Validator.ValidateObject(object, ValidationContext, bool)"/>.
         /// </summary>
         /// <param name="target">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="target"/> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
         public async Task ValidateAsync(object target)
         {
+            Validate(target);
             await Task.CompletedTask.ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Applies validation process and throws the <see cref="ValidationException"/> if necessary.
+        /// The default behavior uses <see cref="Validator.ValidateObject(object, ValidationContext, bool)"/>.
+        /// </summary>
+        /// <param name="target">The target argument to be validated.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="target"/> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
+        public void Validate(object target) => Validator.ValidateObject(target, new ValidationContext(target, null, null), true);
 
         /// <summary>
         /// Determines the zero-base order in which the validator will be executed.
@@ -54,10 +67,21 @@ namespace Xpandables.Net.ValidatorRules
         where TArgument : class
     {
         /// <summary>
-        /// Asynchronously applies validation the argument and throws the <see langword="ValidationException"/> if necessary.
+        /// Asynchronously applies validation the argument and throws the <see cref="ValidationException"/> if necessary.
+        /// The default behavior uses <see cref="Validator.ValidateObject(object, ValidationContext, bool)"/>.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
         public async Task ValidateAsync(TArgument argument) => await ValidateAsync(argument).ConfigureAwait(false);
+
+        /// <summary>
+        /// Applies validation the argument and throws the <see cref="ValidationException"/> if necessary.
+        /// The default behavior uses <see cref="Validator.ValidateObject(object, ValidationContext, bool)"/>.
+        /// </summary>
+        /// <param name="argument">The target argument to be validated.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
+        /// <exception cref="ValidationException"></exception>
+        public void Validate(TArgument argument) => Validate(target: argument);
     }
 }

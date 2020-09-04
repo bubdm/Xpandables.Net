@@ -16,10 +16,9 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Correlation
 {
@@ -52,21 +51,21 @@ namespace Xpandables.Net.Correlation
         }
 
         /// <summary>
-        /// Asynchronously handle the specified command adding post/rollback event to the decorated handler.
+        /// Handles the specified command adding post/rollback event to the decorated handler.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        public void Handle(TCommand command)
         {
             try
             {
-                await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                await _correlationContext.OnPostEventAsync().ConfigureAwait(false);
+                _decoratee.Handle(command);
+                AsyncExtensions.RunSync(_correlationContext.OnPostEventAsync());
             }
             catch (Exception exception)
             {
-                await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
+                AsyncExtensions.RunSync(_correlationContext.OnRollbackEventAsync(exception));
                 throw;
             }
         }

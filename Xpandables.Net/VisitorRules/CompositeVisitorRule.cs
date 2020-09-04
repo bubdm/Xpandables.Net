@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Extensions;
+
 namespace Xpandables.Net.VisitorRules
 {
     /// <summary>
@@ -60,10 +62,39 @@ namespace Xpandables.Net.VisitorRules
             await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Applies all found visitors to the element according to the visitor order.
+        /// </summary>
+        /// <param name="element">The element to be visited.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="element" /> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="element" /> does not implement <see cref="IVisitable" />.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        public void Visit(TElement element)
+        {
+            if (element is null) throw new ArgumentNullException(nameof(element));
+            if (!typeof(IVisitable).IsAssignableFrom(element.GetType()))
+            {
+                throw new ArgumentException(
+                    $"{element.GetType().Name} must implement {nameof(IVisitable)} in order to accept a visitor.",
+                    nameof(element));
+            }
+
+            _visitors.OrderBy(o => o.Order)
+                .ForEach(visitor => element.Accept(visitor));
+        }
+
         async Task ICompositeVisitorRule.VisitAsync(object target)
         {
             if (target is TElement element)
                 await VisitAsync(element).ConfigureAwait(false);
+            else
+                throw new ArgumentException($"{nameof(target)} is not of {typeof(TElement).Name} type.");
+        }
+
+        void ICompositeVisitorRule.Visit(object target)
+        {
+            if (target is TElement element)
+                Visit(element);
             else
                 throw new ArgumentException($"{nameof(target)} is not of {typeof(TElement).Name} type.");
         }

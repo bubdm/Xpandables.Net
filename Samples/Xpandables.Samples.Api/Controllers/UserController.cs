@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-using System;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 using Xpandables.Net.Dispatchers;
+using Xpandables.Net.Extensions;
 using Xpandables.Samples.Business.Contracts;
 
 namespace Xpandables.Samples.Api.Controllers
@@ -21,7 +23,10 @@ namespace Xpandables.Samples.Api.Controllers
         public UserController(IDispatcher dispatcher) => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
 
         [HttpPost, AllowAnonymous]
-        public async Task<SignInResponse> SignIn(SignInRequest signInRequest, CancellationToken cancellationToken)
-                 => await _dispatcher.SendQueryAsync(signInRequest, cancellationToken).ConfigureAwait(false);
+        public async Task<IActionResult> SignIn(SignInRequest signInRequest, CancellationToken cancellationToken)
+        {
+            var results = await _dispatcher.SendQueryAsync(signInRequest, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+            return Ok(results.FirstOrDefault());
+        }
     }
 }

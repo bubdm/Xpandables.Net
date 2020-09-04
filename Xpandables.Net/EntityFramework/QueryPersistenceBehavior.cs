@@ -16,8 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Xpandables.Net.Queries;
 
@@ -27,7 +25,7 @@ namespace Xpandables.Net.EntityFramework
     /// This class allows the application author to add persistence support to query control flow.
     /// The target query should implement the <see cref="IBehaviorPersistence"/> interface in order to activate the behavior.
     /// The class decorates the target query handler with an implementation of <see cref="IDataContext"/> and executes the
-    /// the <see cref="IDataContext.PersistAsync(CancellationToken)"/> after the main one in the same control flow only
+    /// the <see cref="IDataContext.Persist()"/> after the main one in the same control flow only
     /// if there is no exception. You can set the <see cref="IDataContext.PersistenceExceptionHandler"/> with the
     /// <see cref="IDataContext.OnPersistenceException(Func{Exception, Exception?})"/> query, in order to manage
     /// the exception.
@@ -54,17 +52,16 @@ namespace Xpandables.Net.EntityFramework
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result type.
+        /// Handles the specified query and returns the expected result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        public async Task<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
+        public TResult Handle(TQuery query)
         {
-            var result = await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
-            await _dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
+            var result = _decoratee.Handle(query);
+            _dataContext.Persist();
+
             return result;
         }
     }

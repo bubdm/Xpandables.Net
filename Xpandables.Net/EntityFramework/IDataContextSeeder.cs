@@ -18,6 +18,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Extensions;
+
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
@@ -40,7 +42,14 @@ namespace Xpandables.Net.EntityFramework
         /// </summary>
         /// <param name="dataContext">The data context instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A seeded data context.</returns>
         Task SeedAsync(TDataContext dataContext, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Seeds the specified data context as you wish.
+        /// Warning : Do not throw exception from this method unless it's absolutely necessary.
+        /// This method get called by the <see cref="DataContextSeederBehavior{TDataContext}"/>.
+        /// </summary>
+        /// <param name="dataContext">The data context instance to act on.</param>
+        public void Seed(TDataContext dataContext) => AsyncExtensions.RunSync(SeedAsync(dataContext));
     }
 }

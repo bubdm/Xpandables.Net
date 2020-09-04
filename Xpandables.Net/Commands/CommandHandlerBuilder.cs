@@ -16,8 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Commands
 {
@@ -29,27 +27,25 @@ namespace Xpandables.Net.Commands
     public sealed class CommandHandlerBuilder<TCommand> : ICommandHandler<TCommand>
         where TCommand : class, ICommand
     {
-        private readonly Func<TCommand, CancellationToken, Task> _handler;
+        private readonly Action<TCommand> _handler;
 
         /// <summary>
         /// Initializes a new instance of <see cref="CommandHandlerBuilder{TArgument}"/> class with the delegate to be used
-        /// as <see cref="ICommandHandler{TCommand}.HandleAsync(TCommand, CancellationToken)"/> implementation.
+        /// as <see cref="ICommandHandler{TCommand}.Handle(TCommand)"/> implementation.
         /// </summary>
         /// <param name="handler">The delegate to be used when the handler will be invoked.
         /// <para>The delegate should match all the behaviors expected in
-        /// the <see cref="ICommandHandler{TCommand}.HandleAsync(TCommand, CancellationToken)"/>
+        /// the <see cref="ICommandHandler{TCommand}.Handle(TCommand)"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
-        public CommandHandlerBuilder(Func<TCommand, CancellationToken, Task> handler)
-            => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
+        public CommandHandlerBuilder(Action<TCommand> handler) => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
 
         /// <summary>
-        /// Asynchronously handle the specified command using the delegate from the constructor.
+        /// Handles the specified command using the delegate from the constructor.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
-            => await _handler(command, cancellationToken).ConfigureAwait(false);
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        public void Handle(TCommand command) => _handler(command);
     }
 }

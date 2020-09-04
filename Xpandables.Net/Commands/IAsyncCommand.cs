@@ -15,21 +15,13 @@
  *
 ************************************************************************************************************/
 
-using System;
-
-namespace Xpandables.Net.Retry
+namespace Xpandables.Net.Commands
 {
     /// <summary>
-    /// An interface representing an <see cref="RetryBehaviorAttribute"/> to be dynamically applied on the implementing class.
-    /// This interface takes priority over the <see cref="RetryBehaviorAttribute"/> declaration.
+    /// This interface is used as a marker for commands when using the asynchronous command pattern.
+    /// <para>Class implementation is used with the <see cref="IAsyncCommandHandler{TCommand}"/> where
+    /// "TCommand" is <see cref="IAsyncCommand"/> class implementation.</para>
+    /// This can also be enhanced with some useful decorators.
     /// </summary>
-    public interface IRetryBehaviorAttributeProvider
-    {
-        /// <summary>
-        /// Returns the <see cref="RetryBehaviorAttribute"/> to be applied on the current instance.
-        /// </summary>
-        /// <param name="serviceProvider">The service provider instance.</param>
-        /// <returns>An instance of a new <see cref="RetryBehaviorAttribute"/>.</returns>
-        RetryBehaviorAttribute GetRetryBehaviorAttribute(IServiceProvider serviceProvider);
-    }
+    public interface IAsyncCommand { }
 }

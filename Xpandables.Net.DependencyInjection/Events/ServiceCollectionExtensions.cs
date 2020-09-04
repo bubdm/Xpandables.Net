@@ -35,7 +35,9 @@ namespace Xpandables.Net.DependencyInjection
                 throw new ArgumentException($"{nameof(loggerType)} must implement {nameof(Events.ILogger)}.");
 
             services.AddScoped(typeof(Events.ILogger), loggerType);
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandLoggingBehavior<>));
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingBehavior<>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryLoggingBehavior<,>));
             services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryLoggingBehavior<,>));
 
             return services;

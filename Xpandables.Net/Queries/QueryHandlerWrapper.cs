@@ -16,8 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Queries
 {
@@ -43,11 +41,8 @@ namespace Xpandables.Net.Queries
         /// Handles the specified query and returns the expected result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        public async Task<TResult> HandleAsync(IQuery<TResult> query, CancellationToken cancellationToken = default)
-            => await _decoratee.HandleAsync((TQuery)query, cancellationToken).ConfigureAwait(false);
+        public TResult Handle(IQuery<TResult> query) => _decoratee.Handle((TQuery)query);
     }
 }

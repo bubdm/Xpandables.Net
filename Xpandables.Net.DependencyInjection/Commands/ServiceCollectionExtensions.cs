@@ -15,11 +15,11 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
 using System.Linq;
 using System.Reflection;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.Correlation;
@@ -28,7 +28,6 @@ using Xpandables.Net.Events;
 using Xpandables.Net.Extensions;
 using Xpandables.Net.Identities;
 using Xpandables.Net.Queries;
-using Xpandables.Net.Retry;
 using Xpandables.Net.Transactions;
 using Xpandables.Net.ValidatorRules;
 using Xpandables.Net.VisitorRules;
@@ -61,11 +60,6 @@ namespace Xpandables.Net.DependencyInjection
         /// Enables correlation behavior to commands and queries that are decorated with the <see cref="IBehaviorCorrelation"/>.
         /// </summary>
         public CommandQueryOptions UseCorrelationBehavior() => this.With(cq => cq.IsCorrelationEnabled = true);
-
-        /// <summary>
-        /// Enables retry behavior to commands and queries that are decorated with the <see cref="IBehaviorRetry"/>.
-        /// </summary>
-        public CommandQueryOptions UseRetryBehavior() => this.With(cq => cq.IsRetryEnabled = true);
 
         /// <summary>
         /// Enables transaction behavior to commands and queries that are decorated with the <see cref="IBehaviorTransaction"/>.
@@ -103,7 +97,6 @@ namespace Xpandables.Net.DependencyInjection
         internal bool IsTransactionEnabled { get; private set; }
         internal bool IsPersistenceEnabled { get; private set; }
         internal bool IsCorrelationEnabled { get; private set; }
-        internal bool IsRetryEnabled { get; private set; }
         internal Type? IsIdentityDataEnabled { get; private set; }
         internal Type? IsLoggingEnabled { get; private set; }
     }
@@ -114,7 +107,7 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="ICommandHandler{TCommand}"/> to the services with transient life time.
+        /// Adds the <see cref="IAsyncCommandHandler{TCommand}"/> and <see cref="ICommandHandler{TCommand}"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -127,6 +120,10 @@ namespace Xpandables.Net.DependencyInjection
 
             services.XRegister(scan => scan
                 .FromAssemblies(assemblies)
+                .AddClasses(classes => classes.AssignableTo(typeof(IAsyncCommandHandler<>))
+                    .Where(_ => !_.IsGenericType))
+                    .AsImplementedInterfaces()
+                    .WithTransientLifetime()
                 .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>))
                     .Where(_ => !_.IsGenericType))
                     .AsImplementedInterfaces()
@@ -136,7 +133,8 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds and configures the <see cref="ICommandHandler{TCommand}"/> and <see cref="IQueryHandler{TQuery, TResult}"/> behaviors.
+        /// Adds and configures the <see cref="IAsyncCommandHandler{TCommand}"/>, <see cref="ICommandHandler{TCommand}"/>, 
+        /// <see cref="IAsyncQueryHandler{TQuery, TResult}"/> and <see cref="IQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="configureOptions">A delegate to configure the <see cref="CommandQueryOptions"/>.</param>
@@ -161,9 +159,6 @@ namespace Xpandables.Net.DependencyInjection
 
             if (definedOptions.IsCorrelationEnabled)
                 services.AddXCorrelationBehavior();
-
-            if (definedOptions.IsRetryEnabled)
-                services.AddXRetryBehavior();
 
             if (definedOptions.IsTransactionEnabled)
                 services.AddXTransactionBehavior();
