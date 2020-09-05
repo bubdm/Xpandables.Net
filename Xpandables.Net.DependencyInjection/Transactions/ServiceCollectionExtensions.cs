@@ -46,7 +46,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds transaction scope behavior to commands and queries that are decorated with the <see cref="IBehaviorTransaction"/>
+        /// Adds transaction scope behavior to commands and queries that are decorated with the <see cref="ITransactionDecorator"/>
         /// to the services
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -55,8 +55,8 @@ namespace Xpandables.Net.DependencyInjection
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
 
-            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandTransactionBehavior<>));
-            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandTransactionBehavior<>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandTransactionDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandTransactionDecorator<>));
             return services;
         }
     }

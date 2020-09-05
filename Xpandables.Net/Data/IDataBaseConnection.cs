@@ -137,7 +137,7 @@ namespace Xpandables.Net.Data
                 ?? throw new ArgumentException($"{typeof(TExecutableMapped).Name} not found !");
 
             var transaction = default(DbTransaction);
-            IAsyncEnumerable<TResult> results = new AsyncEnumerable<TResult>(Enumerable.Empty<TResult>());
+            var context = default(DataExecutableContext);
             try
             {
                 using var connection = await BuildDbConnectionAsync(DbProviderFactory.Value, DataConnection).ConfigureAwait(false);
@@ -156,36 +156,41 @@ namespace Xpandables.Net.Data
 
                 var component = new DataExecutableContext.DataComponent(command, adapter);
                 var arguments = new DataExecutableContext.DataArgument(options, commandText, parameters);
-                var context = new DataExecutableContext(arguments, component);
-
-                results = new AsyncEnumerable<TResult>(await executableMapped.ExecuteMappedAsync(context, options.CancellationToken).ToListAsync(options.CancellationToken).ConfigureAwait(false));
+                context = new DataExecutableContext(arguments, component);
             }
             catch (Exception exception)
             {
-                if (options.IsTransactionEnabled)
-                {
-                    try
-                    {
-                        transaction?.Rollback();
-                    }
-                    catch (Exception sqlException)
-                    {
-                        throw new InvalidOperationException(
-                            "Exception encountered while attempting to roll back the transaction.",
-                            new AggregateException(new[] { exception, sqlException }));
-                    }
-                }
-
                 throw new InvalidOperationException("Exception encountered while attempting to execute command.", exception);
             }
-            finally
-            {
-                if (options.IsTransactionEnabled)
-                    transaction?.Dispose();
-            }
 
-            await foreach (var result in results)
+            await foreach (var result in AsyncExtensions.TryCatchAsyncEnumerable(() => executableMapped.ExecuteMappedAsync(context, options.CancellationToken).ConfigureAwait(false), out var exceptionDispatchInfo))
+            {
+                if (exceptionDispatchInfo is { })
+                {
+                    if (options.IsTransactionEnabled)
+                    {
+                        try
+                        {
+                            transaction?.Rollback();
+                        }
+                        catch (Exception sqlException)
+                        {
+                            throw new InvalidOperationException(
+                                "Exception encountered while attempting to roll back the transaction.",
+                                new AggregateException(new[] { exceptionDispatchInfo.SourceException, sqlException }));
+                        }
+                        finally
+                        {
+                            if (options.IsTransactionEnabled)
+                                transaction?.Dispose();
+                        }
+                    }
+
+                    throw new InvalidOperationException("Exception encountered while attempting to execute command.", exceptionDispatchInfo.SourceException);
+                }
+
                 yield return result;
+            }
         }
 
         /// <summary>

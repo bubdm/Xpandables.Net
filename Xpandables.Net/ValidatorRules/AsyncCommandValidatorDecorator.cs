@@ -21,47 +21,45 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
 
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.ValidatorRules
 {
     /// <summary>
-    /// This class allows the application author to add persistence support to command control flow.
-    /// The target command should implement the <see cref="IBehaviorPersistence"/> interface in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/> and executes the
-    /// the <see cref="IDataContext.PersistAsync(CancellationToken)"/> after the main one in the same control flow only
-    /// if there is no exception. You can set the <see cref="IDataContext.PersistenceExceptionHandler"/> with the
-    /// <see cref="IDataContext.OnPersistenceException(Func{Exception, Exception?})"/> command, in order to manage
-    /// the exception.
+    /// This class allows the application author to add validation support to command control flow.
+    /// The target command should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
+    /// The class decorates the target command handler with an implementation of <see cref="ICompositeValidatorRule{TArgument}"/>
+    /// and applies all validators found to the target command before the command get handled. You should provide with implementation
+    /// of <see cref="IValidatorRule{TArgument}"/> or <see cref="ValidatorRule{TArgument}"/> for validation.
     /// </summary>
-    /// <typeparam name="TCommand">Type of command.</typeparam>
-    public sealed class AsyncCommandPersistenceBehavior<TCommand> : IAsyncCommandHandler<TCommand>
-        where TCommand : class, IAsyncCommand, IBehaviorPersistence
+    /// <typeparam name="TCommand">Type of the command.</typeparam>
+    public sealed class AsyncCommandValidatorDecorator<TCommand> : IAsyncCommandHandler<TCommand>
+        where TCommand : class, IAsyncCommand, IValidationDecorator
     {
-        private readonly IDataContext _dataContext;
         private readonly IAsyncCommandHandler<TCommand> _decoratee;
+        private readonly ICompositeValidatorRule<TCommand> _validator;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncCommandPersistenceBehavior{TCommand}"/> class.
+        /// Initializes a new instance of <see cref="AsyncCommandValidatorDecorator{TCommand}"/>.
         /// </summary>
-        /// <param name="dataContext">The data context to act on.</param>
         /// <param name="decoratee">The decorated command handler.</param>
+        /// <param name="validator">The validator instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public AsyncCommandPersistenceBehavior(IDataContext dataContext, IAsyncCommandHandler<TCommand> decoratee)
+        /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
+        public AsyncCommandValidatorDecorator(IAsyncCommandHandler<TCommand> decoratee, ICompositeValidatorRule<TCommand> validator)
         {
-            _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
+            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
         /// <summary>
-        /// Asynchronously handles the specified command.
+        /// Asynchronously handle the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
+            await _validator.ValidateAsync(command).ConfigureAwait(false);
             await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            await _dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace Xpandables.Net.DependencyInjection
     public sealed class CommandQueryOptions
     {
         /// <summary>
-        /// Enables validation behavior to commands and queries that are decorated with the <see cref="IBehaviorValidation"/>.
+        /// Enables validation behavior to commands and queries that are decorated with the <see cref="IValidationDecorator"/>.
         /// </summary>
         public CommandQueryOptions UseValidatorBehavior() => this.With(cq => cq.IsValidatorEnabled = true);
 
@@ -52,7 +52,7 @@ namespace Xpandables.Net.DependencyInjection
         public CommandQueryOptions UseVisitorBehavior() => this.With(cq => cq.IsVisitorEnabled = true);
 
         /// <summary>
-        /// Enables persistence behavior to commands and queries that are decorated with the <see cref="IBehaviorPersistence"/> .
+        /// Enables persistence behavior to commands and queries that are decorated with the <see cref="IPersistenceDecorator"/> .
         /// </summary>
         public CommandQueryOptions UsePersistenceBehavior() => this.With(cq => cq.IsPersistenceEnabled = true);
 
@@ -62,18 +62,18 @@ namespace Xpandables.Net.DependencyInjection
         public CommandQueryOptions UseCorrelationBehavior() => this.With(cq => cq.IsCorrelationEnabled = true);
 
         /// <summary>
-        /// Enables transaction behavior to commands and queries that are decorated with the <see cref="IBehaviorTransaction"/>.
+        /// Enables transaction behavior to commands and queries that are decorated with the <see cref="ITransactionDecorator"/>.
         /// </summary>
         public CommandQueryOptions UseTransactionBehavior() => this.With(cq => cq.IsTransactionEnabled = true);
 
         /// <summary>
-        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IBehaviorIdentity"/>.
+        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IIdentityDecorator"/>.
         /// </summary>
         public CommandQueryOptions UseIdentityBehavior<TIdentityDataProvider>()
             where TIdentityDataProvider : class, IIdentityDataProvider => this.With(cq => cq.IsIdentityDataEnabled = typeof(TIdentityDataProvider));
 
         /// <summary>
-        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IBehaviorIdentity"/>.
+        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IIdentityDecorator"/>.
         /// </summary>
         /// <param name="identityDataProvider">The identity data provider type.</param>
         public CommandQueryOptions UseIdentityBehavior(Type identityDataProvider)

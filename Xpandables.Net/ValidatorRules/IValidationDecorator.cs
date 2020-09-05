@@ -21,13 +21,13 @@ namespace Xpandables.Net.ValidatorRules
 {
     /// <summary>
     /// A marker interface that allows the command/query class to be decorated with the validation behavior according to the class type :
-    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="QueryValidatorBehavior{TQuery, TResult}"/> while
-    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandValidatorBehavior{TCommand}"/>.
+    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="QueryValidatorDecorator{TQuery, TResult}"/> while
+    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandValidatorDecorator{TCommand}"/>.
     /// The default validation behavior uses the data annotations validator on validation attributes. You can implement the interface
     /// <see cref="IValidatorRule{T}"/> or derive a class from <see cref="ValidatorRule{TArgument}"/> to customize a validation behavior.
     /// <para></para>
     /// You need to register the expected behavior to the service collections using the appropriate extension method
     /// for the validation behavior and to register all your custom implementations.
     /// </summary>
-    public interface IBehaviorValidation { }
+    public interface IValidationDecorator { }
 }

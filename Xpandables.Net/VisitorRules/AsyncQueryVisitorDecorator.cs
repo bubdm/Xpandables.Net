@@ -34,20 +34,20 @@ namespace Xpandables.Net.VisitorRules
     /// </summary>
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class AsyncQueryVisitorBehavior<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
+    public sealed class AsyncQueryVisitorDecorator<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
         where TQuery : class, IAsyncQuery<TResult>, IVisitable
     {
         private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
         private readonly ICompositeVisitorRule<TQuery> _visitor;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncQueryVisitorBehavior{TQuery, TResult}"/>.
+        /// Initializes a new instance of <see cref="AsyncQueryVisitorDecorator{TQuery, TResult}"/>.
         /// </summary>
         /// <param name="decoratee">The query to be decorated.</param>
         /// <param name="visitor">The composite visitor to apply</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        public AsyncQueryVisitorBehavior(IAsyncQueryHandler<TQuery, TResult> decoratee, ICompositeVisitorRule<TQuery> visitor)
+        public AsyncQueryVisitorDecorator(IAsyncQueryHandler<TQuery, TResult> decoratee, ICompositeVisitorRule<TQuery> visitor)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));

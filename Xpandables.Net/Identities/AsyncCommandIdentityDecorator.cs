@@ -16,6 +16,8 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
 
@@ -23,7 +25,7 @@ namespace Xpandables.Net.Identities
 {
     /// <summary>
     /// This class allows the application author to add secured data support to command control flow.
-    /// The target command should implement the <see cref="IBehaviorIdentity"/> and inherit from <see cref="IdentityData"/>,
+    /// The target command should implement the <see cref="IIdentityDecorator"/> and inherit from <see cref="IdentityData"/>,
     /// <see cref="IdentityData{TData}"/> or <see cref="IdentityDataExpression{TData, TSource}"/> in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IIdentityDataProvider"/>, that you should
     /// provide an implementation and use an extension method for registration.
@@ -31,36 +33,37 @@ namespace Xpandables.Net.Identities
     /// <see cref="IIdentityDataProvider.GetIdentity"/> before the handler execution.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
-    public sealed class CommandIdentityBehavior<TCommand> : ICommandHandler<TCommand>
-        where TCommand : class, IIdentityData, ICommand, IBehaviorIdentity
+    public sealed class AsyncCommandIdentityDecorator<TCommand> : IAsyncCommandHandler<TCommand>
+        where TCommand : class, IIdentityData, IAsyncCommand, IIdentityDecorator
     {
         private readonly IIdentityDataProvider _identityProvider;
-        private readonly ICommandHandler<TCommand> _decoratee;
+        private readonly IAsyncCommandHandler<TCommand> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="CommandIdentityBehavior{TCommand}"/> class.
+        /// Initializes a new instance of <see cref="AsyncCommandIdentityDecorator{TCommand}"/> class.
         /// </summary>
         /// <param name="identityProvider">The secured data provider.</param>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="identityProvider"/> is null.</exception>
-        public CommandIdentityBehavior(IIdentityDataProvider identityProvider, ICommandHandler<TCommand> decoratee)
+        public AsyncCommandIdentityDecorator(IIdentityDataProvider identityProvider, IAsyncCommandHandler<TCommand> decoratee)
         {
             _identityProvider = identityProvider ?? throw new ArgumentNullException(nameof(identityProvider));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
         /// <summary>
-        /// Handles the specified command.
+        /// Asynchronously handles the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        public void Handle(TCommand command)
+        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
             command.SetIdentity(_identityProvider.GetIdentity());
-            _decoratee.Handle(command);
+            await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
         }
     }
 }

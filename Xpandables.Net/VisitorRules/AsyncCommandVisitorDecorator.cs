@@ -31,20 +31,20 @@ namespace Xpandables.Net.VisitorRules
     /// of <see cref="IVisitorRule{TElement}"/>.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
-    public sealed class AsyncCommandVisitorBehavior<TCommand> : IAsyncCommandHandler<TCommand>
+    public sealed class AsyncCommandVisitorDecorator<TCommand> : IAsyncCommandHandler<TCommand>
         where TCommand : class, IAsyncCommand, IVisitable
     {
         private readonly IAsyncCommandHandler<TCommand> _decoratee;
         private readonly ICompositeVisitorRule<TCommand> _visitor;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncCommandVisitorBehavior{TCommand}"/>.
+        /// Initializes a new instance of <see cref="AsyncCommandVisitorDecorator{TCommand}"/>.
         /// </summary>
         /// <param name="decoratee">the decorated command handler.</param>
         /// <param name="visitor">the visitor to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        public AsyncCommandVisitorBehavior(IAsyncCommandHandler<TCommand> decoratee, ICompositeVisitorRule<TCommand> visitor)
+        public AsyncCommandVisitorDecorator(IAsyncCommandHandler<TCommand> decoratee, ICompositeVisitorRule<TCommand> visitor)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));

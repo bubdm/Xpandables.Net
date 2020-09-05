@@ -24,5 +24,5 @@ namespace Xpandables.Net.Identities
     /// implementation for <see cref="IIdentityDataProvider"/>
     /// and register the expected class using the correct extension method.
     /// </summary>
-    public interface IBehaviorIdentity { }
+    public interface IIdentityDecorator { }
 }

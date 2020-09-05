@@ -26,7 +26,7 @@ namespace Xpandables.Net.Identities
     /// <summary>
     /// Defines an implementation of <see cref="IIdentityData"/> with a protected property that holds identity information
     /// of any type in a security context.
-    /// This class is used with <see cref="IBehaviorIdentity"/> and its decorator class.
+    /// This class is used with <see cref="IIdentityDecorator"/> and its decorator class.
     /// </summary>
     public abstract class IdentityData : IIdentityData
     {
@@ -54,7 +54,7 @@ namespace Xpandables.Net.Identities
     /// <summary>
     /// Defines an implementation of <see cref="IIdentityData{TUser}"/> with a protected property that holds identity information
     /// of generic type in a security context.
-    /// This class is used with <see cref="IBehaviorIdentity"/> and its decorator class.
+    /// This class is used with <see cref="IIdentityDecorator"/> and its decorator class.
     /// </summary>
     /// <typeparam name="TIdentity">The type of the identity.</typeparam>
     public abstract class IdentityData<TIdentity> : IdentityData, IIdentityData<TIdentity>
@@ -74,7 +74,7 @@ namespace Xpandables.Net.Identities
     /// of generic type in a security context.
     /// This class implements the <see cref="IQueryExpression{TSource}"/> interface and derives from <see cref="IdentityData{TIdentity}"/>.
     /// You must override the <see cref="BuildExpression"/> method in order to provide a custom behavior.
-    /// This class is used with <see cref="IBehaviorIdentity"/> and its decorator class.
+    /// This class is used with <see cref="IIdentityDecorator"/> and its decorator class.
     /// </summary>
     /// <typeparam name="TIdentity">The type of the identity data.</typeparam>
     /// /// <typeparam name="TSource">The type of the data source</typeparam>

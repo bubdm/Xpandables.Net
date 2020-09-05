@@ -19,34 +19,34 @@ using System;
 
 using Xpandables.Net.Queries;
 
-namespace Xpandables.Net.VisitorRules
+namespace Xpandables.Net.ValidatorRules
 {
     /// <summary>
-    /// This class allows the application author to add visitor support to query control flow.
-    /// The target query should implement the <see cref="IVisitable"/> interface in order to activate the behavior.
-    /// The class decorates the target query handler with an implementation of <see cref="ICompositeVisitorRule{TElement}"/>
-    /// and applies all visitors found to the target query before the query get handled. You should provide with implementation
-    /// of <see cref="IVisitorRule{TElement}"/>.
+    /// This class allows the application author to add validation support to query control flow.
+    /// The target query should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
+    /// The class decorates the target query handler with an implementation of <see cref="ICompositeValidatorRule{TArgument}"/>
+    /// and applies all validators found to the target query before the command get handled. You should provide with implementation
+    /// of <see cref="IValidatorRule{TArgument}"/> or <see cref="ValidatorRule{TArgument}"/> for validation.
     /// </summary>
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class QueryVisitorBehavior<TQuery, TResult> : IQueryHandler<TQuery, TResult>
-        where TQuery : class, IQuery<TResult>, IVisitable
+    public sealed class QueryValidatorDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
+        where TQuery : class, IQuery<TResult>, IValidationDecorator
     {
         private readonly IQueryHandler<TQuery, TResult> _decoratee;
-        private readonly ICompositeVisitorRule<TQuery> _visitor;
+        private readonly ICompositeValidatorRule<TQuery> _validator;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="QueryVisitorBehavior{TQuery, TResult}"/>.
+        /// Initializes a new instance of <see cref="QueryValidatorDecorator{TQuery, TResult}"/>.
         /// </summary>
-        /// <param name="decoratee">The query to be decorated.</param>
-        /// <param name="visitor">The composite visitor to apply</param>
+        /// <param name="decoratee">The query handler to decorate.</param>
+        /// <param name="validator">The validator instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        public QueryVisitorBehavior(IQueryHandler<TQuery, TResult> decoratee, ICompositeVisitorRule<TQuery> visitor)
+        /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
+        public QueryValidatorDecorator(IQueryHandler<TQuery, TResult> decoratee, ICompositeValidatorRule<TQuery> validator)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-            _visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));
+            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
         /// <summary>
@@ -57,9 +57,7 @@ namespace Xpandables.Net.VisitorRules
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         public TResult Handle(TQuery query)
         {
-            if (query is null) throw new ArgumentNullException(nameof(query));
-
-            query.Accept(_visitor);
+            _validator.Validate(query);
             return _decoratee.Handle(query);
         }
     }

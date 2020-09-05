@@ -84,7 +84,7 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Ensures that the supplied interceptor is returned, wrapping all original registered
-        /// type implementing <see cref="IBehaviorInterceptor"/> found in the specified collection of assemblies and match the predicate.
+        /// type implementing <see cref="IInterceptorDecorator"/> found in the specified collection of assemblies and match the predicate.
         /// </summary>
         /// <typeparam name="TInterceptor">The type of interceptor.</typeparam>
         /// <param name="services">The collection of services.</param>
@@ -100,7 +100,7 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Ensures that the supplied interceptor is returned, wrapping all original registered
-        /// type implementing <see cref="IBehaviorInterceptor"/> found in the specified collection of assemblies and match the predicate.
+        /// type implementing <see cref="IInterceptorDecorator"/> found in the specified collection of assemblies and match the predicate.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="interceptorType">The interceptor type that will be used to wrap the original service type
@@ -120,7 +120,7 @@ namespace Xpandables.Net.DependencyInjection
 
             foreach (var serviceType in assemblies
                 .SelectMany(assembly => assembly.GetExportedTypes()
-                .Where(t => typeof(IBehaviorInterceptor).IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface && predicate(t))
+                .Where(t => typeof(IInterceptorDecorator).IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface && predicate(t))
                 .Select(serviceType => bindToInterface ? serviceType.GetInterfaces()[0] : serviceType)))
             {
                 services.XTryDecorate(serviceType, (instance, provider) =>

@@ -45,10 +45,10 @@ namespace Xpandables.Net.DependencyInjection
             if (services is null) throw new ArgumentNullException(nameof(services));
 
             services.AddTransient(typeof(ICompositeVisitorRule<>), typeof(CompositeVisitorRule<>));
-            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandVisitorBehavior<>));
-            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandVisitorBehavior<>));
-            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryVisitorBehavior<,>));
-            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryVisitorBehavior<,>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandVisitorDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandVisitorDecorator<>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryVisitorDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryVisitorDecorator<,>));
             return services;
         }
 

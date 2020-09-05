@@ -16,8 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Transactions;
 
 using Xpandables.Net.Commands;
@@ -26,50 +24,49 @@ namespace Xpandables.Net.Transactions
 {
     /// <summary>
     /// This class allows the application author to add transaction support to command control flow.
-    /// The target command should implement the <see cref="IBehaviorTransaction"/> in order to activate the behavior.
+    /// The target command should implement the <see cref="ITransactionDecorator"/> in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ITransactionScopeProvider"/>, that you should
-    /// provide an implementation and use the extension method <see langword="AddTransactionScopeBehavior{TTransactionScopeProvider}"/>
+    /// provide an implementation and use the extension method <see langword="AddXTransactionScopeDecorator{TTransactionScopeProvider}"/>
     /// for registration. The transaction scope definition comes from the
     /// <see cref="ITransactionScopeProvider.GetTransactionScope{TCommand}(TCommand)"/> method.
     /// if no transaction is returned, the execution is done normally.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
-    public sealed class AsyncCommandTransactionBehavior<TCommand> : IAsyncCommandHandler<TCommand>
-        where TCommand : class, IAsyncCommand, IBehaviorTransaction
+    public sealed class CommandTransactionDecorator<TCommand> : ICommandHandler<TCommand>
+        where TCommand : class, ICommand, ITransactionDecorator
     {
-        private readonly IAsyncCommandHandler<TCommand> _decoratee;
+        private readonly ICommandHandler<TCommand> _decoratee;
         private readonly ITransactionScopeProvider _transactionScopeProvider;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="CommandTransactionBehavior{TCommand}"/>.
+        /// Initializes a new instance of <see cref="CommandTransactionDecorator{TCommand}"/>.
         /// </summary>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <param name="transactionScopeProvider">The transaction scope provider.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="transactionScopeProvider"/> is null.</exception>
-        public AsyncCommandTransactionBehavior(IAsyncCommandHandler<TCommand> decoratee, ITransactionScopeProvider transactionScopeProvider)
+        public CommandTransactionDecorator(ICommandHandler<TCommand> decoratee, ITransactionScopeProvider transactionScopeProvider)
         {
             _transactionScopeProvider = transactionScopeProvider ?? throw new ArgumentNullException(nameof(transactionScopeProvider));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
         /// <summary>
-        /// Asynchronously handles the specified command.
+        /// Handle the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        public void Handle(TCommand command)
         {
             if (_transactionScopeProvider.GetTransactionScope(command) is TransactionScope transaction)
             {
                 using var scope = transaction;
-                await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                _decoratee.Handle(command);
                 scope.Complete();
             }
             else
             {
-                await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                _decoratee.Handle(command);
             }
         }
     }

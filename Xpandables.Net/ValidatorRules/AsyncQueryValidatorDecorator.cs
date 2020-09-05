@@ -23,36 +23,34 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Queries;
 
-namespace Xpandables.Net.Identities
+namespace Xpandables.Net.ValidatorRules
 {
     /// <summary>
-    /// This class allows the application author to add secured information support to query control flow.
-    /// The target query should implement the <see cref="IBehaviorIdentity"/> and inherit from <see cref="IdentityData"/>,
-    /// <see cref="IdentityData{TData}"/> or <see cref="IdentityDataExpression{TData, TSource}"/> in order to activate the behavior.
-    /// The class decorates the target query handler with an implementation of <see cref="IIdentityDataProvider"/>, that you should
-    /// provide an implementation and use the extension method for registration.
-    /// The decorator will set the <see cref="IdentityData.Identity"/> property with the
-    /// <see cref="IIdentityDataProvider.GetIdentity"/> before the handler execution.
+    /// This class allows the application author to add validation support to query control flow.
+    /// The target query should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
+    /// The class decorates the target query handler with an implementation of <see cref="ICompositeValidatorRule{TArgument}"/>
+    /// and applies all validators found to the target query before the command get handled. You should provide with implementation
+    /// of <see cref="IValidatorRule{TArgument}"/> or <see cref="ValidatorRule{TArgument}"/> for validation.
     /// </summary>
-    /// <typeparam name="TQuery">Type of the query.</typeparam>
-    /// <typeparam name="TResult">Type of the query.</typeparam>
-    public sealed class AsyncQueryIdentityBehavior<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
-        where TQuery : class, IIdentityData, IAsyncQuery<TResult>, IBehaviorIdentity
+    /// <typeparam name="TQuery">Type of query.</typeparam>
+    /// <typeparam name="TResult">Type of result.</typeparam>
+    public sealed class AsyncQueryValidatorDecorator<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
+        where TQuery : class, IAsyncQuery<TResult>, IValidationDecorator
     {
-        private readonly IIdentityDataProvider _identityDataProvider;
         private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
+        private readonly ICompositeValidatorRule<TQuery> _validator;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncQueryIdentityBehavior{TQuery, TResult}"/>.
+        /// Initializes a new instance of <see cref="AsyncQueryValidatorDecorator{TQuery, TResult}"/>.
         /// </summary>
-        /// <param name="identityProvider">The secured data provider.</param>
-        /// <param name="decoratee">The query handler to decorate with.</param>
+        /// <param name="decoratee">The query handler to decorate.</param>
+        /// <param name="validator">The validator instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="identityProvider"/> is null.</exception>
-        public AsyncQueryIdentityBehavior(IIdentityDataProvider identityProvider, IAsyncQueryHandler<TQuery, TResult> decoratee)
+        /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
+        public AsyncQueryValidatorDecorator(IAsyncQueryHandler<TQuery, TResult> decoratee, ICompositeValidatorRule<TQuery> validator)
         {
-            _identityDataProvider = identityProvider ?? throw new ArgumentNullException(nameof(identityProvider));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
+            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
         /// <summary>
@@ -65,9 +63,7 @@ namespace Xpandables.Net.Identities
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            if (query is null) throw new ArgumentNullException(nameof(query));
-
-            query.SetIdentity(_identityDataProvider.GetIdentity());
+            await _validator.ValidateAsync(query).ConfigureAwait(false);
             await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false))
                 yield return result;
         }

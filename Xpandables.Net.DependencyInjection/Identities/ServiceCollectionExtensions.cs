@@ -63,7 +63,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds identity data behavior to commands and queries that are decorated with the <see cref="IBehaviorIdentity"/> to the services
+        /// Adds identity data behavior to commands and queries that are decorated with the <see cref="IIdentityDecorator"/> to the services
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -71,10 +71,10 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandIdentityBehavior<>));
-            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandIdentityBehavior<>));
-            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryIdentityBehavior<,>));
-            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryIdentityBehavior<,>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandIdentityDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandIdentityDecorator<>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryIdentityDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryIdentityDecorator<,>));
 
             return services;
         }

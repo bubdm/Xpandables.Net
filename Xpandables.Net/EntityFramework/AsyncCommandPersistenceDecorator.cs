@@ -21,34 +21,34 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
 
-namespace Xpandables.Net.Identities
+namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
-    /// This class allows the application author to add secured data support to command control flow.
-    /// The target command should implement the <see cref="IBehaviorIdentity"/> and inherit from <see cref="IdentityData"/>,
-    /// <see cref="IdentityData{TData}"/> or <see cref="IdentityDataExpression{TData, TSource}"/> in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="IIdentityDataProvider"/>, that you should
-    /// provide an implementation and use an extension method for registration.
-    /// The decorator will set the <see cref="IdentityData.Identity"/> property with the
-    /// <see cref="IIdentityDataProvider.GetIdentity"/> before the handler execution.
+    /// This class allows the application author to add persistence support to command control flow.
+    /// The target command should implement the <see cref="IPersistenceDecorator"/> interface in order to activate the behavior.
+    /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/> and executes the
+    /// the <see cref="IDataContext.PersistAsync(CancellationToken)"/> after the main one in the same control flow only
+    /// if there is no exception. You can set the <see cref="IDataContext.PersistenceExceptionHandler"/> with the
+    /// <see cref="IDataContext.OnPersistenceException(Func{Exception, Exception?})"/> command, in order to manage
+    /// the exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
-    public sealed class AsyncCommandIdentityBehavior<TCommand> : IAsyncCommandHandler<TCommand>
-        where TCommand : class, IIdentityData, IAsyncCommand, IBehaviorIdentity
+    public sealed class AsyncCommandPersistenceDecorator<TCommand> : IAsyncCommandHandler<TCommand>
+        where TCommand : class, IAsyncCommand, IPersistenceDecorator
     {
-        private readonly IIdentityDataProvider _identityProvider;
+        private readonly IDataContext _dataContext;
         private readonly IAsyncCommandHandler<TCommand> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncCommandIdentityBehavior{TCommand}"/> class.
+        /// Initializes a new instance of <see cref="AsyncCommandPersistenceDecorator{TCommand}"/> class.
         /// </summary>
-        /// <param name="identityProvider">The secured data provider.</param>
+        /// <param name="dataContext">The data context to act on.</param>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="identityProvider"/> is null.</exception>
-        public AsyncCommandIdentityBehavior(IIdentityDataProvider identityProvider, IAsyncCommandHandler<TCommand> decoratee)
+        /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
+        public AsyncCommandPersistenceDecorator(IDataContext dataContext, IAsyncCommandHandler<TCommand> decoratee)
         {
-            _identityProvider = identityProvider ?? throw new ArgumentNullException(nameof(identityProvider));
+            _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
@@ -60,10 +60,8 @@ namespace Xpandables.Net.Identities
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
         public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
-            _ = command ?? throw new ArgumentNullException(nameof(command));
-
-            command.SetIdentity(_identityProvider.GetIdentity());
             await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            await _dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

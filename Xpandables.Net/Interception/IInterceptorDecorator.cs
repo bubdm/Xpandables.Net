@@ -21,5 +21,5 @@ namespace Xpandables.Net.Interception
     /// A marker interface that allows the class implementation to be intercepted.
     /// You need to register the expected behavior using the appropriate interceptor extension method and provide an implementation for <see cref="IInterceptor"/>.
     /// </summary>
-    public interface IBehaviorInterceptor { }
+    public interface IInterceptorDecorator { }
 }

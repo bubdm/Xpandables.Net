@@ -29,20 +29,20 @@ namespace Xpandables.Net.VisitorRules
     /// of <see cref="IVisitorRule{TElement}"/>.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
-    public sealed class CommandVisitorBehavior<TCommand> : ICommandHandler<TCommand>
+    public sealed class CommandVisitorDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : class, ICommand, IVisitable
     {
         private readonly ICommandHandler<TCommand> _decoratee;
         private readonly ICompositeVisitorRule<TCommand> _visitor;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="CommandVisitorBehavior{TCommand}"/>.
+        /// Initializes a new instance of <see cref="CommandVisitorDecorator{TCommand}"/>.
         /// </summary>
         /// <param name="decoratee">the decorated command handler.</param>
         /// <param name="visitor">the visitor to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        public CommandVisitorBehavior(ICommandHandler<TCommand> decoratee, ICompositeVisitorRule<TCommand> visitor)
+        public CommandVisitorDecorator(ICommandHandler<TCommand> decoratee, ICompositeVisitorRule<TCommand> visitor)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));

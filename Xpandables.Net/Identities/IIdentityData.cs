@@ -24,7 +24,7 @@ namespace Xpandables.Net.Identities
 {
     /// <summary>
     /// Provides with a protected property that holds identity information of any type in a security context.
-    /// This class is used with <see cref="IBehaviorIdentity"/> and its decorator class.
+    /// This class is used with <see cref="IIdentityDecorator"/> and its decorator class.
     /// </summary>
     public interface IIdentityData
     {
@@ -45,7 +45,7 @@ namespace Xpandables.Net.Identities
 
     /// <summary>
     /// Provides with a protected property that holds identity information of generic type in a security context.
-    /// This class is used with <see cref="IBehaviorIdentity"/> and its decorator class.
+    /// This class is used with <see cref="IIdentityDecorator"/> and its decorator class.
     /// </summary>
     /// <typeparam name="TData">The type of the data.</typeparam>
     public interface IIdentityData<TData> : IIdentityData
@@ -73,7 +73,7 @@ namespace Xpandables.Net.Identities
     /// <summary>
     /// Provides with a protected property that holds identity information of generic type in a security context.
     /// This interface derives from <see cref="IQueryExpression{TSource}"/> interface.
-    /// This interface is used with <see cref="IBehaviorIdentity"/> and its decorator class.
+    /// This interface is used with <see cref="IIdentityDecorator"/> and its decorator class.
     /// </summary>
     /// <typeparam name="TIdentity">The type of the identity data.</typeparam>
     /// <typeparam name="TSource">The type of the data source</typeparam>

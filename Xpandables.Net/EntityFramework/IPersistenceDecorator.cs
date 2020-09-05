@@ -17,23 +17,21 @@
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.Correlation;
-using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
-    /// A marker interface that allows the handler class implementation to use persistence data across the control flow.
+    /// A marker interface that allows the command handler class implementation to use persistence data across the control flow.
     /// The behavior makes use of an implementation of <see cref="IDataContext"/> in the handler class implementation
     /// to persist data at the end of the control flow only if there is no exception.
     /// In order to control the behavior, you can add the <see cref="ICorrelationDecorator"/> to the command/query class and reference
-    /// the <see cref="ICorrelationContext"/> in the handler class implementation, to defines actions to be applied after the control flow with
+    /// the <see cref="ICorrelationContext"/> or <see cref="IAsyncCorrelationContext"/> in the handler class implementation, to defines actions to be applied after the control flow with
     /// <see cref="ICorrelationContext.PostEvent"/> on success and <see cref="ICorrelationContext.RollbackEvent"/> on exception.
     /// <para></para>
     /// You need to register the expected behavior to the service collections using the appropriate extension method,
     /// register the data context using and extension method.
     /// <para></para>
-    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="QueryPersistenceBehavior{TQuery, TResult}"/>.
-    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandPersistenceBehavior{TCommand}"/>.
+    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandPersistenceDecorator{TCommand}"/>.
     /// </summary>
-    public interface IBehaviorPersistence { }
+    public interface IPersistenceDecorator { }
 }

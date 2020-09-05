@@ -19,7 +19,7 @@ using Xpandables.Samples.Business.Services;
 
 namespace Xpandables.Samples.Business.Handlers
 {
-    public sealed class SignInRequestHandler : IAsyncQueryHandler<SignInRequest, SignInResponse>, IBehaviorInterceptor
+    public sealed class SignInRequestHandler : IAsyncQueryHandler<SignInRequest, SignInResponse>, IInterceptorDecorator
     {
         private readonly IDataContext _dataContext;
         private readonly IHttpTokenEngine _tokenEngine;
