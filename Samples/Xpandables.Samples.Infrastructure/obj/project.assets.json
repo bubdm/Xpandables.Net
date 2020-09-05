@@ -2150,7 +2150,7 @@
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
       },
-      "Xpandables.Net/3.1.5": {
+      "Xpandables.Net/3.1.6": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -2167,7 +2167,7 @@
           "bin/placeholder/Xpandables.Net.dll": {}
         }
       },
-      "Xpandables.Net.DependencyInjection/3.1.5": {
+      "Xpandables.Net.DependencyInjection/3.1.6": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -2176,7 +2176,7 @@
           "Microsoft.Extensions.DependencyModel": "3.1.6",
           "Microsoft.Extensions.Http": "3.1.7",
           "System.ComponentModel.Composition": "4.7.0",
-          "Xpandables.Net": "3.1.5"
+          "Xpandables.Net": "3.1.6"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.DependencyInjection.dll": {}
@@ -2185,7 +2185,7 @@
           "bin/placeholder/Xpandables.Net.DependencyInjection.dll": {}
         }
       },
-      "Xpandables.Net.EntityFramework/3.1.5": {
+      "Xpandables.Net.EntityFramework/3.1.6": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -2195,7 +2195,7 @@
           "Microsoft.Extensions.Configuration.FileExtensions": "3.1.7",
           "Microsoft.Extensions.Configuration.Json": "3.1.7",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "3.1.7",
-          "Xpandables.Net": "3.1.5"
+          "Xpandables.Net": "3.1.6"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.EntityFramework.dll": {}
@@ -2208,7 +2208,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
-          "Xpandables.Net": "3.1.5"
+          "Xpandables.Net": "3.1.6"
         },
         "compile": {
           "bin/placeholder/Xpandables.Samples.Domain.dll": {}
@@ -7863,17 +7863,17 @@
         "system.xml.xmlserializer.nuspec"
       ]
     },
-    "Xpandables.Net/3.1.5": {
+    "Xpandables.Net/3.1.6": {
       "type": "project",
       "path": "../../Xpandables.Net/Xpandables.Net.csproj",
       "msbuildProject": "../../Xpandables.Net/Xpandables.Net.csproj"
     },
-    "Xpandables.Net.DependencyInjection/3.1.5": {
+    "Xpandables.Net.DependencyInjection/3.1.6": {
       "type": "project",
       "path": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj"
     },
-    "Xpandables.Net.EntityFramework/3.1.5": {
+    "Xpandables.Net.EntityFramework/3.1.6": {
       "type": "project",
       "path": "../../Xpandables.Net.EntityFramework/Xpandables.Net.EntityFramework.csproj",
       "msbuildProject": "../../Xpandables.Net.EntityFramework/Xpandables.Net.EntityFramework.csproj"
@@ -7888,8 +7888,8 @@
     ".NETStandard,Version=v2.1": [
       "Microsoft.CodeAnalysis.FxCopAnalyzers >= 3.3.0-beta2.final",
       "Microsoft.EntityFrameworkCore.SqlServer >= 3.1.7",
-      "Xpandables.Net.DependencyInjection >= 3.1.5",
-      "Xpandables.Net.EntityFramework >= 3.1.5",
+      "Xpandables.Net.DependencyInjection >= 3.1.6",
+      "Xpandables.Net.EntityFramework >= 3.1.6",
       "Xpandables.Samples.Domain >= 1.0.0"
     ]
   },
