@@ -154,7 +154,7 @@ namespace Xpandables.Net.Data
 
         /// <summary>
         /// Executes the stored procedure by its name using default options
-        /// and returns a collection of results of the specific-type.
+        /// and returns an asynchronous collection of results of the specific-type.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="dataBase">The target database.</param>
@@ -162,13 +162,18 @@ namespace Xpandables.Net.Data
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static IAsyncEnumerable<TResult> ExecuteMappedProceduresAsync<TResult>(
+        public static async IAsyncEnumerable<TResult> ExecuteMappedProceduresAsync<TResult>(
             this IDataBaseConnection dataBase, string commandText, params object[] parameters)
             where TResult : class, new()
-            => dataBase.ExecuteMappedProceduresAsync<TResult>(new DataOptionsBuilder().BuildDefault(), commandText, parameters);
+        {
+            await foreach (var result in dataBase.ExecuteMappedProceduresAsync<TResult>(
+                new DataOptionsBuilder().BuildDefault(), commandText, parameters)
+                .ConfigureAwait(false))
+                yield return result;
+        }
 
         /// <summary>
-        /// Executes the stored procedure by its name using options and returns a collection of results of
+        /// Executes the stored procedure by its name using options and returns an asynchronous collection of results of
         /// the specific-type.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
@@ -179,13 +184,18 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static IAsyncEnumerable<TResult> ExecuteMappedProceduresAsync<TResult>(
+        public static async IAsyncEnumerable<TResult> ExecuteMappedProceduresAsync<TResult>(
             this IDataBaseConnection dataBase,
             DataOptions options,
             string commandText,
             params object[] parameters)
             where TResult : class, new()
-            => dataBase.ExecuteMappedAsync<TResult, DataExecutableMapper<TResult>>(options, commandText, CommandType.StoredProcedure, parameters);     
+        {
+            await foreach (var result in dataBase.ExecuteMappedAsync<TResult, DataExecutableMapper<TResult>>(
+                options, commandText, CommandType.StoredProcedure, parameters)
+                .ConfigureAwait(false))
+                yield return result;
+        }
 
         /// <summary>
         /// Executes the specify query to the database using options and returns a collection of results of
@@ -199,14 +209,18 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static IAsyncEnumerable<TResult> ExecuteMappedQueriesAsync<TResult>(
+        public static async IAsyncEnumerable<TResult> ExecuteMappedQueriesAsync<TResult>(
             this IDataBaseConnection dataBase,
             DataOptions options,
             string commandText,
             params object[] parameters)
             where TResult : class, new()
-            => dataBase.ExecuteMappedAsync<TResult, DataExecutableMapper<TResult>>(
-                options, commandText, CommandType.Text, parameters);
+        {
+            await foreach (var result in dataBase.ExecuteMappedAsync<TResult, DataExecutableMapper<TResult>>(
+                options, commandText, CommandType.Text, parameters).
+                ConfigureAwait(false))
+                yield return result;
+        }
 
         /// <summary>
         /// Executes the specify query to the database using default options
@@ -218,11 +232,15 @@ namespace Xpandables.Net.Data
         /// <param name="parameters">The parameters to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static IAsyncEnumerable<TResult> ExecuteMappedQueriesAsync<TResult>(
+        public static async IAsyncEnumerable<TResult> ExecuteMappedQueriesAsync<TResult>(
             this IDataBaseConnection dataBase, string commandText, params object[] parameters)
             where TResult : class, new()
-            => dataBase.ExecuteMappedQueriesAsync<TResult>(
-                new DataOptionsBuilder().BuildDefault(), commandText, parameters);
+        {
+            await foreach (var result in dataBase.ExecuteMappedQueriesAsync<TResult>(
+                new DataOptionsBuilder().BuildDefault(), commandText, parameters)
+                .ConfigureAwait(false))
+                yield return result;
+        }
 
         /// <summary>
         /// Executes the stored procedure by its name using options and returns the number of affected rows.

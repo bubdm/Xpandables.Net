@@ -32,7 +32,7 @@ namespace Xpandables.Net.Data.Mappers
     public interface IDataMapper
     {
         /// <summary>
-        /// Asynchronously maps the data source to the specified type and returns a collection of that type.
+        /// Asynchronously maps the data source to the specified type.
         /// </summary>
         /// <typeparam name="TEntity">The type of expected result.</typeparam>
         /// <param name="source">The data source to act on.</param>

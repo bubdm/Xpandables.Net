@@ -500,7 +500,7 @@
         </member>
         <member name="M:Xpandables.Net.Creators.IInstanceCreator.ClearCache">
             <summary>
-            Clear the constructor cache.
+            Clear the creator cache.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Creators.InstanceCreator">
@@ -521,18 +521,18 @@
         </member>
         <member name="M:Xpandables.Net.Creators.InstanceCreator.#ctor">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Creators.InstanceCreator"/> with the string generator.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Creators.InstanceCreator"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Cryptography.IStringCryptography">
             <summary>
             Provides with methods to encrypt and decrypt string values.
-            Contains a default implementation using the <see cref="T:Xpandables.Net.Cryptography.IStringGenerator"/>.
+            Contains an implementation of <see cref="T:Xpandables.Net.Cryptography.IStringGenerator"/>.
             </summary>
         </member>
         <member name="P:Xpandables.Net.Cryptography.IStringCryptography.StringGenerator">
             <summary>
-            Gets the string generator the cryptography.
+            Gets the string generator for cryptography.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Cryptography.IStringCryptography.Encrypt(System.String,System.UInt16)">
@@ -623,12 +623,12 @@
         </member>
         <member name="P:Xpandables.Net.Cryptography.StringCryptography.StringGenerator">
             <summary>
-            Gets the string generator the cryptography.
+            Gets the string generator for the cryptography.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Cryptography.StringCryptography.#ctor(Xpandables.Net.Cryptography.IStringGenerator)">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Cryptography.StringCryptography"/> class.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Cryptography.StringCryptography"/> class with the string generator.
             </summary>
             <param name="stringGenerator">The string generator.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="stringGenerator"/> is null.</exception>
@@ -1251,7 +1251,7 @@
         <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProceduresAsync``1(Xpandables.Net.Data.IDataBaseConnection,System.String,System.Object[])">
             <summary>
             Executes the stored procedure by its name using default options
-            and returns a collection of results of the specific-type.
+            and returns an asynchronous collection of results of the specific-type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <param name="dataBase">The target database.</param>
@@ -1262,7 +1262,7 @@
         </member>
         <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProceduresAsync``1(Xpandables.Net.Data.IDataBaseConnection,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
             <summary>
-            Executes the stored procedure by its name using options and returns a collection of results of
+            Executes the stored procedure by its name using options and returns an asynchronous collection of results of
             the specific-type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
@@ -2369,7 +2369,7 @@
         </member>
         <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.MapAsync``1(System.Collections.Generic.IAsyncEnumerable{System.Data.IDataRecord},Xpandables.Net.Data.Options.DataOptions)">
             <summary>
-            Asynchronously maps the data source to the specified type and returns a collection of that type.
+            Asynchronously maps the data source to the specified type.
             </summary>
             <typeparam name="TEntity">The type of expected result.</typeparam>
             <param name="source">The data source to act on.</param>
