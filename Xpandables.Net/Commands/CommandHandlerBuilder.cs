@@ -38,7 +38,8 @@ namespace Xpandables.Net.Commands
         /// the <see cref="ICommandHandler{TCommand}.Handle(TCommand)"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
-        public CommandHandlerBuilder(Action<TCommand> handler) => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
+        public CommandHandlerBuilder(Action<TCommand> handler)
+            => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
 
         /// <summary>
         /// Handles the specified command using the delegate from the constructor.

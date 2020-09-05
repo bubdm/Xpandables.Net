@@ -51,6 +51,7 @@ namespace Xpandables.Net.Commands
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
             => await _handler(command, cancellationToken).ConfigureAwait(false);
     }

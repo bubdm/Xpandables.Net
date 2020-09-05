@@ -57,7 +57,7 @@ namespace Xpandables.Net.DependencyInjection
         public CommandQueryOptions UsePersistenceBehavior() => this.With(cq => cq.IsPersistenceEnabled = true);
 
         /// <summary>
-        /// Enables correlation behavior to commands and queries that are decorated with the <see cref="IBehaviorCorrelation"/>.
+        /// Enables correlation behavior to commands and queries that are decorated with the <see cref="ICorrelationDecorator"/>.
         /// </summary>
         public CommandQueryOptions UseCorrelationBehavior() => this.With(cq => cq.IsCorrelationEnabled = true);
 

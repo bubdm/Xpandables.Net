@@ -116,7 +116,11 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\3.1.5\\xpandables.net.3.1.5.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.dependencyinjection\\3.1.5\\xpandables.net.dependencyinjection.3.1.5.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\3.1.5\\xpandables.net.entityframework.3.1.5.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.netcore\\3.1.5\\xpandables.netcore.3.1.5.nupkg.sha512"
   ],
   "logs": []
 }

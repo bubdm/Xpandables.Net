@@ -25,6 +25,7 @@ namespace Xpandables.Net.Commands
     /// Allows an application author to define a asynchronous handler for a specific type command.
     /// The command must implement <see cref="IAsyncCommand"/> interface.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
+    /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the command can be handled. Its default behavior returns <see langword="true"/>.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to be handled.</typeparam>
     public interface IAsyncCommandHandler<in TCommand> : ICanHandle<TCommand>
@@ -38,6 +39,7 @@ namespace Xpandables.Net.Commands
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task HandleAsync(TCommand command, CancellationToken cancellationToken = default);
     }
 }

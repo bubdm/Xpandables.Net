@@ -61,7 +61,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds correlation behavior to commands and queries that are decorated with the <see cref="IBehaviorCorrelation"/> to the services
+        /// Adds correlation behavior to commands and queries that are decorated with the <see cref="ICorrelationDecorator"/> to the services
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -72,10 +72,10 @@ namespace Xpandables.Net.DependencyInjection
             services.AddScoped<CorrelationContext>();
             services.AddScoped<ICorrelationContext>(provider => provider.GetRequiredService<CorrelationContext>());
 
-            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandCorrelationBehavior<>));
-            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandCorrelationBehavior<>));
-            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryCorrelationBehavior<,>));
-            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryCorrelationBehavior<,>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandCorrelationDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandCorrelationDecorator<>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryCorrelationDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryCorrelationDecorator<,>));
 
             return services;
         }

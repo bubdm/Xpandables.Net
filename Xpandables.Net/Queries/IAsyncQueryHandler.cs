@@ -25,6 +25,7 @@ namespace Xpandables.Net.Queries
     /// Defines a generic method that a class implements to asynchronously handle a type-specific query and
     /// returns an asynchronous enumerable type-specific result.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
+    /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the query can be handled. Its default behavior returns <see langword="true"/>.
     /// </summary>
     /// <typeparam name="TQuery">Type of the query that will be used as argument.</typeparam>
     /// <typeparam name="TResult">Type of the result of the query.</typeparam>
@@ -39,7 +40,7 @@ namespace Xpandables.Net.Queries
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>An asynchronous collection of <typeparamref name="TResult"/>.</returns>
+        /// <returns>A result contains an enumerable of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         IAsyncEnumerable<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
     }
 }

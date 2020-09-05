@@ -59,7 +59,10 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\4.7.1\\system.text.encodings.web.4.7.1.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.text.json\\4.7.2\\system.text.json.4.7.2.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.text.json\\4.7.2\\system.text.json.4.7.2.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\3.1.5\\xpandables.net.3.1.5.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.dependencyinjection\\3.1.5\\xpandables.net.dependencyinjection.3.1.5.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\3.1.5\\xpandables.net.entityframework.3.1.5.nupkg.sha512"
   ],
   "logs": []
 }

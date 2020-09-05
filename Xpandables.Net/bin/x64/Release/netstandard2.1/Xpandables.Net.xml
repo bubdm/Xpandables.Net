@@ -31,6 +31,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents the asynchronous operation.</returns>
         </member>
         <member name="T:Xpandables.Net.Commands.CommandHandlerBuilder`1">
             <summary>
@@ -71,6 +72,7 @@
             Allows an application author to define a asynchronous handler for a specific type command.
             The command must implement <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> interface.
             The implementation must be thread-safe when working in a multi-threaded environment.
+            This interface inherits from <see cref="T:Xpandables.Net.ICanHandle`1"/> that determines whether or not the command can be handled. Its default behavior returns <see langword="true"/>.
             </summary>
             <typeparam name="TCommand">Type of the command to be handled.</typeparam>
         </member>
@@ -83,6 +85,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="command"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents the asynchronous operation.</returns>
         </member>
         <member name="T:Xpandables.Net.Commands.ICommand">
             <summary>
@@ -97,6 +100,7 @@
             Allows an application author to define a handler for a specific type command.
             The command must implement <see cref="T:Xpandables.Net.Commands.ICommand"/> interface.
             The implementation must be thread-safe when working in a multi-threaded environment.
+            This interface inherits from <see cref="T:Xpandables.Net.ICanHandle`1"/> that determines whether or not the command can be handled. Its default behavior returns <see langword="true"/>.
             </summary>
             <typeparam name="TCommand">Type of the command to be handled.</typeparam>
         </member>
@@ -108,56 +112,103 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="command"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
         </member>
-        <member name="T:Xpandables.Net.Correlation.AsyncCommandCorrelationBehavior`1">
+        <member name="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1">
             <summary>
             This class allows the application author to add post/rollback event support to command control flow.
-            The target command should implement the <see cref="T:Xpandables.Net.Correlation.IBehaviorCorrelation"/> interface in order to activate the behavior.
-            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/> that
+            The target command should implement the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface in order to activate the behavior.
+            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/> that
             adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
             and an event (roll back event) to be raised when exception. The target command handler class implementation should reference the
-            <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/> interface in order to set the expected actions.
+            <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/> interface in order to set the expected actions.
             </summary>
             <typeparam name="TCommand">Type of the command to be handled.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Correlation.AsyncCommandCorrelationBehavior`1.#ctor(Xpandables.Net.Correlation.CorrelationContext,Xpandables.Net.Commands.IAsyncCommandHandler{`0})">
+        <member name="M:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1.#ctor(Xpandables.Net.Correlation.AsyncCorrelationContext,Xpandables.Net.Commands.IAsyncCommandHandler{`0})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationBehavior`1"/> class with the correlation context and the command handler to be decorated.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1"/> class with the correlation context and the command handler to be decorated.
             </summary>
             <param name="correlationContext">The correlation context.</param>
             <param name="decoratee">The command handler to be decorated.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Correlation.AsyncCommandCorrelationBehavior`1.HandleAsync(`0,System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
             Asynchronously handle the specified command adding post/rollback event to the decorated handler.
             </summary>
             <param name="command">The command instance to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="command"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents the asynchronous operation.</returns>
         </member>
-        <member name="T:Xpandables.Net.Correlation.AsyncQueryCorrelationBehavior`2">
+        <member name="T:Xpandables.Net.Correlation.AsyncCorrelationContext">
+            <summary>
+            Default implementation of <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/>.
+            This class must be used through a behavior and must be registered as follow :
+            <code>
+                services.AddScoped{CorrelationContext};
+                services.AddScoped{ICorrelationContext}(provider=>provider.GetRequiredService{CorrelationContext}());
+            </code>
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Correlation.AsyncCorrelationContext.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.AsyncCorrelationContext"/>.
+            </summary>
+        </member>
+        <member name="E:Xpandables.Net.Correlation.AsyncCorrelationContext.PostEvent">
+            <summary>
+            The event that will be asynchronously raised after the main one in the same control flow only if there is no exception.
+            The event will received the control flow return value for non-void method.
+            </summary>
+        </member>
+        <member name="E:Xpandables.Net.Correlation.AsyncCorrelationContext.RollbackEvent">
+            <summary>
+            The event that will be asynchronously raised after the main one when exception. The event will received the control flow handled exception.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Correlation.AsyncCorrelationContext.OnPostEventAsync(System.Object)">
+            <summary>
+            Raises the <see cref="E:Xpandables.Net.Correlation.AsyncCorrelationContext.PostEvent"/> event.
+            </summary>
+            <param name="returnValue">The control flow return value only for non-void method.</param>
+        </member>
+        <member name="M:Xpandables.Net.Correlation.AsyncCorrelationContext.OnRollbackEventAsync(System.Exception)">
+            <summary>
+            Raises the <see cref="E:Xpandables.Net.Correlation.AsyncCorrelationContext.RollbackEvent"/> event.
+            </summary>
+            <param name="exception">The control flow handled exception.</param>
+        </member>
+        <member name="M:Xpandables.Net.Correlation.AsyncCorrelationContext.Reset(System.String)">
+            <summary>
+            Clears the event.
+            </summary>
+            <param name="event">The event to reset.</param>
+        </member>
+        <member name="T:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2">
             <summary>
             This class allows the application author to add post/rollback event support to query control flow.
-            The target query should implement the <see cref="T:Xpandables.Net.Correlation.IBehaviorCorrelation"/> interface in order to activate the behavior.
-            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/> that
+            The target query should implement the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface in order to activate the behavior.
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/> that
             adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
             and an event (roll back event) to be raised when exception. The target query handler class should reference the
-            <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/> interface in order to set the expected actions.
+            <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/> interface in order to set the expected actions.
             </summary>
             <typeparam name="TQuery">Type of the query.</typeparam>
             <typeparam name="TResult">Type of the result.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Correlation.AsyncQueryCorrelationBehavior`2.#ctor(Xpandables.Net.Correlation.CorrelationContext,Xpandables.Net.Queries.IAsyncQueryHandler{`0,`1})">
+        <member name="M:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2.#ctor(Xpandables.Net.Correlation.AsyncCorrelationContext,Xpandables.Net.Queries.IAsyncQueryHandler{`0,`1})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.AsyncQueryCorrelationBehavior`2"/> class.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2"/> class.
             </summary>
             <param name="correlationContext">the event register.</param>
             <param name="decoratee">The decorated query handler.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Correlation.AsyncQueryCorrelationBehavior`2.HandleAsync(`0,System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
             Asynchronously handles the specified query and returns the expected result type.
             </summary>
@@ -166,11 +217,12 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A result contains an enumerable of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
-        <member name="T:Xpandables.Net.Correlation.CommandCorrelationBehavior`1">
+        <member name="T:Xpandables.Net.Correlation.CommandCorrelationDecorator`1">
             <summary>
             This class allows the application author to add post/rollback event support to command control flow.
-            The target command should implement the <see cref="T:Xpandables.Net.Correlation.IBehaviorCorrelation"/> interface in order to activate the behavior.
+            The target command should implement the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface in order to activate the behavior.
             The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/> that
             adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
             and an event (roll back event) to be raised when exception. The target command handler class implementation should reference the
@@ -178,16 +230,16 @@
             </summary>
             <typeparam name="TCommand">Type of the command to be handled.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Correlation.CommandCorrelationBehavior`1.#ctor(Xpandables.Net.Correlation.CorrelationContext,Xpandables.Net.Commands.ICommandHandler{`0})">
+        <member name="M:Xpandables.Net.Correlation.CommandCorrelationDecorator`1.#ctor(Xpandables.Net.Correlation.CorrelationContext,Xpandables.Net.Commands.ICommandHandler{`0})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.CommandCorrelationBehavior`1"/> class with the correlation context and the command handler to be decorated.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.CommandCorrelationDecorator`1"/> class with the correlation context and the command handler to be decorated.
             </summary>
             <param name="correlationContext">The correlation context.</param>
             <param name="decoratee">The command handler to be decorated.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Correlation.CommandCorrelationBehavior`1.Handle(`0)">
+        <member name="M:Xpandables.Net.Correlation.CommandCorrelationDecorator`1.Handle(`0)">
             <summary>
             Handles the specified command adding post/rollback event to the decorated handler.
             </summary>
@@ -219,7 +271,7 @@
         </member>
         <member name="T:Xpandables.Net.Correlation.CorrelationContext">
             <summary>
-            Default implementation of <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/>. This class depends on <see cref="T:System.IServiceProvider"/>.
+            Default implementation of <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/>.
             This class must be used through a behavior and must be registered as follow :
             <code>
                 services.AddScoped{CorrelationContext};
@@ -227,12 +279,10 @@
             </code>
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Correlation.CorrelationContext.#ctor(System.IServiceProvider)">
+        <member name="M:Xpandables.Net.Correlation.CorrelationContext.#ctor">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.CorrelationContext"/> with the service provider.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.CorrelationContext"/>.
             </summary>
-            <param name="provider">The service provider to act with.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="provider"/> is null.</exception>
         </member>
         <member name="E:Xpandables.Net.Correlation.CorrelationContext.PostEvent">
             <summary>
@@ -245,20 +295,13 @@
             The event that will be raised after the main one when exception. The event will received the control flow handled exception.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Correlation.CorrelationContext.System#IServiceProvider#GetService(System.Type)">
-            <summary>
-             Gets the service object of the specified type.
-            </summary>
-            <param name="serviceType">An object that specifies the type of service object to get.</param>
-            <returns>A service object of type serviceType or null if there is no service object of type serviceType.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Correlation.CorrelationContext.OnPostEventAsync(System.Object)">
+        <member name="M:Xpandables.Net.Correlation.CorrelationContext.OnPostEvent(System.Object)">
             <summary>
             Raises the <see cref="E:Xpandables.Net.Correlation.CorrelationContext.PostEvent"/> event.
             </summary>
             <param name="returnValue">The control flow return value only for non-void method.</param>
         </member>
-        <member name="M:Xpandables.Net.Correlation.CorrelationContext.OnRollbackEventAsync(System.Exception)">
+        <member name="M:Xpandables.Net.Correlation.CorrelationContext.OnRollbackEvent(System.Exception)">
             <summary>
             Raises the <see cref="E:Xpandables.Net.Correlation.CorrelationContext.RollbackEvent"/> event.
             </summary>
@@ -270,36 +313,50 @@
             </summary>
             <param name="event">The event to reset.</param>
         </member>
-        <member name="T:Xpandables.Net.Correlation.IBehaviorCorrelation">
+        <member name="T:Xpandables.Net.Correlation.AsyncCorrelationPostEvent">
             <summary>
-            A marker interface that allows the command/query class to add correlation context event after control flow.
-            In the class handling the query or command, you should reference
-            the <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/> and set the <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.PostEvent"/> and/or
-            <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.RollbackEvent"/>.
-            <para></para>
-            Note that <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.PostEvent"/> will be raised at the end of the control only if there is no exception,
-            giving you access to all data still alive on the control flow and the <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.RollbackEvent"/>
-            will only be raised when exception. The exception in that case in accessible through the
-            <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.RollbackEvent"/>.
-            <para></para>
-            You need to register the expected behavior using the appropriate extension method.
-            <para></para>
-            <see cref="T:Xpandables.Net.Queries.IQuery`1"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncQueryCorrelationBehavior`2"/>.
-            <see cref="T:Xpandables.Net.Commands.ICommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationBehavior`1"/>.
+            Defines a method signature to be used to handle post event in correlation context <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/>.
+            </summary>
+            <param name="returnValue">The control flow return value only for non-void method.</param>
+        </member>
+        <member name="T:Xpandables.Net.Correlation.AsyncCorrelationRollbackEvent">
+            <summary>
+            Defines a method signature to be used to handler rollback event in correlation context <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/>.
+            </summary>
+            <param name="exception">The control flow handled exception.</param>
+        </member>
+        <member name="T:Xpandables.Net.Correlation.IAsyncCorrelationContext">
+            <summary>
+            Defines two tasks that can be used to follow process after a control flow with <see cref="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.PostEvent"/>
+            and on exception during the control flow with <see cref="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.RollbackEvent"/>.
+            In order to be activated, the target class should implement
+            the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface,
+            the target handling class should reference the current interface (to set the action) and you should
+            register the behavior with the expected extension
+            method <see langword="AddXCorrelationBehavior"/>.
+            </summary>
+        </member>
+        <member name="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.PostEvent">
+            <summary>
+            The event that will be asynchronously raised after the main one in the same control flow only if there is no exception.
+            The event will contain the control flow "return value" for non-void method.
+            </summary>
+        </member>
+        <member name="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.RollbackEvent">
+            <summary>
+            The event that will be asynchronously raised after the main one when exception. The event will contain the control flow handled exception.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Correlation.CorrelationPostEvent">
             <summary>
-            Defines a method signature to be used to handle post event in correlation context.
+            Defines a method signature to be used to handle post event in correlation context <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/>.
             </summary>
-            <param name="provider">The service provider.</param>
             <param name="returnValue">The control flow return value only for non-void method.</param>
         </member>
         <member name="T:Xpandables.Net.Correlation.CorrelationRollbackEvent">
             <summary>
-            Defines a method signature to be used to handler rollback event in correlation context.
+            Defines a method signature to be used to handler rollback event in correlation context <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/>
             </summary>
-            <param name="provider">The service provider.</param>
             <param name="exception">The control flow handled exception.</param>
         </member>
         <member name="T:Xpandables.Net.Correlation.ICorrelationContext">
@@ -307,7 +364,7 @@
             Defines two tasks that can be used to follow process after a control flow with <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.PostEvent"/>
             and on exception during the control flow with <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.RollbackEvent"/>.
             In order to be activated, the target class should implement
-            the <see cref="T:Xpandables.Net.Correlation.IBehaviorCorrelation"/> interface,
+            the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface,
             the target handling class should reference the current interface (to set the action) and you should
             register the behavior with the expected extension
             method <see langword="AddXCorrelationBehavior"/>.
@@ -324,10 +381,28 @@
             The event that will be raised after the main one when exception. The event will contain the control flow handled exception.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.Correlation.QueryCorrelationBehavior`2">
+        <member name="T:Xpandables.Net.Correlation.ICorrelationDecorator">
             <summary>
-            This class allows the application author to add post/rollback event support to query control flow.
-            The target query should implement the <see cref="T:Xpandables.Net.Correlation.IBehaviorCorrelation"/> interface in order to activate the behavior.
+            A marker interface that allows the command/query class to add correlation decorator context event after control flow.
+            In the class handling the query or command, you should reference
+            the <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/> and set the <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.PostEvent"/> and/or
+            <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.RollbackEvent"/>.
+            <para></para>
+            Note that <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.PostEvent"/> will be raised at the end of the control only if there is no exception,
+            giving you access to all data still alive on the control flow and the <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.RollbackEvent"/>
+            will only be raised when exception. The exception in that case in accessible through the
+            <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.RollbackEvent"/>.
+            <para></para>
+            You need to register the expected behavior using the appropriate extension method.
+            <para></para>
+            <see cref="T:Xpandables.Net.Queries.IQuery`1"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2"/>.
+            <see cref="T:Xpandables.Net.Commands.ICommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1"/>.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2">
+            <summary>
+            This decorator class allows the application author to add post/rollback event support to query control flow.
+            The target query should implement the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface in order to activate the behavior.
             The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/> that
             adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
             and an event (roll back event) to be raised when exception. The target query handler class should reference the
@@ -336,22 +411,23 @@
             <typeparam name="TQuery">Type of the query.</typeparam>
             <typeparam name="TResult">Type of the result.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Correlation.QueryCorrelationBehavior`2.#ctor(Xpandables.Net.Correlation.CorrelationContext,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+        <member name="M:Xpandables.Net.Correlation.QueryCorrelationDecorator`2.#ctor(Xpandables.Net.Correlation.CorrelationContext,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.QueryCorrelationBehavior`2"/> class.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2"/> class.
             </summary>
             <param name="correlationContext">the event register.</param>
             <param name="decoratee">The decorated query handler.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Correlation.QueryCorrelationBehavior`2.Handle(`0)">
+        <member name="M:Xpandables.Net.Correlation.QueryCorrelationDecorator`2.Handle(`0)">
             <summary>
             Handles the specified query and returns the expected result type.
             </summary>
             <param name="query">The query to act on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <returns>An object that represents the result of <typeparamref name="TResult"/>.</returns>
         </member>
         <member name="T:Xpandables.Net.Creators.IInstanceCreator">
             <summary>
@@ -3981,7 +4057,7 @@
             A marker interface that allows the handler class implementation to use persistence data across the control flow.
             The behavior makes use of an implementation of <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> in the handler class implementation
             to persist data at the end of the control flow only if there is no exception.
-            In order to control the behavior, you can add the <see cref="T:Xpandables.Net.Correlation.IBehaviorCorrelation"/> to the command/query class and reference
+            In order to control the behavior, you can add the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> to the command/query class and reference
             the <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/> in the handler class implementation, to defines actions to be applied after the control flow with
             <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.PostEvent"/> on success and <see cref="E:Xpandables.Net.Correlation.ICorrelationContext.RollbackEvent"/> on exception.
             <para></para>
@@ -12297,6 +12373,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A result contains an enumerable of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Queries.AsyncQueryHandlerWrapper`2">
             <summary>
@@ -12321,7 +12398,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>An asynchronous collection of <typeparamref name="TResult"/>.</returns>
+            <returns>A result contains an enumerable of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Queries.IAsyncQuery`1">
             <summary>
@@ -12337,6 +12414,7 @@
             Defines a generic method that a class implements to asynchronously handle a type-specific query and
             returns an asynchronous enumerable type-specific result.
             The implementation must be thread-safe when working in a multi-threaded environment.
+            This interface inherits from <see cref="T:Xpandables.Net.ICanHandle`1"/> that determines whether or not the query can be handled. Its default behavior returns <see langword="true"/>.
             </summary>
             <typeparam name="TQuery">Type of the query that will be used as argument.</typeparam>
             <typeparam name="TResult">Type of the result of the query.</typeparam>
@@ -12350,7 +12428,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>An asynchronous collection of <typeparamref name="TResult"/>.</returns>
+            <returns>A result contains an enumerable of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Queries.IAsyncQueryHandlerWrapper`1">
             <summary>
@@ -12367,6 +12445,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A result contains an enumerable of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Queries.IQuery`1">
             <summary>
@@ -12382,6 +12461,7 @@
             Defines a generic method that a class implements to handle a type-specific query and
             returns a type-specific result.
             The implementation must be thread-safe when working in a multi-threaded environment.
+            This interface inherits from <see cref="T:Xpandables.Net.ICanHandle`1"/> that determines whether or not the query can be handled. Its default behavior returns <see langword="true"/>.
             </summary>
             <typeparam name="TQuery">Type of the query that will be used as argument.</typeparam>
             <typeparam name="TResult">Type of the result of the query.</typeparam>

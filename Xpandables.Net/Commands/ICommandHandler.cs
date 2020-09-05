@@ -23,6 +23,7 @@ namespace Xpandables.Net.Commands
     /// Allows an application author to define a handler for a specific type command.
     /// The command must implement <see cref="ICommand"/> interface.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
+    /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the command can be handled. Its default behavior returns <see langword="true"/>.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to be handled.</typeparam>
     public interface ICommandHandler<in TCommand> : ICanHandle<TCommand>

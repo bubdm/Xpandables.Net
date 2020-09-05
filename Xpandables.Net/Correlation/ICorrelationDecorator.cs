@@ -21,7 +21,7 @@ using Xpandables.Net.Queries;
 namespace Xpandables.Net.Correlation
 {
     /// <summary>
-    /// A marker interface that allows the command/query class to add correlation context event after control flow.
+    /// A marker interface that allows the command/query class to add correlation decorator context event after control flow.
     /// In the class handling the query or command, you should reference
     /// the <see cref="ICorrelationContext"/> and set the <see cref="ICorrelationContext.PostEvent"/> and/or
     /// <see cref="ICorrelationContext.RollbackEvent"/>.
@@ -33,8 +33,8 @@ namespace Xpandables.Net.Correlation
     /// <para></para>
     /// You need to register the expected behavior using the appropriate extension method.
     /// <para></para>
-    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncQueryCorrelationBehavior{TQuery, TResult}"/>.
-    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="AsyncCommandCorrelationBehavior{TCommand}"/>.
+    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncQueryCorrelationDecorator{TQuery, TResult}"/>.
+    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="AsyncCommandCorrelationDecorator{TCommand}"/>.
     /// </summary>
-    public interface IBehaviorCorrelation { }
+    public interface ICorrelationDecorator { }
 }

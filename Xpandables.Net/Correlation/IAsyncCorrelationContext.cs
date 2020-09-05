@@ -16,20 +16,21 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.Correlation
 {
     /// <summary>
-    /// Defines a method signature to be used to handle post event in correlation context <see cref="ICorrelationContext"/>.
+    /// Defines a method signature to be used to handle post event in correlation context <see cref="IAsyncCorrelationContext"/>.
     /// </summary>
     /// <param name="returnValue">The control flow return value only for non-void method.</param>
-    public delegate void CorrelationPostEvent(object? returnValue = default);
+    public delegate Task AsyncCorrelationPostEvent(object? returnValue = default);
 
     /// <summary>
-    /// Defines a method signature to be used to handler rollback event in correlation context <see cref="ICorrelationContext"/>
+    /// Defines a method signature to be used to handler rollback event in correlation context <see cref="IAsyncCorrelationContext"/>.
     /// </summary>
     /// <param name="exception">The control flow handled exception.</param>
-    public delegate void CorrelationRollbackEvent(Exception exception);
+    public delegate Task AsyncCorrelationRollbackEvent(Exception exception);
 
     /// <summary>
     /// Defines two tasks that can be used to follow process after a control flow with <see cref="PostEvent"/>
@@ -40,17 +41,17 @@ namespace Xpandables.Net.Correlation
     /// register the behavior with the expected extension
     /// method <see langword="AddXCorrelationBehavior"/>.
     /// </summary>
-    public interface ICorrelationContext
+    public interface IAsyncCorrelationContext
     {
         /// <summary>
-        /// The event that will be raised after the main one in the same control flow only if there is no exception.
+        /// The event that will be asynchronously raised after the main one in the same control flow only if there is no exception.
         /// The event will contain the control flow "return value" for non-void method.
         /// </summary>
-        event CorrelationPostEvent PostEvent;
+        event AsyncCorrelationPostEvent PostEvent;
 
         /// <summary>
-        /// The event that will be raised after the main one when exception. The event will contain the control flow handled exception.
+        /// The event that will be asynchronously raised after the main one when exception. The event will contain the control flow handled exception.
         /// </summary>
-        event CorrelationRollbackEvent RollbackEvent;
+        event AsyncCorrelationRollbackEvent RollbackEvent;
     }
 }

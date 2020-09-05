@@ -16,44 +16,45 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.Correlation
 {
     /// <summary>
-    /// Default implementation of <see cref="ICorrelationContext"/>.
+    /// Default implementation of <see cref="IAsyncCorrelationContext"/>.
     /// This class must be used through a behavior and must be registered as follow :
     /// <code>
     ///     services.AddScoped{CorrelationContext};
     ///     services.AddScoped{ICorrelationContext}(provider=>provider.GetRequiredService{CorrelationContext}());
     /// </code>
     /// </summary>
-    public sealed class CorrelationContext : ICorrelationContext
+    public sealed class AsyncCorrelationContext : IAsyncCorrelationContext
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="CorrelationContext"/>.
+        /// Initializes a new instance of <see cref="AsyncCorrelationContext"/>.
         /// </summary>
-        public CorrelationContext() { }
+        public AsyncCorrelationContext() { }
 
         /// <summary>
-        /// The event that will be raised after the main one in the same control flow only if there is no exception.
+        /// The event that will be asynchronously raised after the main one in the same control flow only if there is no exception.
         /// The event will received the control flow return value for non-void method.
         /// </summary>
-        public event CorrelationPostEvent PostEvent = _ => { };
+        public event AsyncCorrelationPostEvent PostEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
 
         /// <summary>
-        /// The event that will be raised after the main one when exception. The event will received the control flow handled exception.
+        /// The event that will be asynchronously raised after the main one when exception. The event will received the control flow handled exception.
         /// </summary>
-        public event CorrelationRollbackEvent RollbackEvent = _ => { };
+        public event AsyncCorrelationRollbackEvent RollbackEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
 
         /// <summary>
         /// Raises the <see cref="PostEvent"/> event.
         /// </summary>
         /// <param name="returnValue">The control flow return value only for non-void method.</param>
-        internal void OnPostEvent(object? returnValue = default)
+        internal async Task OnPostEventAsync(object? returnValue = default)
         {
             try
             {
-                PostEvent(returnValue);
+                await PostEvent(returnValue).ConfigureAwait(false);
             }
             finally
             {
@@ -65,11 +66,11 @@ namespace Xpandables.Net.Correlation
         /// Raises the <see cref="RollbackEvent"/> event.
         /// </summary>
         /// <param name="exception">The control flow handled exception.</param>
-        internal void OnRollbackEvent(Exception exception)
+        internal async Task OnRollbackEventAsync(Exception exception)
         {
             try
             {
-                RollbackEvent(exception);
+                await RollbackEvent(exception).ConfigureAwait(false);
             }
             finally
             {
@@ -83,8 +84,8 @@ namespace Xpandables.Net.Correlation
         /// <param name="event">The event to reset.</param>
         private void Reset(string @event = "post")
         {
-            if (@event == "post") PostEvent = _ => { };
-            if (@event == "rollback") RollbackEvent = _ => { };
+            if (@event == "post") PostEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
+            if (@event == "rollback") RollbackEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
         }
     }
 }
