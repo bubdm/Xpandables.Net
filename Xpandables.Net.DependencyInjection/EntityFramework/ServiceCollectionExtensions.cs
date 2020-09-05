@@ -131,7 +131,7 @@ namespace Xpandables.Net.DependencyInjection
 
             if (definedOptions.IsSeederEnabled.HasValue)
             {
-                services.AddXSeedBehavior(
+                services.AddXSeedDecorator(
                     definedOptions.IsSeederEnabled.Value.DataContextSeederType,
                     definedOptions.IsSeederEnabled.Value.DataContextType);
             }
@@ -163,26 +163,24 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXPersistenceBehavior(this IServiceCollection services)
+        public static IServiceCollection AddXPersistenceDecorator(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandPersistenceDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandPersistenceDecorator<>));
-            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryPersistenceBehavior<,>));
-            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryPersistenceBehavior<,>));
             return services;
         }
 
         /// <summary>
         /// Adds the <see cref="IDataContextSeeder{TDataContext}"/> to the services with scoped life time that will be used
-        /// to seed every data context that it's decorated with the <see cref="IBehaviorSeed"/> interface.
+        /// to seed every data context that it's decorated with the <see cref="ISeedDecorator"/> interface.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="dataContextSeederType">The type that implements <see cref="IDataContextSeeder{TDataContext}"/>.</param>
         /// <param name="dataContextType">The type of data context.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXSeedBehavior(
+        public static IServiceCollection AddXSeedDecorator(
             this IServiceCollection services, Type dataContextSeederType, Type dataContextType)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
@@ -190,8 +188,8 @@ namespace Xpandables.Net.DependencyInjection
             if (!typeof(IDataContextSeeder<>).TryMakeGenericType(out var seederType, out var seederException, dataContextType))
                 throw new InvalidOperationException($"Unable to build the {typeof(IDataContextSeeder<>).Name} type.", seederException);
 
-            if (!typeof(DataContextSeederBehavior<>).TryMakeGenericType(out var seederDecoratorType, out var decoException, dataContextType))
-                throw new InvalidOperationException($"Unable to build the {typeof(DataContextSeederBehavior<>).Name} type.", decoException);
+            if (!typeof(DataContextSeederDecorator<>).TryMakeGenericType(out var seederDecoratorType, out var decoException, dataContextType))
+                throw new InvalidOperationException($"Unable to build the {typeof(DataContextSeederDecorator<>).Name} type.", decoException);
 
             services.AddScoped(seederType, dataContextSeederType);
             services.XTryDecorate(typeof(IDataContextProvider), seederDecoratorType!);
@@ -200,20 +198,20 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Adds the <see cref="IDataContextSeeder{TDataContext}"/> to the services with scoped life time that will be used
-        /// to seed every data context that it's decorated with the <see cref="IBehaviorSeed"/> interface.
+        /// to seed every data context that it's decorated with the <see cref="ISeedDecorator"/> interface.
         /// </summary>
         /// <typeparam name="TDataContextSeeder">The type that implements <see cref="IDataContextSeeder{TDataContext}"/>.</typeparam>
         /// <typeparam name="TDataContext">The type of data context.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXSeedBehavior<TDataContextSeeder, TDataContext>(this IServiceCollection services)
+        public static IServiceCollection AddXSeedDecorator<TDataContextSeeder, TDataContext>(this IServiceCollection services)
             where TDataContextSeeder : class, IDataContextSeeder<TDataContext>
-            where TDataContext : class, IDataContext, IBehaviorSeed
+            where TDataContext : class, IDataContext, ISeedDecorator
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<IDataContextSeeder<TDataContext>, TDataContextSeeder>();
-            services.XTryDecorate<IDataContextProvider, DataContextSeederBehavior<TDataContext>>();
+            services.XTryDecorate<IDataContextProvider, DataContextSeederDecorator<TDataContext>>();
             return services;
         }
     }

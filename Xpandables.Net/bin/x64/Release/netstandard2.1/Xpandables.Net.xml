@@ -3940,7 +3940,7 @@
         </member>
         <member name="M:Xpandables.Net.EntityFramework.DataContextOptions.UseSeederBehavior``2">
             <summary>
-            Enables seeder for the data context that is decorated with <see cref="T:Xpandables.Net.EntityFramework.IBehaviorSeed"/>.
+            Enables seeder for the data context that is decorated with <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/>.
             </summary>
             <typeparam name="TDataContextSeeder">The type that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1"/>.</typeparam>
             <typeparam name="TDataContext">The type of data context.</typeparam>
@@ -3953,17 +3953,17 @@
             <param name="persistenceExceptionHandler">The persistence exception handler delegate instance.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="persistenceExceptionHandler"/> is null.</exception>
         </member>
-        <member name="T:Xpandables.Net.EntityFramework.DataContextSeederBehavior`1">
+        <member name="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1">
             <summary>
             This class allows the application author to add seed support to data context.
-            The target command should implement the <see cref="T:Xpandables.Net.EntityFramework.IBehaviorSeed"/> interface in order to activate the behavior.
+            The target command should implement the <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/> interface in order to activate the behavior.
             The class decorates the target <see cref="T:Xpandables.Net.EntityFramework.IDataContextProvider"/> with an implementation of
             <see cref="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1"/> that will be called before the data context is returned.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextSeederBehavior`1.#ctor(Xpandables.Net.EntityFramework.IDataContextProvider,Xpandables.Net.EntityFramework.IDataContextSeeder{`0})">
+        <member name="M:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1.#ctor(Xpandables.Net.EntityFramework.IDataContextProvider,Xpandables.Net.EntityFramework.IDataContextSeeder{`0})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederBehavior`1"/>.
+            Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
             </summary>
             <param name="datacontextProvider">The decorated data context provider.</param>
             <param name="dataContextSeeder">The data context seeder.</param>
@@ -4018,15 +4018,6 @@
         <member name="P:Xpandables.Net.EntityFramework.DataContextSettings.ConnectionString">
             <summary>
             The database connection string.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.EntityFramework.IBehaviorSeed">
-            <summary>
-            A marker interface that allows the class that implements the <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> to be seeded before use.
-            You need to register the expected behavior using the appropriate extension method
-            and provide an implementation for <see cref="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1"/>.
-            <para></para>
-            The class implementation will be decorated with the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederBehavior`1"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.EntityFramework.IDataContext">
@@ -4274,19 +4265,19 @@
             <summary>
             Allows an application author to dynamically seed a data context before it's retrieved.
             This is useful when you need a data context not to be empty.
-            The target data context should be decorated with the <see cref="T:Xpandables.Net.EntityFramework.IBehaviorSeed"/> interface and
+            The target data context should be decorated with the <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/> interface and
             the class seeder implementation should be
             registered to services collections with the extension method <see langword="ServiceCollectionExtensions.AddXDataContext{TDataContextProvider}(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
             using options.
             </summary>
             <typeparam name="TDataContext">The type of the data context that
-            implements <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> and <see cref="T:Xpandables.Net.EntityFramework.IBehaviorSeed"/>.</typeparam>
+            implements <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> and <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/>.</typeparam>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.IDataContextSeeder`1.SeedAsync(`0,System.Threading.CancellationToken)">
             <summary>
             Asynchronously seeds the specified data context as you wish.
             Warning : Do not throw exception from this method unless it's absolutely necessary.
-            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederBehavior`1"/>.
+            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
             </summary>
             <param name="dataContext">The data context instance to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -4295,7 +4286,7 @@
             <summary>
             Seeds the specified data context as you wish.
             Warning : Do not throw exception from this method unless it's absolutely necessary.
-            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederBehavior`1"/>.
+            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
             </summary>
             <param name="dataContext">The data context instance to act on.</param>
         </member>
@@ -4312,6 +4303,15 @@
             register the data context using and extension method.
             <para></para>
             <see cref="T:Xpandables.Net.Commands.ICommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.EntityFramework.CommandPersistenceDecorator`1"/>.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.EntityFramework.ISeedDecorator">
+            <summary>
+            A marker interface that allows the class that implements the <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> to be seeded before use.
+            You need to register the expected behavior using the appropriate extension method
+            and provide an implementation for <see cref="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1"/>.
+            <para></para>
+            The class implementation will be decorated with the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Enumerations.EnumerationType">
@@ -4516,24 +4516,24 @@
             for the enumeration.</exception>
             <exception cref="T:System.NotSupportedException">The conversion cannot be performed.</exception>
         </member>
-        <member name="T:Xpandables.Net.Events.AsyncCommandLoggingBehavior`1">
+        <member name="T:Xpandables.Net.Events.AsyncCommandLoggingDecorator`1">
             <summary>
             This class allows the application author to add logging event support to command control flow.
-            The target command should implement the <see cref="T:Xpandables.Net.Events.IBehaviorLogging"/> interface in order to activate the behavior.
+            The target command should implement the <see cref="T:Xpandables.Net.Events.ILoggingDecorator"/> interface in order to activate the behavior.
             The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Events.ILogger"/>.
             </summary>
             <typeparam name="TCommand">Type of the command to be handled.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Events.AsyncCommandLoggingBehavior`1.#ctor(Xpandables.Net.Events.ILogger,Xpandables.Net.Commands.IAsyncCommandHandler{`0})">
+        <member name="M:Xpandables.Net.Events.AsyncCommandLoggingDecorator`1.#ctor(Xpandables.Net.Events.ILogger,Xpandables.Net.Commands.IAsyncCommandHandler{`0})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Events.AsyncCommandLoggingBehavior`1"/> class with the logger and the command handler to be decorated.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Events.AsyncCommandLoggingDecorator`1"/> class with the logger and the command handler to be decorated.
             </summary>
             <param name="logger">The logger instance.</param>
             <param name="decoratee">The command handler to be decorated.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="logger"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Events.AsyncCommandLoggingBehavior`1.HandleAsync(`0,System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Events.AsyncCommandLoggingDecorator`1.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
             Asynchronously handle the specified command adding post/rollback event to the decorated handler.
             </summary>
@@ -4541,25 +4541,25 @@
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
         </member>
-        <member name="T:Xpandables.Net.Events.AsyncQueryLoggingBehavior`2">
+        <member name="T:Xpandables.Net.Events.AsyncQueryLoggingDecorator`2">
             <summary>
             This class allows the application author to add logging event support to query control flow.
-            The target command should implement the <see cref="T:Xpandables.Net.Events.IBehaviorLogging"/> interface in order to activate the behavior.
+            The target command should implement the <see cref="T:Xpandables.Net.Events.ILoggingDecorator"/> interface in order to activate the behavior.
             The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Events.ILogger"/>.
             </summary>
             <typeparam name="TQuery">Type of the query.</typeparam>
             <typeparam name="TResult">Type of the result.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Events.AsyncQueryLoggingBehavior`2.#ctor(Xpandables.Net.Events.ILogger,Xpandables.Net.Queries.IAsyncQueryHandler{`0,`1})">
+        <member name="M:Xpandables.Net.Events.AsyncQueryLoggingDecorator`2.#ctor(Xpandables.Net.Events.ILogger,Xpandables.Net.Queries.IAsyncQueryHandler{`0,`1})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Events.AsyncQueryLoggingBehavior`2"/> class.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Events.AsyncQueryLoggingDecorator`2"/> class.
             </summary>
             <param name="logger">the logger instance.</param>
             <param name="decoratee">The decorated query handler.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="logger"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Events.AsyncQueryLoggingBehavior`2.HandleAsync(`0,System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Events.AsyncQueryLoggingDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
             Asynchronously handles the specified query and returns the expected result type.
             </summary>
@@ -4569,24 +4569,24 @@
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
         </member>
-        <member name="T:Xpandables.Net.Events.CommandLoggingBehavior`1">
+        <member name="T:Xpandables.Net.Events.CommandLoggingDecorator`1">
             <summary>
             This class allows the application author to add logging event support to command control flow.
-            The target command should implement the <see cref="T:Xpandables.Net.Events.IBehaviorLogging"/> interface in order to activate the behavior.
+            The target command should implement the <see cref="T:Xpandables.Net.Events.ILoggingDecorator"/> interface in order to activate the behavior.
             The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Events.ILogger"/>.
             </summary>
             <typeparam name="TCommand">Type of the command to be handled.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Events.CommandLoggingBehavior`1.#ctor(Xpandables.Net.Events.ILogger,Xpandables.Net.Commands.ICommandHandler{`0})">
+        <member name="M:Xpandables.Net.Events.CommandLoggingDecorator`1.#ctor(Xpandables.Net.Events.ILogger,Xpandables.Net.Commands.ICommandHandler{`0})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Events.CommandLoggingBehavior`1"/> class with the logger and the command handler to be decorated.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Events.CommandLoggingDecorator`1"/> class with the logger and the command handler to be decorated.
             </summary>
             <param name="logger">The logger instance.</param>
             <param name="decoratee">The command handler to be decorated.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="logger"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Events.CommandLoggingBehavior`1.Handle(`0)">
+        <member name="M:Xpandables.Net.Events.CommandLoggingDecorator`1.Handle(`0)">
             <summary>
             Handles the specified command adding post/rollback event to the decorated handler.
             </summary>
@@ -4646,13 +4646,6 @@
         <member name="M:Xpandables.Net.Events.DefaultLogEntity.CreateLogEntity">
             <summary>
             Initializes a new log entity with default values.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Events.IBehaviorLogging">
-            <summary>
-            A marker interface that allows the class implementation of (<see cref="T:Xpandables.Net.Queries.IAsyncQueryHandler`2"/> or <see cref="T:Xpandables.Net.Commands.IAsyncCommandHandler`1"/>
-            to be logged using the <see cref="T:Xpandables.Net.Events.IDataLogContext`1"/>.
-            You need to register the expected behavior using the appropriate add data log context extension method and provide an implementation of <see cref="T:Xpandables.Net.Events.ILogger"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Events.IDataLogContext">
@@ -4904,6 +4897,13 @@
             <param name="argument">The arguments</param>
             <param name="result">The execution result for non-void method.</param>
         </member>
+        <member name="T:Xpandables.Net.Events.ILoggingDecorator">
+            <summary>
+            A marker interface that allows the class implementation of (<see cref="T:Xpandables.Net.Queries.IAsyncQueryHandler`2"/> or <see cref="T:Xpandables.Net.Commands.IAsyncCommandHandler`1"/>
+            to be logged using the <see cref="T:Xpandables.Net.Events.IDataLogContext`1"/>.
+            You need to register the expected behavior using the appropriate add data log context extension method and provide an implementation of <see cref="T:Xpandables.Net.Events.ILogger"/>.
+            </summary>
+        </member>
         <member name="T:Xpandables.Net.Events.LogEntity`1">
             <summary>
             Helper class to implement <see cref="T:Xpandables.Net.Events.ILogEntity`1"/>.
@@ -5095,25 +5095,25 @@
             </summary>
             <param name="logEvent">The log event to write.</param>
         </member>
-        <member name="T:Xpandables.Net.Events.QueryLoggingBehavior`2">
+        <member name="T:Xpandables.Net.Events.QueryLoggingDecorator`2">
             <summary>
             This class allows the application author to add logging event support to query control flow.
-            The target command should implement the <see cref="T:Xpandables.Net.Events.IBehaviorLogging"/> interface in order to activate the behavior.
+            The target command should implement the <see cref="T:Xpandables.Net.Events.ILoggingDecorator"/> interface in order to activate the behavior.
             The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Events.ILogger"/>.
             </summary>
             <typeparam name="TQuery">Type of the query.</typeparam>
             <typeparam name="TResult">Type of the result.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Events.QueryLoggingBehavior`2.#ctor(Xpandables.Net.Events.ILogger,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+        <member name="M:Xpandables.Net.Events.QueryLoggingDecorator`2.#ctor(Xpandables.Net.Events.ILogger,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Events.QueryLoggingBehavior`2"/> class.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Events.QueryLoggingDecorator`2"/> class.
             </summary>
             <param name="logger">the logger instance.</param>
             <param name="decoratee">The decorated query handler.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="logger"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Events.QueryLoggingBehavior`2.Handle(`0)">
+        <member name="M:Xpandables.Net.Events.QueryLoggingDecorator`2.Handle(`0)">
             <summary>
             Handles the specified query and returns the expected result type.
             </summary>

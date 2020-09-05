@@ -22,24 +22,24 @@ namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
     /// This class allows the application author to add seed support to data context.
-    /// The target command should implement the <see cref="IBehaviorSeed"/> interface in order to activate the behavior.
+    /// The target command should implement the <see cref="ISeedDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target <see cref="IDataContextProvider"/> with an implementation of
     /// <see cref="IDataContextSeeder{TDataContext}"/> that will be called before the data context is returned.
     /// </summary>
-    public sealed class DataContextSeederBehavior<TDataContext> : IDataContextProvider
-        where TDataContext : IDataContext, IBehaviorSeed
+    public sealed class DataContextSeederDecorator<TDataContext> : IDataContextProvider
+        where TDataContext : IDataContext, ISeedDecorator
     {
         private readonly IDataContextProvider _decoratee;
         private readonly IDataContextSeeder<TDataContext> _seeder;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataContextSeederBehavior{TDataContext}"/>.
+        /// Initializes a new instance of <see cref="DataContextSeederDecorator{TDataContext}"/>.
         /// </summary>
         /// <param name="datacontextProvider">The decorated data context provider.</param>
         /// <param name="dataContextSeeder">The data context seeder.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="datacontextProvider"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContextSeeder"/> is null.</exception>
-        public DataContextSeederBehavior(IDataContextProvider datacontextProvider, IDataContextSeeder<TDataContext> dataContextSeeder)
+        public DataContextSeederDecorator(IDataContextProvider datacontextProvider, IDataContextSeeder<TDataContext> dataContextSeeder)
         {
             _decoratee = datacontextProvider ?? throw new ArgumentNullException(nameof(datacontextProvider));
             _seeder = dataContextSeeder ?? throw new ArgumentNullException(nameof(dataContextSeeder));

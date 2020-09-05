@@ -17,56 +17,56 @@
 ************************************************************************************************************/
 using System;
 
-using Xpandables.Net.Commands;
 using Xpandables.Net.Extensions;
+using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// This class allows the application author to add logging event support to command control flow.
-    /// The target command should implement the <see cref="IBehaviorLogging"/> interface in order to activate the behavior.
+    /// This class allows the application author to add logging event support to query control flow.
+    /// The target command should implement the <see cref="ILoggingDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ILogger"/>.
     /// </summary>
-    /// <typeparam name="TCommand">Type of the command to be handled.</typeparam>
-    public sealed class CommandLoggingBehavior<TCommand> : ICommandHandler<TCommand>
-        where TCommand : class, ICommand, IBehaviorLogging
+    /// <typeparam name="TQuery">Type of the query.</typeparam>
+    /// <typeparam name="TResult">Type of the result.</typeparam>
+    public sealed class QueryLoggingDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
+        where TQuery : class, IQuery<TResult>, ILoggingDecorator
     {
-        private readonly ICommandHandler<TCommand> _decoratee;
+        private readonly IQueryHandler<TQuery, TResult> _decoratee;
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="CommandLoggingBehavior{TCommand}"/> class with the logger and the command handler to be decorated.
+        /// Initializes a new instance of <see cref="QueryLoggingDecorator{TQuery, TResult}"/> class.
         /// </summary>
-        /// <param name="logger">The logger instance.</param>
-        /// <param name="decoratee">The command handler to be decorated.</param>
+        /// <param name="logger">the logger instance.</param>
+        /// <param name="decoratee">The decorated query handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="logger"/> is null.</exception>
-        public CommandLoggingBehavior(ILogger logger, ICommandHandler<TCommand> decoratee)
+        public QueryLoggingDecorator(ILogger logger, IQueryHandler<TQuery, TResult> decoratee)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
         /// <summary>
-        /// Handles the specified command adding post/rollback event to the decorated handler.
+        /// Handles the specified query and returns the expected result type.
         /// </summary>
-        /// <param name="command">The command instance to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        public void Handle(TCommand command)
+        /// <param name="query">The query to act on.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        public TResult Handle(TQuery query)
         {
             try
             {
-                AsyncExtensions.RunSync(_logger.OnEntryLogAsync(_decoratee, command));
-                _decoratee.Handle(command);
+                AsyncExtensions.RunSync(_logger.OnEntryLogAsync(_decoratee, query));
+                var result = _decoratee.Handle(query);
+                AsyncExtensions.RunSync(_logger.OnExitLogAsync(_decoratee, query, result));
+                return result;
             }
             catch (Exception exception)
             {
-                AsyncExtensions.RunSync(_logger.OnExceptionLogAsync(_decoratee, command, exception));
+                AsyncExtensions.RunSync(_logger.OnExceptionLogAsync(_decoratee, query, exception));
                 throw;
-            }
-            finally
-            {
-                AsyncExtensions.RunSync(_logger.OnExitLogAsync(_decoratee, command));
             }
         }
     }

@@ -28,25 +28,25 @@ namespace Xpandables.Net.Events
 {
     /// <summary>
     /// This class allows the application author to add logging event support to query control flow.
-    /// The target command should implement the <see cref="IBehaviorLogging"/> interface in order to activate the behavior.
+    /// The target command should implement the <see cref="ILoggingDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ILogger"/>.
     /// </summary>
     /// <typeparam name="TQuery">Type of the query.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public sealed class AsyncQueryLoggingBehavior<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
-        where TQuery : class, IAsyncQuery<TResult>, IBehaviorLogging
+    public sealed class AsyncQueryLoggingDecorator<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
+        where TQuery : class, IAsyncQuery<TResult>, ILoggingDecorator
     {
         private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncQueryLoggingBehavior{TQuery, TResult}"/> class.
+        /// Initializes a new instance of <see cref="AsyncQueryLoggingDecorator{TQuery, TResult}"/> class.
         /// </summary>
         /// <param name="logger">the logger instance.</param>
         /// <param name="decoratee">The decorated query handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="logger"/> is null.</exception>
-        public AsyncQueryLoggingBehavior(ILogger logger, IAsyncQueryHandler<TQuery, TResult> decoratee)
+        public AsyncQueryLoggingDecorator(ILogger logger, IAsyncQueryHandler<TQuery, TResult> decoratee)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));

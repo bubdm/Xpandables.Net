@@ -16,59 +16,57 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
+using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Events
 {
     /// <summary>
     /// This class allows the application author to add logging event support to command control flow.
-    /// The target command should implement the <see cref="IBehaviorLogging"/> interface in order to activate the behavior.
+    /// The target command should implement the <see cref="ILoggingDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ILogger"/>.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to be handled.</typeparam>
-    public sealed class AsyncCommandLoggingBehavior<TCommand> : IAsyncCommandHandler<TCommand>
-        where TCommand : class, IAsyncCommand, IBehaviorLogging
+    public sealed class CommandLoggingDecorator<TCommand> : ICommandHandler<TCommand>
+        where TCommand : class, ICommand, ILoggingDecorator
     {
-        private readonly IAsyncCommandHandler<TCommand> _decoratee;
+        private readonly ICommandHandler<TCommand> _decoratee;
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncCommandLoggingBehavior{TCommand}"/> class with the logger and the command handler to be decorated.
+        /// Initializes a new instance of <see cref="CommandLoggingDecorator{TCommand}"/> class with the logger and the command handler to be decorated.
         /// </summary>
         /// <param name="logger">The logger instance.</param>
         /// <param name="decoratee">The command handler to be decorated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="logger"/> is null.</exception>
-        public AsyncCommandLoggingBehavior(ILogger logger, IAsyncCommandHandler<TCommand> decoratee)
+        public CommandLoggingDecorator(ILogger logger, ICommandHandler<TCommand> decoratee)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
         /// <summary>
-        /// Asynchronously handle the specified command adding post/rollback event to the decorated handler.
+        /// Handles the specified command adding post/rollback event to the decorated handler.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        public void Handle(TCommand command)
         {
             try
             {
-                await _logger.OnEntryLogAsync(_decoratee, command).ConfigureAwait(false);
-                await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                AsyncExtensions.RunSync(_logger.OnEntryLogAsync(_decoratee, command));
+                _decoratee.Handle(command);
             }
             catch (Exception exception)
             {
-                await _logger.OnExceptionLogAsync(_decoratee, command, exception).ConfigureAwait(false);
+                AsyncExtensions.RunSync(_logger.OnExceptionLogAsync(_decoratee, command, exception));
                 throw;
             }
             finally
             {
-                await _logger.OnExitLogAsync(_decoratee, command).ConfigureAwait(false);
+                AsyncExtensions.RunSync(_logger.OnExitLogAsync(_decoratee, command));
             }
         }
     }

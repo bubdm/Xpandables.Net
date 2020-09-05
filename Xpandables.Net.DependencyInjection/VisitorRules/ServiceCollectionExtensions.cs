@@ -40,7 +40,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXVisitorBehavior(this IServiceCollection services)
+        public static IServiceCollection AddXVisitorDecorator(this IServiceCollection services)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
 

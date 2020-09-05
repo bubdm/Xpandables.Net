@@ -7,7 +7,7 @@ using Xpandables.Samples.Domain.Models;
 
 namespace Xpandables.Samples.Infrastructure
 {
-    public sealed class XpandablesContext : DataContext, IBehaviorSeed
+    public sealed class XpandablesContext : DataContext, ISeedDecorator
     {
         public XpandablesContext(DbContextOptions contextOptions) : base(contextOptions) { }
 

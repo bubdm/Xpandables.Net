@@ -29,13 +29,13 @@ namespace Xpandables.Net.EntityFramework
     public sealed class DataContextOptions
     {
         /// <summary>
-        /// Enables seeder for the data context that is decorated with <see cref="IBehaviorSeed"/>.
+        /// Enables seeder for the data context that is decorated with <see cref="ISeedDecorator"/>.
         /// </summary>
         /// <typeparam name="TDataContextSeeder">The type that implements <see cref="IDataContextSeeder{TDataContext}"/>.</typeparam>
         /// <typeparam name="TDataContext">The type of data context.</typeparam>
         public DataContextOptions UseSeederBehavior<TDataContextSeeder, TDataContext>()
             where TDataContextSeeder : class, IDataContextSeeder<TDataContext>
-            where TDataContext : class, IDataContext, IBehaviorSeed
+            where TDataContext : class, IDataContext, ISeedDecorator
             => this.With(cq => cq.IsSeederEnabled = (typeof(TDataContextSeeder), typeof(TDataContext)));
 
         /// <summary>

@@ -23,10 +23,10 @@ namespace Xpandables.Samples.Business
 
             services.AddXCommandQueriesHandlers(options =>
             {
-                options.UsePersistenceBehavior();
+                options.UsePersistenceDecorator();
                 options.UseValidatorBehavior();
-                options.UseIdentityBehavior<IdentityDataProvider>();
-                options.UseLoggingBehavior<HttpLogginService>();
+                options.UseIdentityDecorator<IdentityDataProvider>();
+                options.UseLoggingDecorator<HttpLogginService>();
             }, assemblies);
 
             services.AddXHttpTokenContainer();

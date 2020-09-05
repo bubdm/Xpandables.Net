@@ -25,5 +25,5 @@ namespace Xpandables.Net.Events
     /// to be logged using the <see cref="IDataLogContext{TLogEntity}"/>.
     /// You need to register the expected behavior using the appropriate add data log context extension method and provide an implementation of <see cref="ILogger"/>.
     /// </summary>
-    public interface IBehaviorLogging { }
+    public interface ILoggingDecorator { }
 }

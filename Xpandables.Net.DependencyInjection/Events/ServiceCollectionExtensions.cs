@@ -20,13 +20,13 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds logging behavior to commands and queries that are decorated with the <see cref="IBehaviorLogging"/> to the services
+        /// Adds logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/> to the services
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="loggerType">The logger type.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="loggerType"/> is null.</exception>
-        public static IServiceCollection AddXLoggingBehavior(this IServiceCollection services, Type loggerType)
+        public static IServiceCollection AddXLoggingDecorator(this IServiceCollection services, Type loggerType)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = loggerType ?? throw new ArgumentNullException(nameof(loggerType));
@@ -35,26 +35,26 @@ namespace Xpandables.Net.DependencyInjection
                 throw new ArgumentException($"{nameof(loggerType)} must implement {nameof(Events.ILogger)}.");
 
             services.AddScoped(typeof(Events.ILogger), loggerType);
-            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandLoggingBehavior<>));
-            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingBehavior<>));
-            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryLoggingBehavior<,>));
-            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryLoggingBehavior<,>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandLoggingDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingDecorator<>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryLoggingDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryLoggingDecorator<,>));
 
             return services;
         }
 
         /// <summary>
-        /// Adds logging behavior to commands and queries that are decorated with the <see cref="IBehaviorLogging"/> to the services
+        /// Adds logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/> to the services
         /// </summary>
         /// <typeparam name="TLogger">The type of the logger.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXLoggingBehavior<TLogger>(this IServiceCollection services)
+        public static IServiceCollection AddXLoggingDecorator<TLogger>(this IServiceCollection services)
             where TLogger : class, Events.ILogger
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            return services.AddXLoggingBehavior(typeof(TLogger));
+            return services.AddXLoggingDecorator(typeof(TLogger));
         }
 
         /// <summary>

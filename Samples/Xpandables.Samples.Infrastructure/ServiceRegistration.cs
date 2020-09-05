@@ -24,7 +24,7 @@ namespace Xpandables.Samples.Infrastructure
             services.AddXHttpTokenAccessor();
             services.AddXDataContext<XpandablesContextProvider>();
             services.AddXDataLogContext<XpandablesLogContextProvider>();
-            services.AddXSeedBehavior<XpandablesContextInitializer, XpandablesContext>();
+            services.AddXSeedDecorator<XpandablesContextInitializer, XpandablesContext>();
         }
     }
 }

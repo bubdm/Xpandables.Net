@@ -22,7 +22,7 @@ namespace Xpandables.Net.EntityFramework
     /// You need to register the expected behavior using the appropriate extension method
     /// and provide an implementation for <see cref="IDataContextSeeder{TDataContext}"/>.
     /// <para></para>
-    /// The class implementation will be decorated with the <see cref="DataContextSeederBehavior{TDataContext}"/>.
+    /// The class implementation will be decorated with the <see cref="DataContextSeederDecorator{TDataContext}"/>.
     /// </summary>
-    public interface IBehaviorSeed { }
+    public interface ISeedDecorator { }
 }
