@@ -29,12 +29,12 @@ namespace Xpandables.Net.Cryptography
 {
     /// <summary>
     /// Provides with methods to encrypt and decrypt string values.
-    /// Contains a default implementation using the <see cref="IStringGenerator"/>.
+    /// Contains an implementation of <see cref="IStringGenerator"/>.
     /// </summary>
     public interface IStringCryptography
     {
         /// <summary>
-        /// Gets the string generator the cryptography.
+        /// Gets the string generator for cryptography.
         /// </summary>
         IStringGenerator StringGenerator { get; }
 
@@ -234,12 +234,12 @@ namespace Xpandables.Net.Cryptography
     public sealed class StringCryptography : IStringCryptography
     {
         /// <summary>
-        /// Gets the string generator the cryptography.
+        /// Gets the string generator for the cryptography.
         /// </summary>
         public IStringGenerator StringGenerator { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="StringCryptography"/> class.
+        /// Initializes a new instance of <see cref="StringCryptography"/> class with the string generator.
         /// </summary>
         /// <param name="stringGenerator">The string generator.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="stringGenerator"/> is null.</exception>

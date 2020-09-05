@@ -176,7 +176,7 @@ namespace Xpandables.Net.Creators
 
 
         /// <summary>
-        /// Clear the constructor cache.
+        /// Clear the creator cache.
         /// </summary>
         public void ClearCache() => Cache.Clear();
 
@@ -225,7 +225,7 @@ namespace Xpandables.Net.Creators
         public ConcurrentDictionary<string, Delegate> Cache { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="InstanceCreator"/> with the string generator.
+        /// Initializes a new instance of <see cref="InstanceCreator"/>.
         /// </summary>
         public InstanceCreator() => (Cache, OnException) = (new ConcurrentDictionary<string, Delegate>(), default);
     }
