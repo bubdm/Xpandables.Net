@@ -9,6 +9,10 @@ Feel free to fork this project, make your own changes and create a pull request.
 - [IAddable{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/IAddable.cs) This interface is useful when implementing a serializable custom collection with JSON.
 - [ICanHandle{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ICanHandle.cs) Provides a method that determines whether or not an argument can be handled.
 - [ValueRange{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ValueRange.cs) Defines a pair of values, representing a segment.
+- [IInstanceCreator](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Creators/IInstanceCreator.cs) Provides with methods to create instance of specific type at runtime using delegate and cache.
+- [IStringCryptography](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Cryptography/IStringCryptography.cs) Provides with methods to encrypt and decrypt string values.
+- [IStringGenerator](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Cryptography/IStringGenerator.cs) Provides with methods to generate strings.
+- [ValueEncrypted](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Cryptography/ValueEncrypted.cs) Defines a representation of an encrypted value, its key and its salt used with [IStringCryptography](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Cryptography/IStringCryptography.cs).
 
 
 Use of [NotifyPropertyChanged{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Notifications/NotifyPropertyChanged.cs) Implementation for "INotifyPropertyChanged".
