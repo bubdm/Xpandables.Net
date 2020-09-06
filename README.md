@@ -14,6 +14,85 @@ Feel free to fork this project, make your own changes and create a pull request.
 - [IStringGenerator](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Cryptography/IStringGenerator.cs) Provides with methods to generate strings.
 - [ValueEncrypted](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Cryptography/ValueEncrypted.cs) Defines a representation of an encrypted value, its key and its salt used with [IStringCryptography](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Cryptography/IStringCryptography.cs).
 
+Use of [IHttpRestClientHandler](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientHandler.cs) Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client. The queries and commands should implement one of the following interfaces : "IStringRequest", "IStreamRequest", "IByteArrayRequest", "IFormUrlEncodedRequest","IMultipartRequest", "IQueryStringRequest"... and decorated with the [HtppRestClientAttribute](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/HttpRestClientAttribute.cs) or implement the [IHttpRestClientAttributeProvider](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientAttributeProvider.cs).
+
+```C#
+[HttpRestClient(Path = "api/login", Method = "Post", IsSecured = false)]
+public class LoginRequest : QueryExpression<User>, IAsyncQuery<LoginResponse>, IValidationDecorator
+{
+    public Login(string name, string password)
+    {
+        Name = phone;
+        Password = password;
+    }
+    
+    protected override Expression<Func<User, bool>> BuildExpression() => user => user.Name == Name;
+    
+    [Required]
+    public string Name { get; set; } = null!;
+    [Required]
+    public string Password { get; set; } = null!;    
+}
+
+public sealed class LoginResponse
+{
+    public LoginResponse() { }
+    public LoginResponse(string token) => Token = token;
+    public string Token {get; set; }
+}
+
+// The api signature
+[Route("api/[controller]")]
+[ApiController]
+public class LoginController : ControllerBase
+{
+    private readonly IDispatcher _dispatcher;
+    public LoginController(IDispatcher dispatcher)
+        => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+
+    [HttpPost, AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponse))]
+    public async Task<IActionResult> PostAsync([FromBody] LoginRequest login, CancellationToken cancellationToken = default)
+        => Ok((await _dispatcher.SendQueryAsync(login, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false)).FirstOrDefault());
+}
+
+// The LoginRequest handler...
+public sealed class LoginRequestHandler : IAsyncQueryHandler<LoginRequest, LoginResponse>
+{
+    private readonly IDataContext _dataContext;
+    private readonly ITokenService _tokenService;
+    public LoginRequestHandler(IDataContext dataContext, ITokenService tokenService) => (_dataContext, _tokenService) = (dataContext, tokenService);
+    
+    public async IAsyncEnumerable<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
+    {
+        var user = await _dataContext.SetOf(query).FirstOrDefaultAsync(query, cancellationToken).configureAwait(false)
+            ?? throw ...
+        
+        if(!user.Password.IsEqualTo(query.Password))
+            throw ...
+        
+        var token = _tokenService.CreateToken(....);
+        yield return new LoginResponse(token);
+    }
+}
+
+// The Api Test class ...
+public async Task LoginTestMethodAsync()
+{
+    System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+    var factory = new WebApplicationFactory<Api.Program>();
+    var client = factory.CreateClient();
+    IHttpRestClientHandler httpClient = new HttpRestClientHandler(client);
+
+    var request = new LoginRequest("mylogin", "mypassword");
+    var response = await httpClient.HandleAsync(request).ConfigureAwait(false);
+
+    Assert.IsNotNull(response.Result.Token);
+}
+
+...
+
+```
 
 Use of [NotifyPropertyChanged{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Notifications/NotifyPropertyChanged.cs) Implementation for "INotifyPropertyChanged".
 
