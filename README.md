@@ -6,9 +6,67 @@ Feel free to fork this project, make your own changes and create a pull request.
 ## Available types
 - [Entity](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Entity.cs) that contains basic properties for all entities.
 - [ValueObject](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ValueObject.cs) An object that represents a descriptive aspect of the domain with no conceptual identity.
-- [IAddable](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/IAddable.cs) This interface is useful when implementing a serializable custom collection with JSON.
-- [ICanHandle](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ICanHandle.cs) Provides a method that determines whether or not an argument can be handled.
-- [ValueRange](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ValueRange.cs) Defines a pair of values, representing a segment.
+- [IAddable{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/IAddable.cs) This interface is useful when implementing a serializable custom collection with JSON.
+- [ICanHandle{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ICanHandle.cs) Provides a method that determines whether or not an argument can be handled.
+- [ValueRange{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ValueRange.cs) Defines a pair of values, representing a segment.
+
+
+Use of [NotifyPropertyChanged{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Notifications/NotifyPropertyChanged.cs) Implementation for "INotifyPropertyChanged".
+
+```C#
+public class User : NotifyPropertyChanged<User>
+{
+    private string _firstName;
+    public string FirstName { get => _firstName; set => SetProperty(ref _firstName, value); }
+    
+    private string _lastName;
+    public string LastName { get => _lastName; set => SetProperty(ref _lastName, value); }
+    
+    [NotifyPropertyOn(nameof(FirstName)]
+    [NotifyPropertyOn(nameof(LastName)]
+    public string FullName => $"{FirstName} {LastName}";
+    ...
+}
+
+// 'FullName' : changes on 'FirstName' and 'LastName' are notified to 'FullName'.
+```
+
+
+Use of [EnumerationType](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Enumerations/EnumerationType.cs), a helper class to implement custom enumeration.
+
+```C#
+public abstract class EnumerationType : IEqualityComparer<EnumerationType>, IEquatable<EnumerationType>,
+    IComparable<EnumerationType>
+{
+    protected EnumerationType(string displayName, int value)
+    {
+        Value = value;
+        DisplayName = displayName ?? throw new ArgumentNullException(nameof(displayName));
+    }
+    ....
+    
+    with useful methods :
+    
+    public static IEnumerable<TEnumeration> GetAll<TEnumeration>()...
+    
+    public static TEnumeration FromDisplayName<TEnumeration>(string displayName)
+        where TEnumeration : Enumeration ...        
+}
+
+[TypeConverter(typeof(EnumerationTypeConverter))]
+public sealed class Gender : EnumerationType
+{
+    private Gender(string displayName, int value) : base(displayName, value) { }
+    public static Gender Woman => new Gender(nameof(Woman), 0);
+    public static Gender Man => new Gender(nameof(Man), 1);
+    
+    public bool IsWoman() => this == Woman;
+    public bool IsMan() => this == Man;
+}
+
+// You can use the EnumerationTypeConverter to convert "Enumeration" objects to and from string representations.
+
+```
 
 Use of [Optional{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Optionals/Optional.cs)
 
