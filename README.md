@@ -6,7 +6,7 @@ Feel free to fork this project, make your own changes and create a pull request.
 ## Available types
 - [Entity](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Entity.cs) that contains basic properties for all entities.
 - [ValueObject](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ValueObject.cs) An object that represents a descriptive aspect of the domain with no conceptual identity.
-- [IAddable{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/IAddable.cs) This interface is useful when implementing a serializable custom collection with JSON.
+- [IAddable{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/IAddable.cs) is a useful interface when implementing a serializable custom collection with JSON.
 - [ICanHandle{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ICanHandle.cs) Provides a method that determines whether or not an argument can be handled.
 - [ValueRange{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ValueRange.cs) Defines a pair of values, representing a segment.
 - [IInstanceCreator](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Creators/IInstanceCreator.cs) Provides with methods to create instance of specific type at runtime using delegate and cache.
