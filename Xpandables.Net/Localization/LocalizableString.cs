@@ -18,7 +18,7 @@
 using System;
 using System.Reflection;
 
-namespace Xpandables.Net.Entities.Attributes
+namespace Xpandables.Net.Localization
 {
 #nullable disable
     /// <summary>

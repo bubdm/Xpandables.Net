@@ -18,7 +18,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.ValidatorRules
 {
     /// <summary>
     /// Default validation attribute.

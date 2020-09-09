@@ -21,8 +21,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 using Xpandables.Net.Extensions;
+using Xpandables.Net.Strings;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.ValidatorRules
 {
     /// <summary>
     /// <see cref="PatternRequiredOptionalAttribute"/> base class for validating value against pattern using regular expression.

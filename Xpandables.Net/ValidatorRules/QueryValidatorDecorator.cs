@@ -55,6 +55,7 @@ namespace Xpandables.Net.ValidatorRules
         /// <param name="query">The query to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        /// <returns>An object that represents the result of <typeparamref name="TResult"/>.</returns>
         public TResult Handle(TQuery query)
         {
             _validator.Validate(query);

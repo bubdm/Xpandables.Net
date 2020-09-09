@@ -23,7 +23,7 @@ namespace Xpandables.Net.Commands
     /// This helper class allows the application author to implement the <see cref="ICommandHandler{TCommand}"/>
     /// interface without dedicated class.
     /// </summary>
-    /// <typeparam name="TCommand">Type of command.</typeparam>
+    /// <typeparam name="TCommand">Type of command to act on.</typeparam>
     public sealed class CommandHandlerBuilder<TCommand> : ICommandHandler<TCommand>
         where TCommand : class, ICommand
     {

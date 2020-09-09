@@ -21,7 +21,7 @@ using System.Threading;
 using Serilog.Core;
 using Serilog.Events;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Asynchronous;
 
 namespace Xpandables.Net.Events
 {

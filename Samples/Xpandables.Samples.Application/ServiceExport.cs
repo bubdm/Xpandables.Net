@@ -24,7 +24,7 @@ namespace Xpandables.Samples.Business
             services.AddXCommandQueriesHandlers(options =>
             {
                 options.UsePersistenceDecorator();
-                options.UseValidatorBehavior();
+                options.UseValidatorDecorator();
                 options.UseIdentityDecorator<IdentityDataProvider>();
                 options.UseLoggingDecorator<HttpLogginService>();
             }, assemblies);

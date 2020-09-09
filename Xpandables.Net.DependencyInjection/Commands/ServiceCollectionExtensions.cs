@@ -44,7 +44,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// Enables validation behavior to commands and queries that are decorated with the <see cref="IValidationDecorator"/>.
         /// </summary>
-        public CommandQueryOptions UseValidatorBehavior() => this.With(cq => cq.IsValidatorEnabled = true);
+        public CommandQueryOptions UseValidatorDecorator() => this.With(cq => cq.IsValidatorEnabled = true);
 
         /// <summary>
         /// Enables visitor behavior to commands and queries that implement the <see cref="IVisitable"/> interface.

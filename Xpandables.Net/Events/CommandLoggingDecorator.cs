@@ -17,8 +17,8 @@
 ************************************************************************************************************/
 using System;
 
+using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Commands;
-using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Events
 {

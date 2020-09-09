@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-namespace Xpandables.Net.Extensions
+namespace Xpandables.Net.Strings
 {
     /// <summary>
     /// Provides with methods to extend use of <see cref="string"/>.
@@ -62,9 +62,9 @@ namespace Xpandables.Net.Extensions
         /// <summary>
         /// Serializes the current instance to JSON string.
         /// </summary>
-        /// <param name="obj">The object to act on.</param>
+        /// <param name="source">The object to act on.</param>
         /// <returns>A JSOn string representation of the object.</returns>
-        public static string ToJsonString(this object obj) => Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+        public static string ToJsonString<T>(this T source) => Newtonsoft.Json.JsonConvert.SerializeObject(source);
 
         /// <summary>
         /// Concatenates all the elements of an <see cref="IEnumerable{T}"/>,

@@ -33,7 +33,7 @@ namespace Xpandables.Net.EntityFramework
         /// </summary>
         /// <typeparam name="TDataContextSeeder">The type that implements <see cref="IDataContextSeeder{TDataContext}"/>.</typeparam>
         /// <typeparam name="TDataContext">The type of data context.</typeparam>
-        public DataContextOptions UseSeederBehavior<TDataContextSeeder, TDataContext>()
+        public DataContextOptions UseSeederDecorator<TDataContextSeeder, TDataContext>()
             where TDataContextSeeder : class, IDataContextSeeder<TDataContext>
             where TDataContext : class, IDataContext, ISeedDecorator
             => this.With(cq => cq.IsSeederEnabled = (typeof(TDataContextSeeder), typeof(TDataContext)));

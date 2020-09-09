@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 
 using Xpandables.Net.Cryptography;
+using Xpandables.Net.Strings;
 
 namespace Xpandables.Net.DependencyInjection
 {

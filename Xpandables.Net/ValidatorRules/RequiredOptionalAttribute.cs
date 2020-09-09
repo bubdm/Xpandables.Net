@@ -18,20 +18,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.ValidatorRules
 {
     /// <summary>
     /// Specifies that a data field value is optionally required settings the <see cref="IsOptional"/> to <see langword="true"/>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class StringLengthOptionalAttribute : StringLengthAttribute
+    public sealed class RequiredOptionalAttribute : RequiredAttribute
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StringLengthOptionalAttribute"/> class by using a specified maximum length.
-        /// </summary>
-        /// <param name="maximumLength"> The maximum length of a string.</param>
-        public StringLengthOptionalAttribute(int maximumLength) : base(maximumLength) { }
-
         /// <summary>
         /// Validates the specified value with respect to the current validation attribute.
         /// </summary>
@@ -47,9 +41,9 @@ namespace Xpandables.Net.Entities
             return base.IsValid(value, validationContext);
 #nullable enable
         }
-        
+
         /// <summary>
-        /// Determines whether or not the decorated property/field/parameter can be null.
+        /// Gets or sets the value whether or not the decorated property/field/parameter can be null.
         /// </summary>
         public bool IsOptional { get; set; }
     }

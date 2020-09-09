@@ -20,12 +20,11 @@ using System;
 namespace Xpandables.Net.Commands
 {
     /// <summary>
-    /// Allows an application author to define a handler for a specific type command.
-    /// The command must implement <see cref="ICommand"/> interface.
-    /// The implementation must be thread-safe when working in a multi-threaded environment.
+    /// Provides with a method to handle a command of specific type that implements <see cref="ICommand"/> interface.
     /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the command can be handled. Its default behavior returns <see langword="true"/>.
+    /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
-    /// <typeparam name="TCommand">Type of the command to be handled.</typeparam>
+    /// <typeparam name="TCommand">Type of the command to act on.</typeparam>
     public interface ICommandHandler<in TCommand> : ICanHandle<TCommand>
         where TCommand : class, ICommand
     {

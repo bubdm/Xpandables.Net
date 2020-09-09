@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Xpandables.Net.Events;
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Strings;
 
 namespace Xpandables.Samples.Business.Services
 {

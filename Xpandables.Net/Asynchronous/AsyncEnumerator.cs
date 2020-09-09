@@ -17,34 +17,13 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Extensions
+namespace Xpandables.Net.Asynchronous
 {
     /// <summary>
-    /// Default implementation of <see cref="IAsyncEnumerable{T}"/>.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public sealed class AsyncEnumerable<T> : List<T>, IAsyncEnumerable<T>
-    {
-        /// <summary>
-        /// Initializes a new instance of <see cref="AsyncEnumerable{T}"/> with the collection.
-        /// </summary>
-        /// <param name="collection">The collection to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
-        public AsyncEnumerable(IEnumerable<T> collection) : base(collection) { }
-
-        /// <summary>
-        /// Returns an enumerator that iterates asynchronously through the collection.
-        /// </summary>
-        /// <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
-        /// <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
-        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) => new AsyncEnumerator<T>(GetEnumerator());
-    }
-
-    /// <summary>
-    /// Default implement of <see cref="IAsyncEnumerator{T}"/>.
+    /// Add asynchronous iteration support to a generic collection.
+    /// This class implements <see cref="IAsyncEnumerator{T}"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public sealed class AsyncEnumerator<T> : IAsyncEnumerator<T>

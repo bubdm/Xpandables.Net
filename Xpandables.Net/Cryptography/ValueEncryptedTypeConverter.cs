@@ -24,7 +24,7 @@ namespace Xpandables.Net.Cryptography
     /// <summary>
     /// Provides a type converter to convert <see cref="ValueEncrypted"/> objects to <see cref="string"/>and from <see cref="string"/> representations.
     /// </summary>
-    public sealed class ValueEncryptedConverter : TypeConverter
+    public sealed class ValueEncryptedTypeConverter : TypeConverter
     {
         /// <summary>
         /// Gets a value indicating whether this converter can convert an object in the given source type

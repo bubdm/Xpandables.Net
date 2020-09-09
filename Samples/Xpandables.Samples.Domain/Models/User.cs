@@ -5,8 +5,9 @@ using System.Security.Claims;
 
 using Xpandables.Net;
 using Xpandables.Net.Cryptography;
-using Xpandables.Net.Entities;
 using Xpandables.Net.Http;
+using Xpandables.Net.Strings;
+using Xpandables.Net.Types;
 
 namespace Xpandables.Samples.Domain.Models
 {

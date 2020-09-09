@@ -24,7 +24,7 @@ namespace Xpandables.Net
     /// <summary>
     /// Provides a type converter to convert <see cref="ValueRange{TValue}"/> objects to <see cref="string"/> and from <see cref="string"/> representations.
     /// </summary>
-    public sealed class ValueRangeConverter : TypeConverter
+    public sealed class ValueRangeTypeConverter : TypeConverter
     {
         /// <summary>
         /// Gets a value indicating whether this converter can convert an object in the given source type

@@ -25,7 +25,7 @@ namespace Xpandables.Net.Commands
     /// This helper class allows the application author to implement the <see cref="IAsyncCommandHandler{TCommand}"/>
     /// interface without dedicated class.
     /// </summary>
-    /// <typeparam name="TCommand">Type of command.</typeparam>
+    /// <typeparam name="TCommand">Type of command to act on.</typeparam>
     public sealed class AsyncCommandHandlerBuilder<TCommand> : IAsyncCommandHandler<TCommand>
         where TCommand : class, IAsyncCommand
     {
@@ -44,7 +44,7 @@ namespace Xpandables.Net.Commands
             => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
 
         /// <summary>
-        /// Asynchronously handle the specified command using the delegate from the constructor.
+        /// Asynchronously handles the specified command using the delegate from the constructor.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

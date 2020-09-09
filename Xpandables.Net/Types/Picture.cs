@@ -21,7 +21,7 @@ using System.ComponentModel.DataAnnotations;
 
 using Xpandables.Net.Properties;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Types
 {
     /// <summary>
     /// Defines the <see cref="Picture"/> class that holds properties for an image.
@@ -109,30 +109,30 @@ namespace Xpandables.Net.Entities
         /// Gets the picture title.
         /// </summary>
         [Required]
-        public string Title { get; private set; }
+        public string Title { get; }
 
         /// <summary>
         /// Gets the picture byte content.
         /// </summary>
         [Required]
-        public byte[] Content { get; private set; }
+        public byte[] Content { get; }
 
         /// <summary>
         /// Gets the height, in pixels, of this picture.
         /// </summary>
         [Required]
-        public int Height { get; private set; }
+        public int Height { get; }
 
         /// <summary>
         /// Gets the width, in pixels, of this picture.
         /// </summary>
         [Required]
-        public int Width { get; private set; }
+        public int Width { get; }
 
         /// <summary>
         /// Gets the file format of this picture.
         /// </summary>
         [Required]
-        public string Extension { get; private set; }
+        public string Extension { get; }
     }
 }

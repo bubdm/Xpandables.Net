@@ -26,7 +26,7 @@ using Xpandables.Net.Extensions;
 
 using static System.FormattableString;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.ValidatorRules
 {
     /// <summary>
     /// Allows an application author to add type description provider for any class.

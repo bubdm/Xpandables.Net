@@ -24,11 +24,11 @@ namespace Xpandables.Net.Cryptography
 {
     /// <summary>
     /// Defines a representation of an encrypted value, its key and its salt.
-    /// This class uses the <see cref="ValueEncryptedConverter"/> type converter.
+    /// This class uses the <see cref="ValueEncryptedTypeConverter"/> type converter.
     /// </summary>
     [Serializable]
     [DebuggerDisplay("Key = {Key}, Value = {Value}, Salt = {Salt}")]
-    [TypeConverter(typeof(ValueEncryptedConverter))]
+    [TypeConverter(typeof(ValueEncryptedTypeConverter))]
     public sealed class ValueEncrypted : ValueObject
     {
         /// <summary>
@@ -147,5 +147,11 @@ namespace Xpandables.Net.Cryptography
         /// <exception cref="FormatException">The <paramref name="format"/> is invalid or
         /// the index of a format item is not zero or one.</exception>
         public string ToString(string format, IFormatProvider formatProvider) => string.Format(formatProvider, format, Key, Value, Salt);
+
+        /// <summary>
+        /// Implicit converter from <see cref="ValueEncrypted"/> to <see cref="string"/>.
+        /// </summary>
+        /// <param name="valueEncrypted">The target value to act on.</param>
+        public static implicit operator string(ValueEncrypted valueEncrypted)=>valueEncrypted.ToString();
     }
 }

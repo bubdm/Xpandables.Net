@@ -21,6 +21,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Extensions;
 using Xpandables.Net.Queries;

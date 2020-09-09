@@ -23,11 +23,11 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Data.Connections;
 using Xpandables.Net.Data.Executables;
 using Xpandables.Net.Data.Options;
 using Xpandables.Net.Data.Providers;
-using Xpandables.Net.Extensions;
 using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.Data

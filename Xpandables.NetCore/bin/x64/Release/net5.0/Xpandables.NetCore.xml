@@ -10257,7 +10257,7 @@
             <param name="services">The collection of service to act on.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="services"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions.UseXLocalizationBehavior(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+        <member name="M:Xpandables.Net.DependencyInjection.ServiceCollectionExtensions.UseXLocalizationDecorator(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
             <summary>
             Adds the Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware to automatically set culture information for
             requests based on information provided by the client.

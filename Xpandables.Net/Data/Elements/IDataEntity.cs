@@ -21,7 +21,7 @@ using System.Linq;
 
 using Xpandables.Net.Creators;
 using Xpandables.Net.Cryptography;
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Strings;
 
 namespace Xpandables.Net.Data.Elements
 {

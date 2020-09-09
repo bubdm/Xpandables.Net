@@ -15,36 +15,33 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Collections.Concurrent;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
-using Xpandables.Net.Asynchronous;
-
-namespace Xpandables.Net.Correlation
+namespace Xpandables.Net.Asynchronous
 {
     /// <summary>
-    /// Provides a collection of objects that need to be shared across asynchronous control flows.
-    /// This collection implements <see cref="IAsyncEnumerable{T}"/>
+    /// Allows a generic collection to be asynchronously enumerable.
+    /// This class implements <see cref="IAsyncEnumerable{T}"/>.
     /// </summary>
-    /// <typeparam name="TKey">The type of the key.</typeparam>
-    /// <typeparam name="TValue">The type of the value.</typeparam>
-    public class CorrelationCollection<TKey, TValue> : ConcurrentDictionary<TKey, TValue>, IAsyncEnumerable<KeyValuePair<TKey, TValue>>
-        where TKey : notnull
+    /// <typeparam name="T">The type of the elements in the collection.</typeparam>
+    public sealed class AsyncEnumerable<T> : IAsyncEnumerable<T>
     {
+        private readonly IEnumerable<T> _collection;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="CorrelationCollection{TKey, TValue}"/>
-        /// class that is empty, has the default concurrency level, has the default initial
-        /// capacity, and uses the default comparer for the key type.
+        /// Initializes a new instance of <see cref="AsyncEnumerable{T}"/> with the collection to be asynchronously enumerable.
         /// </summary>
-        public CorrelationCollection() : base() { }
+        /// <param name="collection">The collection to act on.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
+        public AsyncEnumerable(IEnumerable<T> collection) => _collection = collection ?? throw new ArgumentNullException(nameof(collection));
 
         /// <summary>
         /// Returns an enumerator that iterates asynchronously through the collection.
         /// </summary>
         /// <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
         /// <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
-        public IAsyncEnumerator<KeyValuePair<TKey, TValue>> GetAsyncEnumerator(CancellationToken cancellationToken = default)
-            => new AsyncEnumerator<KeyValuePair<TKey, TValue>>(GetEnumerator());
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) => new AsyncEnumerator<T>(_collection.GetEnumerator());
     }
 }

@@ -21,7 +21,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Correlation
@@ -63,7 +63,7 @@ namespace Xpandables.Net.Correlation
         /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A result contains an enumerable of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+        /// <returns>A result contains an collection of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await foreach (var result in AsyncExtensions.TryCatchAsyncEnumerable(() => _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false), out var exceptionDispatchInfo))

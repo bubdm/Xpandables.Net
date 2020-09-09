@@ -38,8 +38,7 @@ namespace Xpandables.Net.Correlation
     /// In order to be activated, the target class should implement
     /// the <see cref="ICorrelationDecorator"/> interface,
     /// the target handling class should reference the current interface (to set the action) and you should
-    /// register the behavior with the expected extension
-    /// method <see langword="AddXCorrelationBehavior"/>.
+    /// register the behavior with the expected extension method.
     /// </summary>
     public interface IAsyncCorrelationContext
     {

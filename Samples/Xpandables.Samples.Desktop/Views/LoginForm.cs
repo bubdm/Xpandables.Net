@@ -8,7 +8,7 @@ using Xpandables.Net.Windows.Forms;
 using Xpandables.Samples.Business.Contracts;
 using Xpandables.Samples.Desktop.Helpers;
 using Xpandables.Samples.Desktop.Models;
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Strings;
 
 namespace Xpandables.Samples.Desktop.Views
 {

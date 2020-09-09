@@ -60,7 +60,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="app">The current application builder to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="app"/> is null.</exception>
-        public static IApplicationBuilder UseXLocalizationBehavior(this IApplicationBuilder app)
+        public static IApplicationBuilder UseXLocalizationDecorator(this IApplicationBuilder app)
         {
             _ = app ?? throw new ArgumentNullException(nameof(app));
 

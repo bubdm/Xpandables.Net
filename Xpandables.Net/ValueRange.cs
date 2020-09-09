@@ -23,12 +23,12 @@ namespace Xpandables.Net
 {
     /// <summary>
     /// Defines a pair of values, representing a segment.
-    /// This class uses <see cref="ValueRangeConverter"/> as type converter.
+    /// This class uses <see cref="ValueRangeTypeConverter"/> as type converter.
     /// </summary>
     /// <typeparam name="TValue">The Type of each of two values of range.</typeparam>
     [Serializable]
     [DebuggerDisplay("Min = {Min} : Max = {Max}")]
-    [TypeConverter(typeof(ValueRangeConverter))]
+    [TypeConverter(typeof(ValueRangeTypeConverter))]
     public sealed class ValueRange<TValue>
         where TValue : unmanaged, IComparable, IFormattable, IConvertible, IComparable<TValue>, IEquatable<TValue>
     {

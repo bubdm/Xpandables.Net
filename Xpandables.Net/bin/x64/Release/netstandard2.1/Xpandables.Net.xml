@@ -4,12 +4,102 @@
         <name>Xpandables.Net</name>
     </assembly>
     <members>
+        <member name="T:Xpandables.Net.Asynchronous.AsyncEnumerable`1">
+            <summary>
+            Allows a generic collection to be asynchronously enumerable.
+            This class implements <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.
+            </summary>
+            <typeparam name="T">The type of the elements in the collection.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerable`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Asynchronous.AsyncEnumerable`1"/> with the collection to be asynchronously enumerable.
+            </summary>
+            <param name="collection">The collection to act on.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="collection"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerable`1.GetAsyncEnumerator(System.Threading.CancellationToken)">
+            <summary>
+            Returns an enumerator that iterates asynchronously through the collection.
+            </summary>
+            <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
+            <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
+        </member>
+        <member name="T:Xpandables.Net.Asynchronous.AsyncEnumerator`1">
+            <summary>
+            Add asynchronous iteration support to a generic collection.
+            This class implements <see cref="T:System.Collections.Generic.IAsyncEnumerator`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerator`1.#ctor(System.Collections.Generic.IEnumerator{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Asynchronous.AsyncEnumerator`1"/> with the enumerator.
+            </summary>
+            <param name="inner">The enumerator to act on.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="inner"/> is null.</exception>
+        </member>
+        <member name="P:Xpandables.Net.Asynchronous.AsyncEnumerator`1.Current">
+            <summary>
+            Gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerator`1.DisposeAsync">
+            <summary>
+             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
+            </summary>
+            <returns>A task that represents the asynchronous dispose operation.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerator`1.MoveNextAsync">
+            <summary>
+             Advances the enumerator asynchronously to the next element of the collection.
+            </summary>
+            <returns> A System.Threading.Tasks.ValueTask`1 that will complete with a result of true if the enumerator was successfully 
+            advanced to the next element, or false if the enumerator has passed the end of the collection.</returns>
+        </member>
+        <member name="T:Xpandables.Net.Asynchronous.AsyncExtensions">
+            <summary>
+            Provides with methods used to execute asynchronous operation synchronously.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.RunSync``1(System.Func{System.Threading.Tasks.Task{``0}})">
+            <summary>
+            Executes the target asynchronous operation synchronously.
+            </summary>
+            <typeparam name="TResult">The type of result.</typeparam>
+            <param name="func">The asynchronous function to execute synchronously.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="func"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.RunSync``1(System.Threading.Tasks.Task{``0})">
+            <summary>
+            Executes the target asynchronous operation synchronously.
+            </summary>
+            <typeparam name="TResult">The type of result.</typeparam>
+            <param name="task">The asynchronous function to execute synchronously.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="task"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.RunSync(System.Threading.Tasks.Task)">
+            <summary>
+            Executes the target asynchronous operation synchronously.
+            </summary>
+            <param name="task">The operation to be synchronously executed.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="task"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.TryCatchAsyncEnumerable``1(System.Func{``0},System.Runtime.ExceptionServices.ExceptionDispatchInfo@)">
+            <summary>
+            Executes an <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/> in a try catch scope.
+            </summary>
+            <typeparam name="TResult">The type of the result, may be <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.</typeparam>
+            <param name="func">The function to be executed in try catch.</param>
+            <param name="exceptionDispatchInfo">The handled exception.</param>
+            <returns>A result of <typeparamref name="TResult"/> type or null if exception.</returns>
+        </member>
         <member name="T:Xpandables.Net.Commands.AsyncCommandHandlerBuilder`1">
             <summary>
             This helper class allows the application author to implement the <see cref="T:Xpandables.Net.Commands.IAsyncCommandHandler`1"/>
             interface without dedicated class.
             </summary>
-            <typeparam name="TCommand">Type of command.</typeparam>
+            <typeparam name="TCommand">Type of command to act on.</typeparam>
         </member>
         <member name="M:Xpandables.Net.Commands.AsyncCommandHandlerBuilder`1.#ctor(System.Func{`0,System.Threading.CancellationToken,System.Threading.Tasks.Task})">
             <summary>
@@ -24,7 +114,7 @@
         </member>
         <member name="M:Xpandables.Net.Commands.AsyncCommandHandlerBuilder`1.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handle the specified command using the delegate from the constructor.
+            Asynchronously handles the specified command using the delegate from the constructor.
             </summary>
             <param name="command">The command instance to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -38,7 +128,7 @@
             This helper class allows the application author to implement the <see cref="T:Xpandables.Net.Commands.ICommandHandler`1"/>
             interface without dedicated class.
             </summary>
-            <typeparam name="TCommand">Type of command.</typeparam>
+            <typeparam name="TCommand">Type of command to act on.</typeparam>
         </member>
         <member name="M:Xpandables.Net.Commands.CommandHandlerBuilder`1.#ctor(System.Action{`0})">
             <summary>
@@ -69,12 +159,11 @@
         </member>
         <member name="T:Xpandables.Net.Commands.IAsyncCommandHandler`1">
             <summary>
-            Allows an application author to define a asynchronous handler for a specific type command.
-            The command must implement <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> interface.
-            The implementation must be thread-safe when working in a multi-threaded environment.
+            Provides with a method to asynchronously handle a command of specific type that implements <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> interface.
             This interface inherits from <see cref="T:Xpandables.Net.ICanHandle`1"/> that determines whether or not the command can be handled. Its default behavior returns <see langword="true"/>.
+            The implementation must be thread-safe when working in a multi-threaded environment.
             </summary>
-            <typeparam name="TCommand">Type of the command to be handled.</typeparam>
+            <typeparam name="TCommand">Type of the command to act on.</typeparam>
         </member>
         <member name="M:Xpandables.Net.Commands.IAsyncCommandHandler`1.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
@@ -97,12 +186,11 @@
         </member>
         <member name="T:Xpandables.Net.Commands.ICommandHandler`1">
             <summary>
-            Allows an application author to define a handler for a specific type command.
-            The command must implement <see cref="T:Xpandables.Net.Commands.ICommand"/> interface.
-            The implementation must be thread-safe when working in a multi-threaded environment.
+            Provides with a method to handle a command of specific type that implements <see cref="T:Xpandables.Net.Commands.ICommand"/> interface.
             This interface inherits from <see cref="T:Xpandables.Net.ICanHandle`1"/> that determines whether or not the command can be handled. Its default behavior returns <see langword="true"/>.
+            The implementation must be thread-safe when working in a multi-threaded environment.
             </summary>
-            <typeparam name="TCommand">Type of the command to be handled.</typeparam>
+            <typeparam name="TCommand">Type of the command to act on.</typeparam>
         </member>
         <member name="M:Xpandables.Net.Commands.ICommandHandler`1.Handle(`0)">
             <summary>
@@ -146,11 +234,8 @@
         <member name="T:Xpandables.Net.Correlation.AsyncCorrelationContext">
             <summary>
             Default implementation of <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/>.
-            This class must be used through a behavior and must be registered as follow :
-            <code>
-                services.AddScoped{CorrelationContext};
-                services.AddScoped{ICorrelationContext}(provider=>provider.GetRequiredService{CorrelationContext}());
-            </code>
+            Defines two tasks that can be used to follow process after a control flow with <see cref="E:Xpandables.Net.Correlation.AsyncCorrelationContext.PostEvent"/>
+            and on exception during the control flow with <see cref="E:Xpandables.Net.Correlation.AsyncCorrelationContext.RollbackEvent"/>.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Correlation.AsyncCorrelationContext.#ctor">
@@ -217,7 +302,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A result contains an enumerable of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+            <returns>A result contains an collection of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Correlation.CommandCorrelationDecorator`1">
             <summary>
@@ -271,12 +356,9 @@
         </member>
         <member name="T:Xpandables.Net.Correlation.CorrelationContext">
             <summary>
-            Default implementation of <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/>.
-            This class must be used through a behavior and must be registered as follow :
-            <code>
-                services.AddScoped{CorrelationContext};
-                services.AddScoped{ICorrelationContext}(provider=>provider.GetRequiredService{CorrelationContext}());
-            </code>
+            Implementation of <see cref="T:Xpandables.Net.Correlation.ICorrelationContext"/>.
+            Defines two tasks that can be used to follow process after a control flow with <see cref="E:Xpandables.Net.Correlation.CorrelationContext.PostEvent"/>
+            and on exception during the control flow with <see cref="E:Xpandables.Net.Correlation.CorrelationContext.RollbackEvent"/>.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Correlation.CorrelationContext.#ctor">
@@ -332,8 +414,7 @@
             In order to be activated, the target class should implement
             the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface,
             the target handling class should reference the current interface (to set the action) and you should
-            register the behavior with the expected extension
-            method <see langword="AddXCorrelationBehavior"/>.
+            register the behavior with the expected extension method.
             </summary>
         </member>
         <member name="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.PostEvent">
@@ -366,8 +447,7 @@
             In order to be activated, the target class should implement
             the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface,
             the target handling class should reference the current interface (to set the action) and you should
-            register the behavior with the expected extension
-            method <see langword="AddXCorrelationBehavior"/>.
+            register the behavior with the expected extension method.
             </summary>
         </member>
         <member name="E:Xpandables.Net.Correlation.ICorrelationContext.PostEvent">
@@ -395,8 +475,10 @@
             <para></para>
             You need to register the expected behavior using the appropriate extension method.
             <para></para>
-            <see cref="T:Xpandables.Net.Queries.IQuery`1"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2"/>.
-            <see cref="T:Xpandables.Net.Commands.ICommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1"/>.
+            <see cref="T:Xpandables.Net.Queries.IQuery`1"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2"/>.
+            <see cref="T:Xpandables.Net.Commands.ICommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.CommandCorrelationDecorator`1"/>.
+            <see cref="T:Xpandables.Net.Queries.IAsyncQuery`1"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2"/>.
+            <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2">
@@ -527,7 +609,7 @@
         <member name="T:Xpandables.Net.Cryptography.IStringCryptography">
             <summary>
             Provides with methods to encrypt and decrypt string values.
-            Contains an implementation of <see cref="T:Xpandables.Net.Cryptography.IStringGenerator"/>.
+            Contains an implementation of <see cref="T:Xpandables.Net.Strings.IStringGenerator"/>.
             </summary>
         </member>
         <member name="P:Xpandables.Net.Cryptography.IStringCryptography.StringGenerator">
@@ -626,66 +708,17 @@
             Gets the string generator for the cryptography.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Cryptography.StringCryptography.#ctor(Xpandables.Net.Cryptography.IStringGenerator)">
+        <member name="M:Xpandables.Net.Cryptography.StringCryptography.#ctor(Xpandables.Net.Strings.IStringGenerator)">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Cryptography.StringCryptography"/> class with the string generator.
             </summary>
             <param name="stringGenerator">The string generator.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="stringGenerator"/> is null.</exception>
         </member>
-        <member name="T:Xpandables.Net.Cryptography.IStringGenerator">
-            <summary>
-            Provides with methods to generate strings.
-            Contains a default implementation.
-            </summary>
-        </member>
-        <member name="F:Xpandables.Net.Cryptography.IStringGenerator.LookupCharacters">
-            <summary>
-            The lookup characters used to generate random string.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Cryptography.IStringGenerator.Generate(System.UInt16,System.String)">
-            <summary>
-            Generates a string of the specified length that contains random characters from the lookup characters.
-            <para>The implementation uses the <see cref="T:System.Security.Cryptography.RNGCryptoServiceProvider"/>.</para>
-            </summary>
-            <param name="length">The length of the expected string value.</param>
-            <param name="lookupCharacters">The string to be used to pick characters from or default one.</param>
-            <returns>A new string of the specified length with random characters.</returns>
-            <exception cref="T:System.ArgumentException">The <paramref name="length"/> must be greater than zero
-            and lower or equal to <see cref="F:System.UInt16.MaxValue"/>.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="lookupCharacters"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Cryptography.IStringGenerator.GenerateSalt(System.UInt16)">
-            <summary>
-            Generates a salt base64 string of the specified byte length.
-            <para>The implementation uses the <see cref="T:System.Security.Cryptography.RNGCryptoServiceProvider"/>.</para>
-            </summary>
-            <param name="length">The length of the expected string value.</param>
-            <returns>A new base64 string from the salt bytes.</returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="length"/> must be greater than zero
-            and lower or equal to <see cref="F:System.UInt16.MaxValue"/>.</exception>
-            <exception cref="T:System.InvalidOperationException">Generating the salt failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Cryptography.IStringGenerator.Generate(System.UInt16)">
-            <summary>
-            Generates a string of the specified length that contains random characters.
-            <para>The implementation uses the <see cref="T:System.Security.Cryptography.RNGCryptoServiceProvider"/>.</para>
-            </summary>
-            <param name="length">The length of the expected string value.</param>
-            <returns>A new string of the specified length with random characters.</returns>
-            <exception cref="T:System.ArgumentException">The <paramref name="length"/> must be greater than zero
-            and lower or equal to <see cref="F:System.UInt16.MaxValue"/>.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Cryptography.StringGenerator">
-            <summary>
-            Provides with <see cref="T:Xpandables.Net.Cryptography.IStringGenerator"/> implementation.
-            </summary>
-        </member>
         <member name="T:Xpandables.Net.Cryptography.ValueEncrypted">
             <summary>
             Defines a representation of an encrypted value, its key and its salt.
-            This class uses the <see cref="T:Xpandables.Net.Cryptography.ValueEncryptedConverter"/> type converter.
+            This class uses the <see cref="T:Xpandables.Net.Cryptography.ValueEncryptedTypeConverter"/> type converter.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Cryptography.ValueEncrypted.#ctor(System.String,System.String,System.String)">
@@ -785,12 +818,18 @@
             <exception cref="T:System.FormatException">The <paramref name="format"/> is invalid or
             the index of a format item is not zero or one.</exception>
         </member>
-        <member name="T:Xpandables.Net.Cryptography.ValueEncryptedConverter">
+        <member name="M:Xpandables.Net.Cryptography.ValueEncrypted.op_Implicit(Xpandables.Net.Cryptography.ValueEncrypted)~System.String">
+            <summary>
+            Implicit converter from <see cref="T:Xpandables.Net.Cryptography.ValueEncrypted"/> to <see cref="T:System.String"/>.
+            </summary>
+            <param name="valueEncrypted">The target value to act on.</param>
+        </member>
+        <member name="T:Xpandables.Net.Cryptography.ValueEncryptedTypeConverter">
             <summary>
             Provides a type converter to convert <see cref="T:Xpandables.Net.Cryptography.ValueEncrypted"/> objects to <see cref="T:System.String"/>and from <see cref="T:System.String"/> representations.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Cryptography.ValueEncryptedConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+        <member name="M:Xpandables.Net.Cryptography.ValueEncryptedTypeConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Type)">
             <summary>
             Gets a value indicating whether this converter can convert an object in the given source type
             to a range value object using the specified context.
@@ -799,7 +838,7 @@
             <param name="sourceType">A <see cref="T:System.Type"></see> that represents the type you wish to convert from.</param>
             <returns>true if this converter can perform the conversion; otherwise, false.</returns>
         </member>
-        <member name="M:Xpandables.Net.Cryptography.ValueEncryptedConverter.CanConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+        <member name="M:Xpandables.Net.Cryptography.ValueEncryptedTypeConverter.CanConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Type)">
             <summary>
             Gets a value indicating whether this converter can convert an object to the given destination type
             using the context.
@@ -808,7 +847,7 @@
             <param name="destinationType">A <see cref="T:System.Type"></see> that represents the type you wish to convert to.</param>
             <returns>true if this converter can perform the conversion; otherwise, false.</returns>
         </member>
-        <member name="M:Xpandables.Net.Cryptography.ValueEncryptedConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
+        <member name="M:Xpandables.Net.Cryptography.ValueEncryptedTypeConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
             <summary>
             Converts the specified value object to a encrypted value object.
             </summary>
@@ -822,7 +861,7 @@
             for the target type.</exception>
             <exception cref="T:System.NotSupportedException">The conversion cannot be performed.</exception>
         </member>
-        <member name="M:Xpandables.Net.Cryptography.ValueEncryptedConverter.ConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object,System.Type)">
+        <member name="M:Xpandables.Net.Cryptography.ValueEncryptedTypeConverter.ConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object,System.Type)">
             <summary>
             Converts the given value object to the specified destination type.
             </summary>
@@ -3066,696 +3105,6 @@
             Only unmanaged resources can be disposed.</item></list>
             </remarks>
         </member>
-        <member name="T:Xpandables.Net.Entities.Address">
-            <summary>
-            Defines an <see cref="T:Xpandables.Net.Entities.Address"/> class that holds basic properties.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Address.Street">
-            <summary>
-            Gets the street name.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Address.City">
-            <summary>
-            Gets the city name.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Address.StreetNumber">
-            <summary>
-            Gets the street number.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Address.Country">
-            <summary>
-            Gets the country name.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Address.ZipCode">
-            <summary>
-            Gets the zip code.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Address.ToString(System.String,System.IFormatProvider)">
-            <summary>
-            Creates a string representation of the string <see cref="T:Xpandables.Net.Entities.Address"/> using the specified format and provider.
-            The format will received address properties in the following order : <see cref="P:Xpandables.Net.Entities.Address.Street"/>, <see cref="P:Xpandables.Net.Entities.Address.StreetNumber"/>, <see cref="P:Xpandables.Net.Entities.Address.City"/>, <see cref="P:Xpandables.Net.Entities.Address.ZipCode"/>
-            and <see cref="P:Xpandables.Net.Entities.Address.Country"/>.
-            </summary>
-            <param name="format">A composite format string.</param>
-            <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="format"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="formatProvider"/> is null.</exception>
-            <exception cref="T:System.FormatException">The <paramref name="format"/> is invalid or
-            the index of a format item is not zero or one.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Address.Create(System.String,System.String,System.String,System.String,System.String)">
-            <summary>
-            Creates a new instance of <see cref="T:Xpandables.Net.Entities.Address"/> with specified values.
-            </summary>
-            <param name="street">The street address.</param>
-            <param name="city">The city address.</param>
-            <param name="streetNumber">The street number address.</param>
-            <param name="country">The country address.</param>
-            <param name="zipCode">The zip address.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="street"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="city"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="country"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="zipCode"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Address.Default">
-            <summary>
-            Creates a default <see cref="T:Xpandables.Net.Entities.Address"/> instance with NO Value.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Address.EditStreet(System.String)">
-            <summary>
-            Updates the street name and return the current instance.
-            </summary>
-            <param name="street">The new street name.</param>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Address.EditCity(System.String)">
-            <summary>
-            Updates the city name and return the current instance.        
-            </summary>
-            <param name="city">The new city name.</param>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Address.EditStreetNumber(System.String)">
-            <summary>
-            Updates the street number and return the current instance.
-            </summary>
-            <param name="streetNumber">The street number.</param>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Address.EditCountry(System.String)">
-            <summary>
-            Updates the country name and return the current instance.
-            </summary>
-            <param name="country">The new country name.</param>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Address.EditZipCode(System.String)">
-            <summary>
-            Updates the zip code name and return the current instance.
-            </summary>
-            <param name="zipCode">The new zip code</param>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Address.#ctor(System.String,System.String,System.String,System.String,System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Entities.Address"/> class.
-            </summary>
-            <param name="street">The street address.</param>
-            <param name="city">The city address.</param>
-            <param name="streetNumber">The street number address.</param>
-            <param name="country">The country address.</param>
-            <param name="zipCode">The zip address.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="street"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="city"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="country"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="zipCode"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Address.GetEqualityComponents">
-            <summary>
-            Provides the list of components that comprise that class.
-            </summary>
-            <returns>An enumerable components of the derived class.</returns>
-        </member>
-        <member name="T:Xpandables.Net.Entities.Attributes.LocalizableString">
-            <summary>
-                A helper class for providing a localizable string property.
-                This class is currently compiled in both System.Web.dll and System.ComponentModel.DataAnnotations.dll.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Attributes.LocalizableString.#ctor(System.String)">
-            <summary>
-                Constructs a localizable string, specifying the property name associated
-                with this item.  The <paramref name="propertyName" /> value will be used
-                within any exceptions thrown as a result of localization failures.
-            </summary>
-            <param name="propertyName">
-                The name of the property being localized.  This name
-                will be used within exceptions thrown as a result of localization failures.
-            </param>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Attributes.LocalizableString.Value">
-            <summary>
-                Gets or sets the value of this localizable string.  This value can be
-                either the literal, non-localized value, or it can be a resource name
-                found on the resource type supplied to <see cref="M:Xpandables.Net.Entities.Attributes.LocalizableString.GetLocalizableValue" />.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Attributes.LocalizableString.ResourceType">
-            <summary>
-                Gets or sets the resource type to be used for localization.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Attributes.LocalizableString.ClearCache">
-            <summary>
-                Clears any cached values, forcing <see cref="M:Xpandables.Net.Entities.Attributes.LocalizableString.GetLocalizableValue" /> to
-                perform evaluation.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Attributes.LocalizableString.GetLocalizableValue">
-            <summary>
-                Gets the potentially localized value.
-            </summary>
-            <remarks>
-                If <see cref="P:Xpandables.Net.Entities.Attributes.LocalizableString.ResourceType" /> has been specified and <see cref="P:Xpandables.Net.Entities.Attributes.LocalizableString.Value" /> is not
-                null, then localization will occur and the localized value will be returned.
-                <para>
-                    If <see cref="P:Xpandables.Net.Entities.Attributes.LocalizableString.ResourceType" /> is null then <see cref="P:Xpandables.Net.Entities.Attributes.LocalizableString.Value" /> will be returned
-                    as a literal, non-localized string.
-                </para>
-            </remarks>
-            <exception cref="T:System.InvalidOperationException">
-                Thrown if localization fails.  This can occur if <see cref="P:Xpandables.Net.Entities.Attributes.LocalizableString.ResourceType" /> has been
-                specified, <see cref="P:Xpandables.Net.Entities.Attributes.LocalizableString.Value" /> is not null, but the resource could not be
-                accessed.  <see cref="P:Xpandables.Net.Entities.Attributes.LocalizableString.ResourceType" /> must be a public class, and <see cref="P:Xpandables.Net.Entities.Attributes.LocalizableString.Value" />
-                must be the name of a public static string property that contains a getter.
-            </exception>
-            <returns>
-                Returns the potentially localized value.
-            </returns>
-        </member>
-        <member name="T:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute">
-            <summary>
-            Specifies how data fields are localized, displayed and formatted by ASP.NET Dynamic Data.
-             Allows overriding various display-related options for a given field. The options have the same meaning as in BoundField.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.#ctor">
-            <summary>
-            Default constructor.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatString">
-            <summary>
-             Gets or sets the format string, which may be a resource key string.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatStringResourceType">
-            <summary>
-            Gets or sets the type that contains the resources for <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatString"/>.
-            Using the <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatStringResourceType"/> along with <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatString"/>,
-            allows the <see cref="M:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.GetDataFormatString"/> method to return localized values.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.GetDataFormatString">
-            <summary>
-            Returns the UI format string for <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatString"/>.
-            When <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatStringResourceType" /> has not been specified, the value of <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatString" />
-            will be returned. When <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatStringResourceType" /> has been specified and <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatString" />
-            represents a resource key within that resource type, then the localized value will be returned. When <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatString" />
-            and <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatStringResourceType" /> have not been set, returns <c>null</c>.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">
-            After setting both the <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatStringResourceType" /> property and the <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatString" /> property,
-            but a public static property with a name matching the <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatString" /> value couldn't be found
-            on the <see cref="P:Xpandables.Net.Entities.Attributes.LocalizedDisplayFormatAttribute.DataFormatStringResourceType" />.
-            </exception>
-        </member>
-        <member name="T:Xpandables.Net.Entities.Gender">
-            <summary>
-            Enumeration of gender.  This class can be extended.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Gender.#ctor(System.Int32,System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Entities.Gender"/> class.
-            </summary>
-            <param name="value">The value of the gender.</param>
-            <param name="displayName">The name of the gender.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="displayName"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Gender.IsMan">
-            <summary>
-            Determines whether the current instance is a <see cref="P:Xpandables.Net.Entities.Gender.Man"/>.
-            </summary>
-            <returns><see langword="true"/> if so, otherwise <see langword="false"/></returns>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Gender.IsWoman">
-            <summary>
-            Determines whether the current instance is a <see cref="P:Xpandables.Net.Entities.Gender.Woman"/>.
-            </summary>
-            <returns><see langword="true"/> if so, otherwise <see langword="false"/></returns>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Gender.IsUndefinied">
-            <summary>
-            Determines whether the current instance is a <see cref="P:Xpandables.Net.Entities.Gender.Undefined"/>.
-            </summary>
-            <returns><see langword="true"/> if so, otherwise <see langword="false"/></returns>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Gender.Undefined">
-            <summary>
-            The undefined gender.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Gender.Man">
-            <summary>
-            The Man gender.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Gender.Woman">
-            <summary>
-            The Woman gender.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Entities.IMetataDescriptionProvider">
-            <summary>
-            Allows an application author to add type description provider for any class.
-            For more information about description and others, see the <see cref="T:System.ComponentModel.TypeDescriptor"/> class.
-            The implementation must be thread-safe when working in a multi-threaded environment.
-            Any operation that does not deliver or do what it promises to do should throw an exception. 
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.IMetataDescriptionProvider.AddProvider``1(``0,System.String,System.Reflection.Assembly[])">
-            <summary>
-            Adds the type description provider specified by the meta-data description name for the current instance.
-            The meta-data class must be name "{<paramref name="metadataDescriptionTypeName"/>}", must be public, and available from
-            the <paramref name="instance"/> assembly or any custom loaded assembly in the current application domain.
-            </summary>
-            <typeparam name="TSource">The type of the object.</typeparam>
-            <param name="instance">Contains the instance to which the meta-data type description will be added.</param>
-            <param name="metadataDescriptionTypeName">Contains the name of the type used to find the meta-data class for 
-            the current <paramref name="instance"/>.</param>
-            <param name="assemblies">The collection of assemblies to search in.</param>
-            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="instance"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="metadataDescriptionTypeName"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="assemblies"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.IMetataDescriptionProvider.AddProvider``1(``0,System.Type)">
-            <summary>
-            Adds the specified type description provider to the instance.
-            Any operation that does not deliver or do what it promises to do should throw an exception. 
-            </summary>
-            <typeparam name="TSource">The type of the object.</typeparam>
-            <param name="instance">Contains the instance to which the meta-data type description will be added.</param>
-            <param name="metadataDescriptionType">Contains the meta-data type description to add to the current <paramref name="instance"/>.</param>
-            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="instance"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="metadataDescriptionType"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.IMetataDescriptionProvider.AddProvider``1(``0)">
-            <summary>
-            Adds the type description provider specified by its name for the current instance.
-            The meta-data class must be name "{InstanceTypeName}{Metadata}", must be public, 
-            and available from the <paramref name="instance"/> assembly or any custom loaded assembly in the current application domain.
-            </summary>
-            <typeparam name="TSource">The type of the object.</typeparam>
-            <param name="instance">Contains the instance to which the meta-data type description will be added.</param>
-            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="instance"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.IMetataDescriptionProvider.AddProviderFromType``1(``0,System.Type)">
-            <summary>
-            Adds the description provider from the description type.
-            </summary>
-            <typeparam name="TSource">The type of the instance.</typeparam>
-            <param name="instance">The instance.</param>
-            <param name="descriptionType">The description type.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="instance"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="descriptionType"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.IMetataDescriptionProvider.AddProviderFromStringName``1(``0,System.String,System.Reflection.Assembly[])">
-            <summary>
-            Adds the description provider from the description type name.
-            </summary>
-            <typeparam name="TSource">The type of the instance.</typeparam>
-            <param name="instance">The instance.</param>
-            <param name="metadataDescriptionTypeName">The meta data description type name.</param>
-            <param name="assemblies">The collection of assemblies to search in.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="instance"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="metadataDescriptionTypeName"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.IMetataDescriptionProvider.GetDescriptionTypeFromName``1(``0,System.String,System.Reflection.Assembly[])">
-            <summary>
-            Returns the description type if found.
-            </summary>
-            <typeparam name="TSource">The type of the instance.</typeparam>
-            <param name="instance">The instance.</param>
-            <param name="metadataDescriptionTypeName">The meta data description type name.</param>
-            <param name="assemblies">The collection of assemblies to search in.</param>
-            <returns>If found, returns the description type.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="instance"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="metadataDescriptionTypeName"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.IMetataDescriptionProvider.AddMetadataDescriptionType``1(``0,System.Type)">
-            <summary>
-            Adds the description provider to the instance, if specified or adds the description from the current type;
-            </summary>
-            <typeparam name="TSource">The type of the instance.</typeparam>
-            <param name="instance">The instance.</param>
-            <param name="descriptionType">The description <typeparamref name="TSource"/>.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="instance"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Entities.MetadataDescriptionProvider">
-            <summary>
-            Default implementation of <see cref="T:Xpandables.Net.Entities.IMetataDescriptionProvider"/>.
-            Defines methods used to add type description provider for any class.
-            For more information about description and others, see the <see cref="T:System.ComponentModel.TypeDescriptor"/> class.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Entities.MultiFactorType">
-            <summary>
-            Enumeration of multi factor authentication. This class can be extended.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.MultiFactorType.#ctor(System.Int32,System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Entities.MultiFactorType"/> class.
-            </summary>
-            <param name="value">The value of the person type.</param>
-            <param name="displayName">The name of the person type.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="displayName"/> is null.</exception>
-        </member>
-        <member name="P:Xpandables.Net.Entities.MultiFactorType.MFA_SMS">
-            <summary>
-            MultiFactor authentication using SMS.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.MultiFactorType.MFA_TOTP">
-            <summary>
-            MultiFactor authentication using a Time-based One-time Password Algorithm.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Entities.Name">
-            <summary>
-            Defines the <see cref="T:Xpandables.Net.Entities.Name"/> class that holds a <see cref="P:Xpandables.Net.Entities.Name.FirstName"/> and a <see cref="P:Xpandables.Net.Entities.Name.LastName"/> properties.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Name.#ctor(System.String,System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Entities.Name"/> with values.
-            </summary>
-            <param name="firstName">The first name.</param>
-            <param name="lastName">The last name.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="firstName"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="lastName"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Name.Create(System.String,System.String)">
-            <summary>
-            Creates a new instance of <see cref="T:Xpandables.Net.Entities.Name"/> with values provided.
-            </summary>
-            <param name="firstName">The first name.</param>
-            <param name="lastName">The last name.</param>
-            <returns>An instance of <see cref="T:Xpandables.Net.Entities.Name"/>.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="firstName"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="lastName"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Name.Default">
-            <summary>
-            Creates a default instance of <see cref="T:Xpandables.Net.Entities.Name"/> with NO value.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Name.Deconstruct(System.String@,System.String@)">
-            <summary>
-            Provides with deconstruction for <see cref="T:Xpandables.Net.Entities.Name"/>.
-            </summary>
-            <param name="firstName">The output first name.</param>
-            <param name="lastName">The output last name.</param>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Name.LastName">
-            <summary>
-            Gets the last name.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Name.FirstName">
-            <summary>
-            Gets the first name.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Name.EditFirstName(System.String)">
-            <summary>
-            Updates the first name and return the current instance.
-            </summary>
-            <param name="firstName">The new first name.</param>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Name.EditLastName(System.String)">
-            <summary>
-            Updates the last name and return the current instance.
-            </summary>
-            <param name="lastName">The new last name.</param>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Name.ToString">
-            <summary>
-            Returns a string that represents the current object.
-            </summary>
-            <returns>A string that represents the current object.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Name.GetEqualityComponents">
-            <summary>
-            Provides the list of components that comprise that class.
-            </summary>
-            <returns>An enumerable components of the derived class.</returns>
-        </member>
-        <member name="T:Xpandables.Net.Entities.PatternRequiredOptionalAttribute">
-            <summary>
-            <see cref="T:Xpandables.Net.Entities.PatternRequiredOptionalAttribute"/> base class for validating value against pattern using regular expression.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.PatternRequiredOptionalAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
-            <summary>
-            Validates the specified value with respect to the current pattern validation attribute.
-            </summary>
-            <param name="value">The value to validate.</param>
-            <param name="validationContext">The context information about the validation operation.</param>
-            <returns>An instance of the <see cref="T:System.ComponentModel.DataAnnotations.ValidationResult"/> class.</returns>
-            <exception cref="T:System.InvalidOperationException">The current attribute is malformed.</exception>
-        </member>
-        <member name="P:Xpandables.Net.Entities.PatternRequiredOptionalAttribute.IsOptional">
-            <summary>
-            Gets or sets the value whether or not the decorated property/field/parameter can be null.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.PatternRequiredOptionalAttribute.GetRegexPattern">
-            <summary>
-            Returns the Regex pattern the value must match.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Entities.PersonType">
-            <summary>
-            Enumeration of person type. This class can be extended.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.PersonType.#ctor(System.Int32,System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Entities.PersonType"/> class.
-            </summary>
-            <param name="value">The value of the person type.</param>
-            <param name="displayName">The name of the person type.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="displayName"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.PersonType.IsNatural">
-            <summary>
-            Determines whether the current instance is a <see cref="P:Xpandables.Net.Entities.PersonType.Natural"/>.
-            </summary>
-            <returns><see langword="true"/> if so, otherwise <see langword="false"/></returns>
-        </member>
-        <member name="M:Xpandables.Net.Entities.PersonType.IsLegal">
-            <summary>
-            Determines whether the current instance is a <see cref="P:Xpandables.Net.Entities.PersonType.Legal"/>.
-            </summary>
-            <returns><see langword="true"/> if so, otherwise <see langword="false"/></returns>
-        </member>
-        <member name="P:Xpandables.Net.Entities.PersonType.Natural">
-            <summary>
-            The natural person type.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.PersonType.Legal">
-            <summary>
-            The legal person type.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Entities.Picture">
-            <summary>
-            Defines the <see cref="T:Xpandables.Net.Entities.Picture"/> class that holds properties for an image.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Picture.#ctor(System.String,System.Byte[],System.Int32,System.Int32,System.String)">
-            <summary>
-            Initializes a new instance <see cref="T:Xpandables.Net.Entities.Picture"/> with all properties.
-            </summary>
-            <param name="title">The picture title.</param>
-            <param name="content">The picture content.</param>
-            <param name="height">The picture height.</param>
-            <param name="width">The picture width.</param>
-            <param name="extension">The picture extension.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="title"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="content"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="height"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="width"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="extension"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Picture.Default">
-            <summary>
-            Creates a <see cref="T:Xpandables.Net.Entities.Picture"/> with the default image content.
-            </summary>
-            <returns>A new instance of <see cref="T:Xpandables.Net.Entities.Picture"/> with default image content.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Picture.Create(System.String,System.Byte[],System.Int32,System.Int32,System.String)">
-            <summary>
-            Creates a new picture with values.
-            </summary>
-            <param name="title">The picture title.</param>
-            <param name="content">The picture content.</param>
-            <param name="height">The picture height.</param>
-            <param name="width">The picture width.</param>
-            <param name="extension">The picture extension.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="title"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="content"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="height"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="width"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="extension"/> is null.</exception>
-            <returns>A new instance of <see cref="T:Xpandables.Net.Entities.Picture"/>.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Picture.Clear">
-            <summary>
-            Clears the content of the picture.
-            </summary>
-            <returns>The current instance without content.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Picture.GetEqualityComponents">
-            <summary>
-            Provides the list of components that comprise that class.
-            </summary>
-            <returns>An enumerable components of the derived class.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Picture.ToString">
-            <summary>
-            Returns the UTF8 encoded string of the image.
-            </summary>
-            <returns>An UTF8 string.</returns>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Picture.Title">
-            <summary>
-            Gets the picture title.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Picture.Content">
-            <summary>
-            Gets the picture byte content.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Picture.Height">
-            <summary>
-            Gets the height, in pixels, of this picture.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Picture.Width">
-            <summary>
-            Gets the width, in pixels, of this picture.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Picture.Extension">
-            <summary>
-            Gets the file format of this picture.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Entities.RequiredOptionalAttribute">
-            <summary>
-            Specifies that a data field value is optionally required settings the <see cref="P:Xpandables.Net.Entities.RequiredOptionalAttribute.IsOptional"/> to <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.RequiredOptionalAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
-            <summary>
-            Validates the specified value with respect to the current validation attribute.
-            </summary>
-            <param name="value">The value to validate.</param>
-            <param name="validationContext">The context information about the validation operation.</param>
-            <returns>An instance of the System.ComponentModel.DataAnnotations.ValidationResult class.</returns>
-        </member>
-        <member name="P:Xpandables.Net.Entities.RequiredOptionalAttribute.IsOptional">
-            <summary>
-            Gets or sets the value whether or not the decorated property/field/parameter can be null.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Entities.StringLengthOptionalAttribute">
-            <summary>
-            Specifies that a data field value is optionally required settings the <see cref="P:Xpandables.Net.Entities.StringLengthOptionalAttribute.IsOptional"/> to <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.StringLengthOptionalAttribute.#ctor(System.Int32)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Xpandables.Net.Entities.StringLengthOptionalAttribute"/> class by using a specified maximum length.
-            </summary>
-            <param name="maximumLength"> The maximum length of a string.</param>
-        </member>
-        <member name="M:Xpandables.Net.Entities.StringLengthOptionalAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
-            <summary>
-            Validates the specified value with respect to the current validation attribute.
-            </summary>
-            <param name="value">The value to validate.</param>
-            <param name="validationContext">The context information about the validation operation.</param>
-            <returns>An instance of the System.ComponentModel.DataAnnotations.ValidationResult class.</returns>
-        </member>
-        <member name="P:Xpandables.Net.Entities.StringLengthOptionalAttribute.IsOptional">
-            <summary>
-            Determines whether or not the decorated property/field/parameter can be null.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Entities.Token">
-            <summary>
-            Contains a token value.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Token.Value">
-            <summary>
-            Gets the token value.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Token.Type">
-            <summary>
-            Gets the type of the token : Bearer, Basic....
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Entities.Token.ExpiresOn">
-            <summary>
-            Gets the token expiry.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Token.Create(System.String,System.String,System.DateTime)">
-            <summary>
-            Creates an instance of <see cref="T:Xpandables.Net.Entities.Token"/> with the specified value.
-            </summary>
-            <param name="value">The token value.</param>
-            <param name="type">The token type.</param>
-            <param name="expiry">The token expiry.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Entities.Token.GetEqualityComponents">
-            <summary>
-            Provides the list of components that comprise that class.
-            </summary>
-            <returns>An enumerable components of the derived class.</returns>
-        </member>
-        <member name="T:Xpandables.Net.Entities.ValidationRuleAttribute">
-            <summary>
-            Default validation attribute.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Entities.ValidationAttributeExtensions">
-            <summary>
-            Provides with helper methods for validation attributes.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Entities.ValidationAttributeExtensions.ValidationExceptionBuilder(System.Object,System.String,System.Object,System.String[])">
-            <summary>
-            Helper uses to build a <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> using the specified arguments.
-            </summary>
-            <param name="_"></param>
-            <param name="errorMessage">The error message.</param>
-            <param name="value">The value of the object that caused the attribute to trigger the validation error.</param>
-            <param name="memberNames"> The list of member names that have validation errors.</param>
-        </member>
-        <member name="M:Xpandables.Net.Entities.ValidationAttributeExtensions.ValidationExceptionBuilder(System.ComponentModel.DataAnnotations.ValidationAttribute,System.String,System.Object,System.String[])">
-            <summary>
-            Helper uses to build a <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> from the current attribute using the specified arguments.
-            </summary>
-            <param name="this">The current validation attribute.</param>
-            <param name="errorMessage">The error message.</param>
-            <param name="value">The value of the object that caused the attribute to trigger the validation error.</param>
-            <param name="memberNames"> The list of member names that have validation errors.</param>
-        </member>
         <member name="T:Xpandables.Net.Entity">
             <summary>
             The domain object base implementation that provides an identifier and a key generator for derived class.
@@ -3938,7 +3287,7 @@
             Defines options to configure data context.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextOptions.UseSeederBehavior``2">
+        <member name="M:Xpandables.Net.EntityFramework.DataContextOptions.UseSeederDecorator``2">
             <summary>
             Enables seeder for the data context that is decorated with <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/>.
             </summary>
@@ -4467,7 +3816,7 @@
         </member>
         <member name="T:Xpandables.Net.Enumerations.EnumerationTypeConverter">
             <summary>
-            Provides a type converter to convert <see cref="T:Xpandables.Net.Enumerations.EnumerationType"/> objects to and from various other representations.
+            Provides a type converter to convert <see cref="T:Xpandables.Net.Enumerations.EnumerationType"/> objects to and from <see cref="T:System.String"/> and value type representations.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Enumerations.EnumerationTypeConverter.#ctor(System.Type)">
@@ -5377,94 +4726,6 @@
             Returns the expression to be used for the clause <see langword="Where"/> in a query.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.Extensions.AsyncEnumerable`1">
-            <summary>
-            Default implementation of <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.AsyncEnumerable`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Extensions.AsyncEnumerable`1"/> with the collection.
-            </summary>
-            <param name="collection">The collection to act on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="collection"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.AsyncEnumerable`1.GetAsyncEnumerator(System.Threading.CancellationToken)">
-            <summary>
-            Returns an enumerator that iterates asynchronously through the collection.
-            </summary>
-            <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
-            <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
-        </member>
-        <member name="T:Xpandables.Net.Extensions.AsyncEnumerator`1">
-            <summary>
-            Default implement of <see cref="T:System.Collections.Generic.IAsyncEnumerator`1"/>.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.AsyncEnumerator`1.#ctor(System.Collections.Generic.IEnumerator{`0})">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Extensions.AsyncEnumerator`1"/> with the enumerator.
-            </summary>
-            <param name="inner">The enumerator to act on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="inner"/> is null.</exception>
-        </member>
-        <member name="P:Xpandables.Net.Extensions.AsyncEnumerator`1.Current">
-            <summary>
-            Gets the element in the collection at the current position of the enumerator.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.AsyncEnumerator`1.DisposeAsync">
-            <summary>
-             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
-            </summary>
-            <returns>A task that represents the asynchronous dispose operation.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.AsyncEnumerator`1.MoveNextAsync">
-            <summary>
-             Advances the enumerator asynchronously to the next element of the collection.
-            </summary>
-            <returns> A System.Threading.Tasks.ValueTask`1 that will complete with a result of true if the enumerator was successfully 
-            advanced to the next element, or false if the enumerator has passed the end of the collection.</returns>
-        </member>
-        <member name="T:Xpandables.Net.Extensions.AsyncExtensions">
-            <summary>
-            Provides with methods used to execute asynchronous operation synchronously.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.AsyncExtensions.RunSync``1(System.Func{System.Threading.Tasks.Task{``0}})">
-            <summary>
-            Executes the target asynchronous operation synchronously.
-            </summary>
-            <typeparam name="TResult">The type of result.</typeparam>
-            <param name="func">The asynchronous function to execute synchronously.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="func"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.AsyncExtensions.RunSync``1(System.Threading.Tasks.Task{``0})">
-            <summary>
-            Executes the target asynchronous operation synchronously.
-            </summary>
-            <typeparam name="TResult">The type of result.</typeparam>
-            <param name="task">The asynchronous function to execute synchronously.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="task"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.AsyncExtensions.RunSync(System.Threading.Tasks.Task)">
-            <summary>
-            Executes the target asynchronous operation synchronously.
-            </summary>
-            <param name="task">The operation to be synchronously executed.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="task"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.AsyncExtensions.TryCatchAsyncEnumerable``1(System.Func{``0},System.Runtime.ExceptionServices.ExceptionDispatchInfo@)">
-            <summary>
-            Executes an <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/> in a try catch scope.
-            </summary>
-            <typeparam name="TResult">The type of the result, may be <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.</typeparam>
-            <param name="func">The function to be executed in try catch.</param>
-            <param name="exceptionDispatchInfo">The handled exception.</param>
-            <returns>A result of <typeparamref name="TResult"/> type or null if exception..</returns>
-        </member>
         <member name="T:Xpandables.Net.Extensions.EnumerableExtensions">
             <summary>
             Provides with extension methods for <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
@@ -5580,97 +4841,6 @@
             <param name="source">the source of the sequence.</param>
             <param name="index">The zero-based index of the element to retrieve.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Extensions.StringExtensions">
-            <summary>
-            Provides with methods to extend use of <see cref="T:System.String"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.StringExtensions.StringFormat(System.String,System.Object[])">
-            <summary>
-            Replaces the argument object into the current text equivalent <see cref="T:System.String"/>
-            using the default <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/>.
-            </summary>
-            <param name="value">The format string.</param>
-            <param name="args">The object to be formatted.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="value"/> is null or <paramref name="args"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="args"/> is null or empty.</exception>
-            <exception cref="T:System.FormatException">The format is invalid.</exception>
-            <returns>value <see cref="T:System.String"/> filled with <paramref name="args"/>.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.StringExtensions.StringFormat(System.String,System.Globalization.CultureInfo,System.Object[])">
-            <summary>
-            Replaces the argument object into the current text equivalent <see cref="T:System.String"/> using the specified culture.
-            </summary>
-            <param name="value">The format string.</param>
-            <param name="cultureInfo">CultureInfo to be used.</param>
-            <param name="args">The object to be formatted.</param>
-            <returns>value <see cref="T:System.String"/> filled with <paramref name="args"/></returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="cultureInfo"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="args"/> is null or empty.</exception>
-            <exception cref="T:System.FormatException">The format is invalid.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.StringExtensions.ToJsonString(System.Object)">
-            <summary>
-            Serializes the current instance to JSON string.
-            </summary>
-            <param name="obj">The object to act on.</param>
-            <returns>A JSOn string representation of the object.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.StringExtensions.StringJoin``1(System.Collections.Generic.IEnumerable{``0},System.String)">
-            <summary>
-            Concatenates all the elements of an <see cref="T:System.Collections.Generic.IEnumerable`1"/>,
-            using the specified string separator between each element.
-            </summary>
-            <typeparam name="TSource">The generic type parameter.</typeparam>
-            <param name="collection">The collection to act on.</param>
-            <param name="separator">The string to use as a separator.
-            Separator is included in the returned string only if value has more than one element.</param>
-            <returns>A string that consists of the elements in value delimited by the separator string.
-            If value is an empty array, the method returns String.Empty.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="collection"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.StringExtensions.StringJoin``1(System.Collections.Generic.IEnumerable{``0},System.Char)">
-            <summary>
-            Concatenates all the elements of an <see cref="T:System.Collections.Generic.IEnumerable`1"/>,
-            using the specified char separator between each element.
-            </summary>
-            <typeparam name="TSource">The generic type parameter.</typeparam>
-            <param name="collection">The collection to act on.</param>
-            <param name="separator">The string to use as a separator.
-            Separator is included in the returned string only if value has more than one element.</param>
-            <returns>A string that consists of the elements in value delimited by the separator string.
-            If value is an empty array, the method returns String.Empty.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="collection"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.StringExtensions.TryToValueType``1(System.String,``0@,System.Exception@)">
-            <summary>
-            Tries to convert a string to the specified value type.
-            </summary>
-            <typeparam name="TResult">Type source.</typeparam>
-            <param name="value">The string value.</param>
-            <param name="result">The string value converted to the specified value type.</param>
-            <param name="valueTypeException">The handled exception during conversion.</param>
-            <returns>Returns <see langword="true"/> if conversion OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null or empty.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.StringExtensions.TryToDateTime(System.String,System.IFormatProvider,System.Globalization.DateTimeStyles,System.DateTime@,System.Exception@,System.String[])">
-            <summary>
-            Converts string date to <see cref="T:System.DateTime"/> type.
-            If error, returns an exception.
-            </summary>
-            <param name="source">A string containing a date and time to convert.</param>
-            <param name="provider">An object that supplies culture-specific format information about string.</param>
-            <param name="styles"> A bitwise combination of enumeration values that indicates the permitted format
-            of string. A typical value to specify is System.Globalization.DateTimeStyles.None.</param>
-            <param name="result">An object that is equivalent to the date and time contained in <paramref name="source"/> as specified
-            by formats, provider, and style.</param>
-            <param name="dateTimeException">The handled exception during conversion.</param>
-            <param name="formats">An array of allowable formats of strings.</param>
-            <returns>Returns <see langword="true"/> if conversion OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="provider"/> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.Extensions.TypeExtensions">
             <summary>
@@ -7572,6 +6742,7 @@
             <param name="command">The command instance to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
+            <returns>A task that represents the asynchronous operation.</returns>
         </member>
         <member name="T:Xpandables.Net.Identities.AsyncQueryIdentityDecorator`2">
             <summary>
@@ -7604,6 +6775,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A result contains an collection of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Identities.CommandIdentityDecorator`1">
             <summary>
@@ -7788,6 +6960,7 @@
             <param name="query">The query to act on.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <returns>An object that represents the result of <typeparamref name="TResult"/>.</returns>
         </member>
         <member name="T:Xpandables.Net.Interception.IInterceptor">
             <summary>
@@ -8233,6 +7406,100 @@
             Returns a collection of available cultures found in the current application based on the <see cref="P:Xpandables.Net.Localization.ILocalizationResourceProvider.ViewModelResourceTypes"/> definition.
             </summary>
             <returns>A collection of <see cref="T:System.Globalization.CultureInfo"/> of an empty collection if no result.</returns>
+        </member>
+        <member name="T:Xpandables.Net.Localization.LocalizableString">
+            <summary>
+                A helper class for providing a localizable string property.
+                This class is currently compiled in both System.Web.dll and System.ComponentModel.DataAnnotations.dll.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Localization.LocalizableString.#ctor(System.String)">
+            <summary>
+                Constructs a localizable string, specifying the property name associated
+                with this item.  The <paramref name="propertyName" /> value will be used
+                within any exceptions thrown as a result of localization failures.
+            </summary>
+            <param name="propertyName">
+                The name of the property being localized.  This name
+                will be used within exceptions thrown as a result of localization failures.
+            </param>
+        </member>
+        <member name="P:Xpandables.Net.Localization.LocalizableString.Value">
+            <summary>
+                Gets or sets the value of this localizable string.  This value can be
+                either the literal, non-localized value, or it can be a resource name
+                found on the resource type supplied to <see cref="M:Xpandables.Net.Localization.LocalizableString.GetLocalizableValue" />.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Localization.LocalizableString.ResourceType">
+            <summary>
+                Gets or sets the resource type to be used for localization.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Localization.LocalizableString.ClearCache">
+            <summary>
+                Clears any cached values, forcing <see cref="M:Xpandables.Net.Localization.LocalizableString.GetLocalizableValue" /> to
+                perform evaluation.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Localization.LocalizableString.GetLocalizableValue">
+            <summary>
+                Gets the potentially localized value.
+            </summary>
+            <remarks>
+                If <see cref="P:Xpandables.Net.Localization.LocalizableString.ResourceType" /> has been specified and <see cref="P:Xpandables.Net.Localization.LocalizableString.Value" /> is not
+                null, then localization will occur and the localized value will be returned.
+                <para>
+                    If <see cref="P:Xpandables.Net.Localization.LocalizableString.ResourceType" /> is null then <see cref="P:Xpandables.Net.Localization.LocalizableString.Value" /> will be returned
+                    as a literal, non-localized string.
+                </para>
+            </remarks>
+            <exception cref="T:System.InvalidOperationException">
+                Thrown if localization fails.  This can occur if <see cref="P:Xpandables.Net.Localization.LocalizableString.ResourceType" /> has been
+                specified, <see cref="P:Xpandables.Net.Localization.LocalizableString.Value" /> is not null, but the resource could not be
+                accessed.  <see cref="P:Xpandables.Net.Localization.LocalizableString.ResourceType" /> must be a public class, and <see cref="P:Xpandables.Net.Localization.LocalizableString.Value" />
+                must be the name of a public static string property that contains a getter.
+            </exception>
+            <returns>
+                Returns the potentially localized value.
+            </returns>
+        </member>
+        <member name="T:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute">
+            <summary>
+            Specifies how data fields are localized, displayed and formatted by ASP.NET Dynamic Data.
+             Allows overriding various display-related options for a given field. The options have the same meaning as in BoundField.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatString">
+            <summary>
+             Gets or sets the format string, which may be a resource key string.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatStringResourceType">
+            <summary>
+            Gets or sets the type that contains the resources for <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatString"/>.
+            Using the <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatStringResourceType"/> along with <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatString"/>,
+            allows the <see cref="M:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.GetDataFormatString"/> method to return localized values.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.GetDataFormatString">
+            <summary>
+            Returns the UI format string for <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatString"/>.
+            When <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatStringResourceType" /> has not been specified, the value of <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatString" />
+            will be returned. When <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatStringResourceType" /> has been specified and <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatString" />
+            represents a resource key within that resource type, then the localized value will be returned. When <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatString" />
+            and <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatStringResourceType" /> have not been set, returns <c>null</c>.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+            After setting both the <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatStringResourceType" /> property and the <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatString" /> property,
+            but a public static property with a name matching the <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatString" /> value couldn't be found
+            on the <see cref="P:Xpandables.Net.Localization.LocalizedDisplayFormatAttribute.DataFormatStringResourceType" />.
+            </exception>
         </member>
         <member name="T:Xpandables.Net.Localization.Validations.DataAnnotations">
             <summary>
@@ -12476,6 +11743,146 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
         </member>
+        <member name="T:Xpandables.Net.Strings.IStringGenerator">
+            <summary>
+            Provides with methods to generate strings.
+            Contains a default implementation.
+            </summary>
+        </member>
+        <member name="F:Xpandables.Net.Strings.IStringGenerator.LookupCharacters">
+            <summary>
+            The lookup characters used to generate random string.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Strings.IStringGenerator.Generate(System.UInt16,System.String)">
+            <summary>
+            Generates a string of the specified length that contains random characters from the lookup characters.
+            <para>The implementation uses the <see cref="T:System.Security.Cryptography.RNGCryptoServiceProvider"/>.</para>
+            </summary>
+            <param name="length">The length of the expected string value.</param>
+            <param name="lookupCharacters">The string to be used to pick characters from or default one.</param>
+            <returns>A new string of the specified length with random characters.</returns>
+            <exception cref="T:System.ArgumentException">The <paramref name="length"/> must be greater than zero
+            and lower or equal to <see cref="F:System.UInt16.MaxValue"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="lookupCharacters"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Strings.IStringGenerator.GenerateSalt(System.UInt16)">
+            <summary>
+            Generates a salt base64 string of the specified byte length.
+            <para>The implementation uses the <see cref="T:System.Security.Cryptography.RNGCryptoServiceProvider"/>.</para>
+            </summary>
+            <param name="length">The length of the expected string value.</param>
+            <returns>A new base64 string from the salt bytes.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="length"/> must be greater than zero
+            and lower or equal to <see cref="F:System.UInt16.MaxValue"/>.</exception>
+            <exception cref="T:System.InvalidOperationException">Generating the salt failed. See inner exception.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Strings.IStringGenerator.Generate(System.UInt16)">
+            <summary>
+            Generates a string of the specified length that contains random characters.
+            <para>The implementation uses the <see cref="T:System.Security.Cryptography.RNGCryptoServiceProvider"/>.</para>
+            </summary>
+            <param name="length">The length of the expected string value.</param>
+            <returns>A new string of the specified length with random characters.</returns>
+            <exception cref="T:System.ArgumentException">The <paramref name="length"/> must be greater than zero
+            and lower or equal to <see cref="F:System.UInt16.MaxValue"/>.</exception>
+        </member>
+        <member name="T:Xpandables.Net.Strings.StringGenerator">
+            <summary>
+            Provides with <see cref="T:Xpandables.Net.Strings.IStringGenerator"/> implementation.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Strings.StringExtensions">
+            <summary>
+            Provides with methods to extend use of <see cref="T:System.String"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Strings.StringExtensions.StringFormat(System.String,System.Object[])">
+            <summary>
+            Replaces the argument object into the current text equivalent <see cref="T:System.String"/>
+            using the default <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/>.
+            </summary>
+            <param name="value">The format string.</param>
+            <param name="args">The object to be formatted.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="value"/> is null or <paramref name="args"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="args"/> is null or empty.</exception>
+            <exception cref="T:System.FormatException">The format is invalid.</exception>
+            <returns>value <see cref="T:System.String"/> filled with <paramref name="args"/>.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Strings.StringExtensions.StringFormat(System.String,System.Globalization.CultureInfo,System.Object[])">
+            <summary>
+            Replaces the argument object into the current text equivalent <see cref="T:System.String"/> using the specified culture.
+            </summary>
+            <param name="value">The format string.</param>
+            <param name="cultureInfo">CultureInfo to be used.</param>
+            <param name="args">The object to be formatted.</param>
+            <returns>value <see cref="T:System.String"/> filled with <paramref name="args"/></returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="cultureInfo"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="args"/> is null or empty.</exception>
+            <exception cref="T:System.FormatException">The format is invalid.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Strings.StringExtensions.ToJsonString``1(``0)">
+            <summary>
+            Serializes the current instance to JSON string.
+            </summary>
+            <param name="source">The object to act on.</param>
+            <returns>A JSOn string representation of the object.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Strings.StringExtensions.StringJoin``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+            <summary>
+            Concatenates all the elements of an <see cref="T:System.Collections.Generic.IEnumerable`1"/>,
+            using the specified string separator between each element.
+            </summary>
+            <typeparam name="TSource">The generic type parameter.</typeparam>
+            <param name="collection">The collection to act on.</param>
+            <param name="separator">The string to use as a separator.
+            Separator is included in the returned string only if value has more than one element.</param>
+            <returns>A string that consists of the elements in value delimited by the separator string.
+            If value is an empty array, the method returns String.Empty.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="collection"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Strings.StringExtensions.StringJoin``1(System.Collections.Generic.IEnumerable{``0},System.Char)">
+            <summary>
+            Concatenates all the elements of an <see cref="T:System.Collections.Generic.IEnumerable`1"/>,
+            using the specified char separator between each element.
+            </summary>
+            <typeparam name="TSource">The generic type parameter.</typeparam>
+            <param name="collection">The collection to act on.</param>
+            <param name="separator">The string to use as a separator.
+            Separator is included in the returned string only if value has more than one element.</param>
+            <returns>A string that consists of the elements in value delimited by the separator string.
+            If value is an empty array, the method returns String.Empty.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="collection"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Strings.StringExtensions.TryToValueType``1(System.String,``0@,System.Exception@)">
+            <summary>
+            Tries to convert a string to the specified value type.
+            </summary>
+            <typeparam name="TResult">Type source.</typeparam>
+            <param name="value">The string value.</param>
+            <param name="result">The string value converted to the specified value type.</param>
+            <param name="valueTypeException">The handled exception during conversion.</param>
+            <returns>Returns <see langword="true"/> if conversion OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null or empty.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Strings.StringExtensions.TryToDateTime(System.String,System.IFormatProvider,System.Globalization.DateTimeStyles,System.DateTime@,System.Exception@,System.String[])">
+            <summary>
+            Converts string date to <see cref="T:System.DateTime"/> type.
+            If error, returns an exception.
+            </summary>
+            <param name="source">A string containing a date and time to convert.</param>
+            <param name="provider">An object that supplies culture-specific format information about string.</param>
+            <param name="styles"> A bitwise combination of enumeration values that indicates the permitted format
+            of string. A typical value to specify is System.Globalization.DateTimeStyles.None.</param>
+            <param name="result">An object that is equivalent to the date and time contained in <paramref name="source"/> as specified
+            by formats, provider, and style.</param>
+            <param name="dateTimeException">The handled exception during conversion.</param>
+            <param name="formats">An array of allowable formats of strings.</param>
+            <returns>Returns <see langword="true"/> if conversion OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="provider"/> is null.</exception>
+        </member>
         <member name="T:Xpandables.Net.Transactions.AsyncCommandTransactionDecorator`1">
             <summary>
             This class allows the application author to add transaction support to command control flow.
@@ -12504,6 +11911,7 @@
             <param name="command">The command instance to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
+            <returns>A task that represents the asynchronous operation.</returns>
         </member>
         <member name="T:Xpandables.Net.Transactions.CommandTransactionDecorator`1">
             <summary>
@@ -12558,6 +11966,127 @@
             <param name="argument">The command/query instance to retrieve the transaction scope for.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
         </member>
+        <member name="T:Xpandables.Net.Types.Picture">
+            <summary>
+            Defines the <see cref="T:Xpandables.Net.Types.Picture"/> class that holds properties for an image.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Types.Picture.#ctor(System.String,System.Byte[],System.Int32,System.Int32,System.String)">
+            <summary>
+            Initializes a new instance <see cref="T:Xpandables.Net.Types.Picture"/> with all properties.
+            </summary>
+            <param name="title">The picture title.</param>
+            <param name="content">The picture content.</param>
+            <param name="height">The picture height.</param>
+            <param name="width">The picture width.</param>
+            <param name="extension">The picture extension.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="title"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="content"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="height"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="width"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="extension"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.Picture.Default">
+            <summary>
+            Creates a <see cref="T:Xpandables.Net.Types.Picture"/> with the default image content.
+            </summary>
+            <returns>A new instance of <see cref="T:Xpandables.Net.Types.Picture"/> with default image content.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Types.Picture.Create(System.String,System.Byte[],System.Int32,System.Int32,System.String)">
+            <summary>
+            Creates a new picture with values.
+            </summary>
+            <param name="title">The picture title.</param>
+            <param name="content">The picture content.</param>
+            <param name="height">The picture height.</param>
+            <param name="width">The picture width.</param>
+            <param name="extension">The picture extension.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="title"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="content"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="height"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="width"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="extension"/> is null.</exception>
+            <returns>A new instance of <see cref="T:Xpandables.Net.Types.Picture"/>.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Types.Picture.Clear">
+            <summary>
+            Clears the content of the picture.
+            </summary>
+            <returns>The current instance without content.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Types.Picture.GetEqualityComponents">
+            <summary>
+            Provides the list of components that comprise that class.
+            </summary>
+            <returns>An enumerable components of the derived class.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Types.Picture.ToString">
+            <summary>
+            Returns the UTF8 encoded string of the image.
+            </summary>
+            <returns>An UTF8 string.</returns>
+        </member>
+        <member name="P:Xpandables.Net.Types.Picture.Title">
+            <summary>
+            Gets the picture title.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Types.Picture.Content">
+            <summary>
+            Gets the picture byte content.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Types.Picture.Height">
+            <summary>
+            Gets the height, in pixels, of this picture.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Types.Picture.Width">
+            <summary>
+            Gets the width, in pixels, of this picture.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Types.Picture.Extension">
+            <summary>
+            Gets the file format of this picture.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Types.Token">
+            <summary>
+            Contains a token value.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Types.Token.Value">
+            <summary>
+            Gets the token value.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Types.Token.Type">
+            <summary>
+            Gets the type of the token : Bearer, Basic....
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Types.Token.ExpiresOn">
+            <summary>
+            Gets the token expiry.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Types.Token.Create(System.String,System.String,System.DateTime)">
+            <summary>
+            Creates an instance of <see cref="T:Xpandables.Net.Types.Token"/> with the specified value.
+            </summary>
+            <param name="value">The token value.</param>
+            <param name="type">The token type.</param>
+            <param name="expiry">The token expiry.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.Token.GetEqualityComponents">
+            <summary>
+            Provides the list of components that comprise that class.
+            </summary>
+            <returns>An enumerable components of the derived class.</returns>
+        </member>
         <member name="T:Xpandables.Net.ValidatorRules.AsyncCommandValidatorDecorator`1">
             <summary>
             This class allows the application author to add validation support to command control flow.
@@ -12584,6 +12113,7 @@
             <param name="command">The command instance to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
+            <returns>A task that represents the asynchronous operation.</returns>
         </member>
         <member name="T:Xpandables.Net.ValidatorRules.AsyncQueryValidatorDecorator`2">
             <summary>
@@ -12614,6 +12144,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A result contains an collection of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.ValidatorRules.CommandValidatorDecorator`1">
             <summary>
@@ -12714,6 +12245,94 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
             <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException"></exception>
         </member>
+        <member name="T:Xpandables.Net.ValidatorRules.IMetataDescriptionProvider">
+            <summary>
+            Allows an application author to add type description provider for any class.
+            For more information about description and others, see the <see cref="T:System.ComponentModel.TypeDescriptor"/> class.
+            The implementation must be thread-safe when working in a multi-threaded environment.
+            Any operation that does not deliver or do what it promises to do should throw an exception. 
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.IMetataDescriptionProvider.AddProvider``1(``0,System.String,System.Reflection.Assembly[])">
+            <summary>
+            Adds the type description provider specified by the meta-data description name for the current instance.
+            The meta-data class must be name "{<paramref name="metadataDescriptionTypeName"/>}", must be public, and available from
+            the <paramref name="instance"/> assembly or any custom loaded assembly in the current application domain.
+            </summary>
+            <typeparam name="TSource">The type of the object.</typeparam>
+            <param name="instance">Contains the instance to which the meta-data type description will be added.</param>
+            <param name="metadataDescriptionTypeName">Contains the name of the type used to find the meta-data class for 
+            the current <paramref name="instance"/>.</param>
+            <param name="assemblies">The collection of assemblies to search in.</param>
+            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="instance"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="metadataDescriptionTypeName"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="assemblies"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.IMetataDescriptionProvider.AddProvider``1(``0,System.Type)">
+            <summary>
+            Adds the specified type description provider to the instance.
+            Any operation that does not deliver or do what it promises to do should throw an exception. 
+            </summary>
+            <typeparam name="TSource">The type of the object.</typeparam>
+            <param name="instance">Contains the instance to which the meta-data type description will be added.</param>
+            <param name="metadataDescriptionType">Contains the meta-data type description to add to the current <paramref name="instance"/>.</param>
+            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="instance"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="metadataDescriptionType"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.IMetataDescriptionProvider.AddProvider``1(``0)">
+            <summary>
+            Adds the type description provider specified by its name for the current instance.
+            The meta-data class must be name "{InstanceTypeName}{Metadata}", must be public, 
+            and available from the <paramref name="instance"/> assembly or any custom loaded assembly in the current application domain.
+            </summary>
+            <typeparam name="TSource">The type of the object.</typeparam>
+            <param name="instance">Contains the instance to which the meta-data type description will be added.</param>
+            <exception cref="T:System.ArgumentNullException">Exception thrown when the <paramref name="instance"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.IMetataDescriptionProvider.AddProviderFromType``1(``0,System.Type)">
+            <summary>
+            Adds the description provider from the description type.
+            </summary>
+            <typeparam name="TSource">The type of the instance.</typeparam>
+            <param name="instance">The instance.</param>
+            <param name="descriptionType">The description type.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="instance"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="descriptionType"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.IMetataDescriptionProvider.AddProviderFromStringName``1(``0,System.String,System.Reflection.Assembly[])">
+            <summary>
+            Adds the description provider from the description type name.
+            </summary>
+            <typeparam name="TSource">The type of the instance.</typeparam>
+            <param name="instance">The instance.</param>
+            <param name="metadataDescriptionTypeName">The meta data description type name.</param>
+            <param name="assemblies">The collection of assemblies to search in.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="instance"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="metadataDescriptionTypeName"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.IMetataDescriptionProvider.GetDescriptionTypeFromName``1(``0,System.String,System.Reflection.Assembly[])">
+            <summary>
+            Returns the description type if found.
+            </summary>
+            <typeparam name="TSource">The type of the instance.</typeparam>
+            <param name="instance">The instance.</param>
+            <param name="metadataDescriptionTypeName">The meta data description type name.</param>
+            <param name="assemblies">The collection of assemblies to search in.</param>
+            <returns>If found, returns the description type.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="instance"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="metadataDescriptionTypeName"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.IMetataDescriptionProvider.AddMetadataDescriptionType``1(``0,System.Type)">
+            <summary>
+            Adds the description provider to the instance, if specified or adds the description from the current type;
+            </summary>
+            <typeparam name="TSource">The type of the instance.</typeparam>
+            <param name="instance">The instance.</param>
+            <param name="descriptionType">The description <typeparamref name="TSource"/>.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="instance"/> is null.</exception>
+        </member>
         <member name="T:Xpandables.Net.ValidatorRules.IValidationDecorator">
             <summary>
             A marker interface that allows the command/query class to be decorated with the validation behavior according to the class type :
@@ -12783,6 +12402,13 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
             <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException"></exception>
         </member>
+        <member name="T:Xpandables.Net.ValidatorRules.MetadataDescriptionProvider">
+            <summary>
+            Default implementation of <see cref="T:Xpandables.Net.ValidatorRules.IMetataDescriptionProvider"/>.
+            Defines methods used to add type description provider for any class.
+            For more information about description and others, see the <see cref="T:System.ComponentModel.TypeDescriptor"/> class.
+            </summary>
+        </member>
         <member name="T:Xpandables.Net.ValidatorRules.NullValidatorRule`1">
             <summary>
             Validator when no explicit registration exist for a given type.
@@ -12800,6 +12426,30 @@
             Default implementation.
             </summary>
             <param name="_">The argument to be validated.</param>
+        </member>
+        <member name="T:Xpandables.Net.ValidatorRules.PatternRequiredOptionalAttribute">
+            <summary>
+            <see cref="T:Xpandables.Net.ValidatorRules.PatternRequiredOptionalAttribute"/> base class for validating value against pattern using regular expression.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.PatternRequiredOptionalAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Validates the specified value with respect to the current pattern validation attribute.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <param name="validationContext">The context information about the validation operation.</param>
+            <returns>An instance of the <see cref="T:System.ComponentModel.DataAnnotations.ValidationResult"/> class.</returns>
+            <exception cref="T:System.InvalidOperationException">The current attribute is malformed.</exception>
+        </member>
+        <member name="P:Xpandables.Net.ValidatorRules.PatternRequiredOptionalAttribute.IsOptional">
+            <summary>
+            Gets or sets the value whether or not the decorated property/field/parameter can be null.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.PatternRequiredOptionalAttribute.GetRegexPattern">
+            <summary>
+            Returns the Regex pattern the value must match.
+            </summary>
         </member>
         <member name="T:Xpandables.Net.ValidatorRules.QueryValidatorDecorator`2">
             <summary>
@@ -12828,6 +12478,77 @@
             <param name="query">The query to act on.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <returns>An object that represents the result of <typeparamref name="TResult"/>.</returns>
+        </member>
+        <member name="T:Xpandables.Net.ValidatorRules.RequiredOptionalAttribute">
+            <summary>
+            Specifies that a data field value is optionally required settings the <see cref="P:Xpandables.Net.ValidatorRules.RequiredOptionalAttribute.IsOptional"/> to <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.RequiredOptionalAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Validates the specified value with respect to the current validation attribute.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <param name="validationContext">The context information about the validation operation.</param>
+            <returns>An instance of the System.ComponentModel.DataAnnotations.ValidationResult class.</returns>
+        </member>
+        <member name="P:Xpandables.Net.ValidatorRules.RequiredOptionalAttribute.IsOptional">
+            <summary>
+            Gets or sets the value whether or not the decorated property/field/parameter can be null.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.ValidatorRules.StringLengthOptionalAttribute">
+            <summary>
+            Specifies that a data field value is optionally required settings the <see cref="P:Xpandables.Net.ValidatorRules.StringLengthOptionalAttribute.IsOptional"/> to <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.StringLengthOptionalAttribute.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Xpandables.Net.ValidatorRules.StringLengthOptionalAttribute"/> class by using a specified maximum length.
+            </summary>
+            <param name="maximumLength"> The maximum length of a string.</param>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.StringLengthOptionalAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Validates the specified value with respect to the current validation attribute.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <param name="validationContext">The context information about the validation operation.</param>
+            <returns>An instance of the System.ComponentModel.DataAnnotations.ValidationResult class.</returns>
+        </member>
+        <member name="P:Xpandables.Net.ValidatorRules.StringLengthOptionalAttribute.IsOptional">
+            <summary>
+            Determines whether or not the decorated property/field/parameter can be null.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.ValidatorRules.ValidationRuleAttribute">
+            <summary>
+            Default validation attribute.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.ValidatorRules.ValidationAttributeExtensions">
+            <summary>
+            Provides with helper methods for validation attributes.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.ValidationAttributeExtensions.ValidationExceptionBuilder(System.Object,System.String,System.Object,System.String[])">
+            <summary>
+            Helper uses to build a <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> using the specified arguments.
+            </summary>
+            <param name="_"></param>
+            <param name="errorMessage">The error message.</param>
+            <param name="value">The value of the object that caused the attribute to trigger the validation error.</param>
+            <param name="memberNames"> The list of member names that have validation errors.</param>
+        </member>
+        <member name="M:Xpandables.Net.ValidatorRules.ValidationAttributeExtensions.ValidationExceptionBuilder(System.ComponentModel.DataAnnotations.ValidationAttribute,System.String,System.Object,System.String[])">
+            <summary>
+            Helper uses to build a <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> from the current attribute using the specified arguments.
+            </summary>
+            <param name="this">The current validation attribute.</param>
+            <param name="errorMessage">The error message.</param>
+            <param name="value">The value of the object that caused the attribute to trigger the validation error.</param>
+            <param name="memberNames"> The list of member names that have validation errors.</param>
         </member>
         <member name="T:Xpandables.Net.ValidatorRules.ValidatorRule">
             <summary>
@@ -12937,7 +12658,7 @@
         <member name="T:Xpandables.Net.ValueRange`1">
             <summary>
             Defines a pair of values, representing a segment.
-            This class uses <see cref="T:Xpandables.Net.ValueRangeConverter"/> as type converter.
+            This class uses <see cref="T:Xpandables.Net.ValueRangeTypeConverter"/> as type converter.
             </summary>
             <typeparam name="TValue">The Type of each of two values of range.</typeparam>
         </member>
@@ -13019,12 +12740,12 @@
             </summary>
             <returns>Returns <see langword="true"/> if so, otherwise returns <see langword="false"/>.</returns>
         </member>
-        <member name="T:Xpandables.Net.ValueRangeConverter">
+        <member name="T:Xpandables.Net.ValueRangeTypeConverter">
             <summary>
             Provides a type converter to convert <see cref="T:Xpandables.Net.ValueRange`1"/> objects to <see cref="T:System.String"/> and from <see cref="T:System.String"/> representations.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.ValueRangeConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+        <member name="M:Xpandables.Net.ValueRangeTypeConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Type)">
             <summary>
             Gets a value indicating whether this converter can convert an object in the given source type
             to a range value object using the specified context.
@@ -13033,7 +12754,7 @@
             <param name="sourceType">A <see cref="T:System.Type"></see> that represents the type you wish to convert from.</param>
             <returns>true if this converter can perform the conversion; otherwise, false.</returns>
         </member>
-        <member name="M:Xpandables.Net.ValueRangeConverter.CanConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+        <member name="M:Xpandables.Net.ValueRangeTypeConverter.CanConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Type)">
             <summary>
             Gets a value indicating whether this converter can convert an object to the given destination type
             using the context.
@@ -13042,7 +12763,7 @@
             <param name="destinationType">A <see cref="T:System.Type"></see> that represents the type you wish to convert to.</param>
             <returns>true if this converter can perform the conversion; otherwise, false.</returns>
         </member>
-        <member name="M:Xpandables.Net.ValueRangeConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
+        <member name="M:Xpandables.Net.ValueRangeTypeConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
             <summary>
             Converts the specified value object to a range value object.
             </summary>
@@ -13056,7 +12777,7 @@
             for the target type.</exception>
             <exception cref="T:System.NotSupportedException">The conversion cannot be performed.</exception>
         </member>
-        <member name="M:Xpandables.Net.ValueRangeConverter.ConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object,System.Type)">
+        <member name="M:Xpandables.Net.ValueRangeTypeConverter.ConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object,System.Type)">
             <summary>
             Converts the given range value object to the specified destination type string.
             </summary>
@@ -13099,6 +12820,7 @@
             <param name="command">The command instance to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
+            <returns>A task that represents the asynchronous operation.</returns>
         </member>
         <member name="T:Xpandables.Net.VisitorRules.AsyncQueryVisitorDecorator`2">
             <summary>
@@ -13129,6 +12851,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A result contains an collection of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.VisitorRules.CommandVisitorDecorator`1">
             <summary>
@@ -13404,6 +13127,7 @@
             <param name="query">The query to act on.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <returns>An object that represents the result of <typeparamref name="TResult"/>.</returns>
         </member>
     </members>
 </doc>

@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.ComponentModel;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.ValidatorRules
 {
     /// <summary>
     /// Default implementation of <see cref="IMetataDescriptionProvider"/>.

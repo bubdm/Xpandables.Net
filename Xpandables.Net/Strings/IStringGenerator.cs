@@ -19,7 +19,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Xpandables.Net.Cryptography
+namespace Xpandables.Net.Strings
 {
     /// <summary>
     /// Provides with methods to generate strings.

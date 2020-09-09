@@ -22,11 +22,8 @@ namespace Xpandables.Net.Correlation
 {
     /// <summary>
     /// Default implementation of <see cref="IAsyncCorrelationContext"/>.
-    /// This class must be used through a behavior and must be registered as follow :
-    /// <code>
-    ///     services.AddScoped{CorrelationContext};
-    ///     services.AddScoped{ICorrelationContext}(provider=>provider.GetRequiredService{CorrelationContext}());
-    /// </code>
+    /// Defines two tasks that can be used to follow process after a control flow with <see cref="PostEvent"/>
+    /// and on exception during the control flow with <see cref="RollbackEvent"/>.
     /// </summary>
     public sealed class AsyncCorrelationContext : IAsyncCorrelationContext
     {

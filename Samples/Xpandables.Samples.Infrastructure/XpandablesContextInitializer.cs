@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Entities;
 using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Types;
 using Xpandables.Samples.Domain.Models;
 
 namespace Xpandables.Samples.Infrastructure

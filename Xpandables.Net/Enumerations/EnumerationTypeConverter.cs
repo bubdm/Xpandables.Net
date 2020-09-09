@@ -24,7 +24,7 @@ using System.Linq;
 namespace Xpandables.Net.Enumerations
 {
     /// <summary>
-    /// Provides a type converter to convert <see cref="EnumerationType"/> objects to and from various other representations.
+    /// Provides a type converter to convert <see cref="EnumerationType"/> objects to and from <see cref="string"/> and value type representations.
     /// </summary>
     public sealed class EnumerationTypeConverter : EnumConverter
     {
@@ -52,7 +52,7 @@ namespace Xpandables.Net.Enumerations
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             if (sourceType is null) throw new ArgumentNullException(nameof(sourceType));
-            if (sourceType == typeof(string) || sourceType.IsSubclassOf(typeof(EnumerationType)))
+            if (sourceType == typeof(string) || sourceType == typeof(int) || sourceType.IsSubclassOf(typeof(EnumerationType)))
                 return true;
 
             return base.CanConvertFrom(context, sourceType);
@@ -91,6 +91,9 @@ namespace Xpandables.Net.Enumerations
             if (value is string valueString)
                 return EnumerationType.FromDisplayName(EnumType, valueString);
 
+            if (value is int valueInt)
+                return EnumerationType.FromValue(EnumType, valueInt);
+
             if (value?.GetType().IsSubclassOf(typeof(EnumerationType)) == true)
                 return (EnumerationType)value;
 
@@ -111,10 +114,26 @@ namespace Xpandables.Net.Enumerations
         /// for the enumeration.</exception>
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-            => value?.GetType().IsSubclassOf(typeof(EnumerationType)) == true && destinationType == typeof(string)
-                ? (object)((EnumerationType)value).DisplayName
-                : value is string valueString && destinationType == typeof(string)
-                ? (EnumerationType.FromDisplayName(EnumType, valueString) as EnumerationType)!.DisplayName
-                : base.ConvertTo(context, culture, value, destinationType);
+        {
+            if (value is null)
+                return base.ConvertTo(context, culture, value, destinationType);
+
+            if (value.GetType().IsSubclassOf(typeof(EnumerationType)))
+            {
+                if (destinationType == typeof(string))
+                    return ((EnumerationType)value).DisplayName;
+
+                if (destinationType == typeof(int))
+                    return ((EnumerationType)value).Value;
+            }
+
+            if (value is string valueString && destinationType == typeof(string))
+                return (EnumerationType.FromDisplayName(EnumType, valueString) as EnumerationType)!.DisplayName;
+
+            if (value is int valueInt && destinationType == typeof(int))
+                return (EnumerationType.FromValue(EnumType, valueInt) as EnumerationType)!.Value;
+
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
     }
 }

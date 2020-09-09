@@ -60,7 +60,7 @@ namespace Xpandables.Samples.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseXLocalizationBehavior();
+            app.UseXLocalizationDecorator();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();

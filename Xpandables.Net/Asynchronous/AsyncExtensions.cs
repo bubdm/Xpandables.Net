@@ -22,7 +22,7 @@ using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Extensions
+namespace Xpandables.Net.Asynchronous
 {
     /// <summary>
     /// Provides with methods used to execute asynchronous operation synchronously.
@@ -77,7 +77,7 @@ namespace Xpandables.Net.Extensions
         /// <typeparam name="TResult">The type of the result, may be <see cref="IAsyncEnumerable{T}"/>.</typeparam>
         /// <param name="func">The function to be executed in try catch.</param>
         /// <param name="exceptionDispatchInfo">The handled exception.</param>
-        /// <returns>A result of <typeparamref name="TResult"/> type or null if exception..</returns>
+        /// <returns>A result of <typeparamref name="TResult"/> type or null if exception.</returns>
         [return: MaybeNull]
         public static TResult TryCatchAsyncEnumerable<TResult>(this Func<TResult> func, out ExceptionDispatchInfo? exceptionDispatchInfo)
         {

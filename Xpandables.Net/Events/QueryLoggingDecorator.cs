@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Events

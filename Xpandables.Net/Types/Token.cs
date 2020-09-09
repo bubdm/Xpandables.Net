@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Types
 {
     /// <summary>
     /// Contains a token value.

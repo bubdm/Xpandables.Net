@@ -20,7 +20,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Asynchronous;
 
 namespace Xpandables.Net.ValidatorRules
 {

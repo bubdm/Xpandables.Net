@@ -151,7 +151,7 @@ namespace Xpandables.Net.Enumerations
         /// <param name="enumeration">When this method returns, contains the <typeparamref name="TEnumeration"/> value equivalent
         /// of the string contained in <paramref name="displayName"/>, if the conversion succeeded.</param>
         /// <returns><see langword="true"/> if <paramref name="displayName"/> was converted successfully; otherwise, <see langword="false"/>.</returns>
-        public static bool TryParse<TEnumeration>( string displayName, [MaybeNullWhen(false)] out TEnumeration enumeration)
+        public static bool TryParse<TEnumeration>(string displayName, [MaybeNullWhen(false)] out TEnumeration enumeration)
             where TEnumeration : EnumerationType
         {
             enumeration = FromDisplayName<TEnumeration>(displayName);
@@ -267,8 +267,9 @@ namespace Xpandables.Net.Enumerations
         public override string ToString() => DisplayName;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public static implicit operator string(EnumerationType enumeration)
-            => enumeration?.DisplayName ?? string.Empty;
+        public static implicit operator string(EnumerationType enumeration) => enumeration.DisplayName;
+
+        public static implicit operator int(EnumerationType enumerationType) => enumerationType.Value;
 
         public bool Equals(EnumerationType? x, EnumerationType? y) => x?.Equals(y) ?? false;
 

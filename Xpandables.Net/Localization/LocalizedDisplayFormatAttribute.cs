@@ -18,7 +18,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Xpandables.Net.Entities.Attributes
+namespace Xpandables.Net.Localization
 {
     /// <summary>
     /// Specifies how data fields are localized, displayed and formatted by ASP.NET Dynamic Data.
@@ -37,7 +37,8 @@ namespace Xpandables.Net.Entities.Attributes
         /// <summary>
         ///  Gets or sets the format string, which may be a resource key string.
         /// </summary>
-        public new string DataFormatString {
+        public new string DataFormatString
+        {
             get => _dataFormatString.Value;
             set => _dataFormatString.Value = value;
         }
