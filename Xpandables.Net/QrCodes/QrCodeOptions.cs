@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using System;
 
-using Xpandables.Net.Extensions;
 using Xpandables.Net.QrCodes;
 
 namespace Xpandables.Net.DependencyInjection

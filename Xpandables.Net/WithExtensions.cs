@@ -19,7 +19,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Xpandables.Net.Extensions
+namespace Xpandables.Net
 {
     /// <summary>
     /// Provides with extension method similar to the VB.Net key word <see lanwgord="With"/>..<see lanwgord="EndWith"/>.

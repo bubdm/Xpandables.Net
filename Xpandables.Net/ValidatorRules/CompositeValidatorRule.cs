@@ -21,7 +21,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Enumerables;
 
 namespace Xpandables.Net.ValidatorRules
 {

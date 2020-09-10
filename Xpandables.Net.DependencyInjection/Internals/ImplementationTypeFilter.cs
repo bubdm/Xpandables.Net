@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Xpandables.Net.DependencyInjection.Interfaces;
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Types;
 
 namespace Xpandables.Net.DependencyInjection.Internals
 {

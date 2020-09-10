@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -69,28 +70,6 @@ namespace Xpandables.Net.Asynchronous
         {
             _ = task ?? throw new ArgumentNullException(nameof(task));
             _taskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Executes an <see cref="IAsyncEnumerable{T}"/> in a try catch scope.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result, may be <see cref="IAsyncEnumerable{T}"/>.</typeparam>
-        /// <param name="func">The function to be executed in try catch.</param>
-        /// <param name="exceptionDispatchInfo">The handled exception.</param>
-        /// <returns>A result of <typeparamref name="TResult"/> type or null if exception.</returns>
-        [return: MaybeNull]
-        public static TResult TryCatchAsyncEnumerable<TResult>(this Func<TResult> func, out ExceptionDispatchInfo? exceptionDispatchInfo)
-        {
-            exceptionDispatchInfo = default;
-            try
-            {
-                return func();
-            }
-            catch (Exception exception)
-            {
-                exceptionDispatchInfo = ExceptionDispatchInfo.Capture(exception);
-                return default;
-            }
         }
     }
 }

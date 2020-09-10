@@ -23,8 +23,8 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Commands;
-using Xpandables.Net.Extensions;
 using Xpandables.Net.Queries;
+using Xpandables.Net.Types;
 
 namespace Xpandables.Net.Dispatchers
 {
@@ -133,25 +133,26 @@ namespace Xpandables.Net.Dispatchers
             var handler = _dispatcherHandlerProvider.GetHandler<IAsyncQueryHandler<TQuery, TResult>>()
                     ?? throw new NotImplementedException($"The matching query handler for {typeof(TQuery).Name} is missing.");
 
-            await foreach (var result in AsyncExtensions.TryCatchAsyncEnumerable(
-                () => handler.HandleAsync(query, cancellationToken).ConfigureAwait(false), out var exceptionDispatchInfo))
-            {
-                if (exceptionDispatchInfo is { })
-                    if (!(exceptionDispatchInfo.SourceException is ArgumentException)
-                    && !exceptionDispatchInfo.SourceException.GetType().Name.Contains("ValidationException")
-                    && !(exceptionDispatchInfo.SourceException is OperationCanceledException)
-                    && !(exceptionDispatchInfo.SourceException is InvalidOperationException))
-                    {
-                        throw new InvalidOperationException(
-                            $"{nameof(SendQueryResultAsync)} execution failed. See inner exception",
-                            exceptionDispatchInfo.SourceException);
-                    }
-                    else
-                    {
-                        exceptionDispatchInfo.Throw();
-                    }
+            var enumerableAsync = handler.HandleAsync(query, cancellationToken);
+            await using var enumeratorAsync = enumerableAsync.GetAsyncEnumerator(cancellationToken);
 
-                yield return result;
+            for (var resultExist = true; resultExist;)
+            {
+                try
+                {
+                    resultExist = await enumeratorAsync.MoveNextAsync();
+                }
+                catch (Exception exception) when (!(exception is ArgumentException)
+                                            && !exception.GetType().Name.Contains("ValidationException")
+                                            && !(exception is OperationCanceledException)
+                                            && !(exception is InvalidOperationException))
+                {
+                    throw new InvalidOperationException(
+                        $"{nameof(SendQueryResultAsync)} execution failed. See inner exception",
+                        exception);
+                }
+
+                yield return enumeratorAsync.Current;
             }
         }
 
@@ -213,25 +214,26 @@ namespace Xpandables.Net.Dispatchers
                 throw new NotImplementedException(
                     $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerBuilder<,>).Name} is registered using the AddXQueryHandlerWrapper method.");
 
-            await foreach (var result in AsyncExtensions.TryCatchAsyncEnumerable(
-                          () => handler.HandleAsync(query, cancellationToken).ConfigureAwait(false), out var exceptionDispatchInfo))
-            {
-                if (exceptionDispatchInfo is { })
-                    if (!(exceptionDispatchInfo.SourceException is ArgumentException)
-                    && !exceptionDispatchInfo.SourceException.GetType().Name.Contains("ValidationException")
-                    && !(exceptionDispatchInfo.SourceException is OperationCanceledException)
-                    && !(exceptionDispatchInfo.SourceException is InvalidOperationException))
-                    {
-                        throw new InvalidOperationException(
-                            $"{nameof(SendQueryResultAsync)} execution failed. See inner exception",
-                            exceptionDispatchInfo.SourceException);
-                    }
-                    else
-                    {
-                        exceptionDispatchInfo.Throw();
-                    }
+            var enumerableAsync = handler.HandleAsync(query, cancellationToken);
+            await using var enumeratorAsync = enumerableAsync.GetAsyncEnumerator(cancellationToken);
 
-                yield return result;
+            for (var resultExist = true; resultExist;)
+            {
+                try
+                {
+                    resultExist = await enumeratorAsync.MoveNextAsync();
+                }
+                catch (Exception exception) when (!(exception is ArgumentException)
+                                            && !exception.GetType().Name.Contains("ValidationException")
+                                            && !(exception is OperationCanceledException)
+                                            && !(exception is InvalidOperationException))
+                {
+                    throw new InvalidOperationException(
+                        $"{nameof(SendQueryAsync)} execution failed. See inner exception",
+                        exception);
+                }
+
+                yield return enumeratorAsync.Current;
             }
         }
 

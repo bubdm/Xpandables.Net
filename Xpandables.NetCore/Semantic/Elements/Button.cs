@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Xpandables.AspNetCore.Semantic.Enumerations;
 using Xpandables.NetCore.Semantic.Enumerations;
 using Xpandables.NetCore.Semantic.Enumerations.Buttons;
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Types;
 
 namespace Xpandables.NetCore.Semantic.Elements
 {

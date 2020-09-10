@@ -21,8 +21,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Extensions;
-
 namespace Xpandables.Net.Interception
 {
     /// <summary>

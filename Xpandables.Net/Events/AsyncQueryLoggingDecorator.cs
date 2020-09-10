@@ -22,7 +22,7 @@ using System.Text;
 using System.Threading;
 
 using Xpandables.Net.Asynchronous;
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Enumerables;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Events

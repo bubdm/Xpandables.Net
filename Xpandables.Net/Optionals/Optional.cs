@@ -22,7 +22,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Types;
 
 namespace Xpandables.Net.Optionals
 {

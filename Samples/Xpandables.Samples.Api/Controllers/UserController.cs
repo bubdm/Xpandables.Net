@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Xpandables.Net.Dispatchers;
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Enumerables;
 using Xpandables.Samples.Business.Contracts;
 
 namespace Xpandables.Samples.Api.Controllers

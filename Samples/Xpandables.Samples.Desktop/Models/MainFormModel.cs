@@ -1,7 +1,6 @@
 ﻿
 using System.Drawing;
 
-using Xpandables.Net.Entities;
 using Xpandables.Net.Notifications;
 
 namespace Xpandables.Samples.Desktop.Models

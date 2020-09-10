@@ -21,7 +21,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Types;
 
 namespace Xpandables.Net.DependencyInjection
 {

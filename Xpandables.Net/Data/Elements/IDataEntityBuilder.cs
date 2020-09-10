@@ -24,7 +24,7 @@ using Xpandables.Net.Correlation;
 using Xpandables.Net.Creators;
 using Xpandables.Net.Data.Attributes;
 using Xpandables.Net.Data.Options;
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Types;
 
 namespace Xpandables.Net.Data.Elements
 {

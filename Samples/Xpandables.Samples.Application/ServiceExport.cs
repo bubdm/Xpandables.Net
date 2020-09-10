@@ -5,8 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.DependencyInjection;
+using Xpandables.Net.Enumerables;
 using Xpandables.Net.Extensibility;
-using Xpandables.Net.Extensions;
 using Xpandables.Samples.Business.Interceptors;
 using Xpandables.Samples.Business.Services;
 
@@ -41,7 +41,7 @@ namespace Xpandables.Samples.Business
 
             // interceptor
             services.AddTransient<SignInRequestInterceptor>();
-            services.AddXInterceptor<SignInRequestInterceptor>(true, _ => true, assemblies);
+            //services.AddXInterceptor<SignInRequestInterceptor>(true, _ => true, assemblies);
 
         }
     }

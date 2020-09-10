@@ -6,9 +6,14 @@ using System.Threading;
 using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Cryptography;
+using Xpandables.Net.Data;
 using Xpandables.Net.Data.Attributes;
+using Xpandables.Net.Data.Connections;
 using Xpandables.Net.Data.Elements;
+using Xpandables.Net.Data.Options;
+using Xpandables.Net.Data.Providers;
 using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Enumerables;
 using Xpandables.Net.Http;
 using Xpandables.Net.Interception;
 using Xpandables.Net.Queries;
@@ -25,15 +30,15 @@ namespace Xpandables.Samples.Business.Handlers
         private readonly IHttpTokenEngine _tokenEngine;
         private readonly HttpIPService _httpIPService;
         private readonly IStringCryptography _stringCryptography;
-        //private readonly IDataBase _dataBase;
+        private readonly IDataBase _dataBase;
 
-        public SignInRequestHandler(IDataContext dataContext, IHttpTokenEngine tokenEngine, HttpIPService httpIPService, IStringCryptography stringCryptography)
+        public SignInRequestHandler(IDataBase dataBase, IDataContext dataContext, IHttpTokenEngine tokenEngine, HttpIPService httpIPService, IStringCryptography stringCryptography)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _tokenEngine = tokenEngine ?? throw new ArgumentNullException(nameof(tokenEngine));
             _httpIPService = httpIPService ?? throw new ArgumentNullException(nameof(httpIPService));
             _stringCryptography = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
-            //_dataBase = dataBase ?? throw new ArgumentNullException(nameof(dataBase));
+            _dataBase = dataBase ?? throw new ArgumentNullException(nameof(dataBase));
         }
 
         public async IAsyncEnumerable<SignInResponse> HandleAsync(SignInRequest query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -50,18 +55,21 @@ namespace Xpandables.Samples.Business.Handlers
             //    })
             //    .Build();
 
-            //var connection = new DataConnectionBuilder()
-            //    .AddConnectionString("Server=(localdb)\\mssqllocaldb;Database=XSamples;Trusted_Connection=True;MultipleActiveResultSets=true")
-            //    .AddPoolName("LocalDb")
-            //    .AddProviderType(DataProviderType.MSSQL)
-            //    .EnableIntegratedSecurity()
-            //    .Build();
+            var options = new DataOptionsBuilder()
+                .BuildDefault();
 
-            //var xusers = await _dataBase
-            //    .UseConnection(connection)
-            //    .ExecuteMappedQueriesAsync<XUser>(options, "Select * from users")
-            //    .ToListAsync()
-            //    .ConfigureAwait(false);
+            var connection = new DataConnectionBuilder()
+                .AddConnectionString("Server=(localdb)\\mssqllocaldb;Database=XSamples;Trusted_Connection=True;MultipleActiveResultSets=true")
+                .AddPoolName("LocalDb")
+                .AddProviderType(DataProviderType.MSSQL)
+                .EnableIntegratedSecurity()
+                .Build();
+
+            var xusers = await _dataBase
+                .UseConnection(connection)
+                .ExecuteMappedQueriesAsync<XUser>(options, "Select * fromusers")
+                .ToListAsync()
+                .ConfigureAwait(false);
 
             //var options1 = new DataOptionsBuilder()
             //    .Build();
@@ -88,8 +96,7 @@ namespace Xpandables.Samples.Business.Handlers
             var token = user.GetToken(_tokenEngine);
             var location = await _httpIPService.GetIPGeoLocationAsync().ConfigureAwait(false);
 
-            yield return new SignInResponse(
-                token, user.Email, user.Name.LastName, user.Name.FirstName, user.Gender, location);
+            yield return new SignInResponse(token, user.Email, location);
         }
 
 #pragma warning disable CA1034 // Nested types should not be visible
@@ -100,34 +107,6 @@ namespace Xpandables.Samples.Business.Handlers
 
             [DataNotMapped]
             public ValueEncrypted Password { get; set; }
-
-            public XName Name { get; set; }
-
-            [DataConverter(typeof(Tester), nameof(Tester.Converter))]
-            public string Gender { get; set; }
-        }
-
-#pragma warning disable CA1034 // Nested types should not be visible
-        public class Tester
-#pragma warning restore CA1034 // Nested types should not be visible
-        {
-            public static object Converter(IDataProperty property, object rowValue)
-            {
-                if (property.PropertyName == "Gender")
-                    return "Unknown";
-
-                return rowValue;
-            }
-        }
-
-#pragma warning disable CA1034 // Nested types should not be visible
-        public class XName
-#pragma warning restore CA1034 // Nested types should not be visible
-        {
-            [DataName("Name_LastName")]
-            public string LastName { get; set; }
-            [DataName("Name_FirstName")]
-            public string FirstName { get; set; }
         }
     }
 }

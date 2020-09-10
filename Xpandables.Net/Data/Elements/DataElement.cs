@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Types;
 
 namespace Xpandables.Net.Data.Elements
 {

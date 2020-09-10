@@ -23,7 +23,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Enumerables;
 using Xpandables.Net.Localization;
 
 namespace Xpandables.NetCore.Localization

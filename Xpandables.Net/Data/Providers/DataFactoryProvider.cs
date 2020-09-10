@@ -20,7 +20,7 @@ using System.Data.Common;
 using System.IO;
 using System.Reflection;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Types;
 
 namespace Xpandables.Net.Data.Providers
 {

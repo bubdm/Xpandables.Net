@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Enumerables;
 
 namespace Xpandables.Net.QrCodes
 {

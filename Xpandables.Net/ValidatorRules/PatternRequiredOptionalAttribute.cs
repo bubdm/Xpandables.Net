@@ -20,7 +20,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Enumerables;
 using Xpandables.Net.Strings;
 
 namespace Xpandables.Net.ValidatorRules

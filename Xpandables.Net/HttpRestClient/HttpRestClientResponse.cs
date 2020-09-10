@@ -20,8 +20,6 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
-using Xpandables.Net.Extensions;
-
 namespace Xpandables.Net.HttpRestClient
 {
     /// <summary>

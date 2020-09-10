@@ -137,35 +137,50 @@ namespace Xpandables.Net.Data
                 ?? throw new ArgumentException($"{typeof(TExecutableMapped).Name} not found !");
 
             var transaction = default(DbTransaction);
-            var context = default(DataExecutableContext);
+
+            DbConnection connectionSource;
+            DbCommand commandSource;
+            DbDataAdapter adapterSource;
+
             try
             {
-                using var connection = await BuildDbConnectionAsync(DbProviderFactory.Value, DataConnection).ConfigureAwait(false);
-                using var command = connection.CreateCommand();
-                using var adapter = DbProviderFactory.Value.CreateDataAdapter();
+                connectionSource = await BuildDbConnectionAsync(DbProviderFactory.Value, DataConnection).ConfigureAwait(false);
+                commandSource = connectionSource.CreateCommand();
+                adapterSource = DbProviderFactory.Value.CreateDataAdapter();
 
-                command.CommandType = commandType;
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync().ConfigureAwait(false);
-
-                if (options.IsTransactionEnabled)
-                {
-                    transaction = await connection.BeginTransactionAsync(options.IsolationLevel, options.CancellationToken).ConfigureAwait(false);
-                    command.Transaction = transaction;
-                }
-
-                var component = new DataExecutableContext.DataComponent(command, adapter);
-                var arguments = new DataExecutableContext.DataArgument(options, commandText, parameters);
-                context = new DataExecutableContext(arguments, component);
+                commandSource.CommandType = commandType;
+                if (connectionSource.State != ConnectionState.Open)
+                    await connectionSource.OpenAsync().ConfigureAwait(false);
             }
             catch (Exception exception)
             {
                 throw new InvalidOperationException("Exception encountered while attempting to execute command.", exception);
             }
 
-            await foreach (var result in AsyncExtensions.TryCatchAsyncEnumerable(() => executableMapped.ExecuteMappedAsync(context, options.CancellationToken).ConfigureAwait(false), out var exceptionDispatchInfo))
+            using var connection = connectionSource;
+            using var command = commandSource;
+            using var adapter = adapterSource;
+
+            if (options.IsTransactionEnabled)
             {
-                if (exceptionDispatchInfo is { })
+                transaction = await connection.BeginTransactionAsync(options.IsolationLevel, options.CancellationToken).ConfigureAwait(false);
+                command.Transaction = transaction;
+            }
+
+            var component = new DataExecutableContext.DataComponent(command, adapter);
+            var arguments = new DataExecutableContext.DataArgument(options, commandText, parameters);
+            var context = new DataExecutableContext(arguments, component);
+
+            var enumerableAsync = executableMapped.ExecuteMappedAsync(context, options.CancellationToken);
+            await using var enumeratorAsync = enumerableAsync.GetAsyncEnumerator(options.CancellationToken);
+
+            for (var resultExist = true; resultExist;)
+            {
+                try
+                {
+                    resultExist = await enumeratorAsync.MoveNextAsync();
+                }
+                catch (Exception exception)
                 {
                     if (options.IsTransactionEnabled)
                     {
@@ -177,7 +192,7 @@ namespace Xpandables.Net.Data
                         {
                             throw new InvalidOperationException(
                                 "Exception encountered while attempting to roll back the transaction.",
-                                new AggregateException(new[] { exceptionDispatchInfo.SourceException, sqlException }));
+                                new AggregateException(new[] { exception, sqlException }));
                         }
                         finally
                         {
@@ -186,10 +201,10 @@ namespace Xpandables.Net.Data
                         }
                     }
 
-                    throw new InvalidOperationException("Exception encountered while attempting to execute command.", exceptionDispatchInfo.SourceException);
+                    throw new InvalidOperationException("Exception encountered while attempting to execute command.", exception);
                 }
 
-                yield return result;
+                yield return enumeratorAsync.Current;
             }
         }
 

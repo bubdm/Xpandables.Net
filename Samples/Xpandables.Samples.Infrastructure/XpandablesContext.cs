@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Xpandables.Net.Entities;
 using Xpandables.Net.EntityFramework;
 using Xpandables.Net.Events;
 using Xpandables.Samples.Domain.Models;
@@ -25,11 +24,6 @@ namespace Xpandables.Samples.Infrastructure
                     pwd.Property(p => p.Value);
                     pwd.Property(p => p.Salt);
                 })
-                .OwnsOne(u => u.Name, n =>
-                  {
-                      n.Property(p => p.FirstName);
-                      n.Property(p => p.LastName);
-                  })
                 .OwnsOne(r => r.Picture, pic =>
                 {
                     pic.Property(p => p.Content);
@@ -38,8 +32,6 @@ namespace Xpandables.Samples.Infrastructure
                     pic.Property(p => p.Title);
                     pic.Property(p => p.Width);
                 });
-
-            modelBuilder.UseEnumerationValueConverterForType(EnumerationConverter<Gender>());
         }
 
         public DbSet<User> Users { get; set; }

@@ -20,8 +20,8 @@ namespace Xpandables.Samples.Infrastructure
             {
                 dataContext.Users.AddRange(new List<User>
                 {
-                    UserFactory.Create("email@email.com", "first", "last", "motdepasse", Gender.Woman, Picture.Default()),
-                    UserFactory.Create("mail@mail.com", "first1", "last1","passsword", Gender.Man, Picture.Default())
+                    UserFactory.Create("email@email.com", "motdepasse", Picture.Default()),
+                    UserFactory.Create("mail@mail.com", "passsword", Picture.Default())
                 });
 
                 await dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);

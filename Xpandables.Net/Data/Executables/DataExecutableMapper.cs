@@ -23,9 +23,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-using Xpandables.Net.Data.Elements;
 using Xpandables.Net.Data.Mappers;
-using Xpandables.Net.Extensions;
 
 namespace Xpandables.Net.Data.Executables
 {

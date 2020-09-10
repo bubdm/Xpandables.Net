@@ -25,7 +25,6 @@ using Xpandables.Net.Commands;
 using Xpandables.Net.Correlation;
 using Xpandables.Net.EntityFramework;
 using Xpandables.Net.Events;
-using Xpandables.Net.Extensions;
 using Xpandables.Net.Identities;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;

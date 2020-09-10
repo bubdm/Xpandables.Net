@@ -25,7 +25,9 @@ using Xpandables.Net.Data.Executables;
 using Xpandables.Net.Data.Mappers;
 using Xpandables.Net.Data.Providers;
 
+#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
+#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Service collection registration methods for <see cref="IDataBase"/>

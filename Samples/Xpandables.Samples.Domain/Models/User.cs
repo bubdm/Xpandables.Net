@@ -13,10 +13,10 @@ namespace Xpandables.Samples.Domain.Models
 {
     public static class UserFactory
     {
-        public static User Create(string email, string firstName, string lastName, string password, Gender gender, Picture picture)
+        public static User Create(string email, string password, Picture picture)
         {
             IStringCryptography stringCryptography = new StringCryptography(new StringGenerator());
-            var user = new User(email, Name.Create(firstName, lastName), gender, stringCryptography.Encrypt(password), picture);
+            var user = new User(email, stringCryptography.Encrypt(password), picture);
             user.Activate();
             return user;
         }
@@ -28,18 +28,16 @@ namespace Xpandables.Samples.Domain.Models
     {
         public User() { }
 
-        internal User(string email, Name name, Gender gender, ValueEncrypted password, Picture picture)
-            : this(email, gender)
+        internal User(string email, ValueEncrypted password, Picture picture)
+            : this(email)
         {
-            Name = name;
             Password = password;
             Picture = picture;
         }
 
-        internal User(string email, Gender gender)
+        internal User(string email)
         {
             Email = email;
-            Gender = gender;
 
         }
 
@@ -50,15 +48,9 @@ namespace Xpandables.Samples.Domain.Models
         public ValueEncrypted Password { get; private set; }
 
         [Required]
-        public Name Name { get; private set; }
-
-        [Required]
-        public Gender Gender { get; private set; }
-
-        [Required]
         public Picture Picture { get; private set; }
 
-        public IEnumerable<Claim> GetClaims() => ClaimsFactory.Create(Id, Email, Name.FirstName, Name.LastName, TimeSpan.FromMinutes(30).ToString(), Gender);
+        public IEnumerable<Claim> GetClaims() => ClaimsFactory.Create(Id, Email, TimeSpan.FromMinutes(30).ToString());
 
         public string GetToken(IHttpTokenEngine httpTokenEngine)
         {

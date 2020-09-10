@@ -21,8 +21,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.EntityFramework;
-using Xpandables.Net.Extensions;
 using Xpandables.Net.Queries;
+using Xpandables.Net.Types;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection

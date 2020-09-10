@@ -24,7 +24,7 @@ using System.Linq;
 using System.Reflection;
 
 using Xpandables.Net.DependencyInjection.Interfaces;
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Types;
 
 namespace Xpandables.Net.DependencyInjection.Internals
 {

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace Xpandables.Net.Extensions
+namespace Xpandables.Net.Types
 {
     /// <summary>
     /// Provides with method to access type name.

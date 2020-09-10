@@ -20,8 +20,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 
-using Xpandables.Net.Extensions;
 using Xpandables.Net.Http;
+using Xpandables.Net.Types;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection

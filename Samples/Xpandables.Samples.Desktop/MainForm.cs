@@ -38,10 +38,10 @@ namespace Xpandables.Samples.Desktop
             else
             {
                 Data.Token = loginForm.SignInResponse?.Token;
-                Data.FirstName = loginForm.SignInResponse?.FirstName;
-                Data.LastName = loginForm.SignInResponse?.LastName;
+                //Data.FirstName = loginForm.SignInResponse?.FirstName;
+                //Data.LastName = loginForm.SignInResponse?.LastName;
                 Data.Email = loginForm.SignInResponse?.Email;
-                Data.Gender = loginForm.SignInResponse.Gender;
+                //Data.Gender = loginForm.SignInResponse.Gender;
             }
         }
 

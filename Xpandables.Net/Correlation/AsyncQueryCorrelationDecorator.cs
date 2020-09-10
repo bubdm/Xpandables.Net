@@ -19,9 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Correlation
@@ -66,15 +64,22 @@ namespace Xpandables.Net.Correlation
         /// <returns>A result contains an collection of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await foreach (var result in AsyncExtensions.TryCatchAsyncEnumerable(() => _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false), out var exceptionDispatchInfo))
+            var enumerableAsync = _decoratee.HandleAsync(query, cancellationToken);
+            await using var enumeratorAsync = enumerableAsync.GetAsyncEnumerator(cancellationToken);
+
+            for (var resultExist = true; resultExist;)
             {
-                if (exceptionDispatchInfo is { })
+                try
                 {
-                    await _correlationContext.OnRollbackEventAsync(exceptionDispatchInfo.SourceException).ConfigureAwait(false);
-                    exceptionDispatchInfo.Throw();
+                    resultExist = await enumeratorAsync.MoveNextAsync();
+                }
+                catch (Exception exception)
+                {
+                    await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
+                    throw;
                 }
 
-                yield return result;
+                yield return enumeratorAsync.Current;
             }
         }
     }

@@ -22,7 +22,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Enumerables;
 
 using static System.FormattableString;
 

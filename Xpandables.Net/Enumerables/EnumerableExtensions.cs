@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Optionals;
 
-namespace Xpandables.Net.Extensions
+namespace Xpandables.Net.Enumerables
 {
     /// <summary>
     /// Provides with extension methods for <see cref="IEnumerable{T}"/>.

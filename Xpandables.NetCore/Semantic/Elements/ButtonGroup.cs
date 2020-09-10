@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Components;
 
 using Xpandables.AspNetCore.Semantic.Enumerations;
 using Xpandables.NetCore.Semantic.Enumerations;
-using Xpandables.Net.Extensions;
+using Xpandables.Net.Types;
 
 namespace Xpandables.NetCore.Semantic.Elements
 {

@@ -27,7 +27,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Extensions
+namespace Xpandables.Net.Types
 {
     /// <summary>
     /// Provides with methods to extend use of <see cref="Type"/>.
