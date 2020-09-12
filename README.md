@@ -53,14 +53,28 @@ public class LoginController : ControllerBase
         => Ok((await _dispatcher.SendQueryAsync(login, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false)).FirstOrDefault());
 }
 
+// startup class ...
+public class Startup
+{
+    ....
+    services.AddScoped<ITokenService, TokenService>();
+    services.AddXDataContext<ContextProvider>(); // ContextProvider implements IDataContextProvider
+    
+    var assemblies = new[] { typeof(LoginRequestHander).Assembly };
+
+    services.AddXDispatcher();
+    services.AddXCommandQueriesHandlers(options =>
+    {
+        options.UseValidatorDecorator(); // Queries and commands validation decorator
+    }, assemblies);    
+    
+    ...
+}
+
 [HttpRestClient(Path = "api/login", Method = "Post", IsSecured = false)]
 public class LoginRequest : QueryExpression<User>, IAsyncQuery<LoginResponse>, IValidationDecorator
 {
-    public Login(string name, string password)
-    {
-        Name = phone;
-        Password = password;
-    }
+    public Login(string name, string password) => (Name, Password) = (name, password);
     
     protected override Expression<Func<User, bool>> BuildExpression() => user => user.Name == Name;
     
