@@ -21,18 +21,60 @@ Feel free to fork this project, make your own changes and create a pull request.
 - [CorrelationCollection{TKey, TValue}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Correlation/CorrelationCollection.cs) Provides a collection of objects that need to be shared across asynchronous control flows. This collection implements "IAsyncEnumerable{KeyValuePair{TKey, TValue}}".
 - [IDataBase](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Data/IDataBase.cs) Provides with methods to execute command against a database using an implementation of [IDataExecutable{TResult}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Data/Executables/IDataExecutable.cs).
 - [IDispatcher](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Dispatchers/IDispatcher.cs) Defines a set of methods to automatically handle "ICommand", "IAsyncCommand", "IAsyncQuery{TResult} and "IQuery{TResult}" using the matching implementation of "ICommandHandler{TCommand}", "IQueryHandler{TQuery, TResult}", "IAsyncQueryHandler{TQuery, TResult}" or/and "IAsyncCommandHandler{TCommand}".
-    
-Use of [IHttpRestClientHandler](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientHandler.cs) Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client. The queries and commands should implement one of the following interfaces : "IStringRequest", "IStreamRequest", "IByteArrayRequest", "IFormUrlEncodedRequest","IMultipartRequest", "IQueryStringRequest"... and decorated with the [HtppRestClientAttribute](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/HttpRestClientAttribute.cs) or implement the [IHttpRestClientAttributeProvider](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientAttributeProvider.cs).
+- [IDispatcherHandlerProvider](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Dispatchers/IDispatcherHandlerProvider.cs) Defines set of methods to retrieve handlers of specific type.
+- [IDataContext](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/EntityFramework/IDataContext.cs) Allows an application author to manage domain objects using EntityFrameworkCore.
+- [IQueryExpression{T,R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Expressions/IQueryExpression.cs) Defines a methods that returns an "Expression{TDelegate}" that can be used to query the "TSource" instance.
+- [IHttpRestClient](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientHandler.cs)  Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.
+- [IInterceptor](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Interception/IInterceptor.cs) Base interface for types and instances for interception.
+- [Optional{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Optionals/Optional.cs) Describes an object that can contain a value or not of a specific type.
+- [IAsyncQuery{R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Queries/IAsyncQuery.cs) and [IQuery{R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Queries/IQuery.cs) are used as marker for queries when using the command pattern.
+- [IAsyncQueryHandler{T,R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Queries/IAsyncQueryHandler.cs) and [IQueryHandler{T,R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Queries/IQueryHandler.cs) Defines a generic method that a class implements to handle a type-specific query and returns a type-specific result.
+- [IValidatorRule{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ValidatorRules/IValidatorRule.cs) Defines a method contract used to validate an argument.
+- [IVisitorRule](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/VisitorRules/IVisitorRule.cs) allows you to add new behaviors to an existing object without changing the object structure.
+- [IVisitable](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/VisitorRules/IVisitable.cs)  Defines an Accept operation that takes a visitor as an argument.
+
+# Some uses
+
+## [IHttpRestClientHandler](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientHandler.cs)
+Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client. The queries and commands should implement one of the following interfaces : "IStringRequest", "IStreamRequest", "IByteArrayRequest", "IFormUrlEncodedRequest","IMultipartRequest", "IQueryStringRequest"... and decorated with the [HtppRestClientAttribute](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/HttpRestClientAttribute.cs) or implement the [IHttpRestClientAttributeProvider](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientAttributeProvider.cs).
 
 ```C#
+// The api signature
+[Route("api/[controller]")]
+[ApiController]
+public class LoginController : ControllerBase
+{
+    private readonly IDispatcher _dispatcher;
+    public LoginController(IDispatcher dispatcher) => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+
+    [HttpPost, AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponse))]
+    public async Task<IActionResult> PostAsync([FromBody] LoginRequest login, CancellationToken cancellationToken = default)
+        => Ok((await _dispatcher.SendQueryAsync(login, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false)).FirstOrDefault());
+}
+
+// startup class ...
+public class Startup
+{
+    ....
+    services.AddScoped<ITokenService, TokenService>();
+    services.AddXDataContext<ContextProvider>(); // ContextProvider implements IDataContextProvider
+    
+    var assemblies = new[] { typeof(LoginRequestHander).Assembly };
+
+    services.AddXDispatcher();
+    services.AddXCommandQueriesHandlers(options =>
+    {
+        options.UseValidatorDecorator(); // Queries and commands validation decorator
+    }, assemblies);    
+    
+    ...
+}
+
 [HttpRestClient(Path = "api/login", Method = "Post", IsSecured = false)]
 public class LoginRequest : QueryExpression<User>, IAsyncQuery<LoginResponse>, IValidationDecorator
 {
-    public Login(string name, string password)
-    {
-        Name = phone;
-        Password = password;
-    }
+    public Login(string name, string password) => (Name, Password) = (name, password);
     
     protected override Expression<Func<User, bool>> BuildExpression() => user => user.Name == Name;
     
@@ -47,21 +89,6 @@ public sealed class LoginResponse
     public LoginResponse() { }
     public LoginResponse(string token) => Token = token;
     public string Token {get; set; }
-}
-
-// The api signature
-[Route("api/[controller]")]
-[ApiController]
-public class LoginController : ControllerBase
-{
-    private readonly IDispatcher _dispatcher;
-    public LoginController(IDispatcher dispatcher)
-        => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
-
-    [HttpPost, AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponse))]
-    public async Task<IActionResult> PostAsync([FromBody] LoginRequest login, CancellationToken cancellationToken = default)
-        => Ok((await _dispatcher.SendQueryAsync(login, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false)).FirstOrDefault());
 }
 
 // The LoginRequest handler...
@@ -102,7 +129,8 @@ public async Task LoginTestMethodAsync()
 
 ```
 
-Use of [NotifyPropertyChanged{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Notifications/NotifyPropertyChanged.cs) Implementation for "INotifyPropertyChanged".
+## [NotifyPropertyChanged{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Notifications/NotifyPropertyChanged.cs)
+Implementation for "INotifyPropertyChanged".
 
 ```C#
 public class User : NotifyPropertyChanged<User>
@@ -113,8 +141,8 @@ public class User : NotifyPropertyChanged<User>
     private string _lastName;
     public string LastName { get => _lastName; set => SetProperty(ref _lastName, value); }
     
-    [NotifyPropertyOn(nameof(FirstName)]
-    [NotifyPropertyOn(nameof(LastName)]
+    [NotifyPropertyChangedFor(nameof(FirstName)]
+    [NotifyPropertyChangedFor(nameof(LastName)]
     public string FullName => $"{FirstName} {LastName}";
     ...
 }
@@ -122,8 +150,8 @@ public class User : NotifyPropertyChanged<User>
 // 'FullName' : changes on 'FirstName' and 'LastName' are notified to 'FullName'.
 ```
 
-
-Use of [EnumerationType](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Enumerations/EnumerationType.cs), a helper class to implement custom enumeration.
+## [EnumerationType](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Enumerations/EnumerationType.cs)
+A helper class to implement custom enumeration.
 
 ```C#
 public abstract class EnumerationType : IEqualityComparer<EnumerationType>, IEquatable<EnumerationType>,
@@ -159,8 +187,7 @@ public sealed class Gender : EnumerationType
 
 ```
 
-Use of [Optional{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Optionals/Optional.cs)
-
+## [Optional{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Optionals/Optional.cs)
 There is a specific implementation of F# Options you can find in **Optional<T>** with asynchronous behavior.
 
 Without option :
