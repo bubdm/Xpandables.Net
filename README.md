@@ -35,9 +35,24 @@ Feel free to fork this project, make your own changes and create a pull request.
 
 ## Some uses
 
+# [IHttpRestClientHandler](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientHandler.cs)
 Use of [IHttpRestClientHandler](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientHandler.cs) Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client. The queries and commands should implement one of the following interfaces : "IStringRequest", "IStreamRequest", "IByteArrayRequest", "IFormUrlEncodedRequest","IMultipartRequest", "IQueryStringRequest"... and decorated with the [HtppRestClientAttribute](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/HttpRestClientAttribute.cs) or implement the [IHttpRestClientAttributeProvider](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientAttributeProvider.cs).
 
 ```C#
+// The api signature
+[Route("api/[controller]")]
+[ApiController]
+public class LoginController : ControllerBase
+{
+    private readonly IDispatcher _dispatcher;
+    public LoginController(IDispatcher dispatcher) => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+
+    [HttpPost, AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponse))]
+    public async Task<IActionResult> PostAsync([FromBody] LoginRequest login, CancellationToken cancellationToken = default)
+        => Ok((await _dispatcher.SendQueryAsync(login, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false)).FirstOrDefault());
+}
+
 [HttpRestClient(Path = "api/login", Method = "Post", IsSecured = false)]
 public class LoginRequest : QueryExpression<User>, IAsyncQuery<LoginResponse>, IValidationDecorator
 {
@@ -60,21 +75,6 @@ public sealed class LoginResponse
     public LoginResponse() { }
     public LoginResponse(string token) => Token = token;
     public string Token {get; set; }
-}
-
-// The api signature
-[Route("api/[controller]")]
-[ApiController]
-public class LoginController : ControllerBase
-{
-    private readonly IDispatcher _dispatcher;
-    public LoginController(IDispatcher dispatcher)
-        => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
-
-    [HttpPost, AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponse))]
-    public async Task<IActionResult> PostAsync([FromBody] LoginRequest login, CancellationToken cancellationToken = default)
-        => Ok((await _dispatcher.SendQueryAsync(login, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false)).FirstOrDefault());
 }
 
 // The LoginRequest handler...
