@@ -33,7 +33,7 @@ namespace Xpandables.Net.Http
         /// <param name="claims">collection of claims to be used to build token string.</param>
         /// <returns>An instance of string token if OK or an empty string.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="claims"/> is null.</exception>
-        string BuildToken(IEnumerable<Claim> claims);
+        string WriteToken(IEnumerable<Claim> claims);
 
         /// <summary>
         /// Uses the source object to build a string token.
@@ -41,7 +41,7 @@ namespace Xpandables.Net.Http
         /// <param name="source">The source to be used.</param>
         /// <returns>An instance of string token if OK or an empty string.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public virtual string BuildToken(object source) => string.Empty;
+        public virtual string WriteToken(object source) => string.Empty;
 
         /// <summary>
         /// Returns the collection of claims from the specified token.
@@ -49,6 +49,6 @@ namespace Xpandables.Net.Http
         /// <param name="token">The token string.</param>
         /// <returns>An collection of claims if OK or an empty type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
-        IEnumerable<Claim> GetClaims(string token);
+        IEnumerable<Claim> ReadToken(string token);
     }
 }

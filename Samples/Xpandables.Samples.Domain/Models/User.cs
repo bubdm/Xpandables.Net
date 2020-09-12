@@ -55,7 +55,7 @@ namespace Xpandables.Samples.Domain.Models
         public string GetToken(IHttpTokenEngine httpTokenEngine)
         {
             _ = httpTokenEngine ?? throw new ArgumentNullException(nameof(httpTokenEngine));
-            return httpTokenEngine.BuildToken(GetClaims());
+            return httpTokenEngine.WriteToken(GetClaims());
         }
     }
 }

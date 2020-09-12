@@ -112,7 +112,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IServiceCollection AddXCommandHandlers(this IServiceCollection services, params Assembly[] assemblies)
+        public static IServiceCollection AddXCommandHandlers(this IServiceCollection services, Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
@@ -136,11 +136,11 @@ namespace Xpandables.Net.DependencyInjection
         /// <see cref="IAsyncQueryHandler{TQuery, TResult}"/> and <see cref="IQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <param name="configureOptions">A delegate to configure the <see cref="CommandQueryOptions"/>.</param>
-        /// <param name="assemblies">The assemblies to scan for implemented types.</param>///
+        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <param name="configureOptions">A delegate to configure the <see cref="CommandQueryOptions"/>.</param>///
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXCommandQueriesHandlers(
-            this IServiceCollection services, Action<CommandQueryOptions> configureOptions, params Assembly[] assemblies)
+            this IServiceCollection services, Assembly[] assemblies, Action<CommandQueryOptions> configureOptions)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));

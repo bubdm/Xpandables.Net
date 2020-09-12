@@ -21,13 +21,13 @@ namespace Xpandables.Samples.Business
 
             //services.Configure<DataConnection>(configuration.GetSection(nameof(DataConnection)));
 
-            services.AddXCommandQueriesHandlers(options =>
+            services.AddXCommandQueriesHandlers(assemblies, options =>
             {
                 options.UsePersistenceDecorator();
                 options.UseValidatorDecorator();
                 options.UseIdentityDecorator<IdentityDataProvider>();
                 options.UseLoggingDecorator<HttpLogginService>();
-            }, assemblies);
+            });
 
             services.AddXHttpTokenContainer();
             services.AddXHttpTokenEngine<HttpTokenEngine>();

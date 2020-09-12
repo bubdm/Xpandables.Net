@@ -24,7 +24,7 @@ namespace Xpandables.Net.Notifications
     /// when the target specified property by <see cref="Name"/> has changed.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class NotifyPropertyOnAttribute : Attribute
+    public sealed class NotifyPropertyChangedForAttribute : Attribute
     {
         /// <summary>
         /// Specifies that the decorated property will be notified when the target specified by name has changed.
@@ -32,7 +32,7 @@ namespace Xpandables.Net.Notifications
         /// </summary>
         /// <param name="name">The name of the target property which changes are notified to the decorated property.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="name"/> is null.</exception>
-        public NotifyPropertyOnAttribute(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
+        public NotifyPropertyChangedForAttribute(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
 
         /// <summary>
         /// Gets the name of the target property which changes are notified to the decorated property.

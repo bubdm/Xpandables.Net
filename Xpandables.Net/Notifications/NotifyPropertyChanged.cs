@@ -27,7 +27,7 @@ namespace Xpandables.Net.Notifications
 {
     /// <summary>
     /// Implementation for <see cref="INotifyPropertyChanged"/>.
-    /// You can combine the use with <see cref="NotifyPropertyOnAttribute"/> to propagate notification.
+    /// You can combine the use with <see cref="NotifyPropertyChangedForAttribute"/> to propagate notification.
     /// <para>This is an <see langword="abstract"/> and serializable class.</para>
     /// </summary>
     /// <typeparam name="T">Type of the derived class.</typeparam>
@@ -173,13 +173,13 @@ namespace Xpandables.Net.Notifications
             var dependencies = new Dictionary<string, List<string>>();
 
             var properties = (from p in typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                              where p.GetCustomAttributes<NotifyPropertyOnAttribute>(true).Any()
+                              where p.GetCustomAttributes<NotifyPropertyChangedForAttribute>(true).Any()
                               select p)
                             .ToArray();
 
             foreach (var property in properties)
             {
-                var attributes = (from a in property.GetCustomAttributes<NotifyPropertyOnAttribute>(true)
+                var attributes = (from a in property.GetCustomAttributes<NotifyPropertyChangedForAttribute>(true)
                                   select a.Name)
                                 .ToArray();
 

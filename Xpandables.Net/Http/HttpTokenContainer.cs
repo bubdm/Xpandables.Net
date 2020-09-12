@@ -51,7 +51,7 @@ namespace Xpandables.Net.Http
         /// <param name="claims">collection of claims to be used to build token string.</param>
         /// <returns>An instance of string token if OK or an empty string.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="claims" /> is null.</exception>
-        public string BuildToken(IEnumerable<Claim> claims) => _httpTokenEngine.BuildToken(claims);
+        public string WriteToken(IEnumerable<Claim> claims) => _httpTokenEngine.WriteToken(claims);
 
         /// <summary>
         /// Uses the source object to build a string token.
@@ -59,7 +59,7 @@ namespace Xpandables.Net.Http
         /// <param name="source">The source to be used.</param>
         /// <returns>An instance of string token if OK or an empty string.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source" /> is null.</exception>
-        public string BuildToken(object source) => _httpTokenEngine.BuildToken(source);
+        public string WriteToken(object source) => _httpTokenEngine.WriteToken(source);
 
         /// <summary>
         /// Returns the collection of claims from the specified token.
@@ -67,7 +67,7 @@ namespace Xpandables.Net.Http
         /// <param name="token">The token string.</param>
         /// <returns>An collection of claims if OK or an empty type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="token" /> is null.</exception>
-        public IEnumerable<Claim> GetClaims(string token) => _httpTokenEngine.GetClaims(token);
+        public IEnumerable<Claim> ReadToken(string token) => _httpTokenEngine.ReadToken(token);
 
         /// <summary>
         /// Returns the current token value from the current HTTP request with the specified key.

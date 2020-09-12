@@ -15,7 +15,7 @@ namespace Xpandables.Samples.Business.Services
         public object GetIdentity()
         {
             var token = _securedTokenContainer.GetToken("Authorization") ?? throw new InvalidOperationException("Expected token not found");
-            var claims = _securedTokenContainer.GetClaims(token);
+            var claims = _securedTokenContainer.ReadToken(token);
 
             return UserFactory.ToClaims(claims);
         }

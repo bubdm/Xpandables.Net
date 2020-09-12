@@ -59,7 +59,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IServiceCollection AddXValidatorRules(this IServiceCollection services, params Assembly[] assemblies)
+        public static IServiceCollection AddXValidatorRules(this IServiceCollection services, Assembly[] assemblies)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));

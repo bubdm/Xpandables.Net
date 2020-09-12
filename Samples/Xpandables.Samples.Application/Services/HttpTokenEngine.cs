@@ -13,7 +13,7 @@ namespace Xpandables.Samples.Business.Services
 {
     public sealed class HttpTokenEngine : IHttpTokenEngine
     {
-        public string BuildToken(IEnumerable<Claim> claims)
+        public string WriteToken(IEnumerable<Claim> claims)
         {
             if (claims is null) throw new ArgumentNullException(nameof(claims));
 
@@ -35,7 +35,7 @@ namespace Xpandables.Samples.Business.Services
             return $"Bearer {token}";
         }
 
-        public IEnumerable<Claim> GetClaims(string source)
+        public IEnumerable<Claim> ReadToken(string source)
         {
             if (source.StartsWith("Bearer", StringComparison.InvariantCultureIgnoreCase))
                 source = source.Replace("Bearer", string.Empty).TrimStart().TrimEnd();
