@@ -58,58 +58,6 @@ namespace Xpandables.Net.Enumerables
         }
 
         /// <summary>
-        /// Asynchronously returns a <see cref="List{T}"/> from <see cref="IAsyncEnumerable{T}"/>.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the object.</typeparam>
-        /// <param name="source">The source of the sequence.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A <see cref="List{T}"/> from the asynchronous collection.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public static async ValueTask<List<TSource>> ToListAsync<TSource>(this IAsyncEnumerable<TSource> source, CancellationToken cancellationToken = default)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            var result = new List<TSource>();
-
-            await foreach (var item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
-                result.Add(item);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Converts an <see cref="IEnumerable{T}"/> to a read only collection.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the object.</typeparam>
-        /// <param name="source">An instance of the collection to be converted.</param>
-        /// <returns>A new <see cref="ReadOnlyCollection{T}"/></returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public static IReadOnlyCollection<TSource> ToReadOnlyCollection<TSource>(this IEnumerable<TSource> source)
-            => source switch
-            {
-                null => throw new ArgumentNullException(nameof(source)),
-                _ => new ReadOnlyCollectionBuilder<TSource>(source).ToReadOnlyCollection()
-            };
-
-        /// <summary>
-        /// Returns the elements of the specified sequence or the value from the producer in a singleton
-        /// collection if the sequence is empty.
-        /// </summary>
-        /// <typeparam name="TSource">Type of the element in the sequence.</typeparam>
-        /// <param name="source">The source of the sequence.</param>
-        /// <param name="sourceProducer">The delegate that produces the value.</param>
-        /// <returns>A collection object that contains the default value for the TSource type if source is empty;
-        /// otherwise, sourceProducer value.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="sourceProducer"/> is null.</exception>
-        public static IEnumerable<TSource> DefaultIfEmpty<TSource>(this IEnumerable<TSource> source, TSource sourceProducer)
-            => (source, sourceProducer) switch
-            {
-                (_, null) => throw new ArgumentNullException(nameof(sourceProducer)),
-                (null, _) => throw new ArgumentNullException(nameof(source)),
-                ({ }, { }) => source.DefaultIfEmpty(sourceProducer)
-            };
-
-        /// <summary>
         /// Enumerates the collection source and performs the specified action on each element.
         /// </summary>
         /// <typeparam name="TSource">Type of the element in the sequence.</typeparam>
@@ -154,6 +102,39 @@ namespace Xpandables.Net.Enumerables
         }
 
         /// <summary>
+        /// Asynchronously returns a <see cref="List{T}"/> from <see cref="IAsyncEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the object.</typeparam>
+        /// <param name="source">The source of the sequence.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="List{T}"/> from the asynchronous collection.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public static async ValueTask<List<TSource>> ToListAsync<TSource>(this IAsyncEnumerable<TSource> source, CancellationToken cancellationToken = default)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            var result = new List<TSource>();
+
+            await foreach (var item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+                result.Add(item);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Converts an <see cref="IEnumerable{T}"/> to a read only collection.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the object.</typeparam>
+        /// <param name="source">An instance of the collection to be converted.</param>
+        /// <returns>A new <see cref="ReadOnlyCollection{T}"/></returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public static IReadOnlyCollection<TSource> ToReadOnlyCollection<TSource>(this IEnumerable<TSource> source)
+            => source switch
+            {
+                null => throw new ArgumentNullException(nameof(source)),
+                _ => new ReadOnlyCollectionBuilder<TSource>(source).ToReadOnlyCollection()
+            };
+
+        /// <summary>
         /// Returns the first element of the specified sequence or an empty optional if the sequence contains no elements.
         /// </summary>
         /// <typeparam name="TSource">The type of the element in the sequence.</typeparam>
@@ -166,6 +147,28 @@ namespace Xpandables.Net.Enumerables
                 null => throw new ArgumentNullException(nameof(source)),
                 _ => source.FirstOrDefault() is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
             };
+
+        /// <summary>
+        /// Returns the first element of the specified sequence or an empty optional if the sequence contains no elements.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the element in the sequence.</typeparam>
+        /// <param name="source">the source of the sequence.</param>
+        /// <returns>The first element from the sequence or an empty result if the sequence contains no elements.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public static async Task<Optional<TSource>> FirstOrEmptyAsync<TSource>(this IAsyncEnumerable<TSource> source)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            var index = 0;
+            var response = Optional<TSource>.Empty();
+            await foreach (var item in source.ConfigureAwait(false))
+            {
+                response = item;
+                index++;
+                if (index > 0) break;
+            }
+
+            return response;
+        }
 
         /// <summary>
         /// Returns the first element of the sequence that satisfies the predicate or an empty optional if no such element is found.
@@ -183,6 +186,36 @@ namespace Xpandables.Net.Enumerables
                  (null, _) => throw new ArgumentNullException(nameof(source)),
                  ({ }, { }) => source.FirstOrDefault(predicate) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
              };
+
+        /// <summary>
+        /// Returns the first element of the sequence that satisfies the predicate or an empty optional if no such element is found.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the element in the sequence.</typeparam>
+        /// <param name="source">the source of the sequence.</param>
+        /// <param name="predicate">A function to test each element to a condition.</param>
+        /// <returns>The first element that satisfies the predicate or an empty optional.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        public static async Task<Optional<TSource>> FirstOrEmptyAsync<TSource>(this IAsyncEnumerable<TSource> source, Func<TSource, bool> predicate)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            _ = predicate ?? throw new ArgumentNullException(nameof(predicate));
+
+            var index = 0;
+            var response = Optional<TSource>.Empty();
+            await foreach (var item in source.ConfigureAwait(false))
+            {
+                if (predicate(item))
+                {
+                    response = item;
+                    index++;
+                }
+
+                if (index > 0) break;
+            }
+
+            return response;
+        }
 
         /// <summary>
         /// Returns the last elements of a sequence or an empty optional if the sequence contains no elements.
