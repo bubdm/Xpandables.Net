@@ -129,7 +129,8 @@ public async Task LoginTestMethodAsync()
 
 ```
 
-Use of [NotifyPropertyChanged{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Notifications/NotifyPropertyChanged.cs) Implementation for "INotifyPropertyChanged".
+## [NotifyPropertyChanged{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Notifications/NotifyPropertyChanged.cs)
+Implementation for "INotifyPropertyChanged".
 
 ```C#
 public class User : NotifyPropertyChanged<User>
@@ -149,8 +150,8 @@ public class User : NotifyPropertyChanged<User>
 // 'FullName' : changes on 'FirstName' and 'LastName' are notified to 'FullName'.
 ```
 
-
-Use of [EnumerationType](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Enumerations/EnumerationType.cs), a helper class to implement custom enumeration.
+## [EnumerationType](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Enumerations/EnumerationType.cs)
+A helper class to implement custom enumeration.
 
 ```C#
 public abstract class EnumerationType : IEqualityComparer<EnumerationType>, IEquatable<EnumerationType>,
@@ -186,8 +187,7 @@ public sealed class Gender : EnumerationType
 
 ```
 
-Use of [Optional{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Optionals/Optional.cs)
-
+## [Optional{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Optionals/Optional.cs)
 There is a specific implementation of F# Options you can find in **Optional<T>** with asynchronous behavior.
 
 Without option :
