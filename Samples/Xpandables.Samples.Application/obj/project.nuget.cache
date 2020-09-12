@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "K5qXCF9K/izNeVr2o+dxU8jKxoR5XLyBQeH2xD9c3jX4fbmdZWMgV5t8Tm+lOZVhnJ+Mk65Bf//cI1ja4PkMYA==",
+  "dgSpecHash": "bHONEXEeipNeEh1ISV4+KDms1ZgEhmsNM2PjdqkPs34/NoACRX7BkOXpH8yqfc7Rhb6QsmxzlmxZDVYJrBRLSw==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Application\\Xpandables.Samples.Business.csproj",
   "expectedPackageFiles": [
@@ -49,10 +49,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\4.7.1\\system.text.encodings.web.4.7.1.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.text.json\\4.7.2\\system.text.json.4.7.2.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\3.1.6\\xpandables.net.3.1.6.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.dependencyinjection\\3.1.6\\xpandables.net.dependencyinjection.3.1.6.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\3.1.6\\xpandables.net.entityframework.3.1.6.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512"
   ],
   "logs": []
 }

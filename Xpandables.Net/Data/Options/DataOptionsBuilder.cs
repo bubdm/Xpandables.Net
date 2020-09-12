@@ -69,7 +69,7 @@ namespace Xpandables.Net.Data.Options
                 _onException);
 
         /// <summary>
-        /// Returns a the default instance of <see cref="DataOptions"/>.
+        /// Returns a the default instance of <see cref="DataOptions"/> with the specified connection.
         /// </summary>
         /// <param name="connection">The connection to be used.</param>
         public DataOptions BuildDefault(IDataConnection connection)

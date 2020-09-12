@@ -85,15 +85,6 @@
             <param name="task">The operation to be synchronously executed.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="task"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.TryCatchAsyncEnumerable``1(System.Func{``0},System.Runtime.ExceptionServices.ExceptionDispatchInfo@)">
-            <summary>
-            Executes an <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/> in a try catch scope.
-            </summary>
-            <typeparam name="TResult">The type of the result, may be <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.</typeparam>
-            <param name="func">The function to be executed in try catch.</param>
-            <param name="exceptionDispatchInfo">The handled exception.</param>
-            <returns>A result of <typeparamref name="TResult"/> type or null if exception.</returns>
-        </member>
         <member name="T:Xpandables.Net.Commands.AsyncCommandHandlerBuilder`1">
             <summary>
             This helper class allows the application author to implement the <see cref="T:Xpandables.Net.Commands.IAsyncCommandHandler`1"/>
@@ -732,6 +723,13 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="salt"/> is null.</exception>
         </member>
+        <member name="M:Xpandables.Net.Cryptography.ValueEncrypted.#ctor(Xpandables.Net.Cryptography.ValueEncrypted)">
+            <summary>
+            Makes a copy of the value encrypted source.
+            </summary>
+            <param name="source">The encrypted value to be copied.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        </member>
         <member name="M:Xpandables.Net.Cryptography.ValueEncrypted.Deconstruct(System.String@,System.String@,System.String@)">
             <summary>
             Provides with deconstruction for <see cref="T:Xpandables.Net.Cryptography.ValueEncrypted"/>.
@@ -920,6 +918,7 @@
         <member name="T:Xpandables.Net.Data.Attributes.DataKeysAttribute">
             <summary>
             Denotes one or more properties that uniquely identify the decorated class.
+            The properties will be used to create the class identity.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Data.Attributes.DataKeysAttribute.#ctor(System.String[])">
@@ -936,7 +935,8 @@
         </member>
         <member name="T:Xpandables.Net.Data.Attributes.DataNameAttribute">
             <summary>
-            Defines the name of the property/field on the target data source.
+            Specifies the name of the bound field on the target data source for the decorated property.
+            It's useful when the decorated property/field name does not match the data source field.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Data.Attributes.DataNameAttribute.#ctor(System.String)">
@@ -953,12 +953,15 @@
         </member>
         <member name="T:Xpandables.Net.Data.Attributes.DataNotMappedAttribute">
             <summary>
-            Defines that the decorated property should not be mapped with the target data source.
+            Specifies that the decorated property should not be mapped with the target data source.
+            Note that the default behavior of the process is to map all properties.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Data.Attributes.DataPrefixAttribute">
             <summary>
-            Defines the prefix of the property/field on the target data source.
+            Specifies the prefix of the bound field on the target data source for the decorated property/field or class.
+            When applied to a class, all the bound data source field names will be prefixed.
+            Note that when applied on the property/field, this attribute takes priority over the attribute class.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Data.Attributes.DataPrefixAttribute.#ctor(System.String)">
@@ -1045,6 +1048,11 @@
             Allows application author to build <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/>.
             </summary>
         </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionBuilder.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a data connection.
+            </summary>
+        </member>
         <member name="M:Xpandables.Net.Data.Connections.DataConnectionBuilder.Build">
             <summary>
             Returns a new <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/> using registered information.
@@ -1091,6 +1099,62 @@
             <summary>
             Defines the use of integrated security. The connection string must contains the "Integrated Security=true" expression.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Data.Connections.DataConnectionContext">
+            <summary>
+            Contains information of <see cref="P:Xpandables.Net.Data.Connections.DataConnectionContext.DbConnection"/> and <see cref="P:Xpandables.Net.Data.Connections.DataConnectionContext.DbProviderFactory"/>
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContext.#ctor(System.Data.Common.DbConnection,System.Data.Common.DbProviderFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Connections.DataConnectionContext"/>.
+            </summary>
+            <param name="dbConnection">The connection to the data base.</param>
+            <param name="dbProviderFactory">The data base provider factory.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dbConnection"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dbProviderFactory"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContext.#ctor(Xpandables.Net.Data.Connections.DataConnectionContext)">
+            <summary>
+            Makes a copy of the current instance.
+            </summary>
+            <param name="source">The data connection to be copied.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionContext.DbConnection">
+            <summary>
+            Gets the connection to the data base.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionContext.DbProviderFactory">
+            <summary>
+            Gets the data base provider factory.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContext.GetEqualityComponents">
+            <summary>
+            Provides the list of components that comprise that class.
+            </summary>
+            <returns>An enumerable components of the derived class.</returns>
+        </member>
+        <member name="T:Xpandables.Net.Data.Connections.DataConnectionContextProvider">
+            <summary>
+            Provides with the <see cref="T:System.Data.Common.DbConnection"/> from the <see cref="T:System.Data.Common.DbProviderFactory"/> and the <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContextProvider.#ctor(Xpandables.Net.Data.Providers.IDataFactoryProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Connections.DataConnectionContextProvider"/>.
+            </summary>
+            <param name="dataFactoryProvider">The data factory provider.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataFactoryProvider"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContextProvider.GetDataConnectionContextAsync(Xpandables.Net.Data.Connections.IDataConnection)">
+            <summary>
+            Provides with a database connection using the provider and the connection string.
+            </summary>
+            <param name="dataConnection">The data connection to act with.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.Data.Connections.DataConnectionSettings">
             <summary>
@@ -1187,119 +1251,49 @@
             If so, returns <see langword="true"/> otherwise returns <see langword="false"/>.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.Data.Connections.IDataConnectionProvider">
+        <member name="T:Xpandables.Net.Data.Connections.IDataConnectionContextProvider">
             <summary>
-            Allows an application author to return a <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/> to be used with <see cref="T:Xpandables.Net.Data.IDataBase"/>.
+            Allows an application author to return a <see cref="T:Xpandables.Net.Data.Connections.DataConnectionContext"/> to be used with <see cref="T:Xpandables.Net.Data.IDataBase"/>.
+            Note that you must register this interface as a singleton to take advantage of the caching process.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Connections.IDataConnectionProvider.GetDataConnection">
+        <member name="M:Xpandables.Net.Data.Connections.IDataConnectionContextProvider.GetDataConnectionContextAsync(Xpandables.Net.Data.Connections.IDataConnection)">
             <summary>
-            Returns the expected <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/> for the current control flow.
+            Provides with a database connection using the provider and the connection string.
             </summary>
+            <param name="dataConnection">The data connection to act with.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.Data.DataBaseExtensions">
             <summary>
-            Provides with extension methods for <see cref="T:Xpandables.Net.Data.IDataBaseConnection"/>.
+            Provides with extension methods for <see cref="T:Xpandables.Net.Data.DataBase"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteAsync``2(Xpandables.Net.Data.IDataBaseConnection,System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.Contains(System.Data.IDataRecord,System.String)">
             <summary>
-            Executes a command/query with the specified executable <typeparamref name="TExecutable" /> type
-            and returns a result of <typeparamref name="TResult" /> type using default execution options.
-            The <typeparamref name="TExecutable" /> type must implement <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1" /> interface.
+            Determines whether or not the underlying data reader contains the specified column name.
+            If so, returns <see langword="true"/> otherwise returns <see langword="false"/>.
             </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-            <typeparam name="TExecutable">The type of the executable. The class must implement <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1" /> interface.</typeparam>
-            <param name="dataBase">The target database.</param>
-            <param name="commandText">The query or store procedure name.</param>
-            <param name="commandType">The command type.</param>
-            <param name="parameters">The parameters to be applied.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
+            <param name="source">The source of data reader to act on.</param>
+            <param name="columName">The column to find.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="columName"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionAsync(Xpandables.Net.Data.IDataBaseConnection,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.IsSqlConnection(System.Data.IDbConnection)">
             <summary>
-            Executes the specified query as transactional query using the parameters and options and returns the number of records affected.
-            Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
+            Determines whether or not the connection is an MSSQL Connection.
             </summary>
-            <param name="dataBase">The target database.</param>
-            <param name="options">The database options.</param>
-            <param name="commandText">The query to be executed.</param>
-            <param name="parameters">The parameters to be applied.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
+            <param name="connection">The connection to act on.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="connection"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionAsync(Xpandables.Net.Data.IDataBaseConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ParseSql(System.String)">
             <summary>
-            Executes the specified query as transactional query using the parameters and default option
-            and returns the number of records affected.
-            Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
+            Parses query that uses old format.
             </summary>
-            <param name="dataBase">The target database.</param>
-            <param name="commandText">The query to be executed.</param>
-            <param name="parameters">The parameters to be applied.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
+            <param name="query">The query to be formatted.</param>
+            <returns>A parsed query.</returns>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteQueryTableAsync(Xpandables.Net.Data.IDataBaseConnection,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
-            <summary>
-            Executes the specified command to the database using parameters and options and returns a data table.
-            </summary>
-            <param name="dataBase">The target database.</param>
-            <param name="options">The database options.</param>
-            <param name="commandText">The command to be executed.</param>
-            <param name="parameters">The parameters to be applied.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteQueryTableAsync(Xpandables.Net.Data.IDataBaseConnection,System.String,System.Object[])">
-            <summary>
-            Executes the specified query to the database using parameters and default options
-            and returns a data table.
-            </summary>
-            <param name="dataBase">The target database.</param>
-            <param name="commandText">The query to be executed.</param>
-            <param name="parameters">The parameters to be applied.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteProcedureTableAsync(Xpandables.Net.Data.IDataBaseConnection,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
-            <summary>
-            Executes the specified stored procedure to the database using parameters and options and returns a data table.
-            </summary>
-            <param name="dataBase">The target database.</param>
-            <param name="options">The database options.</param>
-            <param name="commandText">The stored procedure to be executed.</param>
-            <param name="parameters">The parameters to be applied.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteProcedureTableAsync(Xpandables.Net.Data.IDataBaseConnection,System.String,System.Object[])">
-            <summary>
-            Executes the specified stored procedure to the database using parameters and default options
-            </summary>
-            <param name="dataBase">The target database.</param>
-            <param name="commandText">The stored procedure to be executed.</param>
-            <param name="parameters">The parameters to be applied.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProceduresAsync``1(Xpandables.Net.Data.IDataBaseConnection,System.String,System.Object[])">
-            <summary>
-            Executes the stored procedure by its name using default options
-            and returns an asynchronous collection of results of the specific-type.
-            </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-            <param name="dataBase">The target database.</param>
-            <param name="commandText">The query to be executed.</param>
-            <param name="parameters">The parameters to be applied.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProceduresAsync``1(Xpandables.Net.Data.IDataBaseConnection,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
             <summary>
             Executes the stored procedure by its name using options and returns an asynchronous collection of results of
             the specific-type.
@@ -1313,9 +1307,47 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedQueriesAsync``1(Xpandables.Net.Data.IDataBaseConnection,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteProcedureTableAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
             <summary>
-            Executes the specify query to the database using options and returns a collection of results of
+            Executes the stored procedure by its name using options and returns an optional data table result.
+            </summary>
+            <param name="dataBase">The target database.</param>
+            <param name="options">The database options.</param>
+            <param name="commandText">The stored procedure to be executed.</param>
+            <param name="parameters">The parameters to be applied.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionProcedureAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
+            <summary>
+            Executes the stored procedure as transactional using the options and returns the number of records affected.
+            Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
+            </summary>
+            <param name="dataBase">The target database.</param>
+            <param name="options">The database options.</param>
+            <param name="commandText">The query/stored procedure to be executed.</param>
+            <param name="parameters">The parameters to be applied.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionQueryAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
+            <summary>
+            Executes the specified query as transactional using the options and returns the number of records affected.
+            Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
+            </summary>
+            <param name="dataBase">The target database.</param>
+            <param name="options">The database options.</param>
+            <param name="commandText">The query/stored procedure to be executed.</param>
+            <param name="parameters">The parameters to be applied.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
+            <summary>
+            Executes the specify query against the database using options and returns a collection of results of
             the specific-type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
@@ -1327,90 +1359,43 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedQueriesAsync``1(Xpandables.Net.Data.IDataBaseConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteQueryTableAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
             <summary>
-            Executes the specify query to the database using default options
-            and returns a collection of results of the specific-type.
-            </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-            <param name="dataBase">The target database.</param>
-            <param name="commandText">The query to be executed.</param>
-            <param name="parameters">The parameters to be applied.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteProcedureAsync(Xpandables.Net.Data.IDataBaseConnection,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
-            <summary>
-            Executes the stored procedure by its name using options and returns the number of affected rows.
-            Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
+            Executes the query against the database using options and returns an optional data table result.
             </summary>
             <param name="dataBase">The target database.</param>
             <param name="options">The database options.</param>
-            <param name="commandText">The query to be executed.</param>
+            <param name="commandText">The command to be executed.</param>
             <param name="parameters">The parameters to be applied.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteProcedureAsync(Xpandables.Net.Data.IDataBaseConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
             <summary>
-            Executes the stored procedure by its name using default options
-            and returns the number of affected rows.
-            Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
-            </summary>
-            <param name="dataBase">The target database.</param>
-            <param name="commandText">The query to be executed.</param>
-            <param name="parameters">The parameters to be applied.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleAsync``1(Xpandables.Net.Data.IDataBaseConnection,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
-            <summary>
-            Executes a query that returns a single value of specific type.
+            Executes a stored procedure against the database that returns a single value of specific type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <param name="dataBase">The target database.</param>
             <param name="options">The database options.</param>
-            <param name="commandText">The query to be executed.</param>
+            <param name="commandText">The query/stored procedure to be executed.</param>
             <param name="parameters">The parameters to be applied.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleAsync``1(Xpandables.Net.Data.IDataBaseConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
             <summary>
-            Executes a query that returns a single value of specific type using default options.
+            Executes a query against the database that returns a single value of specific type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <param name="dataBase">The target database.</param>
-            <param name="commandText">The query to be executed.</param>
+            <param name="options">The database options.</param>
+            <param name="commandText">The query/stored procedure to be executed.</param>
             <param name="parameters">The parameters to be applied.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.Contains(System.Data.IDataRecord,System.String)">
-            <summary>
-            Determines whether or not the target data record contains the specified column name.
-            </summary>
-            <param name="dataRecord">The data record to act on.</param>
-            <param name="columnName">The column name to find.</param>
-            <returns><see langword="true"/> if found, otherwise <see langword="false"/>.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataRecord"/>  is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="columnName"/>  is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.IsSqlConnection(System.Data.IDbConnection)">
-            <summary>
-            Determines whether or not the connection is an SQL Connection.
-            </summary>
-            <param name="connection">The connection to act on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="connection"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ParseSql(System.String)">
-            <summary>
-            Parses query that uses old format.
-            </summary>
-            <param name="query">The query to be formatted.</param>
-            <returns>A parsed query.</returns>
         </member>
         <member name="T:Xpandables.Net.Data.DataParameterBuilder">
             <summary>
@@ -1484,12 +1469,64 @@
             Determine whether the target element is a collection.
             </summary>
         </member>
+        <member name="M:Xpandables.Net.Data.Elements.DataElement.GetElementType">
+            <summary>
+            Returns the element type.
+            <para>If the element type is nullable, returns <see langword="Nullable.GetUnderlyingType(Type)"/>.</para>
+            If the element type is a collection, returns <see langword="Type.GetGenericArguments()[0]"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Elements.DataElement.GetElementStronglyType">
+            <summary>
+            Returns the element type without looking for enumerable concern.
+            If the element is a collection, returns <see langword="Type.GetGenericArguments()[0]"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Elements.DataElement.CreateElement(Xpandables.Net.Creators.IInstanceCreator)">
+            <summary>
+            Creates an instance of the <see cref="P:Xpandables.Net.Data.Elements.DataElement.Type"/>. The type must contains a parameterless constructor.
+            </summary>
+            <param name="instanceCreator">The instance creator to be used.</param>
+            <returns>A new instance.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Unable to create an instance. See inner exception.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Elements.DataElement.CreateStronglyElement(Xpandables.Net.Creators.IInstanceCreator)">
+            <summary>
+            Creates an instance of the exactly value to <see cref="P:Xpandables.Net.Data.Elements.DataElement.Type"/>.
+            </summary>
+            <param name="instanceCreator">The instance creator to be used.</param>
+            <returns>An new instance of <see cref="T:System.Type"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Unable to create an instance. See inner exception.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Elements.DataElement.CreateElementInstance(System.Type,Xpandables.Net.Creators.IInstanceCreator)">
+            <summary>
+            Creates an instance of the specified type using the instance creator.
+            </summary>
+            <param name="targetType">The type to be instantiated</param>
+            <param name="instanceCreator">The instance creator.</param>
+            <returns>A new instance of the target type.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Unable to create an instance. See inner exception.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Elements.DataElement.SetElement(System.Object,System.Object,Xpandables.Net.Creators.IInstanceCreator)">
+            <summary>
+            Sets the target element with the value.
+            </summary>
+            <param name="value">The value to be used.</param>
+            <param name="target">The target element instance to act on.</param>
+            <param name="instanceCreator">The instance creator to be used.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="target" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator" /> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Setting the element failed. See inner exception.</exception>
+        </member>
         <member name="T:Xpandables.Net.Data.Elements.DataEntity">
             <summary>
             Implementation of a mapping associated with a class.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Elements.DataEntity.#ctor(System.Type,System.Collections.Generic.IEnumerable{Xpandables.Net.Data.Elements.IDataProperty})">
+        <member name="M:Xpandables.Net.Data.Elements.DataEntity.#ctor(System.Type,System.Collections.Generic.IEnumerable{Xpandables.Net.Data.Elements.DataProperty})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.Elements.DataEntity"/> that contains a type and a collection of properties.
             </summary>
@@ -1498,17 +1535,17 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="properties"/> is null.</exception>
         </member>
-        <member name="P:Xpandables.Net.Data.Elements.DataEntity.Xpandables#Net#Data#Elements#IDataEntity#Entity">
+        <member name="P:Xpandables.Net.Data.Elements.DataEntity.Entity">
             <summary>
             Gets the entity instance.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Elements.DataEntity.Xpandables#Net#Data#Elements#IDataEntity#ParentProperty">
+        <member name="P:Xpandables.Net.Data.Elements.DataEntity.ParentProperty">
             <summary>
             Gets the property on parent entity if exist.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Elements.DataEntity.Xpandables#Net#Data#Elements#IDataEntity#ParentEntity">
+        <member name="P:Xpandables.Net.Data.Elements.DataEntity.ParentEntity">
             <summary>
             Gets the parent entity if exist.
             </summary>
@@ -1518,10 +1555,46 @@
             Gets the collection of properties from the type.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Elements.DataEntity.Xpandables#Net#Data#Elements#IDataEntity#Identity">
+        <member name="P:Xpandables.Net.Data.Elements.DataEntity.Identity">
             <summary>
             Gets the identity that is unique for the entity.
             </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Elements.DataEntity.IsNestedEntity">
+            <summary>
+            Determines whether the current entity is a nested entity.
+            Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Elements.DataEntity.IsIdentified">
+            <summary>
+            Determine whether or not the underlying object is already signed.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Elements.DataEntity.BuildIdentity">
+            <summary>
+            Builds the identity using the current entity instance.
+            The entity must be already assigned.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Elements.DataEntity.SetParent(System.Object,Xpandables.Net.Data.Elements.DataProperty)">
+            <summary>
+            Sets the parent properties of the current entity.
+            </summary>
+            <param name="parentEntity">The parent entity.</param>
+            <param name="parentProperty">The property parent.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="parentProperty"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Elements.DataEntity.SetElement(System.Object,System.Object,Xpandables.Net.Creators.IInstanceCreator)">
+            <summary>
+            Sets the target entity with the value.
+            </summary>
+            <param name="value">The value to be used.</param>
+            <param name="target">The target element instance to act on.</param>
+            <param name="instanceCreator">The instance creator to be used.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="target" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator" /> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Setting the element failed. See inner exception.</exception>
         </member>
         <member name="T:Xpandables.Net.Data.Elements.DataProperty">
             <summary>
@@ -1588,6 +1661,29 @@
             The default behavior just returns the value.
             </summary>
         </member>
+        <member name="M:Xpandables.Net.Data.Elements.DataProperty.SetData(System.Data.IDataRecord,System.Object,Xpandables.Net.Creators.IInstanceCreator)">
+            <summary>
+            Sets the target element with the data record value.
+            </summary>
+            <param name="dataRecord">The data record row to be used.</param>
+            <param name="target">The target instance to act on.</param>
+            <param name="instanceCreator">The instance creator to be used.</param>
+            <exception cref="T:System.ArgumentNullException">the <paramref name="dataRecord"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="target"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Setting the element failed. See inner exception.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Elements.DataProperty.SetElement(System.Object,System.Object,Xpandables.Net.Creators.IInstanceCreator)">
+            <summary>
+            Sets the target element with the value.
+            </summary>
+            <param name="value">The value to be used.</param>
+            <param name="target">The target element instance to act on.</param>
+            <param name="instanceCreator">The instance creator to be used.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="target" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator" /> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Setting the element failed. See inner exception.</exception>
+        </member>
         <member name="T:Xpandables.Net.Data.Elements.DataPropertySource">
             <summary>
             Provides with information to build a property.
@@ -1616,149 +1712,6 @@
             Gets a collection of properties defined as identifiers.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.Data.Elements.IDataElement">
-            <summary>
-            The base element interface.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataElement.Type">
-            <summary>
-            Gets the type of the target element.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataElement.IsPrimitive">
-            <summary>
-            Determine whether the element is a value type|string or reference type.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataElement.IsNullable">
-            <summary>
-            Determine whether the target element is nullable.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataElement.IsEnumerable">
-            <summary>
-            Determine whether the target element is a collection.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataElement.GetElementType">
-            <summary>
-            Returns the element type.
-            <para>If the element type is nullable, returns <see langword="Nullable.GetUnderlyingType(Type)"/>.</para>
-            If the element type is a collection, returns <see langword="Type.GetGenericArguments()[0]"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataElement.GetElementStronglyType">
-            <summary>
-            Returns the element type without looking for enumerable concern.
-            If the element is a collection, returns <see langword="Type.GetGenericArguments()[0]"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataElement.CreateElement(Xpandables.Net.Creators.IInstanceCreator)">
-            <summary>
-            Creates an instance of the <see cref="P:Xpandables.Net.Data.Elements.IDataElement.Type"/>. The type must contains a parameterless constructor.
-            </summary>
-            <param name="instanceCreator">The instance creator to be used.</param>
-            <returns>A new instance.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">Unable to create an instance. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataElement.CreateStronglyElement(Xpandables.Net.Creators.IInstanceCreator)">
-            <summary>
-            Creates an instance of the exactly value to <see cref="P:Xpandables.Net.Data.Elements.IDataElement.Type"/>.
-            </summary>
-            <param name="instanceCreator">The instance creator to be used.</param>
-            <returns>An new instance of <see cref="T:System.Type"/>.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">Unable to create an instance. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataElement.CreateElementInstance(System.Type,Xpandables.Net.Creators.IInstanceCreator)">
-            <summary>
-            Creates an instance of the specified type using the instance creator.
-            </summary>
-            <param name="targetType">The type to be instantiated</param>
-            <param name="instanceCreator">The instance creator.</param>
-            <returns>A new instance of the target type.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">Unable to create an instance. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataElement.SetElement(System.Object,System.Object,Xpandables.Net.Creators.IInstanceCreator)">
-            <summary>
-            Sets the target element with the value.
-            </summary>
-            <param name="value">The value to be used.</param>
-            <param name="target">The target element instance to act on.</param>
-            <param name="instanceCreator">The instance creator to be used.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="target" /> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator" /> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">Setting the element failed. See inner exception.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Data.Elements.IDataEntity">
-            <summary>
-            Definition of a mapping associated with a class.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataEntity.Entity">
-            <summary>
-            Gets the entity instance.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataEntity.ParentProperty">
-            <summary>
-            Gets the property on parent entity if exist.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataEntity.ParentEntity">
-            <summary>
-            Gets the parent entity if exist.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataEntity.IsNestedEntity">
-            <summary>
-            Determines whether the current entity is a nested entity.
-            Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataEntity.Properties">
-            <summary>
-            Gets the collection of properties from the type.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataEntity.Identity">
-            <summary>
-            Gets the identity that is unique for the entity.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataEntity.IsIdentified">
-            <summary>
-            Determine whether or not the underlying object is already signed.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataEntity.BuildIdentity">
-            <summary>
-            Builds the identity using the current entity instance.
-            The entity must be already assigned.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataEntity.SetParent(System.Object,Xpandables.Net.Data.Elements.IDataProperty)">
-            <summary>
-            Sets the parent properties of the current entity.
-            </summary>
-            <param name="parentEntity">The parent entity.</param>
-            <param name="parentProperty">The property parent.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="parentProperty"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataEntity.SetElement(System.Object,System.Object,Xpandables.Net.Creators.IInstanceCreator)">
-            <summary>
-            Sets the target entity with the value.
-            </summary>
-            <param name="value">The value to be used.</param>
-            <param name="target">The target element instance to act on.</param>
-            <param name="instanceCreator">The instance creator to be used.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="target" /> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator" /> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">Setting the element failed. See inner exception.</exception>
-        </member>
         <member name="T:Xpandables.Net.Data.Elements.IDataEntityBuilder">
             <summary>
             Defines a method to build instance of <see cref="T:Xpandables.Net.Data.Elements.DataEntity"/>.
@@ -1766,7 +1719,7 @@
         </member>
         <member name="M:Xpandables.Net.Data.Elements.IDataEntityBuilder.Build(System.Type,Xpandables.Net.Data.Options.DataOptions)">
             <summary>
-            Builds an implementation of <see cref="T:Xpandables.Net.Data.Elements.IDataEntity"/>.
+            Builds an implementation of <see cref="T:Xpandables.Net.Data.Elements.DataEntity"/>.
             </summary>
             <param name="type">The type of the class.</param>
             <param name="options"></param>
@@ -1864,75 +1817,6 @@
             Gets the instance creator.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.Data.Elements.IDataProperty">
-            <summary>
-            Defines an entity property.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataProperty.PropertyName">
-            <summary>
-            Gets the target property name.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataProperty.DataName">
-            <summary>
-            Gets the name of the column in the data source.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataProperty.DataPrefix">
-            <summary>
-            Gets the prefix of the column in the data source.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataProperty.DataFullName">
-            <summary>
-            Gets the full name of the column in the data source.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataProperty.IsIdentity">
-            <summary>
-            Determine whether the property is used for uniquely identify the data source.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataProperty.Setter">
-            <summary>
-            Gets the setter delegate for the property.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataProperty.Getter">
-            <summary>
-            Gets the getter delegate for the property.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Elements.IDataProperty.Converter">
-            <summary>
-            Gets the delegate used to convert the data row value to the expected type of property.
-            The default behavior will return the value.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataProperty.SetData(System.Data.IDataRecord,System.Object,Xpandables.Net.Creators.IInstanceCreator)">
-            <summary>
-            Sets the target element with the data record value.
-            </summary>
-            <param name="dataRecord">The data record row to be used.</param>
-            <param name="target">The target instance to act on.</param>
-            <param name="instanceCreator">The instance creator to be used.</param>
-            <exception cref="T:System.ArgumentNullException">the <paramref name="dataRecord"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="target"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">Setting the element failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataProperty.SetElement(System.Object,System.Object,Xpandables.Net.Creators.IInstanceCreator)">
-            <summary>
-            Sets the target element with the value.
-            </summary>
-            <param name="value">The value to be used.</param>
-            <param name="target">The target element instance to act on.</param>
-            <param name="instanceCreator">The instance creator to be used.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="target" /> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="instanceCreator" /> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">Setting the element failed. See inner exception.</exception>
-        </member>
         <member name="T:Xpandables.Net.Data.Elements.IDataPropertyBuilder">
             <summary>
             Defines a method to build instances of <see cref="T:Xpandables.Net.Data.Elements.DataProperty"/>.
@@ -1951,21 +1835,35 @@
             Provides with a method to build instances of <see cref="T:Xpandables.Net.Data.Elements.DataProperty"/>.
             </summary>
         </member>
+        <member name="T:Xpandables.Net.Data.Executables.DataExecutable`1">
+            <summary>
+            Provides with a base definition of an executable process for <see cref="T:Xpandables.Net.Data.DataBase"/>.
+            </summary>
+            <typeparam name="TResult">The type of the result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutable`1.ExecuteAsync(Xpandables.Net.Data.Executables.DataExecutableContext)">
+            <summary>
+            Asynchronously executes an action against the database and returns a result of specific-type.
+            </summary>
+            <param name="context">The target executable context instance.</param>
+            <returns>A task representing the asynchronous operation</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="context"/> is null.</exception>
+        </member>
         <member name="T:Xpandables.Net.Data.Executables.DataExecutableBuilder`1">
             <summary>
-            This helper class allows the application author to implement the <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1"/>
+            This helper class allows the application author to implement the <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>
             interface without dedicated class.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Data.Executables.DataExecutableBuilder`1.#ctor(System.Func{Xpandables.Net.Data.Executables.DataExecutableContext,System.Threading.Tasks.Task{`0}})">
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableBuilder`1.#ctor(System.Func{Xpandables.Net.Data.Executables.DataExecutableContext,System.Threading.Tasks.Task{Xpandables.Net.Optionals.Optional{`0}}})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.Executables.DataExecutableBuilder`1"/> class with the delegate to be used
-            as <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1"/> implementation.
+            as <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/> implementation.
             </summary>
             <param name="executable">The delegate to be used when the handler will be invoked.
             <para>The delegate should match all the behaviors expected in
-            the <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1"/>
+            the <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>
             method such as thrown exceptions.</para></param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="executable"/> is null.</exception>
         </member>
@@ -2003,7 +1901,7 @@
         </member>
         <member name="T:Xpandables.Net.Data.Executables.DataExecutableContext.DataArgument">
             <summary>
-            Contains the argument execution for <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1"/>.
+            Contains the argument execution for <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Data.Executables.DataExecutableContext.DataArgument.#ctor(Xpandables.Net.Data.Options.DataOptions,System.String,System.Object[])">
@@ -2028,12 +1926,12 @@
         </member>
         <member name="P:Xpandables.Net.Data.Executables.DataExecutableContext.DataArgument.Parameters">
             <summary>
-            Gets the parameters to be used with the <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1"/>.
+            Gets the parameters to be used with the <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Data.Executables.DataExecutableContext.DataComponent">
             <summary>
-            Contains component execution for <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1"/>.
+            Contains component execution for <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Data.Executables.DataExecutableContext.DataComponent.#ctor(System.Data.Common.DbCommand,System.Data.Common.DbDataAdapter)">
@@ -2063,22 +1961,61 @@
         </member>
         <member name="T:Xpandables.Net.Data.Executables.DataExecutableMapper`1">
             <summary>
-             Executes a stored procedure or query and return the result mapped to specific type.
+            Provides with a base definition of an executable process for <see cref="T:Xpandables.Net.Data.DataBase"/> that maps the result to the target type.
             </summary>
-            <typeparam name="TResult">The type of result.</typeparam>
+            <typeparam name="TResult">The type of the result to map to.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Data.Executables.DataExecutableMapper`1.#ctor(Xpandables.Net.Data.Mappers.IDataMapper)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Executables.DataExecutableMapper`1"/>.
-            </summary>
-            <param name="dataMapper">the mapper to be used.</param>
-        </member>
-        <member name="M:Xpandables.Net.Data.Executables.DataExecutableMapper`1.ExecuteMappedAsync(Xpandables.Net.Data.Executables.DataExecutableContext,System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableMapper`1.ExecuteMappedAsync(Xpandables.Net.Data.Executables.DataExecutableContext)">
             <summary>
             Asynchronously executes an action to the database and returns the result mapped to the specific-type.
             </summary>
             <param name="context">The target executable context instance.</param>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>An asynchronous enumeration of <typeparamref name="TResult"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="context"/> is null.</exception>
+        </member>
+        <member name="T:Xpandables.Net.Data.Executables.DataExecutableMapperBuilder`1">
+            <summary>
+            This helper class allows the application author to implement the <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>
+            interface without dedicated class.
+            </summary>
+            <typeparam name="TResult">The type of the result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableMapperBuilder`1.#ctor(System.Func{Xpandables.Net.Data.Executables.DataExecutableContext,System.Collections.Generic.IAsyncEnumerable{`0}})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Executables.DataExecutableBuilder`1"/> class with the delegate to be used
+            as <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/> implementation.
+            </summary>
+            <param name="executable">The delegate to be used when the handler will be invoked.
+            <para>The delegate should match all the behaviors expected in
+            the <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>
+            method such as thrown exceptions.</para></param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="executable"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableMapperBuilder`1.ExecuteMappedAsync(Xpandables.Net.Data.Executables.DataExecutableContext)">
+            <summary>
+            Asynchronously executes an action to the database and returns the result mapped to the specific-type.
+            </summary>
+            <param name="context">The target executable context instance.</param>
+            <returns>An asynchronous enumeration of <typeparamref name="TResult"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="context"/> is null.</exception>
+        </member>
+        <member name="T:Xpandables.Net.Data.Executables.DataExecutableMapperFuncProc`1">
+            <summary>
+             Executes a stored procedure or query and return the result mapped to specific type.
+            </summary>
+            <typeparam name="TResult">The type of result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableMapperFuncProc`1.#ctor(Xpandables.Net.Data.Mappers.IDataMapper)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Executables.DataExecutableMapperFuncProc`1"/>.
+            </summary>
+            <param name="dataMapper">the mapper to be used.</param>
+        </member>
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableMapperFuncProc`1.ExecuteMappedAsync(Xpandables.Net.Data.Executables.DataExecutableContext)">
+            <summary>
+            Asynchronously executes an action to the database and returns the result mapped to the specific-type.
+            </summary>
+            <param name="context">The target executable context instance.</param>
             <returns>An asynchronous enumeration of <typeparamref name="TResult"/>.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="context"/> is null.</exception>
         </member>
@@ -2148,153 +2085,67 @@
             <returns>A task representing the asynchronous operation</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="context"/> is null.</exception>
         </member>
-        <member name="T:Xpandables.Net.Data.Executables.IDataExecutable">
-            <summary>
-            Allows an application author to defines an executable process for <see cref="T:Xpandables.Net.Data.IDataBase"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Executables.IDataExecutable.ExecuteAsync(Xpandables.Net.Data.Executables.DataExecutableContext)">
-            <summary>
-            Asynchronously executes an action to the database and returns a result.
-            </summary>
-            <param name="context">The target executable context instance.</param>
-            <returns>A task representing the asynchronous operation</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Data.Executables.IDataExecutable`1">
-            <summary>
-            Allows an application author to defines an executable process for <see cref="T:Xpandables.Net.Data.IDataBase"/> for a specific-type result.
-            </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-        </member>
-        <member name="M:Xpandables.Net.Data.Executables.IDataExecutable`1.ExecuteAsync(Xpandables.Net.Data.Executables.DataExecutableContext)">
-            <summary>
-            Asynchronously executes an action to the database and returns a result of specific-type.
-            </summary>
-            <param name="context">The target executable context instance.</param>
-            <returns>A task representing the asynchronous operation</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Data.Executables.DataExecutable`1">
-            <summary>
-            Defines the abstract implementation of <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1"/> class.
-            </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-        </member>
-        <member name="M:Xpandables.Net.Data.Executables.DataExecutable`1.ExecuteAsync(Xpandables.Net.Data.Executables.DataExecutableContext)">
-            <summary>
-            Asynchronously executes an action to the database and returns a result of specific-type.
-            </summary>
-            <param name="context">The target executable context instance.</param>
-            <returns>A task representing the asynchronous operation</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Data.Executables.IDataExecutableMapper">
-            <summary>
-            Allows an application author to defines an executable process to map database result.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Executables.IDataExecutableMapper.ExecuteMappedAsync(Xpandables.Net.Data.Executables.DataExecutableContext,System.Threading.CancellationToken)">
-            <summary>
-            Asynchronously executes an action to the database and returns the result of objects.
-            </summary>
-            <param name="context">The target executable context instance.</param>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <returns>An asynchronous enumeration of objects.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Data.Executables.IDataExecutableMapper`1">
-            <summary>
-            Allows an application author to defines an executable process to map database result to a specific-type.
-            </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-        </member>
-        <member name="M:Xpandables.Net.Data.Executables.IDataExecutableMapper`1.ExecuteMappedAsync(Xpandables.Net.Data.Executables.DataExecutableContext,System.Threading.CancellationToken)">
-            <summary>
-            Asynchronously executes an action to the database and returns the result mapped to the specific-type.
-            </summary>
-            <param name="context">The target executable context instance.</param>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <returns>An asynchronous enumeration of <typeparamref name="TResult"/>.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        </member>
         <member name="T:Xpandables.Net.Data.Executables.IDataExecutableProvider">
             <summary>
             Allows application author to provide with an executable of a specific type.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Executables.IDataExecutableProvider.GetExecutable(System.Type)">
-            <summary>
-            Returns the executable that matches the type if found.
-            </summary>
-            <param name="executableType">The executable type to search for.</param>
-            <returns>An instance of the executable type if found, otherwise null.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="executableType"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Executables.IDataExecutableProvider.GetExecutable``1">
+        <member name="M:Xpandables.Net.Data.Executables.IDataExecutableProvider.GetDataExecutable``2">
             <summary>
             Returns the executable that matches the specific type if found.
             </summary>
-            <typeparam name="TExecutable">The type of the executable.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <typeparam name="TDataExecutable">The type of the executable.</typeparam>
             <returns>An instance of the executable type if found, otherwise null.</returns>
         </member>
-        <member name="M:Xpandables.Net.Data.Executables.IDataExecutableProvider.GetExecutableMapped``1">
+        <member name="M:Xpandables.Net.Data.Executables.IDataExecutableProvider.GetDataExecutableMapper``2">
             <summary>
-            Returns the executable mapped that matches the specific type if found.
+            Returns the executable mapper that matches the specific type if found.
             </summary>
-            <typeparam name="TExecutableMapped">The type of the executable mapped.</typeparam>
-            <returns>An instance of the executable mapped type if found, otherwise null.</returns>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <typeparam name="TDataExecutableMapper">The type of the executable.</typeparam>
+            <returns>An instance of the executable type if found, otherwise null.</returns>
         </member>
         <member name="T:Xpandables.Net.Data.Executables.DataExecutableProvider">
             <summary>
-            Default implementation of <see cref="T:Xpandables.Net.Data.Executables.IDataExecutableProvider"/> that uses service provider to retrieve executables.
+            Provides with a method to retrieve data executable instance using the <see cref="T:System.IServiceProvider"/>.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Data.Executables.DataExecutableProvider.#ctor(System.IServiceProvider)">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.Executables.DataExecutableProvider"/> with the service provider.
             </summary>
-            <param name="serviceProvider">The service provider to be used.</param>
+            <param name="serviceProvider">The service provider.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="serviceProvider"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Executables.DataExecutableProvider.GetExecutable(System.Type)">
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableProvider.GetDataExecutable``2">
             <summary>
-            Returns the executable that matches the type if found.
+            Returns the executable that matches the specific type if found.
             </summary>
-            <param name="executableType">The executable type to search for.</param>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <typeparam name="TDataExecutable">The type of the executable.</typeparam>
             <returns>An instance of the executable type if found, otherwise null.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="executableType"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableProvider.GetDataExecutableMapper``2">
+            <summary>
+            Returns the executable mapper that matches the specific type if found.
+            </summary>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <typeparam name="TDataExecutableMapper">The type of the executable.</typeparam>
+            <returns>An instance of the executable type if found, otherwise null.</returns>
         </member>
         <member name="T:Xpandables.Net.Data.IDataBase">
             <summary>
-            Provides with methods to execute command against a database using an implementation of <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1"/> interface.
+            Provides with methods to execute command against a database using an implementation of <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/> or <see cref="T:Xpandables.Net.Data.Executables.DataExecutableMapper`1"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.UseConnection(Xpandables.Net.Data.Connections.IDataConnection)">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``1(Xpandables.Net.Data.Executables.DataExecutable{``0},Xpandables.Net.Data.Options.DataOptions,System.String,System.Data.CommandType,System.Object[])">
             <summary>
-            Uses the <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/> to access database.
-            </summary>
-            <param name="dataConnection">The connection to be used You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a new instance.</param>
-            <returns>A new instance that implements <see cref="T:Xpandables.Net.Data.IDataBaseConnection"/> with the specified <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/>.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.UseConnection(Xpandables.Net.Data.Connections.IDataConnectionProvider)">
-            <summary>
-            Uses the <see cref="T:Xpandables.Net.Data.Connections.IDataConnectionProvider"/> to access database.
-            </summary>
-            <param name="dataConnectionProvider">The provider used to retrieve the expected data connection.</param>
-            <returns>A new instance that implements <see cref="T:Xpandables.Net.Data.IDataBaseConnection"/> with the specified <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/>.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnectionProvider"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``2(Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Options.DataOptions,System.String,System.Data.CommandType,System.Object[])">
-            <summary>
-            Asynchronously executes a command/query with the specified executable <typeparamref name="TExecutable" /> type to the database
+            Asynchronously executes a command/query with the specified executable against the database
             and returns a result of <typeparamref name="TResult" /> type.
-            The <typeparamref name="TExecutable" /> type must implement <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1" /> interface.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
-            <typeparam name="TExecutable">The type of the executable. The class must implement <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1" /> interface.</typeparam>
-            <param name="dataConnection">The connection to be used You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a new instance.</param>
+            <param name="dataExecutable">The data executable instance to be used.</param>
             <param name="options">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
@@ -2303,16 +2154,45 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``2(Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Options.DataOptions,System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``2(Xpandables.Net.Data.Options.DataOptions,System.String,System.Data.CommandType,System.Object[])">
             <summary>
-            Asynchronously executes a command/query with the specified executable <typeparamref name="TExecutableMapped" /> type to the database
+            Asynchronously executes a command/query with the specified executable <typeparamref name="TDataExecutable" /> type against the database
             and returns a result of <typeparamref name="TResult" /> type.
-            The <typeparamref name="TExecutableMapped" /> type must implement <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1" /> interface.
-            The default implementation just returns an empty result.
+            The <typeparamref name="TDataExecutable" /> type inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1" />.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
-            <typeparam name="TExecutableMapped">The type of the executable. The class must implement <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1" /> interface.</typeparam>
-            <param name="dataConnection">The connection to be used You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a new instance.</param>
+            <typeparam name="TDataExecutable">The type of the executable. The class inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1" />.</typeparam>
+            <param name="options">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
+            <param name="commandText">The text command to run against the database.</param>
+            <param name="commandType">The command type.</param>
+            <param name="parameters">A collection of parameter objects for the command.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="options" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``1(Xpandables.Net.Data.Executables.DataExecutableMapper{``0},Xpandables.Net.Data.Options.DataOptions,System.String,System.Data.CommandType,System.Object[])">
+            <summary>
+            Asynchronously executes a command/query with the specified executable against the database
+            and asynchronously returns result of <typeparamref name="TResult" /> type.
+            </summary>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="dataExecutableMapper">the data executable mapper.</param>
+            <param name="options">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
+            <param name="commandText">The text command to run against the database.</param>
+            <param name="commandType">The command type.</param>
+            <param name="parameters">A collection of parameter objects for the command.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="options" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``2(Xpandables.Net.Data.Options.DataOptions,System.String,System.Data.CommandType,System.Object[])">
+            <summary>
+            Asynchronously executes a command/query with the specified executable <typeparamref name="TDataExecutableMapped" /> type against the database
+            and asynchronously returns result of <typeparamref name="TResult" /> type.
+            The <typeparamref name="TDataExecutableMapped" /> type inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1" />.
+            </summary>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <typeparam name="TDataExecutableMapped">The type of the executable. The class inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1" /> interface.</typeparam>
             <param name="options">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
@@ -2326,79 +2206,13 @@
             Provides with a default implementation of <see cref="T:Xpandables.Net.Data.IDataBase"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Providers.IDataFactoryProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider)">
+        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider)">
             <summary>
-            
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/>.
             </summary>
-            <param name="dataFactoryProvider"></param>
-            <param name="dataExecutableProvider"></param>
-        </member>
-        <member name="T:Xpandables.Net.Data.IDataBaseConnection">
-            <summary>
-            Provides with methods to execute command against a database using the defined <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.IDataBaseConnection.ExecuteAsync``2(Xpandables.Net.Data.Options.DataOptions,System.String,System.Data.CommandType,System.Object[])">
-            <summary>
-            Asynchronously executes a command/query with the specified executable <typeparamref name="TExecutable" /> type to the database
-            and returns a result of <typeparamref name="TResult" /> type.
-            The <typeparamref name="TExecutable" /> type must implement <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1" /> interface.
-            </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-            <typeparam name="TExecutable">The type of the executable. The class must implement <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1" /> interface.</typeparam>
-            <param name="options">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
-            <param name="commandText">The text command to run against the database.</param>
-            <param name="commandType">The command type.</param>
-            <param name="parameters">A collection of parameter objects for the command.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="options" /> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.IDataBaseConnection.ExecuteMappedAsync``2(Xpandables.Net.Data.Options.DataOptions,System.String,System.Data.CommandType,System.Object[])">
-            <summary>
-            Asynchronously executes a command/query with the specified executable <typeparamref name="TExecutableMapped" /> type to the database
-            and returns an asynchronous result of <typeparamref name="TResult" /> type.
-            The <typeparamref name="TExecutableMapped" /> type must implement <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1" /> interface.
-            </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-            <typeparam name="TExecutableMapped">The type of the executable. The class must implement <see cref="T:Xpandables.Net.Data.Executables.IDataExecutable`1" /> interface.</typeparam>
-            <param name="options">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
-            <param name="commandText">The text command to run against the database.</param>
-            <param name="commandType">The command type.</param>
-            <param name="parameters">A collection of parameter objects for the command.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="options" /> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.IDataBaseConnection.BuildDbConnectionAsync(System.Data.Common.DbProviderFactory,Xpandables.Net.Data.Connections.IDataConnection)">
-            <summary>
-            Provides with a database connection using the provider and the connection string.
-            </summary>
-            <param name="dbProviderFactory">The database provider factory.</param>
-            <param name="dataConnection">The data connection to act with.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dbProviderFactory"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.IDataBaseConnection.SpeedSqlServerResultAsync(System.Data.Common.DbConnection)">
-            <summary>
-            Speeds the connection result for SQL server only.
-            </summary>
-            <param name="connection">the connection to speed.</param>
-        </member>
-        <member name="T:Xpandables.Net.Data.DataBaseConnection">
-            <summary>
-            Default implementation of <see cref="T:Xpandables.Net.Data.IDataBaseConnection"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBaseConnection.#ctor(Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Providers.IDataFactoryProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBaseConnection"/> with specified properties.
-            </summary>
-            <param name="dataConnection">The data connection to be sued.</param>
-            <param name="dataFactoryProvider">The data factory provider.</param>
+            <param name="dataConnectionContextProvider">The data context provider.</param>
             <param name="dataExecutableProvider">The data executable provider.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataFactoryProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.Data.Mappers.IDataMapper">
@@ -2412,6 +2226,16 @@
             </summary>
             <typeparam name="TEntity">The type of expected result.</typeparam>
             <param name="source">The data source to act on.</param>
+            <param name="options">Defines the execution options.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.Map``1(System.Collections.Generic.IEnumerable{System.Data.IDataRecord},Xpandables.Net.Data.Options.DataOptions)">
+            <summary>
+            Maps the data source collection to the specified type.
+            </summary>
+            <typeparam name="TEntity">The type of expected result.</typeparam>
+            <param name="source">The data source collection to act on.</param>
             <param name="options">Defines the execution options.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
@@ -2441,7 +2265,7 @@
             Implementation of <see cref="T:Xpandables.Net.Data.Mappers.IDataMapper"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Mappers.DataMapper.#ctor(Xpandables.Net.Data.Mappers.IDataMapperRow,Xpandables.Net.Correlation.CorrelationCollection{System.String,Xpandables.Net.Data.Elements.IDataEntity})">
+        <member name="M:Xpandables.Net.Data.Mappers.DataMapper.#ctor(Xpandables.Net.Data.Mappers.IDataMapperRow,Xpandables.Net.Correlation.CorrelationCollection{System.String,Xpandables.Net.Data.Elements.DataEntity})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.Mappers.DataMapper"/> class.
             </summary>
@@ -2495,7 +2319,7 @@
             Default implementation of <see cref="T:Xpandables.Net.Data.Mappers.IDataMapperRow"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Mappers.DataMapperRow.#ctor(Xpandables.Net.Creators.IInstanceCreator,Xpandables.Net.Data.Elements.IDataEntityBuilder,Xpandables.Net.Correlation.CorrelationCollection{System.String,Xpandables.Net.Data.Elements.IDataEntity})">
+        <member name="M:Xpandables.Net.Data.Mappers.DataMapperRow.#ctor(Xpandables.Net.Creators.IInstanceCreator,Xpandables.Net.Data.Elements.IDataEntityBuilder,Xpandables.Net.Correlation.CorrelationCollection{System.String,Xpandables.Net.Data.Elements.DataEntity})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.Mappers.DataMapperRow"/>.
             </summary>
@@ -2521,6 +2345,11 @@
         <member name="T:Xpandables.Net.Data.Options.DataOptions">
             <summary>
             Contains execution behaviors. Use <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build options.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Options.DataOptions.Connection">
+            <summary>
+            Gets the data connection attached to the current options.
             </summary>
         </member>
         <member name="P:Xpandables.Net.Data.Options.DataOptions.IsTransactionEnabled">
@@ -2577,6 +2406,23 @@
             Determines whether or not to retrieve the newly created identity from SQL command.
             </summary>
         </member>
+        <member name="P:Xpandables.Net.Data.Options.DataOptions.IsOnExceptionDefined">
+            <summary>
+            Gets the value whether <see cref="E:Xpandables.Net.Data.Options.DataOptions.OnException"/> event is defined.
+            </summary>
+        </member>
+        <member name="E:Xpandables.Net.Data.Options.DataOptions.OnException">
+            <summary>
+            Contains the event to raise when exception is handled.
+            If defined, the process do not throws exception.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Options.DataOptions.OnExceptionHandled(System.Exception)">
+            <summary>
+            Raises the <see cref="E:Xpandables.Net.Data.Options.DataOptions.OnException"/> event.
+            </summary>
+            <param name="exception">The handled exception.</param>
+        </member>
         <member name="T:Xpandables.Net.Data.Options.DataOptionsBuilder">
             <summary>
             Allows application author to build <see cref="T:Xpandables.Net.Data.Options.DataOptions"/>.
@@ -2593,10 +2439,11 @@
             Returns a new instance of <see cref="T:Xpandables.Net.Data.Options.DataOptions"/> using registered information.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.BuildDefault">
+        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.BuildDefault(Xpandables.Net.Data.Connections.IDataConnection)">
             <summary>
-            Returns a the default instance of <see cref="T:Xpandables.Net.Data.Options.DataOptions"/>.
+            Returns a the default instance of <see cref="T:Xpandables.Net.Data.Options.DataOptions"/> with the specified connection.
             </summary>
+            <param name="connection">The connection to be used.</param>
         </member>
         <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddTransaction(System.Data.IsolationLevel)">
             <summary>
@@ -2604,7 +2451,19 @@
             </summary>
             <param name="isolationLevel">The isolation level to be used. The default value used by the server is <see cref="F:System.Data.IsolationLevel.ReadCommitted"/> </param>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddMappable(System.Func{Xpandables.Net.Data.Elements.IDataProperty,System.Boolean})">
+        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddExceptionEvent(System.Action{System.Exception})">
+            <summary>
+            Adds the event action that will be raised on exception.
+            </summary>
+            <param name="onException">The action that get called on exception.</param>
+        </member>
+        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddConnection(Xpandables.Net.Data.Connections.IDataConnection)">
+            <summary>
+            Adds the connection to the current instance.
+            </summary>
+            <param name="connection">The connection instance..</param>
+        </member>
+        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddMappable(System.Func{Xpandables.Net.Data.Elements.DataProperty,System.Boolean})">
             <summary>
             This is the highest level of mapping.
             Adds a delegate that determines whether or not a property should be mapped.
@@ -2713,14 +2572,6 @@
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.Providers.DataFactoryProvider"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Providers.DataFactoryProvider.GetProviderFactory(Xpandables.Net.Data.Providers.DataProviderType)">
-            <summary>
-            Returns an instance of the data provider factory matching the specified provider type.
-            </summary>
-            <param name="providerType">The provider type to find factory.</param>
-            <returns>An instance of <see cref="T:System.Data.Common.DbProviderFactory" /> if found, otherwise an empty or exception.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="providerType" /> is null.</exception>
-        </member>
         <member name="T:Xpandables.Net.Data.Providers.DataProviderType">
             <summary>
             Defines the properties for data base access provider and derives from <see cref="T:Xpandables.Net.Enumerations.EnumerationType"/>.
@@ -2799,7 +2650,8 @@
         <member name="T:Xpandables.Net.Data.Providers.IDataFactoryProvider">
             <summary>
             Allows an application author to return a data provider factory from the specified provider type.
-            The default implementation is <see cref="T:Xpandables.Net.Data.Providers.DataFactoryProvider"/>.
+            The default implementation class is <see cref="T:Xpandables.Net.Data.Providers.DataFactoryProvider"/>.
+            Contains default implementation.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Data.Providers.IDataFactoryProvider.GetProviderFactory(Xpandables.Net.Data.Providers.DataProviderType)">
@@ -2807,8 +2659,8 @@
             Returns an instance of the data provider factory matching the specified provider type.
             </summary>
             <param name="providerType">The provider type to find factory.</param>
-            <returns>An instance of <see cref="T:System.Data.Common.DbProviderFactory"/> if found, otherwise an empty or exception.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="providerType"/> is null.</exception>
+            <returns>An instance of <see cref="T:System.Data.Common.DbProviderFactory" /> if found, otherwise an empty or exception.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="providerType" /> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.Dispatchers.Dispatcher">
             <summary>
@@ -3662,6 +3514,122 @@
             <para></para>
             The class implementation will be decorated with the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Enumerables.EnumerableExtensions">
+            <summary>
+            Provides with extension methods for <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.SingleToEnumerable``1(``0)">
+            <summary>
+            Converts a single object to an <see cref="T:System.Collections.Generic.IEnumerable`1"/> instance.
+            </summary>
+            <typeparam name="TSource">The type of the object.</typeparam>
+            <param name="source">An instance of the type.</param>
+            <returns>An enumerable of the current instance.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="source"/> is an enumerable.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.ToListAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously returns a <see cref="T:System.Collections.Generic.List`1"/> from <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.
+            </summary>
+            <typeparam name="TSource">The type of the object.</typeparam>
+            <param name="source">The source of the sequence.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>A <see cref="T:System.Collections.Generic.List`1"/> from the asynchronous collection.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.ToReadOnlyCollection``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Converts an <see cref="T:System.Collections.Generic.IEnumerable`1"/> to a read only collection.
+            </summary>
+            <typeparam name="TSource">The type of the object.</typeparam>
+            <param name="source">An instance of the collection to be converted.</param>
+            <returns>A new <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1"/></returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.DefaultIfEmpty``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Returns the elements of the specified sequence or the value from the producer in a singleton
+            collection if the sequence is empty.
+            </summary>
+            <typeparam name="TSource">Type of the element in the sequence.</typeparam>
+            <param name="source">The source of the sequence.</param>
+            <param name="sourceProducer">The delegate that produces the value.</param>
+            <returns>A collection object that contains the default value for the TSource type if source is empty;
+            otherwise, sourceProducer value.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="sourceProducer"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            Enumerates the collection source and performs the specified action on each element.
+            </summary>
+            <typeparam name="TSource">Type of the element in the sequence.</typeparam>
+            <param name="source">The source of the sequence.</param>
+            <param name="action">Action to invoke for each element.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="action"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.ForEachAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Action{``0},System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously enumerates the collection source and performs the specified action on each element.
+            </summary>
+            <typeparam name="TSource">Type of the element in the sequence.</typeparam>
+            <param name="source">The source of the sequence.</param>
+            <param name="action">Action to invoke for each element.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>A task that represents the asynchronous operation.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.FirstOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns the first element of the specified sequence or an empty optional if the sequence contains no elements.
+            </summary>
+            <typeparam name="TSource">The type of the element in the sequence.</typeparam>
+            <param name="source">the source of the sequence.</param>
+            <returns>The first element from the sequence or an empty result if the sequence contains no elements.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.FirstOrEmpty``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Returns the first element of the sequence that satisfies the predicate or an empty optional if no such element is found.
+            </summary>
+            <typeparam name="TSource">The type of the element in the sequence.</typeparam>
+            <param name="source">the source of the sequence.</param>
+            <param name="predicate">A function to test each element to a condition.</param>
+            <returns>The first element that satisfies the predicate or an empty optional.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.LastOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns the last elements of a sequence or an empty optional if the sequence contains no elements.
+            </summary>
+            <typeparam name="TSource">The type of the element in the sequence.</typeparam>
+            <param name="source">the source of the sequence.</param>
+            <returns>The last element from the sequence or an empty result if the sequence contains no elements.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.LastOrEmpty``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Returns the last element of the sequence that satisfies the predicate or an empty optional if no such element is found.
+            </summary>
+            <typeparam name="TSource">The type of the element in the sequence.</typeparam>
+            <param name="source">the source of the sequence.</param>
+            <param name="predicate">A function to test each element to a condition.</param>
+            <returns>The last element that satisfies the predicate or an empty optional.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.ElementAtOrEmpty``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Returns the element at the specified index in a sequence or an empty optional if the index is out of range
+            </summary>
+            <typeparam name="TSource">The type of the element in the sequence.</typeparam>
+            <param name="source">the source of the sequence.</param>
+            <param name="index">The zero-based index of the element to retrieve.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.Enumerations.EnumerationType">
             <summary>
@@ -4725,456 +4693,6 @@
             <summary>
             Returns the expression to be used for the clause <see langword="Where"/> in a query.
             </summary>
-        </member>
-        <member name="T:Xpandables.Net.Extensions.EnumerableExtensions">
-            <summary>
-            Provides with extension methods for <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.SingleToEnumerable``1(``0)">
-            <summary>
-            Converts a single object to an <see cref="T:System.Collections.Generic.IEnumerable`1"/> instance.
-            </summary>
-            <typeparam name="TSource">The type of the object.</typeparam>
-            <param name="source">An instance of the type.</param>
-            <returns>An enumerable of the current instance.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="source"/> is an enumerable.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.ToListAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.CancellationToken)">
-            <summary>
-            Asynchronously returns a <see cref="T:System.Collections.Generic.List`1"/> from <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.
-            </summary>
-            <typeparam name="TSource">The type of the object.</typeparam>
-            <param name="source">The source of the sequence.</param>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <returns>A <see cref="T:System.Collections.Generic.List`1"/> from the asynchronous collection.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.ToReadOnlyCollection``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Converts an <see cref="T:System.Collections.Generic.IEnumerable`1"/> to a read only collection.
-            </summary>
-            <typeparam name="TSource">The type of the object.</typeparam>
-            <param name="source">An instance of the collection to be converted.</param>
-            <returns>A new <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1"/></returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.DefaultIfEmpty``1(System.Collections.Generic.IEnumerable{``0},``0)">
-            <summary>
-            Returns the elements of the specified sequence or the value from the producer in a singleton
-            collection if the sequence is empty.
-            </summary>
-            <typeparam name="TSource">Type of the element in the sequence.</typeparam>
-            <param name="source">The source of the sequence.</param>
-            <param name="sourceProducer">The delegate that produces the value.</param>
-            <returns>A collection object that contains the default value for the TSource type if source is empty;
-            otherwise, sourceProducer value.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="sourceProducer"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
-            <summary>
-            Enumerates the collection source and performs the specified action on each element.
-            </summary>
-            <typeparam name="TSource">Type of the element in the sequence.</typeparam>
-            <param name="source">The source of the sequence.</param>
-            <param name="action">Action to invoke for each element.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="action"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.ForEachAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Action{``0},System.Threading.CancellationToken)">
-            <summary>
-            Asynchronously enumerates the collection source and performs the specified action on each element.
-            </summary>
-            <typeparam name="TSource">Type of the element in the sequence.</typeparam>
-            <param name="source">The source of the sequence.</param>
-            <param name="action">Action to invoke for each element.</param>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <returns>A task that represents the asynchronous operation.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.FirstOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Returns the first element of the specified sequence or an empty optional if the sequence contains no elements.
-            </summary>
-            <typeparam name="TSource">The type of the element in the sequence.</typeparam>
-            <param name="source">the source of the sequence.</param>
-            <returns>The first element from the sequence or an empty result if the sequence contains no elements.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.FirstOrEmpty``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
-            <summary>
-            Returns the first element of the sequence that satisfies the predicate or an empty optional if no such element is found.
-            </summary>
-            <typeparam name="TSource">The type of the element in the sequence.</typeparam>
-            <param name="source">the source of the sequence.</param>
-            <param name="predicate">A function to test each element to a condition.</param>
-            <returns>The first element that satisfies the predicate or an empty optional.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.LastOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Returns the last elements of a sequence or an empty optional if the sequence contains no elements.
-            </summary>
-            <typeparam name="TSource">The type of the element in the sequence.</typeparam>
-            <param name="source">the source of the sequence.</param>
-            <returns>The last element from the sequence or an empty result if the sequence contains no elements.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.LastOrEmpty``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
-            <summary>
-            Returns the last element of the sequence that satisfies the predicate or an empty optional if no such element is found.
-            </summary>
-            <typeparam name="TSource">The type of the element in the sequence.</typeparam>
-            <param name="source">the source of the sequence.</param>
-            <param name="predicate">A function to test each element to a condition.</param>
-            <returns>The last element that satisfies the predicate or an empty optional.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.EnumerableExtensions.ElementAtOrEmpty``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
-            <summary>
-            Returns the element at the specified index in a sequence or an empty optional if the index is out of range
-            </summary>
-            <typeparam name="TSource">The type of the element in the sequence.</typeparam>
-            <param name="source">the source of the sequence.</param>
-            <param name="index">The zero-based index of the element to retrieve.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Extensions.TypeExtensions">
-            <summary>
-            Provides with methods to extend use of <see cref="T:System.Type"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.GetDescription``1(``0)">
-            <summary>
-            Returns the description string attribute of the current <see cref="T:System.Enum"/> value type.
-            if not found, returns the value as string.
-            </summary>
-            <typeparam name="TEnum">Type of enumeration.</typeparam>
-            <param name="value">Enumeration field value to act on.</param>
-            <returns>The description string. If not found, returns the value as string.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.IsOverridden(System.Reflection.MethodInfo)">
-            <summary>
-            Determines whether the specified method is overridden in its current implementation.
-            The method info should come from the <see cref="M:System.Object.GetType"/>.
-            </summary>
-            <param name="methodInfo">The method info to act on.</param>
-            <returns><see langword="true"/> if so, otherwise <see langword="false"/>.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="methodInfo"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.IsAwaitable(System.Reflection.MethodInfo)">
-            <summary>
-            Determines whether the specified method is a <see cref="T:System.Threading.Tasks.Task"/>.
-            </summary>
-            <param name="methodInfo">The method info to act on.</param>
-            <returns><see langword="true"/> if so, otherwise <see langword="false"/>.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="methodInfo"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.IsNullable(System.Type)">
-            <summary>
-            Determines whether the current type is a null-able type.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <returns><see langword="true"/> if found, otherwise <see langword="false"/>.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.IsEnumerable(System.Type)">
-            <summary>
-            Determines whether the current type implements <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <returns><see langword="true"/> if found, otherwise <see langword="false"/>.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.GetNameWithoutGenericArity(System.Type)">
-            <summary>
-            Returns the name of the type without the generic arity '`'.
-            Useful for generic types.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <returns>The name of the type without the generic arity '`'.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.TryLoadAssembly(System.Reflection.AssemblyName,System.Reflection.Assembly@,System.Exception@)">
-            <summary>
-            Tries to load assembly from its assembly name.
-            </summary>
-            <param name="assemblyName">The assembly name to act with.</param>
-            <param name="loadedAssembly">The loaded assembly if succeeded.</param>
-            <param name="assemblyException">The handled exception during assembly loading if fails.</param>
-            <returns>Returns <see langword="true"/> if loading OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.TryTypeInvokeMember(System.Type,System.Object@,System.Exception@,System.String,System.Reflection.BindingFlags,System.Reflection.Binder,System.Object,System.Object[])">
-            <summary>
-            Tries to invoke the specified member, using the specified binding constraints and matching
-            the specified argument list.
-            </summary>
-            <param name="type"></param>
-            <param name="result">An object representing the return value of the invoked member
-            or an empty result with handled exception.</param>
-            <param name="invokeException">The handled invoke exception.</param>
-            <param name="memberName">The string containing the name of the constructor, method, property, or field
-            member to invoke. /// -or- /// An empty string (&quot;&quot;) to invoke the default
-            member. /// -or- /// For IDispatch members, a string representing the DispID,
-            for example &quot;[DispID=3]&quot;.</param>
-            <param name="invokeAttr">A bit-mask comprised of one or more System.Reflection.BindingFlags that specify
-            how the search is conducted. The access can be one of the BindingFlags such as
-            Public, NonPublic, Private, InvokeMethod, GetField, and so on. The type of lookup
-            need not be specified. If the type of lookup is omitted, BindingFlags.Public
-            | BindingFlags.Instance | BindingFlags.Static are used.</param>
-            <param name="binder">An object that defines a set of properties and enables binding, which can involve
-            selection of an overloaded method, coercion of argument types, and invocation
-            of a member through reflection. /// -or- /// A null reference (Nothing in Visual
-            Basic), to use the System.Type.DefaultBinder. Note that explicitly defining a
-            System.Reflection.Binder object may be required for successfully invoking method
-            overloads with variable arguments.</param>
-            <param name="target">The object on which to invoke the specified member.</param>
-            <param name="args">An array containing the arguments to pass to the member to invoke.</param>
-            <returns>Returns <see langword="true"/> if invoke OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="memberName"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.TryMakeGenericType(System.Type,System.Type@,System.Exception@,System.Type[])">
-            <summary>
-            Tries to substitute the elements of an array of types for the type parameters of the
-            current generic type definition and returns a System.Type object representing
-            the resulting constructed type. If error, return false with exception.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <param name="genericType">The generic type result.</param>
-            <param name="typeException">The handled type exception.</param>
-            <param name="typeArguments">An array of types to be substituted for the type parameters of the current generic
-            type.</param>
-            <returns>Returns <see langword="true"/> if make OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.TryGetConstructorDelegate``1(System.Type,``0@,System.Exception@,System.Type[])">
-            <summary>
-            Tries to get the specified delegate type associated to the constructor.
-            </summary>
-            <typeparam name="TDelegate"></typeparam>
-            <param name="type">The type to act on.</param>
-            <param name="constructorDelegate">The built constructor delegate.</param>
-            <param name="constructorException">The handled exception.</param>
-            <param name="parameterTypes">The collection of parameter types.</param>
-            <returns>Returns <see langword="true"/> if make OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="parameterTypes"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.TryGetTypeFromTypeName(System.String,System.Type@,System.Exception@)">
-            <summary>
-            Tries to get the type specified by its name from the loaded assemblies.
-            </summary>
-            <param name="typeName">The type name.</param>
-            <param name="type">The type result if found.</param>
-            <param name="typeException">The handled execution exception.</param>
-            <returns>Returns <see langword="true"/> if get OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="typeName"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.TryGetConstructorExpression(System.Reflection.ConstructorInfo,System.Linq.Expressions.Expression@,System.Exception@,System.Linq.Expressions.ParameterExpression[])">
-            <summary>
-            Tries to get an Expression representing the constructor call, passing in the constructor parameters.
-            </summary>
-            <param name="constructorInfo">The constructor info to act on.</param>
-            <param name="constructorExpression">The built constructor expression.</param>
-            <param name="constructorException">The handled constructor exception.</param>
-            <param name="parameterExpressions">A collection of parameter expressions.</param>
-            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="constructorInfo"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="parameterExpressions"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.TryGetConstructorInfo(System.Type,System.Reflection.ConstructorInfo@,System.Exception@,System.Type[])">
-            <summary>
-            Tries to get the constructor from the type that matches the specified arguments type.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <param name="constructorInfo">The found constructor.</param>
-            <param name="constructorException">The handled constructor exception.</param>
-            <param name="parameterTypes">The optional parameters types.</param>
-            <returns>Returns <see langword="true"/> if make OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.TryLoadAssembly(System.String,System.Reflection.Assembly@,System.Exception@)">
-            <summary>
-            Tries to load assembly from its name.
-            </summary>
-            <param name="assemblyName">The full assembly name.</param>
-            <param name="loadedAssembly">The loaded assembly if succeeded.</param>
-            <param name="assemblyException">The handled exception during assembly loading.</param>
-            <returns>Returns <see langword="true"/> if loading OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.TryGetType(System.String,System.Type@,System.Exception@)">
-            <summary>
-            Tries to get type from its string name.
-            </summary>
-            <param name="typeName">The name of the type to find.</param>
-            <param name="foundType">The found type.</param>
-            <param name="typeException">The handled type exception.</param>
-            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="typeName"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.TryGetType(System.String,System.String,System.Type@,System.Exception@)">
-            <summary>
-            Tries to get the type from string, if not found, try to load from the assembly.
-            </summary>
-            <param name="typeName">The name of the type to find.</param>
-            <param name="assemblyName">The assembly to act on.</param>
-            <param name="foundType">The found type.</param>
-            <param name="typeException">The handled type exception.</param>
-            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="typeName"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.GetParameterExpression(System.Type[])">
-            <summary>
-            Gets a set of Expressions representing the parameters which will be passed to the constructor.
-            </summary>
-            <param name="parameterTypes">A collection of type to be used to build parameter expressions</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="parameterTypes"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.GetBaseTypes(System.Type)">
-            <summary>
-            Return a collection of base types found in the specified type.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.IsAssignableTo(System.Type,System.Type)">
-            <summary>
-            Determines whether or not the underlying type is assignable to the specified type.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <param name="targetType">The type to check.</param>
-            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="targetType"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.ToFriendlyName(System.Type)">
-            <summary>
-            Returns the friendly name of the type.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.HasAttribute(System.Type,System.Type)">
-            <summary>
-            Determines whether or not the type contains the specified type attribute.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <param name="attributeType">The type of the attribute.</param>
-            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="attributeType"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.HasAttribute``1(System.Type,System.Func{``0,System.Boolean})">
-            <summary>
-            Determines whether or not the type contains the specified type attribute.
-            </summary>
-            <typeparam name="TAttribute">The type of the attribute.</typeparam>
-            <param name="type">The type to act on.</param>
-            <param name="predicate">The predicate to use.</param>
-            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.IsInNamespace(System.Type,System.String)">
-            <summary>
-            Determines whether or not the type is in the name space.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <param name="namespace">The name space.</param>
-            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="namespace"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.IsInExactNamespace(System.Type,System.String)">
-            <summary>
-            Determines whether or not the type is in the specified namespace.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <param name="namespace">The name space.</param>
-            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="namespace"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.IsNonAbstractClass(System.Type,System.Boolean)">
-            <summary>
-            Determines whether or not the type is an abstract type.
-            </summary>
-            <param name="type">The type to act on.</param>
-            <param name="publicOnly">if check public.</param>
-            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.HasMatchingGenericArity(System.Type,System.Reflection.TypeInfo)">
-            <summary>
-            Determines whether an interface type and a type have matching arity.
-            </summary>
-            <param name="interfaceType">The interface type.</param>
-            <param name="typeInfo">The target type.</param>
-            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="interfaceType"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="typeInfo"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeExtensions.GetRegistrationType(System.Type,System.Reflection.TypeInfo)">
-            <summary>
-            Returns the registration type from an interface.
-            </summary>
-            <param name="interfaceType">the interface type to act on.</param>
-            <param name="typeInfo">The type info.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="interfaceType"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="typeInfo"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Extensions.TypeNameExtensions">
-            <summary>
-            Provides with method to access type name.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.TypeNameExtensions.GetTypeDisplayName(System.Type,System.Boolean,System.Boolean)">
-            <summary>
-            Pretty print a type name.
-            </summary>
-            <param name="type">The <see cref="T:System.Type"/>.</param>
-            <param name="fullName"><c>true</c> to print a fully qualified name.</param>
-            <param name="includeGenericParameterNames"><c>true</c> to include generic parameter names.</param>
-            <returns>The pretty printed type name.</returns>
-        </member>
-        <member name="T:Xpandables.Net.Extensions.WithExtensions">
-            <summary>
-            Provides with extension method similar to the VB.Net key word <see lanwgord="With"/>..<see lanwgord="EndWith"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.WithExtensions.With``1(``0,System.Action{``0})">
-            <summary>
-            Sets properties via lambda expression scope.
-            This is similar to the VB.Net key word <see lanwgord="With"/>..<see lanwgord="EndWith"/>.
-            </summary>
-            <typeparam name="TSource">Type source.</typeparam>
-            <param name="source">The source item to act on.</param>
-            <param name="action">The action to be applied.</param>
-            <returns>The same object after applying the action on it.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="action"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Extensions.WithExtensions.With``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.String}},System.Object)">
-            <summary>
-            Sets properties via lambda expression. This is useful when dealing with <see cref="T:System.Linq.Expressions.Expression`1"/>.
-            </summary>
-            <typeparam name="TSource">Type source.</typeparam>
-            <param name="source">The source instance to act on.</param>
-            <param name="nameOfExpression">The expression delegate for the property.
-            Just use <see langword="nameof"/> as expression for the delegate.</param>
-            <param name="value">The value for the property.</param>
-            <returns>The current instance with modified property.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="nameOfExpression"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="nameOfExpression"/> is not valid.</exception>
-            <exception cref="T:System.Reflection.TargetInvocationException">An error occurred while setting the property value. See inner exception.</exception>
         </member>
         <member name="T:Xpandables.Net.HttpRestClient.GeoLocationRequest">
             <summary>
@@ -12087,6 +11605,308 @@
             </summary>
             <returns>An enumerable components of the derived class.</returns>
         </member>
+        <member name="T:Xpandables.Net.Types.TypeExtensions">
+            <summary>
+            Provides with methods to extend use of <see cref="T:System.Type"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.GetDescription``1(``0)">
+            <summary>
+            Returns the description string attribute of the current <see cref="T:System.Enum"/> value type.
+            if not found, returns the value as string.
+            </summary>
+            <typeparam name="TEnum">Type of enumeration.</typeparam>
+            <param name="value">Enumeration field value to act on.</param>
+            <returns>The description string. If not found, returns the value as string.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.IsOverridden(System.Reflection.MethodInfo)">
+            <summary>
+            Determines whether the specified method is overridden in its current implementation.
+            The method info should come from the <see cref="M:System.Object.GetType"/>.
+            </summary>
+            <param name="methodInfo">The method info to act on.</param>
+            <returns><see langword="true"/> if so, otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="methodInfo"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.IsAwaitable(System.Reflection.MethodInfo)">
+            <summary>
+            Determines whether the specified method is a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="methodInfo">The method info to act on.</param>
+            <returns><see langword="true"/> if so, otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="methodInfo"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.IsNullable(System.Type)">
+            <summary>
+            Determines whether the current type is a null-able type.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <returns><see langword="true"/> if found, otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.IsEnumerable(System.Type)">
+            <summary>
+            Determines whether the current type implements <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <returns><see langword="true"/> if found, otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.GetNameWithoutGenericArity(System.Type)">
+            <summary>
+            Returns the name of the type without the generic arity '`'.
+            Useful for generic types.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <returns>The name of the type without the generic arity '`'.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.TryLoadAssembly(System.Reflection.AssemblyName,System.Reflection.Assembly@,System.Exception@)">
+            <summary>
+            Tries to load assembly from its assembly name.
+            </summary>
+            <param name="assemblyName">The assembly name to act with.</param>
+            <param name="loadedAssembly">The loaded assembly if succeeded.</param>
+            <param name="assemblyException">The handled exception during assembly loading if fails.</param>
+            <returns>Returns <see langword="true"/> if loading OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.TryTypeInvokeMember(System.Type,System.Object@,System.Exception@,System.String,System.Reflection.BindingFlags,System.Reflection.Binder,System.Object,System.Object[])">
+            <summary>
+            Tries to invoke the specified member, using the specified binding constraints and matching
+            the specified argument list.
+            </summary>
+            <param name="type"></param>
+            <param name="result">An object representing the return value of the invoked member
+            or an empty result with handled exception.</param>
+            <param name="invokeException">The handled invoke exception.</param>
+            <param name="memberName">The string containing the name of the constructor, method, property, or field
+            member to invoke. /// -or- /// An empty string (&quot;&quot;) to invoke the default
+            member. /// -or- /// For IDispatch members, a string representing the DispID,
+            for example &quot;[DispID=3]&quot;.</param>
+            <param name="invokeAttr">A bit-mask comprised of one or more System.Reflection.BindingFlags that specify
+            how the search is conducted. The access can be one of the BindingFlags such as
+            Public, NonPublic, Private, InvokeMethod, GetField, and so on. The type of lookup
+            need not be specified. If the type of lookup is omitted, BindingFlags.Public
+            | BindingFlags.Instance | BindingFlags.Static are used.</param>
+            <param name="binder">An object that defines a set of properties and enables binding, which can involve
+            selection of an overloaded method, coercion of argument types, and invocation
+            of a member through reflection. /// -or- /// A null reference (Nothing in Visual
+            Basic), to use the System.Type.DefaultBinder. Note that explicitly defining a
+            System.Reflection.Binder object may be required for successfully invoking method
+            overloads with variable arguments.</param>
+            <param name="target">The object on which to invoke the specified member.</param>
+            <param name="args">An array containing the arguments to pass to the member to invoke.</param>
+            <returns>Returns <see langword="true"/> if invoke OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="memberName"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.TryMakeGenericType(System.Type,System.Type@,System.Exception@,System.Type[])">
+            <summary>
+            Tries to substitute the elements of an array of types for the type parameters of the
+            current generic type definition and returns a System.Type object representing
+            the resulting constructed type. If error, return false with exception.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <param name="genericType">The generic type result.</param>
+            <param name="typeException">The handled type exception.</param>
+            <param name="typeArguments">An array of types to be substituted for the type parameters of the current generic
+            type.</param>
+            <returns>Returns <see langword="true"/> if make OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.TryGetConstructorDelegate``1(System.Type,``0@,System.Exception@,System.Type[])">
+            <summary>
+            Tries to get the specified delegate type associated to the constructor.
+            </summary>
+            <typeparam name="TDelegate"></typeparam>
+            <param name="type">The type to act on.</param>
+            <param name="constructorDelegate">The built constructor delegate.</param>
+            <param name="constructorException">The handled exception.</param>
+            <param name="parameterTypes">The collection of parameter types.</param>
+            <returns>Returns <see langword="true"/> if make OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="parameterTypes"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.TryGetTypeFromTypeName(System.String,System.Type@,System.Exception@)">
+            <summary>
+            Tries to get the type specified by its name from the loaded assemblies.
+            </summary>
+            <param name="typeName">The type name.</param>
+            <param name="type">The type result if found.</param>
+            <param name="typeException">The handled execution exception.</param>
+            <returns>Returns <see langword="true"/> if get OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="typeName"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.TryGetConstructorExpression(System.Reflection.ConstructorInfo,System.Linq.Expressions.Expression@,System.Exception@,System.Linq.Expressions.ParameterExpression[])">
+            <summary>
+            Tries to get an Expression representing the constructor call, passing in the constructor parameters.
+            </summary>
+            <param name="constructorInfo">The constructor info to act on.</param>
+            <param name="constructorExpression">The built constructor expression.</param>
+            <param name="constructorException">The handled constructor exception.</param>
+            <param name="parameterExpressions">A collection of parameter expressions.</param>
+            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="constructorInfo"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="parameterExpressions"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.TryGetConstructorInfo(System.Type,System.Reflection.ConstructorInfo@,System.Exception@,System.Type[])">
+            <summary>
+            Tries to get the constructor from the type that matches the specified arguments type.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <param name="constructorInfo">The found constructor.</param>
+            <param name="constructorException">The handled constructor exception.</param>
+            <param name="parameterTypes">The optional parameters types.</param>
+            <returns>Returns <see langword="true"/> if make OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.TryLoadAssembly(System.String,System.Reflection.Assembly@,System.Exception@)">
+            <summary>
+            Tries to load assembly from its name.
+            </summary>
+            <param name="assemblyName">The full assembly name.</param>
+            <param name="loadedAssembly">The loaded assembly if succeeded.</param>
+            <param name="assemblyException">The handled exception during assembly loading.</param>
+            <returns>Returns <see langword="true"/> if loading OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.TryGetType(System.String,System.Type@,System.Exception@)">
+            <summary>
+            Tries to get type from its string name.
+            </summary>
+            <param name="typeName">The name of the type to find.</param>
+            <param name="foundType">The found type.</param>
+            <param name="typeException">The handled type exception.</param>
+            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="typeName"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.TryGetType(System.String,System.String,System.Type@,System.Exception@)">
+            <summary>
+            Tries to get the type from string, if not found, try to load from the assembly.
+            </summary>
+            <param name="typeName">The name of the type to find.</param>
+            <param name="assemblyName">The assembly to act on.</param>
+            <param name="foundType">The found type.</param>
+            <param name="typeException">The handled type exception.</param>
+            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="typeName"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.GetParameterExpression(System.Type[])">
+            <summary>
+            Gets a set of Expressions representing the parameters which will be passed to the constructor.
+            </summary>
+            <param name="parameterTypes">A collection of type to be used to build parameter expressions</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="parameterTypes"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.GetBaseTypes(System.Type)">
+            <summary>
+            Return a collection of base types found in the specified type.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.IsAssignableTo(System.Type,System.Type)">
+            <summary>
+            Determines whether or not the underlying type is assignable to the specified type.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <param name="targetType">The type to check.</param>
+            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="targetType"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.ToFriendlyName(System.Type)">
+            <summary>
+            Returns the friendly name of the type.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.HasAttribute(System.Type,System.Type)">
+            <summary>
+            Determines whether or not the type contains the specified type attribute.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <param name="attributeType">The type of the attribute.</param>
+            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="attributeType"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.HasAttribute``1(System.Type,System.Func{``0,System.Boolean})">
+            <summary>
+            Determines whether or not the type contains the specified type attribute.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <param name="type">The type to act on.</param>
+            <param name="predicate">The predicate to use.</param>
+            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.IsInNamespace(System.Type,System.String)">
+            <summary>
+            Determines whether or not the type is in the name space.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <param name="namespace">The name space.</param>
+            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="namespace"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.IsInExactNamespace(System.Type,System.String)">
+            <summary>
+            Determines whether or not the type is in the specified namespace.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <param name="namespace">The name space.</param>
+            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="namespace"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.IsNonAbstractClass(System.Type,System.Boolean)">
+            <summary>
+            Determines whether or not the type is an abstract type.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <param name="publicOnly">if check public.</param>
+            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.HasMatchingGenericArity(System.Type,System.Reflection.TypeInfo)">
+            <summary>
+            Determines whether an interface type and a type have matching arity.
+            </summary>
+            <param name="interfaceType">The interface type.</param>
+            <param name="typeInfo">The target type.</param>
+            <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="interfaceType"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="typeInfo"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.GetRegistrationType(System.Type,System.Reflection.TypeInfo)">
+            <summary>
+            Returns the registration type from an interface.
+            </summary>
+            <param name="interfaceType">the interface type to act on.</param>
+            <param name="typeInfo">The type info.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="interfaceType"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="typeInfo"/> is null.</exception>
+        </member>
+        <member name="T:Xpandables.Net.Types.TypeNameExtensions">
+            <summary>
+            Provides with method to access type name.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeNameExtensions.GetTypeDisplayName(System.Type,System.Boolean,System.Boolean)">
+            <summary>
+            Pretty print a type name.
+            </summary>
+            <param name="type">The <see cref="T:System.Type"/>.</param>
+            <param name="fullName"><c>true</c> to print a fully qualified name.</param>
+            <param name="includeGenericParameterNames"><c>true</c> to include generic parameter names.</param>
+            <returns>The pretty printed type name.</returns>
+        </member>
         <member name="T:Xpandables.Net.ValidatorRules.AsyncCommandValidatorDecorator`1">
             <summary>
             This class allows the application author to add validation support to command control flow.
@@ -13128,6 +12948,38 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <returns>An object that represents the result of <typeparamref name="TResult"/>.</returns>
+        </member>
+        <member name="T:Xpandables.Net.WithExtensions">
+            <summary>
+            Provides with extension method similar to the VB.Net key word <see lanwgord="With"/>..<see lanwgord="EndWith"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.WithExtensions.With``1(``0,System.Action{``0})">
+            <summary>
+            Sets properties via lambda expression scope.
+            This is similar to the VB.Net key word <see lanwgord="With"/>..<see lanwgord="EndWith"/>.
+            </summary>
+            <typeparam name="TSource">Type source.</typeparam>
+            <param name="source">The source item to act on.</param>
+            <param name="action">The action to be applied.</param>
+            <returns>The same object after applying the action on it.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="action"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.WithExtensions.With``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.String}},System.Object)">
+            <summary>
+            Sets properties via lambda expression. This is useful when dealing with <see cref="T:System.Linq.Expressions.Expression`1"/>.
+            </summary>
+            <typeparam name="TSource">Type source.</typeparam>
+            <param name="source">The source instance to act on.</param>
+            <param name="nameOfExpression">The expression delegate for the property.
+            Just use <see langword="nameof"/> as expression for the delegate.</param>
+            <param name="value">The value for the property.</param>
+            <returns>The current instance with modified property.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="nameOfExpression"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="nameOfExpression"/> is not valid.</exception>
+            <exception cref="T:System.Reflection.TargetInvocationException">An error occurred while setting the property value. See inner exception.</exception>
         </member>
     </members>
 </doc>

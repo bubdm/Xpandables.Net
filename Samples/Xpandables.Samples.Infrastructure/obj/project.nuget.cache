@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "mFsIHJ5PGfDuHGmTan+HkkUb4qxqSY/T7e/XYbCiWRm8wgD6me3IcvH7nvaeqlCuKIECYOlib47/B5awN0s7ew==",
+  "dgSpecHash": "hKrZ53U3lus0SoSWF8v4nWKDpzntcSwLhuwhCmepCzu66062rxpBbUn3hVuAl8TfOVNMEeWw0pn+LBnpljc6dw==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Infrastructure\\Xpandables.Samples.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -146,10 +146,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\3.1.6\\xpandables.net.3.1.6.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.dependencyinjection\\3.1.6\\xpandables.net.dependencyinjection.3.1.6.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net.entityframework\\3.1.6\\xpandables.net.entityframework.3.1.6.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
   "logs": []
 }

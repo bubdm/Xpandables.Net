@@ -34,6 +34,11 @@ namespace Xpandables.Net.Data.Connections
         private bool _useIntegratedSecurity;
 
         /// <summary>
+        /// Initializes a new instance of <see cref="DataConnectionBuilder"/> to build a data connection.
+        /// </summary>
+        public DataConnectionBuilder() { }
+
+        /// <summary>
         /// Returns a new <see cref="IDataConnection"/> using registered information.
         /// </summary>
         /// <exception cref="ArgumentNullException">Connection string, poll name or provider type is null.</exception>

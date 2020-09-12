@@ -51,10 +51,7 @@ namespace Xpandables.Samples.Business.Handlers
 
             var options = new DataOptionsBuilder()
                 .AddConnection(connection)
-                .AddExceptionEvent(exception =>
-                {
-                    Console.WriteLine(exception);
-                })
+                .AddExceptionEvent(exception => Console.WriteLine(exception))
                 .Build();
 
             var xusers = await _dataBase
