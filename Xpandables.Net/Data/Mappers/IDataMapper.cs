@@ -52,6 +52,26 @@ namespace Xpandables.Net.Data.Mappers
         }
 
         /// <summary>
+        /// Maps the data source collection to the specified type.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of expected result.</typeparam>
+        /// <param name="source">The data source collection to act on.</param>
+        /// <param name="options">Defines the execution options.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
+        public void Map<TEntity>(IEnumerable<IDataRecord> source, DataOptions options)
+            where TEntity : class, new()
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            _ = options ?? throw new ArgumentNullException(nameof(options));
+
+            Entities.Clear();
+
+            foreach (var row in source)
+                DataMapperRow.Map<TEntity>(row, options);
+        }
+
+        /// <summary>
         /// Maps the record to the specified type.
         /// </summary>
         /// <typeparam name="TEntity">The type of expected result.</typeparam>
@@ -76,7 +96,7 @@ namespace Xpandables.Net.Data.Mappers
         /// <summary>
         /// Gets the collection of built entities.
         /// </summary>
-        CorrelationCollection<string, IDataEntity> Entities { get; }
+        CorrelationCollection<string, DataEntity> Entities { get; }
     }
 
     /// <summary>
@@ -91,7 +111,7 @@ namespace Xpandables.Net.Data.Mappers
         /// <param name="entities">The shared entities collection.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="dataMapperRow"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="entities"/> is null.</exception>
-        public DataMapper(IDataMapperRow dataMapperRow, CorrelationCollection<string, IDataEntity> entities)
+        public DataMapper(IDataMapperRow dataMapperRow, CorrelationCollection<string, DataEntity> entities)
         {
             DataMapperRow = dataMapperRow ?? throw new ArgumentNullException(nameof(dataMapperRow));
             Entities = entities ?? throw new ArgumentNullException(nameof(entities));
@@ -105,6 +125,6 @@ namespace Xpandables.Net.Data.Mappers
         /// <summary>
         /// Gets the collection of built entities.
         /// </summary>
-        public CorrelationCollection<string, IDataEntity> Entities { get; }
+        public CorrelationCollection<string, DataEntity> Entities { get; }
     }
 }

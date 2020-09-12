@@ -24,6 +24,7 @@ using System.Linq.Expressions;
 using System.Threading;
 
 using Xpandables.Net.Data.Attributes;
+using Xpandables.Net.Data.Connections;
 using Xpandables.Net.Data.Elements;
 
 namespace Xpandables.Net.Data.Options
@@ -35,8 +36,10 @@ namespace Xpandables.Net.Data.Options
     {
         private IsolationLevel _isolationLevel = IsolationLevel.ReadUncommitted;
         private CancellationToken _cancellationToken = CancellationToken.None;
+        private Action<Exception>? _onException;
+        private IDataConnection _connection = null!;
         private bool _isTransactionEnabled;
-        private Func<IDataProperty, bool>? _isMappable;
+        private Func<DataProperty, bool>? _isMappable;
         private readonly ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> _dataNames
             = new ConcurrentDictionary<Type, ConcurrentDictionary<string, string>>();
         private readonly ConcurrentDictionary<Type, HashSet<string>> _exceptNames = new ConcurrentDictionary<Type, HashSet<string>>();
@@ -54,6 +57,7 @@ namespace Xpandables.Net.Data.Options
         /// </summary>
         public DataOptions Build()
             => new DataOptions(
+                _connection,
                 _isTransactionEnabled,
                 _isolationLevel,
                 _isMappable,
@@ -61,13 +65,16 @@ namespace Xpandables.Net.Data.Options
                 _exceptNames,
                 _converters,
                 _isIdentityRetrieved,
-                _cancellationToken);
+                _cancellationToken,
+                _onException);
 
         /// <summary>
         /// Returns a the default instance of <see cref="DataOptions"/>.
         /// </summary>
-        public DataOptions BuildDefault()
+        /// <param name="connection">The connection to be used.</param>
+        public DataOptions BuildDefault(IDataConnection connection)
             => new DataOptions(
+                connection,
                 false,
                 IsolationLevel.ReadCommitted,
                 default,
@@ -89,6 +96,26 @@ namespace Xpandables.Net.Data.Options
         }
 
         /// <summary>
+        /// Adds the event action that will be raised on exception.
+        /// </summary>
+        /// <param name="onException">The action that get called on exception.</param>
+        public DataOptionsBuilder AddExceptionEvent(Action<Exception> onException)
+        {
+            _onException = onException;
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the connection to the current instance.
+        /// </summary>
+        /// <param name="connection">The connection instance..</param>
+        public DataOptionsBuilder AddConnection(IDataConnection connection)
+        {
+            _connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            return this;
+        }
+
+        /// <summary>
         /// This is the highest level of mapping.
         /// Adds a delegate that determines whether or not a property should be mapped.
         /// The delegate will received an instance of the processing property and should return <see langword="true"/> if the property should be
@@ -98,7 +125,7 @@ namespace Xpandables.Net.Data.Options
         /// </summary>
         /// <param name="mappable">The delegate that determine if a property is used or not.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="mappable"/> is null.</exception>
-        public DataOptionsBuilder AddMappable(Func<IDataProperty, bool> mappable)
+        public DataOptionsBuilder AddMappable(Func<DataProperty, bool> mappable)
         {
             _isMappable = mappable ?? throw new ArgumentNullException(nameof(mappable));
             return this;
@@ -224,7 +251,7 @@ namespace Xpandables.Net.Data.Options
             }
 
             return this;
-        } 
+        }
 
         /// <summary>
         /// Adds a delegate to be used for converting data row value to the target type.
@@ -252,7 +279,7 @@ namespace Xpandables.Net.Data.Options
             _converters.AddOrUpdate(typeof(TType), converter, (_, __) => converter);
             return this;
         }
-      
+
         /// <summary>
         /// Defines the cancellation token for the execution.
         /// The default used value is <see cref="CancellationToken.None"/>.

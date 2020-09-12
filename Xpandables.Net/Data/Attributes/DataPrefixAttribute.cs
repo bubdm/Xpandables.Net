@@ -20,7 +20,9 @@ using System;
 namespace Xpandables.Net.Data.Attributes
 {
     /// <summary>
-    /// Defines the prefix of the property/field on the target data source.
+    /// Specifies the prefix of the bound field on the target data source for the decorated property/field or class.
+    /// When applied to a class, all the bound data source field names will be prefixed.
+    /// Note that when applied on the property/field, this attribute takes priority over the attribute class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public sealed class DataPrefixAttribute : Attribute

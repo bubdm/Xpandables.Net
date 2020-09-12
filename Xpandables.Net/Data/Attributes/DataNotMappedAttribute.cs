@@ -20,7 +20,8 @@ using System;
 namespace Xpandables.Net.Data.Attributes
 {
     /// <summary>
-    /// Defines that the decorated property should not be mapped with the target data source.
+    /// Specifies that the decorated property should not be mapped with the target data source.
+    /// Note that the default behavior of the process is to map all properties.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public sealed class DataNotMappedAttribute : Attribute { }

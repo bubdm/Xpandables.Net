@@ -25,34 +25,27 @@ namespace Xpandables.Net.Data.Executables
     public interface IDataExecutableProvider
     {
         /// <summary>
-        /// Returns the executable that matches the type if found.
-        /// </summary>
-        /// <param name="executableType">The executable type to search for.</param>
-        /// <returns>An instance of the executable type if found, otherwise null.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="executableType"/> is null.</exception>
-        object? GetExecutable(Type executableType);
-
-        /// <summary>
         /// Returns the executable that matches the specific type if found.
         /// </summary>
-        /// <typeparam name="TExecutable">The type of the executable.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TDataExecutable">The type of the executable.</typeparam>
         /// <returns>An instance of the executable type if found, otherwise null.</returns>
-        public TExecutable? GetExecutable<TExecutable>()
-            where TExecutable : class, IDataExecutable
-            => GetExecutable(typeof(TExecutable)) as TExecutable;
+        public TDataExecutable? GetDataExecutable<TResult, TDataExecutable>()
+            where TDataExecutable : DataExecutable<TResult>;
 
         /// <summary>
-        /// Returns the executable mapped that matches the specific type if found.
+        /// Returns the executable mapper that matches the specific type if found.
         /// </summary>
-        /// <typeparam name="TExecutableMapped">The type of the executable mapped.</typeparam>
-        /// <returns>An instance of the executable mapped type if found, otherwise null.</returns>
-        public TExecutableMapped? GetExecutableMapped<TExecutableMapped>()
-            where TExecutableMapped : class, IDataExecutableMapper
-            => GetExecutable(typeof(TExecutableMapped)) as TExecutableMapped;
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TDataExecutableMapper">The type of the executable.</typeparam>
+        /// <returns>An instance of the executable type if found, otherwise null.</returns>
+        public TDataExecutableMapper? GetDataExecutableMapper<TResult, TDataExecutableMapper>()
+            where TDataExecutableMapper : DataExecutableMapper<TResult>
+            where TResult : class, new();
     }
 
     /// <summary>
-    /// Default implementation of <see cref="IDataExecutableProvider"/> that uses service provider to retrieve executables.
+    /// Provides with a method to retrieve data executable instance using the <see cref="IServiceProvider"/>.
     /// </summary>
     public sealed class DataExecutableProvider : IDataExecutableProvider
     {
@@ -61,18 +54,29 @@ namespace Xpandables.Net.Data.Executables
         /// <summary>
         /// Initializes a new instance of <see cref="DataExecutableProvider"/> with the service provider.
         /// </summary>
-        /// <param name="serviceProvider">The service provider to be used.</param>
+        /// <param name="serviceProvider">The service provider.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="serviceProvider"/> is null.</exception>
-        public DataExecutableProvider(IServiceProvider serviceProvider)
-            => _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        public DataExecutableProvider(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
         /// <summary>
-        /// Returns the executable that matches the type if found.
+        /// Returns the executable that matches the specific type if found.
         /// </summary>
-        /// <param name="executableType">The executable type to search for.</param>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TDataExecutable">The type of the executable.</typeparam>
         /// <returns>An instance of the executable type if found, otherwise null.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="executableType"/> is null.</exception>
-        public object? GetExecutable(Type executableType) => _serviceProvider.GetService(executableType);
+        public TDataExecutable? GetDataExecutable<TResult, TDataExecutable>()
+            where TDataExecutable : DataExecutable<TResult>
+            => _serviceProvider.GetService(typeof(TDataExecutable)) as TDataExecutable;
 
+        /// <summary>
+        /// Returns the executable mapper that matches the specific type if found.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TDataExecutableMapper">The type of the executable.</typeparam>
+        /// <returns>An instance of the executable type if found, otherwise null.</returns>
+        public TDataExecutableMapper? GetDataExecutableMapper<TResult, TDataExecutableMapper>()
+            where TDataExecutableMapper : DataExecutableMapper<TResult>
+            where TResult : class, new()
+            => _serviceProvider.GetService(typeof(TDataExecutableMapper)) as TDataExecutableMapper;
     }
 }

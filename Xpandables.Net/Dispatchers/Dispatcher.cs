@@ -152,7 +152,8 @@ namespace Xpandables.Net.Dispatchers
                         exception);
                 }
 
-                yield return enumeratorAsync.Current;
+                if (resultExist)
+                    yield return enumeratorAsync.Current;
             }
         }
 
@@ -233,7 +234,8 @@ namespace Xpandables.Net.Dispatchers
                         exception);
                 }
 
-                yield return enumeratorAsync.Current;
+                if (resultExist)
+                    yield return enumeratorAsync.Current;
             }
         }
 

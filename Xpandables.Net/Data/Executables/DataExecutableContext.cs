@@ -54,7 +54,7 @@ namespace Xpandables.Net.Data.Executables
         public DataComponent Component { get; }
 
         /// <summary>
-        /// Contains the argument execution for <see cref="IDataExecutable{T}"/>.
+        /// Contains the argument execution for <see cref="DataExecutable{T}"/>.
         /// </summary>
 #pragma warning disable CA1034 // Nested types should not be visible
         public sealed class DataArgument
@@ -86,13 +86,13 @@ namespace Xpandables.Net.Data.Executables
             public string CommandText { get; }
 
             /// <summary>
-            /// Gets the parameters to be used with the <see cref="IDataExecutable{T}"/>.
+            /// Gets the parameters to be used with the <see cref="DataExecutable{T}"/>.
             /// </summary>
             public ReadOnlyCollection<object>? Parameters { get; }
         }
 
         /// <summary>
-        /// Contains component execution for <see cref="IDataExecutable{T}"/>.
+        /// Contains component execution for <see cref="DataExecutable{T}"/>.
         /// </summary>
 #pragma warning disable CA1034 // Nested types should not be visible
         public sealed class DataComponent : ValueObject

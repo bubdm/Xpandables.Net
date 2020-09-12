@@ -16,9 +16,8 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.Data.Executables
 {
@@ -27,9 +26,10 @@ namespace Xpandables.Net.Data.Executables
     /// interface without dedicated class.
     /// </summary>
     /// <typeparam name="TResult">The type of the result.</typeparam>
-    public sealed class DataExecutableBuilder<TResult> : DataExecutable<TResult>
+    public sealed class DataExecutableMapperBuilder<TResult> : DataExecutableMapper<TResult>
+        where TResult : class, new()
     {
-        private readonly Func<DataExecutableContext, Task<Optional<TResult>>> _executable;
+        private readonly Func<DataExecutableContext, IAsyncEnumerable<TResult>> _executable;
 
         /// <summary>
         /// Initializes a new instance of <see cref="DataExecutableBuilder{TResult}"/> class with the delegate to be used
@@ -40,16 +40,19 @@ namespace Xpandables.Net.Data.Executables
         /// the <see cref="DataExecutable{TResult}"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="executable"/> is null.</exception>
-        public DataExecutableBuilder(Func<DataExecutableContext, Task<Optional<TResult>>> executable)
+        public DataExecutableMapperBuilder(Func<DataExecutableContext, IAsyncEnumerable<TResult>> executable)
             => _executable = executable ?? throw new ArgumentNullException(nameof(executable));
 
         /// <summary>
-        /// Asynchronously executes an action to the database and returns a result of specific-type.
+        /// Asynchronously executes an action to the database and returns the result mapped to the specific-type.
         /// </summary>
         /// <param name="context">The target executable context instance.</param>
-        /// <returns>A task representing the asynchronous operation</returns>
+        /// <returns>An asynchronous enumeration of <typeparamref name="TResult"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public override async Task<Optional<TResult>> ExecuteAsync(DataExecutableContext context)
-            => await _executable(context).ConfigureAwait(false);
+        public override async IAsyncEnumerable<TResult> ExecuteMappedAsync(DataExecutableContext context)
+        {
+            await foreach (var result in _executable(context).ConfigureAwait(false))
+                yield return result;
+        }
     }
 }

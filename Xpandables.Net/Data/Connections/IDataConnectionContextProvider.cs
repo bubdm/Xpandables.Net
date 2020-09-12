@@ -15,16 +15,22 @@
  *
 ************************************************************************************************************/
 
+using System;
+using System.Threading.Tasks;
+
 namespace Xpandables.Net.Data.Connections
 {
     /// <summary>
-    /// Allows an application author to return a <see cref="IDataConnection"/> to be used with <see cref="IDataBase"/>.
+    /// Allows an application author to return a <see cref="DataConnectionContext"/> to be used with <see cref="IDataBase"/>.
+    /// Note that you must register this interface as a singleton to take advantage of the caching process.
     /// </summary>
-    public interface IDataConnectionProvider
+    public interface IDataConnectionContextProvider
     {
         /// <summary>
-        /// Returns the expected <see cref="IDataConnection"/> for the current control flow.
+        /// Provides with a database connection using the provider and the connection string.
         /// </summary>
-        IDataConnection GetDataConnection();
+        /// <param name="dataConnection">The data connection to act with.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
+        Task<DataConnectionContext> GetDataConnectionContextAsync(IDataConnection dataConnection);
     }
 }

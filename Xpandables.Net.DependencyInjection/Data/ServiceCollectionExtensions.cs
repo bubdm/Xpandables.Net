@@ -20,6 +20,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.Data;
+using Xpandables.Net.Data.Connections;
 using Xpandables.Net.Data.Elements;
 using Xpandables.Net.Data.Executables;
 using Xpandables.Net.Data.Mappers;
@@ -44,16 +45,20 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<IDataBase, DataBase>();
-            services.AddScoped<IDataFactoryProvider, DataFactoryProvider>();
+            services.AddSingleton<IDataFactoryProvider, DataFactoryProvider>();
+
+            services.AddTransient<IDataMapperRow, DataMapperRow>();
+            services.AddTransient<IDataMapper, DataMapper>();
+
             services.AddScoped<IDataExecutableProvider, DataExecutableProvider>();
+
             services.AddTransient<IDataPropertyBuilder, DataPropertyBuilder>();
             services.AddTransient<IDataEntityBuilder, DataEntityBuilder>();
-            services.AddTransient<IDataMapperRow, DataMapperRow>();
-            services.AddScoped<IDataMapper, DataMapper>();
-            services.AddScoped<IDataBase, DataBase>();
+
+            services.AddScoped<IDataConnectionContextProvider, DataConnectionContextProvider>();
 
             services.AddTransient<DataExecutableProcedure>();
-            services.AddTransient(typeof(DataExecutableMapper<>));
+            services.AddTransient(typeof(DataExecutableMapperFuncProc<>));
             services.AddTransient(typeof(DataExecutableQuery<>));
             services.AddTransient<DataExecutableTable>();
             services.AddTransient<DataExecutableTransaction>();

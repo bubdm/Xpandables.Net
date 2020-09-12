@@ -21,6 +21,7 @@ namespace Xpandables.Net.Data.Attributes
 {
     /// <summary>
     /// Denotes one or more properties that uniquely identify the decorated class.
+    /// The properties will be used to create the class identity.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public sealed class DataKeysAttribute : Attribute

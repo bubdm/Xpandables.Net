@@ -34,7 +34,7 @@ namespace Xpandables.Net.Data.Elements
         /// <param name="source">The property info source.</param>
         /// <returns>An implementation of <see cref="DataProperty"/>.</returns>
         /// <exception cref="ArgumentNullException">the <paramref name="source"/> is null.</exception>
-        public IDataProperty Build(DataPropertySource source)
+        public DataProperty Build(DataPropertySource source)
         {
             var properties = BuildPropertyParameters(source);
 

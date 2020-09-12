@@ -47,6 +47,17 @@ namespace Xpandables.Net.Cryptography
             salt ?? throw new ArgumentNullException(nameof(salt)));
 
         /// <summary>
+        /// Makes a copy of the value encrypted source.
+        /// </summary>
+        /// <param name="source">The encrypted value to be copied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public ValueEncrypted(ValueEncrypted source)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            (Key, Value, Salt) = (source.Key, source.Value, source.Salt);
+        }
+
+        /// <summary>
         /// Provides with deconstruction for <see cref="ValueEncrypted"/>.
         /// </summary>
         /// <param name="key">The output key.</param>
@@ -152,6 +163,6 @@ namespace Xpandables.Net.Cryptography
         /// Implicit converter from <see cref="ValueEncrypted"/> to <see cref="string"/>.
         /// </summary>
         /// <param name="valueEncrypted">The target value to act on.</param>
-        public static implicit operator string(ValueEncrypted valueEncrypted)=>valueEncrypted.ToString();
+        public static implicit operator string(ValueEncrypted valueEncrypted) => valueEncrypted.ToString();
     }
 }

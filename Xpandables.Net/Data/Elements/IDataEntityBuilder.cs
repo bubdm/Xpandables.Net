@@ -39,14 +39,14 @@ namespace Xpandables.Net.Data.Elements
                     new Type[] { typeof(Type), typeof(DataOptions), typeof(IDataPropertyBuilder), typeof(IInstanceCreator) });
 
         /// <summary>
-        /// Builds an implementation of <see cref="IDataEntity"/>.
+        /// Builds an implementation of <see cref="DataEntity"/>.
         /// </summary>
         /// <param name="type">The type of the class.</param>
         /// <param name="options"></param>
         /// <returns>An instance of <see cref="DataEntity"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to build an instance. See inner exception.</exception>
-        public IDataEntity Build(Type type, DataOptions options) => GetEntityBuilder(type, options);
+        public DataEntity Build(Type type, DataOptions options) => GetEntityBuilder(type, options);
 
         /// <summary>
         /// Gets the builder cache.
@@ -82,9 +82,9 @@ namespace Xpandables.Net.Data.Elements
         /// </summary>
         /// <param name="type">The type to act on.</param>
         /// <param name="options"></param>
-        private IDataEntity GetEntityBuilder(Type type, DataOptions options)
+        private DataEntity GetEntityBuilder(Type type, DataOptions options)
         {
-            var builder = GetEntityBuilderDelegate<Func<Type, DataOptions, IDataPropertyBuilder, IInstanceCreator, IDataEntity>>(type);
+            var builder = GetEntityBuilderDelegate<Func<Type, DataOptions, IDataPropertyBuilder, IInstanceCreator, DataEntity>>(type);
             return builder.Invoke(type, options, PropertyBuilder, InstanceCreator);
         }
 
@@ -126,7 +126,7 @@ namespace Xpandables.Net.Data.Elements
         /// <param name="options">The execute options.</param>
         /// <param name="propertyBuilder">the property builder.</param>
         /// <param name="instanceCreator">The instance creator.</param>
-        public static IDataEntity Builder(Type source, DataOptions options, IDataPropertyBuilder propertyBuilder, IInstanceCreator instanceCreator)
+        public static DataEntity Builder(Type source, DataOptions options, IDataPropertyBuilder propertyBuilder, IInstanceCreator instanceCreator)
         {
             var identities = GetIdentityProperties(source);
             var type = GetEntityType(source);
@@ -151,7 +151,7 @@ namespace Xpandables.Net.Data.Elements
                         new DataPropertySource(propertyInfo, options, identities)))
             };
 
-            IDataEntity dataEntity = new DataEntity(source, properties);
+            DataEntity dataEntity = new DataEntity(source, properties);
             dataEntity.SetElement(default, dataEntity.CreateElement(instanceCreator), instanceCreator);
 
             return dataEntity;
@@ -189,7 +189,7 @@ namespace Xpandables.Net.Data.Elements
     /// <summary>
     /// Provides with a method to build implementations of <see cref="DataEntity"/>.
     /// </summary>
-    public class DataEntityBuilder : IDataEntityBuilder
+    public sealed class DataEntityBuilder : IDataEntityBuilder
     {
         /// <summary>
         /// Initializes a new instance of <see cref="DataEntityBuilder"/> class.

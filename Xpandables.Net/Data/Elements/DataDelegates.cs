@@ -22,7 +22,7 @@ namespace Xpandables.Net.Data.Elements
     /// </summary>
     /// <param name="entity">The target entity to act on.</param>
     /// <returns>A string that uniquely identifies the specified entity.</returns>
-    public delegate string DataIdentityBuilder(IDataEntity entity);
+    public delegate string DataIdentityBuilder(DataEntity entity);
 
     /// <summary>
     /// Defines a delegate to be used for converting data row value to a specific type.
@@ -30,5 +30,5 @@ namespace Xpandables.Net.Data.Elements
     /// <param name="property">The data property descriptor.</param>
     /// <param name="rowValue">The data row value.</param>
     /// <returns>A converted value from the data row value.</returns>
-    public delegate object? DataPropertyConverter(IDataProperty property, object? rowValue);
+    public delegate object? DataPropertyConverter(DataProperty property, object? rowValue);
 }

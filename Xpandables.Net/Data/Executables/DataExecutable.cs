@@ -16,23 +16,24 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.Data.Executables
 {
     /// <summary>
-    /// Provides with a base definition of an executable process for <see cref="DataBase"/> that maps the result to the target type.
+    /// Provides with a base definition of an executable process for <see cref="DataBase"/>.
     /// </summary>
-    /// <typeparam name="TResult">The type of the result to map to.</typeparam>
-    public abstract class DataExecutableMapper<TResult>
-        where TResult : class, new()
+    /// <typeparam name="TResult">The type of the result.</typeparam>
+    public abstract class DataExecutable<TResult>
     {
         /// <summary>
-        /// Asynchronously executes an action to the database and returns the result mapped to the specific-type.
+        /// Asynchronously executes an action against the database and returns a result of specific-type.
         /// </summary>
         /// <param name="context">The target executable context instance.</param>
-        /// <returns>An asynchronous enumeration of <typeparamref name="TResult"/>.</returns>
+        /// <returns>A task representing the asynchronous operation</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public abstract IAsyncEnumerable<TResult> ExecuteMappedAsync(DataExecutableContext context);
+        public abstract Task<Optional<TResult>> ExecuteAsync(DataExecutableContext context);
     }
-}
+} 

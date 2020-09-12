@@ -79,7 +79,8 @@ namespace Xpandables.Net.Correlation
                     throw;
                 }
 
-                yield return enumeratorAsync.Current;
+                if (resultExist)
+                    yield return enumeratorAsync.Current;
             }
         }
     }

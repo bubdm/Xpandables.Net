@@ -54,7 +54,7 @@ namespace Xpandables.Net.Data.Mappers
             {
                 _spinLock.Enter(ref lockTaken);
 
-                var stack = new Stack<IDataEntity>();
+                var stack = new Stack<DataEntity>();
                 var master = EntityBuilder.Build(typeof(TEntity), options);
                 stack.Push(master);
 
@@ -63,7 +63,7 @@ namespace Xpandables.Net.Data.Mappers
                     var entity = stack.Pop();
 
                     var primitives = entity.Properties.Where(property => property.IsPrimitive);
-                    foreach (IDataProperty primitive in primitives)
+                    foreach (DataProperty primitive in primitives)
                         primitive.SetData(dataRecord, entity.Entity!, InstanceCreator);
 
                     entity.BuildIdentity();
@@ -91,7 +91,7 @@ namespace Xpandables.Net.Data.Mappers
         /// <summary>
         /// Gets the collection of built entities.
         /// </summary>
-        CorrelationCollection<string, IDataEntity> Entities { get; }
+        CorrelationCollection<string, DataEntity> Entities { get; }
 
         /// <summary>
         /// Gets the entity builder.
@@ -115,7 +115,7 @@ namespace Xpandables.Net.Data.Mappers
         /// <param name="instanceCreator"></param>
         /// <param name="entityBuilder"></param>
         /// <param name="entities"></param>
-        public DataMapperRow(IInstanceCreator instanceCreator, IDataEntityBuilder entityBuilder, CorrelationCollection<string, IDataEntity> entities)
+        public DataMapperRow(IInstanceCreator instanceCreator, IDataEntityBuilder entityBuilder, CorrelationCollection<string, DataEntity> entities)
         {
             InstanceCreator = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
             EntityBuilder = entityBuilder ?? throw new ArgumentNullException(nameof(entityBuilder));
@@ -125,7 +125,7 @@ namespace Xpandables.Net.Data.Mappers
         /// <summary>
         /// Gets the collection of built entities.
         /// </summary>
-        public CorrelationCollection<string, IDataEntity> Entities { get; }
+        public CorrelationCollection<string, DataEntity> Entities { get; }
 
         /// <summary>
         /// Gets the entity builder.

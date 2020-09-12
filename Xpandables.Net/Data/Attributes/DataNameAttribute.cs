@@ -20,7 +20,8 @@ using System;
 namespace Xpandables.Net.Data.Attributes
 {
     /// <summary>
-    /// Defines the name of the property/field on the target data source.
+    /// Specifies the name of the bound field on the target data source for the decorated property.
+    /// It's useful when the decorated property/field name does not match the data source field.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public sealed class DataNameAttribute : Attribute
