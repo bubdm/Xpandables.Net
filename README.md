@@ -63,10 +63,10 @@ public class Startup
     var assemblies = new[] { typeof(LoginRequestHander).Assembly };
 
     services.AddXDispatcher();
-    services.AddXCommandQueriesHandlers(options =>
+    services.AddXCommandQueriesHandlers(assemblies, options =>
     {
         options.UseValidatorDecorator(); // Queries and commands validation decorator
-    }, assemblies);    
+    });    
     
     ...
 }
