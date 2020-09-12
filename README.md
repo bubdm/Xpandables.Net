@@ -91,6 +91,16 @@ public sealed class LoginResponse
     public string Token {get; set; }
 }
 
+// The request validator will be called before the LoginRequestHandler
+public sealed class LoginRequestValidator : IValidatorRule<LoginRequest>
+{
+    public void Validate(LoginRequest argument)
+    {
+        // code validation
+        ...
+    }
+}
+
 // The LoginRequest handler...
 public sealed class LoginRequestHandler : IAsyncQueryHandler<LoginRequest, LoginResponse>
 {
