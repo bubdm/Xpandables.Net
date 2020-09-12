@@ -141,8 +141,8 @@ public class User : NotifyPropertyChanged<User>
     private string _lastName;
     public string LastName { get => _lastName; set => SetProperty(ref _lastName, value); }
     
-    [NotifyPropertyOn(nameof(FirstName)]
-    [NotifyPropertyOn(nameof(LastName)]
+    [NotifyPropertyChangedFor(nameof(FirstName)]
+    [NotifyPropertyChangedFor(nameof(LastName)]
     public string FullName => $"{FirstName} {LastName}";
     ...
 }
