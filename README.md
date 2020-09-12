@@ -63,10 +63,10 @@ public class Startup
     var assemblies = new[] { typeof(LoginRequestHander).Assembly };
 
     services.AddXDispatcher();
-    services.AddXCommandQueriesHandlers(options =>
+    services.AddXCommandQueriesHandlers(assemblies, options =>
     {
         options.UseValidatorDecorator(); // Queries and commands validation decorator
-    }, assemblies);    
+    });    
     
     ...
 }
@@ -89,6 +89,16 @@ public sealed class LoginResponse
     public LoginResponse() { }
     public LoginResponse(string token) => Token = token;
     public string Token {get; set; }
+}
+
+// The request validator will be called before the LoginRequestHandler
+public sealed class LoginRequestValidator : IValidatorRule<LoginRequest>
+{
+    public void Validate(LoginRequest argument)
+    {
+        // code validation
+        ...
+    }
 }
 
 // The LoginRequest handler...
