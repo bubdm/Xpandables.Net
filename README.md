@@ -240,3 +240,46 @@ public Optional<User> TryFindUser(string userName, string password)
          
 // PasswordIsValid returns an Optional<User> with the current user instance if Ok or empty.
 ```
+
+## [IDataBase](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Data/IDataBase.cs)
+Provides with methods to execute command against a database using an implementation of "DataExecutable{TResult}" or "DataExecutableMapper{TResult}".
+
+```C#
+// The LoginRequest handler...
+public sealed class LoginRequestHandler : IAsyncQueryHandler<LoginRequest, LoginResponse>
+{
+    private readonly IDataBase _dataBase;
+    public LoginRequestHandler(IDataBase dataBase) => _dataBase = dataBase;
+    
+    public async IAsyncEnumerable<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
+    {
+        var connection = new DataConnectionBuilder()
+            .AddConnectionString("yourconnectionstring")
+            .AddPoolName("yourPoolname")
+            .EnableIntegratedSecurity()
+            .Build();
+
+        var options = new DataOptionsBuilder()
+            .AddConnection(connection)
+            .AddExceptionEvent(exception => Console.WriteLine(exception)) // to avoid the database to throw exception
+            .Build();
+            
+        var user = await _dataBase
+            .ExecuteMappedQueryAsync<User>(options, "Select * from users where name=@name and password=@password", query.Name, query.Password)
+            .FirstOrEmptyAsync(cancellationToken)
+            .ConfigureAwait(false);            
+            
+        ...
+    }
+}
+
+// startup class ...
+public class Startup
+{
+    ....
+     services.AddXDataBase();
+    
+    ...
+}
+
+```
