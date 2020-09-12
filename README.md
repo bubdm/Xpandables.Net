@@ -29,6 +29,9 @@ Feel free to fork this project, make your own changes and create a pull request.
 - [Optional{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Optionals/Optional.cs) Describes an object that can contain a value or not of a specific type.
 - [IAsyncQuery{R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Queries/IAsyncQuery.cs) and [IQuery{R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Queries/IQuery.cs) are used as marker for queries when using the command pattern.
 - [IAsyncQueryHandler{T,R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Queries/IAsyncQueryHandler.cs) and [IQueryHandler{T,R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Queries/IQueryHandler.cs) Defines a generic method that a class implements to handle a type-specific query and returns a type-specific result.
+- [IValidatorRule{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/ValidatorRules/IValidatorRule.cs) Defines a method contract used to validate an argument.
+- [IVisitorRule](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/VisitorRules/IVisitorRule.cs) allows you to add new behaviors to an existing object without changing the object structure.
+- [IVisitable](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/VisitorRules/IVisitable.cs)  Defines an Accept operation that takes a visitor as an argument.
 
 ## Some uses
 
