@@ -260,10 +260,10 @@ public sealed class LoginRequestHandler : IAsyncQueryHandler<LoginRequest, Login
             .Build();
 
         var options = new DataOptionsBuilder()
-            .AddConnection(connection)
             .AddExceptionEvent(exception => Console.WriteLine(exception)) // to avoid the database to throw exception
             .Build();
             
+        // The result will be mapped to the User type.
         var user = await _dataBase
             .ExecuteMappedQueryAsync<User>(options, "Select * from users where name=@name and password=@password", query.Name, query.Password)
             .FirstOrEmptyAsync(cancellationToken)
@@ -278,6 +278,54 @@ public class Startup
 {
     ....
      services.AddXDataBase();
+    
+    ...
+}
+
+```
+
+Or you can do it like this
+
+```C#
+// The LoginRequest handler...
+public sealed class LoginRequestHandler : IAsyncQueryHandler<LoginRequest, LoginResponse>
+{
+    private readonly IDataBase _dataBase;
+    public LoginRequestHandler(IDataBase dataBase) => _dataBase = dataBase;
+    
+    public async IAsyncEnumerable<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
+    {          
+        // The database will use the options and connection defined during registration.
+        // You can also use another connection/options with database extension methods.
+        var user = await _dataBase
+            .ExecuteMappedQueryAsync<User>("Select * from users where name=@name and password=@password", query.Name, query.Password)
+            .FirstOrEmptyAsync(cancellationToken)
+            .ConfigureAwait(false);            
+            
+        ...
+    }
+}
+
+// startup class ...
+public class Startup
+{
+    ....
+    
+    var connection = new DataConnectionBuilder()
+        .AddConnectionString("yourconnectionstring")
+        .AddPoolName("yourPoolname")
+        .EnableIntegratedSecurity()
+        .Build();
+
+    var options = new DataOptionsBuilder()
+        .AddExceptionEvent(exception => Console.WriteLine(exception)) // to avoid the database to throw exception
+        .Build();
+    
+     services.AddXDataBase(op =>
+     {
+        op.UseDataConnection(connection);
+        op.UseDataOptions(options);
+     });
     
     ...
 }
