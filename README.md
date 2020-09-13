@@ -19,12 +19,12 @@ Feel free to fork this project, make your own changes and create a pull request.
 - [AsyncCommandCorrelationDecorator{TCommand}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Correlation/AsyncCommandCorrelationDecorator.cs) and [CommandCorrelationDecorator{TCommand}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Correlation/CommandCorrelationDecorator.cs) decorate the target command handler with an implementation of "IAsyncCorrelationContext" that  adds an event (post event) to be raised after the main one in the same control flow only if there is no exception, and an event (roll back event) to be raised when exception.
 - [AsyncQueryCorrelationDecorator{TQuery, TResult}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Correlation/AsyncQueryCorrelationDecorator.cs) and [QueryCorrelationDecorator{TQuery, TResult}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Correlation/QueryCorrelationDecorator.cs) decorate the target query handler with an implementation of "IAsyncCorrelationContext" that  adds an event (post event) to be raised after the main one in the same control flow only if there is no exception, and an event (roll back event) to be raised when exception.
 - [CorrelationCollection{TKey, TValue}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Correlation/CorrelationCollection.cs) Provides a collection of objects that need to be shared across asynchronous control flows. This collection implements "IAsyncEnumerable{KeyValuePair{TKey, TValue}}".
-- [IDataBase](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Data/IDataBase.cs) Provides with methods to execute command against a database using an implementation of [IDataExecutable{TResult}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Data/Executables/IDataExecutable.cs).
+- [IDataBase](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Data/IDataBase.cs) Provides with methods to execute command against a database using a derived form of [DataExecutable{TResult}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Data/Executables/DataExecutable.cs) or [DataExecutableMapper{TResult}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Data/Executables/DataExecutableMapper.cs).
 - [IDispatcher](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Dispatchers/IDispatcher.cs) Defines a set of methods to automatically handle "ICommand", "IAsyncCommand", "IAsyncQuery{TResult} and "IQuery{TResult}" using the matching implementation of "ICommandHandler{TCommand}", "IQueryHandler{TQuery, TResult}", "IAsyncQueryHandler{TQuery, TResult}" or/and "IAsyncCommandHandler{TCommand}".
 - [IDispatcherHandlerProvider](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Dispatchers/IDispatcherHandlerProvider.cs) Defines set of methods to retrieve handlers of specific type.
 - [IDataContext](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/EntityFramework/IDataContext.cs) Allows an application author to manage domain objects using EntityFrameworkCore.
 - [IQueryExpression{T,R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Expressions/IQueryExpression.cs) Defines a methods that returns an "Expression{TDelegate}" that can be used to query the "TSource" instance.
-- [IHttpRestClient](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientHandler.cs)  Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.
+- [IHttpRestClientHandler](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/HttpRestClient/IHttpRestClientHandler.cs)  Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.
 - [IInterceptor](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Interception/IInterceptor.cs) Base interface for types and instances for interception.
 - [Optional{T}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Optionals/Optional.cs) Describes an object that can contain a value or not of a specific type.
 - [IAsyncQuery{R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Queries/IAsyncQuery.cs) and [IQuery{R}](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Queries/IQuery.cs) are used as marker for queries when using the command pattern.
@@ -239,4 +239,47 @@ public Optional<User> TryFindUser(string userName, string password)
          .MapOptional(user => user.PasswordIsValid(password, passwordService));
          
 // PasswordIsValid returns an Optional<User> with the current user instance if Ok or empty.
+```
+
+## [IDataBase](https://github.com/Francescolis/Xpandables.Net/blob/master/Xpandables.Net/Data/IDataBase.cs)
+Provides with methods to execute command against a database using an implementation of "DataExecutable{TResult}" or "DataExecutableMapper{TResult}".
+
+```C#
+// The LoginRequest handler...
+public sealed class LoginRequestHandler : IAsyncQueryHandler<LoginRequest, LoginResponse>
+{
+    private readonly IDataBase _dataBase;
+    public LoginRequestHandler(IDataBase dataBase) => _dataBase = dataBase;
+    
+    public async IAsyncEnumerable<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
+    {
+        var connection = new DataConnectionBuilder()
+            .AddConnectionString("yourconnectionstring")
+            .AddPoolName("yourPoolname")
+            .EnableIntegratedSecurity()
+            .Build();
+
+        var options = new DataOptionsBuilder()
+            .AddConnection(connection)
+            .AddExceptionEvent(exception => Console.WriteLine(exception)) // to avoid the database to throw exception
+            .Build();
+            
+        var user = await _dataBase
+            .ExecuteMappedQueryAsync<User>(options, "Select * from users where name=@name and password=@password", query.Name, query.Password)
+            .FirstOrEmptyAsync(cancellationToken)
+            .ConfigureAwait(false);            
+            
+        ...
+    }
+}
+
+// startup class ...
+public class Startup
+{
+    ....
+     services.AddXDataBase();
+    
+    ...
+}
+
 ```
