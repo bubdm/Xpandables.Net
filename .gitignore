@@ -337,6 +337,7 @@ ASALocalRun/
 .localhistory/
 */.vs
 */obj
+*/.obj
 
 # BeatPulse healthcheck temp database
 healthchecksdb
