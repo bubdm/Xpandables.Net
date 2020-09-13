@@ -26,39 +26,26 @@ using Xpandables.Net.Data.Elements;
 namespace Xpandables.Net.Data.Options
 {
     /// <summary>
-    /// Contains execution behaviors. Use <see cref="DataOptionsBuilder"/> to build options.
+    ///  Represents a set of values data base executable options properties.
     /// </summary>
-    public sealed class DataOptions : IDataOptions
+    public interface IDataOptions
     {
-        internal DataOptions(bool isTransactionEnabled, IsolationLevel isolationLevel, Func<DataProperty, bool>? conditionalMapping, ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> mappedNames, ConcurrentDictionary<Type, HashSet<string>> notMappedNames, ConcurrentDictionary<Type, DataPropertyConverter> converters, bool isIdentityRetrieved, CancellationToken cancellationToken, Action<Exception>? onException = default)
-        {
-            IsTransactionEnabled = isTransactionEnabled;
-            IsolationLevel = isolationLevel;
-            ConditionalMapping = conditionalMapping;
-            MappedNames = mappedNames ?? throw new ArgumentNullException(nameof(mappedNames));
-            NotMappedNames = notMappedNames ?? throw new ArgumentNullException(nameof(notMappedNames));
-            Converters = converters ?? throw new ArgumentNullException(nameof(converters));
-            CancellationToken = cancellationToken;
-            IsIdentityRetrieved = isIdentityRetrieved;
-            OnException = onException;
-        }
-
         /// <summary>
         /// Gets the value whether or not to use transaction. The default value is <see langword="false"/>.
         /// if so, contains <see langword="true"/>, otherwise contains <see langword="false"/>.
         /// </summary>
-        public bool IsTransactionEnabled { get; }
+        bool IsTransactionEnabled { get; }
 
         /// <summary>
         /// Gets the isolation level for transaction. Only used if <see cref="IsTransactionEnabled"/> is <see langword="true"/>.
         /// </summary>
-        public IsolationLevel IsolationLevel { get; }
+        IsolationLevel IsolationLevel { get; }
 
         /// <summary>
         /// Defines the delegate that determines whether or not a property should be mapped.
         /// Its default behavior return <see langword="true"/>.
         /// </summary>
-        public Func<DataProperty, bool>? ConditionalMapping { get; }
+        Func<DataProperty, bool>? ConditionalMapping { get; }
 
         /// <summary>
         /// Gets the value whether or not the conditional mapping has been defined. The default value is <see langword="false"/>.
@@ -69,26 +56,23 @@ namespace Xpandables.Net.Data.Options
         /// <summary>
         /// Contains a collection of manual names mapping.
         /// </summary>
-        public ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> MappedNames { get; }
-            = new ConcurrentDictionary<Type, ConcurrentDictionary<string, string>>();
+        ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> MappedNames { get; }
 
         /// <summary>
         /// Contains a collection of manual names from types that should not to be mapped.
         /// </summary>
-        public ConcurrentDictionary<Type, HashSet<string>> NotMappedNames { get; }
-            = new ConcurrentDictionary<Type, HashSet<string>>();
+        ConcurrentDictionary<Type, HashSet<string>> NotMappedNames { get; }
 
         /// <summary>
         /// Contains a collection of converters.
         /// </summary>
-        public ConcurrentDictionary<Type, DataPropertyConverter> Converters { get; }
-            = new ConcurrentDictionary<Type, DataPropertyConverter>();
+        ConcurrentDictionary<Type, DataPropertyConverter> Converters { get; }
 
         /// <summary>
         /// Contains the cancellation token to be used.
         /// The default value is <see cref="CancellationToken.None"/>.
         /// </summary>
-        public CancellationToken CancellationToken { get; } = CancellationToken.None;
+        CancellationToken CancellationToken { get; }
 
         /// <summary>
         /// Gets the value whether or not the filtered delegate has been defined. The default value is <see langword="false"/>
@@ -98,23 +82,23 @@ namespace Xpandables.Net.Data.Options
         /// <summary>
         /// Gets the value whether or not to retrieve the newly created identity from SQL command.
         /// </summary>
-        public bool IsIdentityRetrieved { get; }
+        bool IsIdentityRetrieved { get; }
 
         /// <summary>
         /// Gets the value whether <see cref="OnException"/> event is defined.
         /// </summary>
-        public bool IsOnExceptionDefined => OnException is { };
+        bool IsOnExceptionDefined { get; }
 
         /// <summary>
         /// Contains the event to raise when exception is handled.
         /// If defined, the process do not throws exception.
         /// </summary>
-        public event Action<Exception>? OnException;
+        event Action<Exception>? OnException;
 
         /// <summary>
         /// Raises the <see cref="OnException"/> event.
         /// </summary>
         /// <param name="exception">The handled exception.</param>
-        public void OnExceptionHandled(Exception exception) => OnException?.Invoke(exception);
+        void OnExceptionHandled(Exception exception);
     }
 }

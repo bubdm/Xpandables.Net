@@ -153,14 +153,15 @@ namespace Xpandables.Net.Enumerables
         /// </summary>
         /// <typeparam name="TSource">The type of the element in the sequence.</typeparam>
         /// <param name="source">the source of the sequence.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>The first element from the sequence or an empty result if the sequence contains no elements.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public static async Task<Optional<TSource>> FirstOrEmptyAsync<TSource>(this IAsyncEnumerable<TSource> source)
+        public static async Task<Optional<TSource>> FirstOrEmptyAsync<TSource>(this IAsyncEnumerable<TSource> source, CancellationToken cancellationToken = default)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
             var index = 0;
             var response = Optional<TSource>.Empty();
-            await foreach (var item in source.ConfigureAwait(false))
+            await foreach (var item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
             {
                 response = item;
                 index++;
@@ -193,17 +194,18 @@ namespace Xpandables.Net.Enumerables
         /// <typeparam name="TSource">The type of the element in the sequence.</typeparam>
         /// <param name="source">the source of the sequence.</param>
         /// <param name="predicate">A function to test each element to a condition.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>The first element that satisfies the predicate or an empty optional.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
-        public static async Task<Optional<TSource>> FirstOrEmptyAsync<TSource>(this IAsyncEnumerable<TSource> source, Func<TSource, bool> predicate)
+        public static async Task<Optional<TSource>> FirstOrEmptyAsync<TSource>(this IAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken = default)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
             _ = predicate ?? throw new ArgumentNullException(nameof(predicate));
 
             var index = 0;
             var response = Optional<TSource>.Empty();
-            await foreach (var item in source.ConfigureAwait(false))
+            await foreach (var item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
             {
                 if (predicate(item))
                 {

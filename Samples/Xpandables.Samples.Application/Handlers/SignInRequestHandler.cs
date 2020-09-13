@@ -43,20 +43,9 @@ namespace Xpandables.Samples.Business.Handlers
         {
             var user = await _dataContext.SetOf(query).FirstOrDefaultAsync(query, cancellationToken).ConfigureAwait(false);
 
-            var connection = new DataConnectionBuilder()
-                .AddConnectionString("Server = (localdb)\\mssqllocaldb; Database = XSamples; Trusted_Connection = True; MultipleActiveResultSets = true")
-                .AddPoolName("LocalDb")
-                .EnableIntegratedSecurity()
-                .Build();
-
-            var options = new DataOptionsBuilder()
-                .AddConnection(connection)
-                .AddExceptionEvent(exception => Console.WriteLine(exception))
-                .Build();
-
             var xusers = await _dataBase
-                .ExecuteMappedQueryAsync<XUser>(options, "Select * fromusers")
-                .ToListAsync()
+                .ExecuteMappedQueryAsync<XUser>("Select * from users")
+                .FirstOrEmptyAsync()
                 .ConfigureAwait(false);
 
             if (user?.Password.IsEqualTo(query.Password, _stringCryptography) != true)

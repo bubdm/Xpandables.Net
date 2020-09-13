@@ -37,7 +37,6 @@ namespace Xpandables.Net.Data.Options
         private IsolationLevel _isolationLevel = IsolationLevel.ReadUncommitted;
         private CancellationToken _cancellationToken = CancellationToken.None;
         private Action<Exception>? _onException;
-        private IDataConnection _connection = null!;
         private bool _isTransactionEnabled;
         private Func<DataProperty, bool>? _isMappable;
         private readonly ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> _dataNames
@@ -55,9 +54,8 @@ namespace Xpandables.Net.Data.Options
         /// <summary>
         /// Returns a new instance of <see cref="DataOptions"/> using registered information.
         /// </summary>
-        public DataOptions Build()
+        public IDataOptions Build()
             => new DataOptions(
-                _connection,
                 _isTransactionEnabled,
                 _isolationLevel,
                 _isMappable,
@@ -69,12 +67,10 @@ namespace Xpandables.Net.Data.Options
                 _onException);
 
         /// <summary>
-        /// Returns a the default instance of <see cref="DataOptions"/> with the specified connection.
+        /// Returns a the default instance of <see cref="DataOptions"/>.
         /// </summary>
-        /// <param name="connection">The connection to be used.</param>
-        public DataOptions BuildDefault(IDataConnection connection)
+        public IDataOptions BuildDefault()
             => new DataOptions(
-                connection,
                 false,
                 IsolationLevel.ReadCommitted,
                 default,
@@ -102,16 +98,6 @@ namespace Xpandables.Net.Data.Options
         public DataOptionsBuilder AddExceptionEvent(Action<Exception> onException)
         {
             _onException = onException;
-            return this;
-        }
-
-        /// <summary>
-        /// Adds the connection to the current instance.
-        /// </summary>
-        /// <param name="connection">The connection instance..</param>
-        public DataOptionsBuilder AddConnection(IDataConnection connection)
-        {
-            _connection = connection ?? throw new ArgumentNullException(nameof(connection));
             return this;
         }
 

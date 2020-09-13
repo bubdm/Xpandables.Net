@@ -35,7 +35,7 @@ namespace Xpandables.Net.Data.Elements
         /// <param name="propertyInfo"></param>
         /// <param name="options"></param>
         /// <param name="identyProperties"></param>
-        public DataPropertySource(PropertyInfo propertyInfo, DataOptions options, string[] identyProperties)
+        public DataPropertySource(PropertyInfo propertyInfo, IDataOptions options, string[] identyProperties)
         {
             PropertyInfo = propertyInfo ?? throw new ArgumentNullException(nameof(propertyInfo));
             Options = options ?? throw new ArgumentNullException(nameof(options));
@@ -52,7 +52,7 @@ namespace Xpandables.Net.Data.Elements
         /// <summary>
         /// Gets the current execution options.
         /// </summary>
-        public DataOptions Options { get; }
+        public IDataOptions Options { get; }
 
         /// <summary>
         /// Gets a collection of properties defined as identifiers.

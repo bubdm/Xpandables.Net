@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using Xpandables.Net.Data.Connections;
+using Xpandables.Net.Data.Options;
 using Xpandables.Net.DependencyInjection;
 using Xpandables.Net.Enumerables;
 using Xpandables.Net.Extensibility;
@@ -37,7 +41,21 @@ namespace Xpandables.Samples.Business
             services.AddScoped<HttpIPService>();
 
             // database context sql access
-            services.AddXDataBase();
+            var dataConnection = new DataConnectionBuilder()
+                .AddConnectionString("Server = (localdb)\\mssqllocaldb; Database = XSamples; Trusted_Connection = True; MultipleActiveResultSets = true")
+                .AddPoolName("LocalDb")
+                .EnableIntegratedSecurity()
+                .Build();
+
+            var dataOptions = new DataOptionsBuilder()
+                .AddExceptionEvent(exception => Trace.WriteLine(exception))
+                .Build();
+
+            services.AddXDataBase(options =>
+            {
+                options.UseDataConnection(dataConnection);
+                options.UseDataOptions(dataOptions);
+            });
 
             // interceptor
             services.AddTransient<SignInRequestInterceptor>();

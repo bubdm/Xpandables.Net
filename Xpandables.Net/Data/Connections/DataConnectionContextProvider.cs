@@ -76,7 +76,7 @@ namespace Xpandables.Net.Data.Connections
 
         private static async Task SpeedSqlServerResultAsync(DbConnection connection)
         {
-            if (connection.GetType().Name.Equals("SqlConnection", StringComparison.OrdinalIgnoreCase))
+            if (connection.IsSqlConnection())
             {
                 using var cmd = connection.CreateCommand();
                 cmd.CommandType = CommandType.Text;

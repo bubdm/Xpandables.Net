@@ -31,36 +31,53 @@ namespace Xpandables.Net.Data
     /// <summary>
     /// Provides with methods to execute command against a database using an implementation of <see cref="DataExecutable{TResult}"/> or <see cref="DataExecutableMapper{TResult}"/>.
     /// </summary>
-    public interface IDataBase
+    public partial interface IDataBase
     {
         internal IDataConnectionContextProvider DataConnectionContextProvider { get; }
         internal IDataExecutableProvider DataExecutableProvider { get; }
 
         /// <summary>
-        /// Asynchronously executes a command/query with the specified executable against the database
+        /// May contains the data connection used from initialization.
+        /// </summary>
+        IDataConnection? DataConnection { get; }
+
+        /// <summary>
+        /// May contains the data options used from initialization.
+        /// </summary>
+        IDataOptions? DataOptions { get; }
+
+        /// <summary>
+        /// Asynchronously executes a command/query with the specified connection, options and executable against the database
         /// and returns a result of <typeparamref name="TResult" /> type.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionBuilder"/> to build a new instance.</param>
         /// <param name="dataExecutable">The data executable instance to be used.</param>
-        /// <param name="options">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
+        /// <param name="dataOptions">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
         /// <param name="commandText">The text command to run against the database.</param>
         /// <param name="commandType">The command type.</param>
         /// <param name="parameters">A collection of parameter objects for the command.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataConnection" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataOptions" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataExecutable" /> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public async Task<Optional<TResult>> ExecuteAsync<TResult>(
+            IDataConnection dataConnection,
+            IDataOptions dataOptions,
             DataExecutable<TResult> dataExecutable,
-            DataOptions options,
             string commandText,
             CommandType commandType,
             params object[] parameters)
         {
-            var executable = dataExecutable ?? throw new ArgumentNullException(nameof(dataExecutable));
+            _ = dataConnection ?? throw new ArgumentNullException(nameof(dataConnection));
+            _ = dataOptions ?? throw new ArgumentNullException(nameof(dataOptions));
+            _ = dataExecutable ?? throw new ArgumentNullException(nameof(dataExecutable));
+
             var transaction = default(DbTransaction);
             try
             {
-                var dataConnectionContext = await DataConnectionContextProvider.GetDataConnectionContextAsync(options.Connection).ConfigureAwait(false);
+                var dataConnectionContext = await DataConnectionContextProvider.GetDataConnectionContextAsync(dataConnection).ConfigureAwait(false);
 
                 using var connection = dataConnectionContext.DbConnection;
                 using var command = connection.CreateCommand();
@@ -70,25 +87,25 @@ namespace Xpandables.Net.Data
                 if (connection.State != ConnectionState.Open)
                     await connection.OpenAsync().ConfigureAwait(false);
 
-                if (options.IsTransactionEnabled)
+                if (dataOptions.IsTransactionEnabled)
                 {
-                    transaction = await connection.BeginTransactionAsync(options.IsolationLevel, options.CancellationToken).ConfigureAwait(false);
+                    transaction = await connection.BeginTransactionAsync(dataOptions.IsolationLevel, dataOptions.CancellationToken).ConfigureAwait(false);
                     command.Transaction = transaction;
                 }
 
                 var component = new DataExecutableContext.DataComponent(command, adapter);
-                var arguments = new DataExecutableContext.DataArgument(options, commandText, parameters);
+                var arguments = new DataExecutableContext.DataArgument(dataOptions, commandText, parameters);
                 var context = new DataExecutableContext(arguments, component);
 
-                return await executable.ExecuteAsync(context).ConfigureAwait(false);
+                return await dataExecutable.ExecuteAsync(context).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
-                if (options.IsTransactionEnabled)
+                if (dataOptions.IsTransactionEnabled)
                 {
                     try
                     {
-                        transaction?.Rollback();
+                        await transaction!.RollbackAsync(dataOptions.CancellationToken).ConfigureAwait(false);
                     }
                     catch (Exception sqlException)
                     {
@@ -96,16 +113,16 @@ namespace Xpandables.Net.Data
                             "Exception encountered while attempting to roll back the transaction.",
                             new AggregateException(new[] { exception, sqlException }));
 
-                        if (options.IsOnExceptionDefined)
-                            options.OnExceptionHandled(invalidSqlException);
+                        if (dataOptions.IsOnExceptionDefined)
+                            dataOptions.OnExceptionHandled(invalidSqlException);
                         else
                             throw invalidSqlException;
                     }
                 }
 
                 var invalidException = new InvalidOperationException("Exception encountered while attempting to execute command.", exception);
-                if (options.IsOnExceptionDefined)
-                    options.OnExceptionHandled(invalidException);
+                if (dataOptions.IsOnExceptionDefined)
+                    dataOptions.OnExceptionHandled(invalidException);
                 else
                     throw invalidException;
 
@@ -113,60 +130,40 @@ namespace Xpandables.Net.Data
             }
             finally
             {
-                if (options.IsTransactionEnabled)
-                    transaction?.Dispose();
+                if (dataOptions.IsTransactionEnabled)
+                    await transaction!.DisposeAsync();
             }
         }
 
         /// <summary>
-        /// Asynchronously executes a command/query with the specified executable <typeparamref name="TDataExecutable" /> type against the database
-        /// and returns a result of <typeparamref name="TResult" /> type.
-        /// The <typeparamref name="TDataExecutable" /> type inherits from <see cref="DataExecutable{T}" />.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <typeparam name="TDataExecutable">The type of the executable. The class inherits from <see cref="DataExecutable{T}" />.</typeparam>
-        /// <param name="options">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
-        /// <param name="commandText">The text command to run against the database.</param>
-        /// <param name="commandType">The command type.</param>
-        /// <param name="parameters">A collection of parameter objects for the command.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async Task<Optional<TResult>> ExecuteAsync<TResult, TDataExecutable>(
-            DataOptions options,
-            string commandText,
-            CommandType commandType,
-            params object[] parameters)
-            where TDataExecutable : DataExecutable<TResult>
-        {
-            var executable = DataExecutableProvider.GetDataExecutable<TResult, TDataExecutable>()
-                ?? throw new ArgumentException($"{typeof(TDataExecutable).Name} not found !");
-
-            return await ExecuteAsync(executable, options, commandText, commandType, parameters).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Asynchronously executes a command/query with the specified executable against the database
+        /// Asynchronously executes a command/query with the specified connection, options and executable mapper against the database
         /// and asynchronously returns result of <typeparamref name="TResult" /> type.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionBuilder"/> to build a new instance.</param>
+        /// <param name="dataOptions">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
         /// <param name="dataExecutableMapper">the data executable mapper.</param>
-        /// <param name="options">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
         /// <param name="commandText">The text command to run against the database.</param>
         /// <param name="commandType">The command type.</param>
         /// <param name="parameters">A collection of parameter objects for the command.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataConnection" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataOptions" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataExecutableMapper" /> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public async IAsyncEnumerable<TResult> ExecuteMappedAsync<TResult>(
+            IDataConnection dataConnection,
+            IDataOptions dataOptions,
             DataExecutableMapper<TResult> dataExecutableMapper,
-            DataOptions options,
             string commandText,
             CommandType commandType,
             params object[] parameters)
             where TResult : class, new()
         {
+            _ = dataConnection ?? throw new ArgumentNullException(nameof(dataConnection));
+            _ = dataOptions ?? throw new ArgumentNullException(nameof(dataOptions));
             var executableMapped = dataExecutableMapper ?? throw new ArgumentNullException(nameof(dataExecutableMapper));
+
             var transaction = default(DbTransaction);
 
             DbConnection connectionSource;
@@ -175,7 +172,7 @@ namespace Xpandables.Net.Data
 
             try
             {
-                var dataConnectionContext = await DataConnectionContextProvider.GetDataConnectionContextAsync(options.Connection).ConfigureAwait(false);
+                var dataConnectionContext = await DataConnectionContextProvider.GetDataConnectionContextAsync(dataConnection).ConfigureAwait(false);
 
                 connectionSource = dataConnectionContext.DbConnection;
                 commandSource = connectionSource.CreateCommand();
@@ -194,18 +191,18 @@ namespace Xpandables.Net.Data
             using var command = commandSource;
             using var adapter = adapterSource;
 
-            if (options.IsTransactionEnabled)
+            if (dataOptions.IsTransactionEnabled)
             {
-                transaction = await connection.BeginTransactionAsync(options.IsolationLevel, options.CancellationToken).ConfigureAwait(false);
+                transaction = await connection.BeginTransactionAsync(dataOptions.IsolationLevel, dataOptions.CancellationToken).ConfigureAwait(false);
                 command.Transaction = transaction;
             }
 
             var component = new DataExecutableContext.DataComponent(command, adapter);
-            var arguments = new DataExecutableContext.DataArgument(options, commandText, parameters);
+            var arguments = new DataExecutableContext.DataArgument(dataOptions, commandText, parameters);
             var context = new DataExecutableContext(arguments, component);
 
             var enumerableAsync = executableMapped.ExecuteMappedAsync(context);
-            await using var enumeratorAsync = enumerableAsync.GetAsyncEnumerator(options.CancellationToken);
+            await using var enumeratorAsync = enumerableAsync.GetAsyncEnumerator(dataOptions.CancellationToken);
 
             for (var resultExist = true; resultExist;)
             {
@@ -215,7 +212,7 @@ namespace Xpandables.Net.Data
                 }
                 catch (Exception exception)
                 {
-                    if (options.IsTransactionEnabled)
+                    if (dataOptions.IsTransactionEnabled)
                     {
                         try
                         {
@@ -227,8 +224,8 @@ namespace Xpandables.Net.Data
                                             "Exception encountered while attempting to roll back the transaction.",
                                             new AggregateException(new[] { exception, sqlException }));
 
-                            if (options.IsOnExceptionDefined)
-                                options.OnExceptionHandled(invalidSqlException);
+                            if (dataOptions.IsOnExceptionDefined)
+                                dataOptions.OnExceptionHandled(invalidSqlException);
                             else
                                 throw invalidSqlException;
 
@@ -236,14 +233,14 @@ namespace Xpandables.Net.Data
                         }
                         finally
                         {
-                            if (options.IsTransactionEnabled)
+                            if (dataOptions.IsTransactionEnabled)
                                 transaction?.Dispose();
                         }
                     }
 
                     var invalidException = new InvalidOperationException("Exception encountered while attempting to execute command.", exception);
-                    if (options.IsOnExceptionDefined)
-                        options.OnExceptionHandled(invalidException);
+                    if (dataOptions.IsOnExceptionDefined)
+                        dataOptions.OnExceptionHandled(invalidException);
                     else
                         throw invalidException;
                 }
@@ -251,35 +248,6 @@ namespace Xpandables.Net.Data
                 if (resultExist)
                     yield return enumeratorAsync.Current;
             }
-        }
-
-        /// <summary>
-        /// Asynchronously executes a command/query with the specified executable <typeparamref name="TDataExecutableMapped" /> type against the database
-        /// and asynchronously returns result of <typeparamref name="TResult" /> type.
-        /// The <typeparamref name="TDataExecutableMapped" /> type inherits from <see cref="DataExecutable{TResult}" />.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <typeparam name="TDataExecutableMapped">The type of the executable. The class inherits from <see cref="DataExecutable{TResult}" /> interface.</typeparam>
-        /// <param name="options">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
-        /// <param name="commandText">The text command to run against the database.</param>
-        /// <param name="commandType">The command type.</param>
-        /// <param name="parameters">A collection of parameter objects for the command.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async IAsyncEnumerable<TResult> ExecuteMappedAsync<TResult, TDataExecutableMapped>(
-            DataOptions options,
-            string commandText,
-            CommandType commandType,
-            params object[] parameters)
-            where TDataExecutableMapped : DataExecutableMapper<TResult>
-            where TResult : class, new()
-        {
-            var executableMapped = DataExecutableProvider.GetDataExecutableMapper<TResult, TDataExecutableMapped>()
-                       ?? throw new ArgumentException($"{typeof(TDataExecutableMapped).Name} not found !");
-
-            await foreach (var result in ExecuteMappedAsync(executableMapped, options, commandText, commandType, parameters).ConfigureAwait(false))
-                yield return result;
         }
     }
 
@@ -290,9 +258,13 @@ namespace Xpandables.Net.Data
     {
         private readonly IDataConnectionContextProvider _dataConnectionContextProvider;
         private readonly IDataExecutableProvider _dataExecutableProvider;
+        private readonly IDataConnection? _dataConnection;
+        private readonly IDataOptions? _dataOptions;
 
         IDataExecutableProvider IDataBase.DataExecutableProvider => _dataExecutableProvider;
         IDataConnectionContextProvider IDataBase.DataConnectionContextProvider => _dataConnectionContextProvider;
+        IDataConnection? IDataBase.DataConnection => _dataConnection;
+        IDataOptions? IDataBase.DataOptions => _dataOptions;
 
         /// <summary>
         /// Initializes a new instance of <see cref="DataBase"/>.
@@ -305,6 +277,57 @@ namespace Xpandables.Net.Data
         {
             _dataConnectionContextProvider = dataConnectionContextProvider ?? throw new ArgumentNullException(nameof(dataConnectionContextProvider));
             _dataExecutableProvider = dataExecutableProvider ?? throw new ArgumentNullException(nameof(dataExecutableProvider));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="DataBase"/> with a default data connection.
+        /// </summary>
+        /// <param name="dataConnectionContextProvider">The data context provider.</param>
+        /// <param name="dataExecutableProvider">The data executable provider.</param>
+        /// <param name="dataConnection">The default data connection to be used.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
+        public DataBase(IDataConnectionContextProvider dataConnectionContextProvider, IDataExecutableProvider dataExecutableProvider, IDataConnection dataConnection)
+        {
+            _dataConnectionContextProvider = dataConnectionContextProvider ?? throw new ArgumentNullException(nameof(dataConnectionContextProvider));
+            _dataExecutableProvider = dataExecutableProvider ?? throw new ArgumentNullException(nameof(dataExecutableProvider));
+            _dataConnection = dataConnection ?? throw new ArgumentNullException(nameof(dataConnection));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="DataBase"/> with a default data options.
+        /// </summary>
+        /// <param name="dataConnectionContextProvider">The data context provider.</param>
+        /// <param name="dataExecutableProvider">The data executable provider.</param>
+        /// <param name="dataOptions">The default data options to be used.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataOptions"/> is null.</exception>
+        public DataBase(IDataConnectionContextProvider dataConnectionContextProvider, IDataExecutableProvider dataExecutableProvider, IDataOptions dataOptions)
+        {
+            _dataConnectionContextProvider = dataConnectionContextProvider ?? throw new ArgumentNullException(nameof(dataConnectionContextProvider));
+            _dataExecutableProvider = dataExecutableProvider ?? throw new ArgumentNullException(nameof(dataExecutableProvider));
+            _dataOptions = dataOptions ?? throw new ArgumentNullException(nameof(dataOptions));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="DataBase"/> with a default data options and connection.
+        /// </summary>
+        /// <param name="dataConnectionContextProvider">The data context provider.</param>
+        /// <param name="dataExecutableProvider">The data executable provider.</param>
+        /// <param name="dataConnection">The default data connection to be used.</param>
+        /// <param name="dataOptions">The default data options to be used.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataOptions"/> is null.</exception>
+        public DataBase(IDataConnectionContextProvider dataConnectionContextProvider, IDataExecutableProvider dataExecutableProvider, IDataConnection dataConnection, IDataOptions dataOptions)
+        {
+            _dataConnectionContextProvider = dataConnectionContextProvider ?? throw new ArgumentNullException(nameof(dataConnectionContextProvider));
+            _dataExecutableProvider = dataExecutableProvider ?? throw new ArgumentNullException(nameof(dataExecutableProvider));
+            _dataConnection = dataConnection ?? throw new ArgumentNullException(nameof(dataConnection));
+            _dataOptions = dataOptions ?? throw new ArgumentNullException(nameof(dataOptions));
         }
     }
 }
