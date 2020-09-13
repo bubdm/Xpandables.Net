@@ -15,13 +15,12 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.Correlation;
-using Xpandables.Net.Events;
 using Xpandables.Net.Queries;
 
 #pragma warning disable ET002 // Namespace does not match file path or default namespace
@@ -56,7 +55,9 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<CorrelationContext>();
+            services.AddScoped<AsyncCorrelationContext>();
             services.AddScoped<ICorrelationContext>(provider => provider.GetRequiredService<CorrelationContext>());
+            services.AddScoped<IAsyncCorrelationContext>(provider => provider.GetRequiredService<AsyncCorrelationContext>());
             return services;
         }
 
@@ -70,7 +71,9 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<CorrelationContext>();
+            services.AddScoped<AsyncCorrelationContext>();
             services.AddScoped<ICorrelationContext>(provider => provider.GetRequiredService<CorrelationContext>());
+            services.AddScoped<IAsyncCorrelationContext>(provider => provider.GetRequiredService<AsyncCorrelationContext>());
 
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandCorrelationDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandCorrelationDecorator<>));

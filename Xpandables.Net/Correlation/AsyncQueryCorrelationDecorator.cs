@@ -19,7 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
+using Xpandables.Net.Asynchronous;
+using Xpandables.Net.Enumerables;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Correlation
@@ -67,21 +70,20 @@ namespace Xpandables.Net.Correlation
             var enumerableAsync = _decoratee.HandleAsync(query, cancellationToken);
             await using var enumeratorAsync = enumerableAsync.GetAsyncEnumerator(cancellationToken);
 
-            for (var resultExist = true; resultExist;)
+            var results = new List<TResult>();
+            try
             {
-                try
-                {
-                    resultExist = await enumeratorAsync.MoveNextAsync();
-                }
-                catch (Exception exception)
-                {
-                    await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
-                    throw;
-                }
-
-                if (resultExist)
-                    yield return enumeratorAsync.Current;
+                results = await _decoratee.HandleAsync(query, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+                await _correlationContext.OnPostEventAsync(results).ConfigureAwait(false);
             }
+            catch (Exception exception)
+            {
+                await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
+                throw;
+            }
+
+            await foreach (var result in new AsyncEnumerable<TResult>(results).ConfigureAwait(false))
+                yield return result;
         }
     }
 }
