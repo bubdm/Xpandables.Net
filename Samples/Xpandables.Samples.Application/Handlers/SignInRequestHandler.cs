@@ -57,9 +57,9 @@ namespace Xpandables.Samples.Business.Handlers
             }
 
             var token = user.GetToken(_tokenEngine);
-            var location = await _httpIPService.GetIPGeoLocationAsync().ConfigureAwait(false);
+            //var location = await _httpIPService.GetIPGeoLocationAsync().ConfigureAwait(false);
 
-            yield return new SignInResponse(token, user.Email, location);
+            yield return new SignInResponse(token, user.Email, default);
         }
 
 #pragma warning disable CA1034 // Nested types should not be visible

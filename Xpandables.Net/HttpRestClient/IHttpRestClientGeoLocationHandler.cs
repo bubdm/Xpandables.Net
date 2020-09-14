@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace Xpandables.Net.HttpRestClient
         /// </summary>
         /// <param name="request">The request to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse<GeoLocationResponse>> GetGeoLocationAsync(GeoLocationRequest request);
+        Task<HttpRestClientResponse<IAsyncEnumerable<GeoLocationResponse>>> GetGeoLocationAsync(GeoLocationRequest request);
     }
 
     /// <summary>
@@ -54,7 +55,7 @@ namespace Xpandables.Net.HttpRestClient
         /// </summary>
         /// <param name="request">The request to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        public async Task<HttpRestClientResponse<GeoLocationResponse>> GetGeoLocationAsync(GeoLocationRequest request)
+        public async Task<HttpRestClientResponse<IAsyncEnumerable<GeoLocationResponse>>> GetGeoLocationAsync(GeoLocationRequest request)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
             return await _httpRestClientHandler.HandleAsync(request).ConfigureAwait(false);

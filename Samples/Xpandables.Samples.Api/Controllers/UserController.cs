@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,10 +25,13 @@ namespace Xpandables.Samples.Api.Controllers
         public UserController(IDispatcher dispatcher) => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
 
         [HttpPost, AllowAnonymous]
-        public async Task<IActionResult> SignIn(SignInRequest signInRequest, CancellationToken cancellationToken)
+        public async IAsyncEnumerable<SignInResponse> SignIn(SignInRequest signInRequest, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var results = await _dispatcher.SendQueryAsync(signInRequest, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-            return Ok(results.FirstOrDefault());
+            await foreach (var result in _dispatcher.SendQueryAsync(signInRequest, cancellationToken).ConfigureAwait(false))
+                yield return result;
+
+            //var results = await _dispatcher.SendQueryAsync(signInRequest, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+            //return Ok(results.FirstOrDefault());
         }
     }
 }

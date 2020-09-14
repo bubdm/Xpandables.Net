@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bF+RKWXkfXu0IME63Ly0ldUQVb1+0Htj6xN857n2DlJZTAOwKOo0bt4C4ecSNPIXwfLH1FzdFzjTzBftCVvUIw==",
+  "dgSpecHash": "uqOClImxlsgy3nLHFYZKsWUSxzuZoQS/lw909FUBY8WXQJ+edAt0VfiUlcOGfjiYh5iXnkHFOqEvKrVI783MQQ==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Desktop\\Xpandables.Samples.Desktop.csproj",
   "expectedPackageFiles": [
@@ -55,6 +55,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.diagnostics.eventlog\\4.7.0\\system.diagnostics.eventlog.4.7.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.7.1\\system.identitymodel.tokens.jwt.6.7.1.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.linq.async\\4.1.1\\system.linq.async.4.1.1.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",

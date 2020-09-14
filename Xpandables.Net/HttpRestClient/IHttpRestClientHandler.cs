@@ -16,11 +16,13 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Queries;
 
@@ -53,7 +55,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns an <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        public async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             if (HttpClient is null)
                 throw new InvalidOperationException(
@@ -71,8 +73,8 @@ namespace Xpandables.Net.HttpRestClient
                 if (response.IsSuccessStatusCode)
                     return await GetHttpRestClientResponseAsync<TResult>(response).ConfigureAwait(false);
 
-                return (HttpRestClientResponse<TResult>)await GetHttpRestClientBadResponseAsync(
-                    HttpRestClientResponse<TResult>.Failure, response)
+                return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)await GetHttpRestClientBadResponseAsync(
+                    HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure, response)
                     .ConfigureAwait(false);
             }
             catch (Exception exception) when (exception is ArgumentNullException
@@ -81,7 +83,7 @@ namespace Xpandables.Net.HttpRestClient
                                             || exception is HttpRequestException
                                             || exception is TaskCanceledException)
             {
-                return HttpRestClientResponse<TResult>.Failure(exception);
+                return HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure(exception);
             }
         }
 
@@ -124,7 +126,7 @@ namespace Xpandables.Net.HttpRestClient
             }
         }
 
-        private static async Task<HttpRestClientResponse<TResult>> GetHttpRestClientResponseAsync<TResult>(HttpResponseMessage httpResponse)
+        private static async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> GetHttpRestClientResponseAsync<TResult>(HttpResponseMessage httpResponse)
         {
             try
             {
@@ -133,8 +135,8 @@ namespace Xpandables.Net.HttpRestClient
                     var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
                     if (stream is { })
                     {
-                        var result = stream.DeserializeJsonFromStream<TResult>();
-                        return HttpRestClientResponse<TResult>
+                        var result = stream.DeserializeJsonFromStream<AsyncEnumerable<TResult>>();
+                        return HttpRestClientResponse<IAsyncEnumerable<TResult>>
                             .Success(result, httpResponse.StatusCode)
                             .AddHeaders(GetHttpResponseHeaders(httpResponse))
                             .AddVersion(httpResponse.Version)
@@ -142,7 +144,7 @@ namespace Xpandables.Net.HttpRestClient
                     }
                 }
 
-                return HttpRestClientResponse<TResult>
+                return HttpRestClientResponse<IAsyncEnumerable<TResult>>
                     .Success(httpResponse.StatusCode)
                     .AddHeaders(GetHttpResponseHeaders(httpResponse))
                     .AddVersion(httpResponse.Version)
@@ -151,7 +153,7 @@ namespace Xpandables.Net.HttpRestClient
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception exception)
             {
-                return HttpRestClientResponse<TResult>
+                return HttpRestClientResponse<IAsyncEnumerable<TResult>>
                     .Failure(exception, HttpStatusCode.BadRequest)
                     .AddHeaders(GetHttpResponseHeaders(httpResponse))
                     .AddVersion(httpResponse.Version)

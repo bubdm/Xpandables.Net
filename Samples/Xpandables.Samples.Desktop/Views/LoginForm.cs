@@ -9,6 +9,8 @@ using Xpandables.Samples.Business.Contracts;
 using Xpandables.Samples.Desktop.Helpers;
 using Xpandables.Samples.Desktop.Models;
 using Xpandables.Net.Strings;
+using Xpandables.Net.Enumerables;
+using System.Linq;
 
 namespace Xpandables.Samples.Desktop.Views
 {
@@ -56,7 +58,7 @@ namespace Xpandables.Samples.Desktop.Views
 
             if (response.IsValid())
             {
-                SignInResponse = response.Result;
+                SignInResponse = await response.Result.FirstAsync();
                 DialogResult = DialogResult.OK;
                 Close();
             }
