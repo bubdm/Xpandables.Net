@@ -1,1255 +1,299 @@
-using Intesa.SanPaolo.Servitia.Practices.Database.Providers;
-using System;
-using System.Collections.Concurrent;
-using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
-
-namespace Intesa.SanPaolo.Servitia.Practices.Database.Connections
-{
-    /// <summary>
-    /// Provides with the <see cref="DbConnection"/> from the <see cref="DbProviderFactory"/> and the <see cref="IDataConnection"/>.
+ /// <summary>
+    /// Defines a generic method that a class implements to handle a type-specific query and
+    /// returns a type-specific result.
+    /// The implementation must be thread-safe when working in a multi-threaded environment.
+    /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the query can be handled. Its default behavior returns <see langword="true"/>.
     /// </summary>
-    public sealed class DbConnectionProvider
+    /// <typeparam name="TQuery">Type of the query that will be used as argument.</typeparam>
+    /// <typeparam name="TResult">Type of the result of the query.</typeparam>
+    public interface IQueryHandler<in TQuery, TResult> : ICanHandle<TQuery>
+        where TQuery : class, IQuery<TResult>
     {
-        private readonly ConcurrentDictionary<string, (DbConnection, DbProviderFactory)> _dbConnectionCache;
-        private readonly DataFactoryProvider _dataFactoryProvider;
-
         /// <summary>
-        /// Initializes a new instance of <see cref="DbConnectionProvider"/>.
+        /// Handles the specified query and returns the expected result type.
         /// </summary>
-        /// <param name="dataFactoryProvider">The data factory provider.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="dataFactoryProvider"/> is null.</exception>
-        public DbConnectionProvider(DataFactoryProvider dataFactoryProvider)
-        {
-            _dataFactoryProvider = dataFactoryProvider ?? throw new ArgumentNullException(nameof(dataFactoryProvider));
-            _dbConnectionCache = new ConcurrentDictionary<string, (DbConnection, DbProviderFactory)>();
-        }
-
-        /// <summary>
-        /// Provides with a database connection using the provider and the connection string.
-        /// </summary>
-        /// <param name="dataConnection">The data connection to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
-        public async Task<(DbConnection Connection, DbProviderFactory ProviderFactory)> BuildDbConnectionAsync(IDataConnection dataConnection)
-        {
-            if (_dbConnectionCache.TryGetValue(dataConnection.GetConnectionString(), out var connectionFactory))
-                return connectionFactory;
-
-            var dbFactoryProvider = _dataFactoryProvider.GetProviderFactory(dataConnection.ProviderType)
-                ?? throw new ArgumentNullException(nameof(dataConnection.ProviderType));
-
-            var connection = await BuildConnectionAsync(dbFactoryProvider, dataConnection).ConfigureAwait(false);
-            return _dbConnectionCache.GetOrAdd(dataConnection.GetConnectionString(), (connection, dbFactoryProvider));
-        }
-
-        private static async Task<DbConnection> BuildConnectionAsync(DbProviderFactory dbProviderFactory, IDataConnection dataConnection)
-        {
-            var dbConnection = dbProviderFactory.CreateConnection();
-            dbConnection.ConnectionString = dataConnection.GetConnectionString();
-            await dbConnection.OpenAsync().ConfigureAwait(false);
-            await SpeedSqlServerResultAsync(dbConnection).ConfigureAwait(false);
-            return dbConnection;
-        }
-
-        private static async Task SpeedSqlServerResultAsync(DbConnection connection)
-        {
-            if (connection is SqlConnection)
-            {
-                using var cmd = connection.CreateCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText =
-                    @"
-                    SET ANSI_NULLS ON
-                    SET ANSI_PADDING ON
-                    SET ANSI_WARNINGS ON
-                    SET ARITHABORT ON
-                    SET CONCAT_NULL_YIELDS_NULL ON
-                    SET QUOTED_IDENTIFIER ON
-                    SET NUMERIC_ROUNDABORT OFF";
-
-                await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
-            }
-        }
+        /// <param name="query">The query to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>An object that represents the result of <typeparamref name="TResult"/>.</returns>
+        Task<Optional<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
     }
-}
-
-using Intesa.SanPaolo.Servitia.Practices.Optionals;
-using System;
-using System.Threading.Tasks;
-
-namespace Intesa.SanPaolo.Servitia.Practices.Database.Executables
-{
+	
     /// <summary>
-    /// Provides with a base definition of an executable process for <see cref="DataBase"/>.
+    /// Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.
+    /// The queries and commands should implement one of the following interfaces :
+    /// <see cref="IStringRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, <see cref="IFormUrlEncodedRequest"/>,
+    /// <see cref="IMultipartRequest"/> and <see cref="IQueryStringRequest"/>.
+    /// <para>You should register the handler using one of the extension methods 
+    /// <see langword="AddHttpClient{TClient, TImplementation}(IServiceCollection)"/> and you may add 
+    /// <see langword="HttpClientBuilderExtensions.ConfigureHttpClient(IHttpClientBuilder, Action{HttpClient})"/> or other 
+    /// to customize the client behaviors.</para>
     /// </summary>
-    /// <typeparam name="TResult">The type of the result.</typeparam>
-    public abstract class DataExecutable<TResult>
+    public interface IHttpRestClientHandler : IDisposable
     {
         /// <summary>
-        /// Asynchronously executes an action against the database and returns a result of specific-type.
+        /// Contains the <see cref="HttpContent"/> instance for the current handler.
         /// </summary>
-        /// <param name="context">The target executable context instance.</param>
-        /// <returns>A task representing the asynchronous operation</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public abstract Task<Optional<TResult>> ExecuteAsync(DataExecutableContext context);
-    }
-}
-
-using System;
-using System.Collections.Generic;
-
-namespace Intesa.SanPaolo.Servitia.Practices.Database.Executables
-{
-    /// <summary>
-    /// Provides with a base definition of an executable process for <see cref="DataBase"/> that maps the result to the target type.
-    /// </summary>
-    /// <typeparam name="TResult">The type of the result to map to.</typeparam>
-    public abstract class DataExecutableMapper<TResult>
-        where TResult : class, new()
-    {
-        /// <summary>
-        /// Asynchronously executes an action to the database and returns the result mapped to the specific-type.
-        /// </summary>
-        /// <param name="context">The target executable context instance.</param>
-        /// <returns>An asynchronous enumeration of <typeparamref name="TResult"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public abstract IAsyncEnumerable<TResult> ExecuteMappedAsync(DataExecutableContext context);
-    }
-}
-
-using Intesa.SanPaolo.Servitia.Practices.Correlation;
-using Intesa.SanPaolo.Servitia.Practices.Database.Elements;
-using Intesa.SanPaolo.Servitia.Practices.Database.Mappers;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
-
-namespace Intesa.SanPaolo.Servitia.Practices.Database.Executables
-{
-    /// <summary>
-    /// Executes a stored procedure or query and return the result mapped to specific type.
-    /// </summary>
-    /// <typeparam name="TResult">The type of result to map to.</typeparam>
-    public sealed class DataExecutableMapperFuncProc<TResult> : DataExecutableMapper<TResult>
-        where TResult : class, new()
-    {
-        private readonly DataMapper _dataMapper;
-        private readonly CorrelationCollection<string, DataEntity> _entities;
+        internal HttpClient HttpClient { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataExecutableMapperFuncProc{TResult}"/>.
-        /// </summary>
-        /// <param name="dataMapper">The mapper to be used.</param>
-        /// <param name="entities">The collection that will contain the result.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="dataMapper"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="entities"/> is null.</exception>
-        public DataExecutableMapperFuncProc(DataMapper dataMapper, CorrelationCollection<string, DataEntity> entities)
-        {
-            _dataMapper = dataMapper ?? throw new ArgumentNullException(nameof(dataMapper));
-            _entities = entities ?? throw new ArgumentNullException(nameof(entities));
-        }
-
-        public override async IAsyncEnumerable<TResult> ExecuteMappedAsync(DataExecutableContext context)
-        {
-            context.Component.Command.CommandText =
-                context.Component.Command.CommandType == CommandType.StoredProcedure
-                ? context.Argument.CommandText
-                : context.Argument.CommandText.ParseSql();
-
-            DataParameterBuilder.Build(context.Component.Command, context.Argument.Parameters?.ToArray());
-
-            if (context.Component.Command.CommandType == CommandType.StoredProcedure)
-            {
-                context.Component.Command.CommandTimeout = 0;
-                context.Component.Command.CommandText = context.Argument.CommandText.Split('@')[0].Trim();
-            }
-
-            if (context.Component.Command.CommandType == CommandType.Text
-                && context.Argument.Parameters?.All(p => p is DbParameter) == true
-                && context.Component.Command.Connection.IsSqlConnection())
-            {
-                await context.Component.Command.PrepareAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
-            }
-
-            using (var reader = await context.Component.Command.ExecuteReaderAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false))
-            {
-                await _dataMapper.MapAsync<TResult>(GetRecordsAsync(), context.Argument.Options).ConfigureAwait(false);
-                async IAsyncEnumerable<IDataRecord> GetRecordsAsync()
-                {
-                    if (reader.HasRows)
-                        while (await reader.ReadAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false))
-                            yield return reader;
-                }
-            }
-
-            await foreach (var keyValue in _entities)
-                yield return (TResult)keyValue.Value.Entity!;
-        }
-    }
-}
-
-using Microsoft.Extensions.DependencyInjection;
-using System;
-
-namespace Intesa.SanPaolo.Servitia.Practices.Database.Executables
-{
-    /// <summary>
-    /// Provides with a method to retrieve data executable instance.
-    /// </summary>
-    public sealed class DataExecutableProvider
-    {
-        private readonly IServiceProvider _serviceProvider;
-
-        /// <summary>
-        /// Initilizes a new instance of <see cref="DataExecutableProvider"/> with the service provider.
-        /// </summary>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="serviceProvider"/> is null.</exception>
-        public DataExecutableProvider(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-
-        /// <summary>
-        /// Returns the executable that matches the specific type if found.
+        /// Handles the query as asynchronous operation.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <typeparam name="TDataExecutable">The type of the executable.</typeparam>
-        /// <returns>An instance of the executable type if found, otherwise null.</returns>
-        public TDataExecutable? GetDataExecutable<TResult, TDataExecutable>()
-            where TDataExecutable : DataExecutable<TResult>
-            => _serviceProvider.GetService<TDataExecutable>();
-
-        /// <summary>
-        /// Returns the executable mapper that matches the specific type if found.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <typeparam name="TDataExecutableMapper">The type of the executable.</typeparam>
-        /// <returns>An instance of the executable type if found, otherwise null.</returns>
-        public TDataExecutableMapper? GetDataExecutableMapper<TResult, TDataExecutableMapper>()
-            where TDataExecutableMapper : DataExecutableMapper<TResult>
-            where TResult : class, new()
-            => _serviceProvider.GetService<TDataExecutableMapper>();
-    }
-}
-
-using Intesa.SanPaolo.Servitia.Practices.Correlation;
-using Intesa.SanPaolo.Servitia.Practices.Database.Elements;
-using Intesa.SanPaolo.Servitia.Practices.Database.Options;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
-
-namespace Intesa.SanPaolo.Servitia.Practices.Database.Mappers
-{
-    /// <summary>
-    /// Provides with methods to map a source to entities.
-    /// </summary>
-    public sealed class DataMapper
-    {
-        private readonly DataMapperRow _dataMapperRow;
-        private readonly CorrelationCollection<string, DataEntity> _entities;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="DataMapper"/> class.
-        /// </summary>
-        /// <param name="dataMapperRow">The data mapper for row.</param>
-        /// <param name="entities">The shared entities collection.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="dataMapperRow"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="entities"/> is null.</exception>
-        public DataMapper(DataMapperRow dataMapperRow, CorrelationCollection<string, DataEntity> entities)
+        /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/>.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>Returns an <see cref="HttpRestClientResponse{TResult}"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        public async Task<HttpRestClientResponse<Optional<TResult>>> HandleAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         {
-            _dataMapperRow = dataMapperRow ?? throw new ArgumentNullException(nameof(dataMapperRow));
-            _entities = entities ?? throw new ArgumentNullException(nameof(entities));
-        }
+            if (HttpClient is null)
+                throw new InvalidOperationException($"The http client needs to be initialized");
 
-        /// <summary>
-        /// Asynchronously maps the data source to the specified type.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of expected result.</typeparam>
-        /// <param name="source">The data source to act on.</param>
-        /// <param name="options">Defines the execution options.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public async Task MapAsync<TEntity>(IAsyncEnumerable<IDataRecord> source, DataOptions options)
-            where TEntity : class, new()
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            _ = options ?? throw new ArgumentNullException(nameof(options));
-
-            _entities.Clear();
-
-            await foreach (var row in source)
-                _dataMapperRow.Map<TEntity>(row, options);
-        }
-
-        /// <summary>
-        /// Maps the data source collection to the specified type.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of expected result.</typeparam>
-        /// <param name="source">The data source collection to act on.</param>
-        /// <param name="options">Defines the execution options.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public void Map<TEntity>(IEnumerable<IDataRecord> source, DataOptions options)
-            where TEntity : class, new()
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            _ = options ?? throw new ArgumentNullException(nameof(options));
-
-            _entities.Clear();
-
-            foreach (var row in source)
-                _dataMapperRow.Map<TEntity>(row, options);
-        }
-
-        /// <summary>
-        /// Maps the record to the specified type.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of expected result.</typeparam>
-        /// <param name="record">The record to act on.</param>
-        /// <param name="options">Defines the execution options.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="record"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public void Map<TEntity>(IDataRecord record, DataOptions options)
-            where TEntity : class, new()
-        {
-            _ = record ?? throw new ArgumentNullException(nameof(record));
-            _ = options ?? throw new ArgumentNullException(nameof(options));
-
-            _dataMapperRow.Map<TEntity>(record, options);
-        }
-    }
-}
-
-using Intesa.SanPaolo.Servitia.Practices.Database.Connections;
-using Intesa.SanPaolo.Servitia.Practices.Database.Elements;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading;
-
-namespace Intesa.SanPaolo.Servitia.Practices.Database.Options
-{
-    /// <summary>
-    /// Contains execution behaviors. Use <see cref="DataOptionsBuilder"/> to build options.
-    /// </summary>
-    public sealed class DataOptions
-    {
-        internal DataOptions(IDataConnection connection, bool isTransactionEnabled, IsolationLevel isolationLevel, Func<DataProperty, bool>? conditionalMapping, ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> mappedNames, ConcurrentDictionary<Type, HashSet<string>> notMappedNames, ConcurrentDictionary<Type, DataPropertyConverter> converters, bool isIdentityRetrieved, CancellationToken cancellationToken, Action<Exception>? onException = default)
-        {
-            Connection = connection ?? throw new ArgumentNullException(nameof(connection));
-            IsTransactionEnabled = isTransactionEnabled;
-            IsolationLevel = isolationLevel;
-            ConditionalMapping = conditionalMapping;
-            MappedNames = mappedNames ?? throw new ArgumentNullException(nameof(mappedNames));
-            NotMappedNames = notMappedNames ?? throw new ArgumentNullException(nameof(notMappedNames));
-            Converters = converters ?? throw new ArgumentNullException(nameof(converters));
-            CancellationToken = cancellationToken;
-            IsIdentityRetrieved = isIdentityRetrieved;
-            OnException = onException;
-        }
-
-        /// <summary>
-        /// Gets the data connection attached to the current options.
-        /// </summary>
-        public IDataConnection Connection { get; }
-
-        /// <summary>
-        /// Gets the value whether or not to use transaction. The default value is <see langword="false"/>.
-        /// if so, contains <see langword="true"/>, otherwise contains <see langword="false"/>.
-        /// </summary>
-        public bool IsTransactionEnabled { get; }
-
-        /// <summary>
-        /// Determines the isolation level for transaction. Only used if <see cref="IsTransactionEnabled"/> is <see langword="true"/>.
-        /// </summary>
-        public IsolationLevel IsolationLevel { get; }
-
-        /// <summary>
-        /// Defines the delegate that determines whether or not a property should be mapped.
-        /// Its default behavior return <see langword="true"/>.
-        /// </summary>
-        public Func<DataProperty, bool>? ConditionalMapping { get; }
-
-        /// <summary>
-        /// Determines whether or not the conditional mapping has been defined. The default value is <see langword="false"/>.
-        /// if so, contains <see langword="true"/>, otherwise contains <see langword="false"/>.
-        /// </summary>
-        public bool IsConditionalMappingEnabled => ConditionalMapping is { };
-
-        /// <summary>
-        /// Contains a collection of manual names mapping.
-        /// </summary>
-        public ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> MappedNames { get; }
-            = new ConcurrentDictionary<Type, ConcurrentDictionary<string, string>>();
-
-        /// <summary>
-        /// Contains a collection of manual names from types that should not to be mapped.
-        /// </summary>
-        public ConcurrentDictionary<Type, HashSet<string>> NotMappedNames { get; }
-            = new ConcurrentDictionary<Type, HashSet<string>>();
-
-        /// <summary>
-        /// Contains a collection of converters.
-        /// </summary>
-        public ConcurrentDictionary<Type, DataPropertyConverter> Converters { get; }
-            = new ConcurrentDictionary<Type, DataPropertyConverter>();
-
-        /// <summary>
-        /// Contains the cancellation token to be used.
-        /// The default value is <see cref="CancellationToken.None"/>.
-        /// </summary>
-        public CancellationToken CancellationToken { get; } = CancellationToken.None;
-
-        /// <summary>
-        /// Gets the value whether or not the filtered delegate has been defined. The default value is <see langword="false"/>
-        /// </summary>
-        public bool ContainsNotMappedNames => !NotMappedNames.IsEmpty;
-
-        /// <summary>
-        /// Gets the value whether or not to retrieve the newly created identity from SQL command.
-        /// </summary>
-        public bool IsIdentityRetrieved { get; }
-
-        /// <summary>
-        /// Gets the value whether <see cref="OnException"/> event is defined.
-        /// </summary>
-        public bool IsOnExceptionDefined => OnException is { };
-
-        /// <summary>
-        /// Contains the event to raise when exception is handled.
-        /// If defined, the process do not throws exception.
-        /// </summary>
-        public event Action<Exception>? OnException;
-
-        /// <summary>
-        /// Raises the <see cref="OnException"/> event.
-        /// </summary>
-        /// <param name="exception">The handled exception.</param>
-        public void OnExceptionHandled(Exception exception) => OnException?.Invoke(exception);
-    }
-}
-
-using Intesa.SanPaolo.Servitia.Practices.Database.Attributes;
-using Intesa.SanPaolo.Servitia.Practices.Database.Connections;
-using Intesa.SanPaolo.Servitia.Practices.Database.Elements;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
-
-namespace Intesa.SanPaolo.Servitia.Practices.Database.Options
-{
-    /// <summary>
-    /// Allows application author to build <see cref="DataOptions"/>.
-    /// </summary>
-    public sealed class DataOptionsBuilder
-    {
-        private IsolationLevel _isolationLevel = IsolationLevel.ReadUncommitted;
-        private CancellationToken _cancellationToken = CancellationToken.None;
-        private Action<Exception>? _onException;
-        private IDataConnection _connection = null!;
-        private bool _isTransactionEnabled;
-        private Func<DataProperty, bool>? _isMappable;
-        private readonly ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> _dataNames
-            = new ConcurrentDictionary<Type, ConcurrentDictionary<string, string>>();
-        private readonly ConcurrentDictionary<Type, HashSet<string>> _exceptNames = new ConcurrentDictionary<Type, HashSet<string>>();
-        private readonly ConcurrentDictionary<Type, DataPropertyConverter> _converters = new ConcurrentDictionary<Type, DataPropertyConverter>();
-        private bool _isIdentityRetrieved;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="DataOptionsBuilder"/> class
-        /// used to build a <see cref="DataOptions"/>.
-        /// </summary>
-        public DataOptionsBuilder() { }
-
-        /// <summary>
-        /// Returns a new instance of <see cref="DataOptions"/> using registered information.
-        /// </summary>
-        public DataOptions Build()
-            => new DataOptions(
-                _connection,
-                _isTransactionEnabled,
-                _isolationLevel,
-                _isMappable,
-                _dataNames,
-                _exceptNames,
-                _converters,
-                _isIdentityRetrieved,
-                _cancellationToken,
-                _onException);
-
-        /// <summary>
-        /// Returns a the default instance of <see cref="DataOptions"/>.
-        /// </summary>
-        /// <param name="connection">The connection to be used.</param>
-        public DataOptions BuildDefault(IDataConnection connection)
-            => new DataOptions(
-                connection,
-                false,
-                IsolationLevel.ReadCommitted,
-                default,
-                _dataNames,
-                _exceptNames,
-                _converters,
-                false,
-                _cancellationToken);
-
-        /// <summary>
-        /// Enables use of transaction. The transaction will be closed just after the current execution.
-        /// </summary>
-        /// <param name="isolationLevel">The isolation level to be used. The default value used by the server is <see cref="IsolationLevel.ReadCommitted"/> </param>
-        public DataOptionsBuilder AddTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {
-            _isTransactionEnabled = true;
-            _isolationLevel = isolationLevel;
-            return this;
-        }
-
-        /// <summary>
-        /// Adds the event action that will be raised on exception.
-        /// </summary>
-        /// <param name="onException">The action that get called on exception.</param>
-        public DataOptionsBuilder AddExceptionEvent(Action<Exception> onException)
-        {
-            _onException = onException;
-            return this;
-        }
-
-        /// <summary>
-        /// Adds the connection to the cueetn instance.
-        /// </summary>
-        /// <param name="connection">The connecition instance..</param>
-        public DataOptionsBuilder AddConnection(IDataConnection connection)
-        {
-            _connection = connection ?? throw new ArgumentNullException(nameof(connection));
-            return this;
-        }
-
-        /// <summary>
-        /// This is the highest level of mapping.
-        /// Adds a delegate that determines whether or not a property should be mapped.
-        /// The delegate will received an instance of the processing property and should return <see langword="true"/> if the property should be
-        /// mapped, otherwise <see langword="false"/>. This action should be used for complex mapping and be aware of the performance impact.
-        /// <para>The definition here takes priority over all attributes <see cref="DataNotMappedAttribute"/>
-        /// and other <see cref="AddNotMappedName{T}(Expression{Func{T, string}})"/>.</para>
-        /// </summary>
-        /// <param name="mappable">The delegate that determine if a property is used or not.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="mappable"/> is null.</exception>
-        public DataOptionsBuilder AddMappable(Func<DataProperty, bool> mappable)
-        {
-            _isMappable = mappable ?? throw new ArgumentNullException(nameof(mappable));
-            return this;
-        }
-
-        /// <summary>
-        /// Bounds the specified model property name to the column data row specific name.
-        /// Behaves like the <see cref="DataNameAttribute"/> attribute but takes priority over this attribute
-        /// and <see cref="DataPrefixAttribute"/> attribute.
-        /// Does not works for nested type, you have to provide mapper name for nested properties.
-        /// You can add many mappers for various properties.
-        /// </summary>
-        /// <typeparam name="T">The type of the target model.</typeparam>
-        /// <param name="propertySelector">The model property selector. We advise use of <see langword="nameof(model.PropertyName)"/>
-        /// The property name must match a real property name.</param>
-        /// <param name="sourceColumnName">The name of the column in the data row.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="propertySelector"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="sourceColumnName"/> is null or empty.</exception>
-        /// <exception cref="ArgumentException">The property can no be bound to the data row property.</exception>
-        public DataOptionsBuilder AddDataName<T>(Expression<Func<T, string>> propertySelector, string sourceColumnName)
-            where T : class
-        {
-            if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
-            if (string.IsNullOrWhiteSpace(sourceColumnName)) throw new ArgumentNullException(nameof(sourceColumnName));
-
-            var property = propertySelector.Body is ConstantExpression constantExpression
-                ? constantExpression.Value!.ToString() : GetMemberNameFromExpression(propertySelector);
-
-            if (string.IsNullOrWhiteSpace(property))
-                throw new ArgumentException($"The parameter {nameof(propertySelector)} is not a valid expression.");
-
-            if (typeof(T).GetProperty(property) is null)
-                throw new ArgumentException($"The parameter {nameof(propertySelector)} does not exist in the {typeof(T).Name} type.");
-
-            var mapping = _dataNames.GetOrAdd(
-                typeof(T),
-                _ => new ConcurrentDictionary<string, string>(new[] { new KeyValuePair<string, string>(property, sourceColumnName) }));
-
-            mapping.AddOrUpdate(property, sourceColumnName, (_, __) => sourceColumnName);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Specifies that selected property of the model must not be bound to the result.
-        /// Behaves like the <see cref="DataNotMappedAttribute"/> attribute but takes priority over this attribute.
-        /// You can add many mappers for various properties.
-        /// </summary>
-        /// <typeparam name="T">The type of the target model.</typeparam>
-        /// <param name="propertySelector">The model property selector. We advise use of <see langword="nameof(model.PropertyName)"/>.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="propertySelector"/> is null.</exception>
-        /// <exception cref="ArgumentException">The property can no be found in the target type.</exception>
-        /// <exception cref="ArgumentException">The property already exist in the filter of target type.</exception>
-        public DataOptionsBuilder AddNotMappedName<T>(Expression<Func<T, string>> propertySelector)
-            where T : class
-        {
-            if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
-
-            var property = propertySelector.Body is ConstantExpression constantExpression
-                ? constantExpression.Value!.ToString() : GetMemberNameFromExpression(propertySelector);
-
-            if (string.IsNullOrWhiteSpace(property))
-                throw new ArgumentException($"The parameter {nameof(propertySelector)} is not a valid expression ({nameof(ConstantExpression)} or {nameof(MemberExpression)})");
-
-            if (typeof(T).GetProperty(property) is null)
-                throw new ArgumentException($"The parameter {nameof(propertySelector)} does not exist in the {typeof(T).Name} type.");
-
-            var filtering = _exceptNames.GetOrAdd(typeof(T), _ => new HashSet<string>());
-
-            if (!filtering.Add(property))
-                throw new ArgumentException($"{property} already exist in the filter for {typeof(T).Name}");
-
-            return this;
-        }
-
-        /// <summary>
-        /// Specifies that selected properties of the model must not be bound to the result.
-        /// Behaves like the <see cref="DataNotMappedAttribute"/> attribute but takes priority over this attribute.
-        /// Does not works for nested type, you have to provide not mapped for nested types.
-        /// You can add many mappers for various types.
-        /// </summary>
-        /// <typeparam name="T">The type of the target model.</typeparam>
-        /// <param name="propertySelectors">The collection of model properties selector. We advise use of <see langword="nameof(model.PropertyName)"/>.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="propertySelectors"/> is null or empty.</exception>
-        /// <exception cref="ArgumentException">The property already exist in the filter of target type.</exception>
-        public DataOptionsBuilder AddNotMappedNames<T>(params Expression<Func<T, string>>[] propertySelectors)
-            where T : class
-        {
-            if (propertySelectors?.Any() != true) throw new ArgumentNullException($"{nameof(propertySelectors)} is null or empty");
-
-            foreach (var propertySelector in propertySelectors)
-                AddNotMappedName(propertySelector);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Specifies that collection of property names of the model must not be bound to the result.
-        /// Behaves like the <see cref="DataNotMappedAttribute"/> attribute but takes priority over this attribute.
-        /// Does not works for nested type, you have to provide not mapped for nested types.
-        /// You can add many mappers for various types.
-        /// </summary>
-        /// <typeparam name="T">The type of the target model.</typeparam>
-        /// <param name="propertyNames">A collection of string property names that shouldn't be bound to the result.</param>
-        /// <exception cref="ArgumentNullException">the <paramref name="propertyNames"/> is null or empty.</exception>
-        /// <exception cref="ArgumentException">The model does not contains the specified property.</exception>
-        /// <exception cref="ArgumentException">The property already exist in the filter of target type.</exception>
-        public DataOptionsBuilder AddNotMappedNames<T>(params string[] propertyNames)
-            where T : class
-        {
-            if (propertyNames?.Any() != true) throw new ArgumentNullException($"{nameof(propertyNames)} is null or empty");
-
-            var properties = typeof(T).GetProperties();
-            foreach (var property in propertyNames)
-            {
-                if (Array.Find(properties, p => p.Name.Equals(property, StringComparison.OrdinalIgnoreCase)) is null)
-                    throw new ArgumentException($"{typeof(T).Name} does not contains '{property}' name.");
-
-                var filtering = _exceptNames.GetOrAdd(typeof(T), _ => new HashSet<string>());
-
-                if (!filtering.Add(property))
-                    throw new ArgumentException($"{property} already exist in the filter for {typeof(T).Name}");
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// Adds a delegate to be used for converting data row value to the target type.
-        /// The delegate will receive an instance of the target property and the value from the data row.
-        /// You can add many converters for various type.
-        /// <para>The <typeparamref name="TType"/> should be a primitive type, <see cref="DateTime"/> or a <see cref="string"/> type.</para>
-        /// The definition here takes priority over the <see cref="DataConverterAttribute"/> attribute.
-        /// </summary>
-        /// <typeparam name="TType">The type of the property the converter should be applied to its value.</typeparam>
-        /// <param name="converter">The delegate to be used to convert a data row value for the target <typeparamref name="TType"/> type.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
-        public DataOptionsBuilder AddConverter<TType>(DataPropertyConverter converter)
-        {
-            if (!typeof(TType).IsPrimitive
-                && typeof(TType) != typeof(DateTime)
-                && typeof(TType) != typeof(DateTime?)
-                && typeof(TType) != typeof(string))
-            {
-                throw new ArgumentException($"Primitives type or string type expected.");
-            }
-
-            if (converter is null)
-                throw new ArgumentNullException(nameof(converter));
-
-            _converters.AddOrUpdate(typeof(TType), converter, (_, __) => converter);
-            return this;
-        }
-
-        /// <summary>
-        /// Defines the cancellation token for the execution.
-        /// The default used value is <see cref="CancellationToken.None"/>.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token to be used.</param>
-        public DataOptionsBuilder AddCancellationToken(CancellationToken cancellationToken)
-        {
-            _cancellationToken = cancellationToken;
-            return this;
-        }
-
-        /// <summary>
-        /// Defines that the current execution should retrieve the last identity from the query.
-        /// Be aware of the fact that the query must be an insertion, otherwise you will face an exception.
-        /// </summary>
-        public DataOptionsBuilder UseRetrievedIdentity()
-        {
-            _isIdentityRetrieved = true;
-            return this;
-        }
-
-        /// <summary>
-        /// Returns the member name from the expression if found, otherwise returns null.
-        /// </summary>
-        /// <typeparam name="T">The type of the model class.</typeparam>
-        /// <typeparam name="TProperty">The property type.</typeparam>
-        /// <param name="propertyExpression">The expression that contains the member name.</param>
-        /// <returns>A string that represents the name of the member found in the expression.</returns>
-        private static string? GetMemberNameFromExpression<T, TProperty>(Expression<Func<T, TProperty>> propertyExpression)
-            where T : class
-        {
-            if (propertyExpression is null) throw new ArgumentNullException(nameof(propertyExpression));
-
-            return (propertyExpression.Body as MemberExpression
-                ?? ((UnaryExpression)propertyExpression.Body).Operand as MemberExpression)
-                ?.Member.Name;
-        }
-    }
-}
-
-using Intesa.SanPaolo.Servitia.Practices.Asynchronous;
-using Intesa.SanPaolo.Servitia.Practices.Database.Connections;
-using Intesa.SanPaolo.Servitia.Practices.Database.Executables;
-using Intesa.SanPaolo.Servitia.Practices.Database.Options;
-using Intesa.SanPaolo.Servitia.Practices.Optionals;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Threading.Tasks;
-
-namespace Intesa.SanPaolo.Servitia.Practices.Database
-{
-    /// <summary>
-    /// Provides with resources to execute commands and queries against a database.
-    /// </summary>
-    public sealed class DataBase
-    {
-        private readonly DbConnectionProvider _dbConnectionProvider;
-        private readonly DataExecutableProvider _dataExecutableProvider;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="DataBase"/> with the specified provider.
-        /// </summary>
-        /// <param name="dbConnectionProvider">The db connection provider.</param>
-        /// <param name="dataExecutableProvider">The data executable provider.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="dbConnectionProvider"/> is not valid.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="dataExecutableProvider"/> is not valid.</exception>
-        public DataBase(DbConnectionProvider dbConnectionProvider, DataExecutableProvider dataExecutableProvider)
-        {
-            _dbConnectionProvider = dbConnectionProvider ?? throw new ArgumentNullException(nameof(dbConnectionProvider));
-            _dataExecutableProvider = dataExecutableProvider ?? throw new ArgumentNullException(nameof(dataExecutableProvider));
-        }
-
-        /// <summary>
-        /// Asynchronously executes a command/query with the specified executable against the database
-        /// and returns a result of <typeparamref name="TResult" /> type.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="dataExecutable">The data executable instance to be used.</param>
-        /// <param name="options">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
-        /// <param name="commandText">The text command to run against the database.</param>
-        /// <param name="commandType">The command type.</param>
-        /// <param name="parameters">A collection of parameter objects for the command.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async Task<Optional<TResult>> ExecuteAsync<TResult>(
-            DataExecutable<TResult> dataExecutable,
-            DataOptions options,
-            string commandText,
-            CommandType commandType,
-            params object[] parameters)
-        {
-            var executable = dataExecutable ?? throw new ArgumentNullException(nameof(dataExecutable));
-
-            var transaction = default(DbTransaction);
             try
             {
-                var (connectionFactory, providerFactory) = await _dbConnectionProvider.BuildDbConnectionAsync(options.Connection).ConfigureAwait(false);
+                using var request = await GetHttpRequestMessageAsync(query, cancellationToken).ConfigureAwait(false);
+                using var response = await HttpClient.SendAsync(
+                    request,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken)
+                    .ConfigureAwait(false);
 
-                using var connection = connectionFactory;
-                using var command = connection.CreateCommand();
-                using var adapter = providerFactory.CreateDataAdapter();
+                if (response.IsSuccessStatusCode)
+                    return await GetHttpRestClientResultResponseAsync<TResult>(response).ConfigureAwait(false);
 
-                command.CommandType = commandType;
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync().ConfigureAwait(false);
+                return (HttpRestClientResponse<Optional<TResult>>)await GetHttpRestClientBadResponseAsync(
+                    HttpRestClientResponse<Optional<TResult>>.Failure, response)
+                    .ConfigureAwait(false);
+            }
+            catch (Exception exception) when (exception is ArgumentNullException
+                                            || exception is InvalidOperationException
+                                            || exception is OperationCanceledException
+                                            || exception is HttpRequestException
+                                            || exception is TaskCanceledException)
+            {
+                return HttpRestClientResponse<Optional<TResult>>.Failure(exception);
+            }
+        }
 
-                if (options.IsTransactionEnabled)
+        /// <summary>
+        /// Handles the query as asynchronous operation.
+        /// Be aware of the fact that the target api must return an <see cref="IAsyncEnumerable{T}"/>, otherwise you will face an exception.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/>.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>Returns an <see cref="HttpRestClientResponse{TResult}"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
+        {
+            if (HttpClient is null)
+                throw new InvalidOperationException($"The http client needs to be initialized");
+
+            try
+            {
+                using var request = await GetHttpRequestMessageAsync(query, cancellationToken).ConfigureAwait(false);
+                // Due to the fact that the result is an IAsyncEnumerable, the response can not be disposed before.
+                var response = await HttpClient.SendAsync(
+                    request,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken)
+                    .ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                    return await GetHttpRestClientStreamResponseAsync<TResult>(response).ConfigureAwait(false);
+
+                return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)await GetHttpRestClientBadResponseAsync(
+                    HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure, response)
+                    .ConfigureAwait(false);
+            }
+            catch (Exception exception) when (exception is ArgumentNullException
+                                            || exception is InvalidOperationException
+                                            || exception is OperationCanceledException
+                                            || exception is HttpRequestException
+                                            || exception is TaskCanceledException)
+            {
+                return HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure(exception);
+            }
+        }
+
+        /// <summary>
+        /// Handles the command as asynchronous operation.
+        /// </summary>
+        /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/></param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>Returns an <see cref="HttpRestClientResponse"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        public async Task<HttpRestClientResponse> HandleAsync(IAsyncCommand command, CancellationToken cancellationToken = default)
+        {
+            if (HttpClient is null)
+                throw new InvalidOperationException($"The http client needs to be initialized");
+
+            try
+            {
+                using var request = await GetHttpRequestMessageAsync(command, cancellationToken).ConfigureAwait(false);
+                using var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    transaction = await connection.BeginTransactionAsync(options.IsolationLevel, options.CancellationToken).ConfigureAwait(false);
-                    command.Transaction = transaction;
+                    return HttpRestClientResponse
+                        .Success()
+                        .AddHeaders(GetHttpResponseHeaders(response))
+                        .AddVersion(response.Version)
+                        .AddReasonPhrase(response.ReasonPhrase);
                 }
 
-                var component = new DataExecutableContext.DataComponent(command, adapter);
-                var arguments = new DataExecutableContext.DataArgument(options, commandText, parameters);
-                var context = new DataExecutableContext(arguments, component);
+                return await GetHttpRestClientBadResponseAsync(HttpRestClientResponse.Failure, response).ConfigureAwait(false);
+            }
+            catch (Exception exception) when (exception is ArgumentNullException
+                                            || exception is InvalidOperationException
+                                            || exception is OperationCanceledException
+                                            || exception is HttpRequestException
+                                            || exception is TaskCanceledException)
+            {
+                return HttpRestClientResponse.Failure(exception);
+            }
+        }
 
-                return await executable.ExecuteAsync(context).ConfigureAwait(false);
+        /// <summary>
+        /// Handles the command as asynchronous operation.
+        /// </summary>
+        /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/></param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>Returns an <see cref="HttpRestClientResponse"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        public async Task<HttpRestClientResponse> HandleAsync(ICommand command, CancellationToken cancellationToken = default)
+        {
+            if (HttpClient is null)
+                throw new InvalidOperationException($"The http client needs to be initialized");
+
+            try
+            {
+                using var request = await GetHttpRequestMessageAsync(command, cancellationToken).ConfigureAwait(false);
+                using var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return HttpRestClientResponse
+                        .Success()
+                        .AddHeaders(GetHttpResponseHeaders(response))
+                        .AddVersion(response.Version)
+                        .AddReasonPhrase(response.ReasonPhrase);
+                }
+
+                return await GetHttpRestClientBadResponseAsync(HttpRestClientResponse.Failure, response).ConfigureAwait(false);
+            }
+            catch (Exception exception) when (exception is ArgumentNullException
+                                            || exception is InvalidOperationException
+                                            || exception is OperationCanceledException
+                                            || exception is HttpRequestException
+                                            || exception is TaskCanceledException)
+            {
+                return HttpRestClientResponse.Failure(exception);
+            }
+        }
+
+        private static async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> GetHttpRestClientStreamResponseAsync<TResult>(HttpResponseMessage httpResponse)
+        {
+            try
+            {
+                if (httpResponse.Content is { })
+                {
+                    var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    if (stream is { })
+                    {
+                        var results = System.Linq.AsyncEnumerable.Create(cancellation => GetIAsyncEnumerableFromStreamAsync<TResult>(stream, cancellation).GetAsyncEnumerator());
+                        return HttpRestClientResponse<IAsyncEnumerable<TResult>>
+                            .Success(results, httpResponse.StatusCode)
+                            .AddHeaders(GetHttpResponseHeaders(httpResponse))
+                            .AddVersion(httpResponse.Version)
+                            .AddReasonPhrase(httpResponse.ReasonPhrase);
+                    }
+                }
+
+                return HttpRestClientResponse<IAsyncEnumerable<TResult>>
+                    .Success(httpResponse.StatusCode)
+                    .AddHeaders(GetHttpResponseHeaders(httpResponse))
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
             }
             catch (Exception exception)
             {
-                if (options.IsTransactionEnabled)
-                {
-                    try
-                    {
-                        transaction?.Rollback();
-                    }
-                    catch (Exception sqlException)
-                    {
-                        var invalidSqlException = new InvalidOperationException(
-                            "Exception encountered while attempting to roll back the transaction.",
-                            new AggregateException(new[] { exception, sqlException }));
-
-                        if (options.IsOnExceptionDefined)
-                            options.OnExceptionHandled(invalidSqlException);
-                        else
-                            throw invalidSqlException;
-                    }
-                }
-
-                var invalidException = new InvalidOperationException("Exception encountered while attempting to execute command.", exception);
-                if (options.IsOnExceptionDefined)
-                    options.OnExceptionHandled(invalidException);
-                else
-                    throw invalidException;
-
-                return Optional<TResult>.Empty();
-            }
-            finally
-            {
-                if (options.IsTransactionEnabled)
-                    transaction?.Dispose();
+                return HttpRestClientResponse<IAsyncEnumerable<TResult>>
+                    .Failure(exception, HttpStatusCode.BadRequest)
+                    .AddHeaders(GetHttpResponseHeaders(httpResponse))
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
             }
         }
 
-        /// <summary>
-        /// Asynchronously executes a command/query with the specified executable <typeparamref name="TDataExecutable" /> type against the database
-        /// and returns a result of <typeparamref name="TResult" /> type.
-        /// The <typeparamref name="TDataExecutable" /> type inherits from <see cref="DataExecutable{T}" />.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <typeparam name="TDataExecutable">The type of the executable. The class inherits from <see cref="DataExecutable{T}" />.</typeparam>
-        /// <param name="options">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
-        /// <param name="commandText">The text command to run against the database.</param>
-        /// <param name="commandType">The command type.</param>
-        /// <param name="parameters">A collection of parameter objects for the command.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async Task<Optional<TResult>> ExecuteAsync<TResult, TDataExecutable>(
-            DataOptions options,
-            string commandText,
-            CommandType commandType,
-            params object[] parameters)
-            where TDataExecutable : DataExecutable<TResult>
+        private static async Task<HttpRestClientResponse<Optional<TResult>>> GetHttpRestClientResultResponseAsync<TResult>(HttpResponseMessage httpResponse)
         {
-            var executable = _dataExecutableProvider.GetDataExecutable<TResult, TDataExecutable>()
-                ?? throw new ArgumentException($"{typeof(TDataExecutable).Name} not found !");
-
-            return await ExecuteAsync(executable, options, commandText, commandType, parameters).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Asynchronously executes a command/query with the specified executable against the database
-        /// and aynshronously returns result of <typeparamref name="TResult" /> type.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="dataExecutableMapper">the data executable mapper.</param>
-        /// <param name="options">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
-        /// <param name="commandText">The text command to run against the database.</param>
-        /// <param name="commandType">The command type.</param>
-        /// <param name="parameters">A collection of parameter objects for the command.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async IAsyncEnumerable<TResult> ExecuteMappedAsync<TResult>(
-            DataExecutableMapper<TResult> dataExecutableMapper,
-            DataOptions options,
-            string commandText,
-            CommandType commandType,
-            params object[] parameters)
-            where TResult : class, new()
-        {
-            var executableMapped = dataExecutableMapper ?? throw new ArgumentNullException(nameof(dataExecutableMapper));
-
-            var transaction = default(DbTransaction);
-            var context = default(DataExecutableContext);
             try
             {
-                var (connectionFactory, providerFactory) = await _dbConnectionProvider.BuildDbConnectionAsync(options.Connection).ConfigureAwait(false);
-
-                using var connection = connectionFactory;
-                using var command = connection.CreateCommand();
-                using var adapter = providerFactory.CreateDataAdapter();
-
-                command.CommandType = commandType;
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync().ConfigureAwait(false);
-
-                if (options.IsTransactionEnabled)
+                if (httpResponse.Content is { })
                 {
-                    transaction = await connection.BeginTransactionAsync(options.IsolationLevel, options.CancellationToken).ConfigureAwait(false);
-                    command.Transaction = transaction;
+                    var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    if (stream is { })
+                    {
+                        var result = stream.DeserializeJsonFromStream<TResult>();
+                        var results = result.AsOptional();
+                        return HttpRestClientResponse<Optional<TResult>>
+                            .Success(results, httpResponse.StatusCode)
+                            .AddHeaders(GetHttpResponseHeaders(httpResponse))
+                            .AddVersion(httpResponse.Version)
+                            .AddReasonPhrase(httpResponse.ReasonPhrase);
+                    }
                 }
 
-                var component = new DataExecutableContext.DataComponent(command, adapter);
-                var arguments = new DataExecutableContext.DataArgument(options, commandText, parameters);
-                context = new DataExecutableContext(arguments, component);
+                return HttpRestClientResponse<Optional<TResult>>
+                    .Success(httpResponse.StatusCode)
+                    .AddHeaders(GetHttpResponseHeaders(httpResponse))
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
             }
             catch (Exception exception)
             {
-                throw new InvalidOperationException("Exception encountered while attempting to execute command.", exception);
+                return HttpRestClientResponse<Optional<TResult>>
+                    .Failure(exception, HttpStatusCode.BadRequest)
+                    .AddHeaders(GetHttpResponseHeaders(httpResponse))
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
             }
+        }
 
-            await foreach (var result in AsyncExtensions.TryCatchAsyncEnumerable(
-                () => executableMapped.ExecuteMappedAsync(context).ConfigureAwait(false),
-                out var exceptionDispatchInfo))
+        private static async Task<HttpRestClientResponse> GetHttpRestClientBadResponseAsync(
+               Func<Exception, HttpStatusCode, HttpRestClientResponse> responseBuilder, HttpResponseMessage httpResponse)
+        {
+            var response = httpResponse.Content switch
             {
-                if (exceptionDispatchInfo is { })
-                {
-                    if (options.IsTransactionEnabled)
-                    {
-                        try
-                        {
-                            transaction?.Rollback();
-                        }
-                        catch (Exception sqlException)
-                        {
-                            var invalidSqlException = new InvalidOperationException(
-                                            "Exception encountered while attempting to roll back the transaction.",
-                                            new AggregateException(new[] { exceptionDispatchInfo.SourceException, sqlException }));
+                { } => await GetBadResponseContentAsync().ConfigureAwait(false),
+                null => responseBuilder(new HttpRestClientException(), httpResponse.StatusCode)
+            };
 
-                            if (options.IsOnExceptionDefined)
-                                options.OnExceptionHandled(invalidSqlException);
-                            else
-                                throw invalidSqlException;
+            return response
+                .AddHeaders(GetHttpResponseHeaders(httpResponse))
+                .AddVersion(httpResponse.Version)
+                .AddReasonPhrase(httpResponse.ReasonPhrase);
 
-                            yield break;
-                        }
-                        finally
-                        {
-                            if (options.IsTransactionEnabled)
-                                transaction?.Dispose();
-                        }
-                    }
-
-                    var invalidException = new InvalidOperationException("Exception encountered while attempting to execute command.", exceptionDispatchInfo.SourceException);
-                    if (options.IsOnExceptionDefined)
-                        options.OnExceptionHandled(invalidException);
-                    else
-                        throw invalidException;
-                }
-
-                yield return result;
-            }
-        }
-
-        /// <summary>
-        /// Asynchronously executes a command/query with the specified executable <typeparamref name="TDataExecutableMapped" /> type against the database
-        /// and aynshronously returns result of <typeparamref name="TResult" /> type.
-        /// The <typeparamref name="TDataExecutableMapped" /> type inherits from <see cref="DataExecutable{TResult}" />.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <typeparam name="TDataExecutableMapped">The type of the executable. The class inherits from <see cref="DataExecutable{TResult}" /> interface.</typeparam>
-        /// <param name="options">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
-        /// <param name="commandText">The text command to run against the database.</param>
-        /// <param name="commandType">The command type.</param>
-        /// <param name="parameters">A collection of parameter objects for the command.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public async IAsyncEnumerable<TResult> ExecuteMappedAsync<TResult, TDataExecutableMapped>(
-            DataOptions options,
-            string commandText,
-            CommandType commandType,
-            params object[] parameters)
-            where TDataExecutableMapped : DataExecutableMapper<TResult>
-            where TResult : class, new()
-        {
-            var executableMapped = _dataExecutableProvider.GetDataExecutableMapper<TResult, TDataExecutableMapped>()
-                       ?? throw new ArgumentException($"{typeof(TDataExecutableMapped).Name} not found !");
-
-            await foreach (var result in ExecuteMappedAsync(executableMapped, options, commandText, commandType, parameters).ConfigureAwait(false))
-                yield return result;
-        }
-    }
-}
-
-using Intesa.SanPaolo.Servitia.Practices.Correlation;
-using Intesa.SanPaolo.Servitia.Practices.Creators;
-using Intesa.SanPaolo.Servitia.Practices.Database.Elements;
-using Intesa.SanPaolo.Servitia.Practices.Database.Executables;
-using Intesa.SanPaolo.Servitia.Practices.Database.Mappers;
-using Intesa.SanPaolo.Servitia.Practices.Database.Options;
-using Intesa.SanPaolo.Servitia.Practices.Optionals;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
-
-namespace Intesa.SanPaolo.Servitia.Practices.Database
-{
-    /// <summary>
-    /// Provides with extenion methods for <see cref="DataBase"/>.
-    /// </summary>
-    public static class DataBaseExtensions
-    {
-        [ThreadStatic]
-        private static readonly IInstanceCreator _instanceCreator = new InstanceCreator();
-        [ThreadStatic]
-        private static readonly CorrelationCollection<string, DataEntity> _entities = new CorrelationCollection<string, DataEntity>();
-        [ThreadStatic]
-        private static readonly CorrelationCollection<string, Lazy<Delegate>> _entitiesCache = new CorrelationCollection<string, Lazy<Delegate>>();
-        [ThreadStatic]
-        private static readonly DataPropertyBuilder _dataPropertyBuilder = new DataPropertyBuilder();
-        [ThreadStatic]
-        private static readonly DataEntityBuilder _dataEntityBuilder = new DataEntityBuilder(_dataPropertyBuilder, _instanceCreator, _entitiesCache);
-        [ThreadStatic]
-        private static readonly DataMapperRow _dataMapperRow = new DataMapperRow(_instanceCreator, _dataEntityBuilder, _entities);
-        [ThreadStatic]
-        private static readonly DataMapper _dataMapper = new DataMapper(_dataMapperRow, _entities);
-
-        /// <summary>
-        /// Determines whether or not the underlying data reader contains the specified column name.
-        /// If so, returns <see langword="true"/> ortherwise returns <see langword="false"/>.
-        /// </summary>
-        /// <param name="source">The source of data reader to act on.</param>
-        /// <param name="columName">The column to find.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="columName"/> is null.</exception>
-        public static bool Contains(this IDataRecord source, string columName)
-        {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            if (string.IsNullOrWhiteSpace(columName)) throw new ArgumentNullException(nameof(columName));
-
-            for (int index = 0; index < source.FieldCount; index++)
+            async Task<HttpRestClientResponse> GetBadResponseContentAsync()
             {
-                if (source.GetName(index).Equals(columName, StringComparison.InvariantCultureIgnoreCase))
-                    return true;
+                var content = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return responseBuilder(new HttpRestClientException(content), httpResponse.StatusCode);
             }
-
-            return false;
         }
 
-        /// <summary>
-        /// Executes the stored procedure by its name using options and returns an asynchronous collection of results of
-        /// the specific-type.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="dataBase">The target database.</param>
-        /// <param name="options">The database options.</param>
-        /// <param name="commandText">The query to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async IAsyncEnumerable<TResult> ExecuteMappedProcedureAsync<TResult>(
-            this DataBase dataBase,
-            DataOptions options,
-            string commandText,
-            params object[] parameters)
-            where TResult : class, new()
+        private static async IAsyncEnumerable<TResult> GetIAsyncEnumerableFromStreamAsync<TResult>(Stream stream, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var executableMapper = new DataExecutableMapperFuncProc<TResult>(_dataMapper, _entities);
-            await foreach (var result in dataBase.ExecuteMappedAsync(
-                executableMapper, options, commandText, CommandType.StoredProcedure, parameters)
-                .ConfigureAwait(false))
-                yield return result;
+            var jsonSerializer = JsonSerializer.CreateDefault();
+            using var streamReader = new StreamReader(stream);
+            using var jsonTextReader = new JsonTextReader(streamReader);
+            while (await jsonTextReader.ReadAsync(cancellationToken).ConfigureAwait(false))
+            {
+                if (jsonTextReader.TokenType == JsonToken.StartObject)
+                    yield return jsonSerializer.Deserialize<TResult>(jsonTextReader);
+            }
         }
 
-        /// <summary>
-        /// Executes the stored procedure by its name using options and returns an optional data table result.
-        /// </summary>
-        /// <param name="dataBase">The target database.</param>
-        /// <param name="options">The database options.</param>
-        /// <param name="commandText">The stored procedure to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<Optional<DataTable>> ExecuteProcedureTableAsync(
-            this DataBase dataBase,
-            DataOptions options,
-            string commandText,
-            params object[] parameters)
-        {
-            var executable = new DataExecutableTable();
-            return await dataBase.ExecuteAsync(
-                executable, options, commandText, CommandType.StoredProcedure, parameters)
-                .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Executes the stored procedure as transactional using the options and returns the number of records affected.
-        /// Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
-        /// </summary>
-        /// <param name="dataBase">The target database.</param>
-        /// <param name="options">The database options.</param>
-        /// <param name="commandText">The query/stored procedure to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<Optional<int>> ExecuteTransactionProcedureAsync(
-            this DataBase dataBase,
-            DataOptions options,
-            string commandText,
-            params object[] parameters)
-        {
-            var executable = new DataExecutableTransaction();
-            return await dataBase.ExecuteAsync(
-                executable, options, commandText, CommandType.StoredProcedure, parameters)
-                .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Executes the specified query as transactional using the options and returns the number of records affected.
-        /// Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
-        /// </summary>
-        /// <param name="dataBase">The target database.</param>
-        /// <param name="options">The database options.</param>
-        /// <param name="commandText">The query/stored procedure to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<Optional<int>> ExecuteTransactionQueryAsync(
-            this DataBase dataBase,
-            DataOptions options,
-            string commandText,
-            params object[] parameters)
-        {
-            var executable = new DataExecutableTransaction();
-            return await dataBase.ExecuteAsync(
-                executable, options, commandText, CommandType.Text, parameters)
-                .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Executes the specify query agasint the database using options and returns a collection of results of
-        /// the specific-type.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="dataBase">The target database.</param>
-        /// <param name="options">The database options.</param>
-        /// <param name="commandText">The query to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async IAsyncEnumerable<TResult> ExecuteMappedQueryAsync<TResult>(
-            this DataBase dataBase,
-            DataOptions options,
-            string commandText,
-            params object[] parameters)
-            where TResult : class, new()
-        {
-            var executableMapped = new DataExecutableMapperFuncProc<TResult>(_dataMapper, _entities);
-            await foreach (var result in dataBase.ExecuteMappedAsync(
-                executableMapped, options, commandText, CommandType.Text, parameters).
-                ConfigureAwait(false))
-                yield return result;
-        }
-
-        /// <summary>
-        /// Executes the query against the database using options and returns an optional data table result.
-        /// </summary>
-        /// <param name="dataBase">The target database.</param>
-        /// <param name="options">The database options.</param>
-        /// <param name="commandText">The command to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<Optional<DataTable>> ExecuteQueryTableAsync(
-            this DataBase dataBase,
-            DataOptions options,
-            string commandText,
-            params object[] parameters)
-        {
-            var executable = new DataExecutableTable();
-            return await dataBase.ExecuteAsync(
-                executable, options, commandText, CommandType.Text, parameters)
-                .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Executes a strored procedure against the database that returns a single value of specific type.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="dataBase">The target database.</param>
-        /// <param name="options">The database options.</param>
-        /// <param name="commandText">The query/stored procedure to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<Optional<TResult>> ExecuteSingleProcedureAsync<TResult>(
-            this DataBase dataBase,
-            DataOptions options,
-            string commandText,
-            params object[] parameters)
-        {
-            var executable = new DataExecutableSingle<TResult>();
-            return await dataBase.ExecuteAsync(
-                executable, options, commandText, CommandType.StoredProcedure, parameters)
-                .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Executes a query against the databse that returns a single value of specific type.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="dataBase">The target database.</param>
-        /// <param name="options">The database options.</param>
-        /// <param name="commandText">The query/stored procedure to be executed.</param>
-        /// <param name="parameters">The parameters to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
-        public static async Task<Optional<TResult>> ExecuteSingleQueryAsync<TResult>(
-            this DataBase dataBase,
-            DataOptions options,
-            string commandText,
-            params object[] parameters)
-        {
-            var executable = new DataExecutableSingle<TResult>();
-            return await dataBase.ExecuteAsync(
-                executable, options, commandText, CommandType.Text, parameters)
-                .ConfigureAwait(false);
-        }
-    }
-}
+    }	
