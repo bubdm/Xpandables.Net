@@ -16,8 +16,10 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
+using Xpandables.Net.Optionals;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Events
@@ -47,25 +49,27 @@ namespace Xpandables.Net.Events
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
-
         /// <summary>
-        /// Handles the specified query and returns the expected result type.
+        /// Asynchronously handles the specified query and returns the expected result or an empty expression.
         /// </summary>
         /// <param name="query">The query to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public TResult Handle(TQuery query)
+        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+        public async Task<Optional<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
             try
             {
-                AsyncExtensions.RunSync(_logger.OnEntryLogAsync(_decoratee, query));
-                var result = _decoratee.Handle(query);
-                AsyncExtensions.RunSync(_logger.OnExitLogAsync(_decoratee, query, result));
+                await _logger.OnEntryLogAsync(_decoratee, query).ConfigureAwait(false);
+                var result = await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
+                await _logger.OnExitLogAsync(_decoratee, query, result).ConfigureAwait(false);
                 return result;
             }
             catch (Exception exception)
             {
-                AsyncExtensions.RunSync(_logger.OnExceptionLogAsync(_decoratee, query, exception));
+                await _logger.OnExceptionLogAsync(_decoratee, query, exception).ConfigureAwait(false);
                 throw;
             }
         }

@@ -102,25 +102,6 @@ namespace Xpandables.Net.Enumerables
         }
 
         /// <summary>
-        /// Asynchronously returns a <see cref="List{T}"/> from <see cref="IAsyncEnumerable{T}"/>.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the object.</typeparam>
-        /// <param name="source">The source of the sequence.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A <see cref="List{T}"/> from the asynchronous collection.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public static async ValueTask<List<TSource>> ToListAsync<TSource>(this IAsyncEnumerable<TSource> source, CancellationToken cancellationToken = default)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            var result = new List<TSource>();
-
-            await foreach (var item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
-                result.Add(item);
-
-            return result;
-        }
-
-        /// <summary>
         /// Converts an <see cref="IEnumerable{T}"/> to a read only collection.
         /// </summary>
         /// <typeparam name="TSource">The type of the object.</typeparam>
@@ -145,7 +126,7 @@ namespace Xpandables.Net.Enumerables
             => source switch
             {
                 null => throw new ArgumentNullException(nameof(source)),
-                _ => source.FirstOrDefault() is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
+                _ => source.FirstOrDefault()
             };
 
         /// <summary>
@@ -159,16 +140,7 @@ namespace Xpandables.Net.Enumerables
         public static async Task<Optional<TSource>> FirstOrEmptyAsync<TSource>(this IAsyncEnumerable<TSource> source, CancellationToken cancellationToken = default)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
-            var index = 0;
-            var response = Optional<TSource>.Empty();
-            await foreach (var item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
-            {
-                response = item;
-                index++;
-                if (index > 0) break;
-            }
-
-            return response;
+            return await source.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -185,7 +157,7 @@ namespace Xpandables.Net.Enumerables
              {
                  (_, null) => throw new ArgumentNullException(nameof(predicate)),
                  (null, _) => throw new ArgumentNullException(nameof(source)),
-                 ({ }, { }) => source.FirstOrDefault(predicate) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
+                 ({ }, { }) => source.FirstOrDefault(predicate)
              };
 
         /// <summary>
@@ -202,21 +174,7 @@ namespace Xpandables.Net.Enumerables
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
             _ = predicate ?? throw new ArgumentNullException(nameof(predicate));
-
-            var index = 0;
-            var response = Optional<TSource>.Empty();
-            await foreach (var item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
-            {
-                if (predicate(item))
-                {
-                    response = item;
-                    index++;
-                }
-
-                if (index > 0) break;
-            }
-
-            return response;
+            return await source.FirstOrDefaultAsync(predicate, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -230,7 +188,22 @@ namespace Xpandables.Net.Enumerables
             => source switch
             {
                 null => throw new ArgumentNullException(nameof(source)),
-                _ => source.LastOrDefault() is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
+                _ => source.LastOrDefault()
+            };
+
+        /// <summary>
+        /// Returns the last elements of a sequence or an empty optional if the sequence contains no elements.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the element in the sequence.</typeparam>
+        /// <param name="source">the source of the sequence.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>The last element from the sequence or an empty result if the sequence contains no elements.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public static async Task<Optional<TSource>> LastOrEmptyAsync<TSource>(this IAsyncEnumerable<TSource> source, CancellationToken cancellationToken = default)
+            => source switch
+            {
+                null => throw new ArgumentNullException(nameof(source)),
+                _ => await source.LastOrDefaultAsync(cancellationToken).ConfigureAwait(false)
             };
 
         /// <summary>
@@ -247,7 +220,24 @@ namespace Xpandables.Net.Enumerables
             {
                 (_, null) => throw new ArgumentNullException(nameof(predicate)),
                 (null, _) => throw new ArgumentNullException(nameof(source)),
-                ({ }, { }) => source.LastOrDefault(predicate) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
+                ({ }, { }) => source.LastOrDefault(predicate)
+            };
+
+        /// <summary>
+        /// Returns the last elements of a sequence or an empty optional if the sequence contains no elements.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the element in the sequence.</typeparam>
+        /// <param name="source">the source of the sequence.</param>
+        /// <param name="predicate">A function to test each element to a condition.</param>/// 
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>The last element from the sequence or an empty result if the sequence contains no elements.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        public static async Task<Optional<TSource>> LastOrEmptyAsync<TSource>(this IAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken = default)
+            => source switch
+            {
+                null => throw new ArgumentNullException(nameof(source)),
+                _ => await source.LastOrDefaultAsync(predicate, cancellationToken).ConfigureAwait(false)
             };
 
         /// <summary>
@@ -262,6 +252,21 @@ namespace Xpandables.Net.Enumerables
             {
                 null => throw new ArgumentNullException(nameof(source)),
                 _ => source.ElementAtOrDefault(index) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
+            };
+
+        /// <summary>
+        /// Returns the element at the specified index in a sequence or an empty optional if the index is out of range
+        /// </summary>
+        /// <typeparam name="TSource">The type of the element in the sequence.</typeparam>
+        /// <param name="source">the source of the sequence.</param>
+        /// <param name="index">The zero-based index of the element to retrieve.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public static async Task<Optional<TSource>> ElementAtOrEmptyAsync<TSource>(this IAsyncEnumerable<TSource> source, int index, CancellationToken cancellationToken = default)
+            => source switch
+            {
+                null => throw new ArgumentNullException(nameof(source)),
+                _ => await source.ElementAtOrDefaultAsync(index, cancellationToken).ConfigureAwait(false)
             };
     }
 }

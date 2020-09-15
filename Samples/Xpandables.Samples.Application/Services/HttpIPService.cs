@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Enumerables;
+using Microsoft.Extensions.Configuration;
+
 using Xpandables.Net.HttpRestClient;
 
 namespace Xpandables.Samples.Business.Services
@@ -26,9 +25,9 @@ namespace Xpandables.Samples.Business.Services
             if (_configuration["AccessKey"] is string accessKey)
             {
                 var ipAddress = await _ipLocationHandler.GetIPAddressAsync().ConfigureAwait(false);
-                var response = await _geoLocationHandler.GetGeoLocationAsync(new GeoLocationRequest((await ipAddress.Result.FirstOrEmptyAsync().ConfigureAwait(false)).Single(), accessKey)).ConfigureAwait(false);
+                var response = await _geoLocationHandler.GetGeoLocationAsync(new GeoLocationRequest(ipAddress.Result.First(), accessKey)).ConfigureAwait(false);
 
-                return response.IsValid() ? (await response.Result.FirstOrEmptyAsync().ConfigureAwait(false)).Single() : default;
+                return response.IsValid() ? response.Result.First() : default;
             }
 
             return default;

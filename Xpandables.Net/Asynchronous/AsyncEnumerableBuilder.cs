@@ -27,23 +27,23 @@ namespace Xpandables.Net.Asynchronous
     /// This class implements <see cref="IAsyncEnumerable{T}"/> and <see cref="IEnumerable{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the collection.</typeparam>
-    public sealed class AsyncEnumerable<T> : IAsyncEnumerable<T>, IEnumerable<T>
+    public sealed class AsyncEnumerableBuilder<T> : IAsyncEnumerable<T>, IEnumerable<T>
     {
         private readonly IEnumerable<T> _collection;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncEnumerable{T}"/> with the collection to be asynchronously enumerable.
+        /// Initializes a new instance of <see cref="AsyncEnumerableBuilder{T}"/> with the collection to be asynchronously enumerable.
         /// </summary>
         /// <param name="collection">The collection to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
-        public AsyncEnumerable(IEnumerable<T> collection) => _collection = collection ?? throw new ArgumentNullException(nameof(collection));
+        public AsyncEnumerableBuilder(IEnumerable<T> collection) => _collection = collection ?? throw new ArgumentNullException(nameof(collection));
 
         /// <summary>
         /// Returns an enumerator that iterates asynchronously through the collection.
         /// </summary>
         /// <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
         /// <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
-        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) => new AsyncEnumerator<T>(_collection.GetEnumerator());
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) => new AsyncEnumeratorBuilder<T>(_collection.GetEnumerator());
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.

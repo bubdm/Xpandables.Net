@@ -16,7 +16,10 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
+using Xpandables.Net.Optionals;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Correlation
@@ -35,7 +38,7 @@ namespace Xpandables.Net.Correlation
         where TQuery : class, IQuery<TResult>, ICorrelationDecorator
     {
         private readonly IQueryHandler<TQuery, TResult> _decoratee;
-        private readonly CorrelationContext _correlationContext;
+        private readonly AsyncCorrelationContext _correlationContext;
 
         /// <summary>
         /// Initializes a new instance of <see cref="QueryCorrelationDecorator{TQuery, TResult}"/> class.
@@ -44,30 +47,32 @@ namespace Xpandables.Net.Correlation
         /// <param name="decoratee">The decorated query handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
-        public QueryCorrelationDecorator(CorrelationContext correlationContext, IQueryHandler<TQuery, TResult> decoratee)
+        public QueryCorrelationDecorator(AsyncCorrelationContext correlationContext, IQueryHandler<TQuery, TResult> decoratee)
         {
             _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
         /// <summary>
-        /// Handles the specified query and returns the expected result type.
+        /// Asynchronously handles the specified query and returns the expected result or an empty expression.
         /// </summary>
         /// <param name="query">The query to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <returns>An object that represents the result of <typeparamref name="TResult"/>.</returns>
-        public TResult Handle(TQuery query)
+        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+        public async Task<Optional<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
             try
             {
-                var results = _decoratee.Handle(query);
-                _correlationContext.OnPostEvent(results);
+                var results = await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
+                await _correlationContext.OnPostEventAsync(results).ConfigureAwait(false);
                 return results;
             }
             catch (Exception exception)
             {
-                _correlationContext.OnRollbackEvent(exception);
+                await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
                 throw;
             }
         }

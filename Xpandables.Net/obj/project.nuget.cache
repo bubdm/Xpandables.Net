@@ -1,13 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "DIZ/tRCLeaFbT22XeNGo16yrkpwmaTFEd6YWOxcYK/q332S48E3qyADfbKJG+Q2B66urV8DLflKSOfCXe4Ew/w==",
+  "dgSpecHash": "7kpATcI8kofssSwlUKOo44izV3poBw5czmtrHpiltix0OiODrRAzp+D19QJS340srBAjbda3bFTeM+6Aqz13iw==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\serilog\\2.9.0\\serilog.2.9.0.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\serilog\\2.10.0\\serilog.2.10.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.annotations\\4.7.0\\system.componentmodel.annotations.4.7.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.linq.async\\4.1.1\\system.linq.async.4.1.1.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\4.7.1\\system.text.encodings.web.4.7.1.nupkg.sha512"
   ],
   "logs": []

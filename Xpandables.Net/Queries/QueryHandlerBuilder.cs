@@ -16,6 +16,10 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.Queries
 {
@@ -28,25 +32,28 @@ namespace Xpandables.Net.Queries
     public sealed class QueryHandlerBuilder<TQuery, TResult> : IQueryHandler<TQuery, TResult>
         where TQuery : class, IQuery<TResult>
     {
-        private readonly Func<TQuery, TResult> _handler;
+        private readonly Func<TQuery, CancellationToken, Task<Optional<TResult>>> _handler;
 
         /// <summary>
         /// Initializes a new instance of <see cref="QueryHandlerBuilder{TQuery, TResult}"/> with the delegate to be used
-        /// as <see cref="IQueryHandler{TQuery, TResult}.Handle(TQuery)"/> implementation.
+        /// as <see cref="IQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/> implementation.
         /// </summary>
         /// <param name="handler">The delegate to be used when the handler will be invoked.
         /// <para>The delegate should match all the behaviors expected in
-        /// the <see cref="IQueryHandler{TQuery, TResult}.Handle(TQuery)"/>
+        /// the <see cref="IQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
-        public QueryHandlerBuilder(Func<TQuery, TResult> handler) => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
+        public QueryHandlerBuilder(Func<TQuery, CancellationToken, Task<Optional<TResult>>> handler) => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
 
         /// <summary>
-        /// Handles the specified query and returns the expected result type.
+        /// Asynchronously handles the specified query and returns the expected result or an empty expression.
         /// </summary>
         /// <param name="query">The query to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public TResult Handle(TQuery query) => _handler(query);
+        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+        public async Task<Optional<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default) => await _handler(query, cancellationToken).ConfigureAwait(false);
     }
 }

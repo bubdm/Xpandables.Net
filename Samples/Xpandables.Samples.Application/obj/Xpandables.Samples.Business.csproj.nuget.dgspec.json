@@ -143,7 +143,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj": {
-      "version": "3.1.9",
+      "version": "3.2.0",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj",
         "projectName": "Xpandables.Net.DependencyInjection",
@@ -224,7 +224,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj": {
-      "version": "3.1.9",
+      "version": "3.2.0",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj",
         "projectName": "Xpandables.Net.EntityFramework",
@@ -309,7 +309,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
-      "version": "3.1.9",
+      "version": "3.2.0",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
         "projectName": "Xpandables.Net",
@@ -351,7 +351,7 @@
             },
             "Serilog": {
               "target": "Package",
-              "version": "[2.9.0, )"
+              "version": "[2.10.0, )"
             },
             "System.ComponentModel.Annotations": {
               "target": "Package",
@@ -360,6 +360,10 @@
             "System.Drawing.Common": {
               "target": "Package",
               "version": "[4.7.0, )"
+            },
+            "System.Linq.Async": {
+              "target": "Package",
+              "version": "[4.1.1, )"
             },
             "System.Text.Encodings.Web": {
               "target": "Package",

@@ -63,10 +63,10 @@ namespace Xpandables.Net.Identities
         /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A result contains an collection of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+        /// <returns>An object that contains an enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            if (query is null) throw new ArgumentNullException(nameof(query));
+            _ = query ?? throw new ArgumentNullException(nameof(query));
 
             query.SetIdentity(_identityDataProvider.GetIdentity());
             await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false))

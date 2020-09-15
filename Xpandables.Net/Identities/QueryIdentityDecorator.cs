@@ -16,7 +16,10 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
+using Xpandables.Net.Optionals;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Identities
@@ -52,18 +55,20 @@ namespace Xpandables.Net.Identities
         }
 
         /// <summary>
-        /// Handles the specified query and returns the expected result type.
+        /// Asynchronously handles the specified query and returns the expected result or an empty expression.
         /// </summary>
         /// <param name="query">The query to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <returns>An object that represents the result of <typeparamref name="TResult"/>.</returns>
-        public TResult Handle(TQuery query)
+        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+        public async Task<Optional<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
-            if (query is null) throw new ArgumentNullException(nameof(query));
+            _ = query ?? throw new ArgumentNullException(nameof(query));
 
             query.SetIdentity(_identityDataProvider.GetIdentity());
-            return _decoratee.Handle(query);
+            return await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
         }
     }
 }

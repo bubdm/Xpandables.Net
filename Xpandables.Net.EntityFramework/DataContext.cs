@@ -65,7 +65,7 @@ namespace Xpandables.Net.EntityFramework
         /// <returns>An entity of type <typeparamref name="T"/> if found otherwise <see langword="null"/>  .</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="identifier"/> is null.</exception>
         public async Task<T?> GetEntityByIdAsync<T>(string identifier, CancellationToken cancellationToken = default) where T : Entity
-            => await Set<T>().FirstOrDefaultAsync(entity => entity.Id == identifier, cancellationToken).ConfigureAwait(false);
+            => await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(Set<T>(), entity => entity.Id == identifier, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Adds a domain object to the data storage that will be inserted
@@ -170,8 +170,8 @@ namespace Xpandables.Net.EntityFramework
 
             foreach (var updatedEntity in updatedEntities)
             {
-                if (await Set<T>()
-                    .FirstOrDefaultAsync(entity => entity.Id == updatedEntity.Id, cancellationToken)
+                if (await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(Set<T>(),
+                    entity => entity.Id == updatedEntity.Id, cancellationToken)
                     .ConfigureAwait(false) is T entity)
                 {
                     Entry(entity).CurrentValues.SetValues(updatedEntity);

@@ -19,13 +19,14 @@ using System;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.HttpRestClient
 {
     /// <summary>
     /// Represents an HTTP Rest client response.
     /// </summary>
-    public class HttpRestClientResponse
+    public class HttpRestClientResponse : Disposable
     {
         /// <summary>
         /// Returns a success HTTP status response.
@@ -222,5 +223,40 @@ namespace Xpandables.Net.HttpRestClient
         /// </summary>
         /// <param name="version">the version to be used.</param>
         public new HttpRestClientResponse<TResult> AddVersion(Version version) => this.With(h => h.Version = version);
+
+        private bool _isDisposed;
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        protected override void Dispose(bool disposing)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        {
+            if (!_isDisposed)
+            {
+                _isDisposed = true;
+
+                if (disposing)
+                {
+                    (Result as IDisposable)?.Dispose();
+                }
+            }
+        }
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        protected override async ValueTask DisposeAsync(bool disposing)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        {
+            if (!_isDisposed)
+            {
+                _isDisposed = true;
+
+                if (Result is IAsyncDisposable disposable)
+                {
+                    await disposable.DisposeAsync().ConfigureAwait(false);
+                }
+                else
+                {
+                    (Result as IDisposable)?.Dispose();
+                }
+            }
+        }
     }
 }

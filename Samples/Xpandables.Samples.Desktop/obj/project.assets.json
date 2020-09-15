@@ -546,13 +546,13 @@
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
       },
-      "Serilog/2.9.0": {
+      "Serilog/2.10.0": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/Serilog.dll": {}
+          "lib/netstandard2.1/Serilog.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/Serilog.dll": {}
+          "lib/netstandard2.1/Serilog.dll": {}
         }
       },
       "System.Collections.Immutable/1.7.1": {
@@ -727,14 +727,15 @@
           "lib/netcoreapp3.0/System.Text.Json.dll": {}
         }
       },
-      "Xpandables.Net/3.1.9": {
+      "Xpandables.Net/3.2.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
-          "Serilog": "2.9.0",
+          "Serilog": "2.10.0",
           "System.ComponentModel.Annotations": "4.7.0",
           "System.Drawing.Common": "4.7.0",
+          "System.Linq.Async": "4.1.1",
           "System.Text.Encodings.Web": "4.7.1"
         },
         "compile": {
@@ -744,7 +745,7 @@
           "bin/placeholder/Xpandables.Net.dll": {}
         }
       },
-      "Xpandables.Net.DependencyInjection/3.1.9": {
+      "Xpandables.Net.DependencyInjection/3.2.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -753,7 +754,7 @@
           "Microsoft.Extensions.DependencyModel": "3.1.6",
           "Microsoft.Extensions.Http": "3.1.7",
           "System.ComponentModel.Composition": "4.7.0",
-          "Xpandables.Net": "3.1.9"
+          "Xpandables.Net": "3.2.0"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.DependencyInjection.dll": {}
@@ -762,7 +763,7 @@
           "bin/placeholder/Xpandables.Net.DependencyInjection.dll": {}
         }
       },
-      "Xpandables.Net.EntityFramework/3.1.9": {
+      "Xpandables.Net.EntityFramework/3.2.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
@@ -772,7 +773,7 @@
           "Microsoft.Extensions.Configuration.FileExtensions": "3.1.7",
           "Microsoft.Extensions.Configuration.Json": "3.1.7",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "3.1.7",
-          "Xpandables.Net": "3.1.9"
+          "Xpandables.Net": "3.2.0"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.EntityFramework.dll": {}
@@ -781,11 +782,11 @@
           "bin/placeholder/Xpandables.Net.EntityFramework.dll": {}
         }
       },
-      "Xpandables.Net.Windows/3.1.9": {
+      "Xpandables.Net.Windows/3.2.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
-          "Xpandables.Net": "3.1.9"
+          "Xpandables.Net": "3.2.0"
         },
         "compile": {
           "bin/placeholder/Xpandables.Net.Windows.dll": {}
@@ -803,8 +804,8 @@
         "dependencies": {
           "Microsoft.IdentityModel.Tokens": "6.7.1",
           "System.IdentityModel.Tokens.Jwt": "6.7.1",
-          "Xpandables.Net.DependencyInjection": "3.1.9",
-          "Xpandables.Net.EntityFramework": "3.1.9",
+          "Xpandables.Net.DependencyInjection": "3.2.0",
+          "Xpandables.Net.EntityFramework": "3.2.0",
           "Xpandables.Samples.Domain": "1.0.0"
         },
         "compile": {
@@ -818,7 +819,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "dependencies": {
-          "Xpandables.Net": "3.1.9"
+          "Xpandables.Net": "3.2.0"
         },
         "compile": {
           "bin/placeholder/Xpandables.Samples.Domain.dll": {}
@@ -1655,13 +1656,14 @@
         "packageIcon.png"
       ]
     },
-    "Serilog/2.9.0": {
-      "sha512": "QzcrD33A3+CsVvwi1I5CSei67ikQnkGrw7SscgL+vZTghaC2aNYg8fiUcedXHzKJFNjgje9rBjzwYGQTKEaXaA==",
+    "Serilog/2.10.0": {
+      "sha512": "+QX0hmf37a0/OZLxM3wL7V6/ADvC1XihXN4Kq/p6d8lCPfgkRdiuhbWlMaFjR9Av0dy5F0+MBeDmDdRZN/YwQA==",
       "type": "package",
-      "path": "serilog/2.9.0",
+      "path": "serilog/2.10.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "icon.png",
         "lib/net45/Serilog.dll",
         "lib/net45/Serilog.xml",
         "lib/net46/Serilog.dll",
@@ -1672,7 +1674,9 @@
         "lib/netstandard1.3/Serilog.xml",
         "lib/netstandard2.0/Serilog.dll",
         "lib/netstandard2.0/Serilog.xml",
-        "serilog.2.9.0.nupkg.sha512",
+        "lib/netstandard2.1/Serilog.dll",
+        "lib/netstandard2.1/Serilog.xml",
+        "serilog.2.10.0.nupkg.sha512",
         "serilog.nuspec"
       ]
     },
@@ -2173,22 +2177,22 @@
         "version.txt"
       ]
     },
-    "Xpandables.Net/3.1.9": {
+    "Xpandables.Net/3.2.0": {
       "type": "project",
       "path": "../../Xpandables.Net/Xpandables.Net.csproj",
       "msbuildProject": "../../Xpandables.Net/Xpandables.Net.csproj"
     },
-    "Xpandables.Net.DependencyInjection/3.1.9": {
+    "Xpandables.Net.DependencyInjection/3.2.0": {
       "type": "project",
       "path": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj",
       "msbuildProject": "../../Xpandables.Net.DependencyInjection/Xpandables.Net.DependencyInjection.csproj"
     },
-    "Xpandables.Net.EntityFramework/3.1.9": {
+    "Xpandables.Net.EntityFramework/3.2.0": {
       "type": "project",
       "path": "../../Xpandables.Net.EntityFramework/Xpandables.Net.EntityFramework.csproj",
       "msbuildProject": "../../Xpandables.Net.EntityFramework/Xpandables.Net.EntityFramework.csproj"
     },
-    "Xpandables.Net.Windows/3.1.9": {
+    "Xpandables.Net.Windows/3.2.0": {
       "type": "project",
       "path": "../../Xpandables.Net.Windows/Xpandables.Net.Windows.csproj",
       "msbuildProject": "../../Xpandables.Net.Windows/Xpandables.Net.Windows.csproj"
@@ -2208,7 +2212,7 @@
     ".NETCoreApp,Version=v3.1": [
       "Microsoft.Extensions.Hosting >= 3.1.7",
       "System.Linq.Async >= 4.1.1",
-      "Xpandables.Net.Windows >= 3.1.9",
+      "Xpandables.Net.Windows >= 3.2.0",
       "Xpandables.Samples.Business >= 1.0.0"
     ]
   },

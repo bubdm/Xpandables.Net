@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -77,7 +78,7 @@ namespace Xpandables.Net.Events
                 throw;
             }
 
-            await foreach (var result in new AsyncEnumerable<TResult>(results))
+            await foreach (var result in new AsyncEnumerableBuilder<TResult>(results))
                 yield return result;
         }
     }

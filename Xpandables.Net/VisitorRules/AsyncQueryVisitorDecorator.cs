@@ -61,10 +61,10 @@ namespace Xpandables.Net.VisitorRules
         /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A result contains an collection of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+        /// <returns>An object that contains an enumerable of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            if (query is null) throw new ArgumentNullException(nameof(query));
+            _ = query ?? throw new ArgumentNullException(nameof(query));
 
             await query.AcceptAsync(_visitor).ConfigureAwait(false);
             await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false))
