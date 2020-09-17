@@ -18,7 +18,9 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 using Xpandables.Net.Http;
 using Xpandables.Net.Types;
@@ -36,13 +38,14 @@ namespace Xpandables.Net.DependencyInjection
         const string HttpHeaderAccessorName = "HttpHeaderAccessor";
 
         /// <summary>
-        /// Adds the default HTTP request header values accessor that implements the <see cref="IHttpHeaderAccessor"/> from assembly.
+        /// Adds the default HTTP request header values accessor that implements the <see cref="IHttpHeaderAccessor"/> from "Xpandables.NetCore.dll" assembly.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXHttpHeaderAccessorExtended(this IServiceCollection services)
         {
-            if (HttpHeaderAccessorAssemblyName.TryLoadAssembly(out var assembly, out var exception))
+            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, HttpHeaderAccessorAssemblyName);
+            if (path.TryLoadAssembly(out var assembly, out var exception))
             {
                 var httpHeaderAccessor = assembly
                     .GetExportedTypes()

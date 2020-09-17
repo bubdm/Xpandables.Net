@@ -5,7 +5,7 @@
     <Platforms>x64</Platforms>
     <PublishTrimmed>true</PublishTrimmed>
     <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
     <Product>Xpandables Net</Product>
@@ -15,10 +15,10 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>3.2.0</Version>
-    <AssemblyVersion>3.2.0</AssemblyVersion>
-    <FileVersion>3.2.0</FileVersion>
-    <PackageVersion>3.2.0</PackageVersion>
+    <Version>3.2.1</Version>
+    <AssemblyVersion>3.2.1</AssemblyVersion>
+    <FileVersion>3.2.1</FileVersion>
+    <PackageVersion>3.2.1</PackageVersion>
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand, IDispatcher, IQuery{TResult}, Enumeration, ILogger, Interception, ICommandHandler{TCommand}, IQueryHandler{TQuery, TResult}, ValueObject...</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>

@@ -65,7 +65,7 @@ namespace Xpandables.Net.Events
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await _logger.OnEntryLogAsync(_decoratee, query).ConfigureAwait(false);
-            var results = new List<TResult>();
+            List<TResult>? results;
 
             try
             {

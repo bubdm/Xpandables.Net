@@ -5,7 +5,7 @@
     <Platforms>x64</Platforms>
     <PublishTrimmed>true</PublishTrimmed>
     <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
-    <LangVersion>8.0</LangVersion>
+        <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
     <Product>Xpandables Net EntityFramework</Product>
@@ -15,10 +15,10 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net.EntityFramework</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>3.2.0</Version>
-    <AssemblyVersion>3.2.0</AssemblyVersion>
-    <FileVersion>3.2.0</FileVersion>
-    <PackageVersion>3.2.0</PackageVersion>
+    <Version>3.2.1</Version>
+    <AssemblyVersion>3.2.1</AssemblyVersion>
+    <FileVersion>3.2.1</FileVersion>
+    <PackageVersion>3.2.1</PackageVersion>
     <PackageId>Xpandables.Net.EntityFramework</PackageId>
     <PackageTags>IDataContext, IDataContextProvider.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
@@ -62,12 +62,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.7" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.7" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.7" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.7" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.7" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.8" />
   </ItemGroup>
 
   <ItemGroup>

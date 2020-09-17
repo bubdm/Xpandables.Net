@@ -143,7 +143,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj": {
-      "version": "3.2.0",
+      "version": "3.2.1",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.DependencyInjection\\Xpandables.Net.DependencyInjection.csproj",
         "projectName": "Xpandables.Net.DependencyInjection",
@@ -185,11 +185,11 @@
           "dependencies": {
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[3.1.8, )"
             },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[3.1.8, )"
             },
             "Microsoft.Extensions.DependencyModel": {
               "target": "Package",
@@ -197,7 +197,7 @@
             },
             "Microsoft.Extensions.Http": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[3.1.8, )"
             },
             "System.ComponentModel.Composition": {
               "target": "Package",
@@ -224,7 +224,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj": {
-      "version": "3.2.0",
+      "version": "3.2.1",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.EntityFramework\\Xpandables.Net.EntityFramework.csproj",
         "projectName": "Xpandables.Net.EntityFramework",
@@ -266,27 +266,27 @@
           "dependencies": {
             "Microsoft.EntityFrameworkCore.Relational": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[3.1.8, )"
             },
             "Microsoft.Extensions.Configuration": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[3.1.8, )"
             },
             "Microsoft.Extensions.Configuration.EnvironmentVariables": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[3.1.8, )"
             },
             "Microsoft.Extensions.Configuration.FileExtensions": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[3.1.8, )"
             },
             "Microsoft.Extensions.Configuration.Json": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[3.1.8, )"
             },
             "Microsoft.Extensions.Options.ConfigurationExtensions": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[3.1.8, )"
             }
           },
           "imports": [
@@ -309,7 +309,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
-      "version": "3.2.0",
+      "version": "3.2.1",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
         "projectName": "Xpandables.Net",
