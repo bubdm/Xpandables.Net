@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bBNQMv342Olduq0xHGi713cDzL+Ta+tq3f5UzprMjJetKiRWogv/2/UsugtWvN5uARvhN5r6H+ji3/4PC6uuCw==",
+  "dgSpecHash": "PL2T5qfzDUMxaG9DcAMKWbkJz6QeaxeK1kfif5oJqp7iD/tO7AGRpbeUzAseBK1ELDw/EoVFf+il4At8HkiFig==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Samples\\Xpandables.Samples.Desktop\\Xpandables.Samples.Desktop.csproj",
   "expectedPackageFiles": [
@@ -60,7 +60,8 @@
     "C:\\Users\\fewan\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\4.7.1\\system.text.encodings.web.4.7.1.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.text.json\\4.7.2\\system.text.json.4.7.2.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\system.text.json\\4.7.2\\system.text.json.4.7.2.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
   ],
   "logs": []
 }
