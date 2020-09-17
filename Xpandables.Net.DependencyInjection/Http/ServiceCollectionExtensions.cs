@@ -32,7 +32,7 @@ namespace Xpandables.Net.DependencyInjection
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
-        const string HttpHeaderAccessorAssemblyName = "Xpandables.Net.AspNetCore.dll";
+        const string HttpHeaderAccessorAssemblyName = "Xpandables.NetCore.dll";
         const string HttpHeaderAccessorName = "HttpHeaderAccessor";
 
         /// <summary>
@@ -94,25 +94,11 @@ namespace Xpandables.Net.DependencyInjection
 
             builder.ConfigurePrimaryHttpMessageHandler(() =>
             {
-                var httpTokenProvider = new HttpTokenAccessorHandler(tokenProvider);
+                var httpTokenProvider = new HttpTokenAccessorBuilder(tokenProvider);
                 return new AuthorizationHttpTokenHandler(httpTokenProvider);
             });
 
             return builder;
-        }
-
-        /// <summary>
-        /// Adds the <see cref="HttpTokenContainer"/> that contains <see cref="IHttpHeaderAccessor"/>, <see cref="IHttpTokenAccessor"/>
-        /// and <see cref="IHttpTokenEngine"/> to the service in scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpTokenContainer(this IServiceCollection services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.AddScoped<HttpTokenContainer>();
-            return services;
         }
 
         /// <summary>

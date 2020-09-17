@@ -22,12 +22,12 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// A helper class used to implement the <see cref="IHttpTokenAccessor"/> interface.
     /// </summary>
-    public sealed class HttpTokenAccessorHandler : IHttpTokenAccessor
+    public sealed class HttpTokenAccessorBuilder : IHttpTokenAccessor
     {
         private readonly Func<string, string?> _tokenAccessor;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="HttpTokenAccessorHandler"/> class with the delegate to be used
+        /// Initializes a new instance of <see cref="HttpTokenAccessorBuilder"/> class with the delegate to be used
         /// as <see cref="IHttpTokenAccessor"/> implementation.
         /// </summary>
         /// <param name="tokenAccessor">The delegate to be used when the handler will be invoked.
@@ -35,7 +35,7 @@ namespace Xpandables.Net.Http
         /// the <see cref="IHttpTokenAccessor"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="tokenAccessor"/> is null.</exception>
-        public HttpTokenAccessorHandler(Func<string, string?> tokenAccessor)
+        public HttpTokenAccessorBuilder(Func<string, string?> tokenAccessor)
             => _tokenAccessor = tokenAccessor ?? throw new ArgumentNullException(nameof(tokenAccessor));
 
         /// <summary>
@@ -44,6 +44,6 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <param name="key">The token key to find.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key" /> is null.</exception>
-        public string? GetToken(string key) => _tokenAccessor(key);
+        public string? ReadToken(string key) => _tokenAccessor(key);
     }
 }

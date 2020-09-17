@@ -11,6 +11,7 @@ using Xpandables.Net.Data.Options;
 using Xpandables.Net.DependencyInjection;
 using Xpandables.Net.Enumerables;
 using Xpandables.Net.Extensibility;
+using Xpandables.Net.Identities;
 using Xpandables.Samples.Business.Interceptors;
 using Xpandables.Samples.Business.Services;
 
@@ -33,7 +34,8 @@ namespace Xpandables.Samples.Business
                 options.UseLoggingDecorator<HttpLogginService>();
             });
 
-            services.AddXHttpTokenContainer();
+            services.AddXHttpTokenAccessor();
+            services.AddXHttpHeaderAccessorExtended();
             services.AddXHttpTokenEngine<HttpTokenEngine>();
 
             services.AddXHttpRestClientGeoLocationHandler();

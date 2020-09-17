@@ -8,12 +8,14 @@ using System.Security.Claims;
 using System.Text;
 
 using Xpandables.Net.Http;
+using Xpandables.Net.Types;
+using Xpandables.Samples.Domain.Models;
 
 namespace Xpandables.Samples.Business.Services
 {
     public sealed class HttpTokenEngine : IHttpTokenEngine
     {
-        public string WriteToken(IEnumerable<Claim> claims)
+        public Token WriteToken(IEnumerable<Claim> claims)
         {
             if (claims is null) throw new ArgumentNullException(nameof(claims));
 
@@ -32,7 +34,7 @@ namespace Xpandables.Samples.Business.Services
             var securityToken = handler.CreateToken(tokenDescriptor);
             var token = handler.WriteToken(securityToken);
 
-            return $"Bearer {token}";
+            return Token.Create(token, "Bearer", tokenDescriptor.Expires.Value);
         }
 
         public IEnumerable<Claim> ReadToken(string source)
@@ -46,5 +48,8 @@ namespace Xpandables.Samples.Business.Services
             claims.Add(new Claim(ClaimsIdentity.DefaultNameClaimType, claims.First(f => f.Type == "unique_name").Value));
             return claims;
         }
+
+        public object ReadIdentity(IEnumerable<Claim> claims) => UserFactory.ToClaims(claims);
+
     }
 }

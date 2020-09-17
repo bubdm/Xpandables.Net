@@ -29,44 +29,12 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <param name="key">The token key to find.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
-        string? GetToken(string key);
+        string? ReadToken(string key);
 
         /// <summary>
         /// Returns the current token value from the current HTTP request matching the "Authorization" key.
         /// If not found, returns an empty value.
         /// </summary>
-        public sealed string? GetToken() => GetToken("Authorization");
-    }
-
-    /// <summary>
-    /// The default implementation for <see cref="IHttpTokenAccessor"/>.
-    /// </summary>
-    public sealed class HttpTokenAccessor : IHttpTokenAccessor
-    {
-        private readonly IHttpHeaderAccessor _httpHeaderAccessor;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="HttpTokenAccessor"/> class.
-        /// </summary>
-        /// <param name="securedHeaderAccessor">The header accessor to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="securedHeaderAccessor"/> is null.</exception>
-        public HttpTokenAccessor(IHttpHeaderAccessor securedHeaderAccessor)
-            => _httpHeaderAccessor = securedHeaderAccessor ?? throw new ArgumentNullException(nameof(securedHeaderAccessor));
-
-        /// <summary>
-        /// Returns the current token value from the current HTTP request with the specified key.
-        /// If not found, returns an empty value.
-        /// </summary>
-        /// <param name="key">The token key to find.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="key" /> is null.</exception>
-        public string? GetToken(string key)
-        {
-            if (key is null) throw new ArgumentNullException(nameof(key));
-
-            var token = _httpHeaderAccessor.GetValue(key);
-            return token?.StartsWith("Bearer", StringComparison.InvariantCulture) == true
-                ? token.Remove(0, "Bearer ".Length - 1).Trim()
-                : token;
-        }
+        public sealed string? ReadToken() => ReadToken("Authorization");
     }
 }

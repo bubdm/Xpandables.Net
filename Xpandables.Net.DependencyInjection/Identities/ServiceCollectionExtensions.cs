@@ -33,6 +33,17 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
+        /// Adds the default identity data type to the services.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXIdentityDataProvider(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            return services.AddScoped<IIdentityDataProvider, IdentityDataProvider>();
+        }
+
+        /// <summary>
         /// Adds the identity data type to the services.
         /// </summary>
         /// <typeparam name="TIdentityProvider">The identity data type provider.</typeparam>

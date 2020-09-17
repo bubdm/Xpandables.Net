@@ -27,7 +27,7 @@ namespace Xpandables.Net.Http
     /// Provides with a handler that can be used with <see cref="HttpClient"/> to add header authorization value
     /// before request execution.
     /// </summary>
-    public class AuthorizationHttpTokenHandler : HttpClientHandler
+    public class AuthorizationHttpTokenHandler : DelegatingHandler
     {
         private readonly IHttpTokenAccessor _httpTokenAccessor;
 
@@ -53,7 +53,7 @@ namespace Xpandables.Net.Http
 
             if (request.Headers.Authorization is AuthenticationHeaderValue authorization)
             {
-                var token = _httpTokenAccessor.GetToken() ?? throw new InvalidOperationException("Expected token not found.");
+                var token = _httpTokenAccessor.ReadToken() ?? throw new InvalidOperationException("Expected token not found.");
                 request.Headers.Authorization = new AuthenticationHeaderValue(authorization.Scheme, token);
             }
 

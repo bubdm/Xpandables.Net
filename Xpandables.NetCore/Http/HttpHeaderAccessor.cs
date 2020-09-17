@@ -45,7 +45,7 @@ namespace Xpandables.NetCore.Http
         /// Gets all HTTP header values from the current HTTP request.
         /// If not found, returns an empty dictionary.
         /// </summary>
-        public IReadOnlyDictionary<string, IReadOnlyList<string>> GetValues()
+        public IReadOnlyDictionary<string, IReadOnlyList<string>> ReadValues()
         {
             var headers = _contextAccessor.HttpContext?.Request?.Headers?.ToDictionary(d => d.Key, d => (IReadOnlyList<string>)d.Value);
             if (headers is null)

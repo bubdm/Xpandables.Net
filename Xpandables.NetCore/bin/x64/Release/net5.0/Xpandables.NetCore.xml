@@ -148,7 +148,7 @@
             <param name="contextAccessor">The HTTP context accessor.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="contextAccessor"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.NetCore.Http.HttpHeaderAccessor.GetValues">
+        <member name="M:Xpandables.NetCore.Http.HttpHeaderAccessor.ReadValues">
             <summary>
             Gets all HTTP header values from the current HTTP request.
             If not found, returns an empty dictionary.

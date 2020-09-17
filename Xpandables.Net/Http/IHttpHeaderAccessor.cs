@@ -31,7 +31,7 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <param name="key">The key of the value to match.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
-        public sealed string? GetValue(string key) => GetValues(key).FirstOrDefault();
+        public sealed string? ReadValue(string key) => ReadValues(key).FirstOrDefault();
 
         /// <summary>
         /// Gets all HTTP header values from the current HTTP request matching the specified key.
@@ -39,16 +39,16 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <param name="key">The key of the value to match.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
-        public sealed IEnumerable<string> GetValues(string key)
+        public sealed IEnumerable<string> ReadValues(string key)
         {
             if (key is null) throw new ArgumentNullException(nameof(key));
-            return GetValues().TryGetValue(key, out var values) ? values.AsEnumerable() : Enumerable.Empty<string>();
+            return ReadValues().TryGetValue(key, out var values) ? values.AsEnumerable() : Enumerable.Empty<string>();
         }
 
         /// <summary>
         /// Gets all HTTP header values from the current HTTP request.
         /// If not found, returns an empty dictionary.
         /// </summary>
-        IReadOnlyDictionary<string, IReadOnlyList<string>> GetValues();
+        IReadOnlyDictionary<string, IReadOnlyList<string>> ReadValues();
     }
 }

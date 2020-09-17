@@ -52,7 +52,7 @@ namespace Xpandables.Samples.Domain.Models
 
         public IEnumerable<Claim> GetClaims() => ClaimsFactory.Create(Id, Email, TimeSpan.FromMinutes(30).ToString());
 
-        public string GetToken(IHttpTokenEngine httpTokenEngine)
+        public Token GetToken(IHttpTokenEngine httpTokenEngine)
         {
             _ = httpTokenEngine ?? throw new ArgumentNullException(nameof(httpTokenEngine));
             return httpTokenEngine.WriteToken(GetClaims());

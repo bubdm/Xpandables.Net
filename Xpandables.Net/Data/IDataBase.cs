@@ -117,6 +117,8 @@ namespace Xpandables.Net.Data
                             dataOptions.OnExceptionHandled(invalidSqlException);
                         else
                             throw invalidSqlException;
+
+                        return Optional<TResult>.Empty();
                     }
                 }
 
@@ -221,8 +223,8 @@ namespace Xpandables.Net.Data
                         catch (Exception sqlException)
                         {
                             var invalidSqlException = new InvalidOperationException(
-                                            "Exception encountered while attempting to roll back the transaction.",
-                                            new AggregateException(new[] { exception, sqlException }));
+                                "Exception encountered while attempting to roll back the transaction.",
+                                new AggregateException(new[] { exception, sqlException }));
 
                             if (dataOptions.IsOnExceptionDefined)
                                 dataOptions.OnExceptionHandled(invalidSqlException);

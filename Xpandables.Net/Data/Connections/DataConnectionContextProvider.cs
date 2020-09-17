@@ -30,7 +30,7 @@ namespace Xpandables.Net.Data.Connections
     /// </summary>
     public sealed class DataConnectionContextProvider : IDataConnectionContextProvider
     {
-        private readonly ConcurrentDictionary<string, DataConnectionContext> _dbConnectionCache;
+        private readonly ConcurrentDictionary<string, DbProviderFactory> _dbProviderFactoryCache;
         private readonly IDataFactoryProvider _dataFactoryProvider;
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Xpandables.Net.Data.Connections
         public DataConnectionContextProvider(IDataFactoryProvider dataFactoryProvider)
         {
             _dataFactoryProvider = dataFactoryProvider ?? throw new ArgumentNullException(nameof(dataFactoryProvider));
-            _dbConnectionCache = new ConcurrentDictionary<string, DataConnectionContext>();
+            _dbProviderFactoryCache = new ConcurrentDictionary<string, DbProviderFactory>();
         }
 
         /// <summary>
@@ -53,16 +53,12 @@ namespace Xpandables.Net.Data.Connections
         {
             _ = dataConnection ?? throw new ArgumentNullException(nameof(dataConnection));
 
-            var connectionString = dataConnection.GetConnectionString();
-            if (_dbConnectionCache.TryGetValue(connectionString, out var dataConnectionContext))
-                return dataConnectionContext;
-
-            var dbFactoryProvider = _dataFactoryProvider.GetProviderFactory(dataConnection.ProviderType)
-                ?? throw new ArgumentNullException(nameof(dataConnection.ProviderType));
+            var dbFactoryProvider = _dbProviderFactoryCache.GetOrAdd(dataConnection.ProviderType.DisplayName, _dataFactoryProvider.GetProviderFactory(dataConnection.ProviderType)
+                ?? throw new ArgumentNullException(nameof(dataConnection.ProviderType)));
 
             var connection = await BuildConnectionAsync(dbFactoryProvider, dataConnection).ConfigureAwait(false);
 
-            return _dbConnectionCache.GetOrAdd(connectionString, new DataConnectionContext(connection, dbFactoryProvider));
+            return new DataConnectionContext(connection, dbFactoryProvider);
         }
 
         private static async Task<DbConnection> BuildConnectionAsync(DbProviderFactory dbProviderFactory, IDataConnection dataConnection)
