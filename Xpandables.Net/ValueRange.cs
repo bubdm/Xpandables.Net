@@ -40,6 +40,17 @@ namespace Xpandables.Net
         public ValueRange(TValue min, TValue max) => (Min, Max) = (min, max);
 
         /// <summary>
+        /// Creates a copy of the specified range value.
+        /// </summary>
+        /// <param name="source">The range to be copied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public ValueRange(ValueRange<TValue> source)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            (Min, Max) = (source.Min, source.Max);
+        }
+
+        /// <summary>
         /// Provides with deconstruction for <see cref="ValueRange{TValue}"/>.
         /// </summary>
         /// <param name="min">The output minimal value of range.</param>

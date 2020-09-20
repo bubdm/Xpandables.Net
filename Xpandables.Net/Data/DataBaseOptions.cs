@@ -33,7 +33,7 @@ namespace Xpandables.Net.Data
         /// <param name="dataOptions">The data options to be used.</param>
         /// <exception cref="ArgumentException">The <paramref name="dataOptions"/> is null.</exception>
         public DataBaseOptions UseDataOptions(IDataOptions dataOptions)
-            => this.With(dbo => dbo.IsDataOptionsEnabled = dataOptions ?? throw new ArgumentNullException(nameof(dataOptions)));
+            => this.Assign(dbo => dbo.IsDataOptionsEnabled = dataOptions ?? throw new ArgumentNullException(nameof(dataOptions)));
 
         /// <summary>
         /// Uses the specified data connection as the default for the target instance of <see cref="IDataBase"/>.
@@ -41,7 +41,7 @@ namespace Xpandables.Net.Data
         /// <param name="dataConnection">The data connection to be used.</param>
         /// <exception cref="ArgumentException">The <paramref name="dataConnection"/> is null.</exception>
         public DataBaseOptions UseDataConnection(IDataConnection dataConnection)
-            => this.With(dbo => dbo.IsDataConnectionEnabled= dataConnection ?? throw new ArgumentNullException(nameof(dataConnection)));
+            => this.Assign(dbo => dbo.IsDataConnectionEnabled= dataConnection ?? throw new ArgumentNullException(nameof(dataConnection)));
 
         internal IDataOptions? IsDataOptionsEnabled { get; private set; }
         internal IDataConnection? IsDataConnectionEnabled { get; private set; }

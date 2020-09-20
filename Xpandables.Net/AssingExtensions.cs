@@ -19,12 +19,14 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Xpandables.Net.Enumerables;
+
 namespace Xpandables.Net
 {
     /// <summary>
     /// Provides with extension method similar to the VB.Net key word <see lanwgord="With"/>..<see lanwgord="EndWith"/>.
     /// </summary>
-    public static class WithExtensions
+    public static class AssingExtensions
     {
         /// <summary>
         /// Sets properties via lambda expression scope.
@@ -36,13 +38,33 @@ namespace Xpandables.Net
         /// <returns>The same object after applying the action on it.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="action"/> is null.</exception>
-        public static TSource With<TSource>(this TSource source, Action<TSource> action)
+        public static TSource Assign<TSource>(this TSource source, Action<TSource> action)
             where TSource : class
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
             _ = action ?? throw new ArgumentNullException(nameof(action));
 
             action.Invoke(source);
+            return source;
+        }
+
+        /// <summary>
+        /// Sets properties via lambda expressions scope.
+        /// This is similar to the VB.Net key word <see lanwgord="With"/>..<see lanwgord="EndWith"/>.
+        /// </summary>
+        /// <typeparam name="TSource">Type source.</typeparam>
+        /// <param name="source">The source item to act on.</param>
+        /// <param name="actions">The actions to be applied.</param>
+        /// <returns>The same object after applying the action on it.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="actions"/> is null.</exception>
+        public static TSource Assign<TSource>(this TSource source, params Action<TSource>[] actions)
+            where TSource : class
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            _ = actions ?? throw new ArgumentNullException(nameof(actions));
+
+            actions.ForEach(action => action.Invoke(source));
             return source;
         }
 
@@ -59,19 +81,19 @@ namespace Xpandables.Net
         /// <exception cref="ArgumentNullException">The <paramref name="nameOfExpression"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="nameOfExpression"/> is not valid.</exception>
         /// <exception cref="TargetInvocationException">An error occurred while setting the property value. See inner exception.</exception>
-        public static TSource With<TSource>(this TSource source, Expression<Func<TSource, string>> nameOfExpression, object value)
+        public static TSource Assign<TSource>(this TSource source, Expression<Func<TSource, string>> nameOfExpression, object value)
             where TSource : class
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
             _ = nameOfExpression ?? throw new ArgumentNullException(nameof(nameOfExpression));
 
-            if (!(nameOfExpression.Body is ConstantExpression constantExpression))
+            if (nameOfExpression.Body is not ConstantExpression constantExpression)
                 throw new ArgumentNullException($"Constant Expression expected. {nameof(nameOfExpression)}");
 
             if (constantExpression.Value is null)
                 throw new ArgumentException($"Constant Expression Value is null. {nameof(nameOfExpression)}");
 
-            if (!(source.GetType().GetProperty(constantExpression.Value.ToString()!) is PropertyInfo propertyInfo))
+            if (source.GetType().GetProperty(constantExpression.Value.ToString()!) is not PropertyInfo propertyInfo)
                 throw new ArgumentException($"Property {constantExpression.Value} does not exist in the {source.GetType().Name}.");
 
             if (!(propertyInfo.GetSetMethod() is MethodInfo))

@@ -34,7 +34,7 @@ namespace Xpandables.Net.EntityFramework
         public DataContextOptions UseSeederDecorator<TDataContextSeeder, TDataContext>()
             where TDataContextSeeder : class, IDataContextSeeder<TDataContext>
             where TDataContext : class, IDataContext, ISeedDecorator
-            => this.With(cq => cq.IsSeederEnabled = (typeof(TDataContextSeeder), typeof(TDataContext)));
+            => this.Assign(cq => cq.IsSeederEnabled = (typeof(TDataContextSeeder), typeof(TDataContext)));
 
         /// <summary>
         /// Enables the delegate that get called on persistence exception.
