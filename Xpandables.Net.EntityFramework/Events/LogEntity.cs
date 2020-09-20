@@ -26,7 +26,9 @@ using Newtonsoft.Json.Linq;
 using Serilog.Events;
 using Serilog.Formatting.Json;
 
-namespace Xpandables.Net.Events
+using Xpandables.Net.Events;
+
+namespace Xpandables.Net.EntityFramework.Events
 {
     /// <summary>
     /// Helper class to implement <see cref="ILogEntity{T}"/>.
@@ -276,18 +278,18 @@ namespace Xpandables.Net.Events
         /// You must override this to match your requirement.
         /// </summary>
         /// <param name="logEvent">The event source.</param>
-        public virtual T LoadFrom(LogEvent logEvent)
+        public virtual T LoadFrom(object logEvent)
         {
-            if (logEvent is null)
+            if (logEvent is not LogEvent log)
                 throw new ArgumentNullException(nameof(logEvent));
 
-            var json = ConvertLogEventToJson(logEvent);
+            var json = ConvertLogEventToJson(log);
             var jobject = JObject.Parse(json);
             var properties = jobject.Property("Properties");
 
             return
-                WithException(logEvent.Exception)
-                .WithLevel(logEvent.Level.ToString())
+                WithException(log.Exception)
+                .WithLevel(log.Level.ToString())
                 .WithEventId(GetProperty("EventId"))
                 .WithSourceContext(GetProperty("SourceContext"))
                 .WithActionId(GetProperty("ActionId"))
@@ -296,11 +298,11 @@ namespace Xpandables.Net.Events
                 .WithRequestId(GetProperty("RequestId"))
                 .WithRequestPath(GetProperty("RequestPath"))
                 .WithProperties(properties?.ToString())
-                .WithMessage(logEvent.RenderMessage())
-                .WithMessageTemplate(logEvent.MessageTemplate?.ToString())
-                .WithTimeSpan(logEvent.Timestamp);
+                .WithMessage(log.RenderMessage())
+                .WithMessageTemplate(log.MessageTemplate?.ToString())
+                .WithTimeSpan(log.Timestamp);
 
-            string? GetProperty(string key) => logEvent.Properties.TryGetValue(key, out var value) ? value.ToString() : default;
+            string? GetProperty(string key) => log.Properties.TryGetValue(key, out var value) ? value.ToString() : default;
 
             static string ConvertLogEventToJson(LogEvent log)
             {

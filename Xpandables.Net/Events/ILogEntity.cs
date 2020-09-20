@@ -17,12 +17,10 @@
 ************************************************************************************************************/
 using System;
 
-using Serilog.Events;
-
 namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// Provides with the base description for an event log using <see cref="Serilog"/>.
+    /// Provides with the base description for an event log using <see langword="Serilog"/>.
     /// </summary>
     public interface ILogEntity
     {
@@ -98,7 +96,7 @@ namespace Xpandables.Net.Events
     }
 
     /// <summary>
-    /// Provides with the generic base description for an event log using <see cref="Serilog"/>.
+    /// Provides with the generic base description for an event log using <see langword="Serilog"/>.
     /// </summary>
     /// <typeparam name="T">The type of the log event class.</typeparam>
     public interface ILogEntity<T> : ILogEntity
@@ -185,9 +183,9 @@ namespace Xpandables.Net.Events
         T WithProperties(string? properties);
 
         /// <summary>
-        /// Loads the underlying instance from the <see cref="Serilog"/> event.
+        /// Loads the underlying instance from the <see langword="Serilog"/> event.
         /// </summary>
         /// <param name="logEvent">The event source.</param>
-        T LoadFrom(LogEvent logEvent);
+        T LoadFrom(object logEvent);
     }
 }

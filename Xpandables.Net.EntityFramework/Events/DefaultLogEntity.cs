@@ -17,7 +17,9 @@
 ************************************************************************************************************/
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Xpandables.Net.Events
+using Xpandables.Net.Events;
+
+namespace Xpandables.Net.EntityFramework.Events
 {
     /// <summary>
     /// The default log entity. You can derive from <see cref="LogEntity{T}"/> to customize your behaviors.

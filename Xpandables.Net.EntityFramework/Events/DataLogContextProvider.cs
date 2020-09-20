@@ -25,9 +25,7 @@ using System.Threading.Tasks;
 using Xpandables.Net.Creators;
 using Xpandables.Net.Events;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.EntityFramework
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// The <see cref="DataLogContextProvider{TDataContext, TLogEntity}"/> helper class.

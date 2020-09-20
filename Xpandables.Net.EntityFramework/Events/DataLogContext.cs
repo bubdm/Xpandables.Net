@@ -19,9 +19,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Events;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.EntityFramework
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// This is the <see langword="abstract"/> db log context class that inherits from <see cref="DbContext"/>
