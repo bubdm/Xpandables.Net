@@ -69,7 +69,7 @@ namespace Xpandables.Net.Optionals
         }
 
         /// <summary>
-        /// Determines whether the internal value is an enumerable.
+        /// Gets a state whether the internal value is an enumerable.
         /// </summary>
         /// <returns><see langword="true"/> if so, otherwise <see langword="false"/>.</returns>
         public bool ValueIsEnumerable() => typeof(T).IsEnumerable();
@@ -94,10 +94,12 @@ namespace Xpandables.Net.Optionals
         /// otherwise returns the empty delegate.
         /// </summary>
         /// <typeparam name="TOutput">The type of the result.</typeparam>
-        /// <param name="pattern">The pattern to be used.</param>
+        /// <param name="empty">The empty action.</param>
+        /// <param name="some">The some action.</param>
         /// <returns>A new optional that could contain a value or not.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="pattern"/> is null.</exception>
-        public Optional<TOutput> Map<TOutput>((Func<TOutput> empty, Func<T, TOutput> some) pattern) => IsValue() ? pattern.some(_values[0]) : pattern.empty();
+        /// <exception cref="ArgumentNullException">The <paramref name="empty"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="some"/> is null.</exception>
+        public Optional<TOutput> Map<TOutput>(Func<TOutput> empty, Func<T, TOutput> some) => IsValue() ? some(_values[0]) : empty();
 
         /// <summary>
         /// Asynchronously creates a new optional that is the result of applying the given functions to the element.
@@ -105,11 +107,13 @@ namespace Xpandables.Net.Optionals
         /// otherwise returns the empty delegate.
         /// </summary>
         /// <typeparam name="TOutput">The type of the result.</typeparam>
-        /// <param name="pattern">The pattern to be used.</param>
+        /// <param name="empty">The empty action.</param>
+        /// <param name="some">The some action.</param>
         /// <returns>A new optional that could contain a value or not.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="pattern"/> is null.</exception>
-        public async Task<Optional<TOutput>> MapAsync<TOutput>((Func<Task<TOutput>> empty, Func<T, Task<TOutput>> some) pattern)
-            => IsValue() ? await pattern.some(_values[0]).ConfigureAwait(false) : await pattern.empty().ConfigureAwait(false);
+        /// <exception cref="ArgumentNullException">The <paramref name="empty"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="some"/> is null.</exception>
+        public async Task<Optional<TOutput>> MapAsync<TOutput>(Func<Task<TOutput>> empty, Func<T, Task<TOutput>> some)
+            => IsValue() ? await some(_values[0]).ConfigureAwait(false) : await empty().ConfigureAwait(false);
 
         /// <summary>
         /// Turns the current optional to a new optional one using the specified binding.
@@ -118,7 +122,7 @@ namespace Xpandables.Net.Optionals
         /// <param name="binder">The binding function.</param>
         /// <returns>A new optional that could contain a value or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="binder"/> is null.</exception>
-        public Optional<TOutput> Bind<TOutput>(Func<T, Optional<TOutput>> binder) => Map((() => Optional<TOutput>.Empty(), value => binder(value)));
+        public Optional<TOutput> Bind<TOutput>(Func<T, Optional<TOutput>> binder) => Map(() => Optional<TOutput>.Empty(), value => binder(value));
 
         /// <summary>
         /// Asynchronously turns the current optional to a new optional one using the specified binding.
@@ -128,7 +132,7 @@ namespace Xpandables.Net.Optionals
         /// <returns>A new optional that could contain a value or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="binder"/> is null.</exception>
         public async Task<Optional<TOutput>> BindAsync<TOutput>(Func<T, Task<Optional<TOutput>>> binder)
-            => await MapAsync((() => Task.FromResult(Optional<TOutput>.Empty()), value => binder(value))).ConfigureAwait(false);
+            => await MapAsync(() => Task.FromResult(Optional<TOutput>.Empty()), value => binder(value)).ConfigureAwait(false);
 
         /// <summary>
         /// Creates a new optional that is the result of calling the given function.

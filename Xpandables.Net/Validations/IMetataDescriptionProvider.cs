@@ -82,7 +82,7 @@ namespace Xpandables.Net.Validations
             AddProviderFromStringName(
                            instance,
                            Invariant($"{instance.GetType().Name}Metadata"),
-                           instance.GetType().Assembly.SingleToEnumerable().ToArray());
+                           new[] { instance.GetType().Assembly });
         }
 
         /// <summary>

@@ -81,7 +81,7 @@ namespace Xpandables.Net.Data
 
                 using var connection = dataConnectionContext.DbConnection;
                 using var command = connection.CreateCommand();
-                using var adapter = dataConnectionContext.DbProviderFactory.CreateDataAdapter();
+                using var adapter = dataConnectionContext.DbProviderFactory.CreateDataAdapter()!;
 
                 command.CommandType = commandType;
                 if (connection.State != ConnectionState.Open)
@@ -178,7 +178,7 @@ namespace Xpandables.Net.Data
 
                 connectionSource = dataConnectionContext.DbConnection;
                 commandSource = connectionSource.CreateCommand();
-                adapterSource = dataConnectionContext.DbProviderFactory.CreateDataAdapter();
+                adapterSource = dataConnectionContext.DbProviderFactory.CreateDataAdapter()!;
 
                 commandSource.CommandType = commandType;
                 if (connectionSource.State != ConnectionState.Open)

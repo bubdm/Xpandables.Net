@@ -16,7 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -33,30 +32,6 @@ namespace Xpandables.Net.Enumerables
     /// </summary>
     public static class EnumerableExtensions
     {
-        /// <summary>
-        /// Converts a single object to an <see cref="IEnumerable{T}"/> instance.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the object.</typeparam>
-        /// <param name="source">An instance of the type.</param>
-        /// <returns>An enumerable of the current instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="source"/> is an enumerable.</exception>
-        public static IEnumerable<TSource> SingleToEnumerable<TSource>(this TSource source)
-            where TSource : notnull
-        {
-            return (source is null, source?.GetType().IsAssignableFrom(typeof(IEnumerable)) == true) switch
-            {
-                (true, _) => throw new ArgumentNullException(nameof(source)),
-                (_, true) => throw new ArgumentException($"The '{nameof(source)}' is already an enumerable."),
-                (false, false) => DoSingleToEnumerable()
-            };
-
-            IEnumerable<TSource> DoSingleToEnumerable()
-            {
-                yield return source;
-            }
-        }
-
         /// <summary>
         /// Enumerates the collection source and performs the specified action on each element.
         /// </summary>
@@ -83,8 +58,7 @@ namespace Xpandables.Net.Enumerables
         /// <param name="action">Action to invoke for each element.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static async Task ForEachAsync<TSource>(
-            this IAsyncEnumerable<TSource> source, Action<TSource> action, CancellationToken cancellationToken = default)
+        public static async Task ForEachAsync<TSource>(this IAsyncEnumerable<TSource> source, Action<TSource> action, CancellationToken cancellationToken = default)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
             _ = action ?? throw new ArgumentNullException(nameof(action));
@@ -126,7 +100,7 @@ namespace Xpandables.Net.Enumerables
             => source switch
             {
                 null => throw new ArgumentNullException(nameof(source)),
-                _ => source.FirstOrDefault()
+                _ => source.FirstOrDefault() is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty()
             };
 
         /// <summary>
@@ -157,7 +131,7 @@ namespace Xpandables.Net.Enumerables
              {
                  (_, null) => throw new ArgumentNullException(nameof(predicate)),
                  (null, _) => throw new ArgumentNullException(nameof(source)),
-                 ({ }, { }) => source.FirstOrDefault(predicate)
+                 ({ }, { }) => source.FirstOrDefault(predicate) is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty()
              };
 
         /// <summary>
@@ -188,7 +162,7 @@ namespace Xpandables.Net.Enumerables
             => source switch
             {
                 null => throw new ArgumentNullException(nameof(source)),
-                _ => source.LastOrDefault()
+                _ => source.LastOrDefault() is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty()
             };
 
         /// <summary>
@@ -220,7 +194,7 @@ namespace Xpandables.Net.Enumerables
             {
                 (_, null) => throw new ArgumentNullException(nameof(predicate)),
                 (null, _) => throw new ArgumentNullException(nameof(source)),
-                ({ }, { }) => source.LastOrDefault(predicate)
+                ({ }, { }) => source.LastOrDefault(predicate) is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty()
             };
 
         /// <summary>

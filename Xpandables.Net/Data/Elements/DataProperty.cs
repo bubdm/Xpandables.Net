@@ -152,7 +152,8 @@ namespace Xpandables.Net.Data.Elements
                     if (Getter.DynamicInvoke(target) is null)
                         Setter.DynamicInvoke(target, CreateStronglyElement(instanceCreator));
 
-                    ((IList)Getter.DynamicInvoke(target)).Add(value);
+                    if (Getter.DynamicInvoke(target) is { } list)
+                        ((IList)list).Add(value);
                 }
                 else
                 {

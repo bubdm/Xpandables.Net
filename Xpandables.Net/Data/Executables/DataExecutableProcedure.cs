@@ -53,7 +53,7 @@ namespace Xpandables.Net.Data.Executables
             returnValParameter.Direction = ParameterDirection.ReturnValue;
             context.Component.Command.Parameters.Add(returnValParameter);
 
-            if (context.Component.Command.Connection.IsSqlConnection() && context.Argument.Parameters?.All(p => p is DbParameter) == true)
+            if (context.Component.Command.Connection!.IsSqlConnection() && context.Argument.Parameters?.All(p => p is DbParameter) == true)
                 await context.Component.Command.PrepareAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
             int result;
@@ -67,11 +67,11 @@ namespace Xpandables.Net.Data.Executables
             else
             {
                 _ = await context.Component.Command.ExecuteNonQueryAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
-                result = int.Parse(returnValParameter.Value.ToString() ?? "0", CultureInfo.InvariantCulture);
+                result = int.Parse(returnValParameter.Value?.ToString() ?? "0", CultureInfo.InvariantCulture);
             }
 
             if (context.Argument.Options.IsTransactionEnabled)
-                await context.Component.Command.Transaction.CommitAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
+                await context.Component.Command.Transaction!.CommitAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
             return result;
         }

@@ -72,7 +72,7 @@ namespace Xpandables.Net.HttpRestClient
 
                 if (response.IsSuccessStatusCode)
                     return await GetResponseAsync<IAsyncEnumerable<TResult>, TResult>(response, stream =>
-                        System.Linq.AsyncEnumerable.Create(cancellation => GetEnumerableFromStreamAsync<TResult>(stream, cancellation).GetAsyncEnumerator()));
+                        System.Linq.AsyncEnumerable.Create(cancellation => GetEnumerableFromStreamAsync<TResult>(stream, cancellation).GetAsyncEnumerator(cancellationToken)));
 
                 return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)await GetBadResponseAsync(
                     HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure, response)

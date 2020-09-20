@@ -79,9 +79,9 @@ namespace Xpandables.Net.Expressions
     public class ExpressionComparer
     {
         private ScopedDictionary<ParameterExpression, ParameterExpression>? _parameterScope;
-        private readonly Func<object, object, bool>? _fnCompare;
+        private readonly Func<object?, object?, bool>? _fnCompare;
 
-        protected ExpressionComparer(ScopedDictionary<ParameterExpression, ParameterExpression>? parameterScope, Func<object, object, bool>? fnCompare)
+        protected ExpressionComparer(ScopedDictionary<ParameterExpression, ParameterExpression>? parameterScope, Func<object?, object?, bool>? fnCompare)
         {
             _parameterScope = parameterScope;
             _fnCompare = fnCompare;
@@ -89,14 +89,14 @@ namespace Xpandables.Net.Expressions
 
         public static bool AreEqual(Expression a, Expression b) => AreEqual(null, a, b);
 
-        public static bool AreEqual(Expression a, Expression b, Func<object, object, bool> fnCompare) => AreEqual(null, a, b, fnCompare);
+        public static bool AreEqual(Expression a, Expression b, Func<object?, object?, bool> fnCompare) => AreEqual(null, a, b, fnCompare);
 
         public static bool AreEqual(ScopedDictionary<ParameterExpression, ParameterExpression>? parameterScope, Expression a, Expression b)
             => new ExpressionComparer(parameterScope, null).Compare(a, b);
 
-        public static bool AreEqual(ScopedDictionary<ParameterExpression, ParameterExpression>? parameterScope, Expression a, Expression b, Func<object, object, bool> fnCompare) => new ExpressionComparer(parameterScope, fnCompare).Compare(a, b);
+        public static bool AreEqual(ScopedDictionary<ParameterExpression, ParameterExpression>? parameterScope, Expression a, Expression b, Func<object?, object?, bool> fnCompare) => new ExpressionComparer(parameterScope, fnCompare).Compare(a, b);
 
-        protected virtual bool Compare(Expression a, Expression b)
+        protected virtual bool Compare(Expression? a, Expression? b)
         {
             if (a == b)
                 return true;
@@ -259,7 +259,7 @@ namespace Xpandables.Net.Expressions
             return true;
         }
 
-        protected virtual bool CompareMemberList(ReadOnlyCollection<MemberInfo> a, ReadOnlyCollection<MemberInfo> b)
+        protected virtual bool CompareMemberList(ReadOnlyCollection<MemberInfo>? a, ReadOnlyCollection<MemberInfo>? b)
         {
             if (a == b)
                 return true;

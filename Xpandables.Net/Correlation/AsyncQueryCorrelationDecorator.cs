@@ -24,6 +24,8 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Queries;
 
+using static Xpandables.Net.Asynchronous.AsyncExtensions;
+
 namespace Xpandables.Net.Correlation
 {
     /// <summary>
@@ -66,10 +68,7 @@ namespace Xpandables.Net.Correlation
         /// <returns>An object that contains an enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var enumerableAsync = _decoratee.HandleAsync(query, cancellationToken);
-            await using var enumeratorAsync = enumerableAsync.GetAsyncEnumerator(cancellationToken);
-
-            var results = new List<TResult>();
+            List<TResult> results;
             try
             {
                 results = await _decoratee.HandleAsync(query, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);

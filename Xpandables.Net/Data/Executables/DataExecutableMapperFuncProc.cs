@@ -64,7 +64,7 @@ namespace Xpandables.Net.Data.Executables
 
             if (context.Component.Command.CommandType == CommandType.Text
                 && context.Argument.Parameters?.All(p => p is DbParameter) == true
-                && context.Component.Command.Connection.IsSqlConnection())
+                && context.Component.Command.Connection!.IsSqlConnection())
             {
                 await context.Component.Command.PrepareAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
             }

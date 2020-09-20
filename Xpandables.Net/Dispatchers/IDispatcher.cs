@@ -84,7 +84,7 @@ namespace Xpandables.Net.Dispatchers
             if (!typeof(AsyncQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { query.GetType(), typeof(TResult) }))
                 throw new InvalidOperationException("Building Query wrapper failed.", typeException);
 
-            if (!(DispatcherHandlerProvider.GetHandler(wrapperType) is IAsyncQueryHandlerWrapper<TResult> handler))
+            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IAsyncQueryHandlerWrapper<TResult> handler)
                 throw new NotImplementedException(
                     $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerBuilder<,>).Name} is registered.");
 
@@ -135,7 +135,7 @@ namespace Xpandables.Net.Dispatchers
             if (!typeof(QueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { query.GetType(), typeof(TResult) }))
                 throw new InvalidOperationException("Building Query wrapper failed.", typeException);
 
-            if (!(DispatcherHandlerProvider.GetHandler(wrapperType) is IQueryHandlerWrapper<TResult> handler))
+            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IQueryHandlerWrapper<TResult> handler)
                 throw new NotImplementedException(
                     $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerBuilder<,>).Name} is registered.");
 

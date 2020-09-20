@@ -36,7 +36,7 @@ namespace Xpandables.Net.Data.Elements
         private readonly static MethodInfo builder =
                 typeof(IDataEntityBuilder).GetMethod(
                     "Builder",
-                    new Type[] { typeof(Type), typeof(IDataOptions), typeof(IDataPropertyBuilder), typeof(IInstanceCreator) });
+                    new Type[] { typeof(Type), typeof(IDataOptions), typeof(IDataPropertyBuilder), typeof(IInstanceCreator) })!;
 
         /// <summary>
         /// Builds an implementation of <see cref="DataEntity"/>.
@@ -168,7 +168,7 @@ namespace Xpandables.Net.Data.Elements
             if (type.IsEnumerable())
                 type = type.GetGenericArguments()[0];
             else if (type.IsNullable())
-                type = Nullable.GetUnderlyingType(type);
+                type = Nullable.GetUnderlyingType(type) ?? type;
 
             return type;
         }

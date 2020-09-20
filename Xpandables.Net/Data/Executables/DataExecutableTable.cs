@@ -54,7 +54,7 @@ namespace Xpandables.Net.Data.Executables
 
             if (context.Component.Command.CommandType == CommandType.Text
                  && context.Argument.Parameters?.All(p => p is DbParameter) == true
-                 && context.Component.Command.Connection.IsSqlConnection())
+                 && context.Component.Command.Connection!.IsSqlConnection())
             {
                 await context.Component.Command.PrepareAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
             }
@@ -65,7 +65,7 @@ namespace Xpandables.Net.Data.Executables
             context.Component.Adapter.Fill(dataSet);
 
             if (context.Argument.Options.IsTransactionEnabled)
-                await context.Component.Command.Transaction.CommitAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
+                await context.Component.Command.Transaction!.CommitAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
             return (dataSet.Tables.Count > 0) switch
             {

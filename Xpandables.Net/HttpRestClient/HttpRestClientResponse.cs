@@ -109,20 +109,20 @@ namespace Xpandables.Net.HttpRestClient
         /// Adds the reason phrase.
         /// </summary>
         /// <param name="reason">the reason phrase to be used.</param>
-        public HttpRestClientResponse AddReasonPhrase(string? reason) => this.With(h => h.ReasonPhrase = reason);
+        public HttpRestClientResponse AddReasonPhrase(string? reason) => this.Assign(h => h.ReasonPhrase = reason);
 
         /// <summary>
         /// Adds the response headers.
         /// </summary>
         /// <param name="headers">the headers to be used.</param>
         public HttpRestClientResponse AddHeaders(NameValueCollection headers)
-            => this.With(h => h.Headers = headers ?? throw new ArgumentNullException(nameof(headers)));
+            => this.Assign(h => h.Headers = headers ?? throw new ArgumentNullException(nameof(headers)));
 
         /// <summary>
         /// Adds the version.
         /// </summary>
         /// <param name="version">the version to be used.</param>
-        public HttpRestClientResponse AddVersion(Version version) => this.With(h => h.Version = version);
+        public HttpRestClientResponse AddVersion(Version version) => this.Assign(h => h.Version = version);
     }
 
     /// <summary>
@@ -209,20 +209,20 @@ namespace Xpandables.Net.HttpRestClient
         /// Adds the reason phrase.
         /// </summary>
         /// <param name="reason">the reason phrase to be used.</param>
-        public new HttpRestClientResponse<TResult> AddReasonPhrase(string? reason) => this.With(h => h.ReasonPhrase = reason);
+        public new HttpRestClientResponse<TResult> AddReasonPhrase(string? reason) => this.Assign(h => h.ReasonPhrase = reason);
 
         /// <summary>
         /// Adds the response headers.
         /// </summary>
         /// <param name="headers">the headers to be used.</param>
         public new HttpRestClientResponse<TResult> AddHeaders(NameValueCollection headers)
-            => this.With(h => h.Headers = headers ?? throw new ArgumentNullException(nameof(headers)));
+            => this.Assign(h => h.Headers = headers ?? throw new ArgumentNullException(nameof(headers)));
 
         /// <summary>
         /// Adds the version.
         /// </summary>
         /// <param name="version">the version to be used.</param>
-        public new HttpRestClientResponse<TResult> AddVersion(Version version) => this.With(h => h.Version = version);
+        public new HttpRestClientResponse<TResult> AddVersion(Version version) => this.Assign(h => h.Version = version);
 
         private bool _isDisposed;
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

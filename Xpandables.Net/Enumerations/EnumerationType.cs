@@ -62,7 +62,7 @@ namespace Xpandables.Net.Enumerations
         /// <returns>List of enumerations.</returns>
         public static IEnumerable<TEnumeration> GetAll<TEnumeration>()
             where TEnumeration : EnumerationType
-            => GetAll(typeof(TEnumeration)).Cast<TEnumeration>();
+            => GetAll(typeof(TEnumeration)).OfType<TEnumeration>();
 
         /// <summary>
         /// Gets the list of all enumeration found in the instance of the specified type and base classes.

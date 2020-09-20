@@ -154,7 +154,7 @@ namespace Xpandables.Net.HttpRestClient
                         ValidateImplementation<IStringRequest>(source, true);
                         var content = new StringContent(JsonConvert.SerializeObject(source), Encoding.UTF8, attribute.ContentType);
                         if (attribute.In == ParameterLocation.Cookie)
-                            httpRequestMessage.Properties.Add(attribute.HeaderCookieName, JsonConvert.SerializeObject(source));
+                            httpRequestMessage.Options.TryAdd(attribute.HeaderCookieName, JsonConvert.SerializeObject(source));
                         else if (attribute.In == ParameterLocation.Header)
                             httpRequestMessage.Headers.Add(attribute.HeaderCookieName, JsonConvert.SerializeObject(source));
                         else

@@ -39,7 +39,7 @@ namespace Xpandables.Net.Enumerations
                 throw new ArgumentException($"{nameof(EnumerationType)} derived class expected.");
 
             Values = new StandardValuesCollection(
-                            EnumerationType.GetAll(type).Cast<EnumerationType>()
+                            EnumerationType.GetAll(type).OfType<EnumerationType>()
                             .Select(s => s.DisplayName)
                             .ToList());
         }

@@ -32,7 +32,7 @@ namespace Xpandables.Net.Optionals
         /// <typeparam name="T">The Type of the value.</typeparam>
         /// <param name="value">The value to act on.</param>
         /// <returns>An optional instance.</returns>
-        public static Optional<T> AsOptional<T>([AllowNull] this T value)
+        public static Optional<T> AsOptional<T>([MaybeNull] this T value)
             => value is { } ? Optional<T>.Some(value) : Optional<T>.Empty();
 
         /// <summary>
@@ -43,15 +43,17 @@ namespace Xpandables.Net.Optionals
         /// <typeparam name="T">The type of the optional value.</typeparam>
         /// <typeparam name="TOutput">The type of the result.</typeparam>
         /// <param name="optional">The optional to act on.</param>
-        /// <param name="pattern">The pattern to be used.</param>
+        /// <param name="empty">The empty action.</param>
+        /// <param name="some">The some action.</param>
         /// <returns>A new optional that could contain a value or not.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="pattern"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="empty"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="some"/> is null.</exception>
         public static async Task<Optional<TOutput>> MapAsync<T, TOutput>(
-            this Task<Optional<T>> optional, (Func<Task<TOutput>> empty, Func<T, Task<TOutput>> some) pattern)
+            this Task<Optional<T>> optional, Func<Task<TOutput>> empty, Func<T, Task<TOutput>> some)
         {
             _ = optional ?? throw new ArgumentNullException(nameof(optional));
 
-            return await (await optional.ConfigureAwait(false)).MapAsync(pattern).ConfigureAwait(false);
+            return await (await optional.ConfigureAwait(false)).MapAsync(empty, some).ConfigureAwait(false);
         }
 
         /// <summary>

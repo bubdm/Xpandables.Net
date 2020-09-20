@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "nwiza4uGhiE2T/A9PBFJxxhzCY+Ip9oS1bWoZPEHsAcVCNYqLW4enCK2q5HUt3DU64/P3cPe/7NQ8dxrosBjSg==",
+  "dgSpecHash": "s8S7XSvPZqfhw7gvCVSKyCqD6cQbzjN0fFLDeOOThjbcu/vigUnfmQPhLRS/3uVNrA3nskyAIgVgsocpaLPuWg==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\system.linq.async\\4.1.1\\system.linq.async.4.1.1.nupkg.sha512"
+  ],
   "logs": []
 }

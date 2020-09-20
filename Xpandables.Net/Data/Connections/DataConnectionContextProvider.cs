@@ -54,7 +54,7 @@ namespace Xpandables.Net.Data.Connections
             _ = dataConnection ?? throw new ArgumentNullException(nameof(dataConnection));
 
             var dbFactoryProvider = _dbProviderFactoryCache.GetOrAdd(dataConnection.ProviderType.DisplayName, _dataFactoryProvider.GetProviderFactory(dataConnection.ProviderType)
-                ?? throw new ArgumentNullException(nameof(dataConnection.ProviderType)));
+                ?? throw new ArgumentNullException(nameof(dataConnection)));
 
             var connection = await BuildConnectionAsync(dbFactoryProvider, dataConnection).ConfigureAwait(false);
 
@@ -63,7 +63,7 @@ namespace Xpandables.Net.Data.Connections
 
         private static async Task<DbConnection> BuildConnectionAsync(DbProviderFactory dbProviderFactory, IDataConnection dataConnection)
         {
-            var dbConnection = dbProviderFactory.CreateConnection();
+            var dbConnection = dbProviderFactory.CreateConnection()!;
             dbConnection.ConnectionString = dataConnection.GetConnectionString();
             await dbConnection.OpenAsync().ConfigureAwait(false);
             await SpeedSqlServerResultAsync(dbConnection).ConfigureAwait(false);
