@@ -24,9 +24,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Asynchronous;
-using Xpandables.Net.Strings;
 
-namespace Xpandables.Net.Cryptography
+namespace Xpandables.Net.Strings
 {
     /// <summary>
     /// Provides with methods to encrypt and decrypt string values.

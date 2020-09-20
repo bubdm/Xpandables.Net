@@ -30,19 +30,19 @@ namespace Xpandables.Net.Types
         /// Gets the token value.
         /// </summary>
         [Required, DataType(DataType.Text)]
-        public string Value { get; private set; }
+        public string Value { get; }
 
         /// <summary>
         /// Gets the type of the token : Bearer, Basic....
         /// </summary>
         [Required, DataType(DataType.Text)]
-        public string Type { get; private set; }
+        public string Type { get; }
 
         /// <summary>
         /// Gets the token expiry.
         /// </summary>
         [Required, DataType(DataType.DateTime)]
-        public DateTime ExpiresOn { get; private set; }
+        public DateTime Expiry { get; }
 
         /// <summary>
         /// Creates an instance of <see cref="Token"/> with the specified value.
@@ -55,6 +55,14 @@ namespace Xpandables.Net.Types
         public static Token Create(string value, string type, DateTime expiry) => new Token(value, type, expiry);
 
         /// <summary>
+        /// Provides with deconstruction for <see cref="Token"/>.
+        /// </summary>
+        /// <param name="value">The output token value.</param>
+        /// <param name="type">The output token type.</param>
+        /// <param name="expiry">The output token expiry date.</param>
+        public void Deconstruct(out string value, out string type, out DateTime expiry) => (value, type, expiry) = (Value, Type, Expiry);
+
+        /// <summary>
         /// Provides the list of components that comprise that class.
         /// </summary>
         /// <returns>An enumerable components of the derived class.</returns>
@@ -62,10 +70,10 @@ namespace Xpandables.Net.Types
         {
             yield return Value;
             yield return Type;
-            yield return ExpiresOn;
+            yield return Expiry;
         }
 
         private Token(string value, string type, DateTime expiry)
-            => (Value, Type, ExpiresOn) = (value ?? throw new ArgumentNullException(nameof(value)), type ?? throw new ArgumentNullException(nameof(type)), expiry);
+            => (Value, Type, Expiry) = (value ?? throw new ArgumentNullException(nameof(value)), type ?? throw new ArgumentNullException(nameof(type)), expiry);
     }
 }

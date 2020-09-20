@@ -64,7 +64,7 @@ namespace Xpandables.Net.Strings
         /// </summary>
         /// <param name="source">The object to act on.</param>
         /// <returns>A JSOn string representation of the object.</returns>
-        public static string ToJsonString<T>(this T source) => Newtonsoft.Json.JsonConvert.SerializeObject(source);
+        public static string ToJsonString<T>(this T source) => System.Text.Json.JsonSerializer.Serialize(source);
 
         /// <summary>
         /// Concatenates all the elements of an <see cref="IEnumerable{T}"/>,

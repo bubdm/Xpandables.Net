@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace Xpandables.Net.Cryptography
+namespace Xpandables.Net.Strings
 {
     /// <summary>
     /// Defines a representation of an encrypted value, its key and its salt.

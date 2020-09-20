@@ -26,7 +26,7 @@ namespace Xpandables.Net.Types
     /// <summary>
     /// Defines the <see cref="Picture"/> class that holds properties for an image.
     /// </summary>
-    public class Picture : ValueObject
+    public sealed class Picture : ValueObject
     {
         /// <summary>
         /// Initializes a new instance <see cref="Picture"/> with all properties.
@@ -41,7 +41,7 @@ namespace Xpandables.Net.Types
         /// <exception cref="ArgumentNullException">The <paramref name="height"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="width"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="extension"/> is null.</exception>
-        protected Picture(string title, byte[] content, int height, int width, string extension)
+        private Picture(string title, byte[] content, int height, int width, string extension)
         {
             _ = content ?? throw new ArgumentNullException(nameof(content));
             Title = title ?? throw new ArgumentNullException(nameof(title));
@@ -75,6 +75,18 @@ namespace Xpandables.Net.Types
         /// <returns>A new instance of <see cref="Picture"/>.</returns>
         public static Picture Create(string title, byte[] content, int height, int width, string extension)
             => new Picture(title, content, height, width, extension);
+
+        /// <summary>
+        /// Creates a new picture from another.
+        /// </summary>
+        /// <param name="source">the picture source.</param>
+        /// <returns>A new instance of <see cref="Picture"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public static Picture Create(Picture source)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            return new Picture(source.Title, source.Content, source.Height, source.Width, source.Extension);
+        }
 
         /// <summary>
         /// Clears the content of the picture.
