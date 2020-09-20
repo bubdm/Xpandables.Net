@@ -1,23 +1,25 @@
 {
   "version": 2,
-  "dgSpecHash": "HucUSVNnF3fOW6xwbiKR4gUkLvvsUkrEqOd/5Au6O4ST216oLouadv08mez0+xjxpDzStW3DuE+omomxyU/p1g==",
-  "success": true,
+  "dgSpecHash": "QPqAORr+VTA6Kpg39/7Sh0Jm7YmgBh5BBAApOU0bNAtPuBjVxCq/5bDu7e5oXmHf6l0RpDBpSPBDNrxflxkcwA==",
+  "success": false,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Windows\\Xpandables.Net.Windows.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codeanalysis.fxcopanalyzers\\3.3.0\\microsoft.codeanalysis.fxcopanalyzers.3.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codeanalysis.versioncheckanalyzer\\3.3.0\\microsoft.codeanalysis.versioncheckanalyzer.3.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codequality.analyzers\\3.3.0\\microsoft.codequality.analyzers.3.3.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.analyzers\\3.3.0\\microsoft.netcore.analyzers.3.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netframework.analyzers\\3.3.0\\microsoft.netframework.analyzers.3.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\serilog\\2.10.0\\serilog.2.10.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.componentmodel.annotations\\4.7.0\\system.componentmodel.annotations.4.7.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.linq.async\\4.1.1\\system.linq.async.4.1.1.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\system.text.encodings.web\\4.7.1\\system.text.encodings.web.4.7.1.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project Xpandables.Net is not compatible with netcoreapp3.1 (.NETCoreApp,Version=v3.1). Project Xpandables.Net supports: net5.0 (.NETCoreApp,Version=v5.0)",
+      "libraryId": "Xpandables.Net",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

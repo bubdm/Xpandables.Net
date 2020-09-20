@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Platforms>x64</Platforms>
     <PublishTrimmed>true</PublishTrimmed>
     <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
     <Product>Xpandables Net</Product>
-    <Description>A utility library in .NetStandard to easily add patterns such as Command, Query, Dispatcher, Interception...</Description>
+    <Description>A utility library in .Net5.0 to easily add patterns such as Command, Query, Dispatcher, Interception...</Description>
     <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
     <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>3.2.1</Version>
-    <AssemblyVersion>3.2.1</AssemblyVersion>
-    <FileVersion>3.2.1</FileVersion>
-    <PackageVersion>3.2.1</PackageVersion>
+    <Version>5.0.0-preview.2.0.1</Version>
+    <AssemblyVersion>5.0.0</AssemblyVersion>
+    <FileVersion>5.0.0</FileVersion>
+    <PackageVersion>5.0.0-preview2.0.1</PackageVersion>
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand, IDispatcher, IQuery{TResult}, Enumeration, ILogger, Interception, ICommandHandler{TCommand}, IQueryHandler{TQuery, TResult}, ValueObject...</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
@@ -29,7 +29,7 @@
     <RootNamespace>Xpandables.Net</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <summary>A utility library in .NetStandard to easily add patterns such as Command, Query, Dispatcher, Interception...</summary>
+    <summary>A utility library in .Net5.0 to easily add patterns such as Command, Query, Dispatcher, Interception...</summary>
     <language>en-GB</language>
     <NeutralLanguage>en-GB</NeutralLanguage>
     <SignAssembly>true</SignAssembly>
@@ -41,19 +41,41 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <WarningsAsErrors />
-    <NoWarn>1701;1702;CA2225;SecurityIntelliSenseCS;CA1307;CA1062;CA1801;IDE0060;CA1819;</NoWarn>
+    <NoWarn></NoWarn>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DocumentationFile>bin\x64\Debug\netstandard2.1\Xpandables.Net.xml</DocumentationFile>
+    <DocumentationFile>bin\x64\Debug\net5.0\Xpandables.Net.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <WarningsAsErrors />
-    <NoWarn>1701;1702;CA2225;SecurityIntelliSenseCS;CA1307;CA1062;CA1801;IDE0060;CA1819;</NoWarn>
+    <NoWarn></NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DocumentationFile>bin\x64\Release\netstandard2.1\Xpandables.Net.xml</DocumentationFile>
+    <DocumentationFile>bin\x64\Release\net5.0\Xpandables.Net.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="HttpRestClient\**" />
+    <EmbeddedResource Remove="HttpRestClient\**" />
+    <None Remove="HttpRestClient\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Events\AsyncCommandLoggingDecorator.cs" />
+    <Compile Remove="Events\AsyncQueryLoggingDecorator.cs" />
+    <Compile Remove="Events\CommandLoggingDecorator.cs" />
+    <Compile Remove="Events\DataLogContextSettings.cs" />
+    <Compile Remove="Events\DefaultLogEntity.cs" />
+    <Compile Remove="Events\IDataLogContext.cs" />
+    <Compile Remove="Events\IDataLogContextProvider.cs" />
+    <Compile Remove="Events\ILogEntity.cs" />
+    <Compile Remove="Events\ILogger.cs" />
+    <Compile Remove="Events\ILoggingDecorator.cs" />
+    <Compile Remove="Events\LogEntity.cs" />
+    <Compile Remove="Events\LogEntitySink.cs" />
+    <Compile Remove="Events\QueryLoggingDecorator.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\Xpandables.png" Link="Xpandables.png">
@@ -62,14 +84,14 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
     <PackageReference Include="System.Linq.Async" Version="4.1.1" />
     <PackageReference Include="System.Text.Encodings.Web" Version="4.7.1" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <Compile Update="Localization\Validations\DataAnnotations.Designer.cs">
@@ -93,6 +115,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Events\" />
   </ItemGroup>
 
 </Project>

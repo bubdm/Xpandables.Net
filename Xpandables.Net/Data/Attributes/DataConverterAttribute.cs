@@ -61,7 +61,7 @@ namespace Xpandables.Net.Data.Attributes
 
             try
             {
-                Converter = (DataPropertyConverter)Delegate.CreateDelegate(typeof(DataPropertyConverter), ownerType.GetMethod(methodName));
+                Converter = (DataPropertyConverter)Delegate.CreateDelegate(typeof(DataPropertyConverter), ownerType.GetMethod(methodName) ?? throw new ArgumentNullException(nameof(methodName)));
             }
             catch (Exception exception)
             {

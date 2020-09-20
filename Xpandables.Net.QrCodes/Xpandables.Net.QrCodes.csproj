@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Platforms>x64</Platforms>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+    <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+    <Authors>Francis-Black EWANE</Authors>
+    <Product>Xpandables Net QrCodes</Product>
+    <Description>A utility library in .Net5.0 to manage qr-codes.</Description>
+    <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
+    <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
+    <title>Xpandables.Net.QrCodes</title>
+    <PackageIcon>Xpandables.png</PackageIcon>
+    <Version>5.0.0-preview.2.0.1</Version>
+    <AssemblyVersion>5.0.0</AssemblyVersion>
+    <FileVersion>5.0.0</FileVersion>
+    <PackageVersion>5.0.0-preview2.0.1</PackageVersion>
+    <PackageId>Xpandables.Net.QrCodes</PackageId>
+    <PackageTags>IQrCodeEngine, IQrCodeTextGenerator, IQrCodeImageGenerator.</PackageTags>
+    <PackageOutputPath>..\Packages\</PackageOutputPath>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!--<PackageReleaseNotes>Start All-in-one.</PackageReleaseNotes>-->
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AssemblyName>Xpandables.Net.QrCodes</AssemblyName>
+    <RootNamespace>Xpandables.Net.QrCodes</RootNamespace>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <summary>A utility library in .Net5.0 to manage qr-codes.</summary>
+    <language>en-GB</language>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Xpandables.Net.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+    <Company>EFB Entreprises</Company>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <WarningsAsErrors />
+    <NoWarn></NoWarn>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DocumentationFile>bin\x64\Debug\net5.0\Xpandables.Net.QrCodes.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <WarningsAsErrors />
+    <NoWarn></NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DocumentationFile>bin\x64\Release\net5.0\Xpandables.Net.QrCodes.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="5.0.0-rc.1.20451.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Xpandables.png" Link="Xpandables.png">
+      <PackagePath></PackagePath>
+      <Pack>True</Pack>
+    </None>
+  </ItemGroup>
+
+</Project>

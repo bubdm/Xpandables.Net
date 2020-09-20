@@ -39,6 +39,9 @@ namespace Xpandables.Net.Data
             if (command is null)
                 throw new ArgumentNullException(nameof(command));
 
+            if (command.Connection is null)
+                throw new ArgumentNullException(nameof(command));
+
             if (parameters is null || parameters.Length == 0)
                 return;
 
