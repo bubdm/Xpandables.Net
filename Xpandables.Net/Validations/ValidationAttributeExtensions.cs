@@ -22,7 +22,7 @@ namespace Xpandables.Net.Validations
     /// <summary>
     /// Provides with helper methods for validation attributes.
     /// </summary>
-    public static class ValidatorRuleAttributeExtensions
+    public static class ValidationAttributeExtensions
     {
         /// <summary>
         /// Creates a new <see cref="ValidationException"/> using the specified arguments.
