@@ -25,8 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.DependencyIn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.EntityFramework", "Xpandables.Net.EntityFramework\Xpandables.Net.EntityFramework.csproj", "{4B83F394-55C9-45F6-8EBE-742D6F40869A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.QrCodes", "Xpandables.Net.QrCodes\Xpandables.Net.QrCodes.csproj", "{FAF343B9-6585-45C5-A31C-D16E3822CFCD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,14 +94,6 @@ Global
 		{4B83F394-55C9-45F6-8EBE-742D6F40869A}.Release|Any CPU.ActiveCfg = Release|x64
 		{4B83F394-55C9-45F6-8EBE-742D6F40869A}.Release|x64.ActiveCfg = Release|x64
 		{4B83F394-55C9-45F6-8EBE-742D6F40869A}.Release|x64.Build.0 = Release|x64
-		{FAF343B9-6585-45C5-A31C-D16E3822CFCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FAF343B9-6585-45C5-A31C-D16E3822CFCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FAF343B9-6585-45C5-A31C-D16E3822CFCD}.Debug|x64.ActiveCfg = Debug|x64
-		{FAF343B9-6585-45C5-A31C-D16E3822CFCD}.Debug|x64.Build.0 = Debug|x64
-		{FAF343B9-6585-45C5-A31C-D16E3822CFCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FAF343B9-6585-45C5-A31C-D16E3822CFCD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FAF343B9-6585-45C5-A31C-D16E3822CFCD}.Release|x64.ActiveCfg = Release|x64
-		{FAF343B9-6585-45C5-A31C-D16E3822CFCD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

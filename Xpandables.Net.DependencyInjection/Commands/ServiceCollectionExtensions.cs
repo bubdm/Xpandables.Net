@@ -24,16 +24,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Correlation;
 using Xpandables.Net.EntityFramework;
-using Xpandables.Net.Events;
 using Xpandables.Net.Identities;
 using Xpandables.Net.Queries;
+using Xpandables.Net.Serilog;
 using Xpandables.Net.Transactions;
-using Xpandables.Net.ValidatorRules;
-using Xpandables.Net.VisitorRules;
+using Xpandables.Net.Validations;
+using Xpandables.Net.Visitors;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Defines options to configure command/query handlers.
@@ -43,53 +41,53 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// Enables validation behavior to commands and queries that are decorated with the <see cref="IValidationDecorator"/>.
         /// </summary>
-        public CommandQueryOptions UseValidatorDecorator() => this.With(cq => cq.IsValidatorEnabled = true);
+        public CommandQueryOptions UseValidatorDecorator() => this.Assign(cq => cq.IsValidatorEnabled = true);
 
         /// <summary>
-        /// Enables visitor behavior to commands and queries that implement the <see cref="IVisitable"/> interface.
+        /// Enables visitor behavior to commands and queries that implement the <see cref="IVisitable{TVisitable}"/> interface.
         /// </summary>
-        public CommandQueryOptions UseVisitorDecorator() => this.With(cq => cq.IsVisitorEnabled = true);
+        public CommandQueryOptions UseVisitorDecorator() => this.Assign(cq => cq.IsVisitorEnabled = true);
 
         /// <summary>
         /// Enables persistence behavior to commands and queries that are decorated with the <see cref="IPersistenceDecorator"/> .
         /// </summary>
-        public CommandQueryOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
+        public CommandQueryOptions UsePersistenceDecorator() => this.Assign(cq => cq.IsPersistenceEnabled = true);
 
         /// <summary>
         /// Enables correlation behavior to commands and queries that are decorated with the <see cref="ICorrelationDecorator"/>.
         /// </summary>
-        public CommandQueryOptions UseCorrelationDecorator() => this.With(cq => cq.IsCorrelationEnabled = true);
+        public CommandQueryOptions UseCorrelationDecorator() => this.Assign(cq => cq.IsCorrelationEnabled = true);
 
         /// <summary>
         /// Enables transaction behavior to commands and queries that are decorated with the <see cref="ITransactionDecorator"/>.
         /// </summary>
-        public CommandQueryOptions UseTransactionDecorator() => this.With(cq => cq.IsTransactionEnabled = true);
+        public CommandQueryOptions UseTransactionDecorator() => this.Assign(cq => cq.IsTransactionEnabled = true);
 
         /// <summary>
         /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IIdentityDecorator"/>.
         /// </summary>
         public CommandQueryOptions UseIdentityDecorator<TIdentityDataProvider>()
-            where TIdentityDataProvider : class, IIdentityDataProvider => this.With(cq => cq.IsIdentityDataEnabled = typeof(TIdentityDataProvider));
+            where TIdentityDataProvider : class, IIdentityDataProvider => this.Assign(cq => cq.IsIdentityDataEnabled = typeof(TIdentityDataProvider));
 
         /// <summary>
         /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IIdentityDecorator"/>.
         /// </summary>
         /// <param name="identityDataProvider">The identity data provider type.</param>
         public CommandQueryOptions UseIdentityDecorator(Type identityDataProvider)
-            => this.With(cq => cq.IsIdentityDataEnabled = identityDataProvider ?? throw new ArgumentNullException(nameof(identityDataProvider)));
+            => this.Assign(cq => cq.IsIdentityDataEnabled = identityDataProvider ?? throw new ArgumentNullException(nameof(identityDataProvider)));
 
         /// <summary>
         /// Enables logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/>.
         /// </summary>
         public CommandQueryOptions UseLoggingDecorator<TLogger>()
-            where TLogger : class, ILogger => this.With(cq => cq.IsLoggingEnabled = typeof(TLogger));
+            where TLogger : class, ILoggerEngine => this.Assign(cq => cq.IsLoggingEnabled = typeof(TLogger));
 
         /// <summary>
         /// Enables logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/>.
         /// </summary>
         /// <param name="loggerType">The identity data provider type.</param>
         public CommandQueryOptions UseLoggingDecorator(Type loggerType)
-            => this.With(cq => cq.IsLoggingEnabled = loggerType ?? throw new ArgumentNullException(nameof(loggerType)));
+            => this.Assign(cq => cq.IsLoggingEnabled = loggerType ?? throw new ArgumentNullException(nameof(loggerType)));
 
         internal bool IsValidatorEnabled { get; private set; }
         internal bool IsVisitorEnabled { get; private set; }
@@ -167,14 +165,14 @@ namespace Xpandables.Net.DependencyInjection
 
             if (definedOptions.IsVisitorEnabled)
             {
-                services.AddXVisitorRules(assemblies);
+                services.AddXVisitors(assemblies);
                 services.AddXVisitorDecorator();
             }
 
             if (definedOptions.IsValidatorEnabled)
             {
-                services.AddXValidatorRules(assemblies);
-                services.AddXValidatorRuleDecorator();
+                services.AddXValidations(assemblies);
+                services.AddXValidationDecorator();
             }
 
             if (definedOptions.IsIdentityDataEnabled is { })

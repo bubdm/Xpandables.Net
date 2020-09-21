@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 
 using System;
+using System.Globalization;
 
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -36,6 +37,8 @@ namespace Xpandables.NetCore
         /// <param name="template">The script template to be used.</param>
         public static IHtmlHelper Script(this IHtmlHelper htmlHelper, Func<object?, HelperResult> template)
         {
+            _ = htmlHelper ?? throw new ArgumentNullException(nameof(htmlHelper));
+
             htmlHelper.ViewContext.HttpContext.Items[$"_script_{Guid.NewGuid()}"] = template;
             return htmlHelper;
         }
@@ -47,9 +50,11 @@ namespace Xpandables.NetCore
         /// <param name="htmlHelper">The helper to act on.</param>
         public static IHtmlHelper RenderPartialViewScript(this IHtmlHelper htmlHelper)
         {
+            _ = htmlHelper ?? throw new ArgumentNullException(nameof(htmlHelper));
+
             foreach (var key in htmlHelper.ViewContext.HttpContext.Items.Keys)
             {
-                if (key.ToString()!.StartsWith("_script_")
+                if (key.ToString()?.StartsWith("_script_", StringComparison.InvariantCulture) == true
                     && htmlHelper.ViewContext.HttpContext.Items[key] is Func<object?, HelperResult> template)
                 {
                     htmlHelper.ViewContext.Writer.Write(template(null));

@@ -71,6 +71,9 @@ namespace Xpandables.NetCore.TagHelpers
         /// <param name="output">A stateful HTML element used to generate an HTML tag.</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            _ = context ?? throw new ArgumentNullException(nameof(context));
+            _ = output ?? throw new ArgumentNullException(nameof(output));
+
             base.Process(context, output);
 
             if (context.AllAttributes["type"]?.Value is string value && types.Contains(value))
@@ -120,8 +123,8 @@ namespace Xpandables.NetCore.TagHelpers
         private static string GetModelPageName(ILocalizationResourceProvider localizationResourceAccessor, Type modelType)
         => localizationResourceAccessor.IsSingleFileUsed && localizationResourceAccessor.ViewModelResourceTypes.Any()
             ? localizationResourceAccessor.ViewModelResourceTypeCollection.First().Key
-            : modelType.Name.EndsWith("Model")
-                ? $"{modelType.Name.Remove(modelType.Name.IndexOf("Model"))}Localization"
+            : modelType.Name.EndsWith("Model", StringComparison.InvariantCulture)
+                ? $"{modelType.Name.Remove(modelType.Name.IndexOf("Model", StringComparison.InvariantCulture))}Localization"
                 : $"{modelType.Name}Localization";
     }
 }

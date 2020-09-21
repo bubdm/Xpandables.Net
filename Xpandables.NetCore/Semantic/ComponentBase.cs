@@ -122,6 +122,8 @@ namespace Xpandables.NetCore.Semantic
         /// <param name="builder">The builder to be used.</param>
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+
             if (AsComponent != null)
             {
                 builder.OpenComponent(0, AsComponent);

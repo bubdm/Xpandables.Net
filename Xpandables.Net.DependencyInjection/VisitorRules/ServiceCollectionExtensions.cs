@@ -15,19 +15,17 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
 using System.Linq;
 using System.Reflection;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Xpandables.Net.Commands;
 using Xpandables.Net.Queries;
-using Xpandables.Net.VisitorRules;
+using Xpandables.Net.Visitors;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Provides method to register visitor rules.
@@ -35,7 +33,7 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds visitor behavior to commands and queries that are decorated with the <see cref="IVisitable"/> to the services
+        /// Adds visitor behavior to commands and queries that are decorated with the <see cref="IVisitable{TVisitable}"/> to the services
         /// with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -44,7 +42,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient(typeof(ICompositeVisitorRule<>), typeof(CompositeVisitorRule<>));
+            services.AddTransient(typeof(ICompositeVisitor<>), typeof(CompositeVisitorRule<>));
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandVisitorDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandVisitorDecorator<>));
             services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryVisitorDecorator<,>));
@@ -53,20 +51,20 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IVisitorRule{TArgument}"/> to the services with transient life time.
+        /// Adds the <see cref="IVisitor{TElement}"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IServiceCollection AddXVisitorRules(this IServiceCollection services, Assembly[] assemblies)
+        public static IServiceCollection AddXVisitors(this IServiceCollection services, Assembly[] assemblies)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             services.XRegister(scan => scan
                 .FromAssemblies(assemblies)
-                .AddClasses(classes => classes.AssignableTo(typeof(IVisitorRule<>))
+                .AddClasses(classes => classes.AssignableTo(typeof(IVisitor<>))
                     .Where(_ => !_.IsInterface && !_.IsAbstract && !_.IsGenericType))
                     .AsImplementedInterfaces()
                     .WithTransientLifetime());

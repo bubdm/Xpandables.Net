@@ -15,15 +15,14 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-using Xpandables.Net.Enumerables;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
 using Xpandables.Net.Localization;
 
 namespace Xpandables.NetCore.Localization
@@ -50,10 +49,12 @@ namespace Xpandables.NetCore.Localization
         /// <param name="context">The context to act on.</param>
         public void CreateValidators(ModelValidatorProviderContext context)
         {
+            _ = context ?? throw new ArgumentNullException(nameof(context));
+
             BindDisplayAttribute((DefaultModelMetadata)context.ModelMetadata);
             BindDisplayFormatAttribute((DefaultModelMetadata)context.ModelMetadata);
 
-            foreach (var validator in context.ValidatorMetadata.Cast<ValidationAttribute>())
+            foreach (var validator in context.ValidatorMetadata.OfType<ValidationAttribute>())
                 BindValidationAttribute(validator);
 
             if (_localizationResourceProvider is ILocalizationResourceProviderExtended resourceProviderExtended)
@@ -61,7 +62,7 @@ namespace Xpandables.NetCore.Localization
                 resourceProviderExtended.ModelBinderAttributeHandler
                     ?.Invoke((DefaultModelMetadata)context.ModelMetadata, context.ModelMetadata.ContainerMetadata);
                 resourceProviderExtended.ModelValidatorAttributeHandler
-                    ?.Invoke((DefaultModelMetadata)context.ModelMetadata, context.ValidatorMetadata.Cast<ValidationAttribute>());
+                    ?.Invoke((DefaultModelMetadata)context.ModelMetadata, context.ValidatorMetadata.OfType<ValidationAttribute>());
             }
         }
 
@@ -71,6 +72,8 @@ namespace Xpandables.NetCore.Localization
         /// <param name="context">The context to act on.</param>
         public IModelBinder? GetBinder(ModelBinderProviderContext context)
         {
+            _ = context ?? throw new ArgumentNullException(nameof(context));
+
             var defaultModelMetadata = (DefaultModelMetadata)context.Metadata;
             if (defaultModelMetadata?.ContainerMetadata?.ModelType is null)
                 return null;
@@ -83,7 +86,7 @@ namespace Xpandables.NetCore.Localization
                 BindDisplayAttribute((DefaultModelMetadata)property, pageName);
                 BindDisplayFormatAttribute((DefaultModelMetadata)property, pageName);
 
-                foreach (var validator in property.ValidatorMetadata.Cast<ValidationAttribute>())
+                foreach (var validator in property.ValidatorMetadata.OfType<ValidationAttribute>())
                     BindValidationAttribute(validator);
 
                 if (_localizationResourceProvider is ILocalizationResourceProviderExtended resourceProviderExtended)
@@ -91,7 +94,7 @@ namespace Xpandables.NetCore.Localization
                     resourceProviderExtended.ModelBinderAttributeHandler
                         ?.Invoke((DefaultModelMetadata)property, defaultModelMetadata.ContainerMetadata);
                     resourceProviderExtended.ModelValidatorAttributeHandler
-                        ?.Invoke((DefaultModelMetadata)property, property.ValidatorMetadata.Cast<ValidationAttribute>());
+                        ?.Invoke((DefaultModelMetadata)property, property.ValidatorMetadata.OfType<ValidationAttribute>());
                 }
             }
 
@@ -101,13 +104,13 @@ namespace Xpandables.NetCore.Localization
         private string? GetModelPageName(Type modelType)
             => _localizationResourceProvider.IsSingleFileUsed && _localizationResourceProvider.ViewModelResourceTypes.Any()
                 ? _localizationResourceProvider.ViewModelResourceTypeCollection.First().Key
-                : modelType.Name.EndsWith("Model")
-                    ? $"{modelType.Name.Remove(modelType.Name.IndexOf("Model"))}Localization"
+                : modelType.Name.EndsWith("Model", StringComparison.InvariantCulture)
+                    ? $"{modelType.Name.Remove(modelType.Name.IndexOf("Model", StringComparison.InvariantCulture))}Localization"
                     : default;
 
         private static ModelPropertyCollection GetModelPageProperties(DefaultModelMetadata defaultModelMetadata)
             => defaultModelMetadata.ModelType == typeof(string) || defaultModelMetadata.ModelType.IsPrimitive
-                ? new ModelPropertyCollection(defaultModelMetadata.SingleToEnumerable())
+                ? new ModelPropertyCollection(new[] { defaultModelMetadata })
                 : defaultModelMetadata.Properties;
 
         private void BindDisplayAttribute(DefaultModelMetadata modelMetadata, string? pageName = default)
@@ -120,7 +123,7 @@ namespace Xpandables.NetCore.Localization
             if (displayAttribute is { }
                 && _localizationResourceProvider
                 .ViewModelResourceTypeCollection
-                .TryGetValue(pageName ?? $"{modelMetadata.ContainerType.Name}Localization", out var resourceType))
+                .TryGetValue(pageName ?? $"{modelMetadata.ContainerType?.Name}Localization", out var resourceType))
             {
                 if (displayAttribute.Name is { }) displayAttribute.Name = $"Display{modelMetadata.Name}";
                 if (displayAttribute.Prompt is { }) displayAttribute.Prompt = $"Prompt{modelMetadata.Name}";
@@ -139,7 +142,7 @@ namespace Xpandables.NetCore.Localization
             if (displayFormat is { }
                 && _localizationResourceProvider
                 .ViewModelResourceTypeCollection
-                .TryGetValue(pageName ?? $"{modelMetadata.ContainerType.Name}Localization", out var resourceType))
+                .TryGetValue(pageName ?? $"{modelMetadata.ContainerType?.Name}Localization", out var resourceType))
             {
                 if (displayFormat.DataFormatString is { })
                 {

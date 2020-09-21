@@ -18,6 +18,7 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -52,6 +53,9 @@ namespace Xpandables.NetCore.TagHelpers
         /// <param name="output">A stateful HTML element used to generate an HTML tag.</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            _ = context ?? throw new ArgumentNullException(nameof(context));
+            _ = output ?? throw new ArgumentNullException(nameof(output));
+
             base.Process(context, output);
 
             if (context.AllAttributes["required"] == null)

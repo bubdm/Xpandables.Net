@@ -23,9 +23,7 @@ using System.Reflection;
 
 using Xpandables.Net.Queries;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Provides method to register query handler.

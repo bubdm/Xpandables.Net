@@ -19,9 +19,7 @@ using System;
 using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.Extensibility
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Defines a <see cref="ComposablePartCatalog"/> implementation that always returns an empty collection of parts.

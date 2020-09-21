@@ -62,14 +62,12 @@
     </None>
   </ItemGroup>
 
-  <!--<ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
-    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.0-rc.1.20451.14" />
     <PackageReference Include="System.Linq.Async" Version="4.1.1" />
-    <PackageReference Include="System.Text.Encodings.Web" Version="4.7.1" />
-  </ItemGroup>-->
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Localization\Validations\DataAnnotations.Designer.cs">
@@ -93,11 +91,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="System.Linq.Async" Version="4.1.1" />
   </ItemGroup>
 
 </Project>

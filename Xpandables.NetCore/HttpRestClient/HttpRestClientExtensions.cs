@@ -58,7 +58,7 @@ namespace Xpandables.NetCore.HttpRestClient
             return new HttpRestClientValidation(validationException
                 .ValidationResult
                 .MemberNames
-                .Select(member => new { MemberName = member, ErrorMessages = new[] { validationException.ValidationResult.ErrorMessage } })
+                .Select(member => new { MemberName = member, ErrorMessages = new[] { validationException.ValidationResult.ErrorMessage! } })
                 .ToDictionary(d => d.MemberName, d => d.ErrorMessages.AsEnumerable()));
         }
     }

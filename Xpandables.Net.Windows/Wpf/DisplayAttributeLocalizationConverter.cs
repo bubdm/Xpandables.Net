@@ -45,6 +45,8 @@ namespace Xpandables.Net.Windows.Wpf
         /// <returns>The object value to set on the property where the extension is applied.</returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
+            _ = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+
             _localizationValidationResource = serviceProvider.GetService(typeof(ILocalizationResourceProvider)) as ILocalizationResourceProvider
                 ?? throw new ArgumentException($"Service {nameof(ILocalizationResourceProvider)} is unavailable.");
 
@@ -67,18 +69,18 @@ namespace Xpandables.Net.Windows.Wpf
         /// <returns>A converted value. If the method returns <see langword="null" />, the valid null value is used.</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(parameter.ToString() is string propertyName)) return string.Empty;
+            if (parameter?.ToString() is not string propertyName) return string.Empty;
             if (_dataContext is null) return propertyName;
 
-            if (!(_dataContext.GetType().GetProperty(propertyName) is { } propertyInfo)) return propertyName;
+            if (_dataContext.GetType().GetProperty(propertyName) is not { } propertyInfo) return propertyName;
 
-            if (!(propertyInfo.GetCustomAttribute<DisplayAttribute>() is { } displayAttribute)) return propertyName;
+            if (propertyInfo.GetCustomAttribute<DisplayAttribute>() is not { } displayAttribute) return propertyName;
             if (displayAttribute.Name is null) return propertyName;
 
             if (_localizationValidationResource.ValidationType is { })
                 displayAttribute.ResourceType = _localizationValidationResource.ValidationType;
 
-            return displayAttribute.GetName();
+            return displayAttribute.GetName()!;
         }
 
         /// <summary>
@@ -91,9 +93,7 @@ namespace Xpandables.Net.Windows.Wpf
         /// <returns>A converted value. If the method returns <see langword="null" />, the valid null value is used.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-#pragma warning disable RCS1079 // Throwing of new NotImplementedException.
             throw new NotImplementedException();
-#pragma warning restore RCS1079 // Throwing of new NotImplementedException.
         }
     }
 }

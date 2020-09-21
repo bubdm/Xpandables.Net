@@ -18,9 +18,7 @@
 using System;
 using System.Reflection;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Defines options to configure export service.

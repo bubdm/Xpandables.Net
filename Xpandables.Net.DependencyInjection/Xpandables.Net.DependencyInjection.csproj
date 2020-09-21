@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Platforms>x64</Platforms>
     <PublishTrimmed>true</PublishTrimmed>
     <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
-        <LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
     <Product>Xpandables Net Dependency Injection</Product>
-    <Description>A utility library in .NetStandard that adds dependency injection to Xpandables.Net.</Description>
+    <Description>A utility library in .Net5.0 that adds dependency injection to Xpandables.Net.</Description>
     <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
     <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net.DependencyInjection</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>3.2.1</Version>
-    <AssemblyVersion>3.2.1</AssemblyVersion>
-    <FileVersion>3.2.1</FileVersion>
-    <PackageVersion>3.2.1</PackageVersion>
+    <Version>5.0.0-rc.1.0.1</Version>
+    <AssemblyVersion>5.0.0</AssemblyVersion>
+    <FileVersion>5.0.0</FileVersion>
+    <PackageVersion>5.0.0-rc.1.0.1</PackageVersion>
     <PackageId>Xpandables.Net.DependencyInjection</PackageId>
     <PackageTags>XTryDecorate, XRegister.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
@@ -29,7 +29,7 @@
     <RootNamespace>Xpandables.Net.DependencyInjection</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <summary>A utility library in .NetStandard that adds dependency injection to Xpandables.Net.</summary>
+    <summary>A utility library in .Net5.0 that adds dependency injection to Xpandables.Net.</summary>
     <language>en-GB</language>
     <NeutralLanguage>en-GB</NeutralLanguage>
     <SignAssembly>true</SignAssembly>
@@ -62,11 +62,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.1.6" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.8" />
-    <PackageReference Include="System.ComponentModel.Composition" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0-rc.1.20451.14" />
   </ItemGroup>
 
   <ItemGroup>

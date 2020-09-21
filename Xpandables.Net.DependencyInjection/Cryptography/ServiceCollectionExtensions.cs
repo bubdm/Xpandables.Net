@@ -15,11 +15,10 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
 
-using Xpandables.Net.Cryptography;
+using Microsoft.Extensions.DependencyInjection;
+
 using Xpandables.Net.Strings;
 
 namespace Xpandables.Net.DependencyInjection

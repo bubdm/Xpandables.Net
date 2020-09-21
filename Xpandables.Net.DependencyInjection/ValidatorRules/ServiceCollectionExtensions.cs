@@ -15,19 +15,17 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
 using System.Linq;
 using System.Reflection;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Xpandables.Net.Commands;
 using Xpandables.Net.Queries;
-using Xpandables.Net.ValidatorRules;
+using Xpandables.Net.Validations;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Provides method to register validation rules.
@@ -40,11 +38,11 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXValidatorRuleDecorator(this IServiceCollection services)
+        public static IServiceCollection AddXValidationDecorator(this IServiceCollection services)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient(typeof(ICompositeValidatorRule<>), typeof(CompositeValidatorRule<>));
+            services.AddTransient(typeof(ICompositeValidation<>), typeof(CompositeValidation<>));
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandValidatorDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandValidatorDecorator<>));
             services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryValidatorDecorator<,>));
@@ -53,20 +51,20 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IValidatorRule{TArgument}"/> to the services with transient life time.
+        /// Adds the <see cref="IValidation{TArgument}"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IServiceCollection AddXValidatorRules(this IServiceCollection services, Assembly[] assemblies)
+        public static IServiceCollection AddXValidations(this IServiceCollection services, Assembly[] assemblies)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             services.XRegister(scan => scan
                 .FromAssemblies(assemblies)
-                .AddClasses(classes => classes.AssignableTo(typeof(IValidatorRule<>))
+                .AddClasses(classes => classes.AssignableTo(typeof(IValidation<>))
                     .Where(_ => !_.IsInterface && !_.IsAbstract && !_.IsGenericType))
                     .AsImplementedInterfaces()
                     .WithTransientLifetime());

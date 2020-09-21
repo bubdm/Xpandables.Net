@@ -22,9 +22,7 @@ using System.ComponentModel.Composition.Primitives;
 using System.IO;
 using System.Linq;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.Extensibility
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Extends <see cref="DirectoryCatalog"/> to support discovery of parts in sub-directories.

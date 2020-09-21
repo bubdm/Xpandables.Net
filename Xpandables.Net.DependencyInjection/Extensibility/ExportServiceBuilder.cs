@@ -23,9 +23,7 @@ using System.Reflection;
 
 using Xpandables.Net.DependencyInjection;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.Extensibility
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Provides with methods for building application object using the Managed Extensibility Framework (MEF).
