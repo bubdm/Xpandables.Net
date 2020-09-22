@@ -20,11 +20,18 @@ using System;
 namespace Xpandables.Net.Http
 {
     /// <summary>
+    /// The delegate that is used to return the token from the specified header key.
+    /// </summary>
+    /// <param name="key">The key to read the token from.</param>
+    /// <returns>A string token value if found or null.</returns>
+    public delegate string HttpTokenAccessorDelegate(string key);
+
+    /// <summary>
     /// A helper class used to implement the <see cref="IHttpTokenAccessor"/> interface.
     /// </summary>
     public sealed class HttpTokenAccessorBuilder : IHttpTokenAccessor
     {
-        private readonly Func<string, string?> _tokenAccessor;
+        private readonly HttpTokenAccessorDelegate _tokenAccessor;
 
         /// <summary>
         /// Initializes a new instance of <see cref="HttpTokenAccessorBuilder"/> class with the delegate to be used
@@ -35,7 +42,7 @@ namespace Xpandables.Net.Http
         /// the <see cref="IHttpTokenAccessor"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="tokenAccessor"/> is null.</exception>
-        public HttpTokenAccessorBuilder(Func<string, string?> tokenAccessor)
+        public HttpTokenAccessorBuilder(HttpTokenAccessorDelegate tokenAccessor)
             => _tokenAccessor = tokenAccessor ?? throw new ArgumentNullException(nameof(tokenAccessor));
 
         /// <summary>

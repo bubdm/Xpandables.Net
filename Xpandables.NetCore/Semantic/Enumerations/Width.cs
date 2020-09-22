@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.ComponentModel;
 
-namespace Xpandables.AspNetCore.Semantic.Enumerations
+namespace Xpandables.NetCore.Semantic.Enumerations
 {
     /// <summary>
     /// Semantic Width

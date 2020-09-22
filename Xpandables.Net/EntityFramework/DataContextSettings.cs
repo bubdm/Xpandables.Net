@@ -49,9 +49,9 @@ namespace Xpandables.Net.EntityFramework
 
         /// <summary>
         /// Ensures that the database for the context will be deleted before applying migration.
-        /// The default value is <see langword="true"/>.
+        /// The default value is <see langword="false"/>.
         /// </summary>
-        public bool EnsuredDeletedBefore { get; set; } = true;
+        public bool EnsuredDeletedBefore { get; set; }
 
         /// <summary>
         /// Ensures that migrations will be applied to the database for the generated context.

@@ -3445,7 +3445,7 @@
         <member name="P:Xpandables.Net.EntityFramework.DataContextSettings.EnsuredDeletedBefore">
             <summary>
             Ensures that the database for the context will be deleted before applying migration.
-            The default value is <see langword="true"/>.
+            The default value is <see langword="false"/>.
             </summary>
         </member>
         <member name="P:Xpandables.Net.EntityFramework.DataContextSettings.ApplyMigrations">
@@ -5158,14 +5158,9 @@
             You must derive from this class in order to customize its behaviors.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.HttpRestClient.HttpRestClientHandler.HttpClientInstance">
+        <member name="P:Xpandables.Net.HttpRestClient.HttpRestClientHandler.HttpClient">
             <summary>
             Gets the <see cref="T:System.Net.Http.HttpClient"/> current instance.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.HttpRestClient.HttpRestClientHandler.Xpandables#Net#HttpRestClient#IHttpRestClientHandler#HttpClient">
-            <summary>
-            Contains the <see cref="T:System.Net.Http.HttpContent"/> instance for the current handler.
             </summary>
         </member>
         <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientHandler.#ctor(System.Net.Http.HttpClient)">
@@ -5667,12 +5662,19 @@
             <param name="key">The token key to find.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="key" /> is null.</exception>
         </member>
+        <member name="T:Xpandables.Net.Http.HttpTokenAccessorDelegate">
+            <summary>
+            The delegate that is used to return the token from the specified header key.
+            </summary>
+            <param name="key">The key to read the token from.</param>
+            <returns>A string token value if found or null.</returns>
+        </member>
         <member name="T:Xpandables.Net.Http.HttpTokenAccessorBuilder">
             <summary>
             A helper class used to implement the <see cref="T:Xpandables.Net.Http.IHttpTokenAccessor"/> interface.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Http.HttpTokenAccessorBuilder.#ctor(System.Func{System.String,System.String})">
+        <member name="M:Xpandables.Net.Http.HttpTokenAccessorBuilder.#ctor(Xpandables.Net.Http.HttpTokenAccessorDelegate)">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Http.HttpTokenAccessorBuilder"/> class with the delegate to be used
             as <see cref="T:Xpandables.Net.Http.IHttpTokenAccessor"/> implementation.
@@ -12828,6 +12830,19 @@
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
             <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
         </member>
+        <member name="T:Xpandables.Net.Validations.ValidationAttributeExtensions">
+            <summary>
+            Provides with helper methods for validation attributes.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Validations.ValidationAttributeExtensions.CreateValidationException(System.String,System.Object,System.String[])">
+            <summary>
+            Creates a new <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> using the specified arguments.
+            </summary>
+            <param name="errorMessage">The error message.</param>
+            <param name="value">The value of the object that caused the attribute to trigger the validation error.</param>
+            <param name="memberNames">The list of member names that have validation errors.</param>
+        </member>
         <member name="T:Xpandables.Net.Validations.ValidationBuilder`1">
             <summary>
             This helper class allows the application author to implement the <see cref="T:Xpandables.Net.Validations.IValidation`1"/>
@@ -12850,19 +12865,6 @@
             <param name="argument">The target argument to be validated.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
             <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException">Any validation exception.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Validations.ValidatorRuleAttributeExtensions">
-            <summary>
-            Provides with helper methods for validation attributes.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Validations.ValidatorRuleAttributeExtensions.CreateValidationException(System.String,System.Object,System.String[])">
-            <summary>
-            Creates a new <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> using the specified arguments.
-            </summary>
-            <param name="errorMessage">The error message.</param>
-            <param name="value">The value of the object that caused the attribute to trigger the validation error.</param>
-            <param name="memberNames">The list of member names that have validation errors.</param>
         </member>
         <member name="T:Xpandables.Net.ValueObject">
             <summary>

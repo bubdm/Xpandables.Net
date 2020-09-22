@@ -27,14 +27,9 @@ namespace Xpandables.Net.HttpRestClient
     public sealed class HttpRestClientHandler : Disposable, IHttpRestClientHandler
     {
         /// <summary>
-        /// Gets the <see cref="HttpClient"/> current instance.
+        /// Gets the <see cref="System.Net.Http.HttpClient"/> current instance.
         /// </summary>
-        public HttpClient HttpClientInstance { get; }
-
-        /// <summary>
-        /// Contains the <see cref="HttpContent"/> instance for the current handler.
-        /// </summary>
-        HttpClient IHttpRestClientHandler.HttpClient => HttpClientInstance;
+        public HttpClient HttpClient { get; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="HttpRestClientHandler"/> class with the HTTP typed client.
@@ -42,7 +37,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="httpClient">The HTTP client type to be used.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="httpClient"/> is null.</exception>
         public HttpRestClientHandler(HttpClient httpClient)
-            => HttpClientInstance = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            => HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
         private bool _isDisposed;
 
@@ -56,7 +51,7 @@ namespace Xpandables.Net.HttpRestClient
                 return;
 
             if (disposing)
-                HttpClientInstance?.Dispose();
+                HttpClient?.Dispose();
 
             _isDisposed = true;
             base.Dispose(disposing);

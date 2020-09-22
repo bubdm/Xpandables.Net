@@ -49,7 +49,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <summary>
         /// Contains the <see cref="HttpContent"/> instance for the current handler.
         /// </summary>
-        internal HttpClient HttpClient { get; }
+        HttpClient HttpClient { get; }
 
         /// <summary>
         /// Handles the query as asynchronous operation.

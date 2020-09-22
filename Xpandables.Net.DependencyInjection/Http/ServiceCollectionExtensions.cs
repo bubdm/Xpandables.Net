@@ -88,7 +88,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="tokenProvider"/> is null.</exception>
         public static IHttpClientBuilder ConfigureXPrimaryAuthorizationTokenHandler(
-            this IHttpClientBuilder builder, Func<string, string> tokenProvider)
+            this IHttpClientBuilder builder, HttpTokenAccessorDelegate tokenProvider)
         {
             _ = builder ?? throw new ArgumentNullException(nameof(builder));
             _ = tokenProvider ?? throw new ArgumentNullException(nameof(tokenProvider));

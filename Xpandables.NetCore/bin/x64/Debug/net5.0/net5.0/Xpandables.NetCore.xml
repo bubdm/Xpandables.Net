@@ -10110,6 +10110,96 @@
             Bottom position
             </summary>
         </member>
+        <member name="T:Xpandables.NetCore.Semantic.Enumerations.Width">
+            <summary>
+            Semantic Width
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.None">
+            <summary>
+            None
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.One">
+            <summary>
+            One
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Two">
+            <summary>
+            Two
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Three">
+            <summary>
+            Three
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Four">
+            <summary>
+            Four
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Five">
+            <summary>
+            Five
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Six">
+            <summary>
+            Six
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Seven">
+            <summary>
+            Seven
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Eight">
+            <summary>
+            Eight
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Nine">
+            <summary>
+            Nine
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Ten">
+            <summary>
+            Ten
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Eleven">
+            <summary>
+            Eleven
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Twelve">
+            <summary>
+            Twelve
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Thirteen">
+            <summary>
+            Thirteen
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Fourteen">
+            <summary>
+            Fourteen
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Fifteen">
+            <summary>
+            Fifteen
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Sixteen">
+            <summary>
+            Sixteen
+            </summary>
+        </member>
         <member name="T:Xpandables.NetCore.Startup.StartupExtensions">
             <summary>
             Provides with startup extension method.
@@ -10264,96 +10354,6 @@
             </summary>
             <param name="app">The current application builder to act on.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="app"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.AspNetCore.Semantic.Enumerations.Width">
-            <summary>
-            Semantic Width
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.None">
-            <summary>
-            None
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.One">
-            <summary>
-            One
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Two">
-            <summary>
-            Two
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Three">
-            <summary>
-            Three
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Four">
-            <summary>
-            Four
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Five">
-            <summary>
-            Five
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Six">
-            <summary>
-            Six
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Seven">
-            <summary>
-            Seven
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Eight">
-            <summary>
-            Eight
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Nine">
-            <summary>
-            Nine
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Ten">
-            <summary>
-            Ten
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Eleven">
-            <summary>
-            Eleven
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Twelve">
-            <summary>
-            Twelve
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Thirteen">
-            <summary>
-            Thirteen
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Fourteen">
-            <summary>
-            Fourteen
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Fifteen">
-            <summary>
-            Fifteen
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Sixteen">
-            <summary>
-            Sixteen
-            </summary>
         </member>
     </members>
 </doc>

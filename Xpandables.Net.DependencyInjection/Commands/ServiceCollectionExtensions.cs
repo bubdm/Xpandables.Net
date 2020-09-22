@@ -70,6 +70,11 @@ namespace Xpandables.Net.DependencyInjection
             where TIdentityDataProvider : class, IIdentityDataProvider => this.Assign(cq => cq.IsIdentityDataEnabled = typeof(TIdentityDataProvider));
 
         /// <summary>
+        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IIdentityDecorator"/> using the default identity provider.
+        /// </summary>
+        public CommandQueryOptions UseIdentityDecorator() => this.Assign(cq => cq.IsIdentityDataEnabled = typeof(IdentityDataProvider));
+
+        /// <summary>
         /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IIdentityDecorator"/>.
         /// </summary>
         /// <param name="identityDataProvider">The identity data provider type.</param>

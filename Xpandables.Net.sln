@@ -9,21 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.NetCore", "Xpand
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Windows", "Xpandables.Net.Windows\Xpandables.Net.Windows.csproj", "{453827F9-17CD-490B-8CD9-7AE67C1EB21A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{4C946619-7F51-4134-AFA4-B459985BCC3E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Infrastructure", "Samples\Xpandables.Samples.Infrastructure\Xpandables.Samples.Infrastructure.csproj", "{C7D0E076-4CB9-45C3-90F9-053489B98170}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Domain", "Samples\Xpandables.Samples.Domain\Xpandables.Samples.Domain.csproj", "{AE78F941-27D5-4D58-BA92-72471A887357}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Desktop", "Samples\Xpandables.Samples.Desktop\Xpandables.Samples.Desktop.csproj", "{0F7992E2-6575-45D5-9C73-1063506C09ED}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Business", "Samples\Xpandables.Samples.Application\Xpandables.Samples.Business.csproj", "{A28F2A50-34DF-4697-BE8B-744A24CEEEC0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Samples.Api", "Samples\Xpandables.Samples.Api\Xpandables.Samples.Api.csproj", "{D906FDDF-55E5-420C-ACAF-1610C032222C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.DependencyInjection", "Xpandables.Net.DependencyInjection\Xpandables.Net.DependencyInjection.csproj", "{1FAA3842-7FF0-4D00-978C-1BECB64994D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.EntityFramework", "Xpandables.Net.EntityFramework\Xpandables.Net.EntityFramework.csproj", "{4B83F394-55C9-45F6-8EBE-742D6F40869A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.Api", "Xpandables.Net.Api\Xpandables.Net.Api.csproj", "{EA6F3416-3632-41A3-ACC5-161F70117443}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.Tests", "..\Xpandables.Net.Tests\Xpandables.Net.Tests.csproj", "{EB926986-C18B-4D9D-9570-40DCBFCE33C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,36 +44,6 @@ Global
 		{453827F9-17CD-490B-8CD9-7AE67C1EB21A}.Release|Any CPU.ActiveCfg = Release|x64
 		{453827F9-17CD-490B-8CD9-7AE67C1EB21A}.Release|x64.ActiveCfg = Release|x64
 		{453827F9-17CD-490B-8CD9-7AE67C1EB21A}.Release|x64.Build.0 = Release|x64
-		{C7D0E076-4CB9-45C3-90F9-053489B98170}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{C7D0E076-4CB9-45C3-90F9-053489B98170}.Debug|x64.ActiveCfg = Debug|x64
-		{C7D0E076-4CB9-45C3-90F9-053489B98170}.Debug|x64.Build.0 = Debug|x64
-		{C7D0E076-4CB9-45C3-90F9-053489B98170}.Release|Any CPU.ActiveCfg = Release|x64
-		{C7D0E076-4CB9-45C3-90F9-053489B98170}.Release|x64.ActiveCfg = Release|x64
-		{C7D0E076-4CB9-45C3-90F9-053489B98170}.Release|x64.Build.0 = Release|x64
-		{AE78F941-27D5-4D58-BA92-72471A887357}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{AE78F941-27D5-4D58-BA92-72471A887357}.Debug|x64.ActiveCfg = Debug|x64
-		{AE78F941-27D5-4D58-BA92-72471A887357}.Debug|x64.Build.0 = Debug|x64
-		{AE78F941-27D5-4D58-BA92-72471A887357}.Release|Any CPU.ActiveCfg = Release|x64
-		{AE78F941-27D5-4D58-BA92-72471A887357}.Release|x64.ActiveCfg = Release|x64
-		{AE78F941-27D5-4D58-BA92-72471A887357}.Release|x64.Build.0 = Release|x64
-		{0F7992E2-6575-45D5-9C73-1063506C09ED}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{0F7992E2-6575-45D5-9C73-1063506C09ED}.Debug|x64.ActiveCfg = Debug|x64
-		{0F7992E2-6575-45D5-9C73-1063506C09ED}.Debug|x64.Build.0 = Debug|x64
-		{0F7992E2-6575-45D5-9C73-1063506C09ED}.Release|Any CPU.ActiveCfg = Release|x64
-		{0F7992E2-6575-45D5-9C73-1063506C09ED}.Release|x64.ActiveCfg = Release|x64
-		{0F7992E2-6575-45D5-9C73-1063506C09ED}.Release|x64.Build.0 = Release|x64
-		{A28F2A50-34DF-4697-BE8B-744A24CEEEC0}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{A28F2A50-34DF-4697-BE8B-744A24CEEEC0}.Debug|x64.ActiveCfg = Debug|x64
-		{A28F2A50-34DF-4697-BE8B-744A24CEEEC0}.Debug|x64.Build.0 = Debug|x64
-		{A28F2A50-34DF-4697-BE8B-744A24CEEEC0}.Release|Any CPU.ActiveCfg = Release|x64
-		{A28F2A50-34DF-4697-BE8B-744A24CEEEC0}.Release|x64.ActiveCfg = Release|x64
-		{A28F2A50-34DF-4697-BE8B-744A24CEEEC0}.Release|x64.Build.0 = Release|x64
-		{D906FDDF-55E5-420C-ACAF-1610C032222C}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{D906FDDF-55E5-420C-ACAF-1610C032222C}.Debug|x64.ActiveCfg = Debug|x64
-		{D906FDDF-55E5-420C-ACAF-1610C032222C}.Debug|x64.Build.0 = Debug|x64
-		{D906FDDF-55E5-420C-ACAF-1610C032222C}.Release|Any CPU.ActiveCfg = Release|x64
-		{D906FDDF-55E5-420C-ACAF-1610C032222C}.Release|x64.ActiveCfg = Release|x64
-		{D906FDDF-55E5-420C-ACAF-1610C032222C}.Release|x64.Build.0 = Release|x64
 		{1FAA3842-7FF0-4D00-978C-1BECB64994D1}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{1FAA3842-7FF0-4D00-978C-1BECB64994D1}.Debug|x64.ActiveCfg = Debug|x64
 		{1FAA3842-7FF0-4D00-978C-1BECB64994D1}.Debug|x64.Build.0 = Debug|x64
@@ -94,16 +56,25 @@ Global
 		{4B83F394-55C9-45F6-8EBE-742D6F40869A}.Release|Any CPU.ActiveCfg = Release|x64
 		{4B83F394-55C9-45F6-8EBE-742D6F40869A}.Release|x64.ActiveCfg = Release|x64
 		{4B83F394-55C9-45F6-8EBE-742D6F40869A}.Release|x64.Build.0 = Release|x64
+		{EA6F3416-3632-41A3-ACC5-161F70117443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA6F3416-3632-41A3-ACC5-161F70117443}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA6F3416-3632-41A3-ACC5-161F70117443}.Debug|x64.ActiveCfg = Debug|x64
+		{EA6F3416-3632-41A3-ACC5-161F70117443}.Debug|x64.Build.0 = Debug|x64
+		{EA6F3416-3632-41A3-ACC5-161F70117443}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA6F3416-3632-41A3-ACC5-161F70117443}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA6F3416-3632-41A3-ACC5-161F70117443}.Release|x64.ActiveCfg = Release|x64
+		{EA6F3416-3632-41A3-ACC5-161F70117443}.Release|x64.Build.0 = Release|x64
+		{EB926986-C18B-4D9D-9570-40DCBFCE33C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB926986-C18B-4D9D-9570-40DCBFCE33C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB926986-C18B-4D9D-9570-40DCBFCE33C9}.Debug|x64.ActiveCfg = Debug|x64
+		{EB926986-C18B-4D9D-9570-40DCBFCE33C9}.Debug|x64.Build.0 = Debug|x64
+		{EB926986-C18B-4D9D-9570-40DCBFCE33C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB926986-C18B-4D9D-9570-40DCBFCE33C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB926986-C18B-4D9D-9570-40DCBFCE33C9}.Release|x64.ActiveCfg = Release|x64
+		{EB926986-C18B-4D9D-9570-40DCBFCE33C9}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{C7D0E076-4CB9-45C3-90F9-053489B98170} = {4C946619-7F51-4134-AFA4-B459985BCC3E}
-		{AE78F941-27D5-4D58-BA92-72471A887357} = {4C946619-7F51-4134-AFA4-B459985BCC3E}
-		{0F7992E2-6575-45D5-9C73-1063506C09ED} = {4C946619-7F51-4134-AFA4-B459985BCC3E}
-		{A28F2A50-34DF-4697-BE8B-744A24CEEEC0} = {4C946619-7F51-4134-AFA4-B459985BCC3E}
-		{D906FDDF-55E5-420C-ACAF-1610C032222C} = {4C946619-7F51-4134-AFA4-B459985BCC3E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {946F08A7-BB6F-4954-B369-EA86BFE7923E}

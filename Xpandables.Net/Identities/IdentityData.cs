@@ -94,7 +94,6 @@ namespace Xpandables.Net.Identities
         protected virtual Expression<Func<TSource, bool>> BuildExpression() => _ => true;
 
 #pragma warning disable CS1591
-#pragma warning disable CA2225
         public static implicit operator Expression<Func<TSource, bool>>(IdentityDataExpression<TIdentity, TSource> criteria)
              => criteria?.GetExpression() ?? (_ => true);
 

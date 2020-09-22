@@ -16,8 +16,6 @@
  *
 ************************************************************************************************************/
 using Microsoft.AspNetCore.Components;
-
-using Xpandables.AspNetCore.Semantic.Enumerations;
 using Xpandables.NetCore.Semantic.Enumerations;
 using Xpandables.Net.Types;
 

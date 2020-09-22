@@ -62,6 +62,7 @@ namespace Xpandables.Net.EntityFramework
         public async Task<IDataContext> GetDataContextAsync(CancellationToken cancellationToken = default)
         {
             var options = GetDataContextOptions();
+            InstanceCreator.OnException = dispatcher => throw new InvalidOperationException($"Unable to create database {nameof(TDataContext)}", dispatcher.SourceException);
             var dataContext = (TDataContext)InstanceCreator.Create(typeof(TDataContext), options)!;
 
             if (DataContextSettings.EnsuredDeletedBefore && !await dataContext.Database.EnsureDeletedAsync(cancellationToken).ConfigureAwait(false))
@@ -80,6 +81,7 @@ namespace Xpandables.Net.EntityFramework
         public IDataContext GetDataContext()
         {
             var options = GetDataContextOptions();
+            InstanceCreator.OnException = dispatcher => throw new InvalidOperationException($"Unable to create database {nameof(TDataContext)}", dispatcher.SourceException);
             var dataContext = (TDataContext)InstanceCreator.Create(typeof(TDataContext), options)!;
 
             if (DataContextSettings.EnsuredDeletedBefore && !dataContext.Database.EnsureDeleted())
