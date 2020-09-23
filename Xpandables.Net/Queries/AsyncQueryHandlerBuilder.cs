@@ -16,10 +16,10 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.Queries
 {
@@ -32,7 +32,7 @@ namespace Xpandables.Net.Queries
     public sealed class AsyncQueryHandlerBuilder<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
         where TQuery : class, IAsyncQuery<TResult>
     {
-        private readonly Func<TQuery, CancellationToken, IAsyncEnumerable<TResult>> _handler;
+        private readonly Func<TQuery, CancellationToken, Task<Optional<TResult>>> _handler;
 
         /// <summary>
         /// Initializes a new instance of <see cref="AsyncQueryHandlerBuilder{TQuery, TResult}"/> with the delegate to be used
@@ -43,22 +43,19 @@ namespace Xpandables.Net.Queries
         /// the <see cref="IAsyncQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
-        public AsyncQueryHandlerBuilder(Func<TQuery, CancellationToken, IAsyncEnumerable<TResult>> handler)
+        public AsyncQueryHandlerBuilder(Func<TQuery, CancellationToken, Task<Optional<TResult>>> handler)
             => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result type.
+        /// Asynchronously handles the specified query and returns an optional type-specific result.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>An object that contains an enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
-        public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            await foreach (var result in _handler(query, cancellationToken).ConfigureAwait(false))
-                yield return result;
-        }
+        /// <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+        public async Task<Optional<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default) 
+            => await _handler(query, cancellationToken).ConfigureAwait(false);
     }
 }

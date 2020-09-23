@@ -23,18 +23,18 @@ namespace Xpandables.Net.Correlation
     /// <summary>
     /// A marker interface that allows the command/query class to add correlation decorator context event after control flow.
     /// In the class handling the query or command, you should reference
-    /// the <see cref="ICorrelationContext"/> and set the <see cref="ICorrelationContext.PostEvent"/> and/or
-    /// <see cref="ICorrelationContext.RollbackEvent"/>.
+    /// the <see cref="IAsyncCorrelationContext"/> and set the <see cref="IAsyncCorrelationContext.PostEvent"/> and/or
+    /// <see cref="IAsyncCorrelationContext.RollbackEvent"/>.
     /// <para></para>
-    /// Note that <see cref="ICorrelationContext.PostEvent"/> will be raised at the end of the control only if there is no exception,
-    /// giving you access to all data still alive on the control flow and the <see cref="ICorrelationContext.RollbackEvent"/>
+    /// Note that <see cref="IAsyncCorrelationContext.PostEvent"/> will be raised at the end of the control only if there is no exception,
+    /// giving you access to all data still alive on the control flow and the <see cref="IAsyncCorrelationContext.RollbackEvent"/>
     /// will only be raised when exception. The exception in that case in accessible through the
-    /// <see cref="ICorrelationContext.RollbackEvent"/>.
+    /// <see cref="IAsyncCorrelationContext.RollbackEvent"/>.
     /// <para></para>
     /// You need to register the expected behavior using the appropriate extension method.
     /// <para></para>
-    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="QueryCorrelationDecorator{TQuery, TResult}"/>.
-    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandCorrelationDecorator{TCommand}"/>.
+    /// <see cref="IAsyncQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncQueryCorrelationDecorator{TQuery, TResult}"/>.
+    /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandCorrelationDecorator{TCommand}"/>.
     /// <see cref="IAsyncQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncQueryCorrelationDecorator{TQuery, TResult}"/>.
     /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandCorrelationDecorator{TCommand}"/>.
     /// </summary>

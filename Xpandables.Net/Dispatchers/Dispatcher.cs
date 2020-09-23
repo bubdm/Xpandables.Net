@@ -24,8 +24,8 @@ namespace Xpandables.Net.Dispatchers
 {
     /// <summary>
     /// The default implementation for <see cref="IDispatcher"/>.
-    /// Implements methods to execute the <see cref="IQueryHandler{TQuery, TResult}"/> and
-    /// <see cref="ICommandHandler{TCommand}"/> process dynamically.
+    /// Implements methods to execute the <see cref="IAsyncQueryHandler{TQuery, TResult}"/> and
+    /// <see cref="IAsyncCommandHandler{TCommand}"/> process dynamically.
     /// This class can not be inherited.
     /// </summary>
     public sealed class Dispatcher : IDispatcher

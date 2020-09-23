@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Http;
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -48,14 +49,11 @@ namespace Xpandables.NetCore.Http
         public IReadOnlyDictionary<string, IReadOnlyList<string>> ReadValues()
         {
             var headers = _contextAccessor.HttpContext?.Request?.Headers?.ToDictionary(d => d.Key, d => (IReadOnlyList<string>)d.Value);
-            if (headers is null)
+            return headers switch
             {
-                throw new InvalidOperationException(
-                    $"Unable to access HttpContext from {nameof(IHttpContextAccessor.HttpContext)}",
-                    new ArgumentException("Getting the header values failed."));
-            }
-
-            return new ReadOnlyDictionary<string, IReadOnlyList<string>>(headers);
+                null => ImmutableDictionary<string, IReadOnlyList<string>>.Empty,
+                _ => new ReadOnlyDictionary<string, IReadOnlyList<string>>(headers)
+            };
         }
     }
 }

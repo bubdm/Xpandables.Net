@@ -15,6 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Collections.Generic;
 using System.Reflection;
 
 using Microsoft.AspNetCore.Authentication;
@@ -91,9 +92,9 @@ namespace Xpandables.Net.Api
             services.AddXQueryHandlerWrapper();
             services.AddXIdentityDataProvider();
 
-            services.AddScoped<IQueryHandler<RequestAuthenToken, AuthenToken>, RequestAuthenTokenHandler>();
+            services.AddScoped<IAsyncQueryHandler<RequestAuthenToken, AuthenToken>, RequestAuthenTokenHandler>();
             services.AddScoped<IAsyncCommandHandler<EditUser>, EditUserHandler>();
-            services.AddScoped<IAsyncQueryHandler<EventLogList, Log>, EventLogListHandler>();
+            services.AddScoped<IAsyncQueryHandler<EventLogList, IAsyncEnumerable<Log>>, EventLogListHandler>();
 
             services.AddXIdentityDecorator();
             services.AddXPersistenceDecorator();

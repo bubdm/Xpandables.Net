@@ -27,7 +27,7 @@ namespace Xpandables.Net.HttpRestClient
 {
     /// <summary>
     /// Describes the parameters for a request used with <see cref="IHttpRestClientHandler"/>.
-    /// The attribute should decorate implementations of <see cref="IQuery{TResult}"/> or <see cref="ICommand"/>
+    /// The attribute should decorate implementations of <see cref="IAsyncQuery{TResult}"/> or <see cref="IAsyncCommand"/>
     /// in order to be used with <see cref="IHttpRestClientHandler"/>.
     /// Your class can implement the <see cref="IHttpRestClientAttributeProvider"/> to dynamically return a <see cref="HttpRestClientAttribute"/>.
     /// </summary>
@@ -86,7 +86,7 @@ namespace Xpandables.Net.HttpRestClient
         public string Accept { get; set; } = "application/json";
 
         /// <summary>
-        /// Determines whether or not the request needs authorization.
+        /// Gets the value whether or not the request needs authorization.
         /// The default value is <see langword="true"/>.
         /// In this case, an <see cref="AuthenticationHeaderValue"/> with the <see cref="Scheme"/> value will be initialized and filled
         /// using one of the <see langword="ConfigureXPrimaryAuthorizationTokenHandler(IHttpClientBuilder)"/> methods extension.
@@ -94,7 +94,7 @@ namespace Xpandables.Net.HttpRestClient
         public bool IsSecured { get; set; } = true;
 
         /// <summary>
-        /// Determines whether or not the query/command should be added to the request content.
+        /// Gets the value whether or not the query/command should be added to the request content.
         /// If <see langword="true"/> the query/command will not be added.
         /// The default value is <see langword="false"/>.
         /// </summary>

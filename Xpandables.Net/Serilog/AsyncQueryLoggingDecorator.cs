@@ -16,14 +16,11 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
-using Xpandables.Net.Enumerables;
+using Xpandables.Net.Optionals;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Serilog
@@ -55,31 +52,32 @@ namespace Xpandables.Net.Serilog
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result type.
+        /// Asynchronously handles the specified query and returns an optional type-specific result.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        /// <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+        public async Task<Optional<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
-            await _logger.OnEntryLogAsync(_decoratee, query).ConfigureAwait(false);
-            List<TResult>? results;
-
+            var results = Optional<TResult>.Empty();
             try
             {
-                results = await _decoratee.HandleAsync(query, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-                await _logger.OnExitLogAsync(_decoratee, query, results).ConfigureAwait(false);
+                await _logger.OnEntryLogAsync(_decoratee, query).ConfigureAwait(false);
+                results = await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
+                return results;
             }
             catch (Exception exception)
             {
                 await _logger.OnExceptionLogAsync(_decoratee, query, exception).ConfigureAwait(false);
                 throw;
             }
-
-            await foreach (var result in new AsyncEnumerableBuilder<TResult>(results))
-                yield return result;
+            finally
+            {
+                await _logger.OnExitLogAsync(_decoratee, query, results.FirstOrDefault()).ConfigureAwait(false);
+            }
         }
     }
 }

@@ -26,16 +26,16 @@ namespace Xpandables.Net.Asynchronous
     /// This class implements <see cref="IAsyncEnumerator{T}"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class AsyncEnumeratorBuilder<T> : IAsyncEnumerator<T>
+    public sealed class AsyncEnumeratorConstructor<T> : IAsyncEnumerator<T>
     {
         private readonly IEnumerator<T> _inner;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncEnumeratorBuilder{T}"/> with the enumerator.
+        /// Initializes a new instance of <see cref="AsyncEnumeratorConstructor{T}"/> with the enumerator.
         /// </summary>
         /// <param name="inner">The enumerator to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="inner"/> is null.</exception>
-        public AsyncEnumeratorBuilder(IEnumerator<T> inner) => _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+        public AsyncEnumeratorConstructor(IEnumerator<T> inner) => _inner = inner ?? throw new ArgumentNullException(nameof(inner));
 
         /// <summary>
         /// Gets the element in the collection at the current position of the enumerator.

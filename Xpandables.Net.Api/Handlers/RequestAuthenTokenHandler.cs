@@ -31,7 +31,7 @@ using static Xpandables.Net.Validations.ValidationAttributeExtensions;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class RequestAuthenTokenHandler : IQueryHandler<RequestAuthenToken, AuthenToken>
+    public sealed class RequestAuthenTokenHandler : IAsyncQueryHandler<RequestAuthenToken, AuthenToken>
     {
         private readonly IDataContext _dataContext;
         private readonly IHttpTokenEngine _tokenService;

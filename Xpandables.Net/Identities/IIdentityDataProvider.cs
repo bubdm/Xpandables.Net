@@ -22,8 +22,8 @@ namespace Xpandables.Net.Identities
 {
     /// <summary>
     /// Provides with a method to retrieve identity.
-    /// You should provide an implementation of this interface that will be used with the <see cref="CommandIdentityDecorator{TCommand}"/>
-    /// or <see cref="QueryIdentityDecorator{TQuery, TResult}"/> decorator to fill the target instance with the identity.
+    /// You should provide an implementation of this interface that will be used with the <see cref="AsyncCommandIdentityDecorator{TCommand}"/>
+    /// or <see cref="AsyncQueryIdentityDecorator{TQuery, TResult}"/> decorator to fill the target instance with the identity.
     /// </summary>
     public interface IIdentityDataProvider
     {

@@ -54,7 +54,6 @@ namespace Xpandables.Net.DependencyInjection
             if (services is null) throw new ArgumentNullException(nameof(services));
 
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandTransactionDecorator<>));
-            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandTransactionDecorator<>));
             return services;
         }
     }

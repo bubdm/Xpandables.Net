@@ -151,7 +151,7 @@ namespace Xpandables.Net.Data.Elements
                         new DataPropertySource(propertyInfo, options, identities)))
             };
 
-            DataEntity dataEntity = new DataEntity(source, properties);
+            var dataEntity = new DataEntity(source, properties);
             dataEntity.SetElement(default, dataEntity.CreateElement(instanceCreator), instanceCreator);
 
             return dataEntity;

@@ -189,7 +189,7 @@ namespace Xpandables.Net.Optionals
         /// <summary>
         /// Provides with an optional of the specific type that is empty.
         /// </summary>
-        /// <returns>An optional with no value nor exception.</returns>
+        /// <returns>An optional with no value.</returns>
         public static Optional<T> Empty() => new Optional<T>();
 
         /// <summary>

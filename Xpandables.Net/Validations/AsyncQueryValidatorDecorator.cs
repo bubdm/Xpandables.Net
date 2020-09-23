@@ -21,6 +21,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Optionals;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Validations
@@ -54,19 +55,18 @@ namespace Xpandables.Net.Validations
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result type.
+        /// Asynchronously handles the specified query and returns an optional type-specific result.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>An object that contains an enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
-        public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        /// <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+        public async Task<Optional<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
             await _validator.ValidateAsync(query).ConfigureAwait(false);
-            await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false))
-                yield return result;
+            return await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
         }
     }
 }

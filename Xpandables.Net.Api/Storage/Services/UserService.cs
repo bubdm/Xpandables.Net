@@ -52,10 +52,9 @@ namespace Xpandables.Net.Api.Storage.Services
             return User.Create(new PhoneNumber(phone), passwordEncrypted, new EmailAddress(email));
         }
 
-        public static async IAsyncEnumerable<EventLog> GetNoTrackingEventLogAsync(this IDataContext @this, IQueryExpression<User> query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public static async Task<List<EventLog>> GetNoTrackingEventLogAsync(this IDataContext @this, IQueryExpression<User> query, CancellationToken cancellationToken = default)
         {
-            await foreach (var eventLog in @this.SetOf(query).Include(i => i.EventLogs).AsNoTracking().Where(query.GetExpression()).SelectMany(user => user.EventLogs).ToAsyncEnumerable())
-                yield return eventLog;
+            return await @this.SetOf(query).Include(i => i.EventLogs).AsNoTracking().Where(query.GetExpression()).SelectMany(user => user.EventLogs).ToListAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

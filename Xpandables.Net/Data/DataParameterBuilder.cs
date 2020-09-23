@@ -83,9 +83,7 @@ namespace Xpandables.Net.Data
                     parameterSql[i] = friendlyRepresentation + parameterNames[i];
                 }
 
-#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
                 command.CommandText = string.Format(CultureInfo.InvariantCulture, command.CommandText, parameterSql);
-#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
             }
             else
             {

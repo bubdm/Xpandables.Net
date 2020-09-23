@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ namespace Xpandables.Net.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> PostAsync([FromBody] EditUser editUser, CancellationToken cancellationToken = default)
         {
-            await _dispatcher.SendCommandAsync(editUser, cancellationToken).ConfigureAwait(false);
+            await _dispatcher.InvokeAsync(editUser, cancellationToken).ConfigureAwait(false);
             return Ok();
         }
 
@@ -51,7 +52,8 @@ namespace Xpandables.Net.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IAsyncEnumerable<Log>))]
         public async IAsyncEnumerable<Log> GetEventLogAsync([FromQuery] EventLogList eventLogList, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await foreach (var eventLog in _dispatcher.SendQueryAsync(eventLogList, cancellationToken).ConfigureAwait(false))
+            var results = await _dispatcher.InvokeAsync(eventLogList, cancellationToken).ConfigureAwait(false);
+            await foreach (var eventLog in results.First().ConfigureAwait(false))
                 yield return eventLog;
         }
     }

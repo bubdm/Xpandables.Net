@@ -16,14 +16,8 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Text;
-using System.Threading.Tasks;
-
-using Xpandables.Net.Data.Executables;
-using Xpandables.Net.Data.Options;
-using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.Data
 {

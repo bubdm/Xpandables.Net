@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.HttpRestClient
 {
     /// <summary>
-    /// Represents an HTTP Rest client response.
+    /// Represents an HTTP Rest client response. Implements <see cref="IDisposable"/>.
     /// </summary>
     public class HttpRestClientResponse : Disposable
     {
@@ -126,7 +126,7 @@ namespace Xpandables.Net.HttpRestClient
     }
 
     /// <summary>
-    ///  Represents an HTTP Rest client response of a specific type result.
+    ///  Represents an HTTP Rest client response of a specific type result. Implements <see cref="IDisposable"/>.
     /// </summary>
     /// <typeparam name="TResult">The type of the result.</typeparam>
     public class HttpRestClientResponse<TResult> : HttpRestClientResponse

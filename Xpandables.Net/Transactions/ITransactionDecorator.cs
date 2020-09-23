@@ -23,7 +23,6 @@ namespace Xpandables.Net.Transactions
     /// <summary>
     /// A marker interface that allows the command handler class implementation to be decorated with transaction behavior according to
     /// the decorated class type :
-    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandTransactionDecorator{TCommand}"/>.
     /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandTransactionDecorator{TCommand}"/>.
     /// You must implement the <see cref="ITransactionScopeProvider"/> to provide the transaction scope.
     /// <para></para>

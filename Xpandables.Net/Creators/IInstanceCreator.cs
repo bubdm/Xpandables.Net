@@ -183,7 +183,7 @@ namespace Xpandables.Net.Creators
         private TDelegate GetConstructorDelegate<TDelegate>(Type type, params Type[] parameterTypes)
                  where TDelegate : Delegate
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            _ = type ?? throw new ArgumentNullException(nameof(type));
 
             var key = KeyBuilder(type, parameterTypes);
             return (TDelegate)Cache.GetOrAdd(key, _ => ConstructDelegate(type, parameterTypes));

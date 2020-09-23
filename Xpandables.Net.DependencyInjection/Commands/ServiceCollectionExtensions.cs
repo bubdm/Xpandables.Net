@@ -109,7 +109,7 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="IAsyncCommandHandler{TCommand}"/> and <see cref="ICommandHandler{TCommand}"/> to the services with transient life time.
+        /// Adds the <see cref="IAsyncCommandHandler{TCommand}"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -125,18 +125,13 @@ namespace Xpandables.Net.DependencyInjection
                 .AddClasses(classes => classes.AssignableTo(typeof(IAsyncCommandHandler<>))
                     .Where(_ => !_.IsGenericType))
                     .AsImplementedInterfaces()
-                    .WithTransientLifetime()
-                .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>))
-                    .Where(_ => !_.IsGenericType))
-                    .AsImplementedInterfaces()
                     .WithTransientLifetime());
 
             return services;
         }
 
         /// <summary>
-        /// Adds and configures the <see cref="IAsyncCommandHandler{TCommand}"/>, <see cref="ICommandHandler{TCommand}"/>, 
-        /// <see cref="IAsyncQueryHandler{TQuery, TResult}"/> and <see cref="IQueryHandler{TQuery, TResult}"/> behaviors.
+        /// Adds and configures the <see cref="IAsyncCommandHandler{TCommand}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>

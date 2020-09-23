@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "Xpandables.NetCore/5.0.0-rc.1.0.1": {
+      "Xpandables.NetCore/5.0.0-rc.1.0.2": {
         "dependencies": {
           "Microsoft.CodeAnalysis.FxCopAnalyzers": "3.3.0",
           "Xpandables.Net": "5.0.0-rc.1.0.1"
@@ -84,7 +84,7 @@
     }
   },
   "libraries": {
-    "Xpandables.NetCore/5.0.0-rc.1.0.1": {
+    "Xpandables.NetCore/5.0.0-rc.1.0.2": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

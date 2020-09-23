@@ -17,27 +17,28 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Contracts;
 using Xpandables.Net.Api.Storage.Services;
 using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Optionals;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class EventLogListHandler : IAsyncQueryHandler<EventLogList, Log>
+    public sealed class EventLogListHandler : IAsyncQueryHandler<EventLogList, IAsyncEnumerable<Log>>
     {
         private readonly IDataContext _dataContext;
 
         public EventLogListHandler(IDataContext dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
 
-        public async IAsyncEnumerable<Log> HandleAsync(EventLogList query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async Task<Optional<IAsyncEnumerable<Log>>> HandleAsync(EventLogList query, CancellationToken cancellationToken = default)
         {
-            await foreach (var log in _dataContext.GetNoTrackingEventLogAsync(query, cancellationToken).ConfigureAwait(false))
-                yield return new Log(log.EventName, log.OccuredOn, log.Description);
+            var result = (await _dataContext.GetNoTrackingEventLogAsync(query, cancellationToken).ConfigureAwait(false)).Select(log => new Log(log.EventName, log.OccuredOn, log.Description)).ToAsyncEnumerable();
+            return Optional<IAsyncEnumerable<Log>>.Some(result);
         }
     }
 }

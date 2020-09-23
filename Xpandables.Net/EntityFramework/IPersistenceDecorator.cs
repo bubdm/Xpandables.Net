@@ -25,13 +25,13 @@ namespace Xpandables.Net.EntityFramework
     /// The behavior makes use of an implementation of <see cref="IDataContext"/> in the handler class implementation
     /// to persist data at the end of the control flow only if there is no exception.
     /// In order to control the behavior, you can add the <see cref="ICorrelationDecorator"/> to the command/query class and reference
-    /// the <see cref="ICorrelationContext"/> or <see cref="IAsyncCorrelationContext"/> in the handler class implementation, to defines actions to be applied after the control flow with
-    /// <see cref="ICorrelationContext.PostEvent"/> on success and <see cref="ICorrelationContext.RollbackEvent"/> on exception.
+    /// the <see cref="IAsyncCorrelationContext"/> in the handler class implementation, to defines actions to be applied after the control flow with
+    /// <see cref="IAsyncCorrelationContext.PostEvent"/> on success and <see cref="IAsyncCorrelationContext.RollbackEvent"/> on exception.
     /// <para></para>
     /// You need to register the expected behavior to the service collections using the appropriate extension method,
     /// register the data context using and extension method.
     /// <para></para>
-    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandPersistenceDecorator{TCommand}"/>.
+    /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandPersistenceDecorator{TCommand}"/>.
     /// </summary>
     public interface IPersistenceDecorator { }
 }

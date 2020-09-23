@@ -25,9 +25,7 @@ using System;
 using Xpandables.NetCore.Localization;
 using Xpandables.Net.Localization;
 
-#pragma warning disable ET002 // Namespace does not match file path or default namespace
 namespace Xpandables.Net.DependencyInjection
-#pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
     /// <summary>
     /// Provides methods to register localization services.
@@ -46,7 +44,7 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddSingleton<IConfigureOptions<RequestLocalizationOptions>, XRequestLocalizationOptions>();
-            services.AddSingleton<IConfigureOptions<MvcOptions>, XMvcOptions>();
+            services.AddSingleton<IConfigureOptions<MvcOptions>, XMvcLocalizationOptions>();
 
             services.AddSingleton<ILocalizationResourceProvider, TLocalizationResourceProvider>();
             services.AddSingleton<ILocalizationResourceEngine, LocalizationResourceEngine>();

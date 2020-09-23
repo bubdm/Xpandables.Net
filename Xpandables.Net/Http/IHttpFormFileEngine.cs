@@ -55,7 +55,7 @@ namespace Xpandables.Net.Http
         bool IsValidFileContent(object formFile);
 
         /// <summary>
-        /// Checks that the HTTP request file content matches its extension signature.
+        /// Checks that the HTTP request file content matches extension signatures provided.
         /// </summary>
         /// <param name="formFile">the sent file.</param>
         /// <param name="fileSignatures">The file signatures dictionary.</param>

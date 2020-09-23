@@ -54,7 +54,7 @@ namespace Xpandables.Net.HttpRestClient
             var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var content = await response.Content!.ReadAsStringAsync().ConfigureAwait(false);
+                var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
                 content = $"'{ content.Replace("\n", "", StringComparison.InvariantCulture)}'";
                 response.Content = new StringContent(content, Encoding.UTF8);
             }

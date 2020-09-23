@@ -53,14 +53,14 @@ namespace Xpandables.Net.HttpRestClient
 
         /// <summary>
         /// Handles the query as asynchronous operation.
-        /// Be aware of the fact that the target must return an <see cref="IAsyncEnumerable{T}"/>, otherwise you will face an exception.
+        /// Make use of <see langword="using"/> key work when call.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IAsyncQuery<IAsyncEnumerable<TResult>> query, CancellationToken cancellationToken = default)
         {
             _ = HttpClient ?? throw new InvalidOperationException($"The HTTP client needs to be initialized.");
 
@@ -96,7 +96,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        public async Task<HttpRestClientResponse<Optional<TResult>>> HandleAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse<Optional<TResult>>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = HttpClient ?? throw new InvalidOperationException($"The HTTP client needs to be initialized.");
 
@@ -134,43 +134,6 @@ namespace Xpandables.Net.HttpRestClient
         /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         public async Task<HttpRestClientResponse> HandleAsync(IAsyncCommand command, CancellationToken cancellationToken = default)
-        {
-            _ = HttpClient ?? throw new InvalidOperationException($"The HTTP client needs to be initialized.");
-
-            try
-            {
-                using var request = await GetHttpRequestMessageAsync(command, cancellationToken).ConfigureAwait(false);
-                using var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return HttpRestClientResponse
-                        .Success()
-                        .AddHeaders(GetHttpResponseHeaders(response))
-                        .AddVersion(response.Version)
-                        .AddReasonPhrase(response.ReasonPhrase);
-                }
-
-                return await GetBadResponseAsync(HttpRestClientResponse.Failure, response).ConfigureAwait(false);
-            }
-            catch (Exception exception) when (exception is ArgumentNullException
-                                            || exception is InvalidOperationException
-                                            || exception is OperationCanceledException
-                                            || exception is HttpRequestException
-                                            || exception is TaskCanceledException)
-            {
-                return HttpRestClientResponse.Failure(exception);
-            }
-        }
-
-        /// <summary>
-        /// Handles the command as asynchronous operation.
-        /// </summary>
-        /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        public async Task<HttpRestClientResponse> HandleAsync(ICommand command, CancellationToken cancellationToken = default)
         {
             _ = HttpClient ?? throw new InvalidOperationException($"The HTTP client needs to be initialized.");
 

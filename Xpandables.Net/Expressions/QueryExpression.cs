@@ -22,7 +22,7 @@ using System.Linq.Expressions;
 namespace Xpandables.Net.Expressions
 {
     /// <summary>
-    /// 
+    /// The base class to define a class expression.
     /// </summary>
     /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
     /// <typeparam name="TResult">The type of the result of expression.</typeparam>
@@ -66,7 +66,7 @@ namespace Xpandables.Net.Expressions
         /// <returns><see cref="bool"/> value.</returns>
         public override bool Equals(object? obj)
         {
-            if (!(obj is QueryExpression<TSource, TResult> objVal)) return false;
+            if (obj is not QueryExpression<TSource, TResult> objVal) return false;
             if (ReferenceEquals(this, objVal)) return true;
 
             return ExpressionComparer.AreEqual(GetExpression(), objVal.GetExpression());

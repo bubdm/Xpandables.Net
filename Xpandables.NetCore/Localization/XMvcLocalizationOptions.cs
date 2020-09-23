@@ -25,16 +25,16 @@ namespace Xpandables.NetCore.Localization
     /// <summary>
     /// Provides with <see cref="MvcOptions"/> localization configuration.
     /// </summary>
-    public sealed class XMvcOptions : IConfigureOptions<MvcOptions>
+    public sealed class XMvcLocalizationOptions : IConfigureOptions<MvcOptions>
     {
         private readonly ILocalizationResourceEngine _localizationResourceEngine;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="XMvcOptions"/> with the localization engine.
+        /// Initializes a new instance of <see cref="XMvcLocalizationOptions"/> with the localization engine.
         /// </summary>
         /// <param name="localizationResourceEngine">The localization engine.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="localizationResourceEngine"/> is null.</exception>
-        public XMvcOptions(ILocalizationResourceEngine localizationResourceEngine)
+        public XMvcLocalizationOptions(ILocalizationResourceEngine localizationResourceEngine)
             => _localizationResourceEngine = localizationResourceEngine ?? throw new ArgumentNullException(nameof(localizationResourceEngine));
 
         /// <summary>

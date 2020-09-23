@@ -21,8 +21,8 @@ namespace Xpandables.Net.Validations
 {
     /// <summary>
     /// A marker interface that allows the command/query class to be decorated with the validation behavior according to the class type :
-    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="QueryValidatorDecorator{TQuery, TResult}"/> while
-    /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandValidatorDecorator{TCommand}"/>.
+    /// <see cref="IAsyncQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncQueryValidatorDecorator{TQuery, TResult}"/> while
+    /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandValidatorDecorator{TCommand}"/>.
     /// The default validation behavior uses the data annotations validator on validation attributes. You can implement the interface
     /// <see cref="IValidation{TArgument}"/> to customize a validation behavior.
     /// <para></para>

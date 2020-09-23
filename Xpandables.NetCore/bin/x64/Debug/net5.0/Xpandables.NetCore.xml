@@ -82,7 +82,7 @@
         </member>
         <member name="M:Xpandables.NetCore.Http.HttpFormFileEngine.IsValidFileContent(System.Object,System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.List{System.Byte[]}})">
             <summary>
-            Checks that the HTTP request file content matches its extension signature.
+            Checks that the HTTP request file content matches extension signatures provided.
             </summary>
             <param name="formFile">the sent file.</param>
             <param name="fileSignatures">The file signatures dictionary.</param>
@@ -125,7 +125,7 @@
         </member>
         <member name="M:Xpandables.NetCore.Http.HttpFormtFileExtensions.IsValidFileContent(Microsoft.AspNetCore.Http.IFormFile,System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.List{System.Byte[]}})">
             <summary>
-            Checks that the HTTP request file content matches its extension signature.
+            Checks that the HTTP request file content matches extension signatures provided.
             </summary>
             <param name="formFile">the sent file.</param>
             <param name="fileSignatures">The file signatures dictionary.</param>
@@ -215,19 +215,19 @@
             </summary>
             <param name="context">The context to act on.</param>
         </member>
-        <member name="T:Xpandables.NetCore.Localization.XMvcOptions">
+        <member name="T:Xpandables.NetCore.Localization.XMvcLocalizationOptions">
             <summary>
             Provides with <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/> localization configuration.
             </summary>
         </member>
-        <member name="M:Xpandables.NetCore.Localization.XMvcOptions.#ctor(Xpandables.NetCore.Localization.ILocalizationResourceEngine)">
+        <member name="M:Xpandables.NetCore.Localization.XMvcLocalizationOptions.#ctor(Xpandables.NetCore.Localization.ILocalizationResourceEngine)">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.NetCore.Localization.XMvcOptions"/> with the localization engine.
+            Initializes a new instance of <see cref="T:Xpandables.NetCore.Localization.XMvcLocalizationOptions"/> with the localization engine.
             </summary>
             <param name="localizationResourceEngine">The localization engine.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="localizationResourceEngine"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.NetCore.Localization.XMvcOptions.Configure(Microsoft.AspNetCore.Mvc.MvcOptions)">
+        <member name="M:Xpandables.NetCore.Localization.XMvcLocalizationOptions.Configure(Microsoft.AspNetCore.Mvc.MvcOptions)">
             <summary>
             Invoked to configure the <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/> instance.
             </summary>

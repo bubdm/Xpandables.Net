@@ -41,7 +41,7 @@ namespace Xpandables.Net.Transactions
         private readonly ITransactionScopeProvider _transactionScopeProvider;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="CommandTransactionDecorator{TCommand}"/>.
+        /// Initializes a new instance of <see cref="AsyncCommandTransactionDecorator{TCommand}"/>.
         /// </summary>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <param name="transactionScopeProvider">The transaction scope provider.</param>
