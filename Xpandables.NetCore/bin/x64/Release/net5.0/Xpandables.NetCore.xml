@@ -82,7 +82,7 @@
         </member>
         <member name="M:Xpandables.NetCore.Http.HttpFormFileEngine.IsValidFileContent(System.Object,System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.List{System.Byte[]}})">
             <summary>
-            Checks that the HTTP request file content matches its extension signature.
+            Checks that the HTTP request file content matches extension signatures provided.
             </summary>
             <param name="formFile">the sent file.</param>
             <param name="fileSignatures">The file signatures dictionary.</param>
@@ -125,7 +125,7 @@
         </member>
         <member name="M:Xpandables.NetCore.Http.HttpFormtFileExtensions.IsValidFileContent(Microsoft.AspNetCore.Http.IFormFile,System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.List{System.Byte[]}})">
             <summary>
-            Checks that the HTTP request file content matches its extension signature.
+            Checks that the HTTP request file content matches extension signatures provided.
             </summary>
             <param name="formFile">the sent file.</param>
             <param name="fileSignatures">The file signatures dictionary.</param>
@@ -215,19 +215,19 @@
             </summary>
             <param name="context">The context to act on.</param>
         </member>
-        <member name="T:Xpandables.NetCore.Localization.XMvcOptions">
+        <member name="T:Xpandables.NetCore.Localization.XMvcLocalizationOptions">
             <summary>
             Provides with <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/> localization configuration.
             </summary>
         </member>
-        <member name="M:Xpandables.NetCore.Localization.XMvcOptions.#ctor(Xpandables.NetCore.Localization.ILocalizationResourceEngine)">
+        <member name="M:Xpandables.NetCore.Localization.XMvcLocalizationOptions.#ctor(Xpandables.NetCore.Localization.ILocalizationResourceEngine)">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.NetCore.Localization.XMvcOptions"/> with the localization engine.
+            Initializes a new instance of <see cref="T:Xpandables.NetCore.Localization.XMvcLocalizationOptions"/> with the localization engine.
             </summary>
             <param name="localizationResourceEngine">The localization engine.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="localizationResourceEngine"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.NetCore.Localization.XMvcOptions.Configure(Microsoft.AspNetCore.Mvc.MvcOptions)">
+        <member name="M:Xpandables.NetCore.Localization.XMvcLocalizationOptions.Configure(Microsoft.AspNetCore.Mvc.MvcOptions)">
             <summary>
             Invoked to configure the <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/> instance.
             </summary>
@@ -10110,6 +10110,96 @@
             Bottom position
             </summary>
         </member>
+        <member name="T:Xpandables.NetCore.Semantic.Enumerations.Width">
+            <summary>
+            Semantic Width
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.None">
+            <summary>
+            None
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.One">
+            <summary>
+            One
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Two">
+            <summary>
+            Two
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Three">
+            <summary>
+            Three
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Four">
+            <summary>
+            Four
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Five">
+            <summary>
+            Five
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Six">
+            <summary>
+            Six
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Seven">
+            <summary>
+            Seven
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Eight">
+            <summary>
+            Eight
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Nine">
+            <summary>
+            Nine
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Ten">
+            <summary>
+            Ten
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Eleven">
+            <summary>
+            Eleven
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Twelve">
+            <summary>
+            Twelve
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Thirteen">
+            <summary>
+            Thirteen
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Fourteen">
+            <summary>
+            Fourteen
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Fifteen">
+            <summary>
+            Fifteen
+            </summary>
+        </member>
+        <member name="F:Xpandables.NetCore.Semantic.Enumerations.Width.Sixteen">
+            <summary>
+            Sixteen
+            </summary>
+        </member>
         <member name="T:Xpandables.NetCore.Startup.StartupExtensions">
             <summary>
             Provides with startup extension method.
@@ -10264,96 +10354,6 @@
             </summary>
             <param name="app">The current application builder to act on.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="app"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.AspNetCore.Semantic.Enumerations.Width">
-            <summary>
-            Semantic Width
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.None">
-            <summary>
-            None
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.One">
-            <summary>
-            One
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Two">
-            <summary>
-            Two
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Three">
-            <summary>
-            Three
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Four">
-            <summary>
-            Four
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Five">
-            <summary>
-            Five
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Six">
-            <summary>
-            Six
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Seven">
-            <summary>
-            Seven
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Eight">
-            <summary>
-            Eight
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Nine">
-            <summary>
-            Nine
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Ten">
-            <summary>
-            Ten
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Eleven">
-            <summary>
-            Eleven
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Twelve">
-            <summary>
-            Twelve
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Thirteen">
-            <summary>
-            Thirteen
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Fourteen">
-            <summary>
-            Fourteen
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Fifteen">
-            <summary>
-            Fifteen
-            </summary>
-        </member>
-        <member name="F:Xpandables.AspNetCore.Semantic.Enumerations.Width.Sixteen">
-            <summary>
-            Sixteen
-            </summary>
         </member>
     </members>
 </doc>

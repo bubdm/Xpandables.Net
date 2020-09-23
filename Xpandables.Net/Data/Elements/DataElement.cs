@@ -46,17 +46,17 @@ namespace Xpandables.Net.Data.Elements
         public Type Type { get; }
 
         /// <summary>
-        /// Determine whether the element is a value type|string or reference type.
+        /// Gets the value whether the element is a value type|string or reference type.
         /// </summary>
         public bool IsPrimitive { get; }
 
         /// <summary>
-        /// Determine whether the target element is nullable.
+        /// Gets the value whether the target element is nullable.
         /// </summary>
         public bool IsNullable { get; }
 
         /// <summary>
-        /// Determine whether the target element is a collection.
+        /// Gets the value whether the target element is a collection.
         /// </summary>
         public bool IsEnumerable { get; }
 

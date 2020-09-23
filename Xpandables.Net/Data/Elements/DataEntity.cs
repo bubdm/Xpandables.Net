@@ -70,13 +70,13 @@ namespace Xpandables.Net.Data.Elements
         public string? Identity { get; private set; }
 
         /// <summary>
-        /// Determines whether the current entity is a nested entity.
+        /// Gets the value whether the current entity is a nested entity.
         /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
         /// </summary>
         public bool IsNestedEntity => ParentEntity is { };
 
         /// <summary>
-        /// Determine whether or not the underlying object is already signed.
+        /// Gets the value whether or not the underlying object is already signed.
         /// </summary>
         public bool IsIdentified => !string.IsNullOrWhiteSpace(Identity);
 

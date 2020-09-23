@@ -85,7 +85,7 @@ namespace Xpandables.Net.Data.Connections
         public string? UserPassword { get; }
 
         /// <summary>
-        /// Determines whether or not to use integrated security.
+        /// Gets the value whether or not to use integrated security.
         /// If <see langword="false"/>, you should provide <see cref="UserId"/> and <see cref="UserPassword"/> information.
         /// </summary>
         public bool UseIntegratedSecurity { get; }

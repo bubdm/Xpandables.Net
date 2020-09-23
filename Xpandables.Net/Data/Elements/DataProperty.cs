@@ -88,7 +88,7 @@ namespace Xpandables.Net.Data.Elements
         public string DataFullName => $"{DataPrefix}{DataName}";
 
         /// <summary>
-        /// Determine whether the property is used for uniquely identify the data source.
+        /// Gets the value whether the property is used for uniquely identify the data source.
         /// </summary>
         public bool IsIdentity { get; private set; }
 

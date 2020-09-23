@@ -32,7 +32,7 @@ namespace Xpandables.Net.HttpRestClient
         /// Returns a success HTTP status response.
         /// </summary>
         /// <param name="statusCode">The status code of the response.</param>
-        public static HttpRestClientResponse Success(HttpStatusCode statusCode = HttpStatusCode.OK)
+        internal static HttpRestClientResponse Success(HttpStatusCode statusCode = HttpStatusCode.OK)
             => new HttpRestClientResponse(statusCode);
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="exception">The handled exception of the response.</param>
         /// <param name="statusCode">The status code of the response.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-        public static HttpRestClientResponse Failure(Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+        internal static HttpRestClientResponse Failure(Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new HttpRestClientResponse(exception, statusCode);
 
         /// <summary>
@@ -109,20 +109,20 @@ namespace Xpandables.Net.HttpRestClient
         /// Adds the reason phrase.
         /// </summary>
         /// <param name="reason">the reason phrase to be used.</param>
-        public HttpRestClientResponse AddReasonPhrase(string? reason) => this.Assign(h => h.ReasonPhrase = reason);
+        internal HttpRestClientResponse AddReasonPhrase(string? reason) => this.Assign(h => h.ReasonPhrase = reason);
 
         /// <summary>
         /// Adds the response headers.
         /// </summary>
         /// <param name="headers">the headers to be used.</param>
-        public HttpRestClientResponse AddHeaders(NameValueCollection headers)
+        internal HttpRestClientResponse AddHeaders(NameValueCollection headers)
             => this.Assign(h => h.Headers = headers ?? throw new ArgumentNullException(nameof(headers)));
 
         /// <summary>
         /// Adds the version.
         /// </summary>
         /// <param name="version">the version to be used.</param>
-        public HttpRestClientResponse AddVersion(Version version) => this.Assign(h => h.Version = version);
+        internal HttpRestClientResponse AddVersion(Version version) => this.Assign(h => h.Version = version);
     }
 
     /// <summary>
@@ -136,14 +136,14 @@ namespace Xpandables.Net.HttpRestClient
         /// </summary>
         /// <param name="result">The result instance.</param>
         /// <param name="statusCode">The status response code.</param>
-        public static HttpRestClientResponse<TResult> Success(TResult result, HttpStatusCode statusCode = HttpStatusCode.OK)
+        internal static HttpRestClientResponse<TResult> Success(TResult result, HttpStatusCode statusCode = HttpStatusCode.OK)
             => new HttpRestClientResponse<TResult>(result, statusCode);
 
         /// <summary>
         ///  Returns a success HTTP status response.
         /// </summary>
         /// <param name="statusCode">The status response code.</param>
-        public static new HttpRestClientResponse<TResult> Success(HttpStatusCode statusCode = HttpStatusCode.OK)
+        internal static new HttpRestClientResponse<TResult> Success(HttpStatusCode statusCode = HttpStatusCode.OK)
             => new HttpRestClientResponse<TResult>(statusCode);
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="exception">The handled exception of the response.</param>
         /// <param name="statusCode">The status code of the response.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-        public static new HttpRestClientResponse<TResult> Failure(
+        internal static new HttpRestClientResponse<TResult> Failure(
             Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new HttpRestClientResponse<TResult>(exception, statusCode);
 
@@ -162,7 +162,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="exception">The handled exception.</param>
         /// <param name="statusCode">The status response code.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-        public static HttpRestClientResponse<TResult> Failure(
+        internal static HttpRestClientResponse<TResult> Failure(
             HttpRestClientException exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new HttpRestClientResponse<TResult>(exception, statusCode);
 
@@ -209,20 +209,20 @@ namespace Xpandables.Net.HttpRestClient
         /// Adds the reason phrase.
         /// </summary>
         /// <param name="reason">the reason phrase to be used.</param>
-        public new HttpRestClientResponse<TResult> AddReasonPhrase(string? reason) => this.Assign(h => h.ReasonPhrase = reason);
+        internal new HttpRestClientResponse<TResult> AddReasonPhrase(string? reason) => this.Assign(h => h.ReasonPhrase = reason);
 
         /// <summary>
         /// Adds the response headers.
         /// </summary>
         /// <param name="headers">the headers to be used.</param>
-        public new HttpRestClientResponse<TResult> AddHeaders(NameValueCollection headers)
+        internal new HttpRestClientResponse<TResult> AddHeaders(NameValueCollection headers)
             => this.Assign(h => h.Headers = headers ?? throw new ArgumentNullException(nameof(headers)));
 
         /// <summary>
         /// Adds the version.
         /// </summary>
         /// <param name="version">the version to be used.</param>
-        public new HttpRestClientResponse<TResult> AddVersion(Version version) => this.Assign(h => h.Version = version);
+        internal new HttpRestClientResponse<TResult> AddVersion(Version version) => this.Assign(h => h.Version = version);
 
         private bool _isDisposed;
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
