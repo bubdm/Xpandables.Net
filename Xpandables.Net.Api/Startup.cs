@@ -94,7 +94,7 @@ namespace Xpandables.Net.Api
 
             services.AddScoped<IAsyncQueryHandler<RequestAuthenToken, AuthenToken>, RequestAuthenTokenHandler>();
             services.AddScoped<IAsyncCommandHandler<EditUser>, EditUserHandler>();
-            services.AddScoped<IAsyncQueryHandler<EventLogList, IAsyncEnumerable<Log>>, EventLogListHandler>();
+            services.AddScoped<IAsyncQueryHandler<EventLogList, Log>, EventLogListHandler>();
 
             services.AddXIdentityDecorator();
             services.AddXPersistenceDecorator();

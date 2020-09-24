@@ -16,6 +16,8 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -55,20 +57,21 @@ namespace Xpandables.Net.Identities
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns an optional type-specific result.
+        /// Asynchronously handles the specified query and returns an asynchronous result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
-        public async Task<Optional<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
+        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+        public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
             query.SetIdentity(_identityDataProvider.GetIdentity());
-            return await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
+            await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false))
+                yield return result;
         }
     }
 }

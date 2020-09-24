@@ -16,10 +16,9 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-
-using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.HttpRestClient
 {
@@ -33,7 +32,7 @@ namespace Xpandables.Net.HttpRestClient
         /// </summary>
         /// <param name="request">The request to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse<Optional<GeoLocationResponse>>> GetGeoLocationAsync(GeoLocationRequest request);
+        Task<HttpRestClientResponse<GeoLocationResponse>> GetGeoLocationAsync(GeoLocationRequest request);
     }
 
     /// <summary>
@@ -56,10 +55,11 @@ namespace Xpandables.Net.HttpRestClient
         /// </summary>
         /// <param name="request">The request to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        public async Task<HttpRestClientResponse<Optional<GeoLocationResponse>>> GetGeoLocationAsync(GeoLocationRequest request)
+        public async Task<HttpRestClientResponse<GeoLocationResponse>> GetGeoLocationAsync(GeoLocationRequest request)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
-            return await _httpRestClientHandler.HandleAsync(request).ConfigureAwait(false);
+            using var respone = await _httpRestClientHandler.HandleAsync(request).ConfigureAwait(false);
+            return HttpRestClientResponse<GeoLocationResponse>.Convert(respone, await respone.Result.FirstOrDefaultAsync().ConfigureAwait(false));
         }
 
         private bool _isDisposed;

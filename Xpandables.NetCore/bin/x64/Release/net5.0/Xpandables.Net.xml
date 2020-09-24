@@ -147,6 +147,18 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="asyncEnumerable"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="onException"/> is null.</exception>
         </member>
+        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.AsyncExecuteSafe``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Func{System.Runtime.ExceptionServices.ExceptionDispatchInfo,System.Threading.Tasks.Task},System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously enumerates the values in a safety mode. Any exception is handled by the <paramref name="onException"/> method.
+            </summary>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="asyncEnumerable">The asynchronous collection to act on.</param>
+            <param name="onException">The delegate that get called when exception.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>An object that contains an enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable in safety mode.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="asyncEnumerable"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="onException"/> is null.</exception>
+        </member>
         <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.AsyncExecuteSafe``1(System.Threading.Tasks.Task{``0},System.Action{System.Runtime.ExceptionServices.ExceptionDispatchInfo})">
             <summary>
             Asynchronously executes the task is a safety mode. Any exception is handled by the <paramref name="onException"/> method.
@@ -329,14 +341,14 @@
         </member>
         <member name="M:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handles the specified query and returns an optional type-specific result.
+            Asynchronously handles the specified query and returns an asynchronous result type.
             </summary>
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Correlation.CorrelationCollection`2">
             <summary>
@@ -2889,7 +2901,7 @@
         </member>
         <member name="M:Xpandables.Net.Dispatchers.IDispatcher.InvokeAsync``1(Xpandables.Net.Queries.IAsyncQuery{``0},System.Threading.CancellationToken)">
             <summary>
-            Asynchronously invokes the query handler (<see cref="T:Xpandables.Net.Queries.IAsyncQueryHandler`2"/> implementation) on the specified query and returns an optional of <typeparamref name="TResult"/> type.
+            Asynchronously invokes the query handler (<see cref="T:Xpandables.Net.Queries.IAsyncQueryHandler`2"/> implementation) on the specified query and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
             </summary>
             <typeparam name="TResult">Type of the result.</typeparam>
             <param name="query">The query to act on.</param>
@@ -2898,11 +2910,11 @@
             <exception cref="T:System.NotImplementedException">The corresponding handler is missing.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="M:Xpandables.Net.Dispatchers.IDispatcher.InvokeQueryAsync``2(``0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously invokes the query handler (<see cref="T:Xpandables.Net.Queries.IAsyncQueryHandler`2"/> implementation) on the specified query and returns an optional of <typeparamref name="TResult"/> type.
+            Asynchronously invokes the query handler (<see cref="T:Xpandables.Net.Queries.IAsyncQueryHandler`2"/> implementation) on the specified query and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
             </summary>
             <typeparam name="TQuery">Type of the query.</typeparam>
             <typeparam name="TResult">Type of the result.</typeparam>
@@ -2912,7 +2924,7 @@
             <exception cref="T:System.NotImplementedException">The corresponding handler is missing.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="M:Xpandables.Net.Dispatchers.IDispatcher.InvokeAsync``1(``0,System.Threading.CancellationToken)">
             <summary>
@@ -4990,6 +5002,12 @@
             <param name="statusCode">The status code of the response.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="exception"/> is null.</exception>
         </member>
+        <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientResponse.Failure(System.Net.HttpStatusCode)">
+            <summary>
+            Returns a failure HTTP status response.
+            </summary>
+            <param name="statusCode">The status code of the response.</param>        
+        </member>
         <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientResponse.#ctor(System.Net.HttpStatusCode)">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientResponse"/> class with the status code.
@@ -5067,6 +5085,15 @@
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
         </member>
+        <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1.Convert(Xpandables.Net.HttpRestClient.HttpRestClientResponse,Xpandables.Net.Optionals.Optional{`0})">
+            <summary>
+            Converts the source <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientResponse"/> to the generic of <typeparamref name="TResult"/> type.
+            </summary>
+            <param name="source">The response to act on.</param>
+            <param name="result">The result content if exist.</param>
+            <returns>A new instance of <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        </member>
         <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1.Success(`0,System.Net.HttpStatusCode)">
             <summary>
              Returns a success HTTP status response.
@@ -5087,6 +5114,12 @@
             <param name="exception">The handled exception of the response.</param>
             <param name="statusCode">The status code of the response.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="exception"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1.Failure(System.Net.HttpStatusCode)">
+            <summary>
+            Returns a failure HTTP status response.
+            </summary>
+            <param name="statusCode">The status code of the response.</param>
         </member>
         <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1.Failure(Xpandables.Net.HttpRestClient.HttpRestClientException,System.Net.HttpStatusCode)">
             <summary>
@@ -5266,7 +5299,7 @@
             Contains the <see cref="T:System.Net.Http.HttpContent"/> instance for the current handler.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.HttpRestClient.IHttpRestClientHandler.HandleAsync``1(Xpandables.Net.Queries.IAsyncQuery{System.Collections.Generic.IAsyncEnumerable{``0}},System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.HttpRestClient.IHttpRestClientHandler.HandleAsync``1(Xpandables.Net.Queries.IAsyncQuery{``0},System.Threading.CancellationToken)">
             <summary>
             Handles the query as asynchronous operation.
             Make use of <see langword="using"/> key work when call.
@@ -5277,10 +5310,12 @@
             <returns>Returns a task <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1"/>.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.HttpRestClient.IHttpRestClientHandler.HandleAsync``1(Xpandables.Net.Queries.IAsyncQuery{``0},System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.HttpRestClient.IHttpRestClientHandler.HandleAsync``2(``0,System.Threading.CancellationToken)">
             <summary>
             Handles the query as asynchronous operation.
+            Make use of <see langword="using"/> key work when call.
             </summary>
+            <typeparam name="TQuery">Type of the query.</typeparam>
             <typeparam name="TResult">The type of the result.</typeparam>
             <param name="query">The query to act with. The query must be decorated with the <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientAttribute"/> or implements the <see cref="T:Xpandables.Net.HttpRestClient.IHttpRestClientAttributeProvider"/> interface.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -5723,14 +5758,14 @@
         </member>
         <member name="M:Xpandables.Net.Identities.AsyncQueryIdentityDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handles the specified query and returns an optional type-specific result.
+            Asynchronously handles the specified query and returns an asynchronous result type.
             </summary>
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Identities.IdentityData">
             <summary>
@@ -10476,7 +10511,7 @@
             <typeparam name="TQuery">Type of argument to act on.</typeparam>
             <typeparam name="TResult">Type of result.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Queries.AsyncQueryHandlerBuilder`2.#ctor(System.Func{`0,System.Threading.CancellationToken,System.Threading.Tasks.Task{Xpandables.Net.Optionals.Optional{`1}}})">
+        <member name="M:Xpandables.Net.Queries.AsyncQueryHandlerBuilder`2.#ctor(System.Func{`0,System.Threading.CancellationToken,System.Collections.Generic.IAsyncEnumerable{`1}})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Queries.AsyncQueryHandlerBuilder`2"/> with the delegate to be used
             as <see cref="M:Xpandables.Net.Queries.IAsyncQueryHandler`2.HandleAsync(`0,System.Threading.CancellationToken)"/> implementation.
@@ -10489,14 +10524,14 @@
         </member>
         <member name="M:Xpandables.Net.Queries.AsyncQueryHandlerBuilder`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handles the specified query and returns an optional type-specific result.
+            Asynchronously handles the specified query and returns an asynchronous result type.
             </summary>
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Queries.AsyncQueryHandlerWrapper`2">
             <summary>
@@ -10514,14 +10549,14 @@
         </member>
         <member name="M:Xpandables.Net.Queries.AsyncQueryHandlerWrapper`2.HandleAsync(Xpandables.Net.Queries.IAsyncQuery{`1},System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handles the specified query and returns an optional type-specific result.
+            Asynchronously handles the specified query and returns an asynchronous result type.
             </summary>
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Queries.IAsyncQuery`1">
             <summary>
@@ -10535,7 +10570,7 @@
         <member name="T:Xpandables.Net.Queries.IAsyncQueryHandler`2">
             <summary>
             Defines a generic method that a class implements to asynchronously handle a type-specific query and
-            returns an optional type-specific result.
+            returns an asynchronous enumerable type-specific result.
             The implementation must be thread-safe when working in a multi-threaded environment.
             This interface inherits from <see cref="T:Xpandables.Net.ICanHandle`1"/> that determines whether or not the query can be handled. Its default behavior returns <see langword="true"/>.
             </summary>
@@ -10544,14 +10579,14 @@
         </member>
         <member name="M:Xpandables.Net.Queries.IAsyncQueryHandler`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handles the specified query and returns an optional type-specific result.
+            Asynchronously handles the specified query and returns an asynchronous result type.
             </summary>
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Queries.IAsyncQueryHandlerWrapper`1">
             <summary>
@@ -10561,14 +10596,14 @@
         </member>
         <member name="M:Xpandables.Net.Queries.IAsyncQueryHandlerWrapper`1.HandleAsync(Xpandables.Net.Queries.IAsyncQuery{`0},System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handles the specified query and returns an optional type-specific result.
+            Asynchronously handles the specified query and returns an asynchronous result type.
             </summary>
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Serilog.AsyncCommandLoggingDecorator`1">
             <summary>
@@ -10615,14 +10650,14 @@
         </member>
         <member name="M:Xpandables.Net.Serilog.AsyncQueryLoggingDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handles the specified query and returns an optional type-specific result.
+            Asynchronously handles the specified query and returns an asynchronous result type.
             </summary>
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Serilog.DataLogContextSettings">
             <summary>
@@ -12088,14 +12123,14 @@
         </member>
         <member name="M:Xpandables.Net.Validations.AsyncQueryValidatorDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handles the specified query and returns an optional type-specific result.
+            Asynchronously handles the specified query and returns an asynchronous result type.
             </summary>
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Validations.CompositeValidation`1">
             <summary>
@@ -12607,14 +12642,14 @@
         </member>
         <member name="M:Xpandables.Net.Visitors.AsyncQueryVisitorDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handles the specified query and returns an optional type-specific result.
+            Asynchronously handles the specified query and returns an asynchronous result type.
             </summary>
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
         <member name="T:Xpandables.Net.Visitors.CompositeVisitorRule`1">
             <summary>

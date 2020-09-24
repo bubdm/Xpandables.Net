@@ -47,7 +47,7 @@ namespace Xpandables.Net.Api.Contracts
     }
 
     [HttpRestClient(Path = "api/user", Method = "Get", IsSecured = true, IsNullable = true)]
-    public sealed class EventLogList : IdentityDataExpression<TokenClaims, User>, IAsyncQuery<IAsyncEnumerable<Log>>, IIdentityDecorator
+    public sealed class EventLogList : IdentityDataExpression<TokenClaims, User>, IAsyncQuery<Log>, IIdentityDecorator
     {
         protected override Expression<Func<User, bool>> BuildExpression() => user => user.Phone.Value == Identity.Phone.Value && user.IsActive && !user.IsDeleted;
     }

@@ -18,8 +18,11 @@
 using System;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Optionals;
 
 namespace Xpandables.Net.HttpRestClient
 {
@@ -43,6 +46,13 @@ namespace Xpandables.Net.HttpRestClient
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
         internal static HttpRestClientResponse Failure(Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new HttpRestClientResponse(exception, statusCode);
+
+        /// <summary>
+        /// Returns a failure HTTP status response.
+        /// </summary>
+        /// <param name="statusCode">The status code of the response.</param>        
+        internal static HttpRestClientResponse Failure(HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+            => new HttpRestClientResponse(statusCode);
 
         /// <summary>
         /// Initializes a new instance of <see cref="HttpRestClientResponse"/> class with the status code.
@@ -132,6 +142,33 @@ namespace Xpandables.Net.HttpRestClient
     public class HttpRestClientResponse<TResult> : HttpRestClientResponse
     {
         /// <summary>
+        /// Converts the source <see cref="HttpRestClientResponse"/> to the generic of <typeparamref name="TResult"/> type.
+        /// </summary>
+        /// <param name="source">The response to act on.</param>
+        /// <param name="result">The result content if exist.</param>
+        /// <returns>A new instance of <see cref="HttpRestClientResponse{TResult}"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public static HttpRestClientResponse<TResult> Convert(HttpRestClientResponse source, Optional<TResult> result)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+
+            var response = (source.Exception, result.FirstOrDefault()) switch
+            {
+                (null, TResult value) => new HttpRestClientResponse<TResult>(value, source.StatusCode),
+                (Exception exception, null) => new HttpRestClientResponse<TResult>(exception, source.StatusCode),
+                (Exception exception, TResult) => new HttpRestClientResponse<TResult>(exception, source.StatusCode),
+                (_, _) => new HttpRestClientResponse<TResult>(source.StatusCode),
+            };
+
+            if (source.Headers is not null) response.AddHeaders(source.Headers);
+            if (source.ReasonPhrase is not null) response.AddReasonPhrase(source.ReasonPhrase);
+            if (source.Version is not null) response.AddVersion(source.Version);
+
+            return response;
+
+        }
+
+        /// <summary>
         ///  Returns a success HTTP status response.
         /// </summary>
         /// <param name="result">The result instance.</param>
@@ -155,6 +192,13 @@ namespace Xpandables.Net.HttpRestClient
         internal static new HttpRestClientResponse<TResult> Failure(
             Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new HttpRestClientResponse<TResult>(exception, statusCode);
+
+        /// <summary>
+        /// Returns a failure HTTP status response.
+        /// </summary>
+        /// <param name="statusCode">The status code of the response.</param>
+        internal static new HttpRestClientResponse<TResult> Failure(HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+            => new HttpRestClientResponse<TResult>(statusCode);
 
         /// <summary>
         ///  Returns a failure HTTP status response.

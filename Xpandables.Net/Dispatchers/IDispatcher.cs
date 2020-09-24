@@ -16,12 +16,13 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Commands;
-using Xpandables.Net.Optionals;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Types;
 
@@ -42,7 +43,7 @@ namespace Xpandables.Net.Dispatchers
         IDispatcherHandlerProvider DispatcherHandlerProvider { get; }
 
         /// <summary>
-        /// Asynchronously invokes the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query and returns an optional of <typeparamref name="TResult"/> type.
+        /// Asynchronously invokes the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TResult">Type of the result.</typeparam>
         /// <param name="query">The query to act on.</param>
@@ -51,8 +52,8 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
-        public async Task<Optional<TResult>> InvokeAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
+        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+        public async IAsyncEnumerable<TResult> InvokeAsync<TResult>(IAsyncQuery<TResult> query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
@@ -63,11 +64,12 @@ namespace Xpandables.Net.Dispatchers
                 throw new NotImplementedException(
                     $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerBuilder<,>).Name} is registered.");
 
-            return await handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler).ConfigureAwait(false);
+            await foreach (var result in handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler, cancellationToken).ConfigureAwait(false))
+                yield return result;
         }
 
         /// <summary>
-        /// Asynchronously invokes the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query and returns an optional of <typeparamref name="TResult"/> type.
+        /// Asynchronously invokes the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TQuery">Type of the query.</typeparam>
         /// <typeparam name="TResult">Type of the result.</typeparam>
@@ -77,8 +79,8 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
-        public async Task<Optional<TResult>> InvokeQueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+        public async IAsyncEnumerable<TResult> InvokeQueryAsync<TQuery, TResult>(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
             where TQuery : class, IAsyncQuery<TResult>
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
@@ -86,7 +88,8 @@ namespace Xpandables.Net.Dispatchers
             var handler = DispatcherHandlerProvider.GetHandler<IAsyncQueryHandler<TQuery, TResult>>()
                 ?? throw new NotImplementedException($"The matching query handler for {typeof(TQuery).Name} is missing.");
 
-            return await handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler).ConfigureAwait(false);
+            await foreach (var result in handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler, cancellationToken).ConfigureAwait(false))
+                yield return result;
         }
 
         /// <summary>

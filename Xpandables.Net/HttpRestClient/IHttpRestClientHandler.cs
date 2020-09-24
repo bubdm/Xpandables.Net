@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 using Xpandables.Net.Commands;
-using Xpandables.Net.Optionals;
 using Xpandables.Net.Queries;
 
 using static Xpandables.Net.HttpRestClient.HttpRestClientExtensions;
@@ -60,7 +59,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IAsyncQuery<IAsyncEnumerable<TResult>> query, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = HttpClient ?? throw new InvalidOperationException($"The HTTP client needs to be initialized.");
 
@@ -90,41 +89,17 @@ namespace Xpandables.Net.HttpRestClient
 
         /// <summary>
         /// Handles the query as asynchronous operation.
+        /// Make use of <see langword="using"/> key work when call.
         /// </summary>
+        /// <typeparam name="TQuery">Type of the query.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        public async Task<HttpRestClientResponse<Optional<TResult>>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
-        {
-            _ = HttpClient ?? throw new InvalidOperationException($"The HTTP client needs to be initialized.");
-
-            try
-            {
-                using var request = await GetHttpRequestMessageAsync(query, cancellationToken).ConfigureAwait(false);
-                using var response = await HttpClient.SendAsync(
-                    request,
-                    HttpCompletionOption.ResponseHeadersRead,
-                    cancellationToken)
-                    .ConfigureAwait(false);
-
-                if (response.IsSuccessStatusCode)
-                    return await GetResponseAsync<Optional<TResult>, TResult>(response, stream => stream.DeserializeJsonFromStream<TResult>()).ConfigureAwait(false);
-
-                return (HttpRestClientResponse<Optional<TResult>>)await GetBadResponseAsync(
-                    HttpRestClientResponse<Optional<TResult>>.Failure, response)
-                    .ConfigureAwait(false);
-            }
-            catch (Exception exception) when (exception is ArgumentNullException
-                                            || exception is InvalidOperationException
-                                            || exception is OperationCanceledException
-                                            || exception is HttpRequestException
-                                            || exception is TaskCanceledException)
-            {
-                return HttpRestClientResponse<Optional<TResult>>.Failure(exception);
-            }
-        }
+        public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+            where TQuery : class, IAsyncQuery<TResult>
+            => await HandleAsync(query, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Handles the command as asynchronous operation.
