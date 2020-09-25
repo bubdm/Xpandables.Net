@@ -46,10 +46,12 @@ namespace Xpandables.Net.HttpRestClient
         /// <returns>The combined result.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="path"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="queryString"/> is null.</exception>
-        public static string AddQueryString(this string path, IDictionary<string, string> queryString)
+        public static string AddQueryString(this string path, IDictionary<string, string?>? queryString)
         {
             _ = path ?? throw new ArgumentNullException(nameof(path));
-            _ = queryString ?? throw new ArgumentNullException(nameof(queryString));
+
+            if (queryString is null)
+                return path;
 
             var anchorIndex = path.IndexOf('#', StringComparison.InvariantCulture);
             var uriToBeAppended = path;
@@ -72,7 +74,7 @@ namespace Xpandables.Net.HttpRestClient
                 sb.Append(hasQuery ? '&' : '?');
                 sb.Append(UrlEncoder.Default.Encode(parameter.Key));
                 sb.Append('=');
-                sb.Append(UrlEncoder.Default.Encode(parameter.Value));
+                sb.Append(parameter.Value is null ? null : UrlEncoder.Default.Encode(parameter.Value));
                 hasQuery = true;
             }
 
@@ -97,8 +99,12 @@ namespace Xpandables.Net.HttpRestClient
 
             attribute.Path ??= "/";
             Uri uri;
-            if (source is IQueryStringRequest queryStringRequest)
+
+            if (attribute.In == ParameterLocation.Path || attribute.In == ParameterLocation.Query)
             {
+                ValidateImplementation<IQueryStringRequest>(source, false);
+                var queryStringRequest = (source as IQueryStringRequest)!;
+
                 var queryString = queryStringRequest.GetQueryString();
                 var queryStringUri = attribute.Path.AddQueryString(queryString);
                 uri = new Uri(queryStringUri, UriKind.Relative);
@@ -152,13 +158,21 @@ namespace Xpandables.Net.HttpRestClient
                         break;
                     case BodyFormat.String:
                         ValidateImplementation<IStringRequest>(source, true);
-                        var content = new StringContent(JsonConvert.SerializeObject(source), Encoding.UTF8, attribute.ContentType);
+                        var content = new StringContent(JsonConvert.SerializeObject((source as IStringRequest)?.GetStringContent() ?? source), Encoding.UTF8, attribute.ContentType);
                         if (attribute.In == ParameterLocation.Cookie)
-                            httpRequestMessage.Options.TryAdd(attribute.HeaderCookieName, JsonConvert.SerializeObject(source));
+                        {
+                            ValidateImplementation<ICookieRequest>(source, false);
+                            httpRequestMessage.Options.TryAdd(attribute.HeaderCookieName, (source as ICookieRequest)!.GetCookieContent());
+                        }
                         else if (attribute.In == ParameterLocation.Header)
-                            httpRequestMessage.Headers.Add(attribute.HeaderCookieName, JsonConvert.SerializeObject(source));
+                        {
+                            ValidateImplementation<IHeaderRequest>(source, false);
+                            httpRequestMessage.Headers.Add(attribute.HeaderCookieName, (source as IHeaderRequest)!.GetHeaderContent());
+                        }
                         else
+                        {
                             httpRequestMessage.Content = content;
+                        }
                         break;
                 }
 

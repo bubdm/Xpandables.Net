@@ -17,40 +17,48 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Models;
 using Xpandables.Net.Api.Models.Domains;
 using Xpandables.Net.HttpRestClient;
 using Xpandables.Net.Identities;
 using Xpandables.Net.Queries;
+using Xpandables.Net.Validations;
 
 namespace Xpandables.Net.Api.Contracts
 {
-    public sealed class Log
+    public sealed class UserItem
     {
-        public Log(string name, DateTime occuredOn, string description)
+        public UserItem(string id, string phone, string email)
         {
-            Name = name;
-            OccuredOn = occuredOn;
-            Description = description;
+            Id = id;
+            Phone = phone;
+            Email = email;
         }
 
-        public string Name { get; set; } = null!;
-        public DateTime OccuredOn { get; set; }
-        public string Description { get; set; } = null!;
-
-        public override string ToString()
-        {
-            return $"{Name} - {OccuredOn} - {Description}";
-        }
+        public string Id { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
     }
 
-    [HttpRestClient(Path = "api/user/getusers", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
-    public sealed class EventLogList : IdentityDataExpression<TokenClaims, User>, IAsyncQuery<Log>, IIdentityDecorator, IQueryStringRequest
+    [HttpRestClient(Path = "api/user/getuser", IsSecured = true, IsNullable = true, Method = "Get", In = ParameterLocation.Query)]
+    public sealed class GetUser : IdentityDataExpression<TokenClaims, User>, IAsyncQuery<UserItem>, IValidationDecorator, IIdentityDecorator, IQueryStringRequest
     {
-        public IDictionary<string, string?>? GetQueryString() => default;
+        public GetUser(string? id) => Id = id;
 
-        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Phone.Value == Identity.Phone.Value && user.IsActive && !user.IsDeleted;
+        public GetUser() { }
+
+        protected override Expression<Func<User, bool>> BuildExpression()
+        {
+            Id ??= Identity.Id;
+            return user => user.Id == Id && user.IsActive && !user.IsDeleted;
+        }
+
+        public IDictionary<string, string?> GetQueryString() => new Dictionary<string, string?> { { nameof(Id), Id } };
+
+        public string? Id { get; set; }
     }
 }

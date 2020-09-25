@@ -113,22 +113,22 @@ namespace Xpandables.Net.HttpRestClient
     public enum ParameterLocation
     {
         /// <summary>
-        /// Parameters that are appended to the URL.
+        /// Parameters that are appended to the URL. You must implement <see cref="IQueryStringRequest"/> to provide with content.
         /// </summary>
         Query,
 
         /// <summary>
-        /// Custom headers that are expected as part of the request.
+        /// Custom headers that are expected as part of the request. You must implement <see cref="IHeaderRequest"/> to provide with content.
         /// </summary>
         Header,
 
         /// <summary>
-        /// Used together with Path Templating, where the parameter value is actually part of the operation's URL
+        /// Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="IQueryStringRequest"/> to provide with content
         /// </summary>
         Path,
 
         /// <summary>
-        /// Used to pass a specific cookie value to the API.
+        /// Used to pass a specific cookie value to the API. You must <see cref="ICookieRequest"/> to provide with content.
         /// </summary>
         Cookie,
 

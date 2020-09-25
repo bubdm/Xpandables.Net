@@ -58,6 +58,28 @@ namespace Xpandables.Net.HttpRestClient
     }
 
     /// <summary>
+    /// Provides with a method to retrieve the request content for <see cref="ParameterLocation.Cookie"/>.
+    /// </summary>
+    public interface ICookieRequest
+    {
+        /// <summary>
+        /// Returns the cookie content.
+        /// </summary>
+        object? GetCookieContent();
+    }
+
+    /// <summary>
+    /// Provides with a method to retrieve the request content for <see cref="ParameterLocation.Header"/>.
+    /// </summary>
+    public interface IHeaderRequest
+    {
+        /// <summary>
+        /// Returns the header content.
+        /// </summary>
+        string? GetHeaderContent();
+    }
+
+    /// <summary>
     /// Provides with a method to retrieve the request content for <see cref="BodyFormat.FormUrlEncoded"/> type.
     /// </summary>
     public interface IFormUrlEncodedRequest
@@ -69,7 +91,7 @@ namespace Xpandables.Net.HttpRestClient
     }
 
     /// <summary>
-    /// Provides with a method to retrieve the query string content for query string Uri.
+    /// Provides with a method to retrieve the query string content for query string Uri when using <see cref="ParameterLocation.Query"/> or <see cref="ParameterLocation.Path"/>.
     /// This can be combined with other request interface.
     /// </summary>
     public interface IQueryStringRequest
@@ -77,6 +99,6 @@ namespace Xpandables.Net.HttpRestClient
         /// <summary>
         /// Returns the keys and values for the Uri.
         /// </summary>
-        IDictionary<string, string> GetQueryString();
+        IDictionary<string, string?>? GetQueryString();
     }
 }

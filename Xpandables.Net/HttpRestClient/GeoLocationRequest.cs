@@ -95,15 +95,15 @@ namespace Xpandables.Net.HttpRestClient
         /// <summary>
         /// Returns the keys and values for the Uri.
         /// </summary>
-        public IDictionary<string, string> GetQueryString()
-            => new Dictionary<string, string>(
+        public IDictionary<string, string?> GetQueryString()
+            => new Dictionary<string, string?>(
                 new[]
                 {
-                    new KeyValuePair<string, string>("access_key", AccessKey),
-                    new KeyValuePair<string, string>("output", Output),
-                    new KeyValuePair<string, string>("language", Language),
-                    new KeyValuePair<string, string>("hostname", EnableHostName.ToString(CultureInfo.InvariantCulture)),
-                    new KeyValuePair<string, string>("security", EnableSecurity.ToString(CultureInfo.InvariantCulture))
+                    new KeyValuePair<string, string?>("access_key", AccessKey),
+                    new KeyValuePair<string, string?>("output", Output),
+                    new KeyValuePair<string, string?>("language", Language),
+                    new KeyValuePair<string, string?>("hostname", EnableHostName.ToString(CultureInfo.InvariantCulture)),
+                    new KeyValuePair<string, string?>("security", EnableSecurity.ToString(CultureInfo.InvariantCulture))
                 });
     }
 

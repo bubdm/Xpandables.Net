@@ -68,6 +68,13 @@ namespace Xpandables.Net.Api
             services.AddSingleton<IConfigureOptions<MvcNewtonsoftJsonOptions>, ApiNewtonsoftJsonOptions>();
             services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, ApiJwtBearerOptions>();
 
+            services.AddRouting(options =>
+            {
+                options.ConstraintMap.Add("string", typeof(StringConstraintMap));
+                options.LowercaseUrls = true;
+                options.LowercaseQueryStrings = true;
+            });
+
             services.AddMemoryCache();
 
             services
@@ -95,6 +102,7 @@ namespace Xpandables.Net.Api
             services.AddScoped<IAsyncQueryHandler<RequestAuthenToken, AuthenToken>, RequestAuthenTokenHandler>();
             services.AddScoped<IAsyncCommandHandler<EditUser>, EditUserHandler>();
             services.AddScoped<IAsyncQueryHandler<EventLogList, Log>, EventLogListHandler>();
+            services.AddScoped<IAsyncQueryHandler<GetUser, UserItem>, GetUserHandler>();
 
             services.AddXIdentityDecorator();
             services.AddXPersistenceDecorator();

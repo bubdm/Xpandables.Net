@@ -4674,22 +4674,22 @@
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Query">
             <summary>
-            Parameters that are appended to the URL.
+            Parameters that are appended to the URL. You must implement <see cref="T:Xpandables.Net.HttpRestClient.IQueryStringRequest"/> to provide with content.
             </summary>
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Header">
             <summary>
-            Custom headers that are expected as part of the request.
+            Custom headers that are expected as part of the request. You must implement <see cref="T:Xpandables.Net.HttpRestClient.IHeaderRequest"/> to provide with content.
             </summary>
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Path">
             <summary>
-            Used together with Path Templating, where the parameter value is actually part of the operation's URL
+            Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="T:Xpandables.Net.HttpRestClient.IQueryStringRequest"/> to provide with content
             </summary>
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Cookie">
             <summary>
-            Used to pass a specific cookie value to the API.
+            Used to pass a specific cookie value to the API. You must <see cref="T:Xpandables.Net.HttpRestClient.ICookieRequest"/> to provide with content.
             </summary>
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Body">
@@ -5414,6 +5414,26 @@
             Returns the body content.
             </summary>
         </member>
+        <member name="T:Xpandables.Net.HttpRestClient.ICookieRequest">
+            <summary>
+            Provides with a method to retrieve the request content for <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Cookie"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.HttpRestClient.ICookieRequest.GetCookieContent">
+            <summary>
+            Returns the cookie content.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.HttpRestClient.IHeaderRequest">
+            <summary>
+            Provides with a method to retrieve the request content for <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Header"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.HttpRestClient.IHeaderRequest.GetHeaderContent">
+            <summary>
+            Returns the header content.
+            </summary>
+        </member>
         <member name="T:Xpandables.Net.HttpRestClient.IFormUrlEncodedRequest">
             <summary>
             Provides with a method to retrieve the request content for <see cref="F:Xpandables.Net.HttpRestClient.BodyFormat.FormUrlEncoded"/> type.
@@ -5426,7 +5446,7 @@
         </member>
         <member name="T:Xpandables.Net.HttpRestClient.IQueryStringRequest">
             <summary>
-            Provides with a method to retrieve the query string content for query string Uri.
+            Provides with a method to retrieve the query string content for query string Uri when using <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Query"/> or <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Path"/>.
             This can be combined with other request interface.
             </summary>
         </member>
