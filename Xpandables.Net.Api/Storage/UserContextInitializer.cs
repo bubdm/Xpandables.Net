@@ -20,27 +20,28 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Api.Models.Domains;
 using Xpandables.Net.Api.Storage.Services;
 using Xpandables.Net.EntityFramework;
 using Xpandables.Net.Strings;
 
 namespace Xpandables.Net.Api.Storage
 {
-    public sealed class UserContextSeeder : IDataContextInitializer<UserContext>
+    public sealed class UserContextInitializer : IDataContextInitializer
     {
         private readonly IStringCryptography _stringCryptography;
 
-        public UserContextSeeder(IStringCryptography stringCryptography) => _stringCryptography = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
+        public UserContextInitializer(IStringCryptography stringCryptography) => _stringCryptography = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
 
-        public async Task SeedAsync(UserContext dataContext, CancellationToken cancellationToken = default)
+        public async Task InitializeAsync(IDataContext dataContext, CancellationToken cancellationToken = default)
         {
-            if (dataContext.Users.Any())
+            if (dataContext.SetOf<User>().Any())
                 return;
 
             var user = await dataContext.CreateNewUser("+33123456789", "motdepasse", "email@email.com", _stringCryptography);
 
-            await dataContext.AddAsync(user, cancellationToken).ConfigureAwait(false);
-            await dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await dataContext.AddEntityAsync(user, cancellationToken).ConfigureAwait(false);
+            await dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
 
         }
     }

@@ -29,12 +29,10 @@ namespace Xpandables.Net.EntityFramework
         /// <summary>
         /// Enables seeder for the data context that is decorated with <see cref="IInitializerDecorator"/>.
         /// </summary>
-        /// <typeparam name="TDataContextSeeder">The type that implements <see cref="IDataContextInitializer{TDataContext}"/>.</typeparam>
-        /// <typeparam name="TDataContext">The type of data context.</typeparam>
-        public DataContextOptions UseSeederDecorator<TDataContextSeeder, TDataContext>()
-            where TDataContextSeeder : class, IDataContextInitializer<TDataContext>
-            where TDataContext : class, IDataContext, IInitializerDecorator
-            => this.Assign(cq => cq.IsSeederEnabled = (typeof(TDataContextSeeder), typeof(TDataContext)));
+        /// <typeparam name="TDataContextInitializer">The type that implements <see cref="IDataContextInitializer"/>.</typeparam>
+        public DataContextOptions UseInitializerDecorator<TDataContextInitializer>()
+            where TDataContextInitializer : class, IDataContextInitializer
+            => this.Assign(cq => cq.IsInitializerEnabled = typeof(TDataContextInitializer));
 
         /// <summary>
         /// Enables the delegate that get called on persistence exception.
@@ -50,7 +48,7 @@ namespace Xpandables.Net.EntityFramework
             return this;
         }
 
-        internal (Type DataContextSeederType, Type DataContextType)? IsSeederEnabled { get; private set; }
+        internal Type? IsInitializerEnabled { get; private set; }
 
         internal Func<Exception, Exception?>? IsPersistenceExceptionHandlerEnabled { get; private set; }
     }

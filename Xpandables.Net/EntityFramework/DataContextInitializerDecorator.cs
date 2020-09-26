@@ -24,31 +24,30 @@ namespace Xpandables.Net.EntityFramework
     /// This class allows the application author to add seed support to data context.
     /// The target command should implement the <see cref="IInitializerDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target <see cref="IDataContextProvider"/> with an implementation of
-    /// <see cref="IDataContextInitializer{TDataContext}"/> that will be called before the data context is returned.
+    /// <see cref="IDataContextInitializer"/> that will be called before the data context is returned.
     /// </summary>
-    public sealed class DataContextSeederDecorator<TDataContext> : IDataContextProvider
-        where TDataContext : IDataContext, IInitializerDecorator
+    public sealed class DataContextInitializerDecorator : IDataContextProvider
     {
         private readonly IDataContextProvider _decoratee;
-        private readonly IDataContextInitializer<TDataContext> _seeder;
+        private readonly IDataContextInitializer _initializer;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataContextSeederDecorator{TDataContext}"/>.
+        /// Initializes a new instance of <see cref="DataContextInitializerDecorator"/>.
         /// </summary>
         /// <param name="datacontextProvider">The decorated data context provider.</param>
-        /// <param name="dataContextSeeder">The data context seeder.</param>
+        /// <param name="dataContextInitializer">The data context seeder.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="datacontextProvider"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="dataContextSeeder"/> is null.</exception>
-        public DataContextSeederDecorator(IDataContextProvider datacontextProvider, IDataContextInitializer<TDataContext> dataContextSeeder)
+        /// <exception cref="ArgumentNullException">The <paramref name="dataContextInitializer"/> is null.</exception>
+        public DataContextInitializerDecorator(IDataContextProvider datacontextProvider, IDataContextInitializer dataContextInitializer)
         {
             _decoratee = datacontextProvider ?? throw new ArgumentNullException(nameof(datacontextProvider));
-            _seeder = dataContextSeeder ?? throw new ArgumentNullException(nameof(dataContextSeeder));
+            _initializer = dataContextInitializer ?? throw new ArgumentNullException(nameof(dataContextInitializer));
         }
 
         async Task<IDataContext> IDataContextProvider.GetDataContextAsync(System.Threading.CancellationToken cancellationToken)
         {
             var context = await _decoratee.GetDataContextAsync(cancellationToken).ConfigureAwait(false);
-            await _seeder.SeedAsync((TDataContext)context, cancellationToken).ConfigureAwait(false);
+            await _initializer.InitializeAsync(context, cancellationToken).ConfigureAwait(false);
 
             return context;
         }
@@ -56,7 +55,7 @@ namespace Xpandables.Net.EntityFramework
         IDataContext IDataContextProvider.GetDataContext()
         {
             var context = _decoratee.GetDataContext();
-            _seeder.Seed((TDataContext)context);
+            _initializer.Initialize(context);
 
             return context;
         }

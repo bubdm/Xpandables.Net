@@ -3191,17 +3191,33 @@
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
         </member>
+        <member name="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator">
+            <summary>
+            This class allows the application author to add seed support to data context.
+            The target command should implement the <see cref="T:Xpandables.Net.EntityFramework.IInitializerDecorator"/> interface in order to activate the behavior.
+            The class decorates the target <see cref="T:Xpandables.Net.EntityFramework.IDataContextProvider"/> with an implementation of
+            <see cref="T:Xpandables.Net.EntityFramework.IDataContextInitializer"/> that will be called before the data context is returned.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.DataContextInitializerDecorator.#ctor(Xpandables.Net.EntityFramework.IDataContextProvider,Xpandables.Net.EntityFramework.IDataContextInitializer)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
+            </summary>
+            <param name="datacontextProvider">The decorated data context provider.</param>
+            <param name="dataContextInitializer">The data context seeder.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="datacontextProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataContextInitializer"/> is null.</exception>
+        </member>
         <member name="T:Xpandables.Net.EntityFramework.DataContextOptions">
             <summary>
             Defines options to configure data context.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextOptions.UseSeederDecorator``2">
+        <member name="M:Xpandables.Net.EntityFramework.DataContextOptions.UseInitializerDecorator``1">
             <summary>
-            Enables seeder for the data context that is decorated with <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/>.
+            Enables seeder for the data context that is decorated with <see cref="T:Xpandables.Net.EntityFramework.IInitializerDecorator"/>.
             </summary>
-            <typeparam name="TDataContextSeeder">The type that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1"/>.</typeparam>
-            <typeparam name="TDataContext">The type of data context.</typeparam>
+            <typeparam name="TDataContextInitializer">The type that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContextInitializer"/>.</typeparam>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.DataContextOptions.UsePersistenceExceptionHandler(System.Func{System.Exception,System.Exception})">
             <summary>
@@ -3210,23 +3226,6 @@
             </summary>
             <param name="persistenceExceptionHandler">The persistence exception handler delegate instance.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="persistenceExceptionHandler"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1">
-            <summary>
-            This class allows the application author to add seed support to data context.
-            The target command should implement the <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/> interface in order to activate the behavior.
-            The class decorates the target <see cref="T:Xpandables.Net.EntityFramework.IDataContextProvider"/> with an implementation of
-            <see cref="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1"/> that will be called before the data context is returned.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1.#ctor(Xpandables.Net.EntityFramework.IDataContextProvider,Xpandables.Net.EntityFramework.IDataContextSeeder{`0})">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
-            </summary>
-            <param name="datacontextProvider">The decorated data context provider.</param>
-            <param name="dataContextSeeder">The data context seeder.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="datacontextProvider"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataContextSeeder"/> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.EntityFramework.DataContextSettings">
             <summary>
@@ -3500,6 +3499,30 @@
             </summary>
             <param name="persistenceExceptionHandler">The optional delegate instance.</param>
         </member>
+        <member name="T:Xpandables.Net.EntityFramework.IDataContextInitializer">
+            <summary>
+            Allows an application author to dynamically seed a data context before it's retrieved.
+            This is useful when you need a data context not to be empty.
+            The target data context should be decorated with the <see cref="T:Xpandables.Net.EntityFramework.IInitializerDecorator"/> interface.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContextInitializer.InitializeAsync(Xpandables.Net.EntityFramework.IDataContext,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously initializes the specified data context as you wish.
+            Warning : Do not throw exception from this method unless it's absolutely necessary.
+            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
+            </summary>
+            <param name="dataContext">The data context instance to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContextInitializer.Initialize(Xpandables.Net.EntityFramework.IDataContext)">
+            <summary>
+            Initializes the specified data context as you wish.
+            Warning : Do not throw exception from this method unless it's absolutely necessary.
+            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
+            </summary>
+            <param name="dataContext">The data context instance to act on.</param>
+        </member>
         <member name="T:Xpandables.Net.EntityFramework.IDataContextProvider">
             <summary>
             Provides with a method to return the ambient data context instance.
@@ -3519,34 +3542,14 @@
             </summary>
             <returns>An instance of context that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContext" />.</returns>
         </member>
-        <member name="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1">
+        <member name="T:Xpandables.Net.EntityFramework.IInitializerDecorator">
             <summary>
-            Allows an application author to dynamically seed a data context before it's retrieved.
-            This is useful when you need a data context not to be empty.
-            The target data context should be decorated with the <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/> interface and
-            the class seeder implementation should be
-            registered to services collections with the extension method <see langword="ServiceCollectionExtensions.AddXDataContext{TDataContextProvider}(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
-            using options.
+            A marker interface that allows the class that implements the <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> to be seeded before use.
+            You need to register the expected behavior using the appropriate extension method
+            and provide an implementation for <see cref="T:Xpandables.Net.EntityFramework.IDataContextInitializer"/>.
+            <para></para>
+            The class implementation will be decorated with the <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
             </summary>
-            <typeparam name="TDataContext">The type of the data context that
-            implements <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> and <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/>.</typeparam>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContextSeeder`1.SeedAsync(`0,System.Threading.CancellationToken)">
-            <summary>
-            Asynchronously seeds the specified data context as you wish.
-            Warning : Do not throw exception from this method unless it's absolutely necessary.
-            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
-            </summary>
-            <param name="dataContext">The data context instance to act on.</param>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContextSeeder`1.Seed(`0)">
-            <summary>
-            Seeds the specified data context as you wish.
-            Warning : Do not throw exception from this method unless it's absolutely necessary.
-            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
-            </summary>
-            <param name="dataContext">The data context instance to act on.</param>
         </member>
         <member name="T:Xpandables.Net.EntityFramework.IPersistenceDecorator">
             <summary>
@@ -3561,15 +3564,6 @@
             register the data context using and extension method.
             <para></para>
             <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.EntityFramework.AsyncCommandPersistenceDecorator`1"/>.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.EntityFramework.ISeedDecorator">
-            <summary>
-            A marker interface that allows the class that implements the <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> to be seeded before use.
-            You need to register the expected behavior using the appropriate extension method
-            and provide an implementation for <see cref="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1"/>.
-            <para></para>
-            The class implementation will be decorated with the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Enumerables.EnumerableExtensions">

@@ -21,8 +21,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.EntityFramework;
-using Xpandables.Net.Queries;
-using Xpandables.Net.Types;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -127,12 +125,8 @@ namespace Xpandables.Net.DependencyInjection
                 return dataContext;
             });
 
-            if (definedOptions.IsSeederEnabled.HasValue)
-            {
-                services.AddXSeedDecorator(
-                    definedOptions.IsSeederEnabled.Value.DataContextSeederType,
-                    definedOptions.IsSeederEnabled.Value.DataContextType);
-            }
+            if (definedOptions.IsInitializerEnabled is not null)
+                services.AddXInitializerDecorator(definedOptions.IsInitializerEnabled);
 
             return services;
         }
@@ -170,45 +164,38 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IDataContextInitializer{TDataContext}"/> to the services with scoped life time that will be used
-        /// to seed every data context that it's decorated with the <see cref="IInitializerDecorator"/> interface.
+        /// Adds the <see cref="IDataContextInitializer"/> to the services with scoped life time that will be used
+        /// to initialize every data context that it's decorated with the <see cref="IInitializerDecorator"/> interface.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <param name="dataContextSeederType">The type that implements <see cref="IDataContextInitializer{TDataContext}"/>.</param>
-        /// <param name="dataContextType">The type of data context.</param>
+        /// <param name="dataContextInitializerType">The type that implements <see cref="IDataContextInitializer"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXSeedDecorator(
-            this IServiceCollection services, Type dataContextSeederType, Type dataContextType)
+        public static IServiceCollection AddXInitializerDecorator(this IServiceCollection services, Type dataContextInitializerType)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            if (!typeof(IDataContextInitializer<>).TryMakeGenericType(out var seederType, out var seederException, dataContextType))
-                throw new InvalidOperationException($"Unable to build the {typeof(IDataContextInitializer<>).Name} type.", seederException);
+            if (!typeof(IDataContextInitializer).IsAssignableFrom(dataContextInitializerType))
+                throw new InvalidOperationException($"{dataContextInitializerType} must implement the {nameof(IDataContextInitializer)} interface.");
 
-            if (!typeof(DataContextSeederDecorator<>).TryMakeGenericType(out var seederDecoratorType, out var decoException, dataContextType))
-                throw new InvalidOperationException($"Unable to build the {typeof(DataContextSeederDecorator<>).Name} type.", decoException);
-
-            services.AddScoped(seederType, dataContextSeederType);
-            services.XTryDecorate(typeof(IDataContextProvider), seederDecoratorType!);
+            services.AddScoped(typeof(IDataContextInitializer), dataContextInitializerType);
+            services.XTryDecorate<IDataContextProvider, DataContextInitializerDecorator>();
             return services;
         }
 
         /// <summary>
-        /// Adds the <see cref="IDataContextInitializer{TDataContext}"/> to the services with scoped life time that will be used
+        /// Adds the <see cref="IDataContextInitializer"/> to the services with scoped life time that will be used
         /// to seed every data context that it's decorated with the <see cref="IInitializerDecorator"/> interface.
         /// </summary>
-        /// <typeparam name="TDataContextSeeder">The type that implements <see cref="IDataContextInitializer{TDataContext}"/>.</typeparam>
-        /// <typeparam name="TDataContext">The type of data context.</typeparam>
+        /// <typeparam name="TDataContextInitializer">The type that implements <see cref="IDataContextInitializer"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXSeedDecorator<TDataContextSeeder, TDataContext>(this IServiceCollection services)
-            where TDataContextSeeder : class, IDataContextInitializer<TDataContext>
-            where TDataContext : class, IDataContext, IInitializerDecorator
+        public static IServiceCollection AddXInitializerDecorator<TDataContextInitializer>(this IServiceCollection services)
+            where TDataContextInitializer : class, IDataContextInitializer
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IDataContextInitializer<TDataContext>, TDataContextSeeder>();
-            services.XTryDecorate<IDataContextProvider, DataContextSeederDecorator<TDataContext>>();
+            services.AddScoped<IDataContextInitializer, TDataContextInitializer>();
+            services.XTryDecorate<IDataContextProvider, DataContextInitializerDecorator>();
             return services;
         }
     }

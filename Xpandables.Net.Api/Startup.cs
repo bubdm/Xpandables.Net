@@ -87,7 +87,7 @@ namespace Xpandables.Net.Api
             services.AddXHttpTokenEngine<TokenService>();
             services.AddScoped<ITwoFactorService, TwoFactorService>();
 
-            services.AddXDataContext<UserContextProvider>(options => options.UseSeederDecorator<UserContextSeeder, UserContext>());
+            services.AddXDataContext<UserContextProvider>(options => options.UseInitializerDecorator<UserContextInitializer>());
 
             services.AddXCommandQueriesHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
             {

@@ -25,31 +25,25 @@ namespace Xpandables.Net.EntityFramework
     /// <summary>
     /// Allows an application author to dynamically seed a data context before it's retrieved.
     /// This is useful when you need a data context not to be empty.
-    /// The target data context should be decorated with the <see cref="IInitializerDecorator"/> interface and
-    /// the class seeder implementation should be
-    /// registered to services collections with the extension method <see langword="ServiceCollectionExtensions.AddXDataContext{TDataContextProvider}(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
-    /// using options.
+    /// The target data context should be decorated with the <see cref="IInitializerDecorator"/> interface.
     /// </summary>
-    /// <typeparam name="TDataContext">The type of the data context that
-    /// implements <see cref="IDataContext"/> and <see cref="IInitializerDecorator"/>.</typeparam>
-    public interface IDataContextInitializer<TDataContext>
-        where TDataContext : IDataContext, IInitializerDecorator
+    public interface IDataContextInitializer
     {
         /// <summary>
-        /// Asynchronously seeds the specified data context as you wish.
+        /// Asynchronously initializes the specified data context as you wish.
         /// Warning : Do not throw exception from this method unless it's absolutely necessary.
-        /// This method get called by the <see cref="DataContextSeederDecorator{TDataContext}"/>.
+        /// This method get called by the <see cref="DataContextInitializerDecorator"/>.
         /// </summary>
         /// <param name="dataContext">The data context instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        Task SeedAsync(TDataContext dataContext, CancellationToken cancellationToken = default);
+        Task InitializeAsync(IDataContext dataContext, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Seeds the specified data context as you wish.
+        /// Initializes the specified data context as you wish.
         /// Warning : Do not throw exception from this method unless it's absolutely necessary.
-        /// This method get called by the <see cref="DataContextSeederDecorator{TDataContext}"/>.
+        /// This method get called by the <see cref="DataContextInitializerDecorator"/>.
         /// </summary>
         /// <param name="dataContext">The data context instance to act on.</param>
-        public void Seed(TDataContext dataContext) => AsyncExtensions.RunSync(SeedAsync(dataContext));
+        public void Initialize(IDataContext dataContext) => AsyncExtensions.RunSync(InitializeAsync(dataContext));
     }
 }
