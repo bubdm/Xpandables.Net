@@ -33,7 +33,7 @@ using Xpandables.Net.Dispatchers;
 namespace Xpandables.Net.Api.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -42,24 +42,26 @@ namespace Xpandables.Net.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> EditAsync([FromBody] EditUser editUser, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> PostAsync([FromBody] EditUser editUser, CancellationToken cancellationToken = default)
         {
             await _dispatcher.InvokeAsync(editUser, cancellationToken).ConfigureAwait(false);
             return Ok();
         }
 
         [HttpGet]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserItem))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetUserAsync([FromQuery] GetUser getUser, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetAsync([FromRoute] GetUser getUser, CancellationToken cancellationToken = default)
         {
             var user = await _dispatcher.InvokeAsync(getUser, cancellationToken).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
             return user switch { { } => Ok(user), _ => NotFound() };
         }
 
         [HttpGet]
+        [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IAsyncEnumerable<Log>))]
-        public async IAsyncEnumerable<Log> GetUsersAsync([FromQuery] EventLogList eventLogList, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<Log> GetAsync([FromQuery] EventLogList eventLogList, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await foreach (var eventLog in _dispatcher.InvokeAsync(eventLogList, cancellationToken).ConfigureAwait(false))
                 yield return eventLog;

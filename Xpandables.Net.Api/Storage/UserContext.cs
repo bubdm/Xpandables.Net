@@ -24,7 +24,7 @@ using Xpandables.Net.EntityFramework;
 
 namespace Xpandables.Net.Api.Storage
 {
-    public sealed class UserContext : DataContext, ISeedDecorator
+    public sealed class UserContext : DataContext, IInitializerDecorator
     {
         public UserContext(DbContextOptions<UserContext> contextOptions)
             : base(contextOptions) { }

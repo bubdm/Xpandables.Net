@@ -105,6 +105,11 @@ namespace Xpandables.Net.HttpRestClient
         /// The default value is "Bearer".
         /// </summary>
         public string Scheme { get; set; } = "Bearer";
+
+        /// <summary>
+        /// Gets or sets the built in Uri.
+        /// </summary>
+        internal Uri Uri { get; set; } = null!;
     }
 
     /// <summary>
@@ -123,7 +128,7 @@ namespace Xpandables.Net.HttpRestClient
         Header,
 
         /// <summary>
-        /// Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="IQueryStringRequest"/> to provide with content
+        /// Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="IPathStringRequest"/> to provide with content.
         /// </summary>
         Path,
 

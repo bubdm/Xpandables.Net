@@ -15,7 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Collections.Generic;
 using System.Reflection;
 
 using Microsoft.AspNetCore.Authentication;
@@ -29,19 +28,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
 using Xpandables.Net.Api.Configurations;
-using Xpandables.Net.Api.Contracts;
-using Xpandables.Net.Api.Handlers;
 using Xpandables.Net.Api.Middlewares;
-using Xpandables.Net.Api.Models;
 using Xpandables.Net.Api.Services;
 using Xpandables.Net.Api.Services.Implementations;
 using Xpandables.Net.Api.Settings;
 using Xpandables.Net.Api.Storage;
-using Xpandables.Net.Commands;
 using Xpandables.Net.Correlation;
 using Xpandables.Net.DependencyInjection;
 using Xpandables.Net.EntityFramework;
-using Xpandables.Net.Queries;
 using Xpandables.NetCore.Startup;
 
 namespace Xpandables.Net.Api
@@ -90,22 +84,17 @@ namespace Xpandables.Net.Api
             services.AddScoped<AsyncCorrelationContext>();
             services.AddScoped<IAsyncCorrelationContext>(provider => provider.GetRequiredService<AsyncCorrelationContext>());
             services.AddXCorrelationContext();
-
             services.AddXHttpTokenEngine<TokenService>();
             services.AddScoped<ITwoFactorService, TwoFactorService>();
 
             services.AddXDataContext<UserContextProvider>(options => options.UseSeederDecorator<UserContextSeeder, UserContext>());
 
-            services.AddXQueryHandlerWrapper();
-            services.AddXIdentityDataProvider();
-
-            services.AddScoped<IAsyncQueryHandler<RequestAuthenToken, AuthenToken>, RequestAuthenTokenHandler>();
-            services.AddScoped<IAsyncCommandHandler<EditUser>, EditUserHandler>();
-            services.AddScoped<IAsyncQueryHandler<EventLogList, Log>, EventLogListHandler>();
-            services.AddScoped<IAsyncQueryHandler<GetUser, UserItem>, GetUserHandler>();
-
-            services.AddXIdentityDecorator();
-            services.AddXPersistenceDecorator();
+            services.AddXCommandQueriesHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
+            {
+                options.UsePersistenceDecorator();
+                options.UseValidatorDecorator();
+                options.UseIdentityDecorator();
+            });
 
             services.AddXDispatcher();
             services.AddAuthentication()

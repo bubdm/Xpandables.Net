@@ -25,15 +25,15 @@ namespace Xpandables.Net.EntityFramework
     /// <summary>
     /// Allows an application author to dynamically seed a data context before it's retrieved.
     /// This is useful when you need a data context not to be empty.
-    /// The target data context should be decorated with the <see cref="ISeedDecorator"/> interface and
+    /// The target data context should be decorated with the <see cref="IInitializerDecorator"/> interface and
     /// the class seeder implementation should be
     /// registered to services collections with the extension method <see langword="ServiceCollectionExtensions.AddXDataContext{TDataContextProvider}(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
     /// using options.
     /// </summary>
     /// <typeparam name="TDataContext">The type of the data context that
-    /// implements <see cref="IDataContext"/> and <see cref="ISeedDecorator"/>.</typeparam>
-    public interface IDataContextSeeder<TDataContext>
-        where TDataContext : IDataContext, ISeedDecorator
+    /// implements <see cref="IDataContext"/> and <see cref="IInitializerDecorator"/>.</typeparam>
+    public interface IDataContextInitializer<TDataContext>
+        where TDataContext : IDataContext, IInitializerDecorator
     {
         /// <summary>
         /// Asynchronously seeds the specified data context as you wish.

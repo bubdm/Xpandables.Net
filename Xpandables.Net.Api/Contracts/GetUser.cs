@@ -44,21 +44,17 @@ namespace Xpandables.Net.Api.Contracts
         public string Email { get; set; }
     }
 
-    [HttpRestClient(Path = "api/user/getuser", IsSecured = true, IsNullable = true, Method = "Get", In = ParameterLocation.Query)]
-    public sealed class GetUser : IdentityDataExpression<TokenClaims, User>, IAsyncQuery<UserItem>, IValidationDecorator, IIdentityDecorator, IQueryStringRequest
+    [HttpRestClient(Path = "api/user/{id}", IsSecured = true, IsNullable = true, Method = "Get", In = ParameterLocation.Path)]
+    public sealed class GetUser : IdentityDataExpression<TokenClaims, User>, IAsyncQuery<UserItem>, IValidationDecorator, IIdentityDecorator, IPathStringRequest
     {
-        public GetUser(string? id) => Id = id;
+        public GetUser(string id) => Id = id;
 
-        public GetUser() { }
+        public GetUser() => Id = null!;
 
-        protected override Expression<Func<User, bool>> BuildExpression()
-        {
-            Id ??= Identity.Id;
-            return user => user.Id == Id && user.IsActive && !user.IsDeleted;
-        }
+        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Id == Id && user.IsActive && !user.IsDeleted;
 
-        public IDictionary<string, string?> GetQueryString() => new Dictionary<string, string?> { { nameof(Id), Id } };
+        public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
 
-        public string? Id { get; set; }
+        public string Id { get; set; }
     }
 }

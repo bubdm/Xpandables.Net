@@ -26,7 +26,7 @@ using Xpandables.Net.Strings;
 
 namespace Xpandables.Net.Api.Storage
 {
-    public sealed class UserContextSeeder : IDataContextSeeder<UserContext>
+    public sealed class UserContextSeeder : IDataContextInitializer<UserContext>
     {
         private readonly IStringCryptography _stringCryptography;
 

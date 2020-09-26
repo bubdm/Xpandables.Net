@@ -39,13 +39,34 @@ namespace Xpandables.Net.HttpRestClient
     public static class HttpRestClientExtensions
     {
         /// <summary>
+        /// Appends the given path keys and values to the Uri.
+        /// </summary>
+        /// <param name="path">The base Uri.</param>
+        /// <param name="pathString">A collection of name value path pairs to append.</param>
+        /// <returns>The combined result.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="path"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="pathString"/> is null.</exception>
+        public static string AddPathString(this string path, IDictionary<string, string> pathString)
+        {
+            _ = path ?? throw new ArgumentNullException(nameof(path));
+            _ = pathString ?? throw new ArgumentNullException(nameof(pathString));
+
+            if (pathString.Count <= 0)
+                return path;
+
+            foreach (var parameter in pathString)
+                path = path.Replace($"{{{parameter.Key}}}", parameter.Value, StringComparison.InvariantCultureIgnoreCase);
+
+            return path;
+        }
+
+        /// <summary>
         /// Appends the given query keys and values to the Uri.
         /// </summary>
         /// <param name="path">The base Uri.</param>
         /// <param name="queryString">A collection of name value query pairs to append.</param>
         /// <returns>The combined result.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="path"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="queryString"/> is null.</exception>
         public static string AddQueryString(this string path, IDictionary<string, string?>? queryString)
         {
             _ = path ?? throw new ArgumentNullException(nameof(path));
@@ -98,25 +119,33 @@ namespace Xpandables.Net.HttpRestClient
             _ = source ?? throw new ArgumentNullException(nameof(source));
 
             attribute.Path ??= "/";
-            Uri uri;
 
             if (attribute.In == ParameterLocation.Path || attribute.In == ParameterLocation.Query)
             {
-                ValidateImplementation<IQueryStringRequest>(source, false);
-                var queryStringRequest = (source as IQueryStringRequest)!;
+                ValidateImplementation<IPathStringRequest>(source, true);
+                if (source is IPathStringRequest pathStringRequest)
+                {
+                    var pathString = pathStringRequest.GetPathStringSource();
+                    attribute.Path = attribute.Path.AddPathString(pathString);
+                }
 
-                var queryString = queryStringRequest.GetQueryString();
-                var queryStringUri = attribute.Path.AddQueryString(queryString);
-                uri = new Uri(queryStringUri, UriKind.Relative);
+                ValidateImplementation<IQueryStringRequest>(source, true);
+                if (source is IQueryStringRequest queryStringRequest)
+                {
+                    var queryString = queryStringRequest.GetQueryStringSource();
+                    attribute.Path = attribute.Path.AddQueryString(queryString);
+                }
+
+                attribute.Uri = new Uri(attribute.Path, UriKind.Relative);
             }
             else
             {
-                uri = new Uri(attribute.Path, UriKind.Relative);
+                attribute.Uri = new Uri(attribute.Path, UriKind.Relative);
             }
 
-            var httpRequestMessage = new HttpRequestMessage(new HttpMethod(attribute.Method), uri);
+            var httpRequestMessage = new HttpRequestMessage(new HttpMethod(attribute.Method), attribute.Uri);
             httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(attribute.Accept));
-            httpRequestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(System.Threading.Thread.CurrentThread.CurrentCulture.Name));
+            httpRequestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(Thread.CurrentThread.CurrentCulture.Name));
 
             if (!attribute.IsNullable)
             {

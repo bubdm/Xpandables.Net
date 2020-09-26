@@ -120,12 +120,13 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
-            services.XRegister(scan => scan
-                .FromAssemblies(assemblies)
-                .AddClasses(classes => classes.AssignableTo(typeof(IAsyncCommandHandler<>))
-                    .Where(_ => !_.IsGenericType))
-                    .AsImplementedInterfaces()
-                    .WithTransientLifetime());
+            var commandTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterface(typeof(IAsyncCommandHandler<>).Name) is not null)
+                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IAsyncCommandHandler<>).Name)! })
+                .ToList();
+
+            foreach (var commandType in commandTypes)
+                services.AddScoped(commandType.Interface, commandType.Type);
 
             return services;
         }

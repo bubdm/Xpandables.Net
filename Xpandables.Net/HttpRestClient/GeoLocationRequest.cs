@@ -95,7 +95,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <summary>
         /// Returns the keys and values for the Uri.
         /// </summary>
-        public IDictionary<string, string?> GetQueryString()
+        public IDictionary<string, string?> GetQueryStringSource()
             => new Dictionary<string, string?>(
                 new[]
                 {

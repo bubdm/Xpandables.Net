@@ -16,6 +16,7 @@
 ************************************************************************************************************/
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Xpandables.Net.HttpRestClient
 {
@@ -92,13 +93,25 @@ namespace Xpandables.Net.HttpRestClient
 
     /// <summary>
     /// Provides with a method to retrieve the query string content for query string Uri when using <see cref="ParameterLocation.Query"/> or <see cref="ParameterLocation.Path"/>.
-    /// This can be combined with other request interface.
+    /// This can be combined with other <see cref="IPathStringRequest"/>.
     /// </summary>
     public interface IQueryStringRequest
     {
         /// <summary>
-        /// Returns the keys and values for the Uri.
+        /// Returns the keys and values for the query string Uri.
         /// </summary>
-        IDictionary<string, string?>? GetQueryString();
+        IDictionary<string, string?>? GetQueryStringSource();
+    }
+
+    /// <summary>
+    /// Provides with a method to retrieve the path string content for query string Uri when using <see cref="ParameterLocation.Query"/> or <see cref="ParameterLocation.Path"/>.
+    /// This can be combined with <see cref="IQueryStringRequest"/>.
+    /// </summary>
+    public interface IPathStringRequest
+    {
+        /// <summary>
+        /// Returns the keys and values for the path string Uri.
+        /// </summary>
+        IDictionary<string, string> GetPathStringSource();
     }
 }

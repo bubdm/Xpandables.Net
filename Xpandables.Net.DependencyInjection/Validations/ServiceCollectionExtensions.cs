@@ -60,12 +60,13 @@ namespace Xpandables.Net.DependencyInjection
             if (services is null) throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
-            services.XRegister(scan => scan
-                .FromAssemblies(assemblies)
-                .AddClasses(classes => classes.AssignableTo(typeof(IValidation<>))
-                    .Where(_ => !_.IsInterface && !_.IsAbstract && !_.IsGenericType))
-                    .AsImplementedInterfaces()
-                    .WithTransientLifetime());
+            var validatorTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterface(typeof(IValidation<>).Name) is not null)
+                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IValidation<>).Name)! })
+                .ToList();
+
+            foreach (var validatorType in validatorTypes)
+                services.AddScoped(validatorType.Interface, validatorType.Type);
 
             return services;
         }

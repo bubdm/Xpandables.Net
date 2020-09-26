@@ -20,9 +20,9 @@ namespace Xpandables.Net.EntityFramework
     /// <summary>
     /// A marker interface that allows the class that implements the <see cref="IDataContext"/> to be seeded before use.
     /// You need to register the expected behavior using the appropriate extension method
-    /// and provide an implementation for <see cref="IDataContextSeeder{TDataContext}"/>.
+    /// and provide an implementation for <see cref="IDataContextInitializer{TDataContext}"/>.
     /// <para></para>
     /// The class implementation will be decorated with the <see cref="DataContextSeederDecorator{TDataContext}"/>.
     /// </summary>
-    public interface ISeedDecorator { }
+    public interface IInitializerDecorator { }
 }

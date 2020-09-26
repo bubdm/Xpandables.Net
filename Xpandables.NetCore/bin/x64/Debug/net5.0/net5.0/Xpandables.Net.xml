@@ -4220,7 +4220,7 @@
             Returns the <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientAttribute" /> to be applied on the current instance.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.HttpRestClient.GeoLocationRequest.GetQueryString">
+        <member name="M:Xpandables.Net.HttpRestClient.GeoLocationRequest.GetQueryStringSource">
             <summary>
             Returns the keys and values for the Uri.
             </summary>
@@ -4667,6 +4667,11 @@
             The default value is "Bearer".
             </summary>
         </member>
+        <member name="P:Xpandables.Net.HttpRestClient.HttpRestClientAttribute.Uri">
+            <summary>
+            Gets or sets the built in Uri.
+            </summary>
+        </member>
         <member name="T:Xpandables.Net.HttpRestClient.ParameterLocation">
             <summary>
             The location of the parameter.
@@ -4684,7 +4689,7 @@
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Path">
             <summary>
-            Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="T:Xpandables.Net.HttpRestClient.IQueryStringRequest"/> to provide with content
+            Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="T:Xpandables.Net.HttpRestClient.IPathStringRequest"/> to provide with content.
             </summary>
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Cookie">
@@ -4902,6 +4907,16 @@
             Helpers for <see cref="T:Xpandables.Net.HttpRestClient.IHttpRestClientHandler"/>.
             </summary>
         </member>
+        <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientExtensions.AddPathString(System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Appends the given path keys and values to the Uri.
+            </summary>
+            <param name="path">The base Uri.</param>
+            <param name="pathString">A collection of name value path pairs to append.</param>
+            <returns>The combined result.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="path"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="pathString"/> is null.</exception>
+        </member>
         <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientExtensions.AddQueryString(System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
             <summary>
             Appends the given query keys and values to the Uri.
@@ -4910,7 +4925,6 @@
             <param name="queryString">A collection of name value query pairs to append.</param>
             <returns>The combined result.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="path"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="queryString"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientExtensions.GetHttpRequestMessageAsync``1(Xpandables.Net.HttpRestClient.HttpRestClientAttribute,``0,System.Threading.CancellationToken)">
             <summary>
@@ -5447,12 +5461,23 @@
         <member name="T:Xpandables.Net.HttpRestClient.IQueryStringRequest">
             <summary>
             Provides with a method to retrieve the query string content for query string Uri when using <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Query"/> or <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Path"/>.
-            This can be combined with other request interface.
+            This can be combined with other <see cref="T:Xpandables.Net.HttpRestClient.IPathStringRequest"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.HttpRestClient.IQueryStringRequest.GetQueryString">
+        <member name="M:Xpandables.Net.HttpRestClient.IQueryStringRequest.GetQueryStringSource">
             <summary>
-            Returns the keys and values for the Uri.
+            Returns the keys and values for the query string Uri.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.HttpRestClient.IPathStringRequest">
+            <summary>
+            Provides with a method to retrieve the path string content for query string Uri when using <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Query"/> or <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Path"/>.
+            This can be combined with <see cref="T:Xpandables.Net.HttpRestClient.IQueryStringRequest"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.HttpRestClient.IPathStringRequest.GetPathStringSource">
+            <summary>
+            Returns the keys and values for the path string Uri.
             </summary>
         </member>
         <member name="T:Xpandables.Net.HttpRestClient.IPLocationRequest">

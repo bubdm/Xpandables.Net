@@ -42,12 +42,13 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
-            services.XRegister(scan => scan
-                .FromAssemblies(assemblies)
-                .AddClasses(classes => classes.AssignableTo(typeof(IAsyncQueryHandler<,>))
-                    .Where(_ => !_.IsGenericType))
-                    .AsImplementedInterfaces()
-                    .WithTransientLifetime());
+            var queryTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterface(typeof(IAsyncQueryHandler<,>).Name) is not null)
+                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IAsyncQueryHandler<,>).Name)! })
+                .ToList();
+
+            foreach (var queryType in queryTypes)
+                services.AddScoped(queryType.Interface, queryType.Type);
 
             return services;
         }
