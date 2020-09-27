@@ -13,25 +13,25 @@ Feel free to fork this project, make your own changes and create a pull request.
 - [IStringCryptography](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Cryptography/IStringCryptography.cs) Provides with methods to encrypt and decrypt string values.
 - [IStringGenerator](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Cryptography/IStringGenerator.cs) Provides with methods to generate strings.
 - [ValueEncrypted](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Cryptography/ValueEncrypted.cs) Defines a representation of an encrypted value, its key and its salt used with [IStringCryptography](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Cryptography/IStringCryptography.cs).
-- [IAsyncCommand](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Commands/IAsyncCommand.cs) and [ICommand](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Commands/ICommand.cs) are used as marker for commands when using the command pattern.
-- [IAsyncCommandHandler{TCommand}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Commands/IAsyncCommandHandler.cs) and [ICommandHandler{TCommand}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Commands/ICommandHandler.cs) Define handler for a specific type command.
-- [IAsyncCorrelationContext](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Correlation/IAsyncCorrelationContext.cs) and [ICorrelationContext](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Correlation/ICorrelationContext.cs) Define two events that can be raised after a control flow with "PostEvent" and on exception during the control flow with "RollbackEvent".
-- [AsyncCommandCorrelationDecorator{TCommand}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Correlation/AsyncCommandCorrelationDecorator.cs) and [CommandCorrelationDecorator{TCommand}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Correlation/CommandCorrelationDecorator.cs) decorate the target command handler with an implementation of "IAsyncCorrelationContext" that  adds an event (post event) to be raised after the main one in the same control flow only if there is no exception, and an event (roll back event) to be raised when exception.
-- [AsyncQueryCorrelationDecorator{TQuery, TResult}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Correlation/AsyncQueryCorrelationDecorator.cs) and [QueryCorrelationDecorator{TQuery, TResult}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Correlation/QueryCorrelationDecorator.cs) decorate the target query handler with an implementation of "IAsyncCorrelationContext" that  adds an event (post event) to be raised after the main one in the same control flow only if there is no exception, and an event (roll back event) to be raised when exception.
+- [IAsyncCommand](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Commands/IAsyncCommand.cs) is used as marker for commands when using the command pattern.
+- [IAsyncCommandHandler{TCommand}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Commands/IAsyncCommandHandler.cs) defines a handler for a specific type command.
+- [IAsyncCorrelationContext](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Correlation/IAsyncCorrelationContext.cs) defines two events that can be raised after a control flow with "PostEvent" and on exception during the control flow with "RollbackEvent".
+- [AsyncCommandCorrelationDecorator{TCommand}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Correlation/AsyncCommandCorrelationDecorator.cs) decorates the target command handler with an implementation of "IAsyncCorrelationContext" that  adds an event (post event) to be raised after the main one in the same control flow only if there is no exception, and an event (roll back event) to be raised when exception.
+- [AsyncQueryCorrelationDecorator{TQuery, TResult}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Correlation/AsyncQueryCorrelationDecorator.cs) decorates the target query handler with an implementation of "IAsyncCorrelationContext" that  adds an event (post event) to be raised after the main one in the same control flow only if there is no exception, and an event (roll back event) to be raised when exception.
 - [CorrelationCollection{TKey, TValue}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Correlation/CorrelationCollection.cs) Provides a collection of objects that need to be shared across asynchronous control flows. This collection implements "IAsyncEnumerable{KeyValuePair{TKey, TValue}}".
 - [IDataBase](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Data/IDataBase.cs) Provides with methods to execute command against a database using a derived form of [DataExecutable{TResult}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Data/Executables/DataExecutable.cs) or [DataExecutableMapper{TResult}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Data/Executables/DataExecutableMapper.cs).
-- [IDispatcher](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Dispatchers/IDispatcher.cs) Defines a set of methods to automatically handle "ICommand", "IAsyncCommand", "IAsyncQuery{TResult} and "IQuery{TResult}" using the matching implementation of "ICommandHandler{TCommand}", "IQueryHandler{TQuery, TResult}", "IAsyncQueryHandler{TQuery, TResult}" or/and "IAsyncCommandHandler{TCommand}".
+- [IDispatcher](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Dispatchers/IDispatcher.cs) Defines a set of methods to automatically handle  "IAsyncCommand" and "IAsyncQuery{TResult}  using the matching implementation of "IAsyncQueryHandler{TQuery, TResult}" or/and "IAsyncCommandHandler{TCommand}".
 - [IDispatcherHandlerProvider](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Dispatchers/IDispatcherHandlerProvider.cs) Defines set of methods to retrieve handlers of specific type.
 - [IDataContext](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/EntityFramework/IDataContext.cs) Allows an application author to manage domain objects using EntityFrameworkCore.
 - [IQueryExpression{T,R}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Expressions/IQueryExpression.cs) Defines a methods that returns an "Expression{TDelegate}" that can be used to query the "TSource" instance.
 - [IHttpRestClientHandler](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/HttpRestClient/IHttpRestClientHandler.cs)  Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.
 - [IInterceptor](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Interception/IInterceptor.cs) Base interface for types and instances for interception.
 - [Optional{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Optionals/Optional.cs) Describes an object that can contain a value or not of a specific type.
-- [IAsyncQuery{R}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Queries/IAsyncQuery.cs) and [IQuery{R}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Queries/IQuery.cs) are used as marker for queries when using the command pattern.
-- [IAsyncQueryHandler{T,R}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Queries/IAsyncQueryHandler.cs) and [IQueryHandler{T,R}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Queries/IQueryHandler.cs) Defines a generic method that a class implements to handle a type-specific query and returns a type-specific result.
-- [IValidatorRule{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/ValidatorRules/IValidatorRule.cs) Defines a method contract used to validate an argument.
-- [IVisitorRule](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/VisitorRules/IVisitorRule.cs) allows you to add new behaviors to an existing object without changing the object structure.
-- [IVisitable](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/VisitorRules/IVisitable.cs)  Defines an Accept operation that takes a visitor as an argument.
+- [IAsyncQuery{R}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Queries/IAsyncQuery.cs) is used as marker for queries when using the command pattern.
+- [IAsyncQueryHandler{T,R}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Queries/IAsyncQueryHandler.cs) defines a generic method that a class implements to handle a type-specific query and returns a type-specific result.
+- [IValidation{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/ValidatorRules/IValidation.cs) defines a method contract used to validate an argument.
+- [IVisitor{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/VisitorRules/IVisitor.cs) allows you to add new behaviors to an existing object without changing the object structure.
+- [IVisitable{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/VisitorRules/IVisitable.cs)  Defines an Accept operation that takes a visitor as an argument.
 
 # Some uses
 
@@ -50,7 +50,7 @@ public class LoginController : ControllerBase
     [HttpPost, AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponse))]
     public async Task<IActionResult> PostAsync([FromBody] LoginRequest login, CancellationToken cancellationToken = default)
-        => Ok((await _dispatcher.SendQueryAsync(login, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false)).FirstOrDefault());
+        => Ok(await _dispatcher.InvokeAsync(login, cancellationToken).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false));
 }
 
 // startup class ...
@@ -92,7 +92,7 @@ public sealed class LoginResponse
 }
 
 // The request validator will be called before the LoginRequestHandler
-public sealed class LoginRequestValidator : IValidatorRule<LoginRequest>
+public sealed class LoginRequestValidator : IValidation<LoginRequest>
 {
     public void Validate(LoginRequest argument)
     {
