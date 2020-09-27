@@ -10,7 +10,7 @@ Feel free to fork this project, make your own changes and create a pull request.
 - [ICanHandle{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/ICanHandle.cs) Provides a method that determines whether or not an argument can be handled.
 - [ValueRange{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/ValueRange.cs) Defines a pair of values, representing a segment.
 - [IInstanceCreator](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Creators/IInstanceCreator.cs) Provides with methods to create instance of specific type at runtime using delegate and cache.
-- [IStringCryptography](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Cryptography/IStringCryptography.cs) Provides with methods to encrypt and decrypt string values.
+- [IStringCryptography](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Strings/IStringCryptography.cs) Provides with methods to encrypt and decrypt string values.
 - [IStringGenerator](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Strings/IStringGenerator.cs) Provides with methods to generate strings.
 - [ValueEncrypted](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Strings/ValueEncrypted.cs) Defines a representation of an encrypted value, its key and its salt used with [IStringCryptography](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Strings/IStringCryptography.cs).
 - [IAsyncCommand](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Commands/IAsyncCommand.cs) is used as marker for commands when using the command pattern.
