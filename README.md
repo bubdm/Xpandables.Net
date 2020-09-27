@@ -11,8 +11,8 @@ Feel free to fork this project, make your own changes and create a pull request.
 - [ValueRange{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/ValueRange.cs) Defines a pair of values, representing a segment.
 - [IInstanceCreator](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Creators/IInstanceCreator.cs) Provides with methods to create instance of specific type at runtime using delegate and cache.
 - [IStringCryptography](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Cryptography/IStringCryptography.cs) Provides with methods to encrypt and decrypt string values.
-- [IStringGenerator](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Cryptography/IStringGenerator.cs) Provides with methods to generate strings.
-- [ValueEncrypted](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Cryptography/ValueEncrypted.cs) Defines a representation of an encrypted value, its key and its salt used with [IStringCryptography](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Cryptography/IStringCryptography.cs).
+- [IStringGenerator](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Strings/IStringGenerator.cs) Provides with methods to generate strings.
+- [ValueEncrypted](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Strings/ValueEncrypted.cs) Defines a representation of an encrypted value, its key and its salt used with [IStringCryptography](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Strings/IStringCryptography.cs).
 - [IAsyncCommand](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Commands/IAsyncCommand.cs) is used as marker for commands when using the command pattern.
 - [IAsyncCommandHandler{TCommand}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Commands/IAsyncCommandHandler.cs) defines a handler for a specific type command.
 - [IAsyncCorrelationContext](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Correlation/IAsyncCorrelationContext.cs) defines two events that can be raised after a control flow with "PostEvent" and on exception during the control flow with "RollbackEvent".
@@ -29,9 +29,9 @@ Feel free to fork this project, make your own changes and create a pull request.
 - [Optional{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Optionals/Optional.cs) Describes an object that can contain a value or not of a specific type.
 - [IAsyncQuery{R}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Queries/IAsyncQuery.cs) is used as marker for queries when using the command pattern.
 - [IAsyncQueryHandler{T,R}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Queries/IAsyncQueryHandler.cs) defines a generic method that a class implements to handle a type-specific query and returns a type-specific result.
-- [IValidation{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/ValidatorRules/IValidation.cs) defines a method contract used to validate an argument.
-- [IVisitor{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/VisitorRules/IVisitor.cs) allows you to add new behaviors to an existing object without changing the object structure.
-- [IVisitable{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/VisitorRules/IVisitable.cs)  Defines an Accept operation that takes a visitor as an argument.
+- [IValidation{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Validations/IValidation.cs) defines a method contract used to validate an argument.
+- [IVisitor{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Visitors/IVisitor.cs) allows you to add new behaviors to an existing object without changing the object structure.
+- [IVisitable{T}](https://github.com/Francescolis/Xpandables.Net/blob/Net5.0/Xpandables.Net/Visitors/IVisitable.cs)  Defines an Accept operation that takes a visitor as an argument.
 
 # Some uses
 
