@@ -17,9 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Queries
 {
@@ -55,10 +53,6 @@ namespace Xpandables.Net.Queries
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
-        public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            await foreach (var result in _handler(query, cancellationToken).ConfigureAwait(false))
-                yield return result;
-        }
+        public IAsyncEnumerable<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default) => _handler(query, cancellationToken);
     }
 }

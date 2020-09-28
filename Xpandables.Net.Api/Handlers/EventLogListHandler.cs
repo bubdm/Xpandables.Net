@@ -17,9 +17,12 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Api.Contracts;
 using Xpandables.Net.Api.Models.Domains;
@@ -36,15 +39,23 @@ namespace Xpandables.Net.Api.Handlers
 
         public EventLogListHandler(IDataContext dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
 
-        public async IAsyncEnumerable<Log> HandleAsync(EventLogList query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<Log> HandleAsync(EventLogList query, CancellationToken cancellationToken = default)
         {
             var queryExpression = QueryExpressionFactory.Create<EventLog>();
             if (query.Name is not null) queryExpression = queryExpression.And(el => el.EventName.Contains(query.Name));
             if (query.StartOccuredOn is not null) queryExpression = queryExpression.And(el => el.OccuredOn >= query.StartOccuredOn.Value);
             if (query.EndOccuredOn is not null) queryExpression = queryExpression.And(el => el.OccuredOn <= query.EndOccuredOn.Value);
 
-            await foreach (var log in _dataContext.GetNoTrackingEventLogAsync(query, queryExpression, cancellationToken).ConfigureAwait(false))
-                yield return new Log(log.EventName, log.OccuredOn, log.Description);
+            return _dataContext.SetOf(query)
+                .AsNoTracking()
+                .Include(i => i.EventLogs)
+                .SelectMany(user => user.EventLogs)
+                .Where(queryExpression)
+                .Select(log => new Log(log.EventName, log.OccuredOn, log.Description))
+                .AsAsyncEnumerable();
+
+            //await foreach (var log in _dataContext.GetNoTrackingEventLogAsync(query, queryExpression, cancellationToken).ConfigureAwait(false))
+            //    yield return new Log(log.EventName, log.OccuredOn, log.Description);
         }
     }
 }

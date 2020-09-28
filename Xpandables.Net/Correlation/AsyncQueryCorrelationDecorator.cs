@@ -19,10 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
-using Xpandables.Net.Optionals;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Correlation
@@ -66,13 +63,30 @@ namespace Xpandables.Net.Correlation
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).AsyncExecuteSafe(
-                async exceptionDispatcher => await _correlationContext.OnRollbackEventAsync(exceptionDispatcher.SourceException).ConfigureAwait(false),
-                cancellationToken).ConfigureAwait(false))
+        {      
+            await using var asyncEnumerator = _decoratee.HandleAsync(query, cancellationToken).GetAsyncEnumerator(cancellationToken);
+            for (var resultExist = true; resultExist;)
             {
-                await _correlationContext.OnPostEventAsync(result).ConfigureAwait(false);
-                yield return result;
+                try
+                {
+                    resultExist = await asyncEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    resultExist = false;
+                    await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
+                    throw;
+                }
+
+                if (resultExist)
+                {
+                    await _correlationContext.OnPostEventAsync(asyncEnumerator.Current).ConfigureAwait(false);
+                    yield return asyncEnumerator.Current;
+                }
+                else
+                {
+                    yield break;
+                }
             }
         }
     }

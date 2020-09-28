@@ -17,11 +17,8 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
-using Xpandables.Net.Optionals;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Identities
@@ -65,13 +62,12 @@ namespace Xpandables.Net.Identities
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
-        public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
             query.SetIdentity(_identityDataProvider.GetIdentity());
-            await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false))
-                yield return result;
+            return _decoratee.HandleAsync(query, cancellationToken);
         }
     }
 }

@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -53,7 +52,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
-        public async IAsyncEnumerable<TResult> InvokeAsync<TResult>(IAsyncQuery<TResult> query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<TResult> InvokeAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
@@ -64,8 +63,7 @@ namespace Xpandables.Net.Dispatchers
                 throw new NotImplementedException(
                     $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerBuilder<,>).Name} is registered.");
 
-            await foreach (var result in handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler, cancellationToken).ConfigureAwait(false))
-                yield return result;
+            return handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler, cancellationToken);
         }
 
         /// <summary>
@@ -80,7 +78,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
-        public async IAsyncEnumerable<TResult> InvokeQueryAsync<TQuery, TResult>(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<TResult> InvokeQueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
             where TQuery : class, IAsyncQuery<TResult>
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
@@ -88,8 +86,7 @@ namespace Xpandables.Net.Dispatchers
             var handler = DispatcherHandlerProvider.GetHandler<IAsyncQueryHandler<TQuery, TResult>>()
                 ?? throw new NotImplementedException($"The matching query handler for {typeof(TQuery).Name} is missing.");
 
-            await foreach (var result in handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler, cancellationToken).ConfigureAwait(false))
-                yield return result;
+            return handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler, cancellationToken);
         }
 
         /// <summary>
