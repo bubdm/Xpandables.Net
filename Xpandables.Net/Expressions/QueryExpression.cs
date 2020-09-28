@@ -33,14 +33,7 @@ namespace Xpandables.Net.Expressions
         /// Gets the expression tree for the underlying instance.
         /// </summary>
         [return: NotNull]
-        public Expression<Func<TSource, TResult>> GetExpression() => BuildExpression();
-
-        /// <summary>
-        /// When implemented in derived class, this method will return the expression
-        /// to be used for the clause <see langword="Where"/> in a query.
-        /// </summary>
-        [return: NotNull]
-        protected abstract Expression<Func<TSource, TResult>> BuildExpression();
+        public abstract Expression<Func<TSource, TResult>> GetExpression();
 
         /// <summary>
         /// Returns the unique hash code for the current instance.
@@ -93,13 +86,13 @@ namespace Xpandables.Net.Expressions
         public static QueryExpression<TSource, TResult> operator &(
              QueryExpression<TSource, TResult> left,
              QueryExpression<TSource, TResult> right)
-          => new QueryExpressionAnd<TSource, TResult>(left, right);
+          => new QueryExpressionAnd<TSource, TResult>(left, right: right);
 
         [return: NotNull]
         public static QueryExpression<TSource, TResult> operator |(
              QueryExpression<TSource, TResult> left,
              QueryExpression<TSource, TResult> right)
-            => new QueryExpressionOr<TSource, TResult>(left, right);
+            => new QueryExpressionOr<TSource, TResult>(left, right: right);
 
         public static QueryExpression<TSource, TResult> operator ==(
             bool value,
@@ -127,14 +120,13 @@ namespace Xpandables.Net.Expressions
         [return: NotNull]
         public static QueryExpression<TSource, TResult> operator !(
              QueryExpression<TSource, TResult> left)
-            => new QueryExpressionNot<TSource, TResult>(left);
+            => new QueryExpressionNot<TSource, TResult>(expression: left);
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
     /// <summary>
-    /// This class is a helper that provides a default implementation for <see cref="IQueryExpression{TSource}"/>.
-    /// You must override the <see cref="BuildExpression"/> method in order to provide a custom behavior.
+    /// This class is a helper that provides a default implementation for <see cref="IQueryExpression{TSource}"/> with <see cref="bool"/> as result.
     /// </summary>
     /// <typeparam name="TSource">The data source type.</typeparam>
     public class QueryExpression<TSource> : QueryExpression<TSource, bool>, IQueryExpression<TSource>
@@ -145,6 +137,6 @@ namespace Xpandables.Net.Expressions
         /// to be used for the clause <see langword="Where"/> in a query.
         /// </summary>
         [return: NotNull]
-        protected override Expression<Func<TSource, bool>> BuildExpression() => _ => true;
+        public override Expression<Func<TSource, bool>> GetExpression() => _ => true;
     }
 }

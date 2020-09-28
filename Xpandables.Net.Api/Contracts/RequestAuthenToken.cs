@@ -37,7 +37,7 @@ namespace Xpandables.Net.Api.Contracts
             Password = password;
         }
 
-        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Phone.Value == Phone && user.IsActive && !user.IsDeleted;
+        public override Expression<Func<User, bool>> GetExpression() => user => user.Phone.Value == Phone && user.IsActive && !user.IsDeleted;
 
         [Required]
         public string Phone { get; set; } = null!;

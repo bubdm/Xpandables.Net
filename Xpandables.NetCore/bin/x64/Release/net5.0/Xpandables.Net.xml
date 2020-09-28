@@ -3191,17 +3191,33 @@
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
         </member>
+        <member name="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator">
+            <summary>
+            This class allows the application author to add seed support to data context.
+            The target command should implement the <see cref="T:Xpandables.Net.EntityFramework.IInitializerDecorator"/> interface in order to activate the behavior.
+            The class decorates the target <see cref="T:Xpandables.Net.EntityFramework.IDataContextProvider"/> with an implementation of
+            <see cref="T:Xpandables.Net.EntityFramework.IDataContextInitializer"/> that will be called before the data context is returned.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.DataContextInitializerDecorator.#ctor(Xpandables.Net.EntityFramework.IDataContextProvider,Xpandables.Net.EntityFramework.IDataContextInitializer)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
+            </summary>
+            <param name="datacontextProvider">The decorated data context provider.</param>
+            <param name="dataContextInitializer">The data context seeder.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="datacontextProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataContextInitializer"/> is null.</exception>
+        </member>
         <member name="T:Xpandables.Net.EntityFramework.DataContextOptions">
             <summary>
             Defines options to configure data context.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextOptions.UseSeederDecorator``2">
+        <member name="M:Xpandables.Net.EntityFramework.DataContextOptions.UseInitializerDecorator``1">
             <summary>
-            Enables seeder for the data context that is decorated with <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/>.
+            Enables seeder for the data context that is decorated with <see cref="T:Xpandables.Net.EntityFramework.IInitializerDecorator"/>.
             </summary>
-            <typeparam name="TDataContextSeeder">The type that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1"/>.</typeparam>
-            <typeparam name="TDataContext">The type of data context.</typeparam>
+            <typeparam name="TDataContextInitializer">The type that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContextInitializer"/>.</typeparam>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.DataContextOptions.UsePersistenceExceptionHandler(System.Func{System.Exception,System.Exception})">
             <summary>
@@ -3210,23 +3226,6 @@
             </summary>
             <param name="persistenceExceptionHandler">The persistence exception handler delegate instance.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="persistenceExceptionHandler"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1">
-            <summary>
-            This class allows the application author to add seed support to data context.
-            The target command should implement the <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/> interface in order to activate the behavior.
-            The class decorates the target <see cref="T:Xpandables.Net.EntityFramework.IDataContextProvider"/> with an implementation of
-            <see cref="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1"/> that will be called before the data context is returned.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1.#ctor(Xpandables.Net.EntityFramework.IDataContextProvider,Xpandables.Net.EntityFramework.IDataContextSeeder{`0})">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
-            </summary>
-            <param name="datacontextProvider">The decorated data context provider.</param>
-            <param name="dataContextSeeder">The data context seeder.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="datacontextProvider"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataContextSeeder"/> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.EntityFramework.DataContextSettings">
             <summary>
@@ -3500,6 +3499,30 @@
             </summary>
             <param name="persistenceExceptionHandler">The optional delegate instance.</param>
         </member>
+        <member name="T:Xpandables.Net.EntityFramework.IDataContextInitializer">
+            <summary>
+            Allows an application author to dynamically seed a data context before it's retrieved.
+            This is useful when you need a data context not to be empty.
+            The target data context should be decorated with the <see cref="T:Xpandables.Net.EntityFramework.IInitializerDecorator"/> interface.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContextInitializer.InitializeAsync(Xpandables.Net.EntityFramework.IDataContext,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously initializes the specified data context as you wish.
+            Warning : Do not throw exception from this method unless it's absolutely necessary.
+            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
+            </summary>
+            <param name="dataContext">The data context instance to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContextInitializer.Initialize(Xpandables.Net.EntityFramework.IDataContext)">
+            <summary>
+            Initializes the specified data context as you wish.
+            Warning : Do not throw exception from this method unless it's absolutely necessary.
+            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
+            </summary>
+            <param name="dataContext">The data context instance to act on.</param>
+        </member>
         <member name="T:Xpandables.Net.EntityFramework.IDataContextProvider">
             <summary>
             Provides with a method to return the ambient data context instance.
@@ -3519,34 +3542,14 @@
             </summary>
             <returns>An instance of context that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContext" />.</returns>
         </member>
-        <member name="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1">
+        <member name="T:Xpandables.Net.EntityFramework.IInitializerDecorator">
             <summary>
-            Allows an application author to dynamically seed a data context before it's retrieved.
-            This is useful when you need a data context not to be empty.
-            The target data context should be decorated with the <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/> interface and
-            the class seeder implementation should be
-            registered to services collections with the extension method <see langword="ServiceCollectionExtensions.AddXDataContext{TDataContextProvider}(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
-            using options.
+            A marker interface that allows the class that implements the <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> to be seeded before use.
+            You need to register the expected behavior using the appropriate extension method
+            and provide an implementation for <see cref="T:Xpandables.Net.EntityFramework.IDataContextInitializer"/>.
+            <para></para>
+            The class implementation will be decorated with the <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
             </summary>
-            <typeparam name="TDataContext">The type of the data context that
-            implements <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> and <see cref="T:Xpandables.Net.EntityFramework.ISeedDecorator"/>.</typeparam>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContextSeeder`1.SeedAsync(`0,System.Threading.CancellationToken)">
-            <summary>
-            Asynchronously seeds the specified data context as you wish.
-            Warning : Do not throw exception from this method unless it's absolutely necessary.
-            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
-            </summary>
-            <param name="dataContext">The data context instance to act on.</param>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContextSeeder`1.Seed(`0)">
-            <summary>
-            Seeds the specified data context as you wish.
-            Warning : Do not throw exception from this method unless it's absolutely necessary.
-            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
-            </summary>
-            <param name="dataContext">The data context instance to act on.</param>
         </member>
         <member name="T:Xpandables.Net.EntityFramework.IPersistenceDecorator">
             <summary>
@@ -3561,15 +3564,6 @@
             register the data context using and extension method.
             <para></para>
             <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.EntityFramework.AsyncCommandPersistenceDecorator`1"/>.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.EntityFramework.ISeedDecorator">
-            <summary>
-            A marker interface that allows the class that implements the <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> to be seeded before use.
-            You need to register the expected behavior using the appropriate extension method
-            and provide an implementation for <see cref="T:Xpandables.Net.EntityFramework.IDataContextSeeder`1"/>.
-            <para></para>
-            The class implementation will be decorated with the <see cref="T:Xpandables.Net.EntityFramework.DataContextSeederDecorator`1"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Enumerables.EnumerableExtensions">
@@ -3976,12 +3970,6 @@
             Gets the expression tree for the underlying instance.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Expressions.QueryExpression`2.BuildExpression">
-            <summary>
-            When implemented in derived class, this method will return the expression
-            to be used for the clause <see langword="Where"/> in a query.
-            </summary>
-        </member>
         <member name="M:Xpandables.Net.Expressions.QueryExpression`2.GetHashCode">
             <summary>
             Returns the unique hash code for the current instance.
@@ -3997,12 +3985,11 @@
         </member>
         <member name="T:Xpandables.Net.Expressions.QueryExpression`1">
             <summary>
-            This class is a helper that provides a default implementation for <see cref="T:Xpandables.Net.Expressions.IQueryExpression`1"/>.
-            You must override the <see cref="M:Xpandables.Net.Expressions.QueryExpression`1.BuildExpression"/> method in order to provide a custom behavior.
+            This class is a helper that provides a default implementation for <see cref="T:Xpandables.Net.Expressions.IQueryExpression`1"/> with <see cref="T:System.Boolean"/> as result.
             </summary>
             <typeparam name="TSource">The data source type.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Expressions.QueryExpression`1.BuildExpression">
+        <member name="M:Xpandables.Net.Expressions.QueryExpression`1.GetExpression">
             <summary>
             When implemented in derived class, this method will return the expression
             to be used for the clause <see langword="Where"/> in a query.
@@ -4017,14 +4004,23 @@
         </member>
         <member name="M:Xpandables.Net.Expressions.QueryExpressionAnd`2.#ctor(Xpandables.Net.Expressions.IQueryExpression{`0,`1},Xpandables.Net.Expressions.IQueryExpression{`0,`1})">
             <summary>
-            Returns a new instance of <see cref="T:Xpandables.Net.Expressions.QueryExpressionAnd`2"/> class with the expressions for composition.
+            Returns a new instance of <see cref="T:Xpandables.Net.Expressions.QueryExpressionAnd`2"/> class with the query expressions for composition.
             </summary>
-            <param name="left">The executable validator for the left side.</param>
-            <param name="right">The executable validator for the right side.</param>
+            <param name="left">The query expression for the left side.</param>
+            <param name="right">The query expression for the right side.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="left"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="right"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Expressions.QueryExpressionAnd`2.BuildExpression">
+        <member name="M:Xpandables.Net.Expressions.QueryExpressionAnd`2.#ctor(Xpandables.Net.Expressions.IQueryExpression{`0,`1},System.Linq.Expressions.Expression{System.Func{`0,`1}})">
+            <summary>
+            Returns a new instance of <see cref="T:Xpandables.Net.Expressions.QueryExpressionAnd`2"/> class with the expressions for composition.
+            </summary>
+            <param name="left">The query expression  for the left side.</param>
+            <param name="rightExpression">The expression for the right side.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="left"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="rightExpression"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Expressions.QueryExpressionAnd`2.GetExpression">
             <summary>
             Returns the expression to be used for the clause <see langword="Where"/> in a query.
             </summary>
@@ -4043,10 +4039,22 @@
             <param name="expression">The expression to be used by the instance.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="expression"/> can not be null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Expressions.QueryExpressionBuilder`2.BuildExpression">
+        <member name="M:Xpandables.Net.Expressions.QueryExpressionBuilder`2.GetExpression">
             <summary>
             Returns the expression to be used for the clause <see langword="Where"/> in a query.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Expressions.QueryExpressionFactory">
+            <summary>
+            Provides the query expression factory that contains methods to create generic query expressions.
+            </summary>   
+        </member>
+        <member name="M:Xpandables.Net.Expressions.QueryExpressionFactory.Create``1">
+            <summary>
+            Creates a new instance of <see cref="T:Xpandables.Net.Expressions.QueryExpression`2"/> with <see cref="T:System.Boolean"/> result that return <see langword="true"/>.
+            </summary>
+            <typeparam name="TSource">The data type source.</typeparam>
+            <returns>an new instance of <see cref="T:Xpandables.Net.Expressions.QueryExpression`2"/> with boolean result.</returns>
         </member>
         <member name="T:Xpandables.Net.Expressions.QueryExpressionFactory`1">
             <summary>
@@ -4109,7 +4117,27 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="left"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="right"/> is null.</exception>
         </member>
+        <member name="M:Xpandables.Net.Expressions.QueryExpressionHelpers.And``2(Xpandables.Net.Expressions.IQueryExpression{``0,``1},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Applies the AND operator to both query expressions and returns a new one.
+            </summary>
+            <param name="left">The expression left side.</param>
+            <param name="right">The expression right side.</param>
+            <returns><see cref="T:Xpandables.Net.Expressions.QueryExpression`2"/> object</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="left"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="right"/> is null.</exception>
+        </member>
         <member name="M:Xpandables.Net.Expressions.QueryExpressionHelpers.Or``2(Xpandables.Net.Expressions.IQueryExpression{``0,``1},Xpandables.Net.Expressions.IQueryExpression{``0,``1})">
+            <summary>
+            Applies the OR operator to both query expressions and returns a new one.
+            </summary>
+            <param name="left">The expression left side.</param>
+            <param name="right">The expression right side.</param>
+            <returns><see cref="T:Xpandables.Net.Expressions.QueryExpression`2"/> object</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="left"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="right"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Expressions.QueryExpressionHelpers.Or``2(Xpandables.Net.Expressions.IQueryExpression{``0,``1},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
             <summary>
             Applies the OR operator to both query expressions and returns a new one.
             </summary>
@@ -4127,6 +4155,14 @@
             <returns><see cref="T:Xpandables.Net.Expressions.QueryExpression`2"/> object</returns>
             <exception cref="T:System.ArgumentNullException"></exception>
         </member>
+        <member name="M:Xpandables.Net.Expressions.QueryExpressionHelpers.Not``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Applies the NOT operator to the query expression and returns a new one.
+            </summary>
+            <param name="queryExpression">The expression left side.</param>
+            <returns><see cref="T:Xpandables.Net.Expressions.QueryExpression`2"/> object</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
         <member name="T:Xpandables.Net.Expressions.QueryExpressionNot`2">
             <summary>
             Provides the <see cref="T:Xpandables.Net.Expressions.QueryExpression`2"/> "Not" profile.
@@ -4136,12 +4172,19 @@
         </member>
         <member name="M:Xpandables.Net.Expressions.QueryExpressionNot`2.#ctor(Xpandables.Net.Expressions.IQueryExpression{`0,`1})">
             <summary>
-            Returns a new instance of <see cref="T:Xpandables.Net.Expressions.QueryExpressionNot`2"/> class with the expression.
+            Returns a new instance of <see cref="T:Xpandables.Net.Expressions.QueryExpressionNot`2"/> class with the query expression.
             </summary>
-            <param name="expression">The executable validator for the left side.</param>
+            <param name="expression">The query expression  for the left side.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="expression"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Expressions.QueryExpressionNot`2.BuildExpression">
+        <member name="M:Xpandables.Net.Expressions.QueryExpressionNot`2.#ctor(System.Linq.Expressions.Expression{System.Func{`0,`1}})">
+            <summary>
+            Returns a new instance of <see cref="T:Xpandables.Net.Expressions.QueryExpressionNot`2"/> class with the expression.
+            </summary>
+            <param name="leftExpression">The query expression  for the left side.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="leftExpression"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Expressions.QueryExpressionNot`2.GetExpression">
             <summary>
             Returns the expression to be used for the clause <see langword="Where"/> in a query.
             </summary>
@@ -4155,14 +4198,23 @@
         </member>
         <member name="M:Xpandables.Net.Expressions.QueryExpressionOr`2.#ctor(Xpandables.Net.Expressions.IQueryExpression{`0,`1},Xpandables.Net.Expressions.IQueryExpression{`0,`1})">
             <summary>
-            Returns a new instance of <see cref="T:Xpandables.Net.Expressions.QueryExpressionOr`2"/> class with the expressions for composition.
+            Returns a new instance of <see cref="T:Xpandables.Net.Expressions.QueryExpressionOr`2"/> class with the query expressions for composition.
             </summary>
-            <param name="left">The executable validator for the left side.</param>
-            <param name="right">The executable validator for the right side.</param>
+            <param name="left">The query expression for the left side.</param>
+            <param name="right">The query expression for the right side.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="left"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="right"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Expressions.QueryExpressionOr`2.BuildExpression">
+        <member name="M:Xpandables.Net.Expressions.QueryExpressionOr`2.#ctor(Xpandables.Net.Expressions.IQueryExpression{`0,`1},System.Linq.Expressions.Expression{System.Func{`0,`1}})">
+            <summary>
+            Returns a new instance of <see cref="T:Xpandables.Net.Expressions.QueryExpressionOr`2"/> class with the expressions for composition.
+            </summary>
+            <param name="left">The query expression for the left side.</param>
+            <param name="rightExpression">The expression for the right side.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="left"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="rightExpression"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Expressions.QueryExpressionOr`2.GetExpression">
             <summary>
             Returns the expression to be used for the clause <see langword="Where"/> in a query.
             </summary>
@@ -4220,7 +4272,7 @@
             Returns the <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientAttribute" /> to be applied on the current instance.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.HttpRestClient.GeoLocationRequest.GetQueryString">
+        <member name="M:Xpandables.Net.HttpRestClient.GeoLocationRequest.GetQueryStringSource">
             <summary>
             Returns the keys and values for the Uri.
             </summary>
@@ -4667,29 +4719,34 @@
             The default value is "Bearer".
             </summary>
         </member>
+        <member name="P:Xpandables.Net.HttpRestClient.HttpRestClientAttribute.Uri">
+            <summary>
+            Gets or sets the built in Uri.
+            </summary>
+        </member>
         <member name="T:Xpandables.Net.HttpRestClient.ParameterLocation">
             <summary>
-            The location of the parameter.
+            The location of the parameter, can be combined.
             </summary>
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Query">
             <summary>
-            Parameters that are appended to the URL. You must implement <see cref="T:Xpandables.Net.HttpRestClient.IQueryStringRequest"/> to provide with content.
+            Parameters that are appended to the URL. You must implement <see cref="T:Xpandables.Net.HttpRestClient.IQueryStringLocationRequest"/> to provide with content.
             </summary>
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Header">
             <summary>
-            Custom headers that are expected as part of the request. You must implement <see cref="T:Xpandables.Net.HttpRestClient.IHeaderRequest"/> to provide with content.
+            Custom headers that are expected as part of the request. You must implement <see cref="T:Xpandables.Net.HttpRestClient.IHeaderLocationRequest"/> to provide with content.
             </summary>
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Path">
             <summary>
-            Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="T:Xpandables.Net.HttpRestClient.IQueryStringRequest"/> to provide with content
+            Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="T:Xpandables.Net.HttpRestClient.IPathStringLocationRequest"/> to provide with content.
             </summary>
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Cookie">
             <summary>
-            Used to pass a specific cookie value to the API. You must <see cref="T:Xpandables.Net.HttpRestClient.ICookieRequest"/> to provide with content.
+            Used to pass a specific cookie value to the API. You must <see cref="T:Xpandables.Net.HttpRestClient.ICookieLocationRequest"/> to provide with content.
             </summary>
         </member>
         <member name="F:Xpandables.Net.HttpRestClient.ParameterLocation.Body">
@@ -4902,6 +4959,16 @@
             Helpers for <see cref="T:Xpandables.Net.HttpRestClient.IHttpRestClientHandler"/>.
             </summary>
         </member>
+        <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientExtensions.AddPathString(System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Appends the given path keys and values to the Uri.
+            </summary>
+            <param name="path">The base Uri.</param>
+            <param name="pathString">A collection of name value path pairs to append.</param>
+            <returns>The combined result.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="path"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="pathString"/> is null.</exception>
+        </member>
         <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientExtensions.AddQueryString(System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
             <summary>
             Appends the given query keys and values to the Uri.
@@ -4910,7 +4977,6 @@
             <param name="queryString">A collection of name value query pairs to append.</param>
             <returns>The combined result.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="path"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="queryString"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientExtensions.GetHttpRequestMessageAsync``1(Xpandables.Net.HttpRestClient.HttpRestClientAttribute,``0,System.Threading.CancellationToken)">
             <summary>
@@ -5287,7 +5353,7 @@
             Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.
             The queries and commands should implement one of the following interfaces :
             <see cref="T:Xpandables.Net.HttpRestClient.IStringRequest"/>, <see cref="T:Xpandables.Net.HttpRestClient.IStreamRequest"/>, <see cref="T:Xpandables.Net.HttpRestClient.IByteArrayRequest"/>, <see cref="T:Xpandables.Net.HttpRestClient.IFormUrlEncodedRequest"/>,
-            <see cref="T:Xpandables.Net.HttpRestClient.IMultipartRequest"/> and <see cref="T:Xpandables.Net.HttpRestClient.IQueryStringRequest"/>.
+            <see cref="T:Xpandables.Net.HttpRestClient.IMultipartRequest"/> and <see cref="T:Xpandables.Net.HttpRestClient.IQueryStringLocationRequest"/>.
             <para>You should register the handler using one of the extension methods 
             <see langword="AddHttpClient{TClient, TImplementation}(IServiceCollection)"/> and you may add 
             <see langword="HttpClientBuilderExtensions.ConfigureHttpClient(IHttpClientBuilder, Action{HttpClient})"/> or other 
@@ -5414,26 +5480,6 @@
             Returns the body content.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.HttpRestClient.ICookieRequest">
-            <summary>
-            Provides with a method to retrieve the request content for <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Cookie"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.HttpRestClient.ICookieRequest.GetCookieContent">
-            <summary>
-            Returns the cookie content.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.HttpRestClient.IHeaderRequest">
-            <summary>
-            Provides with a method to retrieve the request content for <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Header"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.HttpRestClient.IHeaderRequest.GetHeaderContent">
-            <summary>
-            Returns the header content.
-            </summary>
-        </member>
         <member name="T:Xpandables.Net.HttpRestClient.IFormUrlEncodedRequest">
             <summary>
             Provides with a method to retrieve the request content for <see cref="F:Xpandables.Net.HttpRestClient.BodyFormat.FormUrlEncoded"/> type.
@@ -5444,15 +5490,54 @@
             Returns the body content.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.HttpRestClient.IQueryStringRequest">
+        <member name="T:Xpandables.Net.HttpRestClient.ICookieLocationRequest">
             <summary>
-            Provides with a method to retrieve the query string content for query string Uri when using <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Query"/> or <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Path"/>.
-            This can be combined with other request interface.
+            Provides with a method to retrieve the request content for <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Cookie"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.HttpRestClient.IQueryStringRequest.GetQueryString">
+        <member name="M:Xpandables.Net.HttpRestClient.ICookieLocationRequest.GetCookieSource">
             <summary>
-            Returns the keys and values for the Uri.
+            Returns the keys and values for the cookie content.
+            If a key is already present, its value will be replaced with the new one.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.HttpRestClient.IHeaderLocationRequest">
+            <summary>
+            Provides with a method to retrieve the request content for <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Header"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.HttpRestClient.IHeaderLocationRequest.GetHeaderSource">
+            <summary>
+            Returns the keys and values for the header content.
+            If a key is already present, its value will be replaced with the new one.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.HttpRestClient.IHeaderLocationRequest.GetHeadersSource">
+            <summary>
+            Returns the keys and values for the header content.
+            If a key is already present, its value will be replaced with the new one.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.HttpRestClient.IQueryStringLocationRequest">
+            <summary>
+            Provides with a method to retrieve the query string content for query string Uri when using <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Query"/>.
+            This can be combined with other locations.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.HttpRestClient.IQueryStringLocationRequest.GetQueryStringSource">
+            <summary>
+            Returns the keys and values for the query string Uri.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.HttpRestClient.IPathStringLocationRequest">
+            <summary>
+            Provides with a method to retrieve the path string content for query string Uri when using <see cref="F:Xpandables.Net.HttpRestClient.ParameterLocation.Path"/>.
+            This can be combined with other locations.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.HttpRestClient.IPathStringLocationRequest.GetPathStringSource">
+            <summary>
+            Returns the keys and values for the path string Uri.
             </summary>
         </member>
         <member name="T:Xpandables.Net.HttpRestClient.IPLocationRequest">

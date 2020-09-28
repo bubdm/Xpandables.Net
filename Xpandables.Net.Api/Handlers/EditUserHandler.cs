@@ -44,7 +44,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task HandleAsync(EditUser command, CancellationToken cancellationToken = default)
         {
-            var user = await _dataContext.GetTrackingUserAsync(command, cancellationToken).ConfigureAwait(false)
+            var user = await _dataContext.GetUserAsync(command, true, cancellationToken).ConfigureAwait(false)
                 ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, command.Phone, new[] { "Phone" });
 
             if (command.Email is { }) user.ChangeEmail(new EmailAddress(command.Email), $"Change to {command.Email}");

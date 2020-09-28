@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace Xpandables.Net.Expressions
@@ -43,6 +44,7 @@ namespace Xpandables.Net.Expressions
         /// <summary>
         /// Gets the expression tree for the underlying instance.
         /// </summary>
+        [return: NotNull]
         Expression<Func<TSource, TResult>> GetExpression();
     }
 }

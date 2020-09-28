@@ -16,6 +16,7 @@
 ************************************************************************************************************/
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Xpandables.Net.HttpRestClient
@@ -28,7 +29,8 @@ namespace Xpandables.Net.HttpRestClient
         /// <summary>
         /// Returns the body content that will be serialized.
         /// </summary>
-        object? GetStringContent();
+        [return: NotNull]
+        object GetStringContent();
     }
 
     /// <summary>
@@ -55,29 +57,8 @@ namespace Xpandables.Net.HttpRestClient
         /// <summary>
         /// Returns the body content.
         /// </summary>
+        [return: NotNull]
         object GetStreamContent();
-    }
-
-    /// <summary>
-    /// Provides with a method to retrieve the request content for <see cref="ParameterLocation.Cookie"/>.
-    /// </summary>
-    public interface ICookieRequest
-    {
-        /// <summary>
-        /// Returns the cookie content.
-        /// </summary>
-        object? GetCookieContent();
-    }
-
-    /// <summary>
-    /// Provides with a method to retrieve the request content for <see cref="ParameterLocation.Header"/>.
-    /// </summary>
-    public interface IHeaderRequest
-    {
-        /// <summary>
-        /// Returns the header content.
-        /// </summary>
-        string? GetHeaderContent();
     }
 
     /// <summary>
@@ -88,14 +69,47 @@ namespace Xpandables.Net.HttpRestClient
         /// <summary>
         /// Returns the body content.
         /// </summary>
+        [return: NotNull]
         IDictionary<string?, string?> GetFormContent();
     }
 
     /// <summary>
-    /// Provides with a method to retrieve the query string content for query string Uri when using <see cref="ParameterLocation.Query"/> or <see cref="ParameterLocation.Path"/>.
-    /// This can be combined with other <see cref="IPathStringRequest"/>.
+    /// Provides with a method to retrieve the request content for <see cref="ParameterLocation.Cookie"/>.
     /// </summary>
-    public interface IQueryStringRequest
+    public interface ICookieLocationRequest
+    {
+        /// <summary>
+        /// Returns the keys and values for the cookie content.
+        /// If a key is already present, its value will be replaced with the new one.
+        /// </summary>
+        [return: NotNull]
+        IDictionary<string, object?> GetCookieSource();
+    }
+
+    /// <summary>
+    /// Provides with a method to retrieve the request content for <see cref="ParameterLocation.Header"/>.
+    /// </summary>
+    public interface IHeaderLocationRequest
+    {
+        /// <summary>
+        /// Returns the keys and values for the header content.
+        /// If a key is already present, its value will be replaced with the new one.
+        /// </summary>
+        [return: NotNull]
+        IDictionary<string, string?> GetHeaderSource();
+
+        /// <summary>
+        /// Returns the keys and values for the header content.
+        /// If a key is already present, its value will be replaced with the new one.
+        /// </summary>
+        IDictionary<string, IEnumerable<string?>> GetHeadersSource() => GetHeaderSource().ToDictionary(d => d.Key, d => (IEnumerable<string?>)new[] { d.Value });
+    }
+
+    /// <summary>
+    /// Provides with a method to retrieve the query string content for query string Uri when using <see cref="ParameterLocation.Query"/>.
+    /// This can be combined with other locations.
+    /// </summary>
+    public interface IQueryStringLocationRequest
     {
         /// <summary>
         /// Returns the keys and values for the query string Uri.
@@ -104,14 +118,15 @@ namespace Xpandables.Net.HttpRestClient
     }
 
     /// <summary>
-    /// Provides with a method to retrieve the path string content for query string Uri when using <see cref="ParameterLocation.Query"/> or <see cref="ParameterLocation.Path"/>.
-    /// This can be combined with <see cref="IQueryStringRequest"/>.
+    /// Provides with a method to retrieve the path string content for query string Uri when using <see cref="ParameterLocation.Path"/>.
+    /// This can be combined with other locations.
     /// </summary>
-    public interface IPathStringRequest
+    public interface IPathStringLocationRequest
     {
         /// <summary>
         /// Returns the keys and values for the path string Uri.
         /// </summary>
+        [return: NotNull]
         IDictionary<string, string> GetPathStringSource();
     }
 }

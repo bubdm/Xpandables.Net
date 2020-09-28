@@ -23,6 +23,19 @@ namespace Xpandables.Net.Expressions
 {
     /// <summary>
     /// Provides the query expression factory that contains methods to create generic query expressions.
+    /// </summary>   
+    public static class QueryExpressionFactory
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryExpression{TSource, TResult}"/> with <see cref="bool"/> result that return <see langword="true"/>.
+        /// </summary>
+        /// <typeparam name="TSource">The data type source.</typeparam>
+        /// <returns>an new instance of <see cref="QueryExpression{TSource, TResult}"/> with boolean result.</returns>
+        public static QueryExpression<TSource, bool> Create<TSource>() where TSource : class => new QueryExpressionBuilder<TSource, bool>(_ => true);
+    }
+
+    /// <summary>
+    /// Provides the query expression factory that contains methods to create generic query expressions.
     /// </summary>
     /// <typeparam name="TResult">The result type.</typeparam>
     public static class QueryExpressionFactory<TResult>

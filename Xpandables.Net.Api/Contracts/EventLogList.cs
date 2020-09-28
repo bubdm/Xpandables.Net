@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
 using Xpandables.Net.Api.Models;
@@ -47,10 +48,30 @@ namespace Xpandables.Net.Api.Contracts
     }
 
     [HttpRestClient(Path = "api/user", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
-    public sealed class EventLogList : IdentityDataExpression<TokenClaims, User>, IAsyncQuery<Log>, IIdentityDecorator, IQueryStringRequest
+    public sealed class EventLogList : IdentityDataExpression<TokenClaims, User>, IAsyncQuery<Log>, IIdentityDecorator, IQueryStringLocationRequest
     {
-        public IDictionary<string, string?>? GetQueryStringSource() => default;
 
-        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Phone.Value == Identity.Phone.Value && user.IsActive && !user.IsDeleted;
+        public EventLogList() { }
+
+        public EventLogList(string? name, DateTime? startOccuredOn, DateTime? endOccuredOn)
+        {
+            Name = name;
+            StartOccuredOn = startOccuredOn;
+            EndOccuredOn = endOccuredOn;
+        }
+
+        public IDictionary<string, string?>? GetQueryStringSource() => new Dictionary<string, string?>
+        {
+            { nameof(Name), Name },
+            { nameof(StartOccuredOn), StartOccuredOn?.ToString("yyyy-MM-dd HH:mm:ss") },
+            { nameof(EndOccuredOn), EndOccuredOn?.ToString("yyyy-MM-dd HH:mm:ss") }
+        };
+
+        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Id == Identity.Id && user.IsActive && !user.IsDeleted;
+        public string? Name { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime? StartOccuredOn { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime? EndOccuredOn { get; set; }
     }
 }

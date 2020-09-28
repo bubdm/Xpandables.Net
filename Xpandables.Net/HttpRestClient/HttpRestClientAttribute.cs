@@ -113,34 +113,35 @@ namespace Xpandables.Net.HttpRestClient
     }
 
     /// <summary>
-    /// The location of the parameter.
+    /// The location of the parameter, can be combined.
     /// </summary>
+    [Flags]
     public enum ParameterLocation
     {
         /// <summary>
-        /// Parameters that are appended to the URL. You must implement <see cref="IQueryStringRequest"/> to provide with content.
+        /// Parameters that are appended to the URL. You must implement <see cref="IQueryStringLocationRequest"/> to provide with content.
         /// </summary>
-        Query,
+        Query = 0x1,
 
         /// <summary>
-        /// Custom headers that are expected as part of the request. You must implement <see cref="IHeaderRequest"/> to provide with content.
+        /// Custom headers that are expected as part of the request. You must implement <see cref="IHeaderLocationRequest"/> to provide with content.
         /// </summary>
-        Header,
+        Header = 0x4,
 
         /// <summary>
-        /// Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="IPathStringRequest"/> to provide with content.
+        /// Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="IPathStringLocationRequest"/> to provide with content.
         /// </summary>
-        Path,
+        Path = 0x2,
 
         /// <summary>
-        /// Used to pass a specific cookie value to the API. You must <see cref="ICookieRequest"/> to provide with content.
+        /// Used to pass a specific cookie value to the API. You must <see cref="ICookieLocationRequest"/> to provide with content.
         /// </summary>
-        Cookie,
+        Cookie = 0x8,
 
         /// <summary>
         /// Used in the content of the request.
         /// </summary>
-        Body
+        Body = 0x0
     }
 
     /// <summary>

@@ -44,7 +44,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async IAsyncEnumerable<AuthenToken> HandleAsync(RequestAuthenToken query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var user = await _dataContext.GetNoTrackingUserAsync(query, cancellationToken).ConfigureAwait(false)
+            var user = await _dataContext.GetUserAsync(query, false, cancellationToken).ConfigureAwait(false)
                 ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, query.Phone, new[] { nameof(query.Phone) });
 
             var tokenClaims = user.CreateTokenClaims();

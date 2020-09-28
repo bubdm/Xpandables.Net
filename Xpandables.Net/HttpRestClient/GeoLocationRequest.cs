@@ -27,7 +27,7 @@ namespace Xpandables.Net.HttpRestClient
     /// <summary>
     /// The IPAddress Geo-location request.
     /// </summary>
-    public class GeoLocationRequest : IAsyncQuery<GeoLocationResponse>, IQueryStringRequest, IHttpRestClientAttributeProvider
+    public class GeoLocationRequest : IAsyncQuery<GeoLocationResponse>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
     {
         /// <summary>
         /// Initializes a new instance of <see cref="GeoLocationRequest"/> class.

@@ -113,7 +113,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         internal static async Task<HttpRequestMessage> GetHttpRequestMessageAsync<TSource>(
             this HttpRestClientAttribute attribute, TSource source, CancellationToken cancellationToken = default)
-            where TSource : class
+            where TSource : notnull
         {
             _ = attribute ?? throw new ArgumentNullException(nameof(attribute));
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -122,19 +122,8 @@ namespace Xpandables.Net.HttpRestClient
 
             if (attribute.In == ParameterLocation.Path || attribute.In == ParameterLocation.Query)
             {
-                ValidateImplementation<IPathStringRequest>(source, true);
-                if (source is IPathStringRequest pathStringRequest)
-                {
-                    var pathString = pathStringRequest.GetPathStringSource();
-                    attribute.Path = attribute.Path.AddPathString(pathString);
-                }
-
-                ValidateImplementation<IQueryStringRequest>(source, true);
-                if (source is IQueryStringRequest queryStringRequest)
-                {
-                    var queryString = queryStringRequest.GetQueryStringSource();
-                    attribute.Path = attribute.Path.AddQueryString(queryString);
-                }
+                ApplyLocationPath(source, attribute);
+                ApplyLocationQuery(source, attribute);
 
                 attribute.Uri = new Uri(attribute.Path, UriKind.Relative);
             }
@@ -147,63 +136,19 @@ namespace Xpandables.Net.HttpRestClient
             httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(attribute.Accept));
             httpRequestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(Thread.CurrentThread.CurrentCulture.Name));
 
-            if (!attribute.IsNullable)
-            {
-                switch (attribute.BodyFormat)
-                {
-                    case BodyFormat.ByteArray:
-                        ValidateImplementation<IByteArrayRequest>(source);
-                        if ((source as IByteArrayRequest)!.GetByteContent() is { } byteContent)
-                            httpRequestMessage.Content = new ByteArrayContent(byteContent);
-                        break;
-                    case BodyFormat.FormUrlEncoded:
-                        ValidateImplementation<IFormUrlEncodedRequest>(source);
-                        if ((source as IFormUrlEncodedRequest)!.GetFormContent() is { } formContent)
-                            httpRequestMessage.Content = new FormUrlEncodedContent(formContent);
-                        break;
-                    case BodyFormat.Multipart:
-                        ValidateImplementation<IMultipartRequest>(source);
-                        var multipartContent = new MultipartFormDataContent();
-                        var multipartSource = source as IMultipartRequest;
+            ApplyLocationCookie(source, attribute, httpRequestMessage);
+            ApplyLocationHeader(source, attribute, httpRequestMessage);
 
-                        if (multipartSource!.GetByteContent() is { } mbyteContent)
-                            multipartContent.Add(new ByteArrayContent(mbyteContent));
-                        if (multipartSource.GetStringContent() is { } mstringContent)
-                            multipartContent.Add(new StringContent(
-                                JsonConvert.SerializeObject(mstringContent), Encoding.UTF8, attribute.ContentType));
-                        httpRequestMessage.Content = multipartContent;
-                        break;
-                    case BodyFormat.Stream:
-                        ValidateImplementation<IStreamRequest>(source);
-                        var memoryStream = new MemoryStream();
-                        using (var streamWriter = new StreamWriter(memoryStream, new UTF8Encoding(false), 1028, true))
-                        using (var jsonTextWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.None })
-                        {
-                            JsonSerializer.CreateDefault().Serialize(jsonTextWriter, source);
-                            await jsonTextWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
-                        }
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-                        httpRequestMessage.Content = new StreamContent(memoryStream);
-                        break;
-                    case BodyFormat.String:
-                        ValidateImplementation<IStringRequest>(source, true);
-                        var content = new StringContent(JsonConvert.SerializeObject((source as IStringRequest)?.GetStringContent() ?? source), Encoding.UTF8, attribute.ContentType);
-                        if (attribute.In == ParameterLocation.Cookie)
-                        {
-                            ValidateImplementation<ICookieRequest>(source, false);
-                            httpRequestMessage.Options.TryAdd(attribute.HeaderCookieName, (source as ICookieRequest)!.GetCookieContent());
-                        }
-                        else if (attribute.In == ParameterLocation.Header)
-                        {
-                            ValidateImplementation<IHeaderRequest>(source, false);
-                            httpRequestMessage.Headers.Add(attribute.HeaderCookieName, (source as IHeaderRequest)!.GetHeaderContent());
-                        }
-                        else
-                        {
-                            httpRequestMessage.Content = content;
-                        }
-                        break;
-                }
+            if (!attribute.IsNullable && attribute.In == ParameterLocation.Body)
+            {
+                httpRequestMessage.Content = attribute.BodyFormat switch
+                {
+                    BodyFormat.ByteArray => GetByteArrayContent(source),
+                    BodyFormat.FormUrlEncoded => GetFormUrlEncodedContent(source),
+                    BodyFormat.Multipart => GetMultipartContent(source, attribute),
+                    BodyFormat.Stream => await GetStreamContentAsync(source, cancellationToken).ConfigureAwait(false),
+                    _ => GetStringContent(source, attribute)
+                };
 
                 httpRequestMessage.Content!.Headers.ContentType = new MediaTypeHeaderValue(attribute.ContentType);
             }
@@ -212,6 +157,141 @@ namespace Xpandables.Net.HttpRestClient
                 httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(attribute.Scheme);
 
             return httpRequestMessage;
+        }
+
+        private static HttpContent? GetMultipartContent<TSource>(TSource source, HttpRestClientAttribute attribute)
+            where TSource : notnull
+        {
+            ValidateImplementation<IMultipartRequest>(source, false);
+            if (source is IMultipartRequest multipartRequest)
+            {
+                var multipartContent = new MultipartFormDataContent();
+                if (GetByteArrayContent(multipartRequest) is { } byteContent)
+                    multipartContent.Add(byteContent);
+
+                multipartContent.Add(GetStringContent(multipartRequest, attribute));
+
+                return multipartContent;
+            }
+
+            return default;
+        }
+
+        private static async Task<HttpContent?> GetStreamContentAsync<TSource>(TSource source, CancellationToken cancellationToken)
+            where TSource : notnull
+        {
+            ValidateImplementation<IStreamRequest>(source, false);
+            object streamContent;
+            if (source is IStreamRequest streamRequest)
+                streamContent = streamRequest.GetStreamContent();
+            else
+                streamContent = source;
+
+            var memoryStream = new MemoryStream();
+            using (var streamWriter = new StreamWriter(memoryStream, new UTF8Encoding(false), 1028, true))
+            using (var jsonTextWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.None })
+            {
+                JsonSerializer.CreateDefault().Serialize(jsonTextWriter, streamContent);
+                await jsonTextWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
+            }
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return new StreamContent(memoryStream);
+        }
+
+        private static HttpContent GetStringContent<TSource>(TSource source, HttpRestClientAttribute attribute)
+            where TSource : notnull
+        {
+            ValidateImplementation<IStringRequest>(source, true);
+            if (source is IStringRequest stringRequest)
+                return new StringContent(JsonConvert.SerializeObject(stringRequest.GetStringContent()), Encoding.UTF8, attribute.ContentType);
+
+            return new StringContent(JsonConvert.SerializeObject(source), Encoding.UTF8, attribute.ContentType);
+        }
+
+        private static HttpContent? GetFormUrlEncodedContent<TSource>(TSource source)
+            where TSource : notnull
+        {
+            ValidateImplementation<IFormUrlEncodedRequest>(source, false);
+            if (source is IFormUrlEncodedRequest formUrlEncodedRequest)
+                if (formUrlEncodedRequest.GetFormContent() is { } formContent)
+                    return new FormUrlEncodedContent(formContent);
+
+            return default;
+        }
+
+        private static HttpContent? GetByteArrayContent<TSource>(TSource source)
+            where TSource : notnull
+        {
+            ValidateImplementation<IByteArrayRequest>(source, false);
+            if (source is IByteArrayRequest byteArrayRequest)
+                if (byteArrayRequest.GetByteContent() is { } byteContent)
+                    return new ByteArrayContent(byteContent);
+
+            return default;
+        }
+
+        internal static void ApplyLocationHeader<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage)
+            where TSource : notnull
+        {
+            if (attribute.In == ParameterLocation.Header)
+            {
+                ValidateImplementation<IHeaderLocationRequest>(source, false);
+                if (source is IHeaderLocationRequest headerLocationRequest)
+                {
+                    var headerSource = headerLocationRequest.GetHeadersSource();
+                    foreach (var parameter in headerSource)
+                    {
+                        httpRequestMessage.Headers.Remove(parameter.Key);
+                        httpRequestMessage.Headers.Add(parameter.Key, parameter.Value);
+                    }
+                }
+            }
+        }
+
+        internal static void ApplyLocationCookie<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage)
+            where TSource : notnull
+        {
+            if (attribute.In == ParameterLocation.Cookie)
+            {
+                ValidateImplementation<ICookieLocationRequest>(source, false);
+                if (source is ICookieLocationRequest cookieLocationRequest)
+                {
+                    var cookieSource = cookieLocationRequest.GetCookieSource();
+                    foreach (var parameter in cookieSource)
+                    {
+                        httpRequestMessage.Options.Remove(parameter.Key, out _);
+                        httpRequestMessage.Options.TryAdd(parameter.Key, parameter.Value);
+                    }
+                }
+            }
+        }
+
+        internal static void ApplyLocationQuery<TSource>(TSource source, HttpRestClientAttribute attribute)
+            where TSource : notnull
+        {
+            if (attribute.In == ParameterLocation.Query)
+            {
+                ValidateImplementation<IQueryStringLocationRequest>(source, false);
+                if (source is IQueryStringLocationRequest queryStringRequest)
+                {
+                    var queryString = queryStringRequest.GetQueryStringSource();
+                    attribute.Path = attribute.Path!.AddQueryString(queryString);
+                }
+            }
+        }
+
+        internal static void ApplyLocationPath<TSource>(TSource source, HttpRestClientAttribute attribute)
+            where TSource : notnull
+        {
+            if (attribute.In == ParameterLocation.Path)
+            {
+                ValidateImplementation<IPathStringLocationRequest>(source, false);
+                if (source is IPathStringLocationRequest pathStringRequest)
+                {
+                    var pathString = pathStringRequest.GetPathStringSource();
+                    attribute.Path = attribute.Path!.AddPathString(pathString);
+                }
+            }
         }
 
         internal static void ValidateImplementation<TInterface>(object source, bool optional = false)

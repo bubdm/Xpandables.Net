@@ -32,17 +32,26 @@ namespace Xpandables.Net.Expressions
         private Expression<Func<TSource, TResult>>? _cache;
 
         /// <summary>
-        /// Returns a new instance of <see cref="QueryExpressionNot{TSource, TResult}"/> class with the expression.
+        /// Returns a new instance of <see cref="QueryExpressionNot{TSource, TResult}"/> class with the query expression.
         /// </summary>
-        /// <param name="expression">The executable validator for the left side.</param>
+        /// <param name="expression">The query expression  for the left side.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="expression"/> is null.</exception>
         public QueryExpressionNot(IQueryExpression<TSource, TResult> expression)
             => _expression = expression ?? throw new ArgumentNullException(nameof(expression));
 
+
+        /// <summary>
+        /// Returns a new instance of <see cref="QueryExpressionNot{TSource, TResult}"/> class with the expression.
+        /// </summary>
+        /// <param name="leftExpression">The query expression  for the left side.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="leftExpression"/> is null.</exception>
+        public QueryExpressionNot(Expression<Func<TSource, TResult>> leftExpression)
+            => _expression = new QueryExpressionBuilder<TSource, TResult>(leftExpression ?? throw new ArgumentNullException(nameof(leftExpression)));
+
         /// <summary>
         /// Returns the expression to be used for the clause <see langword="Where"/> in a query.
         /// </summary>
-        protected override Expression<Func<TSource, TResult>> BuildExpression()
+        public override Expression<Func<TSource, TResult>> GetExpression()
             => _cache ??= QueryExpressionFactory<TResult>.Not(_expression.GetExpression());
     }
 }

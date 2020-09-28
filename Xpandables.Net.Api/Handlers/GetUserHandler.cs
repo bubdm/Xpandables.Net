@@ -35,7 +35,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async IAsyncEnumerable<UserItem> HandleAsync(GetUser query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var user = await _dataContext.GetNoTrackingUserAsync(query, cancellationToken).ConfigureAwait(false);
+            var user = await _dataContext.GetUserAsync(query, false, cancellationToken).ConfigureAwait(false);
             if (user is not null)
                 yield return new UserItem(user.Id, user.Phone, user.Email);
             else

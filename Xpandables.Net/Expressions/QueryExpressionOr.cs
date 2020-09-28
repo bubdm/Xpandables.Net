@@ -33,10 +33,10 @@ namespace Xpandables.Net.Expressions
         private Expression<Func<TSource, TResult>>? _cache;
 
         /// <summary>
-        /// Returns a new instance of <see cref="QueryExpressionOr{TSource, TResult}"/> class with the expressions for composition.
+        /// Returns a new instance of <see cref="QueryExpressionOr{TSource, TResult}"/> class with the query expressions for composition.
         /// </summary>
-        /// <param name="left">The executable validator for the left side.</param>
-        /// <param name="right">The executable validator for the right side.</param>
+        /// <param name="left">The query expression for the left side.</param>
+        /// <param name="right">The query expression for the right side.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
         public QueryExpressionOr(IQueryExpression<TSource, TResult> left, IQueryExpression<TSource, TResult> right)
@@ -46,9 +46,22 @@ namespace Xpandables.Net.Expressions
         }
 
         /// <summary>
+        /// Returns a new instance of <see cref="QueryExpressionOr{TSource, TResult}"/> class with the expressions for composition.
+        /// </summary>
+        /// <param name="left">The query expression for the left side.</param>
+        /// <param name="rightExpression">The expression for the right side.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="rightExpression"/> is null.</exception>
+        public QueryExpressionOr(IQueryExpression<TSource, TResult> left, Expression<Func<TSource, TResult>> rightExpression)
+        {
+            _left = left ?? throw new ArgumentNullException(nameof(left));
+            _right = new QueryExpressionBuilder<TSource, TResult>(rightExpression ?? throw new ArgumentNullException(nameof(rightExpression)));
+        }
+
+        /// <summary>
         /// Returns the expression to be used for the clause <see langword="Where"/> in a query.
         /// </summary>
-        protected override Expression<Func<TSource, TResult>> BuildExpression()
+        public override Expression<Func<TSource, TResult>> GetExpression()
             => _cache ??= QueryExpressionFactory<TResult>.Or(_left.GetExpression(), _right.GetExpression());
     }
 }

@@ -41,6 +41,6 @@ namespace Xpandables.Net.Expressions
         /// <summary>
         /// Returns the expression to be used for the clause <see langword="Where"/> in a query.
         /// </summary>
-        protected sealed override Expression<Func<TSource, TResult>> BuildExpression() => _expression;
+        public sealed override Expression<Func<TSource, TResult>> GetExpression() => _expression;
     }
 }

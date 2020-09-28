@@ -33,16 +33,10 @@ namespace Xpandables.Net.Api.Storage.Services
 {
     public static class UserService
     {
-        public static async Task<User> GetNoTrackingUserAsync(this IDataContext @this, IQueryExpression<User> query, CancellationToken cancellationToken = default)
+        public static async Task<User> GetUserAsync(this IDataContext @this, IQueryExpression<User> query, bool asTracking = false, CancellationToken cancellationToken = default)
             => await @this
                 .SetOf(query)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(query.GetExpression(), cancellationToken)
-                .ConfigureAwait(false);
-
-        public static async Task<User> GetTrackingUserAsync(this IDataContext @this, IQueryExpression<User> query, CancellationToken cancellationToken = default)
-            => await @this
-                .SetOf(query)
+                .AsTracking(asTracking ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking)
                 .FirstOrDefaultAsync(query.GetExpression(), cancellationToken)
                 .ConfigureAwait(false);
 
@@ -52,9 +46,10 @@ namespace Xpandables.Net.Api.Storage.Services
             return User.Create(new PhoneNumber(phone), passwordEncrypted, new EmailAddress(email));
         }
 
-        public static async IAsyncEnumerable<EventLog> GetNoTrackingEventLogAsync(this IDataContext @this, IQueryExpression<User> query, [EnumeratorCancellation] CancellationToken _ = default)
+        public static async IAsyncEnumerable<EventLog> GetNoTrackingEventLogAsync(
+            this IDataContext @this, IQueryExpression<User> query, IQueryExpression<EventLog, bool> criteria, [EnumeratorCancellation] CancellationToken _ = default)
         {
-            await foreach (var eventLog in @this.SetOf(query).Include(i => i.EventLogs).AsNoTracking().Where(query.GetExpression()).SelectMany(user => user.EventLogs).ToAsyncEnumerable())
+            await foreach (var eventLog in @this.SetOf(query).Include(i => i.EventLogs).AsNoTracking().Where(query.GetExpression()).SelectMany(user => user.EventLogs).Where(criteria.GetExpression()).ToAsyncEnumerable())
                 yield return eventLog;
         }
     }

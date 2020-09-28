@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 
 namespace Xpandables.Net.Expressions
 {
@@ -41,6 +42,21 @@ namespace Xpandables.Net.Expressions
             => new QueryExpressionAnd<TSource, TResult>(left, right);
 
         /// <summary>
+        /// Applies the AND operator to both query expressions and returns a new one.
+        /// </summary>
+        /// <param name="left">The expression left side.</param>
+        /// <param name="right">The expression right side.</param>
+        /// <returns><see cref="QueryExpression{TSource, TResult}"/> object</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
+        [return: NotNull]
+        public static QueryExpression<TSource, TResult> And<TSource, TResult>(
+             this IQueryExpression<TSource, TResult> left,
+             Expression<Func<TSource, TResult>> right)
+            where TSource : class
+            => new QueryExpressionAnd<TSource, TResult>(left, right);
+
+        /// <summary>
         /// Applies the OR operator to both query expressions and returns a new one.
         /// </summary>
         /// <param name="left">The expression left side.</param>
@@ -55,6 +71,20 @@ namespace Xpandables.Net.Expressions
             where TSource : class => new QueryExpressionOr<TSource, TResult>(left, right);
 
         /// <summary>
+        /// Applies the OR operator to both query expressions and returns a new one.
+        /// </summary>
+        /// <param name="left">The expression left side.</param>
+        /// <param name="right">The expression right side.</param>
+        /// <returns><see cref="QueryExpression{TSource, TResult}"/> object</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
+        [return: NotNull]
+        public static QueryExpression<TSource, TResult> Or<TSource, TResult>(
+             this IQueryExpression<TSource, TResult> left,
+             Expression<Func<TSource, TResult>> right)
+            where TSource : class => new QueryExpressionOr<TSource, TResult>(left, right);
+
+        /// <summary>
         /// Applies the NOT operator to the query expression and returns a new one.
         /// </summary>
         /// <param name="queryExpression">The expression left side.</param>
@@ -63,6 +93,17 @@ namespace Xpandables.Net.Expressions
         [return: NotNull]
         public static QueryExpression<TSource, TResult> Not<TSource, TResult>(
              this IQueryExpression<TSource, TResult> queryExpression)
+            where TSource : class => new QueryExpressionNot<TSource, TResult>(queryExpression);
+
+        /// <summary>
+        /// Applies the NOT operator to the query expression and returns a new one.
+        /// </summary>
+        /// <param name="queryExpression">The expression left side.</param>
+        /// <returns><see cref="QueryExpression{TSource, TResult}"/> object</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        [return: NotNull]
+        public static QueryExpression<TSource, TResult> Not<TSource, TResult>(
+             this Expression<Func<TSource, TResult>> queryExpression)
             where TSource : class => new QueryExpressionNot<TSource, TResult>(queryExpression);
     }
 }
