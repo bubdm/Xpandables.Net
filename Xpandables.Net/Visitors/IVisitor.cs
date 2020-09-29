@@ -44,18 +44,8 @@ namespace Xpandables.Net.Visitors
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         public async Task VisitAsync(TElement element)
         {
-            Visit(element);
+            _ = element ?? throw new ArgumentNullException(nameof(element));
             await Task.CompletedTask.ConfigureAwait(false);
         }
-
-        /// <summary>
-        /// Declares a Visit operation.
-        /// When overridden in derived class, this method will do the actual job of visiting the specified element.
-        /// The default behavior checks that the argument is not null.
-        /// </summary>
-        /// <param name="element">Element to be visited.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public void Visit(TElement element) => _ = element ?? throw new ArgumentNullException(nameof(element));
     }
 }

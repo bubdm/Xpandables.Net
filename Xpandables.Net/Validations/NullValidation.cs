@@ -30,10 +30,5 @@ namespace Xpandables.Net.Validations
         /// Does nothing.
         /// </summary>
         public async Task ValidateAsync(TArgument _) => await Task.CompletedTask.ConfigureAwait(false);
-
-        /// <summary>
-        /// Does nothing.
-        /// </summary>
-        public void Validate(TArgument _) { }
     }
 }

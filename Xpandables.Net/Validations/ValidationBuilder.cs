@@ -18,6 +18,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.Validations
 {
@@ -29,7 +30,7 @@ namespace Xpandables.Net.Validations
     public sealed class ValidationBuilder<TArgument> : IValidation<TArgument>
         where TArgument : class
     {
-        private readonly Action<TArgument> _validator;
+        private readonly Func<TArgument, Task> _validator;
 
         /// <summary>
         /// Initializes a new instance of <see cref="ValidationBuilder{TArgument}"/> class with the delegate to be used
@@ -37,15 +38,14 @@ namespace Xpandables.Net.Validations
         /// </summary>
         /// <param name="validator">The delegate validator.</param>
         /// <exception cref="ArgumentException">The <paramref name="validator"/> is null.</exception>
-        public ValidationBuilder(Action<TArgument> validator) =>
-            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+        public ValidationBuilder(Func<TArgument, Task> validator) => _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 
         /// <summary>
-        /// Validates the argument and throws the <see cref="ValidationException"/> if necessary.
+        /// Asynchronously validates the argument and throws the <see cref="ValidationException"/> if necessary.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
         /// <exception cref="ValidationException">Any validation exception.</exception>
-        public void Validate(TArgument argument) => _validator(argument);
+        public async Task ValidateAsync(TArgument argument) => await _validator(argument).ConfigureAwait(false);
     }
 }

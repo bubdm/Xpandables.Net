@@ -30,10 +30,5 @@ namespace Xpandables.Net.Visitors
         /// Does nothing.
         /// </summary>
         public async Task VisitAsync(TElement _) { /* intentionally left empty. */ await Task.CompletedTask.ConfigureAwait(false); }
-
-        /// <summary>
-        /// Does nothing.
-        /// </summary>
-        public void Visit(TElement _) { /* intentionally left empty. */ }
     }
 }

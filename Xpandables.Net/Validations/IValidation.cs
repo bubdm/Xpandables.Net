@@ -45,17 +45,8 @@ namespace Xpandables.Net.Validations
         /// <exception cref="ValidationException">Any validation exception.</exception>
         public async Task ValidateAsync(TArgument argument)
         {
-            Validate(argument);
+            Validator.ValidateObject(argument, new ValidationContext(argument, null, null), true);
             await Task.CompletedTask.ConfigureAwait(false);
         }
-
-        /// <summary>
-        /// Validates the argument and throws the <see cref="ValidationException"/> if necessary.
-        /// The default behavior uses <see cref="Validator.ValidateObject(object, ValidationContext, bool)"/>.
-        /// </summary>
-        /// <param name="argument">The target argument to be validated.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <exception cref="ValidationException">Any validation exception.</exception>
-        public void Validate(TArgument argument) => Validator.ValidateObject(argument, new ValidationContext(argument, null, null), true);
     }
 }

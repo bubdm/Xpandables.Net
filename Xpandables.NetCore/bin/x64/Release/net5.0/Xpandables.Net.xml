@@ -12264,15 +12264,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
             <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException">Any validation exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Validations.ICompositeValidation`1.Validate(`0)">
-            <summary>
-            Validates the argument and throws the <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> if necessary.
-            The default behavior uses <see cref="M:System.ComponentModel.DataAnnotations.Validator.ValidateObject(System.Object,System.ComponentModel.DataAnnotations.ValidationContext,System.Boolean)"/>.
-            </summary>
-            <param name="argument">The target argument to be validated.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-            <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException">Any validation exception.</exception>
-        </member>
         <member name="T:Xpandables.Net.Validations.IMetataDescriptionProvider">
             <summary>
             Allows an application author to add type description provider for any class.
@@ -12384,15 +12375,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
             <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException">Any validation exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Validations.IValidation`1.Validate(`0)">
-            <summary>
-            Validates the argument and throws the <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> if necessary.
-            The default behavior uses <see cref="M:System.ComponentModel.DataAnnotations.Validator.ValidateObject(System.Object,System.ComponentModel.DataAnnotations.ValidationContext,System.Boolean)"/>.
-            </summary>
-            <param name="argument">The target argument to be validated.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-            <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException">Any validation exception.</exception>
-        </member>
         <member name="T:Xpandables.Net.Validations.IValidationDecorator">
             <summary>
             A marker interface that allows the command/query class to be decorated with the validation behavior according to the class type :
@@ -12423,17 +12405,19 @@
             Does nothing.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Validations.NullValidation`1.Validate(`0)">
-            <summary>
-            Does nothing.
-            </summary>
-        </member>
         <member name="T:Xpandables.Net.Validations.PatternRequiredOptionalAttribute">
             <summary>
-            Specifies that the data field value is required according to a regular expression by overriding the <see cref="M:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.GetRegexPattern"/> method.
+            Specifies that the data field value is required according to a regular expression.
             When the <see cref="P:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.IsOptional"/> is <see langword="true"/>, the data field is only checked if there is a value.
             This is an <see langword="abstract"/> class.
             </summary>
+        </member>
+        <member name="M:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Validations.PatternRequiredOptionalAttribute"/> with the regex pattern the value must match.
+            </summary>
+            <param name="regexPattern">The regex pattern to be applied.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="regexPattern"/> is <see langword="null"/>.</exception>
         </member>
         <member name="M:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
             <summary>
@@ -12450,9 +12434,9 @@
             If <see langword="true"/>, the data field will only be checked when there is a value. The default behavior is <see langword="false"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.GetRegexPattern">
+        <member name="P:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.RegexPattern">
             <summary>
-            Returns the Regex pattern the value must match.
+            Gets the Regex pattern the value must match.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Validations.ValidationAttributeExtensions">
@@ -12475,7 +12459,7 @@
             </summary>
             <typeparam name="TArgument">Type of the argument.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Validations.ValidationBuilder`1.#ctor(System.Action{`0})">
+        <member name="M:Xpandables.Net.Validations.ValidationBuilder`1.#ctor(System.Func{`0,System.Threading.Tasks.Task})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Validations.ValidationBuilder`1"/> class with the delegate to be used
             as <see cref="T:Xpandables.Net.Validations.IValidation`1"/> implementation.
@@ -12483,9 +12467,9 @@
             <param name="validator">The delegate validator.</param>
             <exception cref="T:System.ArgumentException">The <paramref name="validator"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Validations.ValidationBuilder`1.Validate(`0)">
+        <member name="M:Xpandables.Net.Validations.ValidationBuilder`1.ValidateAsync(`0)">
             <summary>
-            Validates the argument and throws the <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> if necessary.
+            Asynchronously validates the argument and throws the <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> if necessary.
             </summary>
             <param name="argument">The target argument to be validated.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
@@ -12784,15 +12768,6 @@
             <exception cref="T:System.ArgumentException">The <paramref name="element"/> does not implement <see cref="T:Xpandables.Net.Visitors.IVisitable`1"/>.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Visitors.ICompositeVisitor`1.Visit(`0)">
-            <summary>
-            Applies all found visitors to the element according to the visitor order.
-            </summary>
-            <param name="element">The element to be visited.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="element"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="element"/> does not implement <see cref="T:Xpandables.Net.Visitors.IVisitable`1"/>.</exception>
-            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
-        </member>
         <member name="T:Xpandables.Net.Visitors.IVisitable`1">
             <summary>
             Defines an Accept operation that takes a visitor as an argument.
@@ -12810,25 +12785,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Visitors.IVisitable`1.Accept(Xpandables.Net.Visitors.IVisitor{`0})">
-            <summary>
-            Defines the Accept operation.
-            When overridden in derived class, this method will accept the specified visitor.
-            The default behavior just call the visit method of the visitor on the current instance.
-            </summary>
-            <param name="visitor">The visitor to be applied on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
-        </member>
         <member name="M:Xpandables.Net.Visitors.IVisitable`1.AcceptAsync(Xpandables.Net.Visitors.ICompositeVisitor{`0})">
-            <summary>
-            Defines the Accept operation with <see cref="T:Xpandables.Net.Visitors.ICompositeVisitor`1"/>.
-            </summary>
-            <param name="visitor">The composite visitor to be applied on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Visitors.IVisitable`1.Accept(Xpandables.Net.Visitors.ICompositeVisitor{`0})">
             <summary>
             Defines the Accept operation with <see cref="T:Xpandables.Net.Visitors.ICompositeVisitor`1"/>.
             </summary>
@@ -12859,16 +12816,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="element"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Visitors.IVisitor`1.Visit(`0)">
-            <summary>
-            Declares a Visit operation.
-            When overridden in derived class, this method will do the actual job of visiting the specified element.
-            The default behavior checks that the argument is not null.
-            </summary>
-            <param name="element">Element to be visited.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="element"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
-        </member>
         <member name="T:Xpandables.Net.Visitors.NullVisitor`1">
             <summary>
             Visitor when no explicit registration exist for a given type.
@@ -12876,11 +12823,6 @@
             <typeparam name="TElement">Type of element to be visited.</typeparam>
         </member>
         <member name="M:Xpandables.Net.Visitors.NullVisitor`1.VisitAsync(`0)">
-            <summary>
-            Does nothing.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Visitors.NullVisitor`1.Visit(`0)">
             <summary>
             Does nothing.
             </summary>

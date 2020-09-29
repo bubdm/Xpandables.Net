@@ -20,8 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Enumerables;
-
 namespace Xpandables.Net.Visitors
 {
     /// <summary>
@@ -47,20 +45,6 @@ namespace Xpandables.Net.Visitors
 
             var tasks = VisitorInstances.OrderBy(o => o.Order).Select(visitor => element.AcceptAsync(visitor));
             await Task.WhenAll(tasks).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Applies all found visitors to the element according to the visitor order.
-        /// </summary>
-        /// <param name="element">The element to be visited.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="element"/> does not implement <see cref="IVisitable{TVisitable}"/>.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public new void Visit(TElement element)
-        {
-            _ = element ?? throw new ArgumentNullException(nameof(element));
-
-            VisitorInstances.OrderBy(o => o.Order).ForEach(visitor => visitor.Visit(element));
         }
     }
 }

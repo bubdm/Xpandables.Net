@@ -21,8 +21,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Enumerables;
-
 namespace Xpandables.Net.Validations
 {
     /// <summary>
@@ -46,14 +44,5 @@ namespace Xpandables.Net.Validations
             var tasks = ValidationInstances.OrderBy(o => o.Order).Select(validator => validator.ValidateAsync(argument));
             await Task.WhenAll(tasks).ConfigureAwait(false);
         }
-
-        /// <summary>
-        /// Validates the argument and throws the <see cref="ValidationException"/> if necessary.
-        /// The default behavior uses <see cref="Validator.ValidateObject(object, ValidationContext, bool)"/>.
-        /// </summary>
-        /// <param name="argument">The target argument to be validated.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <exception cref="ValidationException">Any validation exception.</exception>
-        public new void Validate(TArgument argument) => ValidationInstances.OrderBy(o => o.Order).ForEach(validator => validator.Validate(argument));
     }
 }

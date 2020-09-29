@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
+using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Validations
@@ -62,7 +63,7 @@ namespace Xpandables.Net.Validations
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         public IAsyncEnumerable<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
-            _validator.Validate(query);
+            AsyncExtensions.RunSync(_validator.ValidateAsync(query));
             return _decoratee.HandleAsync(query, cancellationToken);
         }
     }

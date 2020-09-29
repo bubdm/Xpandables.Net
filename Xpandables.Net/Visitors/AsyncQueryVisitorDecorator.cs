@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
+using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Visitors
@@ -64,7 +65,7 @@ namespace Xpandables.Net.Visitors
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            query.Accept(_visitor);
+            AsyncExtensions.RunSync(query.AcceptAsync(_visitor));
             return _decoratee.HandleAsync(query, cancellationToken);
         }
     }

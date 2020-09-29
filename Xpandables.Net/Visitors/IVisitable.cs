@@ -43,20 +43,6 @@ namespace Xpandables.Net.Visitors
         }
 
         /// <summary>
-        /// Defines the Accept operation.
-        /// When overridden in derived class, this method will accept the specified visitor.
-        /// The default behavior just call the visit method of the visitor on the current instance.
-        /// </summary>
-        /// <param name="visitor">The visitor to be applied on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public void Accept(IVisitor<TVisitable> visitor)
-        {
-            _ = visitor ?? throw new ArgumentNullException(nameof(visitor));
-            visitor.Visit((TVisitable)this);
-        }
-
-        /// <summary>
         /// Defines the Accept operation with <see cref="ICompositeVisitor{TElement}"/>.
         /// </summary>
         /// <param name="visitor">The composite visitor to be applied on.</param>
@@ -66,18 +52,6 @@ namespace Xpandables.Net.Visitors
         {
             _ = visitor ?? throw new ArgumentNullException(nameof(visitor));
             await visitor.VisitAsync((TVisitable)this).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Defines the Accept operation with <see cref="ICompositeVisitor{TElement}"/>.
-        /// </summary>
-        /// <param name="visitor">The composite visitor to be applied on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public sealed void Accept(ICompositeVisitor<TVisitable> visitor)
-        {
-            _ = visitor ?? throw new ArgumentNullException(nameof(visitor));
-            visitor.Visit((TVisitable)this);
         }
     }
 }

@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 using Xpandables.Net.Strings;
@@ -25,13 +24,20 @@ using Xpandables.Net.Strings;
 namespace Xpandables.Net.Validations
 {
     /// <summary>
-    /// Specifies that the data field value is required according to a regular expression by overriding the <see cref="GetRegexPattern"/> method.
+    /// Specifies that the data field value is required according to a regular expression.
     /// When the <see cref="IsOptional"/> is <see langword="true"/>, the data field is only checked if there is a value.
     /// This is an <see langword="abstract"/> class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public abstract class PatternRequiredOptionalAttribute : RequiredAttribute
+    public sealed class PatternRequiredOptionalAttribute : RequiredAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="PatternRequiredOptionalAttribute"/> with the regex pattern the value must match.
+        /// </summary>
+        /// <param name="regexPattern">The regex pattern to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="regexPattern"/> is <see langword="null"/>.</exception>
+        public PatternRequiredOptionalAttribute(string regexPattern) => RegexPattern = regexPattern ?? throw new ArgumentNullException(nameof(regexPattern));
+
         /// <summary>
         /// Validates the specified value with respect to the current pattern validation attribute.
         /// </summary>
@@ -58,7 +64,7 @@ namespace Xpandables.Net.Validations
 
             try
             {
-                isValid = Regex.IsMatch(stringValue, GetRegexPattern());
+                isValid = Regex.IsMatch(stringValue, RegexPattern);
             }
             catch (Exception exception) when (exception is ArgumentException
                                             || exception is RegexMatchTimeoutException)
@@ -78,9 +84,8 @@ namespace Xpandables.Net.Validations
         public bool IsOptional { get; set; }
 
         /// <summary>
-        /// Returns the Regex pattern the value must match.
+        /// Gets the Regex pattern the value must match.
         /// </summary>
-        [return: NotNull]
-        protected abstract string GetRegexPattern();
+        public string RegexPattern { get; }
     }
 }
