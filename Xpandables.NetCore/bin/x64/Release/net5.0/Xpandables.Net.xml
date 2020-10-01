@@ -6002,6 +6002,14 @@
             </summary>
             <exception cref="T:System.InvalidOperationException">Failed to find secured data.</exception>
         </member>
+        <member name="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity``1">
+            <summary>
+            Returns an instance that contains identity of the specified type or null if not found.
+            </summary>
+            <typeparam name="TIdentity">The type of the identity.</typeparam>
+            <returns>An object of <typeparamref name="TIdentity"/> type or null.</returns>
+            <exception cref="T:System.InvalidOperationException">Failed to find secured data.</exception>
+        </member>
         <member name="T:Xpandables.Net.Identities.IIdentityDecorator">
             <summary>
             A marker interface that allows the command/query class to be filled with an identity. The class should derive from

@@ -6,10 +6,10 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "Xpandables.NetCore/5.0.0-rc.1.0.9": {
+      "Xpandables.NetCore/5.0.0-rc.1.1.0": {
         "dependencies": {
           "Microsoft.CodeAnalysis.FxCopAnalyzers": "3.3.0",
-          "Xpandables.Net": "5.0.0-rc.1.0.9"
+          "Xpandables.Net": "5.0.0-rc.1.1.0"
         },
         "runtime": {
           "Xpandables.NetCore.dll": {}
@@ -54,7 +54,7 @@
           }
         }
       },
-      "Xpandables.Net/5.0.0-rc.1.0.9": {
+      "Xpandables.Net/5.0.0-rc.1.1.0": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
           "System.Drawing.Common": "5.0.0-rc.1.20451.14",
@@ -75,7 +75,7 @@
     }
   },
   "libraries": {
-    "Xpandables.NetCore/5.0.0-rc.1.0.9": {
+    "Xpandables.NetCore/5.0.0-rc.1.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -150,7 +150,7 @@
       "path": "system.linq.async/4.1.1",
       "hashPath": "system.linq.async.4.1.1.nupkg.sha512"
     },
-    "Xpandables.Net/5.0.0-rc.1.0.9": {
+    "Xpandables.Net/5.0.0-rc.1.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
