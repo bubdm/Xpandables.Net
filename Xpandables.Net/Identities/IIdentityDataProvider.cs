@@ -33,5 +33,14 @@ namespace Xpandables.Net.Identities
         /// <exception cref="InvalidOperationException">Failed to find secured data.</exception>
         [return: NotNull]
         object GetIdentity();
+
+        /// <summary>
+        /// Returns an instance that contains identity of the specified type or null if not found.
+        /// </summary>
+        /// <typeparam name="TIdentity">The type of the identity.</typeparam>
+        /// <returns>An object of <typeparamref name="TIdentity"/> type or null.</returns>
+        /// <exception cref="InvalidOperationException">Failed to find secured data.</exception>
+        [return: MaybeNull]
+        public TIdentity GetIdentity<TIdentity>() where TIdentity : class => GetIdentity() as TIdentity;
     }
 }
