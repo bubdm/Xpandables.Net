@@ -71,7 +71,7 @@ namespace Xpandables.Net.Data
 
                 // We check for the friendly representation of the parameter.
                 // We only manage SQL Server and Oracle.
-                var friendlyRepresentation = command.Connection.GetType().Name.Contains("SqlConnection", StringComparison.OrdinalIgnoreCase) ? "@" : ":";
+                var friendlyRepresentation = command.Connection.IsSqlConnection() ? "@" : ":";
 
                 for (var i = 0; i < parameters.Length; i++)
                 {

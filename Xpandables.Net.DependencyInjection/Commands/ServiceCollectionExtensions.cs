@@ -26,7 +26,6 @@ using Xpandables.Net.Correlation;
 using Xpandables.Net.EntityFramework;
 using Xpandables.Net.Identities;
 using Xpandables.Net.Queries;
-using Xpandables.Net.Serilog;
 using Xpandables.Net.Transactions;
 using Xpandables.Net.Validations;
 using Xpandables.Net.Visitors;
@@ -81,26 +80,12 @@ namespace Xpandables.Net.DependencyInjection
         public CommandQueryOptions UseIdentityDecorator(Type identityDataProvider)
             => this.Assign(cq => cq.IsIdentityDataEnabled = identityDataProvider ?? throw new ArgumentNullException(nameof(identityDataProvider)));
 
-        /// <summary>
-        /// Enables logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/>.
-        /// </summary>
-        public CommandQueryOptions UseLoggingDecorator<TLogger>()
-            where TLogger : class, ILoggerEngine => this.Assign(cq => cq.IsLoggingEnabled = typeof(TLogger));
-
-        /// <summary>
-        /// Enables logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/>.
-        /// </summary>
-        /// <param name="loggerType">The identity data provider type.</param>
-        public CommandQueryOptions UseLoggingDecorator(Type loggerType)
-            => this.Assign(cq => cq.IsLoggingEnabled = loggerType ?? throw new ArgumentNullException(nameof(loggerType)));
-
         internal bool IsValidatorEnabled { get; private set; }
         internal bool IsVisitorEnabled { get; private set; }
         internal bool IsTransactionEnabled { get; private set; }
         internal bool IsPersistenceEnabled { get; private set; }
         internal bool IsCorrelationEnabled { get; private set; }
         internal Type? IsIdentityDataEnabled { get; private set; }
-        internal Type? IsLoggingEnabled { get; private set; }
     }
 
     /// <summary>
@@ -151,9 +136,6 @@ namespace Xpandables.Net.DependencyInjection
 
             var definedOptions = new CommandQueryOptions();
             configureOptions.Invoke(definedOptions);
-
-            if (definedOptions.IsLoggingEnabled is { })
-                services.AddXLoggingDecorator(definedOptions.IsLoggingEnabled);
 
             if (definedOptions.IsCorrelationEnabled)
                 services.AddXCorrelationDecorator();

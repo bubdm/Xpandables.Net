@@ -65,7 +65,7 @@ namespace Xpandables.Net.EntityFramework
             InstanceCreator.OnException = dispatcher => throw new InvalidOperationException($"Unable to create database {nameof(TDataContext)}", dispatcher.SourceException);
             var dataContext = (TDataContext)InstanceCreator.Create(typeof(TDataContext), options)!;
 
-            if (DataContextSettings.EnsuredDeletedBefore && !await dataContext.Database.EnsureDeletedAsync(cancellationToken).ConfigureAwait(false))
+            if (DataContextSettings.EnsuredDeleted && !await dataContext.Database.EnsureDeletedAsync(cancellationToken).ConfigureAwait(false))
                 throw new InvalidOperationException($"Unable to delete database before migration {dataContext.Database.ProviderName}");
 
             if (!DataContextSettings.UseInMemory && DataContextSettings.ApplyMigrations)
@@ -84,7 +84,7 @@ namespace Xpandables.Net.EntityFramework
             InstanceCreator.OnException = dispatcher => throw new InvalidOperationException($"Unable to create database {nameof(TDataContext)}", dispatcher.SourceException);
             var dataContext = (TDataContext)InstanceCreator.Create(typeof(TDataContext), options)!;
 
-            if (DataContextSettings.EnsuredDeletedBefore && !dataContext.Database.EnsureDeleted())
+            if (DataContextSettings.EnsuredDeleted && !dataContext.Database.EnsureDeleted())
                 throw new InvalidOperationException($"Unable to delete database before migration {dataContext.Database.ProviderName}");
 
             if (!DataContextSettings.UseInMemory && DataContextSettings.ApplyMigrations)

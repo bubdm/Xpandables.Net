@@ -34,15 +34,13 @@ namespace Xpandables.Net.EntityFramework
         /// </summary>
         /// <param name="ensuredDeletedBefore">Determine whether or not the database for the context will be deleted before applying migration.</param>
         /// <param name="useInMemory">Determine whether or not the database is uses in memory</param>
-        /// <param name="addSamplesData">Determine whether or not the database will be filled with samples data.</param>
         /// <param name="applyMigrations">Determine whether or not the database the migrations must be applied.</param>
         /// <param name="connectionString">The database connection string.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="connectionString"/> is null.</exception>
-        public DataContextSettings(bool ensuredDeletedBefore, bool useInMemory, bool addSamplesData, bool applyMigrations, string connectionString)
+        public DataContextSettings(bool ensuredDeletedBefore, bool useInMemory, bool applyMigrations, string connectionString)
         {
-            EnsuredDeletedBefore = ensuredDeletedBefore;
+            EnsuredDeleted = ensuredDeletedBefore;
             UseInMemory = useInMemory;
-            AddSamplesData = addSamplesData;
             ApplyMigrations = applyMigrations;
             ConnectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
@@ -51,7 +49,7 @@ namespace Xpandables.Net.EntityFramework
         /// Ensures that the database for the context will be deleted before applying migration.
         /// The default value is <see langword="false"/>.
         /// </summary>
-        public bool EnsuredDeletedBefore { get; set; }
+        public bool EnsuredDeleted { get; set; }
 
         /// <summary>
         /// Ensures that migrations will be applied to the database for the generated context.
@@ -64,12 +62,6 @@ namespace Xpandables.Net.EntityFramework
         /// The default value is <see langword="false"/>.
         /// </summary>
         public bool UseInMemory { get; set; }
-
-        /// <summary>
-        /// Allows the database to be filled with samples data.
-        /// The default value is <see langword="false"/>.
-        /// </summary>
-        public bool AddSamplesData { get; set; }
 
         /// <summary>
         /// The database connection string.
