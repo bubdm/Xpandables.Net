@@ -26,7 +26,7 @@ namespace Xpandables.Net
     /// <summary>
     /// Provides with extension method similar to the VB.Net key word <see lanwgord="With"/>..<see lanwgord="EndWith"/>.
     /// </summary>
-    public static class AssingExtensions
+    public static class AssignExtensions
     {
         /// <summary>
         /// Sets properties via lambda expression scope.
