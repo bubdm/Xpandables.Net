@@ -61,7 +61,7 @@ namespace Xpandables.Net.Tests
             var request = RequestAuthenToken.Default();
             using var response = await httpClientHandler.HandleAsync(request).ConfigureAwait(false);
 
-            var result = await response.Result.FirstAsync().ConfigureAwait(false);
+            var result = response.Result;
             Assert.IsNotNull(result.Token);
             Trace.WriteLine(result.Token);
         }
@@ -76,7 +76,7 @@ namespace Xpandables.Net.Tests
             var request = RequestAuthenToken.Default();
             using var response = await httpClientHandler.HandleAsync(request).ConfigureAwait(false);
 
-            var auth = await response.Result.FirstAsync().ConfigureAwait(false);
+            var auth = response.Result;
             token = auth.Token;
 
             for (int i = 0; i < 2; i++)
@@ -100,7 +100,7 @@ namespace Xpandables.Net.Tests
             var request = RequestAuthenToken.Default();
             using var response = await httpClientHandler.HandleAsync(request).ConfigureAwait(false);
 
-            var auth = await response.Result.FirstAsync().ConfigureAwait(false);
+            var auth = response.Result;
             token = auth.Token;
 
             var eventLogRequest = new EventLogList();// { StartOccuredOn = new DateTime(2020, 09, 24, 10, 00, 35) };
@@ -127,15 +127,15 @@ namespace Xpandables.Net.Tests
             var request = RequestAuthenToken.Default();
             using var response = await httpClientHandler.HandleAsync(request).ConfigureAwait(false);
 
-            var auth = await response.Result.FirstAsync().ConfigureAwait(false);
+            var auth = response.Result;
             token = auth.Token;
             var getUser = new GetUser("IKHTJDQMZWSOKSPYIOFUBMRCHPDAJ197");
 
             using var userResponse = await httpClientHandler.HandleAsync(getUser).ConfigureAwait(false);
             if (userResponse.IsValid())
             {
-                await foreach (var user in userResponse.Result.ConfigureAwait(false))
-                    Trace.WriteLine($"Id : {user.Id} Phone : {user.Phone} Email : {user.Email} ");
+                var user = userResponse.Result;
+                Trace.WriteLine($"Id : {user.Id} Phone : {user.Phone} Email : {user.Email} ");
             }
             else
             {

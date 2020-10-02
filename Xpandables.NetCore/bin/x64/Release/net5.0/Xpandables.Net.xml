@@ -425,6 +425,38 @@
             <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1"/>.
             </summary>
         </member>
+        <member name="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2">
+            <summary>
+            This decorator class allows the application author to add post/rollback event support to query control flow.
+            The target query should implement the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface in order to activate the behavior.
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/> that
+            adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
+            and an event (roll back event) to be raised when exception. The target query handler class should reference the
+            <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/> interface in order to set the expected actions.
+            </summary>
+            <typeparam name="TQuery">Type of the query.</typeparam>
+            <typeparam name="TResult">Type of the result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Correlation.QueryCorrelationDecorator`2.#ctor(Xpandables.Net.Correlation.AsyncCorrelationContext,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2"/> class.
+            </summary>
+            <param name="correlationContext">the event register.</param>
+            <param name="decoratee">The decorated query handler.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Correlation.QueryCorrelationDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        </member>
         <member name="T:Xpandables.Net.Creators.IInstanceCreator">
             <summary>
             Provides with methods to create instance of specific type at runtime using delegate and cache.
@@ -2939,6 +2971,35 @@
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
             <returns>A task that represents the asynchronous operation.</returns>
         </member>
+        <member name="M:Xpandables.Net.Dispatchers.IDispatcher.InvokeAsync``2(``0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously invokes the query handler(<see cref="T:Xpandables.Net.Queries.IQueryHandler`2"/> implementation) on the specified query
+            and returns a result of <typeparamref name="TResult"/> type.
+            </summary>
+            <typeparam name="TQuery">Type of the query.</typeparam>
+            <typeparam name="TResult">Type of the result.</typeparam>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.NotImplementedException">The corresponding handler is missing.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Dispatchers.IDispatcher.InvokeAsync``1(Xpandables.Net.Queries.IQuery{``0},System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously invokes the query handler(<see cref="T:Xpandables.Net.Queries.IQueryHandler`2"/> implementation) on the specified query
+            and returns a result of <typeparamref name="TResult"/> type.
+            </summary>
+            <typeparam name="TResult">Type of the result.</typeparam>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.NotImplementedException">The corresponding handler is missing.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        </member>
         <member name="T:Xpandables.Net.Dispatchers.IDispatcherHandlerProvider">
             <summary>
             Defines set of methods to retrieve handlers of specific type.
@@ -5390,6 +5451,16 @@
             <returns>Returns a task <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientResponse"/>.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command"/> is null.</exception>
         </member>
+        <member name="M:Xpandables.Net.HttpRestClient.IHttpRestClientHandler.HandleAsync``1(Xpandables.Net.Queries.IQuery{``0},System.Threading.CancellationToken)">
+            <summary>
+            Handles the query as asynchronous operation.
+            </summary>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="query">The query to act with. The query must be decorated with the <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientAttribute"/> or implements the <see cref="T:Xpandables.Net.HttpRestClient.IHttpRestClientAttributeProvider"/> interface.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>Returns a task <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        </member>
         <member name="T:Xpandables.Net.HttpRestClient.IHttpRestClientIPLocationHandler">
             <summary>
             Provides with methods to handle HTTP Rest client IP location.
@@ -6018,6 +6089,39 @@
             implementation for <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>
             and register the expected class using the correct extension method.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Identities.QueryIdentityDecorator`2">
+            <summary>
+            This class allows the application author to add secured information support to query control flow.
+            The target query should implement the <see cref="T:Xpandables.Net.Identities.IIdentityDecorator"/> and inherit from <see cref="T:Xpandables.Net.Identities.IdentityData"/>,
+            <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/> in order to activate the behavior.
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>, that you should
+            provide an implementation and use the extension method for registration.
+            The decorator will set the <see cref="P:Xpandables.Net.Identities.IdentityData.Identity"/> property with the
+            <see cref="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity"/> before the handler execution.
+            </summary>
+            <typeparam name="TQuery">Type of the query.</typeparam>
+            <typeparam name="TResult">Type of the query.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Identities.QueryIdentityDecorator`2.#ctor(Xpandables.Net.Identities.IIdentityDataProvider,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Identities.QueryIdentityDecorator`2"/>.
+            </summary>
+            <param name="identityProvider">The secured data provider.</param>
+            <param name="decoratee">The query handler to decorate with.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="identityProvider"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Identities.QueryIdentityDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
         <member name="T:Xpandables.Net.Interception.IInterceptor">
             <summary>
@@ -10711,6 +10815,108 @@
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
             <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
+        <member name="T:Xpandables.Net.Queries.IQuery`1">
+            <summary>
+            This interface is used as a marker for queries when using the query pattern that contains a specific-type result.
+            <para>Class implementation is used with the <see cref="T:Xpandables.Net.Queries.IQueryHandler`2"/> where
+            "TQuery" is <see cref="T:Xpandables.Net.Queries.IQuery`1"/> class implementation.</para>
+            This can also be enhanced with some useful decorators.
+            </summary>
+            <typeparam name="TResult">Type of the result of the query.</typeparam>
+        </member>
+        <member name="T:Xpandables.Net.Queries.IQueryHandler`2">
+            <summary>
+            Defines a generic method that a class implements to handle a type-specific query and
+            returns a type-specific result.
+            The implementation must be thread-safe when working in a multi-threaded environment.
+            This interface inherits from <see cref="T:Xpandables.Net.ICanHandle`1"/> that determines whether or not the query can be handled. Its default behavior returns <see langword="true"/>.
+            </summary>
+            <typeparam name="TQuery">Type of the query that will be used as argument.</typeparam>
+            <typeparam name="TResult">Type of the result of the query.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Queries.IQueryHandler`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        </member>
+        <member name="T:Xpandables.Net.Queries.IQueryHandlerWrapper`1">
+            <summary>
+            This interface allows application authors to avoid use of C# dynamics with query pattern and allows type inference.
+            </summary>
+            <typeparam name="TResult">Type of the result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Queries.IQueryHandlerWrapper`1.HandleAsync(Xpandables.Net.Queries.IQuery{`0},System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        </member>
+        <member name="T:Xpandables.Net.Queries.QueryHandlerBuilder`2">
+            <summary>
+            This helper class allows the application author to implement the <see cref="T:Xpandables.Net.Queries.IQueryHandler`2"/>
+            interface without dedicated class.
+            </summary>
+            <typeparam name="TQuery">Type of argument to act on.</typeparam>
+            <typeparam name="TResult">Type of result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Queries.QueryHandlerBuilder`2.#ctor(System.Func{`0,System.Threading.CancellationToken,System.Threading.Tasks.Task{`1}})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Queries.QueryHandlerBuilder`2"/> with the delegate to be used
+            as <see cref="M:Xpandables.Net.Queries.IQueryHandler`2.HandleAsync(`0,System.Threading.CancellationToken)"/> implementation.
+            </summary>
+            <param name="handler">The delegate to be used when the handler will be invoked.
+            <para>The delegate should match all the behaviors expected in
+            the <see cref="M:Xpandables.Net.Queries.IQueryHandler`2.HandleAsync(`0,System.Threading.CancellationToken)"/>
+            method such as thrown exceptions.</para></param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="handler"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Queries.QueryHandlerBuilder`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        </member>
+        <member name="T:Xpandables.Net.Queries.QueryHandlerWrapper`2">
+            <summary>
+            Implementation for <see cref="T:Xpandables.Net.Queries.IQueryHandlerWrapper`1"/>.
+            </summary>
+            <typeparam name="TQuery">Type of query.</typeparam>
+            <typeparam name="TResult">Type of result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Queries.QueryHandlerWrapper`2.#ctor(Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Queries.QueryHandlerWrapper`2"/> class.
+            </summary>
+            <param name="decoratee">The query handler instance.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Queries.QueryHandlerWrapper`2.HandleAsync(Xpandables.Net.Queries.IQuery{`1},System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        </member>
         <member name="T:Xpandables.Net.Strings.IStringCryptography">
             <summary>
             Provides with methods to encrypt and decrypt string values.
@@ -11884,6 +12090,37 @@
             Gets the Regex pattern the value must match.
             </summary>
         </member>
+        <member name="T:Xpandables.Net.Validations.QueryValidatorDecorator`2">
+            <summary>
+            This class allows the application author to add validation support to query control flow.
+            The target query should implement the <see cref="T:Xpandables.Net.Validations.IValidationDecorator"/> interface in order to activate the behavior.
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Validations.ICompositeValidation`1"/>
+            and applies all validators found to the target query before the command get handled. You should provide with implementation
+            of <see cref="T:Xpandables.Net.Validations.IValidation`1"/>for validation.
+            </summary>
+            <typeparam name="TQuery">Type of query.</typeparam>
+            <typeparam name="TResult">Type of result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Validations.QueryValidatorDecorator`2.#ctor(Xpandables.Net.Queries.IQueryHandler{`0,`1},Xpandables.Net.Validations.ICompositeValidation{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Validations.QueryValidatorDecorator`2"/>.
+            </summary>
+            <param name="decoratee">The query handler to decorate.</param>
+            <param name="validator">The validator instance.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="validator"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Validations.QueryValidatorDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        </member>
         <member name="T:Xpandables.Net.Validations.ValidationAttributeExtensions">
             <summary>
             Provides with helper methods for validation attributes.
@@ -12271,6 +12508,37 @@
             <summary>
             Does nothing.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Visitors.QueryVisitorDecorator`2">
+            <summary>
+            This class allows the application author to add visitor support to query control flow.
+            The target query should implement the <see cref="T:Xpandables.Net.Visitors.IVisitable`1"/> interface in order to activate the behavior.
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Visitors.ICompositeVisitor`1"/>
+            and applies all visitors found to the target query before the query get handled. You should provide with implementation
+            of <see cref="T:Xpandables.Net.Visitors.IVisitor`1"/>.
+            </summary>
+            <typeparam name="TQuery">Type of query.</typeparam>
+            <typeparam name="TResult">Type of result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Visitors.QueryVisitorDecorator`2.#ctor(Xpandables.Net.Queries.IQueryHandler{`0,`1},Xpandables.Net.Visitors.ICompositeVisitor{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Visitors.QueryVisitorDecorator`2"/>.
+            </summary>
+            <param name="decoratee">The query to be decorated.</param>
+            <param name="visitor">The composite visitor to apply</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Visitors.QueryVisitorDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
     </members>
 </doc>

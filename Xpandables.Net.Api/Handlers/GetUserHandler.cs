@@ -16,9 +16,8 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Contracts;
 using Xpandables.Net.Api.Storage.Services;
@@ -27,19 +26,16 @@ using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class GetUserHandler : IAsyncQueryHandler<GetUser, UserItem>
+    public sealed class GetUserHandler : IQueryHandler<GetUser, UserItem>
     {
         private readonly IDataContext _dataContext;
 
         public GetUserHandler(IDataContext dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
 
-        public async IAsyncEnumerable<UserItem> HandleAsync(GetUser query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async Task<UserItem> HandleAsync(GetUser query, CancellationToken cancellationToken = default)
         {
             var user = await _dataContext.GetUserAsync(query, false, cancellationToken).ConfigureAwait(false);
-            if (user is not null)
-                yield return new UserItem(user.Id, user.Phone, user.Email);
-            else
-                yield break;
+            return new UserItem(user.Id, user.Phone, user.Email);
         }
     }
 }

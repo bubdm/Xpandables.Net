@@ -105,7 +105,7 @@
           "lib/netcoreapp3.0/System.Linq.Async.dll": {}
         }
       },
-      "Xpandables.Net/5.0.0-rc.1.1.0": {
+      "Xpandables.Net/5.0.0-rc.1.1.1": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
@@ -673,7 +673,7 @@
         "system.linq.async.nuspec"
       ]
     },
-    "Xpandables.Net/5.0.0-rc.1.1.0": {
+    "Xpandables.Net/5.0.0-rc.1.1.1": {
       "type": "project",
       "path": "../Xpandables.Net/Xpandables.Net.csproj",
       "msbuildProject": "../Xpandables.Net/Xpandables.Net.csproj"
@@ -682,7 +682,7 @@
   "projectFileDependencyGroups": {
     "net5.0": [
       "Microsoft.CodeAnalysis.FxCopAnalyzers >= 3.3.0",
-      "Xpandables.Net >= 5.0.0-rc.1.1.0"
+      "Xpandables.Net >= 5.0.0-rc.1.1.1"
     ]
   },
   "packageFolders": {
@@ -690,7 +690,7 @@
     "D:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
-    "version": "5.0.0-rc.1.1.0",
+    "version": "5.0.0-rc.1.1.1",
     "restore": {
       "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj",
       "projectName": "Xpandables.NetCore",

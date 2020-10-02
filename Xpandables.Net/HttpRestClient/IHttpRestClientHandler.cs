@@ -138,6 +138,44 @@ namespace Xpandables.Net.HttpRestClient
             }
         }
 
+        /// <summary>
+        /// Handles the query as asynchronous operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        public async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+        {
+            _ = HttpClient ?? throw new InvalidOperationException($"The HTTP client needs to be initialized.");
+
+            try
+            {
+                using var request = await GetHttpRequestMessageAsync(query, cancellationToken).ConfigureAwait(false);
+                using var response = await HttpClient.SendAsync(
+                    request,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken)
+                    .ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                    return await GetResponseAsync<TResult, TResult>(response, stream => stream.DeserializeJsonFromStream<TResult>()).ConfigureAwait(false);
+
+                return (HttpRestClientResponse<TResult>)await GetBadResponseAsync(
+                    HttpRestClientResponse<TResult>.Failure, response)
+                    .ConfigureAwait(false);
+            }
+            catch (Exception exception) when (exception is ArgumentNullException
+                                            || exception is InvalidOperationException
+                                            || exception is OperationCanceledException
+                                            || exception is HttpRequestException
+                                            || exception is TaskCanceledException)
+            {
+                return HttpRestClientResponse<TResult>.Failure(exception);
+            }
+        }
+
         private static async Task<HttpRestClientResponse<TResponse>> GetResponseAsync<TResponse, TElement>(HttpResponseMessage httpResponse, Func<Stream, TResponse> streamConverter)
         {
             try

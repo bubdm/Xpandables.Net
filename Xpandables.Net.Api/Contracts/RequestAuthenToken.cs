@@ -28,7 +28,7 @@ using Xpandables.Net.Validations;
 namespace Xpandables.Net.Api.Contracts
 {
     [HttpRestClient(Path = "api/authenticate", Method = "Post", IsSecured = false, IsNullable = true)]
-    public sealed class RequestAuthenToken : QueryExpression<User>, IAsyncQuery<AuthenToken>, IValidationDecorator
+    public sealed class RequestAuthenToken : QueryExpression<User>, IQuery<AuthenToken>, IValidationDecorator
     {
         public static RequestAuthenToken Default() => new RequestAuthenToken("NONE", "NONE");
         public RequestAuthenToken(string phone, string password)

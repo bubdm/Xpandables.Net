@@ -16,9 +16,8 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Contracts;
 using Xpandables.Net.Api.Localization;
@@ -31,7 +30,7 @@ using static Xpandables.Net.Validations.ValidationAttributeExtensions;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class RequestAuthenTokenHandler : IAsyncQueryHandler<RequestAuthenToken, AuthenToken>
+    public sealed class RequestAuthenTokenHandler : IQueryHandler<RequestAuthenToken, AuthenToken>
     {
         private readonly IDataContext _dataContext;
         private readonly IHttpTokenEngine _tokenService;
@@ -42,7 +41,7 @@ namespace Xpandables.Net.Api.Handlers
             _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
         }
 
-        public async IAsyncEnumerable<AuthenToken> HandleAsync(RequestAuthenToken query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async Task<AuthenToken> HandleAsync(RequestAuthenToken query, CancellationToken cancellationToken = default)
         {
             var user = await _dataContext.GetUserAsync(query, false, cancellationToken).ConfigureAwait(false)
                 ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, query.Phone, new[] { nameof(query.Phone) });
@@ -50,7 +49,7 @@ namespace Xpandables.Net.Api.Handlers
             var tokenClaims = user.CreateTokenClaims();
             var token = _tokenService.WriteToken(tokenClaims);
 
-            yield return AuthenToken
+            return AuthenToken
                 .Create()
                 .AddExpiry(token.Expiry)
                 .AddToken(token.Value)

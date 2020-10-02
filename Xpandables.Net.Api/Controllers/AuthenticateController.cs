@@ -44,7 +44,7 @@ namespace Xpandables.Net.Api.Controllers
         public async Task<IActionResult> PostAsync(CancellationToken cancellationToken = default)
         {
             var requestCode = new RequestAuthenToken(ControllerContext.HttpContext.Request.Headers["Phone"], ControllerContext.HttpContext.Request.Headers["Key"]);
-            var response = await _dispatcher.InvokeAsync(requestCode, cancellationToken).FirstAsync(cancellationToken).ConfigureAwait(false);
+            var response = await _dispatcher.InvokeAsync(requestCode, cancellationToken).ConfigureAwait(false);
             return Ok(response);
         }
     }

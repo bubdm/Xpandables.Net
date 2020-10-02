@@ -152,7 +152,7 @@ namespace Xpandables.Net.Asynchronous
         /// <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="taskAsync"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="onException"/> is null.</exception>
-        public static async Task<Optional<TResult>> AsyncExecuteSafe<TResult>(this Task<TResult> taskAsync, Action<ExceptionDispatchInfo> onException)
+        public static async Task<TResult> AsyncExecuteSafe<TResult>(this Task<TResult> taskAsync, Action<ExceptionDispatchInfo> onException)
         {
             _ = taskAsync ?? throw new ArgumentNullException(nameof(taskAsync));
             _ = onException ?? throw new ArgumentNullException(nameof(onException));
@@ -164,7 +164,7 @@ namespace Xpandables.Net.Asynchronous
             catch (Exception exception)
             {
                 onException(ExceptionDispatchInfo.Capture(exception));
-                return Optional<TResult>.Empty();
+                throw;
             }
         }
 

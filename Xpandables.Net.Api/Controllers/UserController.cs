@@ -54,7 +54,7 @@ namespace Xpandables.Net.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAsync([FromRoute] GetUser getUser, CancellationToken cancellationToken = default)
         {
-            var user = await _dispatcher.InvokeAsync(getUser, cancellationToken).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            var user = await _dispatcher.InvokeAsync(getUser, cancellationToken).ConfigureAwait(false);
             return user switch { { } => Ok(user), _ => NotFound() };
         }
 

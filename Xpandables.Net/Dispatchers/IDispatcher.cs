@@ -110,5 +110,55 @@ namespace Xpandables.Net.Dispatchers
 
             await handler.HandleAsync(command, cancellationToken).AsyncExecuteSafe<TCommand>(DispatcherExceptionHandler).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Asynchronously invokes the query handler(<see cref="IQueryHandler{TQuery, TResult}"/> implementation) on the specified query
+        /// and returns a result of <typeparamref name="TResult"/> type.
+        /// </summary>
+        /// <typeparam name="TQuery">Type of the query.</typeparam>
+        /// <typeparam name="TResult">Type of the result.</typeparam>
+        /// <param name="query">The query to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        public async Task<TResult> InvokeAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+            where TQuery : class, IQuery<TResult>
+        {
+            _ = query ?? throw new ArgumentNullException(nameof(query));
+
+            var handler = DispatcherHandlerProvider.GetHandler<IQueryHandler<TQuery, TResult>>()
+                    ?? throw new NotImplementedException($"The matching query handler for {typeof(TQuery).Name} is missing.");
+
+            return await handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously invokes the query handler(<see cref="IQueryHandler{TQuery, TResult}"/> implementation) on the specified query
+        /// and returns a result of <typeparamref name="TResult"/> type.
+        /// </summary>
+        /// <typeparam name="TResult">Type of the result.</typeparam>
+        /// <param name="query">The query to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        public async Task<TResult> InvokeAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+        {
+            _ = query ?? throw new ArgumentNullException(nameof(query));
+
+            if (!typeof(QueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { query.GetType(), typeof(TResult) }))
+                throw new InvalidOperationException("Building Query wrapper failed.", typeException);
+
+            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IQueryHandlerWrapper<TResult> handler)
+                throw new NotImplementedException(
+                    $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} is registered.");
+
+            return await handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler).ConfigureAwait(false);
+        }
     }
 }

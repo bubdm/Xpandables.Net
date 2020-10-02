@@ -43,8 +43,8 @@ namespace Xpandables.Net.DependencyInjection
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             var queryTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterface(typeof(IAsyncQueryHandler<,>).Name) is not null)
-                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IAsyncQueryHandler<,>).Name)! })
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && (type.GetInterface(typeof(IAsyncQueryHandler<,>).Name) is not null || type.GetInterface(typeof(IQueryHandler<,>).Name) is not null))
+                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IAsyncQueryHandler<,>).Name) ?? type.GetInterface(typeof(IQueryHandler<,>).Name)! })
                 .ToList();
 
             foreach (var queryType in queryTypes)
@@ -63,6 +63,7 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddTransient(typeof(AsyncQueryHandlerWrapper<,>));
+            services.AddTransient(typeof(QueryHandlerWrapper<,>));
             return services;
         }
     }

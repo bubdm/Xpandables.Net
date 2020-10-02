@@ -53,9 +53,6 @@ namespace Xpandables.Net.Api.Handlers
                 .Where(queryExpression)
                 .Select(log => new Log(log.EventName, log.OccuredOn, log.Description))
                 .AsAsyncEnumerable();
-
-            //await foreach (var log in _dataContext.GetNoTrackingEventLogAsync(query, queryExpression, cancellationToken).ConfigureAwait(false))
-            //    yield return new Log(log.EventName, log.OccuredOn, log.Description);
         }
     }
 }
