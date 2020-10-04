@@ -15,17 +15,36 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Xpandables.Net.EntityFramework;
+using System;
+using System.IO;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace Xpandables.Net.Api.Storage
 {
-    public sealed class UserContextDesignTimeFactory
-        : DataContextDesignTimeFactory<UserContext, UserContextProvider>
+    public sealed class UserContextDesignTimeFactory : IDesignTimeDbContextFactory<UserContext>
     {
-        public override UserContext CreateDbContext(string[] args)
+        public UserContext CreateDbContext(string[] args)
         {
-            //Debugger.Launch();
-            return base.CreateDbContext(args);
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            IConfiguration config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{environment}.json", optional: true)
+                .AddEnvironmentVariables()
+                .Build();
+
+            var connectionString = config.GetConnectionString("default");
+            var options = new DbContextOptionsBuilder<UserContext>()
+                .UseSqlServer(connectionString)
+                .EnableDetailedErrors()
+                .EnableSensitiveDataLogging()
+                .EnableServiceProviderCaching()
+                .Options;
+            return new UserContext(options);
         }
     }
 }

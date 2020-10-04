@@ -20,29 +20,39 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Api.Models.Domains;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 using Xpandables.Net.Api.Storage.Services;
-using Xpandables.Net.EntityFramework;
 using Xpandables.Net.Strings;
 
 namespace Xpandables.Net.Api.Storage
 {
-    public sealed class UserContextInitializer : IDataContextInitializer
+    public sealed class UserContextInitializer : IHostedService
     {
-        private readonly IStringCryptography _stringCryptography;
-
-        public UserContextInitializer(IStringCryptography stringCryptography) => _stringCryptography = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
-
-        public async Task InitializeAsync(IDataContext dataContext, CancellationToken cancellationToken = default)
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        public UserContextInitializer(IServiceScopeFactory serviceScopeFactory)
         {
-            if (dataContext.SetOf<User>().Any())
-                return;
+            _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
+        }
 
-            var user = await dataContext.CreateNewUser("+33123456789", "motdepasse", "email@email.com", _stringCryptography);
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            using var service = _serviceScopeFactory.CreateScope();
+            var stringCryptography = service.ServiceProvider.GetRequiredService<IStringCryptography>();
+            var dataContext = service.ServiceProvider.GetRequiredService<UserContext>();
+
+            if (dataContext.Users.Any()) return;
+
+            var user = await dataContext.CreateNewUser("+33123456789", "motdepasse", "email@email.com", stringCryptography);
 
             await dataContext.AddEntityAsync(user, cancellationToken).ConfigureAwait(false);
             await dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
+        }
 
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            await Task.CompletedTask.ConfigureAwait(false);
         }
     }
 }

@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -30,6 +31,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Xpandables.Net.Api.Contracts;
 using Xpandables.Net.Http;
 using Xpandables.Net.HttpRestClient;
+using Xpandables.Net.Optionals;
 using Xpandables.Net.Strings;
 
 namespace Xpandables.Net.Tests
@@ -109,7 +111,9 @@ namespace Xpandables.Net.Tests
             using var listResponse = await httpClientHandler.HandleAsync(eventLogRequest).ConfigureAwait(false);
             if (listResponse.IsValid())
             {
-                await foreach (var log in listResponse.Result.ConfigureAwait(false))
+                var results = Optional<IAsyncEnumerable<Log>>.Some(listResponse.Result);
+
+                await foreach (var log in results.GetEnumerable().ConfigureAwait(false))
                     Trace.WriteLine($"Timer : {DateTime.UtcNow:O}  {log}");
             }
             else

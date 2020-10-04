@@ -48,7 +48,7 @@ namespace Xpandables.Net.Api.Contracts
     }
 
     [HttpRestClient(Path = "api/user", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
-    public sealed class EventLogList : IdentityDataExpression<TokenClaims, User>, IAsyncQuery<Log>, IIdentityDecorator, IQueryStringLocationRequest
+    public sealed class EventLogList : TokenClaimExpression<TokenClaims, User>, IAsyncQuery<Log>, ITokenClaimDecorator, IQueryStringLocationRequest
     {
 
         public EventLogList() { }
@@ -67,7 +67,7 @@ namespace Xpandables.Net.Api.Contracts
             { nameof(EndOccuredOn), EndOccuredOn?.ToString("yyyy-MM-dd HH:mm:ss") }
         };
 
-        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Id == Identity.Id && user.IsActive && !user.IsDeleted;
+        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Id == Claims.Id && user.IsActive && !user.IsDeleted;
         public string? Name { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime? StartOccuredOn { get; set; }

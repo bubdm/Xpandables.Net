@@ -15,14 +15,14 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.Identities
 {
     /// <summary>
-    /// A marker interface that allows the class that implements the <see cref="IDataContext"/> to be seeded before use.
-    /// You need to register the expected behavior using the appropriate extension method
-    /// and provide an implementation for <see cref="IDataContextInitializer"/>.
-    /// <para></para>
-    /// The class implementation will be decorated with the <see cref="DataContextInitializerDecorator"/>.
+    /// A marker interface that allows the command/query class to be filled with claims identity. The class should derive from
+    /// <see cref="TokenClaim"/>, <see cref="TokenClaim{TUser}"/> or <see cref="TokenClaimExpression{TUser, TSource}"/>
+    /// for a query-bale class. You need to provide with an
+    /// implementation for <see cref="ITokenClaimProvider"/>
+    /// and register the expected class using the correct extension method.
     /// </summary>
-    public interface IInitializerDecorator { }
+    public interface ITokenClaimDecorator { }
 }

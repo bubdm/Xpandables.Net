@@ -25,30 +25,30 @@ namespace Xpandables.Net.Identities
 {
     /// <summary>
     /// This class allows the application author to add secured data support to command control flow.
-    /// The target command should implement the <see cref="IIdentityDecorator"/> and inherit from <see cref="IdentityData"/>,
-    /// <see cref="IdentityData{TData}"/> or <see cref="IdentityDataExpression{TData, TSource}"/> in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="IIdentityDataProvider"/>, that you should
+    /// The target command should implement the <see cref="ITokenClaimDecorator"/> and inherit from <see cref="TokenClaim"/>,
+    /// <see cref="TokenClaim{TData}"/> or <see cref="TokenClaimExpression{TData, TSource}"/> in order to activate the behavior.
+    /// The class decorates the target command handler with an implementation of <see cref="ITokenClaimProvider"/>, that you should
     /// provide an implementation and use an extension method for registration.
-    /// The decorator will set the <see cref="IdentityData.Identity"/> property with the
-    /// <see cref="IIdentityDataProvider.GetIdentity"/> before the handler execution.
+    /// The decorator will set the <see cref="TokenClaim.Claims"/> property with the
+    /// <see cref="ITokenClaimProvider.ReadTokenClaim"/> before the handler execution.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
-    public sealed class AsyncCommandIdentityDecorator<TCommand> : IAsyncCommandHandler<TCommand>
-        where TCommand : class, IIdentityData, IAsyncCommand, IIdentityDecorator
+    public sealed class AsyncCommandTokenClaimDecorator<TCommand> : IAsyncCommandHandler<TCommand>
+        where TCommand : class, ITokenClaim, IAsyncCommand, ITokenClaimDecorator
     {
-        private readonly IIdentityDataProvider _identityProvider;
+        private readonly ITokenClaimProvider _tokenClaimProvider;
         private readonly IAsyncCommandHandler<TCommand> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncCommandIdentityDecorator{TCommand}"/> class.
+        /// Initializes a new instance of <see cref="AsyncCommandTokenClaimDecorator{TCommand}"/> class.
         /// </summary>
-        /// <param name="identityProvider">The secured data provider.</param>
+        /// <param name="tokenClaimProvider">The secured data provider.</param>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="identityProvider"/> is null.</exception>
-        public AsyncCommandIdentityDecorator(IIdentityDataProvider identityProvider, IAsyncCommandHandler<TCommand> decoratee)
+        /// <exception cref="ArgumentNullException">The <paramref name="tokenClaimProvider"/> is null.</exception>
+        public AsyncCommandTokenClaimDecorator(ITokenClaimProvider tokenClaimProvider, IAsyncCommandHandler<TCommand> decoratee)
         {
-            _identityProvider = identityProvider ?? throw new ArgumentNullException(nameof(identityProvider));
+            _tokenClaimProvider = tokenClaimProvider ?? throw new ArgumentNullException(nameof(tokenClaimProvider));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
@@ -63,7 +63,7 @@ namespace Xpandables.Net.Identities
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
-            command.SetIdentity(_identityProvider.GetIdentity());
+            command.SetClaims(_tokenClaimProvider.ReadTokenClaim());
             await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
         }
     }

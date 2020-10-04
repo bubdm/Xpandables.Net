@@ -16,12 +16,13 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Contracts;
 using Xpandables.Net.Api.Localization;
-using Xpandables.Net.Api.Storage.Services;
+using Xpandables.Net.Api.Models.Domains;
 using Xpandables.Net.EntityFramework;
 using Xpandables.Net.Http;
 using Xpandables.Net.Queries;
@@ -43,7 +44,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<AuthenToken> HandleAsync(RequestAuthenToken query, CancellationToken cancellationToken = default)
         {
-            var user = await _dataContext.GetUserAsync(query, false, cancellationToken).ConfigureAwait(false)
+            var user = await _dataContext.FindAsync<User>(u => u.Where(x => x.Phone.Value == query.Phone), cancellationToken).ConfigureAwait(false)
                 ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, query.Phone, new[] { nameof(query.Phone) });
 
             var tokenClaims = user.CreateTokenClaims();

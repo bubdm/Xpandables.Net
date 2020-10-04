@@ -16,13 +16,14 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Contracts;
 using Xpandables.Net.Api.Localization;
 using Xpandables.Net.Api.Models;
-using Xpandables.Net.Api.Storage.Services;
+using Xpandables.Net.Api.Models.Domains;
 using Xpandables.Net.Commands;
 using Xpandables.Net.EntityFramework;
 using Xpandables.Net.Strings;
@@ -44,7 +45,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task HandleAsync(EditUser command, CancellationToken cancellationToken = default)
         {
-            var user = await _dataContext.GetUserAsync(command, true, cancellationToken).ConfigureAwait(false)
+            var user = await _dataContext.FindAsync<User>(u => u.Where(command), cancellationToken).ConfigureAwait(false)
                 ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, command.Phone, new[] { "Phone" });
 
             if (command.Email is { }) user.ChangeEmail(new EmailAddress(command.Email), $"Change to {command.Email}");

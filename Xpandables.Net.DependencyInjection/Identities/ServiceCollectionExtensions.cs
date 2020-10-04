@@ -31,58 +31,58 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the default identity data type to the services.
+        /// Adds the default token claims provider type to the services.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIdentityDataProvider(this IServiceCollection services)
+        public static IServiceCollection AddXTokenClaimProvider(this IServiceCollection services)
         {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            return services.AddScoped<IIdentityDataProvider, IdentityDataProvider>();
+            _ = services ?? throw new ArgumentNullException(nameof(services)); 
+            return services.AddScoped<ITokenClaimProvider, TokenClaimProvider>();
         }
 
         /// <summary>
-        /// Adds the identity data type to the services.
+        /// Adds the token claims provider data type to the services.
         /// </summary>
-        /// <typeparam name="TIdentityProvider">The identity data type provider.</typeparam>
+        /// <typeparam name="TTokenClaimProvider">The token claims provider type provider.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIdentityDataProvider<TIdentityProvider>(this IServiceCollection services)
-            where TIdentityProvider : class, IIdentityDataProvider
+        public static IServiceCollection AddXTokenClaimProvider<TTokenClaimProvider>(this IServiceCollection services)
+            where TTokenClaimProvider : class, ITokenClaimProvider
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            return services.AddScoped<IIdentityDataProvider, TIdentityProvider>();
+            return services.AddScoped<ITokenClaimProvider, TTokenClaimProvider>();
         }
 
         /// <summary>
-        /// Adds the identity data type to the services.
+        /// Adds the token claims provider data type to the services.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <param name="identityProviderType">The identity data provider type.</param>
+        /// <param name="tokenClaimProviderType">The token claims provider type.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="identityProviderType"/> is null.</exception>
-        public static IServiceCollection AddXIdentityDataProvider(this IServiceCollection services, Type identityProviderType)
+        /// <exception cref="ArgumentNullException">The <paramref name="tokenClaimProviderType"/> is null.</exception>
+        public static IServiceCollection AddXTokenClaimProvider(this IServiceCollection services, Type tokenClaimProviderType)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            _ = identityProviderType ?? throw new ArgumentNullException(nameof(identityProviderType));
+            _ = tokenClaimProviderType ?? throw new ArgumentNullException(nameof(tokenClaimProviderType));
 
-            if (!typeof(IIdentityDataProvider).IsAssignableFrom(identityProviderType))
-                throw new ArgumentException($"{nameof(identityProviderType)} must implement {nameof(IIdentityDataProvider)}.");
-            return services.AddScoped(typeof(IIdentityDataProvider), identityProviderType);
+            if (!typeof(ITokenClaimProvider).IsAssignableFrom(tokenClaimProviderType))
+                throw new ArgumentException($"{nameof(tokenClaimProviderType)} must implement {nameof(ITokenClaimProvider)}.");
+            return services.AddScoped(typeof(ITokenClaimProvider), tokenClaimProviderType);
         }
 
         /// <summary>
-        /// Adds identity data behavior to commands and queries that are decorated with the <see cref="IIdentityDecorator"/> to the services
+        /// Adds token claim data behavior to commands and queries that are decorated with the <see cref="ITokenClaimDecorator"/> to the services
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIdentityDecorator(this IServiceCollection services)
+        public static IServiceCollection AddXTokenClaimDecorator(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandIdentityDecorator<>));
-            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryIdentityDecorator<,>));
-            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryIdentityDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandTokenClaimDecorator<>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryTokenClaimDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryTokenClaimDecorator<,>));
 
             return services;
         }

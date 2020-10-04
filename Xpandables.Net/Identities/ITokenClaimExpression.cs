@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +15,19 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using Xpandables.Net.Expressions;
 
 namespace Xpandables.Net.Identities
 {
     /// <summary>
-    /// A marker interface that allows the command/query class to be filled with an identity. The class should derive from
-    /// <see cref="IdentityData"/>, <see cref="IdentityData{TUser}"/> or <see cref="IdentityDataExpression{TUser, TSource}"/>
-    /// for a query-bale class. You need to provide with an
-    /// implementation for <see cref="IIdentityDataProvider"/>
-    /// and register the expected class using the correct extension method.
+    /// Provides with a protected property that holds token claims information of generic type in a security context.
+    /// This interface derives from <see cref="IQueryExpression{TSource}"/> interface.
+    /// This interface is used with <see cref="ITokenClaimDecorator"/> and its decorator class.
     /// </summary>
-    public interface IIdentityDecorator { }
+    /// <typeparam name="TClaims">The type of claims.</typeparam>
+    /// <typeparam name="TSource">The type of the data source</typeparam>
+    public interface ITokenClaimExpression<TClaims, TSource> : ITokenClaim<TClaims>, IQueryExpression<TSource>
+        where TClaims : class
+        where TSource : class
+    { }
 }

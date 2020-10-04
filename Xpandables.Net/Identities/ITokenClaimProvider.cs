@@ -21,26 +21,26 @@ using System;
 namespace Xpandables.Net.Identities
 {
     /// <summary>
-    /// Provides with a method to retrieve identity.
-    /// You should provide an implementation of this interface that will be used with the <see cref="AsyncCommandIdentityDecorator{TCommand}"/>
-    /// or <see cref="AsyncQueryIdentityDecorator{TQuery, TResult}"/> decorator to fill the target instance with the identity.
+    /// Provides with a method to retrieve token claims.
+    /// You should provide an implementation of this interface that will be used with the <see cref="AsyncCommandTokenClaimDecorator{TCommand}"/>
+    /// or <see cref="AsyncQueryTokenClaimDecorator{TQuery, TResult}"/> decorator to fill the target instance with the token claims.
     /// </summary>
-    public interface IIdentityDataProvider
+    public interface ITokenClaimProvider
     {
         /// <summary>
-        /// Returns an instance that contains identity or throw an exception if not found.
+        /// Returns an instance that contains token claims or throw an exception if not found.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Failed to find secured data.</exception>
+        /// <exception cref="InvalidOperationException">Failed to find claims</exception>
         [return: NotNull]
-        object GetIdentity();
+        object ReadTokenClaim();
 
         /// <summary>
-        /// Returns an instance that contains identity of the specified type or null if not found.
+        /// Returns an instance that contains token claims of the specified type or null if not found.
         /// </summary>
-        /// <typeparam name="TIdentity">The type of the identity.</typeparam>
-        /// <returns>An object of <typeparamref name="TIdentity"/> type or null.</returns>
-        /// <exception cref="InvalidOperationException">Failed to find secured data.</exception>
+        /// <typeparam name="TTokenClaim">The type of the token claims.</typeparam>
+        /// <returns>An object of <typeparamref name="TTokenClaim"/> type or null.</returns>
+        /// <exception cref="InvalidOperationException">Failed to find claims.</exception>
         [return: MaybeNull]
-        public TIdentity GetIdentity<TIdentity>() where TIdentity : class => GetIdentity() as TIdentity;
+        public TTokenClaim ReadTokenClaim<TTokenClaim>() where TTokenClaim : class => ReadTokenClaim() as TTokenClaim;
     }
 }

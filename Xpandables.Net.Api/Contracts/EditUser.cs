@@ -28,7 +28,7 @@ using Xpandables.Net.Identities;
 namespace Xpandables.Net.Api.Contracts
 {
     [HttpRestClient(Path = "api/user", Method = "Post", IsSecured = true, IsNullable = false)]
-    public sealed class EditUser : IdentityDataExpression<TokenClaims, User>, IAsyncCommand, IIdentityDecorator, IPersistenceDecorator
+    public sealed class EditUser : TokenClaimExpression<TokenClaims, User>, IAsyncCommand, ITokenClaimDecorator, IPersistenceDecorator
     {
         public EditUser(string? email, string? password, string? phone)
         {
@@ -37,7 +37,7 @@ namespace Xpandables.Net.Api.Contracts
             Phone = phone;
         }
 
-        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Phone.Value == Identity.Phone.Value && user.IsActive && !user.IsDeleted;
+        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Phone.Value == Claims.Phone.Value && user.IsActive && !user.IsDeleted;
 
         public string? Email { get; set; }
         public string? Password { get; set; }

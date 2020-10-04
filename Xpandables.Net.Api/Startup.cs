@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -55,7 +56,6 @@ namespace Xpandables.Net.Api
             services.AddOptions();
 
             services.XConfigureOptions<JwtSettings>(Configuration);
-            services.XConfigureOptions<DataContextSettings>(Configuration);
 
             services.AddSingleton<IConfigureOptions<AuthenticationOptions>, ApiAuthenticationOptions>();
             services.AddSingleton<IConfigureOptions<MvcOptions>, ApiMvcOptions>();
@@ -87,7 +87,13 @@ namespace Xpandables.Net.Api
             services.AddXHttpTokenEngine<TokenService>();
             services.AddScoped<ITwoFactorService, TwoFactorService>();
 
-            services.AddXDataContext<UserContextProvider>(options => options.UseInitializerDecorator<UserContextInitializer>());
+            services.AddDbContext<UserContext>(options => options.UseSqlServer(Configuration.GetConnectionString("default"))
+                .EnableDetailedErrors()
+                .EnableSensitiveDataLogging()
+                .EnableServiceProviderCaching());
+
+            services.AddXDataContext(provider => provider.GetRequiredService<UserContext>());
+            services.AddHostedService<UserContextInitializer>();
 
             services.AddXCommandQueriesHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
             {

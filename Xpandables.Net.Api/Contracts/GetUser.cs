@@ -17,9 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Models;
 using Xpandables.Net.Api.Models.Domains;
@@ -45,7 +43,7 @@ namespace Xpandables.Net.Api.Contracts
     }
 
     [HttpRestClient(Path = "api/user/{id}", IsSecured = true, IsNullable = true, Method = "Get", In = ParameterLocation.Path)]
-    public sealed class GetUser : IdentityDataExpression<TokenClaims, User>, IQuery<UserItem>, IValidationDecorator, IIdentityDecorator, IPathStringLocationRequest
+    public sealed class GetUser : TokenClaimExpression<TokenClaims, User>, IQuery<UserItem>, IValidationDecorator, ITokenClaimDecorator, IPathStringLocationRequest
     {
         public GetUser(string id) => Id = id;
 

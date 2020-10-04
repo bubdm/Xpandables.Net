@@ -16,11 +16,12 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Contracts;
-using Xpandables.Net.Api.Storage.Services;
+using Xpandables.Net.Api.Models.Domains;
 using Xpandables.Net.EntityFramework;
 using Xpandables.Net.Queries;
 
@@ -34,8 +35,8 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<UserItem> HandleAsync(GetUser query, CancellationToken cancellationToken = default)
         {
-            var user = await _dataContext.GetUserAsync(query, false, cancellationToken).ConfigureAwait(false);
-            return new UserItem(user.Id, user.Phone, user.Email);
+            var user = await _dataContext.FindAsync<User>(u => u.Where(query), cancellationToken).ConfigureAwait(false);
+            return new UserItem(user!.Id, user.Phone, user.Email);
         }
     }
 }

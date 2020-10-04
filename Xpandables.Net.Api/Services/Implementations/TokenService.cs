@@ -81,12 +81,12 @@ namespace Xpandables.Net.Api.Services.Implementations
             return handler.Claims;
         }
 
-        public object ReadIdentity(IEnumerable<Claim> claims) => new TokenClaims(claims);
+        public object ReadTokenClaim(IEnumerable<Claim> claims) => new TokenClaims(claims);
 
-        public object ReadIdentity(string token)
+        public object ReadTokenClaim(string token)
         {
             var claims = ReadToken(token);
-            return ReadIdentity(claims);
+            return ReadTokenClaim(claims);
         }
     }
 }

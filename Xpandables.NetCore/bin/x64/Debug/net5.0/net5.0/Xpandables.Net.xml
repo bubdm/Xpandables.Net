@@ -50,14 +50,14 @@
         </member>
         <member name="T:Xpandables.Net.Asynchronous.AsyncEnumerableBuilder`1">
             <summary>
-            Allows a generic collection to be asynchronously enumerable.
+            Allows a generic collection to be asynchronously enumerated.
             This class implements <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/> and <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
             </summary>
             <typeparam name="T">The type of the elements in the collection.</typeparam>
         </member>
         <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableBuilder`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Asynchronous.AsyncEnumerableBuilder`1"/> with the collection to be asynchronously enumerable.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Asynchronous.AsyncEnumerableBuilder`1"/> with the collection to be asynchronously enumerated.
             </summary>
             <param name="collection">The collection to act on.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="collection"/> is null.</exception>
@@ -293,7 +293,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         </member>
         <member name="T:Xpandables.Net.Correlation.CorrelationCollection`2">
             <summary>
@@ -2883,7 +2883,7 @@
             <exception cref="T:System.NotImplementedException">The corresponding handler is missing.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         </member>
         <member name="M:Xpandables.Net.Dispatchers.IDispatcher.InvokeQueryAsync``2(``0,System.Threading.CancellationToken)">
             <summary>
@@ -2898,7 +2898,7 @@
             <exception cref="T:System.NotImplementedException">The corresponding handler is missing.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         </member>
         <member name="M:Xpandables.Net.Dispatchers.IDispatcher.InvokeAsync``1(``0,System.Threading.CancellationToken)">
             <summary>
@@ -3197,85 +3197,6 @@
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
         </member>
-        <member name="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator">
-            <summary>
-            This class allows the application author to add seed support to data context.
-            The target command should implement the <see cref="T:Xpandables.Net.EntityFramework.IInitializerDecorator"/> interface in order to activate the behavior.
-            The class decorates the target <see cref="T:Xpandables.Net.EntityFramework.IDataContextProvider"/> with an implementation of
-            <see cref="T:Xpandables.Net.EntityFramework.IDataContextInitializer"/> that will be called before the data context is returned.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextInitializerDecorator.#ctor(Xpandables.Net.EntityFramework.IDataContextProvider,Xpandables.Net.EntityFramework.IDataContextInitializer)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
-            </summary>
-            <param name="datacontextProvider">The decorated data context provider.</param>
-            <param name="dataContextInitializer">The data context seeder.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="datacontextProvider"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataContextInitializer"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.EntityFramework.DataContextOptions">
-            <summary>
-            Defines options to configure data context.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextOptions.UseInitializerDecorator``1">
-            <summary>
-            Enables seeder for the data context that is decorated with <see cref="T:Xpandables.Net.EntityFramework.IInitializerDecorator"/>.
-            </summary>
-            <typeparam name="TDataContextInitializer">The type that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContextInitializer"/>.</typeparam>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextOptions.UsePersistenceExceptionHandler(System.Func{System.Exception,System.Exception})">
-            <summary>
-            Enables the delegate that get called on persistence exception.
-            If you want the exception to be re-thrown, the delegate should return an exception, otherwise null.
-            </summary>
-            <param name="persistenceExceptionHandler">The persistence exception handler delegate instance.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="persistenceExceptionHandler"/> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.EntityFramework.DataContextSettings">
-            <summary>
-            Provides with the base option class for <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> settings.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextSettings.#ctor">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextSettings"/> class.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextSettings.#ctor(System.Boolean,System.Boolean,System.Boolean,System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextSettings"/> with properties.
-            </summary>
-            <param name="ensuredDeletedBefore">Determine whether or not the database for the context will be deleted before applying migration.</param>
-            <param name="useInMemory">Determine whether or not the database is uses in memory</param>
-            <param name="applyMigrations">Determine whether or not the database the migrations must be applied.</param>
-            <param name="connectionString">The database connection string.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="connectionString"/> is null.</exception>
-        </member>
-        <member name="P:Xpandables.Net.EntityFramework.DataContextSettings.EnsuredDeleted">
-            <summary>
-            Ensures that the database for the context will be deleted before applying migration.
-            The default value is <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.EntityFramework.DataContextSettings.ApplyMigrations">
-            <summary>
-            Ensures that migrations will be applied to the database for the generated context.
-            The default value is <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.EntityFramework.DataContextSettings.UseInMemory">
-            <summary>
-            Ensures that the database is uses in memory.
-            The default value is <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.EntityFramework.DataContextSettings.ConnectionString">
-            <summary>
-            The database connection string.
-            </summary>
-        </member>
         <member name="T:Xpandables.Net.EntityFramework.IDataContext">
             <summary>
             Allows an application author to manage domain objects using EntityFrameworkCore.
@@ -3284,115 +3205,90 @@
             The implementation must be thread-safe when working in a multi-threaded environment.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.SetOf``1">
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext.FindAsync``1(System.Func{System.Linq.IQueryable{``0},System.Linq.IQueryable{``0}},System.Threading.CancellationToken)">
             <summary>
-            Provides with a query-able instance for <typeparamref name="T"/>.
+            Returns an entity of the <typeparamref name="T"/> type specified by the selector.
+            If not found, returns the <see langword="default"/> value of the type.
             </summary>
-            <typeparam name="T">Type of entity.</typeparam>
-            <returns>An <see cref="T:System.Linq.IQueryable`1"/>.</returns>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.SetOf``1(Xpandables.Net.Expressions.IQueryExpression{``0})">
-            <summary>
-            Provides with a query-able instance for <typeparamref name="T"/> from an expression.
-            </summary>
-            <typeparam name="T">Type of entity.</typeparam>
-            <param name="queryExpression">The expression to act with.</param>
-            <returns>An <see cref="T:System.Linq.IQueryable`1"/>.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="queryExpression"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.GetEntityByIdAsync``1(System.String,System.Threading.CancellationToken)">
-            <summary>
-            Returns the entity matching the specified identifier or <see langword="null"/> if not found.
-            </summary>
-            <typeparam name="T">Type of entity.</typeparam>
-            <param name="identifier">the entity identifier to search for.</param>
+            <typeparam name="T">The Domain object type.</typeparam>
+            <param name="selector">Expression used for selecting entities.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <returns>An entity of type <typeparamref name="T"/> if found otherwise <see langword="null"/>  .</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="identifier"/> is null.</exception>
+            <returns>A task that represents an object of <typeparamref name="T"/> type or not.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="selector"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.GetEntityById``1(System.String)">
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext.FindAsync``2(System.Func{System.Linq.IQueryable{``0},System.Linq.IQueryable{``1}},System.Threading.CancellationToken)">
             <summary>
-            Returns the entity matching the specified identifier or <see langword="null"/> if not found.
+            Returns an anonymous type of <typeparamref name="TResult"/> specified by the selector.
+            If not found, returns the <see langword="default"/> value of the type.
             </summary>
-            <typeparam name="T">Type of entity.</typeparam>
-            <param name="identifier">the entity identifier to search for.</param>
-            <returns>An entity of type <typeparamref name="T"/> if found otherwise <see langword="null"/>  .</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="identifier"/> is null.</exception>
+            <typeparam name="T">The Domain object type.</typeparam>
+            <typeparam name="TResult">Anonymous type to be returned.</typeparam>
+            <param name="selector">Expression used for selecting entities.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext.FindAllAsync``1(System.Func{System.Linq.IQueryable{``0},System.Linq.IQueryable{``0}},System.Threading.CancellationToken)">
+            <summary>
+            Returns an asynchronous enumerable of <typeparamref name="T"/> entities specified by the selector.
+            If no result found, returns an empty enumerable.
+            </summary>
+            <typeparam name="T">The Domain object type.</typeparam>
+            <param name="selector">Expression used for selecting entities.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>A collection of <typeparamref name="T"/> that can be asynchronously enumerated.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext.FindAllAsync``2(System.Func{System.Linq.IQueryable{``0},System.Linq.IQueryable{``1}},System.Threading.CancellationToken)">
+            <summary>
+            Returns an asynchronous enumerable of <typeparamref name="TResult"/> anonymous type specified by the selector.
+            If no result found, returns an empty enumerable.
+            </summary>
+            <typeparam name="T">The Domain object type.</typeparam>
+            <typeparam name="TResult">Anonymous type to be returned.</typeparam>
+            <param name="selector">Expression used for selecting entities.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="selector"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.IDataContext.AddEntityRangeAsync``1(System.Collections.Generic.IEnumerable{``0},System.Threading.CancellationToken)">
             <summary>
             Adds a collection of domain objects to the data storage that will be inserted
-            into the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.Persist"/> is called.
+            into the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.PersistAsync(System.Threading.CancellationToken)"/> is called.
             </summary>
             <typeparam name="T">The Domain object type.</typeparam>
             <param name="entities">The domain objects collection to be added and persisted.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="entities"/> is null or empty.</exception>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.AddEntityRange``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Adds a collection of domain objects to the data storage that will be inserted
-            into the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.Persist"/> is called.
-            </summary>
-            <typeparam name="T">The Domain object type.</typeparam>
-            <param name="entities">The domain objects collection to be added and persisted.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="entities"/> is null or empty.</exception>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.IDataContext.AddEntityAsync``1(``0,System.Threading.CancellationToken)">
             <summary>
             Adds a domain object to the data storage that will be inserted
-            into the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.Persist"/> is called.
+            into the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.PersistAsync(System.Threading.CancellationToken)"/> is called.
             </summary>
             <typeparam name="T">The Domain object type.</typeparam>
             <param name="entity">The domain object to be added and persisted.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="entity"/> is null or empty.</exception>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.AddEntity``1(``0)">
-            <summary>
-            Adds a domain object to the data storage that will be inserted
-            into the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.Persist"/> is called.
-            </summary>
-            <typeparam name="T">The Domain object type.</typeparam>
-            <param name="entity">The domain object to be added and persisted.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="entity"/> is null or empty.</exception>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.IDataContext.DeleteEntityAsync``1(``0,System.Threading.CancellationToken)">
             <summary>
-            Deletes the domain object matching the specified entity that will be removed from the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.Persist"/>
+            Deletes the domain object matching the specified entity that will be removed from the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.PersistAsync(System.Threading.CancellationToken)"/>
             is called.
             </summary>
             <typeparam name="T">The Domain object type.</typeparam>
             <param name="deletedEntity">The entity to be deleted.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="deletedEntity"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.DeleteEntity``1(``0)">
-            <summary>
-            Deletes the domain object matching the specified entity that will be removed from the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.Persist"/>
-            is called.
-            </summary>
-            <typeparam name="T">The Domain object type.</typeparam>
-            <param name="deletedEntity">The entity to be deleted.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="deletedEntity"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.IDataContext.DeleteEntityAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Threading.CancellationToken)">
             <summary>
-            Deletes the domain objects matching the predicate that will be removed from the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.Persist"/>
-            is called. You can use a third party library with <see langword="SetOf{T}"/> for performance.
+            Deletes the domain objects matching the predicate that will be removed from the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.PersistAsync(System.Threading.CancellationToken)"/>
+            is called. You can use a third party library for performance.
             </summary>
             <typeparam name="T">The Domain object type.</typeparam>
             <param name="predicate">The predicate to be used to filter domain objects.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.DeleteEntity``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
-            <summary>
-            Deletes the domain objects matching the predicate that will be removed from the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.Persist"/>
-            is called. You can use a third party library with <see langword="SetOf{T}"/> for performance.
-            </summary>
-            <typeparam name="T">The Domain object type.</typeparam>
-            <param name="predicate">The predicate to be used to filter domain objects.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.IDataContext.UpdateEntityAsync``1(``0,System.Threading.CancellationToken)">
@@ -3402,14 +3298,6 @@
             <typeparam name="T">The Domain object type.</typeparam>
             <param name="updatedEntity">the updated entity.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="updatedEntity"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.UpdateEntity``1(``0)">
-            <summary>
-            Updates the domain object matching the specify entity.
-            </summary>
-            <typeparam name="T">The Domain object type.</typeparam>
-            <param name="updatedEntity">the updated entity.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="updatedEntity"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.IDataContext.UpdateEntityRangeAsync``2(System.Collections.Generic.IEnumerable{``1},System.Threading.CancellationToken)">
@@ -3423,18 +3311,6 @@
             <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
             <param name="updatedEntities">Contains the collection of updated values.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="updatedEntities"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.UpdateEntityRange``2(System.Collections.Generic.IEnumerable{``1})">
-            <summary>
-            Updates the domain objects matching the collection of entities.
-            Only the columns corresponding to properties you set in the object will be updated -- any properties
-            you don't set will be left alone. If you have property you want to set to its default,
-            then you must explicitly set that property's value.
-            </summary>
-            <typeparam name="T">The Domain object type.</typeparam>
-            <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
-            <param name="updatedEntities">Contains the collection of updated values.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="updatedEntities"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.IDataContext.UpdateEntityAsync``2(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Func{``0,``1},System.Threading.CancellationToken)">
@@ -3451,27 +3327,6 @@
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="updater"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.UpdateEntity``2(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Func{``0,``1})">
-            <summary>
-            Updates the domain objects matching the predicate by using the updater.
-            Only the columns corresponding to properties you set in the object will be updated -- any properties
-            you don't set will be left alone. If you have property you want to set to its default,
-            then you must explicitly set that property's value.
-            </summary>
-            <typeparam name="T">The Domain object type.</typeparam>
-            <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
-            <param name="predicate">The predicate to be used to filter domain objects.</param>
-            <param name="updater">The delegate to be used for updating domain objects.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="updater"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContext.Persist">
-            <summary>
-            Persists all pending domain objects to the data storage.
-            You can use the <see cref="M:Xpandables.Net.EntityFramework.IDataContext.OnPersistenceException(System.Func{System.Exception,System.Exception})"/> to manage exception.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">All exceptions related to the operation.</exception>
         </member>
         <member name="M:Xpandables.Net.EntityFramework.IDataContext.PersistAsync(System.Threading.CancellationToken)">
             <summary>
@@ -3498,58 +3353,6 @@
             </summary>
             <param name="persistenceExceptionHandler">The optional delegate instance.</param>
         </member>
-        <member name="T:Xpandables.Net.EntityFramework.IDataContextInitializer">
-            <summary>
-            Allows an application author to dynamically seed a data context before it's retrieved.
-            This is useful when you need a data context not to be empty.
-            The target data context should be decorated with the <see cref="T:Xpandables.Net.EntityFramework.IInitializerDecorator"/> interface.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContextInitializer.InitializeAsync(Xpandables.Net.EntityFramework.IDataContext,System.Threading.CancellationToken)">
-            <summary>
-            Asynchronously initializes the specified data context as you wish.
-            Warning : Do not throw exception from this method unless it's absolutely necessary.
-            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
-            </summary>
-            <param name="dataContext">The data context instance to act on.</param>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContextInitializer.Initialize(Xpandables.Net.EntityFramework.IDataContext)">
-            <summary>
-            Initializes the specified data context as you wish.
-            Warning : Do not throw exception from this method unless it's absolutely necessary.
-            This method get called by the <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
-            </summary>
-            <param name="dataContext">The data context instance to act on.</param>
-        </member>
-        <member name="T:Xpandables.Net.EntityFramework.IDataContextProvider">
-            <summary>
-            Provides with a method to return the ambient data context instance.
-            You need to register the class implementation to the services collection using and extension method.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContextProvider.GetDataContextAsync(System.Threading.CancellationToken)">
-            <summary>
-            Asynchronously returns an instance that will contain the ambient data context according to the environment.
-            </summary>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <returns>An instance of context that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContext" />.</returns>
-        </member>
-        <member name="M:Xpandables.Net.EntityFramework.IDataContextProvider.GetDataContext">
-            <summary>
-            Returns an instance that will contain the ambient data context according to the environment.
-            </summary>
-            <returns>An instance of context that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContext" />.</returns>
-        </member>
-        <member name="T:Xpandables.Net.EntityFramework.IInitializerDecorator">
-            <summary>
-            A marker interface that allows the class that implements the <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> to be seeded before use.
-            You need to register the expected behavior using the appropriate extension method
-            and provide an implementation for <see cref="T:Xpandables.Net.EntityFramework.IDataContextInitializer"/>.
-            <para></para>
-            The class implementation will be decorated with the <see cref="T:Xpandables.Net.EntityFramework.DataContextInitializerDecorator"/>.
-            </summary>
-        </member>
         <member name="T:Xpandables.Net.EntityFramework.IPersistenceDecorator">
             <summary>
             A marker interface that allows the command handler class implementation to use persistence data across the control flow.
@@ -3564,6 +3367,39 @@
             <para></para>
             <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.EntityFramework.AsyncCommandPersistenceDecorator`1"/>.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.EntityFramework.QueryPersistenceDecorator`2">
+            <summary>
+            This class allows the application author to add persistence support to query control flow.
+            The target command should implement the <see cref="T:Xpandables.Net.EntityFramework.IPersistenceDecorator"/> interface in order to activate the behavior.
+            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/> and executes the
+            the <see cref="M:Xpandables.Net.EntityFramework.IDataContext.PersistAsync(System.Threading.CancellationToken)"/> after the main one in the same control flow only
+            if there is no exception. You can set the <see cref="P:Xpandables.Net.EntityFramework.IDataContext.PersistenceExceptionHandler"/> with the
+            <see cref="M:Xpandables.Net.EntityFramework.IDataContext.OnPersistenceException(System.Func{System.Exception,System.Exception})"/> command, in order to manage
+            the exception.
+            </summary>
+            <typeparam name="TQuery">Type of query.</typeparam>
+            <typeparam name="TResult">Type of result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.QueryPersistenceDecorator`2.#ctor(Xpandables.Net.EntityFramework.IDataContext,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.QueryPersistenceDecorator`2"/> class.
+            </summary>
+            <param name="dataContext">The data context to act on.</param>
+            <param name="decoratee">The decorated query handler.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.QueryPersistenceDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
         <member name="T:Xpandables.Net.Enumerables.EnumerableExtensions">
             <summary>
@@ -5757,24 +5593,24 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="token"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">Unable to read claims from token object. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Http.IHttpTokenEngine.ReadIdentity(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
+        <member name="M:Xpandables.Net.Http.IHttpTokenEngine.ReadTokenClaim(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
             <summary>
-            Returns an object identity from the specify collection of claims. This method get used with <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>.
+            Returns an object claims from the specify collection of claims. This method get used with <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider"/>.
             The default behavior throws <see cref="T:System.NotImplementedException"/>.
             </summary>
             <param name="claims">The collection of claims to act on.</param>
             <returns>An object that represents the security identity, otherwise throw <see cref="T:System.InvalidOperationException"/>.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="claims"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">Unable to read identity from claims. See inner exception.</exception>
+            <exception cref="T:System.InvalidOperationException">Unable to read from claims. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Http.IHttpTokenEngine.ReadIdentity(System.String)">
+        <member name="M:Xpandables.Net.Http.IHttpTokenEngine.ReadTokenClaim(System.String)">
             <summary>
-            Returns an object identity from the specify token. The default behavior throws <see cref="T:System.NotImplementedException"/>.
+            Returns an object claims from the specify token. The default behavior throws <see cref="T:System.NotImplementedException"/>.
             </summary>
             <param name="token">The token string to act on.</param>
             <returns>An object that represents the security identity, otherwise throw <see cref="T:System.InvalidOperationException"/>.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="token"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">Unable to read identity from claims. See inner exception.</exception>
+            <exception cref="T:System.InvalidOperationException">Unable to read from claims. See inner exception.</exception>
         </member>
         <member name="T:Xpandables.Net.IAddable`1">
             <summary>
@@ -5827,28 +5663,28 @@
             <param name="argument">The argument to handle.</param>
             <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
         </member>
-        <member name="T:Xpandables.Net.Identities.AsyncCommandIdentityDecorator`1">
+        <member name="T:Xpandables.Net.Identities.AsyncCommandTokenClaimDecorator`1">
             <summary>
             This class allows the application author to add secured data support to command control flow.
-            The target command should implement the <see cref="T:Xpandables.Net.Identities.IIdentityDecorator"/> and inherit from <see cref="T:Xpandables.Net.Identities.IdentityData"/>,
-            <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/> in order to activate the behavior.
-            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>, that you should
+            The target command should implement the <see cref="T:Xpandables.Net.Identities.ITokenClaimDecorator"/> and inherit from <see cref="T:Xpandables.Net.Identities.TokenClaim"/>,
+            <see cref="T:Xpandables.Net.Identities.TokenClaim`1"/> or <see cref="T:Xpandables.Net.Identities.TokenClaimExpression`2"/> in order to activate the behavior.
+            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider"/>, that you should
             provide an implementation and use an extension method for registration.
-            The decorator will set the <see cref="P:Xpandables.Net.Identities.IdentityData.Identity"/> property with the
-            <see cref="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity"/> before the handler execution.
+            The decorator will set the <see cref="P:Xpandables.Net.Identities.TokenClaim.Claims"/> property with the
+            <see cref="M:Xpandables.Net.Identities.ITokenClaimProvider.ReadTokenClaim"/> before the handler execution.
             </summary>
             <typeparam name="TCommand">Type of command.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Identities.AsyncCommandIdentityDecorator`1.#ctor(Xpandables.Net.Identities.IIdentityDataProvider,Xpandables.Net.Commands.IAsyncCommandHandler{`0})">
+        <member name="M:Xpandables.Net.Identities.AsyncCommandTokenClaimDecorator`1.#ctor(Xpandables.Net.Identities.ITokenClaimProvider,Xpandables.Net.Commands.IAsyncCommandHandler{`0})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Identities.AsyncCommandIdentityDecorator`1"/> class.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Identities.AsyncCommandTokenClaimDecorator`1"/> class.
             </summary>
-            <param name="identityProvider">The secured data provider.</param>
+            <param name="tokenClaimProvider">The secured data provider.</param>
             <param name="decoratee">The decorated command handler.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="identityProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="tokenClaimProvider"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Identities.AsyncCommandIdentityDecorator`1.HandleAsync(`0,System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Identities.AsyncCommandTokenClaimDecorator`1.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
             Asynchronously handles the specified command.
             </summary>
@@ -5857,29 +5693,29 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
             <returns>A task that represents the asynchronous operation.</returns>
         </member>
-        <member name="T:Xpandables.Net.Identities.AsyncQueryIdentityDecorator`2">
+        <member name="T:Xpandables.Net.Identities.AsyncQueryTokenClaimDecorator`2">
             <summary>
             This class allows the application author to add secured information support to query control flow.
-            The target query should implement the <see cref="T:Xpandables.Net.Identities.IIdentityDecorator"/> and inherit from <see cref="T:Xpandables.Net.Identities.IdentityData"/>,
-            <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/> in order to activate the behavior.
-            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>, that you should
+            The target query should implement the <see cref="T:Xpandables.Net.Identities.ITokenClaimDecorator"/> and inherit from <see cref="T:Xpandables.Net.Identities.TokenClaim"/>,
+            <see cref="T:Xpandables.Net.Identities.TokenClaim`1"/> or <see cref="T:Xpandables.Net.Identities.TokenClaimExpression`2"/> in order to activate the behavior.
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider"/>, that you should
             provide an implementation and use the extension method for registration.
-            The decorator will set the <see cref="P:Xpandables.Net.Identities.IdentityData.Identity"/> property with the
-            <see cref="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity"/> before the handler execution.
+            The decorator will set the <see cref="P:Xpandables.Net.Identities.TokenClaim.Claims"/> property with the
+            <see cref="M:Xpandables.Net.Identities.ITokenClaimProvider.ReadTokenClaim"/> before the handler execution.
             </summary>
             <typeparam name="TQuery">Type of the query.</typeparam>
             <typeparam name="TResult">Type of the query.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Identities.AsyncQueryIdentityDecorator`2.#ctor(Xpandables.Net.Identities.IIdentityDataProvider,Xpandables.Net.Queries.IAsyncQueryHandler{`0,`1})">
+        <member name="M:Xpandables.Net.Identities.AsyncQueryTokenClaimDecorator`2.#ctor(Xpandables.Net.Identities.ITokenClaimProvider,Xpandables.Net.Queries.IAsyncQueryHandler{`0,`1})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Identities.AsyncQueryIdentityDecorator`2"/>.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Identities.AsyncQueryTokenClaimDecorator`2"/>.
             </summary>
-            <param name="identityProvider">The secured data provider.</param>
+            <param name="tokenClaimProvider">The secured data provider.</param>
             <param name="decoratee">The query handler to decorate with.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="identityProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="tokenClaimProvider"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Identities.AsyncQueryIdentityDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Identities.AsyncQueryTokenClaimDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
             Asynchronously handles the specified query and returns an asynchronous result type.
             </summary>
@@ -5888,185 +5724,116 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         </member>
-        <member name="T:Xpandables.Net.Identities.IdentityData">
+        <member name="T:Xpandables.Net.Identities.ITokenClaim">
             <summary>
-            Defines an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityData"/> with a protected property that holds identity information
-            of any type in a security context.
-            This class is used with <see cref="T:Xpandables.Net.Identities.IIdentityDecorator"/> and its decorator class.
+            Provides with a protected property that holds token claims information of any type in a security context.
+            This class is used with <see cref="T:Xpandables.Net.Identities.ITokenClaimDecorator"/> and its decorator class.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Identities.IdentityData.Identity">
+        <member name="P:Xpandables.Net.Identities.ITokenClaim.Claims">
             <summary>
-            Contains the protected instance of identity data.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider" /> using a decorator.
+            Contains an instance of claims.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider"/> using a decorator.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Identities.IdentityData.SetIdentity(System.Object)">
+        <member name="M:Xpandables.Net.Identities.ITokenClaim.SetClaims(System.Object)">
             <summary>
-            Sets the <see cref="P:Xpandables.Net.Identities.IIdentityData.Identity" /> with the specified value.
+            Sets the <see cref="P:Xpandables.Net.Identities.ITokenClaim.Claims"/> with the specified value.
             This method get called by the decorator class.
             </summary>
-            <param name="identity">The identity data to be used.</param>
+            <param name="claims">The claims to be used.</param>
         </member>
-        <member name="T:Xpandables.Net.Identities.IdentityData`1">
+        <member name="T:Xpandables.Net.Identities.ITokenClaim`1">
             <summary>
-            Defines an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityData`1"/> with a protected property that holds identity information
-            of generic type in a security context.
-            This class is used with <see cref="T:Xpandables.Net.Identities.IIdentityDecorator"/> and its decorator class.
+            Provides with a protected property that holds token claims information of generic type in a security context.
+            This class is used with <see cref="T:Xpandables.Net.Identities.ITokenClaimDecorator"/> and its decorator class.
             </summary>
-            <typeparam name="TIdentity">The type of the identity.</typeparam>
+            <typeparam name="TClaims">The type of claims.</typeparam>
         </member>
-        <member name="P:Xpandables.Net.Identities.IdentityData`1.Identity">
+        <member name="P:Xpandables.Net.Identities.ITokenClaim`1.Claims">
             <summary>
-            Contains the protected instance of identity data of <typeparamref name="TIdentity"/> type.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider" /> using a decorator.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Identities.IdentityDataExpression`2">
-            <summary>
-            Defines an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityExpression`2"/> with a protected property that holds identity information
-            of generic type in a security context.
-            This class implements the <see cref="T:Xpandables.Net.Expressions.IQueryExpression`1"/> interface and derives from <see cref="T:Xpandables.Net.Identities.IdentityData`1"/>.
-            You must override the <see cref="M:Xpandables.Net.Identities.IdentityDataExpression`2.BuildExpression"/> method in order to provide a custom behavior.
-            This class is used with <see cref="T:Xpandables.Net.Identities.IIdentityDecorator"/> and its decorator class.
-            </summary>
-            <typeparam name="TIdentity">The type of the identity data.</typeparam>
-            /// <typeparam name="TSource">The type of the data source</typeparam>
-        </member>
-        <member name="M:Xpandables.Net.Identities.IdentityDataExpression`2.GetExpression">
-            <summary>
-            Gets the expression tree for the underlying instance.
+            Contains an instance of claims.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider"/> using a decorator.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Identities.IdentityDataExpression`2.BuildExpression">
+        <member name="M:Xpandables.Net.Identities.ITokenClaim`1.SetClaims(`0)">
             <summary>
-            When implemented in derived class, this method will return the expression
-            to be used for the <see langword="Where"/> clause in a query to a db context.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Identities.IdentityDataProvider">
-            <summary>
-            Provides with a default implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/> that uses <see cref="T:Xpandables.Net.Http.IHttpTokenAccessor"/> and <see cref="T:Xpandables.Net.Http.IHttpTokenEngine"/> to retrieve the entity object.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Identities.IdentityDataProvider.#ctor(Xpandables.Net.Http.IHttpTokenAccessor,Xpandables.Net.Http.IHttpTokenEngine)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Identities.IdentityDataProvider"/> with the token accessor and token engine.
-            </summary>
-            <param name="httpTokenAccessor">The accessor to get the token value.</param>
-            <param name="httpTokenEngine">The engine to read and write token.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="httpTokenAccessor"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="httpTokenEngine"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Identities.IdentityDataProvider.GetIdentity">
-            <summary>
-            Returns an instance that contains identity or throw an exception if not found.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">Failed to find secured data.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Identities.IIdentityData">
-            <summary>
-            Provides with a protected property that holds identity information of any type in a security context.
-            This class is used with <see cref="T:Xpandables.Net.Identities.IIdentityDecorator"/> and its decorator class.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Identities.IIdentityData.Identity">
-            <summary>
-            Contains an instance of secured data.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/> using a decorator.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Identities.IIdentityData.SetIdentity(System.Object)">
-            <summary>
-            Sets the <see cref="P:Xpandables.Net.Identities.IIdentityData.Identity"/> with the specified value.
+            Sets the <see cref="P:Xpandables.Net.Identities.ITokenClaim`1.Claims"/> with the specified value.
             This method get called by the decorator class.
             </summary>
-            <param name="identity">The identity data to be used.</param>
+            <param name="claims">The claims to be used.</param>
         </member>
-        <member name="T:Xpandables.Net.Identities.IIdentityData`1">
+        <member name="M:Xpandables.Net.Identities.ITokenClaim`1.SetClaims(System.Object)">
             <summary>
-            Provides with a protected property that holds identity information of generic type in a security context.
-            This class is used with <see cref="T:Xpandables.Net.Identities.IIdentityDecorator"/> and its decorator class.
-            </summary>
-            <typeparam name="TData">The type of the data.</typeparam>
-        </member>
-        <member name="P:Xpandables.Net.Identities.IIdentityData`1.Identity">
-            <summary>
-            Contains an instance of identity data.
-            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/> using a decorator.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Identities.IIdentityData`1.SetIdentity(`0)">
-            <summary>
-            Sets the <see cref="P:Xpandables.Net.Identities.IIdentityData`1.Identity"/> with the specified value.
+            Sets the <see cref="P:Xpandables.Net.Identities.ITokenClaim`1.Claims"/> with the specified value.
             This method get called by the decorator class.
             </summary>
-            <param name="identity">The identity data to be used.</param>
+            <param name="claims">The claims to be used.</param>
         </member>
-        <member name="T:Xpandables.Net.Identities.IIdentityExpression`2">
+        <member name="T:Xpandables.Net.Identities.ITokenClaimDecorator">
             <summary>
-            Provides with a protected property that holds identity information of generic type in a security context.
-            This interface derives from <see cref="T:Xpandables.Net.Expressions.IQueryExpression`1"/> interface.
-            This interface is used with <see cref="T:Xpandables.Net.Identities.IIdentityDecorator"/> and its decorator class.
-            </summary>
-            <typeparam name="TIdentity">The type of the identity data.</typeparam>
-            <typeparam name="TSource">The type of the data source</typeparam>
-        </member>
-        <member name="T:Xpandables.Net.Identities.IIdentityDataProvider">
-            <summary>
-            Provides with a method to retrieve identity.
-            You should provide an implementation of this interface that will be used with the <see cref="T:Xpandables.Net.Identities.AsyncCommandIdentityDecorator`1"/>
-            or <see cref="T:Xpandables.Net.Identities.AsyncQueryIdentityDecorator`2"/> decorator to fill the target instance with the identity.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity">
-            <summary>
-            Returns an instance that contains identity or throw an exception if not found.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">Failed to find secured data.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity``1">
-            <summary>
-            Returns an instance that contains identity of the specified type or null if not found.
-            </summary>
-            <typeparam name="TIdentity">The type of the identity.</typeparam>
-            <returns>An object of <typeparamref name="TIdentity"/> type or null.</returns>
-            <exception cref="T:System.InvalidOperationException">Failed to find secured data.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Identities.IIdentityDecorator">
-            <summary>
-            A marker interface that allows the command/query class to be filled with an identity. The class should derive from
-            <see cref="T:Xpandables.Net.Identities.IdentityData"/>, <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/>
+            A marker interface that allows the command/query class to be filled with claims identity. The class should derive from
+            <see cref="T:Xpandables.Net.Identities.TokenClaim"/>, <see cref="T:Xpandables.Net.Identities.TokenClaim`1"/> or <see cref="T:Xpandables.Net.Identities.TokenClaimExpression`2"/>
             for a query-bale class. You need to provide with an
-            implementation for <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>
+            implementation for <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider"/>
             and register the expected class using the correct extension method.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.Identities.QueryIdentityDecorator`2">
+        <member name="T:Xpandables.Net.Identities.ITokenClaimExpression`2">
+            <summary>
+            Provides with a protected property that holds token claims information of generic type in a security context.
+            This interface derives from <see cref="T:Xpandables.Net.Expressions.IQueryExpression`1"/> interface.
+            This interface is used with <see cref="T:Xpandables.Net.Identities.ITokenClaimDecorator"/> and its decorator class.
+            </summary>
+            <typeparam name="TClaims">The type of claims.</typeparam>
+            <typeparam name="TSource">The type of the data source</typeparam>
+        </member>
+        <member name="T:Xpandables.Net.Identities.ITokenClaimProvider">
+            <summary>
+            Provides with a method to retrieve token claims.
+            You should provide an implementation of this interface that will be used with the <see cref="T:Xpandables.Net.Identities.AsyncCommandTokenClaimDecorator`1"/>
+            or <see cref="T:Xpandables.Net.Identities.AsyncQueryTokenClaimDecorator`2"/> decorator to fill the target instance with the token claims.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Identities.ITokenClaimProvider.ReadTokenClaim">
+            <summary>
+            Returns an instance that contains token claims or throw an exception if not found.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Failed to find claims</exception>
+        </member>
+        <member name="M:Xpandables.Net.Identities.ITokenClaimProvider.ReadTokenClaim``1">
+            <summary>
+            Returns an instance that contains token claims of the specified type or null if not found.
+            </summary>
+            <typeparam name="TTokenClaim">The type of the token claims.</typeparam>
+            <returns>An object of <typeparamref name="TTokenClaim"/> type or null.</returns>
+            <exception cref="T:System.InvalidOperationException">Failed to find claims.</exception>
+        </member>
+        <member name="T:Xpandables.Net.Identities.QueryTokenClaimDecorator`2">
             <summary>
             This class allows the application author to add secured information support to query control flow.
-            The target query should implement the <see cref="T:Xpandables.Net.Identities.IIdentityDecorator"/> and inherit from <see cref="T:Xpandables.Net.Identities.IdentityData"/>,
-            <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/> in order to activate the behavior.
-            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>, that you should
+            The target query should implement the <see cref="T:Xpandables.Net.Identities.ITokenClaimDecorator"/> and inherit from <see cref="T:Xpandables.Net.Identities.TokenClaim"/>,
+            <see cref="T:Xpandables.Net.Identities.TokenClaim`1"/> or <see cref="T:Xpandables.Net.Identities.TokenClaimExpression`2"/> in order to activate the behavior.
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider"/>, that you should
             provide an implementation and use the extension method for registration.
-            The decorator will set the <see cref="P:Xpandables.Net.Identities.IdentityData.Identity"/> property with the
-            <see cref="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity"/> before the handler execution.
+            The decorator will set the <see cref="P:Xpandables.Net.Identities.TokenClaim.Claims"/> property with the
+            <see cref="M:Xpandables.Net.Identities.ITokenClaimProvider.ReadTokenClaim"/> before the handler execution.
             </summary>
             <typeparam name="TQuery">Type of the query.</typeparam>
             <typeparam name="TResult">Type of the query.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Identities.QueryIdentityDecorator`2.#ctor(Xpandables.Net.Identities.IIdentityDataProvider,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+        <member name="M:Xpandables.Net.Identities.QueryTokenClaimDecorator`2.#ctor(Xpandables.Net.Identities.ITokenClaimProvider,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Identities.QueryIdentityDecorator`2"/>.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Identities.QueryTokenClaimDecorator`2"/>.
             </summary>
-            <param name="identityProvider">The secured data provider.</param>
+            <param name="tokenClaimProvider">The secured data provider.</param>
             <param name="decoratee">The query handler to decorate with.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="identityProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="tokenClaimProvider"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Identities.QueryIdentityDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Identities.QueryTokenClaimDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
             Asynchronously handles the specified query and returns the expected result.
             </summary>
@@ -6076,6 +5843,89 @@
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
             <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        </member>
+        <member name="T:Xpandables.Net.Identities.TokenClaim">
+            <summary>
+            Defines an implementation of <see cref="T:Xpandables.Net.Identities.ITokenClaim"/> with a protected property that holds token claims information
+            of any type in a security context.
+            This class is used with <see cref="T:Xpandables.Net.Identities.ITokenClaimDecorator"/> and its decorator class.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Identities.TokenClaim.Claims">
+            <summary>
+            Contains the protected instance of token claims.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider" /> using a decorator.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Identities.TokenClaim.SetClaims(System.Object)">
+            <summary>
+            Sets the <see cref="P:Xpandables.Net.Identities.ITokenClaim.Claims" /> with the specified value.
+            This method get called by the decorator class.
+            </summary>
+            <param name="claims">The claims data to be used.</param>
+        </member>
+        <member name="T:Xpandables.Net.Identities.TokenClaim`1">
+            <summary>
+            Defines an implementation of <see cref="T:Xpandables.Net.Identities.ITokenClaim`1"/> with a protected property that holds token claims information
+            of generic type in a security context.
+            This class is used with <see cref="T:Xpandables.Net.Identities.ITokenClaimDecorator"/> and its decorator class.
+            </summary>
+            <typeparam name="TClaims">The type of the token claims.</typeparam>
+        </member>
+        <member name="P:Xpandables.Net.Identities.TokenClaim`1.Claims">
+            <summary>
+            Contains the protected instance of claims of <typeparamref name="TClaims"/> type.
+            This value is provided by an implementation of <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider" /> using a decorator.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Identities.TokenClaim`1.SetClaims(`0)">
+            <summary>
+            Sets the <see cref="P:Xpandables.Net.Identities.TokenClaim`1.Claims"/> with the specified value.
+            This method get called by the decorator class.
+            </summary>
+            <param name="claims">The claims to be used.</param>
+        </member>
+        <member name="T:Xpandables.Net.Identities.TokenClaimExpression`2">
+            <summary>
+            Defines an implementation of <see cref="T:Xpandables.Net.Identities.ITokenClaimExpression`2"/> with a protected property that holds token claims information
+            of generic type in a security context.
+            This class implements the <see cref="T:Xpandables.Net.Expressions.IQueryExpression`1"/> interface and derives from <see cref="T:Xpandables.Net.Identities.TokenClaim`1"/>.
+            You must override the <see cref="M:Xpandables.Net.Identities.TokenClaimExpression`2.BuildExpression"/> method in order to provide a custom behavior.
+            This class is used with <see cref="T:Xpandables.Net.Identities.ITokenClaimDecorator"/> and its decorator class.
+            </summary>
+            <typeparam name="TClaims">The type of the claims data.</typeparam>
+            /// <typeparam name="TSource">The type of the data source</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Identities.TokenClaimExpression`2.GetExpression">
+            <summary>
+            Gets the expression tree for the underlying instance.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Identities.TokenClaimExpression`2.BuildExpression">
+            <summary>
+            When implemented in derived class, this method will return the expression
+            to be used for the <see langword="Where"/> clause in a query to a db context.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Identities.TokenClaimProvider">
+            <summary>
+            Provides with a default implementation of <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider"/> that uses <see cref="T:Xpandables.Net.Http.IHttpTokenAccessor"/> and <see cref="T:Xpandables.Net.Http.IHttpTokenEngine"/> to retrieve the token claims object.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Identities.TokenClaimProvider.#ctor(Xpandables.Net.Http.IHttpTokenAccessor,Xpandables.Net.Http.IHttpTokenEngine)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Identities.TokenClaimProvider"/> with the token accessor and token engine.
+            </summary>
+            <param name="httpTokenAccessor">The accessor to get the token value.</param>
+            <param name="httpTokenEngine">The engine to read and write token.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="httpTokenAccessor"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="httpTokenEngine"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Identities.TokenClaimProvider.ReadTokenClaim">
+            <summary>
+            Returns an instance that contains token claims or throw an exception if not found.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Failed to find claims.</exception>
         </member>
         <member name="T:Xpandables.Net.Interception.IInterceptor">
             <summary>
@@ -6826,11 +6676,11 @@
         <member name="T:Xpandables.Net.Optionals.Optional`1">
             <summary>
             Describes an object that can contain a value or not of a specific type.
-            You can make unconditional calls to its contents using <see cref="N:System.Linq"/> without testing whether the content is there or not.
+            You can make unconditional calls to its content using <see cref="N:System.Linq"/> without testing whether the content is there or not.
             The enumerator will only return the available value.
-            If <typeparamref name="T"/> is an enumerable, use the <see cref="M:Xpandables.Net.Optionals.Optional`1.GetEnumerable"/> function to access its contain.
+            If <typeparamref name="T"/> is an enumerable, use the <see cref="M:Xpandables.Net.Optionals.Optional`1.GetEnumerable"/> function to access its content.
             </summary>
-            <typeparam name="T"></typeparam>
+            <typeparam name="T">The type of the value.</typeparam>
         </member>
         <member name="M:Xpandables.Net.Optionals.Optional`1.GetEnumerable">
             <summary>
@@ -6842,9 +6692,16 @@
         </member>
         <member name="M:Xpandables.Net.Optionals.Optional`1.ValueIsEnumerable">
             <summary>
-            Gets a state whether the internal value is an enumerable.
+            Gets a state whether the internal value is an enumerable or asynchronous enumerable.
             </summary>
             <returns><see langword="true"/> if so, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Optionals.Optional`1.GetAsyncEnumerator(System.Threading.CancellationToken)">
+            <summary>
+            Returns an enumerator that iterates asynchronously through the collection.
+            </summary>
+            <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
+            <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
         </member>
         <member name="M:Xpandables.Net.Optionals.Optional`1.GetEnumerator">
             <summary>
@@ -10695,7 +10552,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         </member>
         <member name="T:Xpandables.Net.Queries.AsyncQueryHandlerWrapper`2">
             <summary>
@@ -10729,7 +10586,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         </member>
         <member name="T:Xpandables.Net.Queries.IAsyncQuery`1">
             <summary>
@@ -10759,7 +10616,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         </member>
         <member name="T:Xpandables.Net.Queries.IAsyncQueryHandlerWrapper`1">
             <summary>
@@ -10776,7 +10633,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         </member>
         <member name="T:Xpandables.Net.Queries.IQuery`1">
             <summary>
@@ -11519,6 +11376,14 @@
         <member name="M:Xpandables.Net.Types.TypeExtensions.IsEnumerable(System.Type)">
             <summary>
             Determines whether the current type implements <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+            <param name="type">The type to act on.</param>
+            <returns><see langword="true"/> if found, otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Types.TypeExtensions.IsAsyncEnumerable(System.Type)">
+            <summary>
+            Determines whether the current type implements or it's <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.
             </summary>
             <param name="type">The type to act on.</param>
             <returns><see langword="true"/> if found, otherwise <see langword="false"/>.</returns>

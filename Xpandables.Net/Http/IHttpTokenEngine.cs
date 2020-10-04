@@ -67,22 +67,22 @@ namespace Xpandables.Net.Http
         public IEnumerable<Claim> ReadToken(Token token) => ReadToken(token.Value);
 
         /// <summary>
-        /// Returns an object identity from the specify collection of claims. This method get used with <see cref="IIdentityDataProvider"/>.
+        /// Returns an object claims from the specify collection of claims. This method get used with <see cref="ITokenClaimProvider"/>.
         /// The default behavior throws <see cref="NotImplementedException"/>.
         /// </summary>
         /// <param name="claims">The collection of claims to act on.</param>
         /// <returns>An object that represents the security identity, otherwise throw <see cref="InvalidOperationException"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="claims"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Unable to read identity from claims. See inner exception.</exception>
-        public object ReadIdentity(IEnumerable<Claim> claims) => throw new NotImplementedException();
+        /// <exception cref="InvalidOperationException">Unable to read from claims. See inner exception.</exception>
+        public object ReadTokenClaim(IEnumerable<Claim> claims) => throw new NotImplementedException();
 
         /// <summary>
-        /// Returns an object identity from the specify token. The default behavior throws <see cref="NotImplementedException"/>.
+        /// Returns an object claims from the specify token. The default behavior throws <see cref="NotImplementedException"/>.
         /// </summary>
         /// <param name="token">The token string to act on.</param>
         /// <returns>An object that represents the security identity, otherwise throw <see cref="InvalidOperationException"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Unable to read identity from claims. See inner exception.</exception>
-        public object ReadIdentity(string token) => throw new NotImplementedException();
+        /// <exception cref="InvalidOperationException">Unable to read from claims. See inner exception.</exception>
+        public object ReadTokenClaim(string token) => throw new NotImplementedException();
     }
 }

@@ -63,18 +63,18 @@ namespace Xpandables.Net.DependencyInjection
         public CommandQueryOptions UseTransactionDecorator() => this.Assign(cq => cq.IsTransactionEnabled = true);
 
         /// <summary>
-        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IIdentityDecorator"/>.
+        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="ITokenClaimDecorator"/>.
         /// </summary>
         public CommandQueryOptions UseIdentityDecorator<TIdentityDataProvider>()
-            where TIdentityDataProvider : class, IIdentityDataProvider => this.Assign(cq => cq.IsIdentityDataEnabled = typeof(TIdentityDataProvider));
+            where TIdentityDataProvider : class, ITokenClaimProvider => this.Assign(cq => cq.IsIdentityDataEnabled = typeof(TIdentityDataProvider));
 
         /// <summary>
-        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IIdentityDecorator"/> using the default identity provider.
+        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="ITokenClaimDecorator"/> using the default identity provider.
         /// </summary>
-        public CommandQueryOptions UseIdentityDecorator() => this.Assign(cq => cq.IsIdentityDataEnabled = typeof(IdentityDataProvider));
+        public CommandQueryOptions UseIdentityDecorator() => this.Assign(cq => cq.IsIdentityDataEnabled = typeof(TokenClaimProvider));
 
         /// <summary>
-        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="IIdentityDecorator"/>.
+        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="ITokenClaimDecorator"/>.
         /// </summary>
         /// <param name="identityDataProvider">The identity data provider type.</param>
         public CommandQueryOptions UseIdentityDecorator(Type identityDataProvider)
@@ -160,8 +160,8 @@ namespace Xpandables.Net.DependencyInjection
 
             if (definedOptions.IsIdentityDataEnabled is { })
             {
-                services.AddXIdentityDataProvider(definedOptions.IsIdentityDataEnabled);
-                services.AddXIdentityDecorator();
+                services.AddXTokenClaimProvider(definedOptions.IsIdentityDataEnabled);
+                services.AddXTokenClaimDecorator();
             }
 
             return services;

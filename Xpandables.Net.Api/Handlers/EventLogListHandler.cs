@@ -18,15 +18,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Api.Contracts;
 using Xpandables.Net.Api.Models.Domains;
-using Xpandables.Net.Api.Storage.Services;
 using Xpandables.Net.EntityFramework;
 using Xpandables.Net.Expressions;
 using Xpandables.Net.Queries;
@@ -46,13 +43,12 @@ namespace Xpandables.Net.Api.Handlers
             if (query.StartOccuredOn is not null) queryExpression = queryExpression.And(el => el.OccuredOn >= query.StartOccuredOn.Value);
             if (query.EndOccuredOn is not null) queryExpression = queryExpression.And(el => el.OccuredOn <= query.EndOccuredOn.Value);
 
-            return _dataContext.SetOf(query)
-                .AsNoTracking()
-                .Include(i => i.EventLogs)
-                .SelectMany(user => user.EventLogs)
-                .Where(queryExpression)
-                .Select(log => new Log(log.EventName, log.OccuredOn, log.Description))
-                .AsAsyncEnumerable();
+            return _dataContext.FindAllAsync<User, Log>(u => u
+                 .AsNoTracking()
+                 .Include(i => i.EventLogs)
+                 .SelectMany(user => user.EventLogs)
+                 .Where(queryExpression)
+                 .Select(log => new Log(log.EventName, log.OccuredOn, log.Description)), cancellationToken);
         }
     }
 }

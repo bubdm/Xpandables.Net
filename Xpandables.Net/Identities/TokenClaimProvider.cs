@@ -23,36 +23,36 @@ using Xpandables.Net.Http;
 namespace Xpandables.Net.Identities
 {
     /// <summary>
-    /// Provides with a default implementation of <see cref="IIdentityDataProvider"/> that uses <see cref="IHttpTokenAccessor"/> and <see cref="IHttpTokenEngine"/> to retrieve the entity object.
+    /// Provides with a default implementation of <see cref="ITokenClaimProvider"/> that uses <see cref="IHttpTokenAccessor"/> and <see cref="IHttpTokenEngine"/> to retrieve the token claims object.
     /// </summary>
-    public sealed class IdentityDataProvider : IIdentityDataProvider
+    public sealed class TokenClaimProvider : ITokenClaimProvider
     {
         private readonly IHttpTokenAccessor _httpTokenAccessor;
         private readonly IHttpTokenEngine _httpTokenEngine;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="IdentityDataProvider"/> with the token accessor and token engine.
+        /// Initializes a new instance of <see cref="TokenClaimProvider"/> with the token accessor and token engine.
         /// </summary>
         /// <param name="httpTokenAccessor">The accessor to get the token value.</param>
         /// <param name="httpTokenEngine">The engine to read and write token.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="httpTokenAccessor"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="httpTokenEngine"/> is null.</exception>
-        public IdentityDataProvider(IHttpTokenAccessor httpTokenAccessor, IHttpTokenEngine httpTokenEngine)
+        public TokenClaimProvider(IHttpTokenAccessor httpTokenAccessor, IHttpTokenEngine httpTokenEngine)
         {
             _httpTokenAccessor = httpTokenAccessor ?? throw new ArgumentNullException(nameof(httpTokenAccessor));
             _httpTokenEngine = httpTokenEngine ?? throw new ArgumentNullException(nameof(httpTokenEngine));
         }
 
         /// <summary>
-        /// Returns an instance that contains identity or throw an exception if not found.
+        /// Returns an instance that contains token claims or throw an exception if not found.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Failed to find secured data.</exception>
+        /// <exception cref="InvalidOperationException">Failed to find claims.</exception>
         [return: NotNull]
-        public object GetIdentity()
+        public object ReadTokenClaim()
         {
             var token = _httpTokenAccessor.ReadToken() ?? throw new InvalidOperationException("Expected token not found");
             var claims = _httpTokenEngine.ReadToken(token);
-            return _httpTokenEngine.ReadIdentity(claims);
+            return _httpTokenEngine.ReadTokenClaim(claims);
         }
     }
 }
