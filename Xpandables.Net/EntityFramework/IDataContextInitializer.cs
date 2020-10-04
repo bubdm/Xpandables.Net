@@ -44,6 +44,6 @@ namespace Xpandables.Net.EntityFramework
         /// This method get called by the <see cref="DataContextInitializerDecorator"/>.
         /// </summary>
         /// <param name="dataContext">The data context instance to act on.</param>
-        public void Initialize(IDataContext dataContext) => AsyncExtensions.RunSync(InitializeAsync(dataContext));
+        public void Initialize(IDataContext dataContext) => InitializeAsync(dataContext).RunSync();
     }
 }

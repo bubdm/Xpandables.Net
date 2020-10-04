@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -160,6 +161,7 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandPersistenceDecorator<>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryPersistenceDecorator<,>));
             return services;
         }
 

@@ -148,11 +148,11 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="result">The result content if exist.</param>
         /// <returns>A new instance of <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public static HttpRestClientResponse<TResult> Convert(HttpRestClientResponse source, Optional<TResult> result)
+        public static HttpRestClientResponse<TResult> Convert(HttpRestClientResponse source, TResult result)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
 
-            var response = (source.Exception, result.FirstOrDefault()) switch
+            var response = (source.Exception, result) switch
             {
                 (null, TResult value) => new HttpRestClientResponse<TResult>(value, source.StatusCode),
                 (Exception exception, null) => new HttpRestClientResponse<TResult>(exception, source.StatusCode),

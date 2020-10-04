@@ -48,7 +48,7 @@ namespace Xpandables.Net.Api.Handlers
                 ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, command.Phone, new[] { "Phone" });
 
             if (command.Email is { }) user.ChangeEmail(new EmailAddress(command.Email), $"Change to {command.Email}");
-            if (command.Password is { }) user.ChangePassword(_stringCryptography.Encrypt(command.Password), $"Just to change to {command.Password}");
+            if (command.Password is { }) user.ChangePassword(await _stringCryptography.EncryptAsync(command.Password).ConfigureAwait(false), $"Just to change to {command.Password}");
             if (command.Phone is { }) user.ChangePhone(new PhoneNumber(command.Phone), $"Changing from {user.Phone} to {command.Phone}");
 
             await _dataContext.UpdateEntityAsync(user, cancellationToken).ConfigureAwait(false);

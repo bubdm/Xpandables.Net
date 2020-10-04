@@ -20,37 +20,42 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Types;
 
 namespace Xpandables.Net.Optionals
 {
     /// <summary>
     /// Describes an object that can contain a value or not of a specific type.
-    /// You can make unconditional calls to its contents using <see cref="System.Linq"/> without testing whether the content is there or not.
+    /// You can make unconditional calls to its content using <see cref="System.Linq"/> without testing whether the content is there or not.
     /// The enumerator will only return the available value.
-    /// If <typeparamref name="T"/> is an enumerable, use the <see cref="GetEnumerable"/> function to access its contain.
+    /// If <typeparamref name="T"/> is an enumerable, use the <see cref="GetEnumerable"/> function to access its content.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public readonly partial struct Optional<T> : IEnumerable<T>
+    /// <typeparam name="T">The type of the value.</typeparam>
+    public readonly partial struct Optional<T> : IEnumerable<T>, IAsyncEnumerable<T>
     {
         private readonly Type[] _genericTypes;
         private readonly T[] _values;
+        private readonly bool IsEnumerbaleOrAsyncEnumerable => typeof(T).IsEnumerable() || typeof(T).IsAsyncEnumerable();
+        private readonly bool IsEnumerbale => typeof(T).IsEnumerable();       
 
         private static readonly MethodInfo _arrayEmpty = typeof(Array).GetMethod("Empty")!;
+        private static readonly MethodInfo _asyncEmpty = typeof(AsyncEnumerable).GetMethod("Empty")!;
 
         internal bool IsValue() => _values?.Length > 0;
 
         private Optional(T[]? values = default)
         {
             _values = values ?? Array.Empty<T>();
-            _genericTypes = typeof(T).IsEnumerable() ? typeof(T).GetGenericArguments() : Type.EmptyTypes;
+            _genericTypes = typeof(T).IsEnumerable() || typeof(T).IsAsyncEnumerable() ? typeof(T).GetGenericArguments() : Type.EmptyTypes;
         }
 
         private T GetDefaultEnumerable()
         {
-            var runtimeMethod = _arrayEmpty.MakeGenericMethod(_genericTypes[0]);
+            var runtimeMethod = IsEnumerbale ? _arrayEmpty.MakeGenericMethod(_genericTypes[0]) : _asyncEmpty.MakeGenericMethod(_genericTypes[0]);
             return (T)runtimeMethod.Invoke(null, null)!;
         }
 
@@ -62,17 +67,24 @@ namespace Xpandables.Net.Optionals
         /// <exception cref="InvalidOperationException">The <typeparamref name="T"/> is not an enumerable.</exception>
         public T GetEnumerable()
         {
-            if (!typeof(T).IsEnumerable())
-                throw new InvalidOperationException($"{typeof(T).Name} is not an enumerable !");
+            if (!ValueIsEnumerable())
+                throw new InvalidOperationException($"{typeof(T).Name} is not an enumerable nor asynchronous enumerable !");
 
             return IsValue() ? _values[0] : GetDefaultEnumerable();
         }
 
         /// <summary>
-        /// Gets a state whether the internal value is an enumerable.
+        /// Gets a state whether the internal value is an enumerable or asynchronous enumerable.
         /// </summary>
         /// <returns><see langword="true"/> if so, otherwise <see langword="false"/>.</returns>
-        public bool ValueIsEnumerable() => typeof(T).IsEnumerable();
+        public bool ValueIsEnumerable() => IsEnumerbaleOrAsyncEnumerable;
+
+        /// <summary>
+        /// Returns an enumerator that iterates asynchronously through the collection.
+        /// </summary>
+        /// <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
+        /// <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) => new AsyncEnumeratorBuilder<T>(GetEnumerator());
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.

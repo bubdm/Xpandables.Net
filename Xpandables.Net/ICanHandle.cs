@@ -47,5 +47,14 @@ namespace Xpandables.Net
         /// <param name="argument">The argument to handle.</param>
         /// <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
         public bool CanHandle(TArgument argument) => true;
+
+        /// <summary>
+        /// Determines whether or not a an argument can be handled by the underlying context.
+        /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+        /// The default behavior calls the <see cref="CanHandle(TArgument)"/>.
+        /// </summary>
+        /// <param name="argument">The argument to handle.</param>
+        /// <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
+        public new sealed bool CanHandle(object argument) => CanHandle((TArgument)argument);
     }
 }

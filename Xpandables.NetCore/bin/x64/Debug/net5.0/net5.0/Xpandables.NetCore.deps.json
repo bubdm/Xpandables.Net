@@ -6,10 +6,10 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "Xpandables.NetCore/5.0.0-rc.1.0.7": {
+      "Xpandables.NetCore/5.0.0-rc.1.1.1": {
         "dependencies": {
           "Microsoft.CodeAnalysis.FxCopAnalyzers": "3.3.0",
-          "Xpandables.Net": "5.0.0-rc.1.0.7"
+          "Xpandables.Net": "5.0.0-rc.1.1.1"
         },
         "runtime": {
           "Xpandables.NetCore.dll": {}
@@ -41,14 +41,6 @@
           }
         }
       },
-      "Serilog/2.10.0": {
-        "runtime": {
-          "lib/netstandard2.1/Serilog.dll": {
-            "assemblyVersion": "2.0.0.0",
-            "fileVersion": "2.10.0.0"
-          }
-        }
-      },
       "System.Drawing.Common/5.0.0-rc.1.20451.14": {
         "dependencies": {
           "Microsoft.Win32.SystemEvents": "5.0.0-rc.1.20451.14"
@@ -62,10 +54,9 @@
           }
         }
       },
-      "Xpandables.Net/5.0.0-rc.1.0.7": {
+      "Xpandables.Net/5.0.0-rc.1.1.1": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
-          "Serilog": "2.10.0",
           "System.Drawing.Common": "5.0.0-rc.1.20451.14",
           "System.Linq.Async": "4.1.1"
         },
@@ -84,7 +75,7 @@
     }
   },
   "libraries": {
-    "Xpandables.NetCore/5.0.0-rc.1.0.7": {
+    "Xpandables.NetCore/5.0.0-rc.1.1.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -145,13 +136,6 @@
       "path": "newtonsoft.json/12.0.3",
       "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
     },
-    "Serilog/2.10.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-+QX0hmf37a0/OZLxM3wL7V6/ADvC1XihXN4Kq/p6d8lCPfgkRdiuhbWlMaFjR9Av0dy5F0+MBeDmDdRZN/YwQA==",
-      "path": "serilog/2.10.0",
-      "hashPath": "serilog.2.10.0.nupkg.sha512"
-    },
     "System.Drawing.Common/5.0.0-rc.1.20451.14": {
       "type": "package",
       "serviceable": true,
@@ -166,7 +150,7 @@
       "path": "system.linq.async/4.1.1",
       "hashPath": "system.linq.async.4.1.1.nupkg.sha512"
     },
-    "Xpandables.Net/5.0.0-rc.1.0.7": {
+    "Xpandables.Net/5.0.0-rc.1.1.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -16,7 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -80,11 +79,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <summary>
         /// Asynchronously gets the IPAddress of the current caller using https://ipinfo.io/ip.
         /// </summary>
-        public async Task<HttpRestClientResponse<string>> GetIPAddressAsync()
-        {
-            using var respone = await _httpRestClientHandler.HandleAsync(new IPLocationRequest()).ConfigureAwait(false);
-            return HttpRestClientResponse<string>.Convert(respone, await respone.Result.FirstOrDefaultAsync().ConfigureAwait(false));
-        }
+        public async Task<HttpRestClientResponse<string>> GetIPAddressAsync() => await _httpRestClientHandler.HandleAsync(new IPLocationRequest()).ConfigureAwait(false);
 
         private bool _isDisposed;
 

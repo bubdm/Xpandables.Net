@@ -65,7 +65,7 @@ namespace Xpandables.Net.Visitors
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            AsyncExtensions.RunSync(query.AcceptAsync(_visitor));
+            query.AcceptAsync(_visitor).RunSync();
             return _decoratee.HandleAsync(query, cancellationToken);
         }
     }

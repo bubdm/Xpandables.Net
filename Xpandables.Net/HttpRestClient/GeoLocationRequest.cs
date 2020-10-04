@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 
 using Xpandables.Net.Enumerations;
@@ -27,7 +28,7 @@ namespace Xpandables.Net.HttpRestClient
     /// <summary>
     /// The IPAddress Geo-location request.
     /// </summary>
-    public class GeoLocationRequest : IAsyncQuery<GeoLocationResponse>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
+    public class GeoLocationRequest : IQuery<GeoLocationResponse>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
     {
         /// <summary>
         /// Initializes a new instance of <see cref="GeoLocationRequest"/> class.
@@ -90,7 +91,7 @@ namespace Xpandables.Net.HttpRestClient
         /// Returns the <see cref="HttpRestClientAttribute" /> to be applied on the current instance.
         /// </summary>
         public HttpRestClientAttribute GetHttpRestClientAttribute()
-            => new HttpRestClientAttribute { Path = IpAddress, IsNullable = true, IsSecured = false };
+            => new HttpRestClientAttribute { Path = IpAddress, IsNullable = true, IsSecured = false, In = ParameterLocation.Query };
 
         /// <summary>
         /// Returns the keys and values for the Uri.
@@ -110,6 +111,7 @@ namespace Xpandables.Net.HttpRestClient
     /// <summary>
     /// The location output format.
     /// </summary>
+    [TypeConverter(typeof(EnumerationTypeConverter))]
     public sealed class GeoLocationOutput : EnumerationType
     {
         /// <summary>
@@ -135,6 +137,7 @@ namespace Xpandables.Net.HttpRestClient
     /// <summary>
     /// The location language.
     /// </summary>
+    [TypeConverter(typeof(EnumerationTypeConverter))]
     public sealed class GeoLocationLanguage : EnumerationType
     {
         /// <summary>

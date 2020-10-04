@@ -16,7 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -58,8 +57,7 @@ namespace Xpandables.Net.HttpRestClient
         public async Task<HttpRestClientResponse<GeoLocationResponse>> GetGeoLocationAsync(GeoLocationRequest request)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
-            using var respone = await _httpRestClientHandler.HandleAsync(request).ConfigureAwait(false);
-            return HttpRestClientResponse<GeoLocationResponse>.Convert(respone, await respone.Result.FirstOrDefaultAsync().ConfigureAwait(false));
+            return await _httpRestClientHandler.HandleAsync(request).ConfigureAwait(false);
         }
 
         private bool _isDisposed;

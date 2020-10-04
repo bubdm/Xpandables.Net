@@ -15,8 +15,6 @@
  *
 ************************************************************************************************************/
 
-using Microsoft.EntityFrameworkCore;
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,7 +24,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Xpandables.Net.EntityFramework
 {
@@ -37,56 +35,91 @@ namespace Xpandables.Net.EntityFramework
     public abstract partial class DataContext : IDataContext
     {
         /// <summary>
-        /// Provides with a query-able instance for <typeparamref name="T" />.
+        /// Returns an entity of the <typeparamref name="T"/> type specified by the selector.
+        /// If not found, returns the <see langword="default"/> value of the type.
         /// </summary>
-        /// <typeparam name="T">Type of entity.</typeparam>
-        /// <returns>An <see cref="IQueryable{T}" />.</returns>
-        public virtual IQueryable<T> SetOf<T>() where T : Entity => Set<T>();
-
-        /// <summary>
-        /// Provides with a query-able instance for <typeparamref name="T"/> from an expression.
-        /// </summary>
-        /// <typeparam name="T">Type of entity.</typeparam>
-        /// <param name="queryExpression">The expression to act with.</param>
-        /// <returns>An <see cref="IQueryable{T}"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="queryExpression"/> is null.</exception>
-        public virtual IQueryable<T> SetOf<T>(IQueryExpression<T> queryExpression) where T : Entity
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <param name="selector">Expression used for selecting entities.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an object of <typeparamref name="T"/> type or not.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        public virtual async Task<T?> FindAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken = default)
+            where T : Entity
         {
-            _ = queryExpression ?? throw new ArgumentNullException(nameof(queryExpression));
-            return Set<T>();
+            _ = selector ?? throw new ArgumentNullException(nameof(selector));
+            return await selector(Set<T>()).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Returns the entity matching the specified identifier or <see langword="null"/> if not found.
+        /// Returns an anonymous type of <typeparamref name="TResult"/> specified by the selector.
+        /// If not found, returns the <see langword="default"/> value of the type.
         /// </summary>
-        /// <typeparam name="T">Type of entity.</typeparam>
-        /// <param name="identifier">the entity identifier to search for.</param>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
+        /// <param name="selector">Expression used for selecting entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An entity of type <typeparamref name="T"/> if found otherwise <see langword="null"/>  .</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="identifier"/> is null.</exception>
-        public async Task<T?> GetEntityByIdAsync<T>(string identifier, CancellationToken cancellationToken = default) where T : Entity
-            => await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(Set<T>(), entity => entity.Id == identifier, cancellationToken).ConfigureAwait(false);
+        /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        public virtual async Task<TResult?> FindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
+            where T : Entity
+        {
+            _ = selector ?? throw new ArgumentNullException(nameof(selector));
+            return await selector(Set<T>()).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Returns an asynchronous enumerable of <typeparamref name="T"/> entities specified by the selector.
+        /// If no result found, returns an empty enumerable.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <param name="selector">Expression used for selecting entities.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A collection of <typeparamref name="T"/> that can be asynchronously enumerable.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        public IAsyncEnumerable<T> FindAllAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken = default)
+            where T : Entity
+        {
+            _ = selector ?? throw new ArgumentNullException(nameof(selector));
+            return selector(Set<T>()).AsAsyncEnumerable();
+        }
+
+        /// <summary>
+        /// Returns an asynchronous enumerable of <typeparamref name="TResult"/> anonymous type specified by the selector.
+        /// If no result found, returns an empty enumerable.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
+        /// <param name="selector">Expression used for selecting entities.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        public IAsyncEnumerable<TResult> FindAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
+            where T : Entity
+        {
+            _ = selector ?? throw new ArgumentNullException(nameof(selector));
+            return selector(Set<T>()).AsAsyncEnumerable();
+        }
 
         /// <summary>
         /// Adds a domain object to the data storage that will be inserted
-        /// into the database when <see cref="Persist"/> is called.
+        /// into the database when <see cref="PersistAsync(CancellationToken)"/> is called.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <param name="entity">The domain object to be added and persisted.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null or empty.</exception>
-        public async Task AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default) where T : Entity
+        public virtual async Task AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default) where T : Entity
             => await Set<T>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Adds a collection of domain objects to the data storage that will be inserted
-        /// into the database when <see cref="IDataContext.Persist" /> is called.
+        /// into the database when <see cref="IDataContext.PersistAsync(CancellationToken)" /> is called.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <param name="entities">The domain objects collection to be added and persisted.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="entities" /> is null or empty.</exception>
-        public async Task AddEntityRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+        public virtual async Task AddEntityRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
             where T : Entity
         {
             if (entities?.Any() != true)
@@ -96,14 +129,14 @@ namespace Xpandables.Net.EntityFramework
         }
 
         /// <summary>
-        /// Deletes the domain object matching the specified entity that will be removed from the database when <see cref="Persist"/>
+        /// Deletes the domain object matching the specified entity that will be removed from the database when <see cref="PersistAsync(CancellationToken)"/>
         /// is called.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <param name="deletedEntity">The entity to be deleted.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="deletedEntity"/> is null.</exception>
-        public async Task DeleteEntityAsync<T>(T deletedEntity, CancellationToken cancellationToken = default)
+        public virtual async Task DeleteEntityAsync<T>(T deletedEntity, CancellationToken cancellationToken = default)
             where T : Entity
         {
             if (deletedEntity is null) throw new ArgumentNullException(nameof(deletedEntity));
@@ -113,14 +146,14 @@ namespace Xpandables.Net.EntityFramework
         }
 
         /// <summary>
-        /// Deletes the domain objects matching the predicate that will be removed from the database when <see cref="IDataContext.Persist" />
+        /// Deletes the domain objects matching the predicate that will be removed from the database when <see cref="IDataContext.PersistAsync(CancellationToken)" />
         /// is called. You can use a third party library with <see langword="IDataContext.SetOf{T}" /> for performance.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <param name="predicate">The predicate to be used to filter domain objects.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate" /> is null.</exception>
-        public async Task DeleteEntityAsync<T>(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        public virtual async Task DeleteEntityAsync<T>(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
             where T : Entity
         {
             if (predicate is null) throw new ArgumentNullException(nameof(predicate));
@@ -140,7 +173,7 @@ namespace Xpandables.Net.EntityFramework
         /// <param name="updatedEntity">the updated entity.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="updatedEntity"/> is null.</exception>
-        public async Task UpdateEntityAsync<T>(T updatedEntity, CancellationToken cancellationToken = default)
+        public virtual async Task UpdateEntityAsync<T>(T updatedEntity, CancellationToken cancellationToken = default)
             where T : Entity
         {
             if (updatedEntity is null) throw new ArgumentNullException(nameof(updatedEntity));
@@ -160,7 +193,7 @@ namespace Xpandables.Net.EntityFramework
         /// <param name="updatedEntities">Contains the collection of updated values.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="updatedEntities" /> is null.</exception>
-        public async Task UpdateEntityRangeAsync<T, TUpdated>(
+        public virtual async Task UpdateEntityRangeAsync<T, TUpdated>(
             IEnumerable<TUpdated> updatedEntities, CancellationToken cancellationToken = default)
             where T : Entity
             where TUpdated : Entity
@@ -193,7 +226,7 @@ namespace Xpandables.Net.EntityFramework
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate" /> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="updater" /> is null.</exception>
-        public async Task UpdateEntityAsync<T, TUpdated>(
+        public virtual async Task UpdateEntityAsync<T, TUpdated>(
             Expression<Func<T, bool>> predicate, Func<T, TUpdated> updater, CancellationToken cancellationToken = default)
             where T : Entity
             where TUpdated : class
@@ -214,29 +247,12 @@ namespace Xpandables.Net.EntityFramework
         /// <summary>
         /// Persists all pending domain objects to the data storage.
         /// </summary>
-        /// <exception cref="InvalidOperationException">All exceptions related to the operation.</exception>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public void Persist()
-        {
-            try
-            {
-                SaveChanges(true);
-            }
-            catch (Exception exception) when (exception is DbUpdateException)
-            {
-                ExceptionHandler(exception);
-            }
-        }
-
-        /// <summary>
-        /// Persists all pending domain objects to the data storage.
-        /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous persist all operation.</returns>
         /// <exception cref="InvalidOperationException">All exceptions related to the operation.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public async Task PersistAsync(CancellationToken cancellationToken)
+        public virtual async Task PersistAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -281,138 +297,5 @@ namespace Xpandables.Net.EntityFramework
         /// <param name="persistenceExceptionHandler">The optional delegate instance.</param>
         public void OnPersistenceException(Func<Exception, Exception?>? persistenceExceptionHandler)
             => PersistenceExceptionHandler = persistenceExceptionHandler;
-
-        /// <summary>
-        /// Returns the entity matching the specified identifier or <see langword="null"/> if not found.
-        /// </summary>
-        /// <typeparam name="T">Type of entity.</typeparam>
-        /// <param name="identifier">the entity identifier to search for.</param>
-        /// <returns>An entity of type <typeparamref name="T"/> if found otherwise <see langword="null"/>  .</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="identifier"/> is null.</exception>
-        public T? GetEntityById<T>(string identifier) where T : Entity
-            => Set<T>().FirstOrDefault(entity => entity.Id == identifier);
-
-        /// <summary>
-        /// Adds a domain object to the data storage that will be inserted
-        /// into the database when <see cref="Persist"/> is called.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <param name="entity">The domain object to be added and persisted.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null or empty.</exception>
-        public void AddEntity<T>(T entity) where T : Entity
-            => Set<T>().Add(entity);
-
-        /// <summary>
-        /// Adds a collection of domain objects to the data storage that will be inserted
-        /// into the database when <see cref="IDataContext.Persist" /> is called.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <param name="entities">The domain objects collection to be added and persisted.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="entities" /> is null or empty.</exception>
-        public void AddEntityRange<T>(IEnumerable<T> entities)
-            where T : Entity
-        {
-            if (entities?.Any() != true)
-                throw new ArgumentNullException(nameof(entities));
-
-            AddRange(entities);
-        }
-
-        /// <summary>
-        /// Deletes the domain object matching the specified entity that will be removed from the database when <see cref="Persist"/>
-        /// is called.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <param name="deletedEntity">The entity to be deleted.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="deletedEntity"/> is null.</exception>
-        public void DeleteEntity<T>(T deletedEntity)
-            where T : Entity
-        {
-            if (deletedEntity is null) throw new ArgumentNullException(nameof(deletedEntity));
-            Remove(deletedEntity);
-        }
-
-        /// <summary>
-        /// Deletes the domain objects matching the predicate that will be removed from the database when <see cref="IDataContext.Persist" />
-        /// is called. You can use a third party library with <see langword="IDataContext.SetOf{T}" /> for performance.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <param name="predicate">The predicate to be used to filter domain objects.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="predicate" /> is null.</exception>
-        public void DeleteEntity<T>(Expression<Func<T, bool>> predicate)
-            where T : Entity
-        {
-            if (predicate is null) throw new ArgumentNullException(nameof(predicate));
-            foreach (var entity in Set<T>().Where(predicate))
-                Remove(entity);
-        }
-
-        /// <summary>
-        /// Updates the domain object matching the specify entity.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <param name="updatedEntity">the updated entity.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="updatedEntity"/> is null.</exception>
-        public void UpdateEntity<T>(T updatedEntity)
-            where T : Entity
-        {
-            if (updatedEntity is null) throw new ArgumentNullException(nameof(updatedEntity));
-            Update(updatedEntity);
-        }
-
-        /// <summary>
-        /// Updates the domain objects matching the collection of entities.
-        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
-        /// you don't set will be left alone. If you have property you want to set to its default,
-        /// then you must explicitly set that property's value.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
-        /// <param name="updatedEntities">Contains the collection of updated values.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="updatedEntities" /> is null.</exception>
-        public void UpdateEntityRange<T, TUpdated>(
-            IEnumerable<TUpdated> updatedEntities)
-            where T : Entity
-            where TUpdated : Entity
-        {
-            if (updatedEntities?.Any() != true)
-                throw new ArgumentNullException(nameof(updatedEntities));
-
-            foreach (var updatedEntity in updatedEntities)
-            {
-                if (Set<T>().FirstOrDefault(entity => entity.Id == updatedEntity.Id) is T entity)
-                {
-                    Entry(entity).CurrentValues.SetValues(updatedEntity);
-                    Entry(entity).State = EntityState.Modified;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Updates the domain objects matching the predicate by using the updater.
-        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
-        /// you don't set will be left alone. If you have property you want to set to its default,
-        /// then you must explicitly set that property's value.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
-        /// <param name="predicate">The predicate to be used to filter domain objects.</param>
-        /// <param name="updater">The delegate to be used for updating domain objects.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="predicate" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="updater" /> is null.</exception>
-        public void UpdateEntity<T, TUpdated>(
-            Expression<Func<T, bool>> predicate, Func<T, TUpdated> updater)
-            where T : Entity
-            where TUpdated : class
-        {
-            if (predicate is null) throw new ArgumentNullException(nameof(predicate));
-            if (updater is null) throw new ArgumentNullException(nameof(updater));
-
-            foreach (var entity in Set<T>().Where(predicate))
-            {
-                Entry(entity).CurrentValues.SetValues(updater(entity));
-                Entry(entity).State = EntityState.Modified;
-            }
-        }
     }
 }

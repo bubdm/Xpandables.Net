@@ -63,7 +63,7 @@ namespace Xpandables.Net.Validations
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         public IAsyncEnumerable<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
-            AsyncExtensions.RunSync(_validator.ValidateAsync(query));
+            _validator.ValidateAsync(query).RunSync();
             return _decoratee.HandleAsync(query, cancellationToken);
         }
     }

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Xpandables.Net.Correlation;
 using Xpandables.Net.Creators;
@@ -36,14 +37,14 @@ namespace Xpandables.Net.Data.Mappers
         private static SpinLock _spinLock;
 
         /// <summary>
-        /// Maps an entity with the record value.
+        /// Asynchronously maps an entity with the record value.
         /// </summary>
         /// <typeparam name="TEntity">The entity type.</typeparam>
         /// <param name="dataRecord">The record to be used.</param>
         /// <param name="options">The execution options to act with.</param>
         /// <exception cref="ArgumentNullException">the <paramref name="dataRecord"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public void Map<TEntity>(IDataRecord dataRecord, IDataOptions options)
+        public async Task MapAsync<TEntity>(IDataRecord dataRecord, IDataOptions options)
         {
             _ = dataRecord ?? throw new ArgumentNullException(nameof(dataRecord));
             _ = options ?? throw new ArgumentNullException(nameof(options));
@@ -66,7 +67,7 @@ namespace Xpandables.Net.Data.Mappers
                     foreach (DataProperty primitive in primitives)
                         primitive.SetData(dataRecord, entity.Entity!, InstanceCreator);
 
-                    entity.BuildIdentity();
+                    await entity.BuildIdentity().ConfigureAwait(false);
 
                     if (Entities.TryGetValue(entity.Identity!, out var foundEntity)) entity = foundEntity;
 

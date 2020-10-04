@@ -4,12 +4,12 @@
         <name>Xpandables.Net</name>
     </assembly>
     <members>
-        <member name="T:Xpandables.Net.AssingExtensions">
+        <member name="T:Xpandables.Net.AssignExtensions">
             <summary>
             Provides with extension method similar to the VB.Net key word <see lanwgord="With"/>..<see lanwgord="EndWith"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.AssingExtensions.Assign``1(``0,System.Action{``0})">
+        <member name="M:Xpandables.Net.AssignExtensions.Assign``1(``0,System.Action{``0})">
             <summary>
             Sets properties via lambda expression scope.
             This is similar to the VB.Net key word <see lanwgord="With"/>..<see lanwgord="EndWith"/>.
@@ -21,7 +21,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="action"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.AssingExtensions.Assign``1(``0,System.Action{``0}[])">
+        <member name="M:Xpandables.Net.AssignExtensions.Assign``1(``0,System.Action{``0}[])">
             <summary>
             Sets properties via lambda expressions scope.
             This is similar to the VB.Net key word <see lanwgord="With"/>..<see lanwgord="EndWith"/>.
@@ -33,7 +33,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="actions"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.AssingExtensions.Assign``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.String}},System.Object)">
+        <member name="M:Xpandables.Net.AssignExtensions.Assign``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.String}},System.Object)">
             <summary>
             Sets properties via lambda expression. This is useful when dealing with <see cref="T:System.Linq.Expressions.Expression`1"/>.
             </summary>
@@ -48,71 +48,39 @@
             <exception cref="T:System.ArgumentException">The <paramref name="nameOfExpression"/> is not valid.</exception>
             <exception cref="T:System.Reflection.TargetInvocationException">An error occurred while setting the property value. See inner exception.</exception>
         </member>
-        <member name="T:Xpandables.Net.Asynchronous.AsyncEnumerableConstructor`1">
+        <member name="T:Xpandables.Net.Asynchronous.AsyncEnumerableBuilder`1">
             <summary>
             Allows a generic collection to be asynchronously enumerable.
             This class implements <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/> and <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
             </summary>
             <typeparam name="T">The type of the elements in the collection.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableConstructor`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableBuilder`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Asynchronous.AsyncEnumerableConstructor`1"/> with the collection to be asynchronously enumerable.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Asynchronous.AsyncEnumerableBuilder`1"/> with the collection to be asynchronously enumerable.
             </summary>
             <param name="collection">The collection to act on.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="collection"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableConstructor`1.GetAsyncEnumerator(System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableBuilder`1.GetAsyncEnumerator(System.Threading.CancellationToken)">
             <summary>
             Returns an enumerator that iterates asynchronously through the collection.
             </summary>
             <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
             <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableConstructor`1.GetEnumerator">
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableBuilder`1.GetEnumerator">
             <summary>
             Returns an enumerator that iterates through the collection.
             </summary>
             <returns>An enumerator that can be used to iterate through the collection.</returns>
         </member>
-        <member name="T:Xpandables.Net.Asynchronous.AsyncEnumeratorConstructor`1">
-            <summary>
-            Add asynchronous iteration support to a generic collection.
-            This class implements <see cref="T:System.Collections.Generic.IAsyncEnumerator`1"/>.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumeratorConstructor`1.#ctor(System.Collections.Generic.IEnumerator{`0})">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Asynchronous.AsyncEnumeratorConstructor`1"/> with the enumerator.
-            </summary>
-            <param name="inner">The enumerator to act on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="inner"/> is null.</exception>
-        </member>
-        <member name="P:Xpandables.Net.Asynchronous.AsyncEnumeratorConstructor`1.Current">
-            <summary>
-            Gets the element in the collection at the current position of the enumerator.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumeratorConstructor`1.DisposeAsync">
-            <summary>
-             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
-            </summary>
-            <returns>A task that represents the asynchronous dispose operation.</returns>
-        </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumeratorConstructor`1.MoveNextAsync">
-            <summary>
-             Advances the enumerator asynchronously to the next element of the collection.
-            </summary>
-            <returns> A System.Threading.Tasks.ValueTask`1 that will complete with a result of true if the enumerator was successfully 
-            advanced to the next element, or false if the enumerator has passed the end of the collection.</returns>
-        </member>
-        <member name="T:Xpandables.Net.Asynchronous.AsyncExtensions">
+        <member name="T:Xpandables.Net.Asynchronous.AsyncEnumerableExtensions">
             <summary>
             Provides with methods used to execute asynchronous operation synchronously.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.RunSync``1(System.Func{System.Threading.Tasks.Task{``0}})">
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableExtensions.RunSync``1(System.Func{System.Threading.Tasks.Task{``0}})">
             <summary>
             Executes the target asynchronous operation synchronously.
             </summary>
@@ -120,7 +88,7 @@
             <param name="func">The asynchronous function to execute synchronously.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="func"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.RunSync``1(System.Threading.Tasks.Task{``0})">
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableExtensions.RunSync``1(System.Threading.Tasks.Task{``0})">
             <summary>
             Executes the target asynchronous operation synchronously.
             </summary>
@@ -128,67 +96,44 @@
             <param name="task">The asynchronous function to execute synchronously.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="task"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.RunSync(System.Threading.Tasks.Task)">
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableExtensions.RunSync(System.Threading.Tasks.Task)">
             <summary>
             Executes the target asynchronous operation synchronously.
             </summary>
             <param name="task">The operation to be synchronously executed.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="task"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.AsyncExecuteSafe``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Action{System.Runtime.ExceptionServices.ExceptionDispatchInfo},System.Threading.CancellationToken)">
+        <member name="T:Xpandables.Net.Asynchronous.AsyncEnumeratorBuilder`1">
             <summary>
-            Asynchronously enumerates the values in a safety mode. Any exception is handled by the <paramref name="onException"/> method.
+            Add asynchronous iteration support to a generic collection.
+            This class implements <see cref="T:System.Collections.Generic.IAsyncEnumerator`1"/>.
             </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-            <param name="asyncEnumerable">The asynchronous collection to act on.</param>
-            <param name="onException">The delegate that get called when exception.</param>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <returns>An object that contains an enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable in safety mode.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="asyncEnumerable"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="onException"/> is null.</exception>
+            <typeparam name="T"></typeparam>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.AsyncExecuteSafe``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Func{System.Runtime.ExceptionServices.ExceptionDispatchInfo,System.Threading.Tasks.Task},System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumeratorBuilder`1.#ctor(System.Collections.Generic.IEnumerator{`0})">
             <summary>
-            Asynchronously enumerates the values in a safety mode. Any exception is handled by the <paramref name="onException"/> method.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Asynchronous.AsyncEnumeratorBuilder`1"/> with the enumerator.
             </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-            <param name="asyncEnumerable">The asynchronous collection to act on.</param>
-            <param name="onException">The delegate that get called when exception.</param>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <returns>An object that contains an enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable in safety mode.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="asyncEnumerable"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="onException"/> is null.</exception>
+            <param name="inner">The enumerator to act on.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="inner"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.AsyncExecuteSafe``1(System.Threading.Tasks.Task{``0},System.Action{System.Runtime.ExceptionServices.ExceptionDispatchInfo})">
+        <member name="P:Xpandables.Net.Asynchronous.AsyncEnumeratorBuilder`1.Current">
             <summary>
-            Asynchronously executes the task is a safety mode. Any exception is handled by the <paramref name="onException"/> method.
+            Gets the element in the collection at the current position of the enumerator.
             </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-            <param name="taskAsync">The tack to be invoked.</param>
-            <param name="onException">The delegate that get called when exception.</param>
-            <returns>A task that represents an optional object that may contains a value of <typeparamref name="TResult"/> or not.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="taskAsync"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="onException"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.AsyncExecuteSafe``1(System.Threading.Tasks.Task,System.Action{System.Runtime.ExceptionServices.ExceptionDispatchInfo})">
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumeratorBuilder`1.DisposeAsync">
             <summary>
-            Asynchronously executes the task is a safety mode. Any exception is handled by the <paramref name="onException"/> method.
+             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
             </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
-            <param name="taskAsync">The tack to be invoked.</param>
-            <param name="onException">The delegate that get called when exception.</param>
-            <returns>A task that represents the asynchronous operation.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="taskAsync"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="onException"/> is null.</exception>
+            <returns>A task that represents the asynchronous dispose operation.</returns>
         </member>
-        <member name="M:Xpandables.Net.Asynchronous.AsyncExtensions.ExecuteSafe(System.Action,System.Action{System.Runtime.ExceptionServices.ExceptionDispatchInfo})">
+        <member name="M:Xpandables.Net.Asynchronous.AsyncEnumeratorBuilder`1.MoveNextAsync">
             <summary>
-            Executes the action is a safety mode. Any exception is handled by the <paramref name="onException"/> method.
+             Advances the enumerator asynchronously to the next element of the collection.
             </summary>
-            <param name="action">The action to be invoked.</param>
-            <param name="onException">The delegate that get called when exception.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="action"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="onException"/> is null.</exception>
+            <returns> A System.Threading.Tasks.ValueTask`1 that will complete with a result of true if the enumerator was successfully 
+            advanced to the next element, or false if the enumerator has passed the end of the collection.</returns>
         </member>
         <member name="T:Xpandables.Net.Commands.AsyncCommandHandlerBuilder`1">
             <summary>
@@ -424,6 +369,38 @@
             <see cref="T:Xpandables.Net.Queries.IAsyncQuery`1"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2"/>.
             <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1"/>.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2">
+            <summary>
+            This decorator class allows the application author to add post/rollback event support to query control flow.
+            The target query should implement the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface in order to activate the behavior.
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/> that
+            adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
+            and an event (roll back event) to be raised when exception. The target query handler class should reference the
+            <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/> interface in order to set the expected actions.
+            </summary>
+            <typeparam name="TQuery">Type of the query.</typeparam>
+            <typeparam name="TResult">Type of the result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Correlation.QueryCorrelationDecorator`2.#ctor(Xpandables.Net.Correlation.AsyncCorrelationContext,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2"/> class.
+            </summary>
+            <param name="correlationContext">the event register.</param>
+            <param name="decoratee">The decorated query handler.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Correlation.QueryCorrelationDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
         <member name="T:Xpandables.Net.Creators.IInstanceCreator">
             <summary>
@@ -2340,9 +2317,9 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.Map``1(System.Collections.Generic.IEnumerable{System.Data.IDataRecord},Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.MapAsync``1(System.Collections.Generic.IEnumerable{System.Data.IDataRecord},Xpandables.Net.Data.Options.IDataOptions)">
             <summary>
-            Maps the data source collection to the specified type.
+            Asynchronously maps the data source collection to the specified type.
             </summary>
             <typeparam name="TEntity">The type of expected result.</typeparam>
             <param name="source">The data source collection to act on.</param>
@@ -2350,9 +2327,9 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.Map``1(System.Data.IDataRecord,Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.MapAsync``1(System.Data.IDataRecord,Xpandables.Net.Data.Options.IDataOptions)">
             <summary>
-            Maps the record to the specified type.
+            Asynchronously maps the record to the specified type.
             </summary>
             <typeparam name="TEntity">The type of expected result.</typeparam>
             <param name="record">The data source to act on.</param>
@@ -2399,9 +2376,9 @@
             Provides with a method to map a record to an entity.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Mappers.IDataMapperRow.Map``1(System.Data.IDataRecord,Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.Mappers.IDataMapperRow.MapAsync``1(System.Data.IDataRecord,Xpandables.Net.Data.Options.IDataOptions)">
             <summary>
-            Maps an entity with the record value.
+            Asynchronously maps an entity with the record value.
             </summary>
             <typeparam name="TEntity">The entity type.</typeparam>
             <param name="dataRecord">The record to be used.</param>
@@ -2856,11 +2833,6 @@
             <param name="dispatcherHandlerProvider">The handler service provider.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="dispatcherHandlerProvider"/> is null.</exception>
         </member>
-        <member name="T:Xpandables.Net.Dispatchers.DispatcherExtensions">
-            <summary>
-            Provides helper methods for <see cref="T:Xpandables.Net.Dispatchers.IDispatcher"/>.
-            </summary>
-        </member>
         <member name="T:Xpandables.Net.Dispatchers.DispatcherHandlerProvider">
             <summary>
             An implementation of <see cref="T:Xpandables.Net.Dispatchers.IDispatcherHandlerProvider"/> that uses a instance of <see cref="T:System.IServiceProvider"/> to retrieve the handler.
@@ -2907,6 +2879,7 @@
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
             <exception cref="T:System.NotImplementedException">The corresponding handler is missing.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
@@ -2921,6 +2894,7 @@
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
             <exception cref="T:System.NotImplementedException">The corresponding handler is missing.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
@@ -2934,10 +2908,42 @@
             <param name="command">The command to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The handler is unable to handle the <paramref name="command"/>.</exception>
             <exception cref="T:System.NotImplementedException">The corresponding handler is missing.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
             <returns>A task that represents the asynchronous operation.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Dispatchers.IDispatcher.InvokeAsync``2(``0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously invokes the query handler(<see cref="T:Xpandables.Net.Queries.IQueryHandler`2"/> implementation) on the specified query
+            and returns a result of <typeparamref name="TResult"/> type.
+            </summary>
+            <typeparam name="TQuery">Type of the query.</typeparam>
+            <typeparam name="TResult">Type of the result.</typeparam>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
+            <exception cref="T:System.NotImplementedException">The corresponding handler is missing.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Dispatchers.IDispatcher.InvokeAsync``1(Xpandables.Net.Queries.IQuery{``0},System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously invokes the query handler(<see cref="T:Xpandables.Net.Queries.IQueryHandler`2"/> implementation) on the specified query
+            and returns a result of <typeparamref name="TResult"/> type.
+            </summary>
+            <typeparam name="TResult">Type of the result.</typeparam>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
+            <exception cref="T:System.NotImplementedException">The corresponding handler is missing.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
         <member name="T:Xpandables.Net.Dispatchers.IDispatcherHandlerProvider">
             <summary>
@@ -3237,18 +3243,17 @@
             Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextSettings"/> class.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.EntityFramework.DataContextSettings.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String)">
+        <member name="M:Xpandables.Net.EntityFramework.DataContextSettings.#ctor(System.Boolean,System.Boolean,System.Boolean,System.String)">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.EntityFramework.DataContextSettings"/> with properties.
             </summary>
             <param name="ensuredDeletedBefore">Determine whether or not the database for the context will be deleted before applying migration.</param>
             <param name="useInMemory">Determine whether or not the database is uses in memory</param>
-            <param name="addSamplesData">Determine whether or not the database will be filled with samples data.</param>
             <param name="applyMigrations">Determine whether or not the database the migrations must be applied.</param>
             <param name="connectionString">The database connection string.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="connectionString"/> is null.</exception>
         </member>
-        <member name="P:Xpandables.Net.EntityFramework.DataContextSettings.EnsuredDeletedBefore">
+        <member name="P:Xpandables.Net.EntityFramework.DataContextSettings.EnsuredDeleted">
             <summary>
             Ensures that the database for the context will be deleted before applying migration.
             The default value is <see langword="false"/>.
@@ -3263,12 +3268,6 @@
         <member name="P:Xpandables.Net.EntityFramework.DataContextSettings.UseInMemory">
             <summary>
             Ensures that the database is uses in memory.
-            The default value is <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.EntityFramework.DataContextSettings.AddSamplesData">
-            <summary>
-            Allows the database to be filled with samples data.
             The default value is <see langword="false"/>.
             </summary>
         </member>
@@ -5151,7 +5150,7 @@
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1.Convert(Xpandables.Net.HttpRestClient.HttpRestClientResponse,Xpandables.Net.Optionals.Optional{`0})">
+        <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1.Convert(Xpandables.Net.HttpRestClient.HttpRestClientResponse,`0)">
             <summary>
             Converts the source <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientResponse"/> to the generic of <typeparamref name="TResult"/> type.
             </summary>
@@ -5396,6 +5395,16 @@
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <returns>Returns a task <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientResponse"/>.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.HttpRestClient.IHttpRestClientHandler.HandleAsync``1(Xpandables.Net.Queries.IQuery{``0},System.Threading.CancellationToken)">
+            <summary>
+            Handles the query as asynchronous operation.
+            </summary>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="query">The query to act with. The query must be decorated with the <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientAttribute"/> or implements the <see cref="T:Xpandables.Net.HttpRestClient.IHttpRestClientAttributeProvider"/> interface.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>Returns a task <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.HttpRestClient.IHttpRestClientIPLocationHandler">
             <summary>
@@ -5809,6 +5818,15 @@
             <param name="argument">The argument to handle.</param>
             <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
         </member>
+        <member name="M:Xpandables.Net.ICanHandle`1.CanHandle(System.Object)">
+            <summary>
+            Determines whether or not a an argument can be handled by the underlying context.
+            Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+            The default behavior calls the <see cref="M:Xpandables.Net.ICanHandle`1.CanHandle(`0)"/>.
+            </summary>
+            <param name="argument">The argument to handle.</param>
+            <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
+        </member>
         <member name="T:Xpandables.Net.Identities.AsyncCommandIdentityDecorator`1">
             <summary>
             This class allows the application author to add secured data support to command control flow.
@@ -6009,6 +6027,14 @@
             </summary>
             <exception cref="T:System.InvalidOperationException">Failed to find secured data.</exception>
         </member>
+        <member name="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity``1">
+            <summary>
+            Returns an instance that contains identity of the specified type or null if not found.
+            </summary>
+            <typeparam name="TIdentity">The type of the identity.</typeparam>
+            <returns>An object of <typeparamref name="TIdentity"/> type or null.</returns>
+            <exception cref="T:System.InvalidOperationException">Failed to find secured data.</exception>
+        </member>
         <member name="T:Xpandables.Net.Identities.IIdentityDecorator">
             <summary>
             A marker interface that allows the command/query class to be filled with an identity. The class should derive from
@@ -6017,6 +6043,39 @@
             implementation for <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>
             and register the expected class using the correct extension method.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Identities.QueryIdentityDecorator`2">
+            <summary>
+            This class allows the application author to add secured information support to query control flow.
+            The target query should implement the <see cref="T:Xpandables.Net.Identities.IIdentityDecorator"/> and inherit from <see cref="T:Xpandables.Net.Identities.IdentityData"/>,
+            <see cref="T:Xpandables.Net.Identities.IdentityData`1"/> or <see cref="T:Xpandables.Net.Identities.IdentityDataExpression`2"/> in order to activate the behavior.
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Identities.IIdentityDataProvider"/>, that you should
+            provide an implementation and use the extension method for registration.
+            The decorator will set the <see cref="P:Xpandables.Net.Identities.IdentityData.Identity"/> property with the
+            <see cref="M:Xpandables.Net.Identities.IIdentityDataProvider.GetIdentity"/> before the handler execution.
+            </summary>
+            <typeparam name="TQuery">Type of the query.</typeparam>
+            <typeparam name="TResult">Type of the query.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Identities.QueryIdentityDecorator`2.#ctor(Xpandables.Net.Identities.IIdentityDataProvider,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Identities.QueryIdentityDecorator`2"/>.
+            </summary>
+            <param name="identityProvider">The secured data provider.</param>
+            <param name="decoratee">The query handler to decorate with.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="identityProvider"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Identities.QueryIdentityDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
         <member name="T:Xpandables.Net.Interception.IInterceptor">
             <summary>
@@ -10652,6 +10711,15 @@
             <param name="decoratee">The query handler instance.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         </member>
+        <member name="M:Xpandables.Net.Queries.AsyncQueryHandlerWrapper`2.CanHandle(System.Object)">
+            <summary>
+            Determines whether or not a an argument can be handled by the underlying context.
+            Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+            The default behavior returns <see langword="true"/>.
+            </summary>
+            <param name="argument">The argument to handle.</param>
+            <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
+        </member>
         <member name="M:Xpandables.Net.Queries.AsyncQueryHandlerWrapper`2.HandleAsync(Xpandables.Net.Queries.IAsyncQuery{`1},System.Threading.CancellationToken)">
             <summary>
             Asynchronously handles the specified query and returns an asynchronous result type.
@@ -10710,561 +10778,116 @@
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
             <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         </member>
-        <member name="T:Xpandables.Net.Serilog.AsyncCommandLoggingDecorator`1">
+        <member name="T:Xpandables.Net.Queries.IQuery`1">
             <summary>
-            This class allows the application author to add logging event support to command control flow.
-            The target command should implement the <see cref="T:Xpandables.Net.Serilog.ILoggingDecorator"/> interface in order to activate the behavior.
-            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Serilog.ILoggerEngine"/>.
+            This interface is used as a marker for queries when using the query pattern that contains a specific-type result.
+            <para>Class implementation is used with the <see cref="T:Xpandables.Net.Queries.IQueryHandler`2"/> where
+            "TQuery" is <see cref="T:Xpandables.Net.Queries.IQuery`1"/> class implementation.</para>
+            This can also be enhanced with some useful decorators.
             </summary>
-            <typeparam name="TCommand">Type of the command to be handled.</typeparam>
+            <typeparam name="TResult">Type of the result of the query.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Serilog.AsyncCommandLoggingDecorator`1.#ctor(Xpandables.Net.Serilog.ILoggerEngine,Xpandables.Net.Commands.IAsyncCommandHandler{`0})">
+        <member name="T:Xpandables.Net.Queries.IQueryHandler`2">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Serilog.AsyncCommandLoggingDecorator`1"/> class with the logger and the command handler to be decorated.
+            Defines a generic method that a class implements to handle a type-specific query and
+            returns a type-specific result.
+            The implementation must be thread-safe when working in a multi-threaded environment.
+            This interface inherits from <see cref="T:Xpandables.Net.ICanHandle`1"/> that determines whether or not the query can be handled. Its default behavior returns <see langword="true"/>.
             </summary>
-            <param name="logger">The logger instance.</param>
-            <param name="decoratee">The command handler to be decorated.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="logger"/> is null.</exception>
+            <typeparam name="TQuery">Type of the query that will be used as argument.</typeparam>
+            <typeparam name="TResult">Type of the result of the query.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Serilog.AsyncCommandLoggingDecorator`1.HandleAsync(`0,System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Queries.IQueryHandler`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handle the specified command adding post/rollback event to the decorated handler.
-            </summary>
-            <param name="command">The command instance to act on.</param>
-            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        </member>
-        <member name="T:Xpandables.Net.Serilog.AsyncQueryLoggingDecorator`2">
-            <summary>
-            This class allows the application author to add logging event support to query control flow.
-            The target command should implement the <see cref="T:Xpandables.Net.Serilog.ILoggingDecorator"/> interface in order to activate the behavior.
-            The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Serilog.ILoggerEngine"/>.
-            </summary>
-            <typeparam name="TQuery">Type of the query.</typeparam>
-            <typeparam name="TResult">Type of the result.</typeparam>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.AsyncQueryLoggingDecorator`2.#ctor(Xpandables.Net.Serilog.ILoggerEngine,Xpandables.Net.Queries.IAsyncQueryHandler{`0,`1})">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Serilog.AsyncQueryLoggingDecorator`2"/> class.
-            </summary>
-            <param name="logger">the logger instance.</param>
-            <param name="decoratee">The decorated query handler.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="logger"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.AsyncQueryLoggingDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
-            <summary>
-            Asynchronously handles the specified query and returns an asynchronous result type.
+            Asynchronously handles the specified query and returns the expected result.
             </summary>
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
-            <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
-        <member name="T:Xpandables.Net.Serilog.DataLogContextSettings">
+        <member name="T:Xpandables.Net.Queries.IQueryHandlerWrapper`1">
             <summary>
-            Provides with the base option class for <see cref="T:Xpandables.Net.Serilog.IDataLogContext"/> settings.
+            This interface allows application authors to avoid use of C# dynamics with query pattern and allows type inference.
             </summary>
+            <typeparam name="TResult">Type of the result.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Serilog.DataLogContextSettings.#ctor">
+        <member name="M:Xpandables.Net.Queries.IQueryHandlerWrapper`1.HandleAsync(Xpandables.Net.Queries.IQuery{`0},System.Threading.CancellationToken)">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Serilog.DataLogContextSettings"/> class.
+            Asynchronously handles the specified query and returns the expected result.
             </summary>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.DataLogContextSettings.#ctor(System.Boolean,System.Boolean,System.Boolean,System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Serilog.DataLogContextSettings"/> with properties.
-            </summary>
-            <param name="ensuredDeletedBefore">Determine whether or not the database for the context will be deleted before applying migration.</param>
-            <param name="useInMemory">Determine whether or not the database is uses in memory</param>
-            <param name="applyMigrations">Determine whether or not the database the migrations must be applied.</param>
-            <param name="connectionString">The database connection string.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="connectionString"/> is null.</exception>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.DataLogContextSettings.EnsuredDeletedBefore">
-            <summary>
-            Ensures that the database for the context will be deleted before applying migration.
-            The default value is <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.DataLogContextSettings.ApplyMigrations">
-            <summary>
-            Ensures that migrations will be applied to the database for the generated context.
-            The default value is <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.DataLogContextSettings.UseInMemory">
-            <summary>
-            Ensures that the database is uses in memory.
-            The default value is <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.DataLogContextSettings.ConnectionString">
-            <summary>
-            The database connection string.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Serilog.DefaultLogEntity">
-            <summary>
-            The default log entity. You can derive from <see cref="T:Xpandables.Net.Serilog.LogEntity`1"/> to customize your behaviors.
-            In order to used, the <see cref="T:Xpandables.Net.Serilog.DefaultLogEntity"/> class must be referenced in the data logger context and the context
-            must implement the <see cref="T:Xpandables.Net.Serilog.IDataLogContext"/> interface.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.DefaultLogEntity.CreateLogEntity">
-            <summary>
-            Initializes a new log entity with default values.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Serilog.IDataLogContext">
-            <summary>
-            The data context associated to the <see cref="T:Xpandables.Net.Serilog.ILogEntity"/>.
-            Inherits from <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/>.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Serilog.IDataLogContext`1">
-            <summary>
-            The data context associated to the <see cref="T:Xpandables.Net.Serilog.ILogEntity"/>.
-            Inherits from <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/>.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Serilog.IDataLogContextProvider`1">
-            <summary>
-            Provides with a method to return the ambient data logger context instance.
-            You need to register the class implementation to the services collection using and extension method.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.IDataLogContextProvider`1.GetDataLogContextAsync(System.Threading.CancellationToken)">
-            <summary>
-            Asynchronously returns an instance that will contain the ambient data logger context according to the environment.
-            </summary>
+            <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <returns>An instance of context that implements <see cref="T:Xpandables.Net.Serilog.IDataLogContext" />.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
-        <member name="M:Xpandables.Net.Serilog.IDataLogContextProvider`1.GetDataLogContext">
+        <member name="T:Xpandables.Net.Queries.QueryHandlerBuilder`2">
             <summary>
-            Returns an instance that will contain the ambient data logger context according to the environment.
+            This helper class allows the application author to implement the <see cref="T:Xpandables.Net.Queries.IQueryHandler`2"/>
+            interface without dedicated class.
             </summary>
-            <returns>An instance of context that implements <see cref="T:Xpandables.Net.Serilog.IDataLogContext" />.</returns>
+            <typeparam name="TQuery">Type of argument to act on.</typeparam>
+            <typeparam name="TResult">Type of result.</typeparam>
         </member>
-        <member name="T:Xpandables.Net.Serilog.ILogEntity">
+        <member name="M:Xpandables.Net.Queries.QueryHandlerBuilder`2.#ctor(System.Func{`0,System.Threading.CancellationToken,System.Threading.Tasks.Task{`1}})">
             <summary>
-            Provides with the base description for an event log using <see langword="Serilog"/>.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Queries.QueryHandlerBuilder`2"/> with the delegate to be used
+            as <see cref="M:Xpandables.Net.Queries.IQueryHandler`2.HandleAsync(`0,System.Threading.CancellationToken)"/> implementation.
             </summary>
+            <param name="handler">The delegate to be used when the handler will be invoked.
+            <para>The delegate should match all the behaviors expected in
+            the <see cref="M:Xpandables.Net.Queries.IQueryHandler`2.HandleAsync(`0,System.Threading.CancellationToken)"/>
+            method such as thrown exceptions.</para></param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="handler"/> is null.</exception>
         </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.Id">
+        <member name="M:Xpandables.Net.Queries.QueryHandlerBuilder`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Contains log identifier.
+            Asynchronously handles the specified query and returns the expected result.
             </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.EventId">
+        <member name="T:Xpandables.Net.Queries.QueryHandlerWrapper`2">
             <summary>
-            Contains the event identifier.
+            Implementation for <see cref="T:Xpandables.Net.Queries.IQueryHandlerWrapper`1"/>.
             </summary>
+            <typeparam name="TQuery">Type of query.</typeparam>
+            <typeparam name="TResult">Type of result.</typeparam>
         </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.SourceContext">
+        <member name="M:Xpandables.Net.Queries.QueryHandlerWrapper`2.#ctor(Xpandables.Net.Queries.IQueryHandler{`0,`1})">
             <summary>
-            Contains the source context.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Queries.QueryHandlerWrapper`2"/> class.
             </summary>
+            <param name="decoratee">The query handler instance.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.ActionId">
+        <member name="M:Xpandables.Net.Queries.QueryHandlerWrapper`2.CanHandle(System.Object)">
             <summary>
-            Contains the action identifier.
+            Determines whether or not a an argument can be handled by the underlying context.
+            Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+            The default behavior returns <see langword="true"/>.
             </summary>
+            <param name="argument">The argument to handle.</param>
+            <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
         </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.ActionName">
+        <member name="M:Xpandables.Net.Queries.QueryHandlerWrapper`2.HandleAsync(Xpandables.Net.Queries.IQuery{`1},System.Threading.CancellationToken)">
             <summary>
-            Contains the action name.
+            Asynchronously handles the specified query and returns the expected result.
             </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.ControllerName">
-            <summary>
-            Contains the controller name.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.RequestId">
-            <summary>
-            Contains the request identifier.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.RequestPath">
-            <summary>
-            Contains the request path.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.Exception">
-            <summary>
-            Contains the handled exception.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.Level">
-            <summary>
-            Contains the level.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.Message">
-            <summary>
-            Contains the message.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.MessageTemplate">
-            <summary>
-            Contains the message template.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.TimeSpan">
-            <summary>
-            Contains the event time span.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.ILogEntity.Properties">
-            <summary>
-            Contains the properties in JSON format.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Serilog.ILogEntity`1">
-            <summary>
-            Provides with the generic base description for an event log using <see langword="Serilog"/>.
-            </summary>
-            <typeparam name="T">The type of the log event class.</typeparam>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithMessage(System.String)">
-            <summary>
-            Adds a message to the underlying instance.
-            </summary>
-            <param name="message">The event message.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="message"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithEventId(System.String)">
-            <summary>
-            Adds an event id to the underlying instance.
-            </summary>
-            <param name="eventId">The event id.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithSourceContext(System.String)">
-            <summary>
-            Adds a source context to the underlying instance.
-            </summary>
-            <param name="sourceContext">The source context.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithActionId(System.String)">
-            <summary>
-            Adds an action identifier to the underlying instance.
-            </summary>
-            <param name="actionId">The action identifier.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithActionName(System.String)">
-            <summary>
-            Adds a source context to the underlying instance.
-            </summary>
-            <param name="actionName">The action name.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithControllerName(System.String)">
-            <summary>
-            Adds a controller name to the underlying instance.
-            </summary>
-            <param name="controllerName">The controller name.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithRequestId(System.String)">
-            <summary>
-            Adds a request identifier to the underlying instance.
-            </summary>
-            <param name="requestId">The request identifier.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithRequestPath(System.String)">
-            <summary>
-            Adds a request path to the underlying instance.
-            </summary>
-            <param name="requestPath">The request path.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithMessageTemplate(System.String)">
-            <summary>
-            Adds a message template to the underlying instance.
-            </summary>
-            <param name="messageTemplate">the event message template.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithTimeSpan(System.DateTimeOffset)">
-            <summary>
-            Adds a time span to the underlying instance.
-            </summary>
-            <param name="dateTimeOffset">The event time span.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithException(System.Exception)">
-            <summary>
-            Adds an exception to the underlying instance.
-            </summary>
-            <param name="exception">The event exception.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithLevel(System.String)">
-            <summary>
-            Adds a level to the underlying instance.
-            </summary>
-            <param name="level">The event level.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="level"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.WithProperties(System.String)">
-            <summary>
-            Adds a JSON object to the underlying instance.
-            </summary>
-            <param name="properties">The JSON properties</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILogEntity`1.LoadFrom(System.Object)">
-            <summary>
-            Loads the underlying instance from the <see langword="Serilog"/> event.
-            </summary>
-            <param name="logEvent">The event source (LogEvent type).</param>
-        </member>
-        <member name="T:Xpandables.Net.Serilog.ILoggerEngine">
-            <summary>
-            An interface used for writing log events.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILoggerEngine.OnEntryLogAsync(System.Object,System.Object)">
-            <summary>
-            Asynchronously registers logs on entry.
-            </summary>
-            <param name="sender">The object sender.</param>
-            <param name="argument">The arguments</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILoggerEngine.OnExceptionLogAsync(System.Object,System.Object,System.Exception)">
-            <summary>
-            Asynchronously registers logs on exception.
-            </summary>
-            <param name="sender">The object sender.</param>
-            <param name="argument">The arguments</param>
-            <param name="exception">The handled exception.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILoggerEngine.OnExitLogAsync(System.Object,System.Object,System.Object)">
-            <summary>
-            Asynchronously registers logs on exit.
-            </summary>
-            <param name="sender">The object sender.</param>
-            <param name="argument">The arguments</param>
-            <param name="result">The execution result for non-void method.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILoggerEngine.OnEntryLog(System.Object,System.Object)">
-            <summary>
-            Registers logs on entry.
-            </summary>
-            <param name="sender">The object sender.</param>
-            <param name="argument">The arguments</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILoggerEngine.OnExceptionLog(System.Object,System.Object,System.Exception)">
-            <summary>
-            Registers logs on exception.
-            </summary>
-            <param name="sender">The object sender.</param>
-            <param name="argument">The arguments</param>
-            <param name="exception">The handled exception.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.ILoggerEngine.OnExitLog(System.Object,System.Object,System.Object)">
-            <summary>
-            Registers logs on exit.
-            </summary>
-            <param name="sender">The object sender.</param>
-            <param name="argument">The arguments</param>
-            <param name="result">The execution result for non-void method.</param>
-        </member>
-        <member name="T:Xpandables.Net.Serilog.ILoggingDecorator">
-            <summary>
-            A marker interface that allows the class implementation of (<see cref="T:Xpandables.Net.Queries.IAsyncQueryHandler`2"/> or <see cref="T:Xpandables.Net.Commands.IAsyncCommandHandler`1"/>
-            to be logged using the <see cref="T:Xpandables.Net.Serilog.IDataLogContext`1"/>.
-            You need to register the expected behavior using the appropriate add data log context extension method and provide an implementation of <see cref="T:Xpandables.Net.Serilog.ILoggerEngine"/>.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Serilog.LogEntity`1">
-            <summary>
-            Helper class to implement <see cref="T:Xpandables.Net.Serilog.ILogEntity`1"/>.
-            <para>You must derive from this class to add custom behavior to the event log.</para>
-            </summary>
-            <typeparam name="T">The type of derived class.</typeparam>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.#ctor">
-            <summary>
-            Initialize the logger event with default value.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.KeyGenerator">
-            <summary>
-            Returns a unique identifier for log.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.EventId">
-            <summary>
-            Contains the event identifier.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.SourceContext">
-            <summary>
-            Contains the source context.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.ActionId">
-            <summary>
-            Contains the action identifier.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.ActionName">
-            <summary>
-            Contains the action name.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.ControllerName">
-            <summary>
-            Contains the controller name.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.RequestId">
-            <summary>
-            Contains the request identifier.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.RequestPath">
-            <summary>
-            Contains the request path.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.Exception">
-            <summary>
-            Contains the handled exception.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.Level">
-            <summary>
-            Contains the event level.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.Message">
-            <summary>
-            Contains the event message.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.MessageTemplate">
-            <summary>
-            Contains the event message template.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.TimeSpan">
-            <summary>
-            Contains the event time span.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Serilog.LogEntity`1.Properties">
-            <summary>
-            Contains the properties in JSON format.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithEventId(System.String)">
-            <summary>
-            Adds an event id to the underlying instance.
-            </summary>
-            <param name="eventId">The event id.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithSourceContext(System.String)">
-            <summary>
-            Adds a source context to the underlying instance.
-            </summary>
-            <param name="sourceContext">The source context.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithActionId(System.String)">
-            <summary>
-            Adds an action identifier to the underlying instance.
-            </summary>
-            <param name="actionId">The action identifier.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithActionName(System.String)">
-            <summary>
-            Adds a source context to the underlying instance.
-            </summary>
-            <param name="actionName">The action name.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithControllerName(System.String)">
-            <summary>
-            Adds a controller name to the underlying instance.
-            </summary>
-            <param name="controllerName">The controller name.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithRequestId(System.String)">
-            <summary>
-            Adds a request identifier to the underlying instance.
-            </summary>
-            <param name="requestId">The request identifier.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithRequestPath(System.String)">
-            <summary>
-            Adds a request path to the underlying instance.
-            </summary>
-            <param name="requestPath">The request path.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithMessage(System.String)">
-            <summary>
-            Adds a message to the underlying instance.
-            </summary>
-            <param name="message">The event message.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="message"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithMessageTemplate(System.String)">
-            <summary>
-            Adds a message template to the underlying instance.
-            </summary>
-            <param name="messageTemplate">the event message template.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithTimeSpan(System.DateTimeOffset)">
-            <summary>
-            Adds a time span to the underlying instance.
-            </summary>
-            <param name="dateTimeOffset">The event time span.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithException(System.Exception)">
-            <summary>
-            Adds an exception to the underlying instance.
-            </summary>
-            <param name="exception">The event exception.</param>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithLevel(System.String)">
-            <summary>
-            Adds a level to the underlying instance.
-            </summary>
-            <param name="level">The event level.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="level"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.WithProperties(System.String)">
-            <summary>
-            Adds a JSON object to the underlying instance.
-            </summary>
-            <param name="properties">The JSON properties</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="properties"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntity`1.LoadFrom(System.Object)">
-            <summary>
-            Loads the underlying instance from the event.
-            You must override this to match your requirement.
-            </summary>
-            <param name="logEvent">The event source.</param>
-        </member>
-        <member name="T:Xpandables.Net.Serilog.LogEntitySink`1">
-            <summary>
-            Provides with a custom emitter for the specified log event type.
-            <para>Using the <see cref="T:Xpandables.Net.Serilog.IDataLogContext"/> interface to save the log.</para>
-            </summary>
-            <typeparam name="TLogEntity">The type of the log event.</typeparam>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntitySink`1.#ctor(Xpandables.Net.Serilog.IDataLogContext{`0})">
-            <summary>
-            Initializes the <see cref="T:Xpandables.Net.Serilog.LogEntitySink`1"/> with the  data context and the log event converter.
-            </summary>
-            <param name="dataLogContext">The data context to act on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataLogContext"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Serilog.LogEntitySink`1.Emit(Serilog.Events.LogEvent)">
-            <summary>
-            Emit the provided log event to the sink.
-            </summary>
-            <param name="logEvent">The log event to write.</param>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
         <member name="T:Xpandables.Net.Strings.IStringCryptography">
             <summary>
@@ -11277,7 +10900,7 @@
             Gets the string generator for cryptography.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Strings.IStringCryptography.Encrypt(System.String,System.UInt16)">
+        <member name="M:Xpandables.Net.Strings.IStringCryptography.EncryptAsync(System.String,System.UInt16)">
             <summary>
             Returns an encrypted string from the value using a randomize key.
             The process uses the <see cref="T:System.Security.Cryptography.RijndaelManaged"/> algorithm with the <see cref="T:System.Security.Cryptography.SHA256"/>.
@@ -11288,19 +10911,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
             <exception cref="T:System.ArgumentException">The <paramref name="keySize"/> must be greater than zero
             and lower or equal to <see cref="F:System.UInt16.MaxValue"/>.</exception>
-            <exception cref="T:System.InvalidOperationException">The encryption failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Strings.IStringCryptography.Encrypt(System.String,System.String,System.String)">
-            <summary>
-            Returns an encrypted string from the value string using the specified key and the salt value.
-            If <paramref name="key"/> or <paramref name="salt"/> is not provided, a default value will be used.
-            The process uses the <see cref="T:System.Security.Cryptography.RijndaelManaged"/> algorithm with the <see cref="T:System.Security.Cryptography.SHA256"/>.
-            </summary>
-            <param name="value">The value to be encrypted.</param>
-            <param name="key">The optional key value to be used for encryption.</param>
-            <param name="salt">The optional salt base64 string value to be used for encryption.</param>
-            <returns>An encrypted object that contains the encrypted value, its key and its salt.</returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The encryption failed. See inner exception.</exception>
         </member>
         <member name="M:Xpandables.Net.Strings.IStringCryptography.EncryptAsync(System.String,System.String,System.String)">
@@ -11316,7 +10926,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The encryption failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Strings.IStringCryptography.Decrypt(System.String,System.String,System.String)">
+        <member name="M:Xpandables.Net.Strings.IStringCryptography.DecryptAsync(System.String,System.String,System.String)">
             <summary>
             Returns an decrypted string from the encrypted value.
             The process uses the <see cref="T:System.Security.Cryptography.RijndaelManaged"/> algorithm with the <see cref="T:System.Security.Cryptography.SHA256"/>.
@@ -11328,15 +10938,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="value"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="key"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="salt"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">The decryption failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Strings.IStringCryptography.Decrypt(Xpandables.Net.Strings.ValueEncrypted)">
-            <summary>
-            Returns an decrypted string from the encrypted object.
-            The process uses the <see cref="T:System.Security.Cryptography.RijndaelManaged"/> algorithm with the <see cref="T:System.Security.Cryptography.SHA256"/>.
-            </summary>
-            <param name="encrypted">The object that contains encrypted information.</param>
-            <returns>A decrypted string from the encrypted object.</returns>
             <exception cref="T:System.InvalidOperationException">The decryption failed. See inner exception.</exception>
         </member>
         <member name="M:Xpandables.Net.Strings.IStringCryptography.DecryptAsync(Xpandables.Net.Strings.ValueEncrypted)">
@@ -12264,15 +11865,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
             <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException">Any validation exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Validations.ICompositeValidation`1.Validate(`0)">
-            <summary>
-            Validates the argument and throws the <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> if necessary.
-            The default behavior uses <see cref="M:System.ComponentModel.DataAnnotations.Validator.ValidateObject(System.Object,System.ComponentModel.DataAnnotations.ValidationContext,System.Boolean)"/>.
-            </summary>
-            <param name="argument">The target argument to be validated.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-            <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException">Any validation exception.</exception>
-        </member>
         <member name="T:Xpandables.Net.Validations.IMetataDescriptionProvider">
             <summary>
             Allows an application author to add type description provider for any class.
@@ -12384,15 +11976,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
             <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException">Any validation exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Validations.IValidation`1.Validate(`0)">
-            <summary>
-            Validates the argument and throws the <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> if necessary.
-            The default behavior uses <see cref="M:System.ComponentModel.DataAnnotations.Validator.ValidateObject(System.Object,System.ComponentModel.DataAnnotations.ValidationContext,System.Boolean)"/>.
-            </summary>
-            <param name="argument">The target argument to be validated.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-            <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException">Any validation exception.</exception>
-        </member>
         <member name="T:Xpandables.Net.Validations.IValidationDecorator">
             <summary>
             A marker interface that allows the command/query class to be decorated with the validation behavior according to the class type :
@@ -12423,17 +12006,19 @@
             Does nothing.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Validations.NullValidation`1.Validate(`0)">
-            <summary>
-            Does nothing.
-            </summary>
-        </member>
         <member name="T:Xpandables.Net.Validations.PatternRequiredOptionalAttribute">
             <summary>
-            Specifies that the data field value is required according to a regular expression by overriding the <see cref="M:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.GetRegexPattern"/> method.
+            Specifies that the data field value is required according to a regular expression.
             When the <see cref="P:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.IsOptional"/> is <see langword="true"/>, the data field is only checked if there is a value.
             This is an <see langword="abstract"/> class.
             </summary>
+        </member>
+        <member name="M:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Validations.PatternRequiredOptionalAttribute"/> with the regex pattern the value must match.
+            </summary>
+            <param name="regexPattern">The regex pattern to be applied.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="regexPattern"/> is <see langword="null"/>.</exception>
         </member>
         <member name="M:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
             <summary>
@@ -12450,10 +12035,41 @@
             If <see langword="true"/>, the data field will only be checked when there is a value. The default behavior is <see langword="false"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.GetRegexPattern">
+        <member name="P:Xpandables.Net.Validations.PatternRequiredOptionalAttribute.RegexPattern">
             <summary>
-            Returns the Regex pattern the value must match.
+            Gets the Regex pattern the value must match.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Validations.QueryValidatorDecorator`2">
+            <summary>
+            This class allows the application author to add validation support to query control flow.
+            The target query should implement the <see cref="T:Xpandables.Net.Validations.IValidationDecorator"/> interface in order to activate the behavior.
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Validations.ICompositeValidation`1"/>
+            and applies all validators found to the target query before the command get handled. You should provide with implementation
+            of <see cref="T:Xpandables.Net.Validations.IValidation`1"/>for validation.
+            </summary>
+            <typeparam name="TQuery">Type of query.</typeparam>
+            <typeparam name="TResult">Type of result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Validations.QueryValidatorDecorator`2.#ctor(Xpandables.Net.Queries.IQueryHandler{`0,`1},Xpandables.Net.Validations.ICompositeValidation{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Validations.QueryValidatorDecorator`2"/>.
+            </summary>
+            <param name="decoratee">The query handler to decorate.</param>
+            <param name="validator">The validator instance.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="validator"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Validations.QueryValidatorDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
         <member name="T:Xpandables.Net.Validations.ValidationAttributeExtensions">
             <summary>
@@ -12475,7 +12091,7 @@
             </summary>
             <typeparam name="TArgument">Type of the argument.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Validations.ValidationBuilder`1.#ctor(System.Action{`0})">
+        <member name="M:Xpandables.Net.Validations.ValidationBuilder`1.#ctor(System.Func{`0,System.Threading.Tasks.Task})">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Validations.ValidationBuilder`1"/> class with the delegate to be used
             as <see cref="T:Xpandables.Net.Validations.IValidation`1"/> implementation.
@@ -12483,9 +12099,9 @@
             <param name="validator">The delegate validator.</param>
             <exception cref="T:System.ArgumentException">The <paramref name="validator"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Validations.ValidationBuilder`1.Validate(`0)">
+        <member name="M:Xpandables.Net.Validations.ValidationBuilder`1.ValidateAsync(`0)">
             <summary>
-            Validates the argument and throws the <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> if necessary.
+            Asynchronously validates the argument and throws the <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> if necessary.
             </summary>
             <param name="argument">The target argument to be validated.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
@@ -12784,15 +12400,6 @@
             <exception cref="T:System.ArgumentException">The <paramref name="element"/> does not implement <see cref="T:Xpandables.Net.Visitors.IVisitable`1"/>.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Visitors.ICompositeVisitor`1.Visit(`0)">
-            <summary>
-            Applies all found visitors to the element according to the visitor order.
-            </summary>
-            <param name="element">The element to be visited.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="element"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="element"/> does not implement <see cref="T:Xpandables.Net.Visitors.IVisitable`1"/>.</exception>
-            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
-        </member>
         <member name="T:Xpandables.Net.Visitors.IVisitable`1">
             <summary>
             Defines an Accept operation that takes a visitor as an argument.
@@ -12810,25 +12417,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Visitors.IVisitable`1.Accept(Xpandables.Net.Visitors.IVisitor{`0})">
-            <summary>
-            Defines the Accept operation.
-            When overridden in derived class, this method will accept the specified visitor.
-            The default behavior just call the visit method of the visitor on the current instance.
-            </summary>
-            <param name="visitor">The visitor to be applied on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
-        </member>
         <member name="M:Xpandables.Net.Visitors.IVisitable`1.AcceptAsync(Xpandables.Net.Visitors.ICompositeVisitor{`0})">
-            <summary>
-            Defines the Accept operation with <see cref="T:Xpandables.Net.Visitors.ICompositeVisitor`1"/>.
-            </summary>
-            <param name="visitor">The composite visitor to be applied on.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Visitors.IVisitable`1.Accept(Xpandables.Net.Visitors.ICompositeVisitor{`0})">
             <summary>
             Defines the Accept operation with <see cref="T:Xpandables.Net.Visitors.ICompositeVisitor`1"/>.
             </summary>
@@ -12859,16 +12448,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="element"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Visitors.IVisitor`1.Visit(`0)">
-            <summary>
-            Declares a Visit operation.
-            When overridden in derived class, this method will do the actual job of visiting the specified element.
-            The default behavior checks that the argument is not null.
-            </summary>
-            <param name="element">Element to be visited.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="element"/> is null.</exception>
-            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
-        </member>
         <member name="T:Xpandables.Net.Visitors.NullVisitor`1">
             <summary>
             Visitor when no explicit registration exist for a given type.
@@ -12880,10 +12459,36 @@
             Does nothing.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Visitors.NullVisitor`1.Visit(`0)">
+        <member name="T:Xpandables.Net.Visitors.QueryVisitorDecorator`2">
             <summary>
-            Does nothing.
+            This class allows the application author to add visitor support to query control flow.
+            The target query should implement the <see cref="T:Xpandables.Net.Visitors.IVisitable`1"/> interface in order to activate the behavior.
+            The class decorates the target query handler with an implementation of <see cref="T:Xpandables.Net.Visitors.ICompositeVisitor`1"/>
+            and applies all visitors found to the target query before the query get handled. You should provide with implementation
+            of <see cref="T:Xpandables.Net.Visitors.IVisitor`1"/>.
             </summary>
+            <typeparam name="TQuery">Type of query.</typeparam>
+            <typeparam name="TResult">Type of result.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.Visitors.QueryVisitorDecorator`2.#ctor(Xpandables.Net.Queries.IQueryHandler{`0,`1},Xpandables.Net.Visitors.ICompositeVisitor{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Visitors.QueryVisitorDecorator`2"/>.
+            </summary>
+            <param name="decoratee">The query to be decorated.</param>
+            <param name="visitor">The composite visitor to apply</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Visitors.QueryVisitorDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously handles the specified query and returns the expected result.
+            </summary>
+            <param name="query">The query to act on.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="query"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
         </member>
     </members>
 </doc>

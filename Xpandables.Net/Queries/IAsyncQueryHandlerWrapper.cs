@@ -25,7 +25,7 @@ namespace Xpandables.Net.Queries
     /// This interface allows application authors to avoid use of C# dynamics with query pattern and allows type inference.
     /// </summary>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public interface IAsyncQueryHandlerWrapper<TResult>
+    public interface IAsyncQueryHandlerWrapper<TResult> : ICanHandle
     {
         /// <summary>
         /// Asynchronously handles the specified query and returns an asynchronous result type.
@@ -35,7 +35,7 @@ namespace Xpandables.Net.Queries
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         IAsyncEnumerable<TResult> HandleAsync(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default);
     }
 }

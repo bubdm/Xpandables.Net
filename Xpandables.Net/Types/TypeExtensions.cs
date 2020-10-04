@@ -96,6 +96,22 @@ namespace Xpandables.Net.Types
         }
 
         /// <summary>
+        /// Determines whether the current type implements or it's <see cref="IAsyncEnumerable{T}"/>.
+        /// </summary>
+        /// <param name="type">The type to act on.</param>
+        /// <returns><see langword="true"/> if found, otherwise <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        public static bool IsAsyncEnumerable(this Type type)
+        {
+            _ = type ?? throw new ArgumentNullException(nameof(type));
+            return type.IsInterface switch
+            {
+                true => type.IsGenericType && type.Name.Equals(typeof(IAsyncEnumerable<>).Name),
+                _ => type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAsyncEnumerable<>))
+            };
+        }
+
+        /// <summary>
         /// Returns the name of the type without the generic arity '`'.
         /// Useful for generic types.
         /// </summary>

@@ -17,15 +17,14 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Types;
-
-using static Xpandables.Net.Dispatchers.DispatcherExtensions;
 
 namespace Xpandables.Net.Dispatchers
 {
@@ -48,10 +47,11 @@ namespace Xpandables.Net.Dispatchers
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         public IAsyncEnumerable<TResult> InvokeAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
@@ -61,9 +61,12 @@ namespace Xpandables.Net.Dispatchers
 
             if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IAsyncQueryHandlerWrapper<TResult> handler)
                 throw new NotImplementedException(
-                    $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerBuilder<,>).Name} is registered.");
+                    $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerWrapper<,>).Name} is registered.");
 
-            return handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler, cancellationToken);
+            if (!handler.CanHandle(query))
+                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
+
+            return DoAsyncEnumerableInvokeAsync(handler.HandleAsync(query, cancellationToken), cancellationToken);
         }
 
         /// <summary>
@@ -74,10 +77,11 @@ namespace Xpandables.Net.Dispatchers
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         public IAsyncEnumerable<TResult> InvokeQueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
             where TQuery : class, IAsyncQuery<TResult>
         {
@@ -86,7 +90,42 @@ namespace Xpandables.Net.Dispatchers
             var handler = DispatcherHandlerProvider.GetHandler<IAsyncQueryHandler<TQuery, TResult>>()
                 ?? throw new NotImplementedException($"The matching query handler for {typeof(TQuery).Name} is missing.");
 
-            return handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler, cancellationToken);
+            if (!handler.CanHandle(query))
+                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
+
+            return DoAsyncEnumerableInvokeAsync(handler.HandleAsync(query, cancellationToken), cancellationToken);
+        }
+
+        private static async IAsyncEnumerable<TResult> DoAsyncEnumerableInvokeAsync<TResult>(IAsyncEnumerable<TResult> asyncEnumerable, [EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            _ = asyncEnumerable ?? throw new ArgumentNullException(nameof(asyncEnumerable));
+
+            await using var asyncEnumerator = asyncEnumerable.GetAsyncEnumerator(cancellationToken);
+
+            for (var resultExist = true; resultExist;)
+            {
+                try
+                {
+                    resultExist = await asyncEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    resultExist = false;
+                    switch (exception)
+                    {
+                        case ArgumentException: throw;
+                        case ValidationException: throw;
+                        case OperationCanceledException: throw;
+                        case InvalidOperationException: throw;
+                        default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
+                    };
+                }
+
+                if (resultExist)
+                    yield return asyncEnumerator.Current;
+                else
+                    yield break;
+            }
         }
 
         /// <summary>
@@ -96,6 +135,7 @@ namespace Xpandables.Net.Dispatchers
         /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="command"/>.</exception>
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
@@ -108,7 +148,24 @@ namespace Xpandables.Net.Dispatchers
             var handler = DispatcherHandlerProvider.GetHandler<IAsyncCommandHandler<TCommand>>()
                 ?? throw new NotImplementedException($"The matching command handler for {typeof(TCommand).Name} is missing.");
 
-            await handler.HandleAsync(command, cancellationToken).AsyncExecuteSafe<TCommand>(DispatcherExceptionHandler).ConfigureAwait(false);
+            if (!handler.CanHandle(command))
+                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
+
+            try
+            {
+                await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                switch (exception)
+                {
+                    case ArgumentException: throw;
+                    case ValidationException: throw;
+                    case OperationCanceledException: throw;
+                    case InvalidOperationException: throw;
+                    default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
+                };
+            }
         }
 
         /// <summary>
@@ -120,6 +177,7 @@ namespace Xpandables.Net.Dispatchers
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
@@ -132,7 +190,24 @@ namespace Xpandables.Net.Dispatchers
             var handler = DispatcherHandlerProvider.GetHandler<IQueryHandler<TQuery, TResult>>()
                     ?? throw new NotImplementedException($"The matching query handler for {typeof(TQuery).Name} is missing.");
 
-            return await handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler).ConfigureAwait(false);
+            if (!handler.CanHandle(query))
+                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
+
+            try
+            {
+                return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                switch (exception)
+                {
+                    case ArgumentException: throw;
+                    case ValidationException: throw;
+                    case OperationCanceledException: throw;
+                    case InvalidOperationException: throw;
+                    default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
+                };
+            }
         }
 
         /// <summary>
@@ -143,6 +218,7 @@ namespace Xpandables.Net.Dispatchers
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
@@ -158,7 +234,24 @@ namespace Xpandables.Net.Dispatchers
                 throw new NotImplementedException(
                     $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} is registered.");
 
-            return await handler.HandleAsync(query, cancellationToken).AsyncExecuteSafe(DispatcherExceptionHandler).ConfigureAwait(false);
+            if (!handler.CanHandle(query))
+                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
+
+            try
+            {
+                return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                switch (exception)
+                {
+                    case ArgumentException: throw;
+                    case ValidationException: throw;
+                    case OperationCanceledException: throw;
+                    case InvalidOperationException: throw;
+                    default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
+                };
+            }
         }
     }
 }

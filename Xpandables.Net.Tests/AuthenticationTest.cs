@@ -19,6 +19,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
@@ -142,6 +143,30 @@ namespace Xpandables.Net.Tests
                 Trace.WriteLine(userResponse.Exception);
                 Assert.Fail();
             }
+        }
+
+        [TestMethod]
+        public async Task GetIpAddressAsync()
+        {
+            IHttpRestClientIPLocationHandler clientHandler = new HttpRestClientIPLocationHandler(
+                new HttpClient(new HttpRestClientIPLocationMessage()) { BaseAddress = new Uri("https://ipinfo.io/ip") });
+            using var response = await clientHandler.GetIPAddressAsync().ConfigureAwait(false);
+
+            Assert.IsNotNull(response.Result);
+        }
+
+        [TestMethod]
+        public async Task GetGeoLocationAsync()
+        {
+            IHttpRestClientIPLocationHandler clientHandler = new HttpRestClientIPLocationHandler(
+          new HttpClient(new HttpRestClientIPLocationMessage()) { BaseAddress = new Uri("https://ipinfo.io/ip") });
+            using var response = await clientHandler.GetIPAddressAsync().ConfigureAwait(false);
+
+            IHttpRestClientGeoLocationHandler clientHandler1 = new HttpRestClientGeoLocationHandler(
+                new HttpClient() { BaseAddress = new Uri("http://api.ipstack.com") });
+            using var response1 = await clientHandler1.GetGeoLocationAsync(new GeoLocationRequest(response.Result, "868cb9ec7403caf372f47373a8d525fa")).ConfigureAwait(false);
+
+            Assert.IsNotNull(response1.Result.Ip);
         }
 
         [ClassCleanup]

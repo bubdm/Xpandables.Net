@@ -48,18 +48,18 @@ namespace Xpandables.Net.Data.Mappers
             Entities.Clear();
 
             await foreach (var row in source)
-                DataMapperRow.Map<TEntity>(row, options);
+                await DataMapperRow.MapAsync<TEntity>(row, options).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Maps the data source collection to the specified type.
+        /// Asynchronously maps the data source collection to the specified type.
         /// </summary>
         /// <typeparam name="TEntity">The type of expected result.</typeparam>
         /// <param name="source">The data source collection to act on.</param>
         /// <param name="options">Defines the execution options.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public void Map<TEntity>(IEnumerable<IDataRecord> source, IDataOptions options)
+        public async Task MapAsync<TEntity>(IEnumerable<IDataRecord> source, IDataOptions options)
             where TEntity : class, new()
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -68,24 +68,24 @@ namespace Xpandables.Net.Data.Mappers
             Entities.Clear();
 
             foreach (var row in source)
-                DataMapperRow.Map<TEntity>(row, options);
+                await DataMapperRow.MapAsync<TEntity>(row, options).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Maps the record to the specified type.
+        /// Asynchronously maps the record to the specified type.
         /// </summary>
         /// <typeparam name="TEntity">The type of expected result.</typeparam>
         /// <param name="record">The data source to act on.</param>
         /// <param name="options">Defines the execution options.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="record"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public void Map<TEntity>(IDataRecord record, IDataOptions options)
+        public async Task MapAsync<TEntity>(IDataRecord record, IDataOptions options)
             where TEntity : class, new()
         {
             _ = record ?? throw new ArgumentNullException(nameof(record));
             _ = options ?? throw new ArgumentNullException(nameof(options));
 
-            DataMapperRow.Map<TEntity>(record, options);
+            await DataMapperRow.MapAsync<TEntity>(record, options).ConfigureAwait(false);
         }
 
         /// <summary>

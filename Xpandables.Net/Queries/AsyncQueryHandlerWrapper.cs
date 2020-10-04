@@ -17,9 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Queries
 {
@@ -42,6 +40,15 @@ namespace Xpandables.Net.Queries
             => _decoratee = decoratee ?? throw new ArgumentNullException($"{decoratee} : {nameof(TQuery)}.{nameof(TResult)}");
 
         /// <summary>
+        /// Determines whether or not a an argument can be handled by the underlying context.
+        /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+        /// The default behavior returns <see langword="true"/>.
+        /// </summary>
+        /// <param name="argument">The argument to handle.</param>
+        /// <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
+        public bool CanHandle(object argument) => _decoratee.CanHandle(argument);
+
+        /// <summary>
         /// Asynchronously handles the specified query and returns an asynchronous result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
@@ -49,11 +56,8 @@ namespace Xpandables.Net.Queries
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
-        public async IAsyncEnumerable<TResult> HandleAsync(IAsyncQuery<TResult> query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            await foreach (var result in _decoratee.HandleAsync((TQuery)query, cancellationToken).ConfigureAwait(false))
-                yield return result;
-        }
+        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
+        public IAsyncEnumerable<TResult> HandleAsync(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
+            => _decoratee.HandleAsync((TQuery)query, cancellationToken);
     }
 }

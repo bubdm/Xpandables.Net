@@ -5205,7 +5205,7 @@
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1.Convert(Xpandables.Net.HttpRestClient.HttpRestClientResponse,Xpandables.Net.Optionals.Optional{`0})">
+        <member name="M:Xpandables.Net.HttpRestClient.HttpRestClientResponse`1.Convert(Xpandables.Net.HttpRestClient.HttpRestClientResponse,`0)">
             <summary>
             Converts the source <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientResponse"/> to the generic of <typeparamref name="TResult"/> type.
             </summary>

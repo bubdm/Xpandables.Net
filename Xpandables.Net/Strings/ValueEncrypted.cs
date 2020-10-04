@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.Strings
 {
@@ -84,12 +85,12 @@ namespace Xpandables.Net.Strings
         /// <param name="stringCryptography">The cryptography instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="stringCryptography"/> is null.</exception>
-        public bool IsEqualTo(string value, IStringCryptography stringCryptography)
+        public async Task<bool> IsEqualTo(string value, IStringCryptography stringCryptography)
         {
             _ = value ?? throw new ArgumentNullException(nameof(value));
             _ = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
 
-            return stringCryptography.AreEqual(this, value);
+            return await stringCryptography.AreEqual(this, value).ConfigureAwait(false);
         }
 
         /// <summary>

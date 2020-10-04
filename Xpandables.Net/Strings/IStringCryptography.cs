@@ -49,29 +49,15 @@ namespace Xpandables.Net.Strings
         /// <exception cref="ArgumentException">The <paramref name="keySize"/> must be greater than zero
         /// and lower or equal to <see cref="ushort.MaxValue"/>.</exception>
         /// <exception cref="InvalidOperationException">The encryption failed. See inner exception.</exception>
-        public ValueEncrypted Encrypt(string value, ushort keySize)
+        public async Task<ValueEncrypted> EncryptAsync(string value, ushort keySize)
         {
             _ = value ?? throw new ArgumentNullException(nameof(value));
             if (keySize == 0) throw new ArgumentException($"{nameof(keySize)} must be greater than zero and lower or equal to {ushort.MaxValue}");
 
             var key = StringGenerator.Generate(keySize);
             var salt = StringGenerator.GenerateSalt();
-            return Encrypt(value, key, salt);
+            return await EncryptAsync(value, key, salt).ConfigureAwait(false);
         }
-
-        /// <summary>
-        /// Returns an encrypted string from the value string using the specified key and the salt value.
-        /// If <paramref name="key"/> or <paramref name="salt"/> is not provided, a default value will be used.
-        /// The process uses the <see cref="RijndaelManaged"/> algorithm with the <see cref="SHA256"/>.
-        /// </summary>
-        /// <param name="value">The value to be encrypted.</param>
-        /// <param name="key">The optional key value to be used for encryption.</param>
-        /// <param name="salt">The optional salt base64 string value to be used for encryption.</param>
-        /// <returns>An encrypted object that contains the encrypted value, its key and its salt.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The encryption failed. See inner exception.</exception>
-        public ValueEncrypted Encrypt(string value, string? key = default, string? salt = default)
-            => AsyncExtensions.RunSync(() => EncryptAsync(value, key, salt));
 
         /// <summary>
         /// Returns an encrypted string from the value string using the specified key and the salt value.
@@ -130,7 +116,7 @@ namespace Xpandables.Net.Strings
                                                   || exception is NotSupportedException
                                                   || exception is TargetInvocationException)
             {
-                throw new InvalidOperationException($"{nameof(Encrypt)} : encryption failed. See inner exception.", exception);
+                throw new InvalidOperationException($"{nameof(EncryptAsync)} : encryption failed. See inner exception.", exception);
             }
         }
 
@@ -146,16 +132,7 @@ namespace Xpandables.Net.Strings
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="salt"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The decryption failed. See inner exception.</exception>
-        public string Decrypt(string key, string value, string salt) => Decrypt(new ValueEncrypted(key, value, salt));
-
-        /// <summary>
-        /// Returns an decrypted string from the encrypted object.
-        /// The process uses the <see cref="RijndaelManaged"/> algorithm with the <see cref="SHA256"/>.
-        /// </summary>
-        /// <param name="encrypted">The object that contains encrypted information.</param>
-        /// <returns>A decrypted string from the encrypted object.</returns>
-        /// <exception cref="InvalidOperationException">The decryption failed. See inner exception.</exception>
-        public string Decrypt(ValueEncrypted encrypted) => AsyncExtensions.RunSync(() => DecryptAsync(encrypted));
+        public async Task<string> DecryptAsync(string key, string value, string salt) => await DecryptAsync(new ValueEncrypted(key, value, salt)).ConfigureAwait(false);
 
         /// <summary>
         /// Returns an decrypted string from the encrypted object.
@@ -207,7 +184,7 @@ namespace Xpandables.Net.Strings
                                                 || exception is NotSupportedException
                                                 || exception is TargetInvocationException)
             {
-                throw new InvalidOperationException($"{nameof(Decrypt)} : decryption failed. See inner exception.", exception);
+                throw new InvalidOperationException($"{nameof(DecryptAsync)} : decryption failed. See inner exception.", exception);
             }
         }
 
@@ -219,11 +196,11 @@ namespace Xpandables.Net.Strings
         /// <param name="value">The value to compare with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The comparison failed. See inner exception.</exception>
-        public bool AreEqual(ValueEncrypted encrypted, string value)
+        public async Task<bool> AreEqual(ValueEncrypted encrypted, string value)
         {
             _ = value ?? throw new ArgumentNullException(nameof(value));
 
-            var comp = Encrypt(value, encrypted.Key, encrypted.Salt);
+            var comp = await EncryptAsync(value, encrypted.Key, encrypted.Salt).ConfigureAwait(false);
             return comp == encrypted;
         }
     }

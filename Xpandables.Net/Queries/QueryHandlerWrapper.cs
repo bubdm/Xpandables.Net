@@ -39,6 +39,15 @@ namespace Xpandables.Net.Queries
             => _decoratee = decoratee ?? throw new ArgumentNullException($"{decoratee} : {nameof(TQuery)}.{nameof(TResult)}");
 
         /// <summary>
+        /// Determines whether or not a an argument can be handled by the underlying context.
+        /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+        /// The default behavior returns <see langword="true"/>.
+        /// </summary>
+        /// <param name="argument">The argument to handle.</param>
+        /// <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
+        public bool CanHandle(object argument) => _decoratee.CanHandle(argument);
+
+        /// <summary>
         /// Asynchronously handles the specified query and returns the expected result.
         /// </summary>
         /// <param name="query">The query to act on.</param>

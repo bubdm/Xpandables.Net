@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Xpandables.Net.Creators;
 using Xpandables.Net.Strings;
@@ -47,12 +48,12 @@ namespace Xpandables.Net.Data.Elements
         /// <summary>
         /// Gets the entity instance.
         /// </summary>
-        public object? Entity { get ; private set ; }
+        public object? Entity { get; private set; }
 
         /// <summary>
         /// Gets the property on parent entity if exist.
         /// </summary>
-        public DataProperty? ParentProperty { get ; private set ; }
+        public DataProperty? ParentProperty { get; private set; }
 
         /// <summary>
         /// Gets the parent entity if exist.
@@ -84,7 +85,7 @@ namespace Xpandables.Net.Data.Elements
         /// Builds the identity using the current entity instance.
         /// The entity must be already assigned.
         /// </summary>
-        public void BuildIdentity()
+        public async Task BuildIdentity()
         {
             if (IsIdentified) return;
 
@@ -109,7 +110,8 @@ namespace Xpandables.Net.Data.Elements
             if (string.IsNullOrWhiteSpace(value))
                 value = _stringGenerator.Generate(32, Key);
 
-            Identity = _stringCryptography.Encrypt(value, Key).Value;
+            var encrypted = await _stringCryptography.EncryptAsync(value, Key).ConfigureAwait(false);
+            Identity = encrypted.Value;
         }
 
         /// <summary>
