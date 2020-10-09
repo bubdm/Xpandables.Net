@@ -39,33 +39,34 @@ namespace Xpandables.Net.Data.Executables
         public override async Task<Optional<DataTable>> ExecuteAsync(DataExecutableContext context)
         {
             using var dataSet = new DataSet();
-            context.Component.Command.CommandText =
-                context.Component.Command.CommandType == CommandType.StoredProcedure
+            context.ConnectionContext.Command.CommandText =
+                context.ConnectionContext.Command.CommandType == CommandType.StoredProcedure
                 ? context.Argument.CommandText
                 : context.Argument.CommandText.ParseSql();
 
-            DataParameterBuilder.Build(context.Component.Command, context.Argument.Parameters?.ToArray());
+            DataParameterBuilder.Build(context.ConnectionContext.Command, context.Argument.Parameters?.ToArray());
 
-            if (context.Component.Command.CommandType == CommandType.StoredProcedure)
+            if (context.ConnectionContext.Command.CommandType == CommandType.StoredProcedure)
             {
-                context.Component.Command.CommandTimeout = 0;
-                context.Component.Command.CommandText = context.Argument.CommandText.Split('@')[0].Trim();
+                context.ConnectionContext.Command.CommandTimeout = 0;
+                context.ConnectionContext.Command.CommandText = context.Argument.CommandText.Split('@')[0].Trim();
             }
 
-            if (context.Component.Command.CommandType == CommandType.Text
+            if (context.ConnectionContext.Command.CommandType == CommandType.Text
                  && context.Argument.Parameters?.All(p => p is DbParameter) == true
-                 && context.Component.Command.Connection!.IsSqlConnection())
+                 && context.ConnectionContext.Command.Connection!.IsSqlConnection())
             {
-                await context.Component.Command.PrepareAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
+                await context.ConnectionContext.Command.PrepareAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
             }
 
-            context.Component.Adapter.SelectCommand = context.Component.Command;
-            context.Component.Adapter.AcceptChangesDuringFill = false;
-            context.Component.Adapter.FillLoadOption = LoadOption.OverwriteChanges;
-            context.Component.Adapter.Fill(dataSet);
+            using var adapter = context.ConnectionContext.DbProviderFactory.CreateDataAdapter()!;
+            adapter.SelectCommand = context.ConnectionContext.Command;
+            adapter.AcceptChangesDuringFill = false;
+            adapter.FillLoadOption = LoadOption.OverwriteChanges;
+            adapter.Fill(dataSet);
 
             if (context.Argument.Options.IsTransactionEnabled)
-                await context.Component.Command.Transaction!.CommitAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
+                await context.ConnectionContext.Command.Transaction!.CommitAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
             return (dataSet.Tables.Count > 0) switch
             {

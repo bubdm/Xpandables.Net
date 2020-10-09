@@ -39,7 +39,7 @@ namespace Xpandables.Net.Data
         /// <summary>
         /// May contains the data connection used from initialization.
         /// </summary>
-        IDataConnection? DataConnection { get; }
+        IDataConnectionOptions? DataConnection { get; }
 
         /// <summary>
         /// May contains the data options used from initialization.
@@ -51,7 +51,7 @@ namespace Xpandables.Net.Data
         /// and returns a result of <typeparamref name="TResult" /> type.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionBuilder"/> to build a new instance.</param>
+        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionOptionsBuilder"/> to build a new instance.</param>
         /// <param name="dataExecutable">The data executable instance to be used.</param>
         /// <param name="dataOptions">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
         /// <param name="commandText">The text command to run against the database.</param>
@@ -63,7 +63,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public async Task<Optional<TResult>> ExecuteAsync<TResult>(
-            IDataConnection dataConnection,
+            IDataConnectionOptions dataConnection,
             IDataOptions dataOptions,
             DataExecutable<TResult> dataExecutable,
             string commandText,
@@ -77,25 +77,12 @@ namespace Xpandables.Net.Data
             var transaction = default(DbTransaction);
             try
             {
-                var dataConnectionContext = await DataConnectionContextProvider.GetDataConnectionContextAsync(dataConnection).ConfigureAwait(false);
+                using var dataConnectionContext = await DataConnectionContextProvider.GetDataConnectionContextAsync(dataConnection).ConfigureAwait(false);
+                await dataConnectionContext.InitializeAsync(commandType).ConfigureAwait(false);
+                transaction = await dataConnectionContext.InitializeTransactionAsync(dataOptions).ConfigureAwait(false);
 
-                using var connection = dataConnectionContext.DbConnection;
-                using var command = connection.CreateCommand();
-                using var adapter = dataConnectionContext.DbProviderFactory.CreateDataAdapter()!;
-
-                command.CommandType = commandType;
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync().ConfigureAwait(false);
-
-                if (dataOptions.IsTransactionEnabled)
-                {
-                    transaction = await connection.BeginTransactionAsync(dataOptions.IsolationLevel, dataOptions.CancellationToken).ConfigureAwait(false);
-                    command.Transaction = transaction;
-                }
-
-                var component = new DataExecutableContext.DataComponent(command, adapter);
-                var arguments = new DataExecutableContext.DataArgument(dataOptions, commandText, parameters);
-                var context = new DataExecutableContext(arguments, component);
+                var arguments = new DataExecutableArgument(dataOptions, commandText, parameters);
+                using var context = new DataExecutableContext(arguments, dataConnectionContext);
 
                 return await dataExecutable.ExecuteAsync(context).ConfigureAwait(false);
             }
@@ -142,7 +129,7 @@ namespace Xpandables.Net.Data
         /// and asynchronously returns result of <typeparamref name="TResult" /> type.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionBuilder"/> to build a new instance.</param>
+        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionOptionsBuilder"/> to build a new instance.</param>
         /// <param name="dataOptions">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
         /// <param name="dataExecutableMapper">the data executable mapper.</param>
         /// <param name="commandText">The text command to run against the database.</param>
@@ -154,7 +141,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public async IAsyncEnumerable<TResult> ExecuteMappedAsync<TResult>(
-            IDataConnection dataConnection,
+            IDataConnectionOptions dataConnection,
             IDataOptions dataOptions,
             DataExecutableMapper<TResult> dataExecutableMapper,
             string commandText,
@@ -166,42 +153,23 @@ namespace Xpandables.Net.Data
             _ = dataOptions ?? throw new ArgumentNullException(nameof(dataOptions));
             var executableMapped = dataExecutableMapper ?? throw new ArgumentNullException(nameof(dataExecutableMapper));
 
-            var transaction = default(DbTransaction);
-
-            DbConnection connectionSource;
-            DbCommand commandSource;
-            DbDataAdapter adapterSource;
+            DataConnectionContext? dataConnectionContext;
+            DbTransaction? transaction;
 
             try
             {
-                var dataConnectionContext = await DataConnectionContextProvider.GetDataConnectionContextAsync(dataConnection).ConfigureAwait(false);
-
-                connectionSource = dataConnectionContext.DbConnection;
-                commandSource = connectionSource.CreateCommand();
-                adapterSource = dataConnectionContext.DbProviderFactory.CreateDataAdapter()!;
-
-                commandSource.CommandType = commandType;
-                if (connectionSource.State != ConnectionState.Open)
-                    await connectionSource.OpenAsync().ConfigureAwait(false);
+                dataConnectionContext = await DataConnectionContextProvider.GetDataConnectionContextAsync(dataConnection).ConfigureAwait(false);
+                await dataConnectionContext.InitializeAsync(commandType).ConfigureAwait(false);
+                transaction = await dataConnectionContext.InitializeTransactionAsync(dataOptions).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
                 throw new InvalidOperationException("Exception encountered while attempting to execute command.", exception);
             }
 
-            using var connection = connectionSource;
-            using var command = commandSource;
-            using var adapter = adapterSource;
 
-            if (dataOptions.IsTransactionEnabled)
-            {
-                transaction = await connection.BeginTransactionAsync(dataOptions.IsolationLevel, dataOptions.CancellationToken).ConfigureAwait(false);
-                command.Transaction = transaction;
-            }
-
-            var component = new DataExecutableContext.DataComponent(command, adapter);
-            var arguments = new DataExecutableContext.DataArgument(dataOptions, commandText, parameters);
-            var context = new DataExecutableContext(arguments, component);
+            var arguments = new DataExecutableArgument(dataOptions, commandText, parameters);
+            var context = new DataExecutableContext(arguments, dataConnectionContext);
 
             var enumerableAsync = executableMapped.ExecuteMappedAsync(context);
             await using var enumeratorAsync = enumerableAsync.GetAsyncEnumerator(dataOptions.CancellationToken);
@@ -218,7 +186,7 @@ namespace Xpandables.Net.Data
                     {
                         try
                         {
-                            transaction?.Rollback();
+                            await transaction!.RollbackAsync(dataOptions.CancellationToken).ConfigureAwait(false);
                         }
                         catch (Exception sqlException)
                         {
@@ -249,6 +217,8 @@ namespace Xpandables.Net.Data
 
                 if (resultExist)
                     yield return enumeratorAsync.Current;
+                else
+                    yield break;
             }
         }
     }
@@ -260,12 +230,12 @@ namespace Xpandables.Net.Data
     {
         private readonly IDataConnectionContextProvider _dataConnectionContextProvider;
         private readonly IDataExecutableProvider _dataExecutableProvider;
-        private readonly IDataConnection? _dataConnection;
+        private readonly IDataConnectionOptions? _dataConnection;
         private readonly IDataOptions? _dataOptions;
 
         IDataExecutableProvider IDataBase.DataExecutableProvider => _dataExecutableProvider;
         IDataConnectionContextProvider IDataBase.DataConnectionContextProvider => _dataConnectionContextProvider;
-        IDataConnection? IDataBase.DataConnection => _dataConnection;
+        IDataConnectionOptions? IDataBase.DataConnection => _dataConnection;
         IDataOptions? IDataBase.DataOptions => _dataOptions;
 
         /// <summary>
@@ -290,7 +260,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
-        public DataBase(IDataConnectionContextProvider dataConnectionContextProvider, IDataExecutableProvider dataExecutableProvider, IDataConnection dataConnection)
+        public DataBase(IDataConnectionContextProvider dataConnectionContextProvider, IDataExecutableProvider dataExecutableProvider, IDataConnectionOptions dataConnection)
         {
             _dataConnectionContextProvider = dataConnectionContextProvider ?? throw new ArgumentNullException(nameof(dataConnectionContextProvider));
             _dataExecutableProvider = dataExecutableProvider ?? throw new ArgumentNullException(nameof(dataExecutableProvider));
@@ -324,7 +294,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataOptions"/> is null.</exception>
-        public DataBase(IDataConnectionContextProvider dataConnectionContextProvider, IDataExecutableProvider dataExecutableProvider, IDataConnection dataConnection, IDataOptions dataOptions)
+        public DataBase(IDataConnectionContextProvider dataConnectionContextProvider, IDataExecutableProvider dataExecutableProvider, IDataConnectionOptions dataConnection, IDataOptions dataOptions)
         {
             _dataConnectionContextProvider = dataConnectionContextProvider ?? throw new ArgumentNullException(nameof(dataConnectionContextProvider));
             _dataExecutableProvider = dataExecutableProvider ?? throw new ArgumentNullException(nameof(dataExecutableProvider));

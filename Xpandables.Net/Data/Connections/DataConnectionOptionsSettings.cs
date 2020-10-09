@@ -22,14 +22,14 @@ namespace Xpandables.Net.Data.Connections
 {
     /// <summary>
     /// Contains data base connection information from the appsettings file.
-    /// You can use <see cref="DataConnectionBuilder"/> to build data connection instance.
+    /// You can use <see cref="DataConnectionOptionsBuilder"/> to build data connection instance.
     /// </summary>
-    public sealed class DataConnectionSettings : IDataConnection
+    public sealed class DataConnectionOptionsSettings : IDataConnectionOptions
     {
         /// <summary>
-        /// Initializes a default instance of <see cref="DataConnectionSettings"/> class.
+        /// Initializes a default instance of <see cref="DataConnectionOptionsSettings"/> class.
         /// </summary>
-        public DataConnectionSettings() { }
+        public DataConnectionOptionsSettings() { }
 
         /// <summary>
         /// Gets or sets the connection string.

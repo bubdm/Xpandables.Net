@@ -36,25 +36,25 @@ namespace Xpandables.Net.Data.Executables
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
         public override async Task<Optional<int>> ExecuteAsync(DataExecutableContext context)
         {
-            context.Component.Command.CommandText = context.Argument.CommandText.ParseSql();
+            context.ConnectionContext.Command.CommandText = context.Argument.CommandText.ParseSql();
 
-            DataParameterBuilder.Build(context.Component.Command, context.Argument.Parameters?.ToArray());
+            DataParameterBuilder.Build(context.ConnectionContext.Command, context.Argument.Parameters?.ToArray());
 
             int result;
             if (context.Argument.Options.IsIdentityRetrieved)
             {
-                context.Component.Command.CommandText += "; SELECT CAST(SCOPE_IDENTITY() AS int)";
-                var execution = await context.Component.Command.ExecuteScalarAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
+                context.ConnectionContext.Command.CommandText += "; SELECT CAST(SCOPE_IDENTITY() AS int)";
+                var execution = await context.ConnectionContext.Command.ExecuteScalarAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
                 result = execution is DBNull || execution is null ? 0 : (int)execution;
             }
             else
             {
-                result = await context.Component.Command.ExecuteNonQueryAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
+                result = await context.ConnectionContext.Command.ExecuteNonQueryAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
             }
 
             if (context.Argument.Options.IsTransactionEnabled)
-                context.Component.Command.Transaction?.Commit();
+                context.ConnectionContext.Command.Transaction?.Commit();
 
             return result;
         }

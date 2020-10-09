@@ -37,14 +37,14 @@ namespace Xpandables.Net.Data.Executables
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
         public override async Task<Optional<TResult>> ExecuteAsync(DataExecutableContext context)
         {
-            context.Component.Command.CommandText = context.Argument.CommandText.ParseSql();
+            context.ConnectionContext.Command.CommandText = context.Argument.CommandText.ParseSql();
 
-            DataParameterBuilder.Build(context.Component.Command, context.Argument.Parameters?.ToArray());
+            DataParameterBuilder.Build(context.ConnectionContext.Command, context.Argument.Parameters?.ToArray());
 
-            var result = await context.Component.Command.ExecuteScalarAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
+            var result = await context.ConnectionContext.Command.ExecuteScalarAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
             if (context.Argument.Options.IsTransactionEnabled)
-                await context.Component.Command.Transaction!.CommitAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
+                await context.ConnectionContext.Command.Transaction!.CommitAsync(context.Argument.Options.CancellationToken).ConfigureAwait(false);
 
             return result switch
             {

@@ -31,6 +31,6 @@ namespace Xpandables.Net.Data.Connections
         /// </summary>
         /// <param name="dataConnection">The data connection to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
-        Task<DataConnectionContext> GetDataConnectionContextAsync(IDataConnection dataConnection);
+        Task<DataConnectionContext> GetDataConnectionContextAsync(IDataConnectionOptions dataConnection);
     }
 }

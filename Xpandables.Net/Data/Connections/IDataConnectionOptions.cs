@@ -26,7 +26,7 @@ namespace Xpandables.Net.Data.Connections
     /// <summary>
     ///  Represents a set of values data base connection properties.
     /// </summary>
-    public interface IDataConnection
+    public interface IDataConnectionOptions
     {
         /// <summary>
         /// Gets the connection string.

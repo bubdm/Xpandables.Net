@@ -44,7 +44,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async IAsyncEnumerable<TResult> ExecuteMappedProcedureAsync<TResult>(
             this IDataBase dataBase,
-            IDataConnection dataConnection,
+            IDataConnectionOptions dataConnection,
             IDataOptions dataOptions,
             string commandText,
             params object[] parameters)
@@ -95,7 +95,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async IAsyncEnumerable<TResult> ExecuteMappedProcedureAsync<TResult>(
             this IDataBase dataBase,
-            IDataConnection dataConnection,
+            IDataConnectionOptions dataConnection,
             string commandText,
             params object[] parameters)
             where TResult : class, new()
@@ -144,7 +144,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async IAsyncEnumerable<TResult> ExecuteMappedQueryAsync<TResult>(
             this IDataBase dataBase,
-            IDataConnection dataConnection,
+            IDataConnectionOptions dataConnection,
             IDataOptions dataOptions,
             string commandText,
             params object[] parameters)
@@ -195,7 +195,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async IAsyncEnumerable<TResult> ExecuteMappedQueryAsync<TResult>(
             this IDataBase dataBase,
-            IDataConnection dataConnection,
+            IDataConnectionOptions dataConnection,
             string commandText,
             params object[] parameters)
             where TResult : class, new()

@@ -366,7 +366,7 @@
             <para></para>
             <see cref="T:Xpandables.Net.Queries.IAsyncQuery`1"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2"/>.
             <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1"/>.
-            <see cref="T:Xpandables.Net.Queries.IAsyncQuery`1"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2"/>.
+            <see cref="T:Xpandables.Net.Queries.IQuery`1"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2"/>.
             <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1"/>.
             </summary>
         </member>
@@ -607,123 +607,9 @@
             Gets the data mapper property converter instance.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.Data.Connections.DataConnection">
-            <summary>
-            Contains data base connection information. Use <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build connection.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnection.#ctor(System.String,System.String,Xpandables.Net.Data.Providers.DataProviderType,System.String,System.String,System.Boolean)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Connections.DataConnection"/> with the provided properties.
-            </summary>
-            <param name="connectionStringSource">The connection string.</param>
-            <param name="poolName">The pool name.</param>
-            <param name="providerType">The data base provider type.</param>
-            <param name="userId">The optional user identifier.</param>
-            <param name="userPassword">The optional user password.</param>
-            <param name="useIntegratedSecurity">Enable or not use of integrated security.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="connectionStringSource"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="poolName"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="providerType"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">The <paramref name="userId"/> and/or <paramref name="userPassword"/> expected.</exception>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnection.ConnectionStringSource">
-            <summary>
-            Gets the connection string.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnection.PoolName">
-            <summary>
-            Gets the pool name.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnection.ProviderType">
-            <summary>
-            Gets the provider type.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnection.UserId">
-            <summary>
-            Gets the connection string user identifier.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnection.UserPassword">
-            <summary>
-            Gets the connection string user password.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnection.UseIntegratedSecurity">
-            <summary>
-            Gets the value whether or not to use integrated security.
-            If <see langword="false"/>, you should provide <see cref="P:Xpandables.Net.Data.Connections.DataConnection.UserId"/> and <see cref="P:Xpandables.Net.Data.Connections.DataConnection.UserPassword"/> information.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnection.GetEqualityComponents">
-            <summary>
-            Provides with the list of components that comprise this class.
-            </summary>
-            <returns>An enumerable components of the derived class.</returns>
-        </member>
-        <member name="T:Xpandables.Net.Data.Connections.DataConnectionBuilder">
-            <summary>
-            Allows application author to build <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionBuilder.#ctor">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a data connection.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionBuilder.Build">
-            <summary>
-            Returns a new <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/> using registered information.
-            </summary>
-            <exception cref="T:System.ArgumentNullException">Connection string, poll name or provider type is null.</exception>
-            <exception cref="T:System.ArgumentException">User identifier and/or user password expected.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionBuilder.AddConnectionString(System.String)">
-            <summary>
-            Adds the connection string source (without security information).
-            </summary>
-            <param name="connectionStringSource">The connection string.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="connectionStringSource"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionBuilder.AddPoolName(System.String)">
-            <summary>
-            Adds the pool name to be used.
-            </summary>
-            <param name="poolName">The pool name.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="poolName"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionBuilder.AddProviderType(Xpandables.Net.Data.Providers.DataProviderType)">
-            <summary>
-            Adds the known provider name from the provider type.
-            </summary>
-            <param name="providerType">The provider type to be used.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="providerType"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionBuilder.AddUserId(System.String)">
-            <summary>
-            Adds the specified user identifier.
-            </summary>
-            <param name="userId">The user identifier.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="userId"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionBuilder.AddUserPassword(System.String)">
-            <summary>
-            Adds the user password.
-            </summary>
-            <param name="userPassword">The user password.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="userPassword"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionBuilder.EnableIntegratedSecurity">
-            <summary>
-            Defines the use of integrated security. The connection string must contains the "Integrated Security=true" expression.
-            </summary>
-        </member>
         <member name="T:Xpandables.Net.Data.Connections.DataConnectionContext">
             <summary>
-            Contains information of <see cref="P:Xpandables.Net.Data.Connections.DataConnectionContext.DbConnection"/> and <see cref="P:Xpandables.Net.Data.Connections.DataConnectionContext.DbProviderFactory"/>
+            Contains information of <see cref="P:Xpandables.Net.Data.Connections.DataConnectionContext.Connection"/> and <see cref="P:Xpandables.Net.Data.Connections.DataConnectionContext.DbProviderFactory"/>
             </summary>
         </member>
         <member name="M:Xpandables.Net.Data.Connections.DataConnectionContext.#ctor(System.Data.Common.DbConnection,System.Data.Common.DbProviderFactory)">
@@ -742,9 +628,14 @@
             <param name="source">The data connection to be copied.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
         </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnectionContext.DbConnection">
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionContext.Connection">
             <summary>
             Gets the connection to the data base.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionContext.Command">
+            <summary>
+            Get the Database command instance.
             </summary>
         </member>
         <member name="P:Xpandables.Net.Data.Connections.DataConnectionContext.DbProviderFactory">
@@ -752,15 +643,37 @@
             Gets the data base provider factory.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContext.GetEqualityComponents">
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContext.InitializeAsync(System.Data.CommandType)">
             <summary>
-            Provides the list of components that comprise that class.
+            Opens the current data connection.
             </summary>
-            <returns>An enumerable components of the derived class.</returns>
+            <param name="commandType">The target command type.</param>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContext.InitializeTransactionAsync(Xpandables.Net.Data.Options.IDataOptions)">
+            <summary>
+            Initializes the database transaction if necessary.
+            </summary>
+            <param name="dataOptions">The data options.</param>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContext.Dispose(System.Boolean)">
+            <summary>
+            Disposes the connection.
+            </summary>
+            <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources;
+            <see langword="false"/> to release only unmanaged resources.
+            </param>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContext.DisposeAsync(System.Boolean)">
+            <summary>
+            Asynchronously disposes the connection.
+            </summary>
+            <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources;
+            <see langword="false"/> to release only unmanaged resources.
+            </param>
         </member>
         <member name="T:Xpandables.Net.Data.Connections.DataConnectionContextProvider">
             <summary>
-            Provides with the <see cref="T:System.Data.Common.DbConnection"/> from the <see cref="T:System.Data.Common.DbProviderFactory"/> and the <see cref="T:Xpandables.Net.Data.Connections.IDataConnection"/>.
+            Provides with the <see cref="T:System.Data.Common.DbConnection"/> from the <see cref="T:System.Data.Common.DbProviderFactory"/> and the <see cref="T:Xpandables.Net.Data.Connections.IDataConnectionOptions"/>.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Data.Connections.DataConnectionContextProvider.#ctor(Xpandables.Net.Data.Providers.IDataFactoryProvider)">
@@ -770,106 +683,172 @@
             <param name="dataFactoryProvider">The data factory provider.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataFactoryProvider"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContextProvider.GetDataConnectionContextAsync(Xpandables.Net.Data.Connections.IDataConnection)">
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContextProvider.GetDataConnectionContextAsync(Xpandables.Net.Data.Connections.IDataConnectionOptions)">
             <summary>
             Provides with a database connection using the provider and the connection string.
             </summary>
             <param name="dataConnection">The data connection to act with.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
         </member>
-        <member name="T:Xpandables.Net.Data.Connections.DataConnectionSettings">
+        <member name="T:Xpandables.Net.Data.Connections.DataConnectionOptions">
             <summary>
-            Contains data base connection information from the appsettings file.
-            You can use <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build data connection instance.
+            Contains data base connection information. Use <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build connection.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionSettings.#ctor">
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionOptions.#ctor(System.String,System.String,Xpandables.Net.Data.Providers.DataProviderType,System.String,System.String,System.Boolean)">
             <summary>
-            Initializes a default instance of <see cref="T:Xpandables.Net.Data.Connections.DataConnectionSettings"/> class.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptions"/> with the provided properties.
             </summary>
+            <param name="connectionStringSource">The connection string.</param>
+            <param name="poolName">The pool name.</param>
+            <param name="providerType">The data base provider type.</param>
+            <param name="userId">The optional user identifier.</param>
+            <param name="userPassword">The optional user password.</param>
+            <param name="useIntegratedSecurity">Enable or not use of integrated security.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="connectionStringSource"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="poolName"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="providerType"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The <paramref name="userId"/> and/or <paramref name="userPassword"/> expected.</exception>
         </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnectionSettings.ConnectionStringSource">
-            <summary>
-            Gets or sets the connection string.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnectionSettings.PoolName">
-            <summary>
-            Gets or sets the pool name.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnectionSettings.ProviderName">
-            <summary>
-            Gets or sets the provider name.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnectionSettings.ProviderType">
-            <summary>
-            Gets the provider type.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnectionSettings.UserId">
-            <summary>
-            Gets or sets the connection string user identifier.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnectionSettings.UserPassword">
-            <summary>
-            Gets or sets the connection string user password.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.DataConnectionSettings.UseIntegratedSecurity">
-            <summary>
-            Gets the value whether or not to use integrated security.
-            If <see langword="false"/>, you should provide <see cref="P:Xpandables.Net.Data.Connections.DataConnectionSettings.UserId"/> and <see cref="P:Xpandables.Net.Data.Connections.DataConnectionSettings.UserPassword"/> information.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Data.Connections.IDataConnection">
-            <summary>
-             Represents a set of values data base connection properties.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Connections.IDataConnection.ConnectionStringSource">
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptions.ConnectionStringSource">
             <summary>
             Gets the connection string.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Connections.IDataConnection.PoolName">
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptions.PoolName">
             <summary>
             Gets the pool name.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Connections.IDataConnection.ProviderType">
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptions.ProviderType">
             <summary>
             Gets the provider type.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Connections.IDataConnection.UseIntegratedSecurity">
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptions.UserId">
             <summary>
-            Determines whether or not to use integrated security.
-            If <see langword="false"/>, you should provide <see cref="P:Xpandables.Net.Data.Connections.IDataConnection.UserId"/> and <see cref="P:Xpandables.Net.Data.Connections.IDataConnection.UserPassword"/> information.
+            Gets the connection string user identifier.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Connections.IDataConnection.UserId">
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptions.UserPassword">
             <summary>
-            Gets the connection string user identifier when <see cref="P:Xpandables.Net.Data.Connections.IDataConnection.UseIntegratedSecurity"/> is false.
+            Gets the connection string user password.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Connections.IDataConnection.UserPassword">
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptions.UseIntegratedSecurity">
             <summary>
-            Gets the connection string user password when <see cref="P:Xpandables.Net.Data.Connections.IDataConnection.UseIntegratedSecurity"/> is false.
+            Gets the value whether or not to use integrated security.
+            If <see langword="false"/>, you should provide <see cref="P:Xpandables.Net.Data.Connections.DataConnectionOptions.UserId"/> and <see cref="P:Xpandables.Net.Data.Connections.DataConnectionOptions.UserPassword"/> information.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Connections.IDataConnection.GetConnectionString">
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionOptions.GetEqualityComponents">
             <summary>
-            Returns the built connection string value.
+            Provides with the list of components that comprise this class.
             </summary>
-            <exception cref="T:System.ArgumentException">The instance is invalid.</exception>
+            <returns>An enumerable components of the derived class.</returns>
         </member>
-        <member name="M:Xpandables.Net.Data.Connections.IDataConnection.IsValid(System.Exception@)">
+        <member name="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder">
             <summary>
-            Determines whether or not the instance contains valid information.
-            If so, returns <see langword="true"/> otherwise returns <see langword="false"/>.
+            Allows application author to build <see cref="T:Xpandables.Net.Data.Connections.IDataConnectionOptions"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a data connection.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder.Build">
+            <summary>
+            Returns a new <see cref="T:Xpandables.Net.Data.Connections.IDataConnectionOptions"/> using registered information.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Connection string, poll name or provider type is null.</exception>
+            <exception cref="T:System.ArgumentException">User identifier and/or user password expected.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder.AddConnectionString(System.String)">
+            <summary>
+            Adds the connection string source (without security information).
+            </summary>
+            <param name="connectionStringSource">The connection string.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="connectionStringSource"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder.AddPoolName(System.String)">
+            <summary>
+            Adds the pool name to be used.
+            </summary>
+            <param name="poolName">The pool name.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="poolName"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder.AddProviderType(Xpandables.Net.Data.Providers.DataProviderType)">
+            <summary>
+            Adds the known provider name from the provider type.
+            </summary>
+            <param name="providerType">The provider type to be used.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="providerType"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder.AddUserId(System.String)">
+            <summary>
+            Adds the specified user identifier.
+            </summary>
+            <param name="userId">The user identifier.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="userId"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder.AddUserPassword(System.String)">
+            <summary>
+            Adds the user password.
+            </summary>
+            <param name="userPassword">The user password.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="userPassword"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder.EnableIntegratedSecurity">
+            <summary>
+            Defines the use of integrated security. The connection string must contains the "Integrated Security=true" expression.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings">
+            <summary>
+            Contains data base connection information from the appsettings file.
+            You can use <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build data connection instance.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings.#ctor">
+            <summary>
+            Initializes a default instance of <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings"/> class.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings.ConnectionStringSource">
+            <summary>
+            Gets or sets the connection string.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings.PoolName">
+            <summary>
+            Gets or sets the pool name.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings.ProviderName">
+            <summary>
+            Gets or sets the provider name.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings.ProviderType">
+            <summary>
+            Gets the provider type.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings.UserId">
+            <summary>
+            Gets or sets the connection string user identifier.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings.UserPassword">
+            <summary>
+            Gets or sets the connection string user password.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings.UseIntegratedSecurity">
+            <summary>
+            Gets the value whether or not to use integrated security.
+            If <see langword="false"/>, you should provide <see cref="P:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings.UserId"/> and <see cref="P:Xpandables.Net.Data.Connections.DataConnectionOptionsSettings.UserPassword"/> information.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Data.Connections.IDataConnectionContextProvider">
@@ -878,12 +857,60 @@
             Note that you must register this interface as a singleton to take advantage of the caching process.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Connections.IDataConnectionContextProvider.GetDataConnectionContextAsync(Xpandables.Net.Data.Connections.IDataConnection)">
+        <member name="M:Xpandables.Net.Data.Connections.IDataConnectionContextProvider.GetDataConnectionContextAsync(Xpandables.Net.Data.Connections.IDataConnectionOptions)">
             <summary>
             Provides with a database connection using the provider and the connection string.
             </summary>
             <param name="dataConnection">The data connection to act with.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
+        </member>
+        <member name="T:Xpandables.Net.Data.Connections.IDataConnectionOptions">
+            <summary>
+             Represents a set of values data base connection properties.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.IDataConnectionOptions.ConnectionStringSource">
+            <summary>
+            Gets the connection string.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.IDataConnectionOptions.PoolName">
+            <summary>
+            Gets the pool name.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.IDataConnectionOptions.ProviderType">
+            <summary>
+            Gets the provider type.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.IDataConnectionOptions.UseIntegratedSecurity">
+            <summary>
+            Determines whether or not to use integrated security.
+            If <see langword="false"/>, you should provide <see cref="P:Xpandables.Net.Data.Connections.IDataConnectionOptions.UserId"/> and <see cref="P:Xpandables.Net.Data.Connections.IDataConnectionOptions.UserPassword"/> information.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.IDataConnectionOptions.UserId">
+            <summary>
+            Gets the connection string user identifier when <see cref="P:Xpandables.Net.Data.Connections.IDataConnectionOptions.UseIntegratedSecurity"/> is false.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Connections.IDataConnectionOptions.UserPassword">
+            <summary>
+            Gets the connection string user password when <see cref="P:Xpandables.Net.Data.Connections.IDataConnectionOptions.UseIntegratedSecurity"/> is false.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.IDataConnectionOptions.GetConnectionString">
+            <summary>
+            Returns the built connection string value.
+            </summary>
+            <exception cref="T:System.ArgumentException">The instance is invalid.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.Connections.IDataConnectionOptions.IsValid(System.Exception@)">
+            <summary>
+            Determines whether or not the instance contains valid information.
+            If so, returns <see langword="true"/> otherwise returns <see langword="false"/>.
+            </summary>
         </member>
         <member name="T:Xpandables.Net.Data.DataBaseExtensions">
             <summary>
@@ -926,7 +953,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteProcedureTableAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteProcedureTableAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the stored procedure by its name using connection and returns an optional data table result.
             </summary>
@@ -961,7 +988,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionProcedureAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionProcedureAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the stored procedure as transactional using the connection and returns the number of records affected.
             Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
@@ -998,7 +1025,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionQueryAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionQueryAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the specified query as transactional using the connection and returns the number of records affected.
             Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
@@ -1023,7 +1050,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteQueryTableAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteQueryTableAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the query against the database using connection and returns an optional data table result.
             </summary>
@@ -1058,7 +1085,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes a stored procedure against the database that returns a single value of specific type.
             </summary>
@@ -1095,7 +1122,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes a query against the database that returns a single value of specific type.
             </summary>
@@ -1119,7 +1146,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the stored procedure by its name using options and returns an asynchronous collection of results of
             the specific-type.
@@ -1149,7 +1176,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the stored procedure by its name using connection and returns an asynchronous collection of results of
             the specific-type.
@@ -1175,7 +1202,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the specify query against the database using connection, options and returns a collection of results of
             the specific-type.
@@ -1205,7 +1232,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnection,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the specify query against the database using connection and returns a collection of results of
             the specific-type.
@@ -1243,7 +1270,7 @@
             <param name="dataOptions">The data options to be used.</param>
             <exception cref="T:System.ArgumentException">The <paramref name="dataOptions"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseOptions.UseDataConnection(Xpandables.Net.Data.Connections.IDataConnection)">
+        <member name="M:Xpandables.Net.Data.DataBaseOptions.UseDataConnection(Xpandables.Net.Data.Connections.IDataConnectionOptions)">
             <summary>
             Uses the specified data connection as the default for the target instance of <see cref="T:Xpandables.Net.Data.IDataBase"/>.
             </summary>
@@ -1702,6 +1729,36 @@
             <returns>A task representing the asynchronous operation</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="context"/> is null.</exception>
         </member>
+        <member name="T:Xpandables.Net.Data.Executables.DataExecutableArgument">
+            <summary>
+            Contains the argument execution for <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableArgument.#ctor(Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Executables.DataExecutableArgument"/>.
+            </summary>
+            <param name="options">The execution options.</param>
+            <param name="commandText">The string command to act with.</param>
+            <param name="parameters">The parameters for the command.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
+        </member>
+        <member name="P:Xpandables.Net.Data.Executables.DataExecutableArgument.Options">
+            <summary>
+            Get the execution options.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Executables.DataExecutableArgument.CommandText">
+            <summary>
+            Gets the string command : can be stored procedure name, query or other command.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Data.Executables.DataExecutableArgument.Parameters">
+            <summary>
+            Gets the parameters to be used with the <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>.
+            </summary>
+        </member>
         <member name="T:Xpandables.Net.Data.Executables.DataExecutableBuilder`1">
             <summary>
             This helper class allows the application author to implement the <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>
@@ -1733,84 +1790,40 @@
             Defines the context of an executable.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Executables.DataExecutableContext.#ctor(Xpandables.Net.Data.Executables.DataExecutableContext.DataArgument,Xpandables.Net.Data.Executables.DataExecutableContext.DataComponent)">
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableContext.#ctor(Xpandables.Net.Data.Executables.DataExecutableArgument,Xpandables.Net.Data.Connections.DataConnectionContext)">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Executables.DataExecutableContext"/> class with the argument and component.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Executables.DataExecutableContext"/> class with the argument and connection.
             </summary>
             <param name="argument">The context argument.</param>
-            <param name="component">The component argument.</param>
+            <param name="connectionContext">The component argument.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="component"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="connectionContext"/> is null.</exception>
         </member>
         <member name="P:Xpandables.Net.Data.Executables.DataExecutableContext.Argument">
             <summary>
             Gets the argument for the executable.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Executables.DataExecutableContext.Component">
+        <member name="P:Xpandables.Net.Data.Executables.DataExecutableContext.ConnectionContext">
             <summary>
             Gets the component needed by the executable.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.Data.Executables.DataExecutableContext.DataArgument">
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableContext.Dispose(System.Boolean)">
             <summary>
-            Contains the argument execution for <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>.
+            Disposes the connection.
             </summary>
+            <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources;
+            <see langword="false"/> to release only unmanaged resources.
+            </param>
         </member>
-        <member name="M:Xpandables.Net.Data.Executables.DataExecutableContext.DataArgument.#ctor(Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableContext.DisposeAsync(System.Boolean)">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Executables.DataExecutableContext.DataArgument"/>.
+            Asynchronously disposes the connection.
             </summary>
-            <param name="options">The execution options.</param>
-            <param name="commandText">The string command to act with.</param>
-            <param name="parameters">The parameters for the command.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-        </member>
-        <member name="P:Xpandables.Net.Data.Executables.DataExecutableContext.DataArgument.Options">
-            <summary>
-            Get the execution options.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Executables.DataExecutableContext.DataArgument.CommandText">
-            <summary>
-            Gets the string command : can be stored procedure name, query or other command.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Executables.DataExecutableContext.DataArgument.Parameters">
-            <summary>
-            Gets the parameters to be used with the <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>.
-            </summary>
-        </member>
-        <member name="T:Xpandables.Net.Data.Executables.DataExecutableContext.DataComponent">
-            <summary>
-            Contains component execution for <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Executables.DataExecutableContext.DataComponent.#ctor(System.Data.Common.DbCommand,System.Data.Common.DbDataAdapter)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Executables.DataExecutableContext.DataComponent"/>.
-            </summary>
-            <param name="command">The database command instance.</param>
-            <param name="adapter">The database adapter to act with.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="command"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="adapter"/> is null.</exception>
-        </member>
-        <member name="P:Xpandables.Net.Data.Executables.DataExecutableContext.DataComponent.Command">
-            <summary>
-            Get the Database command instance.
-            </summary>
-        </member>
-        <member name="P:Xpandables.Net.Data.Executables.DataExecutableContext.DataComponent.Adapter">
-            <summary>
-            Gets the database adapter instance.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.Executables.DataExecutableContext.DataComponent.GetEqualityComponents">
-            <summary>
-            When implemented in derived class, this method will provide the list of components that comprise that class.
-            </summary>
-            <returns>An enumerable components of the derived class.</returns>
+            <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources;
+            <see langword="false"/> to release only unmanaged resources.
+            </param>
         </member>
         <member name="T:Xpandables.Net.Data.Executables.DataExecutableMapper`1">
             <summary>
@@ -2002,13 +2015,13 @@
             May contains the data options used from initialization.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``1(Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Options.IDataOptions,Xpandables.Net.Data.Executables.DataExecutable{``0},System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``1(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,Xpandables.Net.Data.Executables.DataExecutable{``0},System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified connection, options and executable against the database
             and returns a result of <typeparamref name="TResult" /> type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
-            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a new instance.</param>
+            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
             <param name="dataExecutable">The data executable instance to be used.</param>
             <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
@@ -2020,13 +2033,13 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``1(Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Options.IDataOptions,Xpandables.Net.Data.Executables.DataExecutableMapper{``0},System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``1(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,Xpandables.Net.Data.Executables.DataExecutableMapper{``0},System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified connection, options and executable mapper against the database
             and asynchronously returns result of <typeparamref name="TResult" /> type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
-            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a new instance.</param>
+            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
             <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
             <param name="dataExecutableMapper">the data executable mapper.</param>
             <param name="commandText">The text command to run against the database.</param>
@@ -2038,7 +2051,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``2(Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``2(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified connection, options and executable <typeparamref name="TDataExecutable" /> type against the database
             and returns a result of <typeparamref name="TResult" /> type.
@@ -2046,7 +2059,7 @@
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <typeparam name="TDataExecutable">The type of the executable. The class inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1" />.</typeparam>
-            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a new instance.</param>
+            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
             <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
@@ -2072,7 +2085,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``2(Xpandables.Net.Data.Connections.IDataConnection,System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``2(Xpandables.Net.Data.Connections.IDataConnectionOptions,System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified connection and executable <typeparamref name="TDataExecutable" /> type against the database
             and returns a result of <typeparamref name="TResult" /> type.
@@ -2080,7 +2093,7 @@
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <typeparam name="TDataExecutable">The type of the executable. The class inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1" />.</typeparam>
-            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a new instance.</param>
+            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
             <param name="parameters">A collection of parameter objects for the command.</param>
@@ -2118,14 +2131,14 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``1(Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Executables.DataExecutable{``0},System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``1(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Executables.DataExecutable{``0},System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified connection and executable against the database
             and returns a result of <typeparamref name="TResult" /> type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <param name="dataExecutable">The data executable instance to be used.</param>
-            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a new instance.</param>
+            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
             <param name="parameters">A collection of parameter objects for the command.</param>
@@ -2148,7 +2161,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``2(Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``2(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified connection, options and executable <typeparamref name="TDataExecutableMapped" /> type against the database
             and asynchronously returns result of <typeparamref name="TResult" /> type.
@@ -2156,7 +2169,7 @@
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <typeparam name="TDataExecutableMapped">The type of the executable. The class inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutableBuilder`1" />.</typeparam>
-            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a new instance.</param>
+            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
             <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
@@ -2182,7 +2195,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``2(Xpandables.Net.Data.Connections.IDataConnection,System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``2(Xpandables.Net.Data.Connections.IDataConnectionOptions,System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified connection and executable <typeparamref name="TDataExecutableMapped" /> type against the database
             and asynchronously returns result of <typeparamref name="TResult" /> type.
@@ -2190,7 +2203,7 @@
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <typeparam name="TDataExecutableMapped">The type of the executable. The class inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutableBuilder`1" />.</typeparam>
-            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a new instance.</param>
+            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
             <param name="parameters">A collection of parameter objects for the command.</param>
@@ -2226,14 +2239,14 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``1(Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Executables.DataExecutableMapper{``0},System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``1(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Executables.DataExecutableMapper{``0},System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified executable mapper against the database
             and asynchronously returns result of <typeparamref name="TResult" /> type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <param name="dataExecutableMapper">The data executable mapper instance to be used.</param>
-            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionBuilder"/> to build a new instance.</param>
+            <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
             <param name="parameters">A collection of parameter objects for the command.</param>
@@ -2267,7 +2280,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Connections.IDataConnection)">
+        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Connections.IDataConnectionOptions)">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/> with a default data connection.
             </summary>
@@ -2289,7 +2302,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataOptions"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Connections.IDataConnection,Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions)">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/> with a default data options and connection.
             </summary>
@@ -5559,10 +5572,10 @@
         </member>
         <member name="M:Xpandables.Net.Http.IHttpTokenEngine.WriteToken(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
             <summary>
-            Uses the collection of claims to build a string token.
+            Uses the collection of claims to build a token.
             </summary>
             <param name="claims">collection of claims to be used to build token string.</param>
-            <returns>An instance of string token if OK or an empty string.</returns>
+            <returns>An instance of string token if OK.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="claims"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">Unable to write token from claims. See inner exception.</exception>
         </member>
@@ -5571,7 +5584,7 @@
             Uses the source object to build a string token. The default behavior throws <see cref="T:System.NotImplementedException"/>.
             </summary>
             <param name="source">The source to be used.</param>
-            <returns>An instance of string token if OK or an empty string.</returns>
+            <returns>An instance of string token if OK.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">Unable to write token from source. See inner exception.</exception>
         </member>
@@ -5580,7 +5593,7 @@
             Returns the collection of claims from the specified token.
             </summary>
             <param name="token">The token string.</param>
-            <returns>An collection of claims if OK or an empty type.</returns>
+            <returns>An collection of claims if OK.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="token"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">Unable to read claims from token. See inner exception.</exception>
         </member>
@@ -5589,7 +5602,7 @@
             Returns the collection of claims from the specified token.
             </summary>
             <param name="token">The token string.</param>
-            <returns>An collection of claims if OK or an empty type.</returns>
+            <returns>An collection of claims if OK.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="token"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">Unable to read claims from token object. See inner exception.</exception>
         </member>
@@ -11935,6 +11948,26 @@
             <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
             <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
             <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        </member>
+        <member name="T:Xpandables.Net.Validations.RequiredOptionalAttribute">
+            <summary>
+            Specifies that a data field value is required.
+            When the <see cref="P:Xpandables.Net.Validations.RequiredOptionalAttribute.IsOptional"/> is <see langword="true"/>, the data field is only checked if there is a value.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Validations.RequiredOptionalAttribute.IsValid(System.Object)">
+            <summary>
+            Checks that the value of the required data field is not empty if optional is <see langword="false"/>.
+            </summary>
+            <param name="value">The data field value to validate.</param>
+            <returns> true if validation is successful; otherwise, false.</returns>
+            <exception cref="T:System.ComponentModel.DataAnnotations.ValidationException">The data field value was null.</exception>
+        </member>
+        <member name="P:Xpandables.Net.Validations.RequiredOptionalAttribute.IsOptional">
+            <summary>
+            Gets or sets the value whether or not the decorated property/field/parameter can be null.
+            If <see langword="true"/>, the data field will only be checked when there is a value. The default behavior is <see langword="false"/>.
+            </summary>
         </member>
         <member name="T:Xpandables.Net.Validations.ValidationAttributeExtensions">
             <summary>

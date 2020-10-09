@@ -35,7 +35,7 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <typeparam name="TDataExecutableMapped">The type of the executable. The class inherits from <see cref="DataExecutableBuilder{TResult}" />.</typeparam>
-        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionBuilder"/> to build a new instance.</param>
+        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionOptionsBuilder"/> to build a new instance.</param>
         /// <param name="dataOptions">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
         /// <param name="commandText">The text command to run against the database.</param>
         /// <param name="commandType">The command type.</param>
@@ -45,7 +45,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public async IAsyncEnumerable<TResult> ExecuteMappedAsync<TResult, TDataExecutableMapped>(
-            IDataConnection dataConnection,
+            IDataConnectionOptions dataConnection,
             IDataOptions dataOptions,
             string commandText,
             CommandType commandType,
@@ -82,7 +82,7 @@ namespace Xpandables.Net.Data
             where TDataExecutableMapped : DataExecutableMapper<TResult>
             where TResult : class, new()
         {
-            _ = DataConnection ?? throw new ArgumentNullException(nameof(IDataConnection), "You must initialize the database instance with a default data connection.");
+            _ = DataConnection ?? throw new ArgumentNullException(nameof(IDataConnectionOptions), "You must initialize the database instance with a default data connection.");
 
             await foreach (var result in ExecuteMappedAsync<TResult, TDataExecutableMapped>(DataConnection, dataOptions, commandText, commandType, parameters).ConfigureAwait(false))
                 yield return result;
@@ -95,7 +95,7 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <typeparam name="TDataExecutableMapped">The type of the executable. The class inherits from <see cref="DataExecutableBuilder{TResult}" />.</typeparam>
-        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionBuilder"/> to build a new instance.</param>
+        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionOptionsBuilder"/> to build a new instance.</param>
         /// <param name="commandText">The text command to run against the database.</param>
         /// <param name="commandType">The command type.</param>
         /// <param name="parameters">A collection of parameter objects for the command.</param>
@@ -103,7 +103,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public async IAsyncEnumerable<TResult> ExecuteMappedAsync<TResult, TDataExecutableMapped>(
-            IDataConnection dataConnection,
+            IDataConnectionOptions dataConnection,
             string commandText,
             CommandType commandType,
             params object[] parameters)
@@ -135,7 +135,7 @@ namespace Xpandables.Net.Data
             where TDataExecutableMapped : DataExecutableMapper<TResult>
             where TResult : class, new()
         {
-            _ = DataConnection ?? throw new ArgumentNullException(nameof(IDataConnection), "You must initialize the database instance with a default data connection.");
+            _ = DataConnection ?? throw new ArgumentNullException(nameof(IDataConnectionOptions), "You must initialize the database instance with a default data connection.");
             _ = DataOptions ?? throw new ArgumentNullException(nameof(IDataOptions), "You must initialize the database instance with a default data options.");
 
             await foreach (var result in ExecuteMappedAsync<TResult, TDataExecutableMapped>(DataConnection, DataOptions, commandText, commandType, parameters).ConfigureAwait(false))
@@ -162,7 +162,7 @@ namespace Xpandables.Net.Data
             params object[] parameters)
             where TResult : class, new()
         {
-            _ = DataConnection ?? throw new ArgumentNullException(nameof(IDataConnection), "You must initialize the database instance with a default data connection.");
+            _ = DataConnection ?? throw new ArgumentNullException(nameof(IDataConnectionOptions), "You must initialize the database instance with a default data connection.");
 
             await foreach (var result in ExecuteMappedAsync(DataConnection, dataOptions, dataExecutableMapper, commandText, commandType, parameters).ConfigureAwait(false))
                 yield return result;
@@ -174,14 +174,14 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="dataExecutableMapper">The data executable mapper instance to be used.</param>
-        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionBuilder"/> to build a new instance.</param>
+        /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionOptionsBuilder"/> to build a new instance.</param>
         /// <param name="commandText">The text command to run against the database.</param>
         /// <param name="commandType">The command type.</param>
         /// <param name="parameters">A collection of parameter objects for the command.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public async IAsyncEnumerable<TResult> ExecuteMappedAsync<TResult>(
-            IDataConnection dataConnection,
+            IDataConnectionOptions dataConnection,
             DataExecutableMapper<TResult> dataExecutableMapper,
             string commandText,
             CommandType commandType,
@@ -213,7 +213,7 @@ namespace Xpandables.Net.Data
             where TResult : class, new()
         {
             _ = DataOptions ?? throw new ArgumentNullException(nameof(IDataOptions), "You must initialize the database instance with a default data options.");
-            _ = DataConnection ?? throw new ArgumentNullException(nameof(IDataConnection), "You must initialize the database instance with a default data connection.");
+            _ = DataConnection ?? throw new ArgumentNullException(nameof(IDataConnectionOptions), "You must initialize the database instance with a default data connection.");
 
             await foreach (var result in ExecuteMappedAsync(DataConnection, DataOptions, dataExecutableMapper, commandText, commandType, parameters).ConfigureAwait(false))
                 yield return result;

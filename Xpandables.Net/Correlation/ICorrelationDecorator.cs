@@ -35,7 +35,7 @@ namespace Xpandables.Net.Correlation
     /// <para></para>
     /// <see cref="IAsyncQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncQueryCorrelationDecorator{TQuery, TResult}"/>.
     /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandCorrelationDecorator{TCommand}"/>.
-    /// <see cref="IAsyncQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncQueryCorrelationDecorator{TQuery, TResult}"/>.
+    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="QueryCorrelationDecorator{TQuery, TResult}"/>.
     /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandCorrelationDecorator{TCommand}"/>.
     /// </summary>
     public interface ICorrelationDecorator { }

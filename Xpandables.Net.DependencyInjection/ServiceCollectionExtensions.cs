@@ -22,7 +22,6 @@ using System.Reflection;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Xpandables.Net.DependencyInjection.Interfaces;
 using Xpandables.Net.Types;
 
 namespace Xpandables.Net.DependencyInjection
@@ -85,33 +84,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
             return services.HasRegistration(typeof(TService));
-        }
-
-        /// <summary>
-        /// Adds registrations to the <paramref name="services"/> collection using
-        /// conventions specified using the <paramref name="action"/>.
-        /// </summary>
-        /// <param name="services">The services to add to.</param>
-        /// <param name="action">The configuration action.</param>
-        /// <exception cref="ArgumentNullException">If either the <paramref name="services"/>
-        /// or <paramref name="action"/> arguments are <c>null</c>.</exception>
-        public static IServiceCollection XRegister(this IServiceCollection services, Action<ITypeSourceSelector> action)
-        {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            if (action == null) throw new ArgumentNullException(nameof(action));
-
-            var selector = new TypeSourceSelector();
-
-            action(selector);
-
-            return services.Populate(selector, RegistrationStrategy.Append);
-        }
-
-        private static IServiceCollection Populate(this IServiceCollection services, ISelector selector, RegistrationStrategy registrationStrategy)
-        {
-            selector.Populate(services, registrationStrategy);
-            return services;
-        }
+        }  
 
         /// <summary>
         /// Ensures that the supplied <typeparamref name="TDecorator"/> decorator is returned, wrapping the

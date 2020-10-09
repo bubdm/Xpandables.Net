@@ -22,9 +22,9 @@ using Xpandables.Net.Data.Providers;
 namespace Xpandables.Net.Data.Connections
 {
     /// <summary>
-    /// Allows application author to build <see cref="IDataConnection"/>.
+    /// Allows application author to build <see cref="IDataConnectionOptions"/>.
     /// </summary>
-    public sealed class DataConnectionBuilder
+    public sealed class DataConnectionOptionsBuilder
     {
         private string _connectionStringSource = string.Empty;
         private string _poolName = string.Empty;
@@ -34,24 +34,24 @@ namespace Xpandables.Net.Data.Connections
         private bool _useIntegratedSecurity;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataConnectionBuilder"/> to build a data connection.
+        /// Initializes a new instance of <see cref="DataConnectionOptionsBuilder"/> to build a data connection.
         /// </summary>
-        public DataConnectionBuilder() { }
+        public DataConnectionOptionsBuilder() { }
 
         /// <summary>
-        /// Returns a new <see cref="IDataConnection"/> using registered information.
+        /// Returns a new <see cref="IDataConnectionOptions"/> using registered information.
         /// </summary>
         /// <exception cref="ArgumentNullException">Connection string, poll name or provider type is null.</exception>
         /// <exception cref="ArgumentException">User identifier and/or user password expected.</exception>
-        public IDataConnection Build()
-            => new DataConnection(_connectionStringSource, _poolName, _providerType, _userId, _userPassword, _useIntegratedSecurity);
+        public IDataConnectionOptions Build()
+            => new DataConnectionOptions(_connectionStringSource, _poolName, _providerType, _userId, _userPassword, _useIntegratedSecurity);
 
         /// <summary>
         /// Adds the connection string source (without security information).
         /// </summary>
         /// <param name="connectionStringSource">The connection string.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="connectionStringSource"/> is null.</exception>
-        public DataConnectionBuilder AddConnectionString(string connectionStringSource)
+        public DataConnectionOptionsBuilder AddConnectionString(string connectionStringSource)
         {
             _connectionStringSource = connectionStringSource ?? throw new ArgumentNullException(nameof(connectionStringSource));
             return this;
@@ -62,7 +62,7 @@ namespace Xpandables.Net.Data.Connections
         /// </summary>
         /// <param name="poolName">The pool name.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="poolName"/> is null.</exception>
-        public DataConnectionBuilder AddPoolName(string poolName)
+        public DataConnectionOptionsBuilder AddPoolName(string poolName)
         {
             _poolName = poolName ?? throw new ArgumentNullException(nameof(poolName));
             return this;
@@ -73,7 +73,7 @@ namespace Xpandables.Net.Data.Connections
         /// </summary>
         /// <param name="providerType">The provider type to be used.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="providerType"/> is null.</exception>
-        public DataConnectionBuilder AddProviderType(DataProviderType providerType)
+        public DataConnectionOptionsBuilder AddProviderType(DataProviderType providerType)
         {
             _providerType = providerType ?? throw new ArgumentNullException(nameof(providerType));
             return this;
@@ -84,7 +84,7 @@ namespace Xpandables.Net.Data.Connections
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="userId"/> is null.</exception>
-        public DataConnectionBuilder AddUserId(string userId)
+        public DataConnectionOptionsBuilder AddUserId(string userId)
         {
             _userId = userId ?? throw new ArgumentNullException(nameof(userId));
             return this;
@@ -95,7 +95,7 @@ namespace Xpandables.Net.Data.Connections
         /// </summary>
         /// <param name="userPassword">The user password.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="userPassword"/> is null.</exception>
-        public DataConnectionBuilder AddUserPassword(string userPassword)
+        public DataConnectionOptionsBuilder AddUserPassword(string userPassword)
         {
             _userPassword = userPassword ?? throw new ArgumentNullException(nameof(userPassword));
             return this;
@@ -104,7 +104,7 @@ namespace Xpandables.Net.Data.Connections
         /// <summary>
         /// Defines the use of integrated security. The connection string must contains the "Integrated Security=true" expression.
         /// </summary>
-        public DataConnectionBuilder EnableIntegratedSecurity()
+        public DataConnectionOptionsBuilder EnableIntegratedSecurity()
         {
             _useIntegratedSecurity = true;
             return this;

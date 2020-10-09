@@ -23,12 +23,12 @@ using Xpandables.Net.Data.Providers;
 namespace Xpandables.Net.Data.Connections
 {
     /// <summary>
-    /// Contains data base connection information. Use <see cref="DataConnectionBuilder"/> to build connection.
+    /// Contains data base connection information. Use <see cref="DataConnectionOptionsBuilder"/> to build connection.
     /// </summary>
-    public sealed class DataConnection : ValueObject, IDataConnection
+    public sealed class DataConnectionOptions : ValueObject, IDataConnectionOptions
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="DataConnection"/> with the provided properties.
+        /// Initializes a new instance of <see cref="DataConnectionOptions"/> with the provided properties.
         /// </summary>
         /// <param name="connectionStringSource">The connection string.</param>
         /// <param name="poolName">The pool name.</param>
@@ -40,7 +40,7 @@ namespace Xpandables.Net.Data.Connections
         /// <exception cref="ArgumentNullException">The <paramref name="poolName"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="providerType"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="userId"/> and/or <paramref name="userPassword"/> expected.</exception>
-        internal DataConnection(
+        internal DataConnectionOptions(
             string connectionStringSource,
             string poolName,
             DataProviderType providerType,

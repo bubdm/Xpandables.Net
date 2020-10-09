@@ -26,7 +26,7 @@ using Xpandables.Net.Data.Providers;
 namespace Xpandables.Net.Data.Connections
 {
     /// <summary>
-    /// Provides with the <see cref="DbConnection"/> from the <see cref="DbProviderFactory"/> and the <see cref="IDataConnection"/>.
+    /// Provides with the <see cref="DbConnection"/> from the <see cref="DbProviderFactory"/> and the <see cref="IDataConnectionOptions"/>.
     /// </summary>
     public sealed class DataConnectionContextProvider : IDataConnectionContextProvider
     {
@@ -49,7 +49,7 @@ namespace Xpandables.Net.Data.Connections
         /// </summary>
         /// <param name="dataConnection">The data connection to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
-        public async Task<DataConnectionContext> GetDataConnectionContextAsync(IDataConnection dataConnection)
+        public async Task<DataConnectionContext> GetDataConnectionContextAsync(IDataConnectionOptions dataConnection)
         {
             _ = dataConnection ?? throw new ArgumentNullException(nameof(dataConnection));
 
@@ -61,7 +61,7 @@ namespace Xpandables.Net.Data.Connections
             return new DataConnectionContext(connection, dbFactoryProvider);
         }
 
-        private static async Task<DbConnection> BuildConnectionAsync(DbProviderFactory dbProviderFactory, IDataConnection dataConnection)
+        private static async Task<DbConnection> BuildConnectionAsync(DbProviderFactory dbProviderFactory, IDataConnectionOptions dataConnection)
         {
             var dbConnection = dbProviderFactory.CreateConnection()!;
             dbConnection.ConnectionString = dataConnection.GetConnectionString();

@@ -42,10 +42,10 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <param name="dataConnection">The data connection to be used.</param>
         /// <exception cref="ArgumentException">The <paramref name="dataConnection"/> is null.</exception>
-        public DataBaseOptions UseDataConnection(IDataConnection dataConnection)
+        public DataBaseOptions UseDataConnection(IDataConnectionOptions dataConnection)
             => this.Assign(dbo => dbo.IsDataConnectionEnabled= dataConnection ?? throw new ArgumentNullException(nameof(dataConnection)));
 
         internal IDataOptions? IsDataOptionsEnabled { get; private set; }
-        internal IDataConnection? IsDataConnectionEnabled { get; private set; }
+        internal IDataConnectionOptions? IsDataConnectionEnabled { get; private set; }
     }
 }

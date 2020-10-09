@@ -16,15 +16,19 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
+using System.Threading.Tasks;
+using System.Transactions;
+
+using Xpandables.Net.Data.Options;
 
 namespace Xpandables.Net.Data.Connections
 {
     /// <summary>
-    /// Contains information of <see cref="DbConnection"/> and <see cref="DbProviderFactory"/>
+    /// Contains information of <see cref="Connection"/> and <see cref="DbProviderFactory"/>
     /// </summary>
-    public sealed class DataConnectionContext : ValueObject
+    public sealed class DataConnectionContext : Disposable
     {
         /// <summary>
         /// Initializes a new instance of <see cref="DataConnectionContext"/>.
@@ -35,8 +39,9 @@ namespace Xpandables.Net.Data.Connections
         /// <exception cref="ArgumentNullException">The <paramref name="dbProviderFactory"/> is null.</exception>
         public DataConnectionContext(DbConnection dbConnection, DbProviderFactory dbProviderFactory)
         {
-            DbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
+            Connection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
             DbProviderFactory = dbProviderFactory ?? throw new ArgumentNullException(nameof(dbProviderFactory));
+            Command = Connection.CreateCommand();
         }
 
         /// <summary>
@@ -47,14 +52,20 @@ namespace Xpandables.Net.Data.Connections
         public DataConnectionContext(DataConnectionContext source)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
-            DbConnection = source.DbConnection;
+            Connection = source.Connection;
             DbProviderFactory = source.DbProviderFactory;
+            Command = source.Command;
         }
 
         /// <summary>
         /// Gets the connection to the data base.
         /// </summary>
-        public DbConnection DbConnection { get; }
+        public DbConnection Connection { get; }
+
+        /// <summary>
+        /// Get the Database command instance.
+        /// </summary>
+        public DbCommand Command { get; }
 
         /// <summary>
         /// Gets the data base provider factory.
@@ -62,13 +73,70 @@ namespace Xpandables.Net.Data.Connections
         public DbProviderFactory DbProviderFactory { get; }
 
         /// <summary>
-        /// Provides the list of components that comprise that class.
+        /// Opens the current data connection.
         /// </summary>
-        /// <returns>An enumerable components of the derived class.</returns>
-        protected override IEnumerable<object> GetEqualityComponents()
+        /// <param name="commandType">The target command type.</param>
+        public async Task InitializeAsync(CommandType commandType)
         {
-            yield return DbConnection;
-            yield return DbProviderFactory;
+            Command.CommandType = commandType;
+            if (Connection.State != ConnectionState.Open)
+                await Connection.OpenAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Initializes the database transaction if necessary.
+        /// </summary>
+        /// <param name="dataOptions">The data options.</param>
+        public async Task<DbTransaction?> InitializeTransactionAsync(IDataOptions dataOptions)
+        {
+            if (dataOptions.IsTransactionEnabled)
+            {
+                var transaction = await Connection.BeginTransactionAsync(dataOptions.IsolationLevel, dataOptions.CancellationToken).ConfigureAwait(false);
+                Command.Transaction = transaction;
+                return transaction;
+            }
+
+            return default;
+        }
+
+        private bool isDisposed;
+
+        /// <summary>
+        /// Disposes the connection.
+        /// </summary>
+        /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources;
+        /// <see langword="false"/> to release only unmanaged resources.
+        /// </param>
+        protected override void Dispose(bool disposing)
+        {
+            if (isDisposed) return;
+
+            if (disposing)
+            {
+                Command.Dispose();
+                Connection.Dispose();
+            }
+
+            isDisposed = true;
+        }
+
+        /// <summary>
+        /// Asynchronously disposes the connection.
+        /// </summary>
+        /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources;
+        /// <see langword="false"/> to release only unmanaged resources.
+        /// </param>
+        protected override async ValueTask DisposeAsync(bool disposing)
+        {
+            if (isDisposed) return;
+
+            if (disposing)
+            {
+                await Command.DisposeAsync().ConfigureAwait(false);
+                await Connection.DisposeAsync().ConfigureAwait(false);
+            }
+
+            isDisposed = true;
         }
     }
 }

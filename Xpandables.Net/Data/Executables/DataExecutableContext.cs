@@ -16,120 +16,72 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Common;
-using System.Linq;
+using System.Threading.Tasks;
 
-using Xpandables.Net.Data.Options;
+using Xpandables.Net.Data.Connections;
 
 namespace Xpandables.Net.Data.Executables
 {
     /// <summary>
     /// Defines the context of an executable.
     /// </summary>
-    public sealed class DataExecutableContext
+    public sealed class DataExecutableContext : Disposable
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="DataExecutableContext"/> class with the argument and component.
+        /// Initializes a new instance of <see cref="DataExecutableContext"/> class with the argument and connection.
         /// </summary>
         /// <param name="argument">The context argument.</param>
-        /// <param name="component">The component argument.</param>
+        /// <param name="connectionContext">The component argument.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="component"/> is null.</exception>
-        public DataExecutableContext(DataArgument argument, DataComponent component)
+        /// <exception cref="ArgumentNullException">The <paramref name="connectionContext"/> is null.</exception>
+        public DataExecutableContext(DataExecutableArgument argument, DataConnectionContext connectionContext)
         {
             Argument = argument ?? throw new ArgumentNullException(nameof(argument));
-            Component = component ?? throw new ArgumentNullException(nameof(component));
+            ConnectionContext = connectionContext ?? throw new ArgumentNullException(nameof(connectionContext));
         }
 
         /// <summary>
         /// Gets the argument for the executable.
         /// </summary>
-        public DataArgument Argument { get; }
+        public DataExecutableArgument Argument { get; }
         
         /// <summary>
         /// Gets the component needed by the executable.
         /// </summary>
-        public DataComponent Component { get; }
+        public DataConnectionContext ConnectionContext { get; }
+
+        private bool isDisposed;
 
         /// <summary>
-        /// Contains the argument execution for <see cref="DataExecutable{T}"/>.
+        /// Disposes the connection.
         /// </summary>
-#pragma warning disable CA1034 // Nested types should not be visible
-        public sealed class DataArgument
-#pragma warning restore CA1034 // Nested types should not be visible
+        /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources;
+        /// <see langword="false"/> to release only unmanaged resources.
+        /// </param>
+        protected override void Dispose(bool disposing)
         {
-            /// <summary>
-            /// Initializes a new instance of <see cref="DataArgument"/>.
-            /// </summary>
-            /// <param name="options">The execution options.</param>
-            /// <param name="commandText">The string command to act with.</param>
-            /// <param name="parameters">The parameters for the command.</param>
-            /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-            /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-            public DataArgument(IDataOptions options, string commandText, object[]? parameters = default)
-            {
-                Options = options ?? throw new ArgumentNullException(nameof(options));
-                CommandText = commandText ?? throw new ArgumentNullException(nameof(commandText));
-                Parameters = parameters?.Any() == true ? new ReadOnlyCollection<object>(parameters) : default;
-            }
+            if (isDisposed) return;
 
-            /// <summary>
-            /// Get the execution options.
-            /// </summary>
-            public IDataOptions Options { get; }
+            if (disposing)
+                ConnectionContext.Dispose();
 
-            /// <summary>
-            /// Gets the string command : can be stored procedure name, query or other command.
-            /// </summary>
-            public string CommandText { get; }
-
-            /// <summary>
-            /// Gets the parameters to be used with the <see cref="DataExecutable{T}"/>.
-            /// </summary>
-            public ReadOnlyCollection<object>? Parameters { get; }
+            isDisposed = true;
         }
 
         /// <summary>
-        /// Contains component execution for <see cref="DataExecutable{T}"/>.
+        /// Asynchronously disposes the connection.
         /// </summary>
-#pragma warning disable CA1034 // Nested types should not be visible
-        public sealed class DataComponent : ValueObject
-#pragma warning restore CA1034 // Nested types should not be visible
+        /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources;
+        /// <see langword="false"/> to release only unmanaged resources.
+        /// </param>
+        protected override async ValueTask DisposeAsync(bool disposing)
         {
-            /// <summary>
-            /// Initializes a new instance of <see cref="DataComponent"/>.
-            /// </summary>
-            /// <param name="command">The database command instance.</param>
-            /// <param name="adapter">The database adapter to act with.</param>
-            /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-            /// <exception cref="ArgumentNullException">The <paramref name="adapter"/> is null.</exception>
-            public DataComponent(DbCommand command, DbDataAdapter adapter)
-            {
-                Command = command ?? throw new ArgumentNullException(nameof(command));
-                Adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
-            }
+            if (isDisposed) return;
 
-            /// <summary>
-            /// Get the Database command instance.
-            /// </summary>
-            public DbCommand Command { get; }
+            if (disposing)
+                await ConnectionContext.DisposeAsync().ConfigureAwait(false);
 
-            /// <summary>
-            /// Gets the database adapter instance.
-            /// </summary>
-            public DbDataAdapter Adapter { get; }
-
-            /// <summary>
-            /// When implemented in derived class, this method will provide the list of components that comprise that class.
-            /// </summary>
-            /// <returns>An enumerable components of the derived class.</returns>
-            protected override IEnumerable<object> GetEqualityComponents()
-            {
-                yield return Command;
-                yield return Adapter;
-            }
+            isDisposed = true;
         }
     }
 }

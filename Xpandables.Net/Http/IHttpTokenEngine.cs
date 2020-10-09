@@ -31,10 +31,10 @@ namespace Xpandables.Net.Http
     public interface IHttpTokenEngine
     {
         /// <summary>
-        /// Uses the collection of claims to build a string token.
+        /// Uses the collection of claims to build a token.
         /// </summary>
         /// <param name="claims">collection of claims to be used to build token string.</param>
-        /// <returns>An instance of string token if OK or an empty string.</returns>
+        /// <returns>An instance of string token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="claims"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to write token from claims. See inner exception.</exception>
         Token WriteToken(IEnumerable<Claim> claims);
@@ -43,7 +43,7 @@ namespace Xpandables.Net.Http
         /// Uses the source object to build a string token. The default behavior throws <see cref="NotImplementedException"/>.
         /// </summary>
         /// <param name="source">The source to be used.</param>
-        /// <returns>An instance of string token if OK or an empty string.</returns>
+        /// <returns>An instance of string token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to write token from source. See inner exception.</exception>
         public Token WriteToken(object source) => throw new NotImplementedException();
@@ -52,7 +52,7 @@ namespace Xpandables.Net.Http
         /// Returns the collection of claims from the specified token.
         /// </summary>
         /// <param name="token">The token string.</param>
-        /// <returns>An collection of claims if OK or an empty type.</returns>
+        /// <returns>An collection of claims if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to read claims from token. See inner exception.</exception>
         IEnumerable<Claim> ReadToken(string token);
@@ -61,7 +61,7 @@ namespace Xpandables.Net.Http
         /// Returns the collection of claims from the specified token.
         /// </summary>
         /// <param name="token">The token string.</param>
-        /// <returns>An collection of claims if OK or an empty type.</returns>
+        /// <returns>An collection of claims if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to read claims from token object. See inner exception.</exception>
         public IEnumerable<Claim> ReadToken(Token token) => ReadToken(token.Value);
