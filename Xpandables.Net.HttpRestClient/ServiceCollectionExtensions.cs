@@ -40,7 +40,9 @@ namespace Xpandables.Net.DependencyInjection
             services.AddTransient<HttpRestClientIPLocationMessage>();
             services.AddHttpClient<IHttpRestClientIPLocationHandler, HttpRestClientIPLocationHandler>(httpClient =>
             {
+#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
                 httpClient.BaseAddress = new Uri("https://ipinfo.io/ip");
+#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
             })
             .ConfigurePrimaryHttpMessageHandler<HttpRestClientIPLocationMessage>();
@@ -59,7 +61,9 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddHttpClient<IHttpRestClientGeoLocationHandler, HttpRestClientGeoLocationHandler>(httpClient =>
             {
+#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
                 httpClient.BaseAddress = new Uri("http://api.ipstack.com");
+#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             });
 

@@ -8,42 +8,41 @@
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
-    <Product>Xpandables Net</Product>
-    <Description>A utility library in .Net5.0 to easily add patterns such as Command, Query, Dispatcher, Interception...</Description>
+    <Product>Xpandables Net HttpRestClient</Product>
+    <Description>A utility library in .Net5.0 that provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.</Description>
     <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
     <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
-    <title>Xpandables.Net</title>
+    <title>Xpandables.Net.HttpRestClient</title>
     <PackageIcon>Xpandables.png</PackageIcon>
     <Version>5.0.0-rc.1.1.2</Version>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0</FileVersion>
     <PackageVersion>5.0.0-rc.1.1.2</PackageVersion>
-    <PackageId>Xpandables.Net</PackageId>
-    <PackageTags>ICommand, IDispatcher, IQuery{TResult}, Enumeration, ILogger, Interception, ICommandHandler{TCommand}, IQueryHandler{TQuery, TResult}, ValueObject...</PackageTags>
+    <PackageId>Xpandables.Net.HttpRestClient</PackageId>
+    <PackageTags>IHttpRestClientHandler.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<PackageReleaseNotes>Start All-in-one.</PackageReleaseNotes>-->
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AssemblyName>Xpandables.Net</AssemblyName>
-    <RootNamespace>Xpandables.Net</RootNamespace>
+    <AssemblyName>Xpandables.Net.HttpRestClient</AssemblyName>
+    <RootNamespace>Xpandables.Net.HttpRestClient</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <summary>A utility library in .Net5.0 to easily add patterns such as Command, Query, Dispatcher, Interception...</summary>
+    <summary>A utility library in .Net5.0 that provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.</summary>
     <language>en-GB</language>
     <NeutralLanguage>en-GB</NeutralLanguage>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Xpandables.Net.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <Company>EFB Entreprises</Company>
-
+    <Company>EFB Entreprises</Company>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <WarningsAsErrors />
     <NoWarn></NoWarn>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DocumentationFile>bin\x64\Debug\net5.0\Xpandables.Net.xml</DocumentationFile>
+    <DocumentationFile>bin\x64\Debug\net5.0\Xpandables.Net.HttpRestClient.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
@@ -52,12 +51,8 @@
     <NoWarn></NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DocumentationFile>bin\x64\Release\net5.0\Xpandables.Net.xml</DocumentationFile>
+    <DocumentationFile>bin\x64\Release\net5.0\Xpandables.Net.HttpRestClient.xml</DocumentationFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Identities\IIdentityDataProvider.cs~RF14eb0cd2.TMP" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\Xpandables.png" Link="Xpandables.png">
@@ -67,27 +62,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Localization\Validations\DataAnnotations.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DataAnnotations.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Localization\Validations\DataAnnotations.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>DataAnnotations.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <ProjectReference Include="..\Xpandables.Net\Xpandables.Net.csproj" />
   </ItemGroup>
-
 </Project>
