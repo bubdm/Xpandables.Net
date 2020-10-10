@@ -39,8 +39,10 @@ namespace Xpandables.Net.Optionals
     {
         private readonly Type[] _genericTypes;
         private readonly T[] _values;
+#pragma warning disable CA1822 // Mark members as static
         private readonly bool IsEnumerbaleOrAsyncEnumerable => typeof(T).IsEnumerable() || typeof(T).IsAsyncEnumerable();
         private readonly bool IsEnumerbale => typeof(T).IsEnumerable();       
+#pragma warning restore CA1822 // Mark members as static
 
         private static readonly MethodInfo _arrayEmpty = typeof(Array).GetMethod("Empty")!;
         private static readonly MethodInfo _asyncEmpty = typeof(AsyncEnumerableExtensions).GetMethod("Empty")!;
