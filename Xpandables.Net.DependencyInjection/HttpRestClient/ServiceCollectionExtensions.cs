@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-using Xpandables.Net.HttpRestClient;
+using Xpandables.Net.HttpRestClient.Network;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -29,41 +29,37 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds an <see cref="IHttpRestClientIPLocationHandler"/> to retrieve the IPAddress.
+        /// Adds an <see cref="IHttpRestClientIPHandler"/> to retrieve the IPAddress.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpRestClientIPLocationHandler(this IServiceCollection services)
+        public static IServiceCollection AddXHttpRestClientIPHandler(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient<HttpRestClientIPLocationMessage>();
-            services.AddHttpClient<IHttpRestClientIPLocationHandler, HttpRestClientIPLocationHandler>(httpClient =>
+            services.AddTransient<HttpRestClientIPMessageHandler>();
+            services.AddHttpClient<IHttpRestClientIPHandler, HttpRestClientIPHandler>(httpClient =>
             {
-#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
                 httpClient.BaseAddress = new Uri("https://ipinfo.io/ip");
-#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
             })
-            .ConfigurePrimaryHttpMessageHandler<HttpRestClientIPLocationMessage>();
+            .ConfigurePrimaryHttpMessageHandler<HttpRestClientIPMessageHandler>();
 
             return services;
         }
 
         /// <summary>
-        /// Adds an <see cref="IHttpRestClientGeoLocationHandler"/> to retrieve the user location.
+        /// Adds an <see cref="IHttpRestClientLocationHandler"/> to retrieve the user location.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpRestClientGeoLocationHandler(this IServiceCollection services)
+        public static IServiceCollection AddXHttpRestClientLocationHandler(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddHttpClient<IHttpRestClientGeoLocationHandler, HttpRestClientGeoLocationHandler>(httpClient =>
+            services.AddHttpClient<IHttpRestClientLocationHandler, HttpRestClientLocationHandler>(httpClient =>
             {
-#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
                 httpClient.BaseAddress = new Uri("http://api.ipstack.com");
-#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             });
 

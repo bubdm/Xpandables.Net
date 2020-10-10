@@ -29,8 +29,10 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Xpandables.Net.Api.Contracts;
+using Xpandables.Net.DependencyInjection.HttpRestClient;
 using Xpandables.Net.Http;
 using Xpandables.Net.HttpRestClient;
+using Xpandables.Net.HttpRestClient.Network;
 using Xpandables.Net.Optionals;
 using Xpandables.Net.Strings;
 
@@ -51,7 +53,7 @@ namespace Xpandables.Net.Tests
             var factory = new WebApplicationFactory<Api.Program>();
             var client = factory.CreateDefaultClient(new AuthorizationHttpTokenHandler(new HttpTokenAccessorBuilder(httpTokenAccessor)));
 
-            httpClientHandler = new HttpRestClientHandler(client);
+            httpClientHandler = new HttpRestClientHandler(client, new HttpRestClientEngine());
         }
 
         [TestMethod]
@@ -152,25 +154,27 @@ namespace Xpandables.Net.Tests
         [TestMethod]
         public async Task GetIpAddressAsync()
         {
-            IHttpRestClientIPLocationHandler clientHandler = new HttpRestClientIPLocationHandler(
-                new HttpClient(new HttpRestClientIPLocationMessage()) { BaseAddress = new Uri("https://ipinfo.io/ip") });
-            using var response = await clientHandler.GetIPAddressAsync().ConfigureAwait(false);
+            IHttpRestClientIPHandler clientHandler = new HttpRestClientIPHandler(
+                new HttpClient(new HttpRestClientIPMessageHandler()) { BaseAddress = new Uri("https://ipinfo.io/ip") }, new HttpRestClientEngine());
+            using var response = await clientHandler.ReadIPAddressAsync().ConfigureAwait(false);
 
             Assert.IsNotNull(response.Result);
+            Trace.WriteLine($"Ip ; {response.Result}");
         }
 
         [TestMethod]
         public async Task GetGeoLocationAsync()
         {
-            IHttpRestClientIPLocationHandler clientHandler = new HttpRestClientIPLocationHandler(
-          new HttpClient(new HttpRestClientIPLocationMessage()) { BaseAddress = new Uri("https://ipinfo.io/ip") });
-            using var response = await clientHandler.GetIPAddressAsync().ConfigureAwait(false);
+            IHttpRestClientIPHandler clientHandler = new HttpRestClientIPHandler(
+          new HttpClient(new HttpRestClientIPMessageHandler()) { BaseAddress = new Uri("https://ipinfo.io/ip") }, new HttpRestClientEngine());
+            using var response = await clientHandler.ReadIPAddressAsync().ConfigureAwait(false);
 
-            IHttpRestClientGeoLocationHandler clientHandler1 = new HttpRestClientGeoLocationHandler(
-                new HttpClient() { BaseAddress = new Uri("http://api.ipstack.com") });
-            using var response1 = await clientHandler1.GetGeoLocationAsync(new GeoLocationRequest(response.Result, "868cb9ec7403caf372f47373a8d525fa")).ConfigureAwait(false);
+            IHttpRestClientLocationHandler clientHandler1 = new HttpRestClientLocationHandler(
+                new HttpClient() { BaseAddress = new Uri("http://api.ipstack.com") }, new HttpRestClientEngine());
+            using var response1 = await clientHandler1.ReadLocationAsync(new GetLocation(response.Result, "868cb9ec7403caf372f47373a8d525fa")).ConfigureAwait(false);
 
             Assert.IsNotNull(response1.Result.Ip);
+            Trace.WriteLine($"City : {response1.Result.City}");
         }
 
         [ClassCleanup]
