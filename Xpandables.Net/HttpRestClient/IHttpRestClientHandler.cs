@@ -21,13 +21,16 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
+using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Queries;
+using Xpandables.Net.Types;
 
 using static Xpandables.Net.HttpRestClient.HttpRestClientExtensions;
 
@@ -71,7 +74,7 @@ namespace Xpandables.Net.HttpRestClient
 
                 if (response.IsSuccessStatusCode)
                     return await GetResponseAsync<IAsyncEnumerable<TResult>, TResult>(response, stream =>
-                        System.Linq.AsyncEnumerable.Create(cancellation => GetEnumerableFromStreamAsync<TResult>(stream, cancellation).GetAsyncEnumerator(cancellationToken)));
+                        new AsyncEnumerableBuilder<TResult>(cancellation => GetEnumerableFromStreamAsync<TResult>(stream, cancellation).GetAsyncEnumerator(cancellationToken)));
 
                 return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)await GetBadResponseAsync(
                     HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure, response)
@@ -232,7 +235,7 @@ namespace Xpandables.Net.HttpRestClient
 
         private static async IAsyncEnumerable<TResult> GetEnumerableFromStreamAsync<TResult>(Stream stream, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var jsonSerializer = JsonSerializer.CreateDefault();
+            var jsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault();
             using var streamReader = new StreamReader(stream);
             using var jsonTextReader = new JsonTextReader(streamReader);
             while (await jsonTextReader.ReadAsync(cancellationToken).ConfigureAwait(false))

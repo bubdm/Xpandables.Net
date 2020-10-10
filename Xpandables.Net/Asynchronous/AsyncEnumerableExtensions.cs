@@ -16,6 +16,8 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -67,5 +69,13 @@ namespace Xpandables.Net.Asynchronous
             _ = task ?? throw new ArgumentNullException(nameof(task));
             _taskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
         }
+
+        /// <summary>
+        /// Returns an empty async-enumerable.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <returns>An async-enumerable sequence with no elements.</returns>
+        public static IAsyncEnumerable<TResult> Empty<TResult>() => new AsyncEnumerableBuilder<TResult>(Enumerable.Empty<TResult>());
+
     }
 }

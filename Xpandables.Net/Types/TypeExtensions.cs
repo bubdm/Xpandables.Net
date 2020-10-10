@@ -628,18 +628,7 @@ namespace Xpandables.Net.Types
             return otherTypeInfo.IsGenericTypeDefinition
                 ? typeInfo.IsAssignableToGenericTypeDefinition(otherTypeInfo)
                 : otherTypeInfo.IsAssignableFrom(typeInfo);
-        }
-
-        /// <summary>
-        /// Returns the friendly name of the type.
-        /// </summary>
-        /// <param name="type">The type to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        public static string ToFriendlyName(this Type type)
-        {
-            _ = type ?? throw new ArgumentNullException(nameof(type));
-            return TypeNameExtensions.GetTypeDisplayName(type, includeGenericParameterNames: true);
-        }
+        }   
 
         /// <summary>
         /// Determines whether or not the type contains the specified type attribute.
@@ -728,37 +717,7 @@ namespace Xpandables.Net.Types
             return string.Equals(type.Namespace, @namespace, StringComparison.Ordinal);
         }
 
-        /// <summary>
-        /// Determines whether or not the type is an abstract type.
-        /// </summary>
-        /// <param name="type">The type to act on.</param>
-        /// <param name="publicOnly">if check public.</param>
-        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        public static bool IsNonAbstractClass(this Type type, bool publicOnly)
-        {
-            _ = type ?? throw new ArgumentNullException(nameof(type));
-
-            var typeInfo = type.GetTypeInfo();
-
-            if (typeInfo.IsSpecialName)
-                return false;
-
-            if (typeInfo.IsClass && !typeInfo.IsAbstract)
-            {
-                if (typeInfo.IsDefined(typeof(CompilerGeneratedAttribute), inherit: true))
-                    return false;
-
-                if (publicOnly)
-                    return typeInfo.IsPublic || typeInfo.IsNestedPublic;
-
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
+            /// <summary>
         /// Determines whether an interface type and a type have matching arity.
         /// </summary>
         /// <param name="interfaceType">The interface type.</param>

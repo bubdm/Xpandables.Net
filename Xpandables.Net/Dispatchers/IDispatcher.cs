@@ -106,7 +106,7 @@ namespace Xpandables.Net.Dispatchers
             {
                 try
                 {
-                    resultExist = await asyncEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(false);
+                    resultExist = await asyncEnumerator.MoveNextAsync().ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {

@@ -43,7 +43,7 @@ namespace Xpandables.Net.Optionals
         private readonly bool IsEnumerbale => typeof(T).IsEnumerable();       
 
         private static readonly MethodInfo _arrayEmpty = typeof(Array).GetMethod("Empty")!;
-        private static readonly MethodInfo _asyncEmpty = typeof(AsyncEnumerable).GetMethod("Empty")!;
+        private static readonly MethodInfo _asyncEmpty = typeof(AsyncEnumerableExtensions).GetMethod("Empty")!;
 
         internal bool IsValue() => _values?.Length > 0;
 

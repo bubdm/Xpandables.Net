@@ -69,7 +69,7 @@ namespace Xpandables.Net.Correlation
             {
                 try
                 {
-                    resultExist = await asyncEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(false);
+                    resultExist = await asyncEnumerator.MoveNextAsync().ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
