@@ -258,12 +258,12 @@ Provides with methods to execute command against a database using an implementat
 
 ```C#
 // The LoginRequest handler...
-public sealed class LoginRequestHandler : IAsyncQueryHandler<LoginRequest, LoginResponse>
+public sealed class LoginRequestHandler : IQueryHandler<LoginRequest, LoginResponse>
 {
     private readonly IDataBase _dataBase;
     public LoginRequestHandler(IDataBase dataBase) => _dataBase = dataBase;
     
-    public async IAsyncEnumerable<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
+    public async Task<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
     {
         var connection = new DataConnectionBuilder()
             .AddConnectionString("yourconnectionstring")
@@ -300,12 +300,12 @@ Or you can do it like this
 
 ```C#
 // The LoginRequest handler...
-public sealed class LoginRequestHandler : IAsyncQueryHandler<LoginRequest, LoginResponse>
+public sealed class LoginRequestHandler : IQueryHandler<LoginRequest, LoginResponse>
 {
     private readonly IDataBase _dataBase;
     public LoginRequestHandler(IDataBase dataBase) => _dataBase = dataBase;
     
-    public async IAsyncEnumerable<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
+    public async Task<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
     {          
         // The database will use the options and connection defined during registration.
         // You can also use another connection/options with database extension methods.
