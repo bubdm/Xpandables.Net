@@ -61,11 +61,11 @@ namespace Xpandables.Net.Expressions
         /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
         public static Expression<Func<TSource, TResult>> And<TSource>(Expression<Func<TSource, TResult>> left, Expression<Func<TSource, TResult>> right)
         {
-            var _left = left ?? throw new ArgumentNullException(nameof(left));
-            var _right = right ?? throw new ArgumentNullException(nameof(right));
+            _ = left ?? throw new ArgumentNullException(nameof(left));
+            _ = right ?? throw new ArgumentNullException(nameof(right));
 
-            var body = Expression.AndAlso(Expression.Invoke(_left, _left.Parameters.Single()), Expression.Invoke(_right, _left.Parameters.Single()));
-            return Expression.Lambda<Func<TSource, TResult>>(body, _left.Parameters.Single());
+            var invokedExpr = Expression.Invoke(right, left.Parameters.Cast<Expression>()!);
+            return Expression.Lambda<Func<TSource, TResult>>(Expression.AndAlso(left.Body, invokedExpr), left.Parameters);
         }
 
         /// <summary>
@@ -79,11 +79,11 @@ namespace Xpandables.Net.Expressions
         /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
         public static Expression<Func<TSource, TResult>> Or<TSource>(Expression<Func<TSource, TResult>> left, Expression<Func<TSource, TResult>> right)
         {
-            var _left = left ?? throw new ArgumentNullException(nameof(left));
-            var _right = right ?? throw new ArgumentNullException(nameof(right));
+            _ = left ?? throw new ArgumentNullException(nameof(left));
+            _ = right ?? throw new ArgumentNullException(nameof(right));
 
-            var body = Expression.OrElse(Expression.Invoke(_left, _left.Parameters.Single()), Expression.Invoke(_right, _left.Parameters.Single()));
-            return Expression.Lambda<Func<TSource, TResult>>(body, _left.Parameters.Single());
+            var invokedExpr = Expression.Invoke(right, left.Parameters.Cast<Expression>()!);
+            return Expression.Lambda<Func<TSource, TResult>>(Expression.OrElse(left.Body, invokedExpr), left.Parameters);
         }
 
         /// <summary>
@@ -96,9 +96,7 @@ namespace Xpandables.Net.Expressions
         public static Expression<Func<TSource, TResult>> Not<TSource>(Expression<Func<TSource, TResult>> expression)
         {
             var _left = expression ?? throw new ArgumentNullException(nameof(expression));
-
-            var body = Expression.Not(Expression.Invoke(_left, _left.Parameters.Single()));
-            return Expression.Lambda<Func<TSource, TResult>>(body, _left.Parameters.Single());
+            return Expression.Lambda<Func<TSource, TResult>>(Expression.Not(_left.Body), _left.Parameters);
         }
     }
 }

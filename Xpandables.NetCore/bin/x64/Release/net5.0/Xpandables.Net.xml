@@ -3761,10 +3761,32 @@
             for the enumeration.</exception>
             <exception cref="T:System.NotSupportedException">The conversion cannot be performed.</exception>
         </member>
+        <member name="T:Xpandables.Net.Expressions.ExpandableQuery`1">
+            <summary>
+            An IQueryable wrapper that allows us to visit the query's expression tree just before LINQ to SQL gets to it.
+            This is based on the excellent work of Tomas Petricek: http://tomasp.net/blog/linq-expand.aspx
+            </summary>
+        </member>
         <member name="T:Xpandables.Net.Expressions.ExpressionComparer">
             <summary>
             Compare two expressions to determine if they are equivalent
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Expressions.ExpressionExpander">
+            <summary>
+            Custom expression visitor for ExpandableQuery. This expands calls to Expression.Compile() and
+            collapses captured lambda references in sub-queries which LINQ to SQL can't otherwise handle.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Expressions.ExpressionExpander.VisitInvocation(System.Linq.Expressions.InvocationExpression)">
+            <summary>
+            Flatten calls to Invoke so that Entity Framework can understand it. Calls to Invoke are generated
+            by PredicateBuilder.
+            </summary>
+        </member>
+        <member name="T:Xpandables.Net.Expressions.ExpressionExtensions">
+            <summary>Refer to http://www.albahari.com/nutshell/linqkit.html and
+            http://tomasp.net/blog/linq-expand.aspx for more information.</summary>
         </member>
         <member name="T:Xpandables.Net.Expressions.ExpressionHelpers">
             <summary>
@@ -3792,6 +3814,12 @@
             <exception cref="T:System.ArgumentException">No property or field named propertyOrFieldName is
             defined in expression.Type or its base types.</exception>
         </member>
+        <member name="T:Xpandables.Net.Expressions.ExpressionVisitor">
+            <summary>
+            This comes from Matt Warren's sample:
+            http://blogs.msdn.com/mattwar/archive/2007/07/31/linq-building-an-iqueryable-provider-part-ii.aspx
+            </summary>
+        </member>
         <member name="T:Xpandables.Net.Expressions.IQueryExpression`1">
             <summary>
             Defines a methods that returns an <see cref="T:System.Linq.Expressions.Expression`1"/> that can be used to query
@@ -3813,6 +3841,67 @@
             <summary>
             Gets the expression tree for the underlying instance.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Expressions.Linq">
+            <summary>
+            Another good idea by Tomas Petricek.
+            See http://tomasp.net/blog/dynamic-linq-queries.aspx for information on how it's used.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Expressions.Linq.Expr``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Returns the given anonymous method as a lambda expression
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="expr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Xpandables.Net.Expressions.Linq.Func``2(System.Func{``0,``1})">
+            <summary>
+            Returns the given anonymous function as a Func delegate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="expr"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Xpandables.Net.Expressions.PredicateBuilder">
+            <summary>
+            See http://www.albahari.com/expressions for information and examples.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Expressions.PredicateBuilder.True``1">
+            <summary>
+            Returns a <see langword="true"/> predicate.
+            </summary>
+            <typeparam name="TSource">The data type to apply expression to.</typeparam>
+            <returns>A true lambda expression.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Expressions.PredicateBuilder.False``1">
+            <summary>
+            Returns a <see langword="false"/> predicate.
+            </summary>
+            <typeparam name="TSource">The data type to apply expression to.</typeparam>
+            <returns>A false lambda expression.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Expressions.PredicateBuilder.Or``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Returns "Or" combination of two expression.
+            </summary>
+            <typeparam name="TSource">The data type to apply expression to.</typeparam>
+            <param name="left">The first expression to act on.</param>
+            <param name="right">The second expression to act on.</param>
+            <returns>A lambda expression which "Or" combination of the two expressions.</returns>
+        </member>
+        <member name="M:Xpandables.Net.Expressions.PredicateBuilder.And``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Returns "And" combination of two expression.
+            </summary>
+            <typeparam name="TSource">The data type to apply expression to.</typeparam>
+            <param name="left">The first expression to act on.</param>
+            <param name="right">The second expression to act on.</param>
+            <returns>A lambda expression which "And" combination of the two expressions.</returns>
         </member>
         <member name="T:Xpandables.Net.Expressions.QueryExpression`2">
             <summary>
