@@ -265,7 +265,7 @@ public sealed class LoginRequestHandler : IQueryHandler<LoginRequest, LoginRespo
     
     public async Task<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
     {
-        var connection = new DataConnectionBuilder()
+        var connection = new DataConnectionOptionsBuilder()
             .AddConnectionString("yourconnectionstring")
             .AddPoolName("yourPoolname")
             .EnableIntegratedSecurity()
