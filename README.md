@@ -50,7 +50,7 @@ public class LoginController : ControllerBase
     [HttpPost, AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponse))]
     public async Task<IActionResult> PostAsync([FromBody] LoginRequest login, CancellationToken cancellationToken = default)
-        => Ok(await _dispatcher.InvokeAsync(login, cancellationToken).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false));
+        => Ok(await _dispatcher.InvokeAsync(login, cancellationToken).ConfigureAwait(false));
 }
 
 // startup class ...
@@ -58,7 +58,8 @@ public class Startup
 {
     ....
     services.AddScoped<ITokenService, TokenService>();
-    services.AddXDataContext<ContextProvider>(); // ContextProvider implements IDataContextProvider
+    services.AddDbContext<UserContext>(...);
+    services.AddXDataContext(provider => provider.GetRequiredService<UserContext>());
     
     var assemblies = new[] { typeof(LoginRequestHander).Assembly };
 
@@ -72,7 +73,7 @@ public class Startup
 }
 
 [HttpRestClient(Path = "api/login", Method = "Post", IsSecured = false)]
-public class LoginRequest : QueryExpression<User>, IAsyncQuery<LoginResponse>, IValidationDecorator
+public class LoginRequest : QueryExpression<User>, IQuery<LoginResponse>, IValidationDecorator
 {
     public Login(string name, string password) => (Name, Password) = (name, password);
     
@@ -101,23 +102,31 @@ public sealed class LoginRequestValidator : IValidation<LoginRequest>
     }
 }
 
+// The dbContext
+
+public sealed class UserContext : DataContext // DataContext implements the IDataContext interface
+{
+    ...
+}
+
 // The LoginRequest handler...
-public sealed class LoginRequestHandler : IAsyncQueryHandler<LoginRequest, LoginResponse>
+public sealed class LoginRequestHandler : IQueryHandler<LoginRequest, LoginResponse>
 {
     private readonly IDataContext _dataContext;
     private readonly ITokenService _tokenService;
+    
     public LoginRequestHandler(IDataContext dataContext, ITokenService tokenService) => (_dataContext, _tokenService) = (dataContext, tokenService);
     
-    public async IAsyncEnumerable<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
+    public async Task<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
     {
-        var user = await _dataContext.SetOf(query).FirstOrDefaultAsync(query, cancellationToken).configureAwait(false)
-            ?? throw ...
+        var user = await _dataContext.FindAsync<User>(u=>u.Where(query), cancellationToken).configureAwait(false)
+            ?? throw ... or something else
         
         if(!user.Password.IsEqualTo(query.Password))
-            throw ...
+            throw ... or something else
         
         var token = _tokenService.CreateToken(....);
-        yield return new LoginResponse(token);
+        return new LoginResponse(token);
     }
 }
 
@@ -127,7 +136,10 @@ public async Task LoginTestMethodAsync()
     System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
     var factory = new WebApplicationFactory<Api.Program>();
     var client = factory.CreateClient();
-    IHttpRestClientHandler httpClient = new HttpRestClientHandler(client);
+    IHttpRestClientHandler httpClient = new HttpRestClientHandler(client, new HttpRestClientEngine());
+    
+    // HttpRestClientEngine is a default implementation of IHttpRestClientEngine interface that provides with all required methods for HttpRestClientHandler.
+    // This class can be customized.
 
     var request = new LoginRequest("mylogin", "mypassword");
     var response = await httpClient.HandleAsync(request).ConfigureAwait(false);
@@ -246,14 +258,14 @@ Provides with methods to execute command against a database using an implementat
 
 ```C#
 // The LoginRequest handler...
-public sealed class LoginRequestHandler : IAsyncQueryHandler<LoginRequest, LoginResponse>
+public sealed class LoginRequestHandler : IQueryHandler<LoginRequest, LoginResponse>
 {
     private readonly IDataBase _dataBase;
     public LoginRequestHandler(IDataBase dataBase) => _dataBase = dataBase;
     
-    public async IAsyncEnumerable<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
+    public async Task<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
     {
-        var connection = new DataConnectionBuilder()
+        var connection = new DataConnectionOptionsBuilder()
             .AddConnectionString("yourconnectionstring")
             .AddPoolName("yourPoolname")
             .EnableIntegratedSecurity()
@@ -288,12 +300,12 @@ Or you can do it like this
 
 ```C#
 // The LoginRequest handler...
-public sealed class LoginRequestHandler : IAsyncQueryHandler<LoginRequest, LoginResponse>
+public sealed class LoginRequestHandler : IQueryHandler<LoginRequest, LoginResponse>
 {
     private readonly IDataBase _dataBase;
     public LoginRequestHandler(IDataBase dataBase) => _dataBase = dataBase;
     
-    public async IAsyncEnumerable<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
+    public async Task<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
     {          
         // The database will use the options and connection defined during registration.
         // You can also use another connection/options with database extension methods.
@@ -311,7 +323,7 @@ public class Startup
 {
     ....
     
-    var connection = new DataConnectionBuilder()
+    var connection = new DataConnectionOptionsBuilder()
         .AddConnectionString("yourconnectionstring")
         .AddPoolName("yourPoolname")
         .EnableIntegratedSecurity()
