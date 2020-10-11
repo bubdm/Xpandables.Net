@@ -108,7 +108,7 @@ namespace Xpandables.Net.Tests
             var auth = response.Result;
             token = auth.Token;
 
-            var eventLogRequest = new EventLogList() { StartOccuredOn = new DateTime(2020, 09, 24, 10, 00, 35) };
+            var eventLogRequest = new EventLogList() { StartOccuredOn = new DateTime(2020, 10, 11, 10, 00, 35) };
 
             using var listResponse = await httpClientHandler.HandleAsync(eventLogRequest).ConfigureAwait(false);
             if (listResponse.IsValid())

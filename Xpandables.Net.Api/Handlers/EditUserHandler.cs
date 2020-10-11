@@ -34,10 +34,10 @@ namespace Xpandables.Net.Api.Handlers
 {
     public sealed class EditUserHandler : IAsyncCommandHandler<EditUser>
     {
-        private readonly IDataContext _dataContext;
+        private readonly IDataContext<User> _dataContext;
         private readonly IStringCryptography _stringCryptography;
 
-        public EditUserHandler(IDataContext dataContext, IStringCryptography stringCryptography)
+        public EditUserHandler(IDataContext<User> dataContext, IStringCryptography stringCryptography)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _stringCryptography = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
@@ -45,7 +45,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task HandleAsync(EditUser command, CancellationToken cancellationToken = default)
         {
-            var user = await _dataContext.FindAsync<User>(u => u.Where(command), cancellationToken).ConfigureAwait(false)
+            var user = await _dataContext.FindAsync(u => u.Where(command), cancellationToken).ConfigureAwait(false)
                 ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, command.Phone, new[] { "Phone" });
 
             if (command.Email is { }) user.ChangeEmail(new EmailAddress(command.Email), $"Change to {command.Email}");
