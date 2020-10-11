@@ -40,7 +40,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async Task<Optional<DataTable>> ExecuteProcedureTableAsync(
             this IDataBase dataBase,
-            IDataOptions dataOptions,
+            IDataExecutableOptions dataOptions,
             string commandText,
             params object[] parameters)
             => await dataBase.ExecuteAsync<DataTable, DataExecutableTable>(
@@ -95,7 +95,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async Task<Optional<int>> ExecuteTransactionProcedureAsync(
             this IDataBase dataBase,
-            IDataOptions dataOptions,
+            IDataExecutableOptions dataOptions,
             string commandText,
             params object[] parameters)
             => await dataBase.ExecuteAsync<int, DataExecutableTransaction>(
@@ -152,7 +152,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async Task<Optional<int>> ExecuteTransactionQueryAsync(
             this IDataBase dataBase,
-            IDataOptions dataOptions,
+            IDataExecutableOptions dataOptions,
             string commandText,
             params object[] parameters)
             => await dataBase.ExecuteAsync<int, DataExecutableTransaction>(
@@ -191,7 +191,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async Task<Optional<DataTable>> ExecuteQueryTableAsync(
             this IDataBase dataBase,
-            IDataOptions dataOptions,
+            IDataExecutableOptions dataOptions,
             string commandText,
             params object[] parameters)
             => await dataBase.ExecuteAsync<DataTable, DataExecutableTable>(
@@ -246,7 +246,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async Task<Optional<TResult>> ExecuteSingleProcedureAsync<TResult>(
             this IDataBase dataBase,
-            IDataOptions dataOptions,
+            IDataExecutableOptions dataOptions,
             string commandText,
             params object[] parameters)
             => await dataBase.ExecuteAsync<TResult, DataExecutableSingle<TResult>>(
@@ -303,7 +303,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public static async Task<Optional<TResult>> ExecuteSingleQueryAsync<TResult>(
             this IDataBase dataBase,
-            IDataOptions dataOptions,
+            IDataExecutableOptions dataOptions,
             string commandText,
             params object[] parameters)
             => await dataBase.ExecuteAsync<TResult, DataExecutableSingle<TResult>>(

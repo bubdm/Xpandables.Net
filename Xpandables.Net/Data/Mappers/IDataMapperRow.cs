@@ -44,7 +44,7 @@ namespace Xpandables.Net.Data.Mappers
         /// <param name="options">The execution options to act with.</param>
         /// <exception cref="ArgumentNullException">the <paramref name="dataRecord"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public async Task MapAsync<TEntity>(IDataRecord dataRecord, IDataOptions options)
+        public async Task MapAsync<TEntity>(IDataRecord dataRecord, IDataExecutableOptions options)
         {
             _ = dataRecord ?? throw new ArgumentNullException(nameof(dataRecord));
             _ = options ?? throw new ArgumentNullException(nameof(options));

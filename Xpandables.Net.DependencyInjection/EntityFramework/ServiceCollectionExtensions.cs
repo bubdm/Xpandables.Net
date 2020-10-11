@@ -42,6 +42,7 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
             var serviceDescriptor = new ServiceDescriptor(typeof(IDataContext), implementationFactory, ServiceLifetime.Scoped);
             services.Add(serviceDescriptor);
+            services.AddScoped(typeof(IDataContext<>), typeof(DataContext<>));
 
             return services;
         }

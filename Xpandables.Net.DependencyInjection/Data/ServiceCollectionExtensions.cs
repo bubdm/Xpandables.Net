@@ -101,7 +101,7 @@ namespace Xpandables.Net.DependencyInjection
 
             _ = (definedOptions.IsDataConnectionEnabled, definedOptions.IsDataOptionsEnabled) switch
             {
-                (IDataConnectionOptions dataConnection, IDataOptions dataOptions) => services.AddScoped<IDataBase>(provider =>
+                (IDataConnectionOptions dataConnection, IDataExecutableOptions dataOptions) => services.AddScoped<IDataBase>(provider =>
                   {
                       var executableProvider = provider.GetRequiredService<IDataExecutableProvider>();
                       var contextProvider = provider.GetRequiredService<IDataConnectionContextProvider>();
@@ -115,7 +115,7 @@ namespace Xpandables.Net.DependencyInjection
 
                       return new DataBase(contextProvider, executableProvider, dataConnection);
                   }),
-                (_, IDataOptions dataOptions) => services.AddScoped<IDataBase>(provider =>
+                (_, IDataExecutableOptions dataOptions) => services.AddScoped<IDataBase>(provider =>
                 {
                     var executableProvider = provider.GetRequiredService<IDataExecutableProvider>();
                     var contextProvider = provider.GetRequiredService<IDataConnectionContextProvider>();

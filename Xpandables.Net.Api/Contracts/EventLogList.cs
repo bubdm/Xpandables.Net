@@ -22,6 +22,7 @@ using System.Linq.Expressions;
 
 using Xpandables.Net.Api.Models;
 using Xpandables.Net.Api.Models.Domains;
+using Xpandables.Net.Expressions;
 using Xpandables.Net.HttpRestClient;
 using Xpandables.Net.Identities;
 using Xpandables.Net.Queries;
@@ -48,7 +49,7 @@ namespace Xpandables.Net.Api.Contracts
     }
 
     [HttpRestClient(Path = "api/user", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
-    public sealed class EventLogList : TokenClaimExpression<TokenClaims, User>, IAsyncQuery<Log>, ITokenClaimDecorator, IQueryStringLocationRequest
+    public sealed class EventLogList : TokenClaimExpression<TokenClaims, EventLog>, IAsyncQuery<Log>, ITokenClaimDecorator, IQueryStringLocationRequest
     {
 
         public EventLogList() { }
@@ -67,7 +68,16 @@ namespace Xpandables.Net.Api.Contracts
             { nameof(EndOccuredOn), EndOccuredOn?.ToString("yyyy-MM-dd HH:mm:ss") }
         };
 
-        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Id == Claims.Id && user.IsActive && !user.IsDeleted;
+        protected override Expression<Func<EventLog, bool>> BuildExpression()
+        {
+            var queryExpression = QueryExpressionFactory.Create<EventLog>();
+            if (Name is not null) queryExpression = queryExpression.And(el => el.EventName.Contains(Name));
+            if (StartOccuredOn is not null) queryExpression = queryExpression.And(el => el.OccuredOn >= StartOccuredOn.Value);
+            if (EndOccuredOn is not null) queryExpression = queryExpression.And(el => el.OccuredOn <= EndOccuredOn.Value);
+
+            return queryExpression;
+        }
+
         public string? Name { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime? StartOccuredOn { get; set; }

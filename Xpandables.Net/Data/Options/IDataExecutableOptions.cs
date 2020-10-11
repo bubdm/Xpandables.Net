@@ -28,10 +28,10 @@ namespace Xpandables.Net.Data.Options
     /// <summary>
     ///  Represents a set of values data base executable options properties.
     /// </summary>
-    public interface IDataOptions
+    public interface IDataExecutableOptions
     {
         /// <summary>
-        /// Gets the value whether or not to use transaction. The default value is <see langword="false"/>.
+        /// Gets the value indicating whether or not to use transaction. The default value is <see langword="false"/>.
         /// if so, contains <see langword="true"/>, otherwise contains <see langword="false"/>.
         /// </summary>
         bool IsTransactionEnabled { get; }
@@ -48,7 +48,7 @@ namespace Xpandables.Net.Data.Options
         Func<DataProperty, bool>? ConditionalMapping { get; }
 
         /// <summary>
-        /// Gets the value whether or not the conditional mapping has been defined. The default value is <see langword="false"/>.
+        /// Gets the value indicating whether or not the conditional mapping has been defined. The default value is <see langword="false"/>.
         /// if so, contains <see langword="true"/>, otherwise contains <see langword="false"/>.
         /// </summary>
         public bool IsConditionalMappingEnabled => ConditionalMapping is { };
@@ -75,17 +75,17 @@ namespace Xpandables.Net.Data.Options
         CancellationToken CancellationToken { get; }
 
         /// <summary>
-        /// Gets the value whether or not the filtered delegate has been defined. The default value is <see langword="false"/>
+        /// Gets the value indicating whether or not the filtered delegate has been defined. The default value is <see langword="false"/>
         /// </summary>
         public bool ContainsNotMappedNames => !NotMappedNames.IsEmpty;
 
         /// <summary>
-        /// Gets the value whether or not to retrieve the newly created identity from SQL command.
+        /// Gets the value indicating whether or not to retrieve the newly created identity from SQL command.
         /// </summary>
         bool IsIdentityRetrieved { get; }
 
         /// <summary>
-        /// Gets the value whether <see cref="OnException"/> event is defined.
+        /// Gets the value indicating whether <see cref="OnException"/> event is defined.
         /// </summary>
         bool IsOnExceptionDefined { get; }
 

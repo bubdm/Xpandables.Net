@@ -34,7 +34,7 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <param name="dataOptions">The data options to be used.</param>
         /// <exception cref="ArgumentException">The <paramref name="dataOptions"/> is null.</exception>
-        public DataBaseOptions UseDataOptions(IDataOptions dataOptions)
+        public DataBaseOptions UseDataOptions(IDataExecutableOptions dataOptions)
             => this.Assign(dbo => dbo.IsDataOptionsEnabled = dataOptions ?? throw new ArgumentNullException(nameof(dataOptions)));
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Xpandables.Net.Data
         public DataBaseOptions UseDataConnection(IDataConnectionOptions dataConnection)
             => this.Assign(dbo => dbo.IsDataConnectionEnabled= dataConnection ?? throw new ArgumentNullException(nameof(dataConnection)));
 
-        internal IDataOptions? IsDataOptionsEnabled { get; private set; }
+        internal IDataExecutableOptions? IsDataOptionsEnabled { get; private set; }
         internal IDataConnectionOptions? IsDataConnectionEnabled { get; private set; }
     }
 }

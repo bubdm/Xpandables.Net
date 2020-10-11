@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Data.Executables
 {
@@ -49,10 +48,6 @@ namespace Xpandables.Net.Data.Executables
         /// <param name="context">The target executable context instance.</param>
         /// <returns>An asynchronous enumeration of <typeparamref name="TResult"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public override async IAsyncEnumerable<TResult> ExecuteMappedAsync(DataExecutableContext context)
-        {
-            await foreach (var result in _executable(context).ConfigureAwait(false))
-                yield return result;
-        }
+        public override IAsyncEnumerable<TResult> ExecuteMappedAsync(DataExecutableContext context) => _executable(context);
     }
 }

@@ -33,10 +33,10 @@ namespace Xpandables.Net.Api.Handlers
 {
     public sealed class RequestAuthenTokenHandler : IQueryHandler<RequestAuthenToken, AuthenToken>
     {
-        private readonly IDataContext _dataContext;
+        private readonly IDataContext<User> _dataContext;
         private readonly IHttpTokenEngine _tokenService;
 
-        public RequestAuthenTokenHandler(IDataContext dataContext, IHttpTokenEngine tokenService)
+        public RequestAuthenTokenHandler(IDataContext<User> dataContext, IHttpTokenEngine tokenService)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
@@ -44,8 +44,12 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<AuthenToken> HandleAsync(RequestAuthenToken query, CancellationToken cancellationToken = default)
         {
-            var user = await _dataContext.FindAsync<User>(u => u.Where(x => x.Phone.Value == query.Phone), cancellationToken).ConfigureAwait(false)
-                ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, query.Phone, new[] { nameof(query.Phone) });
+            //var user = await _dataContext.FindAsync<User>(u => u.Where(x => x.Phone.Value == query.Phone), cancellationToken).ConfigureAwait(false)
+            //    ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, query.Phone, new[] { nameof(query.Phone) });
+
+            var user = await _dataContext.FindAsync(u => u.Where(query), cancellationToken).ConfigureAwait(false)
+            ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, query.Phone, new[] { nameof(query.Phone) });
+
 
             var tokenClaims = user.CreateTokenClaims();
             var token = _tokenService.WriteToken(tokenClaims);

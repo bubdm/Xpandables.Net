@@ -36,7 +36,7 @@ namespace Xpandables.Net.Data
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <typeparam name="TDataExecutable">The type of the executable. The class inherits from <see cref="DataExecutable{T}" />.</typeparam>
         /// <param name="dataConnection">The data connection. You can use the <see cref="DataConnectionOptionsBuilder"/> to build a new instance.</param>
-        /// <param name="dataOptions">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
+        /// <param name="dataOptions">The database options. You can use the <see cref="DataExecutableOptionsBuilder"/> to build a new instance.</param>
         /// <param name="commandText">The text command to run against the database.</param>
         /// <param name="commandType">The command type.</param>
         /// <param name="parameters">A collection of parameter objects for the command.</param>
@@ -46,7 +46,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public async Task<Optional<TResult>> ExecuteAsync<TResult, TDataExecutable>(
             IDataConnectionOptions dataConnection,
-            IDataOptions dataOptions,
+            IDataExecutableOptions dataOptions,
             string commandText,
             CommandType commandType,
             params object[] parameters)
@@ -65,7 +65,7 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <typeparam name="TDataExecutable">The type of the executable. The class inherits from <see cref="DataExecutable{T}" />.</typeparam>
-        /// <param name="dataOptions">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
+        /// <param name="dataOptions">The database options. You can use the <see cref="DataExecutableOptionsBuilder"/> to build a new instance.</param>
         /// <param name="commandText">The text command to run against the database.</param>
         /// <param name="commandType">The command type.</param>
         /// <param name="parameters">A collection of parameter objects for the command.</param>
@@ -73,7 +73,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public async Task<Optional<TResult>> ExecuteAsync<TResult, TDataExecutable>(
-            IDataOptions dataOptions,
+            IDataExecutableOptions dataOptions,
             string commandText,
             CommandType commandType,
             params object[] parameters)
@@ -105,7 +105,7 @@ namespace Xpandables.Net.Data
             params object[] parameters)
             where TDataExecutable : DataExecutable<TResult>
         {
-            _ = DataOptions ?? throw new ArgumentNullException(nameof(IDataOptions), "You must initialize the database instance with a default data options.");
+            _ = DataOptions ?? throw new ArgumentNullException(nameof(IDataExecutableOptions), "You must initialize the database instance with a default data options.");
 
             return await ExecuteAsync<TResult, TDataExecutable>(dataConnection, DataOptions, commandText, commandType, parameters).ConfigureAwait(false);
         }
@@ -129,7 +129,7 @@ namespace Xpandables.Net.Data
             where TDataExecutable : DataExecutable<TResult>
         {
             _ = DataConnection ?? throw new ArgumentNullException(nameof(IDataConnectionOptions), "You must initialize the database instance with a default data connection.");
-            _ = DataOptions ?? throw new ArgumentNullException(nameof(IDataOptions), "You must initialize the database instance with a default data options.");
+            _ = DataOptions ?? throw new ArgumentNullException(nameof(IDataExecutableOptions), "You must initialize the database instance with a default data options.");
 
             return await ExecuteAsync<TResult, TDataExecutable>(DataConnection, DataOptions, commandText, commandType, parameters).ConfigureAwait(false);
         }
@@ -140,7 +140,7 @@ namespace Xpandables.Net.Data
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="dataExecutable">The data executable instance to be used.</param>
-        /// <param name="dataOptions">The database options. You can use the <see cref="DataOptionsBuilder"/> to build a new instance.</param>
+        /// <param name="dataOptions">The database options. You can use the <see cref="DataExecutableOptionsBuilder"/> to build a new instance.</param>
         /// <param name="commandText">The text command to run against the database.</param>
         /// <param name="commandType">The command type.</param>
         /// <param name="parameters">A collection of parameter objects for the command.</param>
@@ -149,7 +149,7 @@ namespace Xpandables.Net.Data
         /// <exception cref="ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
         /// <exception cref="InvalidOperationException">the execution failed. See inner exception.</exception>
         public async Task<Optional<TResult>> ExecuteAsync<TResult>(
-            IDataOptions dataOptions,
+            IDataExecutableOptions dataOptions,
             DataExecutable<TResult> dataExecutable,
             string commandText,
             CommandType commandType,
@@ -181,7 +181,7 @@ namespace Xpandables.Net.Data
             CommandType commandType,
             params object[] parameters)
         {
-            _ = DataOptions ?? throw new ArgumentNullException(nameof(IDataOptions), "You must initialize the database instance with a default data options.");
+            _ = DataOptions ?? throw new ArgumentNullException(nameof(IDataExecutableOptions), "You must initialize the database instance with a default data options.");
 
             return await ExecuteAsync(dataConnection, DataOptions, dataExecutable, commandText, commandType, parameters).ConfigureAwait(false);
         }
@@ -205,7 +205,7 @@ namespace Xpandables.Net.Data
             params object[] parameters)
         {
             _ = DataConnection ?? throw new ArgumentNullException(nameof(IDataConnectionOptions), "You must initialize the database instance with a default data connection.");
-            _ = DataOptions ?? throw new ArgumentNullException(nameof(IDataOptions), "You must initialize the database instance with a default data options.");
+            _ = DataOptions ?? throw new ArgumentNullException(nameof(IDataExecutableOptions), "You must initialize the database instance with a default data options.");
 
             return await ExecuteAsync(DataConnection, DataOptions, dataExecutable, commandText, commandType, parameters).ConfigureAwait(false);
         }

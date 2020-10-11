@@ -36,7 +36,7 @@ namespace Xpandables.Net.Data.Executables
         /// <param name="parameters">The parameters for the command.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
-        public DataExecutableArgument(IDataOptions options, string commandText, object[]? parameters = default)
+        public DataExecutableArgument(IDataExecutableOptions options, string commandText, object[]? parameters = default)
         {
             Options = options ?? throw new ArgumentNullException(nameof(options));
             CommandText = commandText ?? throw new ArgumentNullException(nameof(commandText));
@@ -46,7 +46,7 @@ namespace Xpandables.Net.Data.Executables
         /// <summary>
         /// Get the execution options.
         /// </summary>
-        public IDataOptions Options { get; }
+        public IDataExecutableOptions Options { get; }
 
         /// <summary>
         /// Gets the string command : can be stored procedure name, query or other command.

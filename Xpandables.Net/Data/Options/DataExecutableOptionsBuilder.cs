@@ -24,15 +24,14 @@ using System.Linq.Expressions;
 using System.Threading;
 
 using Xpandables.Net.Data.Attributes;
-using Xpandables.Net.Data.Connections;
 using Xpandables.Net.Data.Elements;
 
 namespace Xpandables.Net.Data.Options
 {
     /// <summary>
-    /// Allows application author to build <see cref="DataOptions"/>.
+    /// Allows application author to build <see cref="DataExecutableOptions"/>.
     /// </summary>
-    public sealed class DataOptionsBuilder
+    public sealed class DataExecutableOptionsBuilder
     {
         private IsolationLevel _isolationLevel = IsolationLevel.ReadUncommitted;
         private CancellationToken _cancellationToken = CancellationToken.None;
@@ -46,16 +45,16 @@ namespace Xpandables.Net.Data.Options
         private bool _isIdentityRetrieved;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataOptionsBuilder"/> class
-        /// used to build a <see cref="DataOptions"/>.
+        /// Initializes a new instance of <see cref="DataExecutableOptionsBuilder"/> class
+        /// used to build a <see cref="DataExecutableOptions"/>.
         /// </summary>
-        public DataOptionsBuilder() { }
+        public DataExecutableOptionsBuilder() { }
 
         /// <summary>
-        /// Returns a new instance of <see cref="DataOptions"/> using registered information.
+        /// Returns a new instance of <see cref="DataExecutableOptions"/> using registered information.
         /// </summary>
-        public IDataOptions Build()
-            => new DataOptions(
+        public IDataExecutableOptions Build()
+            => new DataExecutableOptions(
                 _isTransactionEnabled,
                 _isolationLevel,
                 _isMappable,
@@ -67,10 +66,10 @@ namespace Xpandables.Net.Data.Options
                 _onException);
 
         /// <summary>
-        /// Returns a the default instance of <see cref="DataOptions"/>.
+        /// Returns a the default instance of <see cref="DataExecutableOptions"/>.
         /// </summary>
-        public IDataOptions BuildDefault()
-            => new DataOptions(
+        public IDataExecutableOptions BuildDefault()
+            => new DataExecutableOptions(
                 false,
                 IsolationLevel.ReadCommitted,
                 default,
@@ -84,7 +83,7 @@ namespace Xpandables.Net.Data.Options
         /// Enables use of transaction. The transaction will be closed just after the current execution.
         /// </summary>
         /// <param name="isolationLevel">The isolation level to be used. The default value used by the server is <see cref="IsolationLevel.ReadCommitted"/> </param>
-        public DataOptionsBuilder AddTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        public DataExecutableOptionsBuilder AddTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
             _isTransactionEnabled = true;
             _isolationLevel = isolationLevel;
@@ -95,7 +94,7 @@ namespace Xpandables.Net.Data.Options
         /// Adds the event action that will be raised on exception.
         /// </summary>
         /// <param name="onException">The action that get called on exception.</param>
-        public DataOptionsBuilder AddExceptionEvent(Action<Exception> onException)
+        public DataExecutableOptionsBuilder AddExceptionEvent(Action<Exception> onException)
         {
             _onException = onException;
             return this;
@@ -111,7 +110,7 @@ namespace Xpandables.Net.Data.Options
         /// </summary>
         /// <param name="mappable">The delegate that determine if a property is used or not.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="mappable"/> is null.</exception>
-        public DataOptionsBuilder AddMappable(Func<DataProperty, bool> mappable)
+        public DataExecutableOptionsBuilder AddMappable(Func<DataProperty, bool> mappable)
         {
             _isMappable = mappable ?? throw new ArgumentNullException(nameof(mappable));
             return this;
@@ -131,7 +130,7 @@ namespace Xpandables.Net.Data.Options
         /// <exception cref="ArgumentNullException">The <paramref name="propertySelector"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="sourceColumnName"/> is null or empty.</exception>
         /// <exception cref="ArgumentException">The property can no be bound to the data row property.</exception>
-        public DataOptionsBuilder AddDataName<T>(Expression<Func<T, string>> propertySelector, string sourceColumnName)
+        public DataExecutableOptionsBuilder AddDataName<T>(Expression<Func<T, string>> propertySelector, string sourceColumnName)
             where T : class
         {
             if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
@@ -165,7 +164,7 @@ namespace Xpandables.Net.Data.Options
         /// <exception cref="ArgumentNullException">The <paramref name="propertySelector"/> is null.</exception>
         /// <exception cref="ArgumentException">The property can no be found in the target type.</exception>
         /// <exception cref="ArgumentException">The property already exist in the filter of target type.</exception>
-        public DataOptionsBuilder AddNotMappedName<T>(Expression<Func<T, string>> propertySelector)
+        public DataExecutableOptionsBuilder AddNotMappedName<T>(Expression<Func<T, string>> propertySelector)
             where T : class
         {
             if (propertySelector is null) throw new ArgumentNullException(nameof(propertySelector));
@@ -197,7 +196,7 @@ namespace Xpandables.Net.Data.Options
         /// <param name="propertySelectors">The collection of model properties selector. We advise use of <see langword="nameof(model.PropertyName)"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="propertySelectors"/> is null or empty.</exception>
         /// <exception cref="ArgumentException">The property already exist in the filter of target type.</exception>
-        public DataOptionsBuilder AddNotMappedNames<T>(params Expression<Func<T, string>>[] propertySelectors)
+        public DataExecutableOptionsBuilder AddNotMappedNames<T>(params Expression<Func<T, string>>[] propertySelectors)
             where T : class
         {
             if (propertySelectors?.Any() != true) throw new ArgumentNullException($"{nameof(propertySelectors)} is null or empty");
@@ -219,7 +218,7 @@ namespace Xpandables.Net.Data.Options
         /// <exception cref="ArgumentNullException">the <paramref name="propertyNames"/> is null or empty.</exception>
         /// <exception cref="ArgumentException">The model does not contains the specified property.</exception>
         /// <exception cref="ArgumentException">The property already exist in the filter of target type.</exception>
-        public DataOptionsBuilder AddNotMappedNames<T>(params string[] propertyNames)
+        public DataExecutableOptionsBuilder AddNotMappedNames<T>(params string[] propertyNames)
             where T : class
         {
             if (propertyNames?.Any() != true) throw new ArgumentNullException($"{nameof(propertyNames)} is null or empty");
@@ -249,7 +248,7 @@ namespace Xpandables.Net.Data.Options
         /// <typeparam name="TType">The type of the property the converter should be applied to its value.</typeparam>
         /// <param name="converter">The delegate to be used to convert a data row value for the target <typeparamref name="TType"/> type.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
-        public DataOptionsBuilder AddConverter<TType>(DataPropertyConverter converter)
+        public DataExecutableOptionsBuilder AddConverter<TType>(DataPropertyConverter converter)
         {
             if (!typeof(TType).IsPrimitive
                 && typeof(TType) != typeof(DateTime)
@@ -271,7 +270,7 @@ namespace Xpandables.Net.Data.Options
         /// The default used value is <see cref="CancellationToken.None"/>.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to be used.</param>
-        public DataOptionsBuilder AddCancellationToken(CancellationToken cancellationToken)
+        public DataExecutableOptionsBuilder AddCancellationToken(CancellationToken cancellationToken)
         {
             _cancellationToken = cancellationToken;
             return this;
@@ -281,7 +280,7 @@ namespace Xpandables.Net.Data.Options
         /// Defines that the current execution should retrieve the last identity from the query.
         /// Be aware of the fact that the query must be an insertion, otherwise you will face an exception.
         /// </summary>
-        public DataOptionsBuilder UseRetrievedIdentity()
+        public DataExecutableOptionsBuilder UseRetrievedIdentity()
         {
             _isIdentityRetrieved = true;
             return this;

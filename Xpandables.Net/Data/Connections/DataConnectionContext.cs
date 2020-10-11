@@ -87,7 +87,7 @@ namespace Xpandables.Net.Data.Connections
         /// Initializes the database transaction if necessary.
         /// </summary>
         /// <param name="dataOptions">The data options.</param>
-        public async Task<DbTransaction?> InitializeTransactionAsync(IDataOptions dataOptions)
+        public async Task<DbTransaction?> InitializeTransactionAsync(IDataExecutableOptions dataOptions)
         {
             if (dataOptions.IsTransactionEnabled)
             {

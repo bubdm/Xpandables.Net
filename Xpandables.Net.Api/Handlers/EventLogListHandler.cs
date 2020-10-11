@@ -25,29 +25,23 @@ using Microsoft.EntityFrameworkCore;
 using Xpandables.Net.Api.Contracts;
 using Xpandables.Net.Api.Models.Domains;
 using Xpandables.Net.EntityFramework;
-using Xpandables.Net.Expressions;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api.Handlers
 {
     public sealed class EventLogListHandler : IAsyncQueryHandler<EventLogList, Log>
     {
-        private readonly IDataContext _dataContext;
+        private readonly IDataContext<User> _dataContext;
 
-        public EventLogListHandler(IDataContext dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+        public EventLogListHandler(IDataContext<User> dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
 
         public IAsyncEnumerable<Log> HandleAsync(EventLogList query, CancellationToken cancellationToken = default)
         {
-            var queryExpression = QueryExpressionFactory.Create<EventLog>();
-            if (query.Name is not null) queryExpression = queryExpression.And(el => el.EventName.Contains(query.Name));
-            if (query.StartOccuredOn is not null) queryExpression = queryExpression.And(el => el.OccuredOn >= query.StartOccuredOn.Value);
-            if (query.EndOccuredOn is not null) queryExpression = queryExpression.And(el => el.OccuredOn <= query.EndOccuredOn.Value);
-
-            return _dataContext.FindAllAsync<User, Log>(u => u
+            return _dataContext.FindAllAsync(u => u
                  .AsNoTracking()
                  .Include(i => i.EventLogs)
                  .SelectMany(user => user.EventLogs)
-                 .Where(queryExpression)
+                 .Where(query)
                  .Select(log => new Log(log.EventName, log.OccuredOn, log.Description)), cancellationToken);
         }
     }

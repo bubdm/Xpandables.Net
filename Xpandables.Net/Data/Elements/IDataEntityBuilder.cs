@@ -36,7 +36,7 @@ namespace Xpandables.Net.Data.Elements
         private readonly static MethodInfo builder =
                 typeof(IDataEntityBuilder).GetMethod(
                     "Builder",
-                    new Type[] { typeof(Type), typeof(IDataOptions), typeof(IDataPropertyBuilder), typeof(IInstanceCreator) })!;
+                    new Type[] { typeof(Type), typeof(IDataExecutableOptions), typeof(IDataPropertyBuilder), typeof(IInstanceCreator) })!;
 
         /// <summary>
         /// Builds an implementation of <see cref="DataEntity"/>.
@@ -46,7 +46,7 @@ namespace Xpandables.Net.Data.Elements
         /// <returns>An instance of <see cref="DataEntity"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to build an instance. See inner exception.</exception>
-        public DataEntity Build(Type type, IDataOptions options) => GetEntityBuilder(type, options);
+        public DataEntity Build(Type type, IDataExecutableOptions options) => GetEntityBuilder(type, options);
 
         /// <summary>
         /// Gets the builder cache.
@@ -82,9 +82,9 @@ namespace Xpandables.Net.Data.Elements
         /// </summary>
         /// <param name="type">The type to act on.</param>
         /// <param name="options"></param>
-        private DataEntity GetEntityBuilder(Type type, IDataOptions options)
+        private DataEntity GetEntityBuilder(Type type, IDataExecutableOptions options)
         {
-            var builder = GetEntityBuilderDelegate<Func<Type, IDataOptions, IDataPropertyBuilder, IInstanceCreator, DataEntity>>(type);
+            var builder = GetEntityBuilderDelegate<Func<Type, IDataExecutableOptions, IDataPropertyBuilder, IInstanceCreator, DataEntity>>(type);
             return builder.Invoke(type, options, PropertyBuilder, InstanceCreator);
         }
 
@@ -109,7 +109,7 @@ namespace Xpandables.Net.Data.Elements
             where TDelegate : Delegate
         {
             var typeExpression = Expression.Parameter(typeof(Type));
-            var optionExpression = Expression.Parameter(typeof(IDataOptions));
+            var optionExpression = Expression.Parameter(typeof(IDataExecutableOptions));
             var propertyExpression = Expression.Parameter(typeof(IDataPropertyBuilder));
             var creatorExpression = Expression.Parameter(typeof(IInstanceCreator));
 
@@ -126,7 +126,7 @@ namespace Xpandables.Net.Data.Elements
         /// <param name="options">The execute options.</param>
         /// <param name="propertyBuilder">the property builder.</param>
         /// <param name="instanceCreator">The instance creator.</param>
-        public static DataEntity Builder(Type source, IDataOptions options, IDataPropertyBuilder propertyBuilder, IInstanceCreator instanceCreator)
+        public static DataEntity Builder(Type source, IDataExecutableOptions options, IDataPropertyBuilder propertyBuilder, IInstanceCreator instanceCreator)
         {
             var identities = GetIdentityProperties(source);
             var type = GetEntityType(source);

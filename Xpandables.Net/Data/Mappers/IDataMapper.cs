@@ -39,7 +39,7 @@ namespace Xpandables.Net.Data.Mappers
         /// <param name="options">Defines the execution options.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public async Task MapAsync<TEntity>(IAsyncEnumerable<IDataRecord> source, IDataOptions options)
+        public async Task MapAsync<TEntity>(IAsyncEnumerable<IDataRecord> source, IDataExecutableOptions options)
             where TEntity : class, new()
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -59,7 +59,7 @@ namespace Xpandables.Net.Data.Mappers
         /// <param name="options">Defines the execution options.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public async Task MapAsync<TEntity>(IEnumerable<IDataRecord> source, IDataOptions options)
+        public async Task MapAsync<TEntity>(IEnumerable<IDataRecord> source, IDataExecutableOptions options)
             where TEntity : class, new()
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -79,7 +79,7 @@ namespace Xpandables.Net.Data.Mappers
         /// <param name="options">Defines the execution options.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="record"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        public async Task MapAsync<TEntity>(IDataRecord record, IDataOptions options)
+        public async Task MapAsync<TEntity>(IDataRecord record, IDataExecutableOptions options)
             where TEntity : class, new()
         {
             _ = record ?? throw new ArgumentNullException(nameof(record));

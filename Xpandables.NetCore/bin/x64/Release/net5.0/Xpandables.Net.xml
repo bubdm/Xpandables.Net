@@ -657,7 +657,7 @@
             </summary>
             <param name="commandType">The target command type.</param>
         </member>
-        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContext.InitializeTransactionAsync(Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.Connections.DataConnectionContext.InitializeTransactionAsync(Xpandables.Net.Data.Options.IDataExecutableOptions)">
             <summary>
             Initializes the database transaction if necessary.
             </summary>
@@ -949,7 +949,7 @@
             <param name="query">The query to be formatted.</param>
             <returns>A parsed query.</returns>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteProcedureTableAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteProcedureTableAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the stored procedure by its name using options and returns an optional data table result.
             </summary>
@@ -983,7 +983,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionProcedureAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionProcedureAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the stored procedure as transactional using the options and returns the number of records affected.
             Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
@@ -1020,7 +1020,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionQueryAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteTransactionQueryAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the specified query as transactional using the options and returns the number of records affected.
             Use <see langword="DataOptionsBuilder().UseRetrievedIdentity()"/> to retrieve the newly created identity.
@@ -1046,7 +1046,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteQueryTableAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteQueryTableAsync(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the query against the database using options and returns an optional data table result.
             </summary>
@@ -1080,7 +1080,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes a stored procedure against the database that returns a single value of specific type.
             </summary>
@@ -1117,7 +1117,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteSingleQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes a query against the database that returns a single value of specific type.
             </summary>
@@ -1154,7 +1154,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the stored procedure by its name using options and returns an asynchronous collection of results of
             the specific-type.
@@ -1170,7 +1170,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedProcedureAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the stored procedure by its name using options and returns an asynchronous collection of results of
             the specific-type.
@@ -1210,7 +1210,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the specify query against the database using connection, options and returns a collection of results of
             the specific-type.
@@ -1226,7 +1226,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText"/> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.DataBaseExtensions.ExecuteMappedQueryAsync``1(Xpandables.Net.Data.IDataBase,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Object[])">
             <summary>
             Asynchronously executes the specify query against the database using options and returns a collection of results of
             the specific-type.
@@ -1271,7 +1271,7 @@
             Defines options to configure <see cref="T:Xpandables.Net.Data.DataBase"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBaseOptions.UseDataOptions(Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.DataBaseOptions.UseDataOptions(Xpandables.Net.Data.Options.IDataExecutableOptions)">
             <summary>
             Uses the specified data options as the default for the target instance of <see cref="T:Xpandables.Net.Data.IDataBase"/>.
             </summary>
@@ -1577,7 +1577,7 @@
             Provides with information to build a property.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Elements.DataPropertySource.#ctor(System.Reflection.PropertyInfo,Xpandables.Net.Data.Options.IDataOptions,System.String[])">
+        <member name="M:Xpandables.Net.Data.Elements.DataPropertySource.#ctor(System.Reflection.PropertyInfo,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String[])">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.Elements.DataPropertySource"/>.
             </summary>
@@ -1605,7 +1605,7 @@
             Defines a method to build instance of <see cref="T:Xpandables.Net.Data.Elements.DataEntity"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataEntityBuilder.Build(System.Type,Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.Elements.IDataEntityBuilder.Build(System.Type,Xpandables.Net.Data.Options.IDataExecutableOptions)">
             <summary>
             Builds an implementation of <see cref="T:Xpandables.Net.Data.Elements.DataEntity"/>.
             </summary>
@@ -1636,7 +1636,7 @@
             </summary>
             <param name="type">The type of the entity.</param>
         </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataEntityBuilder.GetEntityBuilder(System.Type,Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.Elements.IDataEntityBuilder.GetEntityBuilder(System.Type,Xpandables.Net.Data.Options.IDataExecutableOptions)">
             <summary>
             Builds the <see cref="T:Xpandables.Net.Data.Elements.DataEntity"/> from the specified type.
             </summary>
@@ -1656,7 +1656,7 @@
             </summary>
             <typeparam name="TDelegate">The type of delegate.</typeparam>
         </member>
-        <member name="M:Xpandables.Net.Data.Elements.IDataEntityBuilder.Builder(System.Type,Xpandables.Net.Data.Options.IDataOptions,Xpandables.Net.Data.Elements.IDataPropertyBuilder,Xpandables.Net.Creators.IInstanceCreator)">
+        <member name="M:Xpandables.Net.Data.Elements.IDataEntityBuilder.Builder(System.Type,Xpandables.Net.Data.Options.IDataExecutableOptions,Xpandables.Net.Data.Elements.IDataPropertyBuilder,Xpandables.Net.Creators.IInstanceCreator)">
             <summary>
             Builds the <see cref="T:Xpandables.Net.Data.Elements.DataEntity"/> with provided arguments.
             </summary>
@@ -1742,7 +1742,7 @@
             Contains the argument execution for <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Executables.DataExecutableArgument.#ctor(Xpandables.Net.Data.Options.IDataOptions,System.String,System.Object[])">
+        <member name="M:Xpandables.Net.Data.Executables.DataExecutableArgument.#ctor(Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Object[])">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.Executables.DataExecutableArgument"/>.
             </summary>
@@ -2023,7 +2023,7 @@
             May contains the data options used from initialization.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``1(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,Xpandables.Net.Data.Executables.DataExecutable{``0},System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``1(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataExecutableOptions,Xpandables.Net.Data.Executables.DataExecutable{``0},System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified connection, options and executable against the database
             and returns a result of <typeparamref name="TResult" /> type.
@@ -2031,7 +2031,7 @@
             <typeparam name="TResult">The type of the result.</typeparam>
             <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
             <param name="dataExecutable">The data executable instance to be used.</param>
-            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
+            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
             <param name="parameters">A collection of parameter objects for the command.</param>
@@ -2041,14 +2041,14 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``1(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,Xpandables.Net.Data.Executables.DataExecutableMapper{``0},System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``1(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataExecutableOptions,Xpandables.Net.Data.Executables.DataExecutableMapper{``0},System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified connection, options and executable mapper against the database
             and asynchronously returns result of <typeparamref name="TResult" /> type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
-            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
+            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder"/> to build a new instance.</param>
             <param name="dataExecutableMapper">the data executable mapper.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
@@ -2059,7 +2059,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``2(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``2(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified connection, options and executable <typeparamref name="TDataExecutable" /> type against the database
             and returns a result of <typeparamref name="TResult" /> type.
@@ -2068,7 +2068,7 @@
             <typeparam name="TResult">The type of the result.</typeparam>
             <typeparam name="TDataExecutable">The type of the executable. The class inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1" />.</typeparam>
             <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
-            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
+            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
             <param name="parameters">A collection of parameter objects for the command.</param>
@@ -2077,7 +2077,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``2(Xpandables.Net.Data.Options.IDataOptions,System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``2(Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified options and executable <typeparamref name="TDataExecutable" /> type against the database
             and returns a result of <typeparamref name="TResult" /> type.
@@ -2085,7 +2085,7 @@
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <typeparam name="TDataExecutable">The type of the executable. The class inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutable`1" />.</typeparam>
-            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
+            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
             <param name="parameters">A collection of parameter objects for the command.</param>
@@ -2123,14 +2123,14 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``1(Xpandables.Net.Data.Options.IDataOptions,Xpandables.Net.Data.Executables.DataExecutable{``0},System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteAsync``1(Xpandables.Net.Data.Options.IDataExecutableOptions,Xpandables.Net.Data.Executables.DataExecutable{``0},System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified options and executable against the database
             and returns a result of <typeparamref name="TResult" /> type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <param name="dataExecutable">The data executable instance to be used.</param>
-            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
+            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
             <param name="parameters">A collection of parameter objects for the command.</param>
@@ -2169,7 +2169,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``2(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions,System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``2(Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified connection, options and executable <typeparamref name="TDataExecutableMapped" /> type against the database
             and asynchronously returns result of <typeparamref name="TResult" /> type.
@@ -2178,7 +2178,7 @@
             <typeparam name="TResult">The type of the result.</typeparam>
             <typeparam name="TDataExecutableMapped">The type of the executable. The class inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutableBuilder`1" />.</typeparam>
             <param name="dataConnection">The data connection. You can use the <see cref="T:Xpandables.Net.Data.Connections.DataConnectionOptionsBuilder"/> to build a new instance.</param>
-            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
+            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
             <param name="parameters">A collection of parameter objects for the command.</param>
@@ -2187,7 +2187,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``2(Xpandables.Net.Data.Options.IDataOptions,System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``2(Xpandables.Net.Data.Options.IDataExecutableOptions,System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified options and executable <typeparamref name="TDataExecutableMapped" /> type against the database
             and asynchronously returns result of <typeparamref name="TResult" /> type.
@@ -2195,7 +2195,7 @@
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <typeparam name="TDataExecutableMapped">The type of the executable. The class inherits from <see cref="T:Xpandables.Net.Data.Executables.DataExecutableBuilder`1" />.</typeparam>
-            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
+            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
             <param name="parameters">A collection of parameter objects for the command.</param>
@@ -2233,14 +2233,14 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``1(Xpandables.Net.Data.Options.IDataOptions,Xpandables.Net.Data.Executables.DataExecutableMapper{``0},System.String,System.Data.CommandType,System.Object[])">
+        <member name="M:Xpandables.Net.Data.IDataBase.ExecuteMappedAsync``1(Xpandables.Net.Data.Options.IDataExecutableOptions,Xpandables.Net.Data.Executables.DataExecutableMapper{``0},System.String,System.Data.CommandType,System.Object[])">
             <summary>
             Asynchronously executes a command/query with the specified executable mapper against the database
             and asynchronously returns result of <typeparamref name="TResult" /> type.
             </summary>
             <typeparam name="TResult">The type of the result.</typeparam>
             <param name="dataExecutableMapper">The data executable mapper instance to be used.</param>
-            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build a new instance.</param>
+            <param name="dataOptions">The database options. You can use the <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder"/> to build a new instance.</param>
             <param name="commandText">The text command to run against the database.</param>
             <param name="commandType">The command type.</param>
             <param name="parameters">A collection of parameter objects for the command.</param>
@@ -2299,7 +2299,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Options.IDataExecutableOptions)">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/> with a default data options.
             </summary>
@@ -2310,7 +2310,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="dataOptions"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataExecutableOptions)">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/> with a default data options and connection.
             </summary>
@@ -2328,7 +2328,7 @@
             Provides with methods to map a source to entities.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.MapAsync``1(System.Collections.Generic.IAsyncEnumerable{System.Data.IDataRecord},Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.MapAsync``1(System.Collections.Generic.IAsyncEnumerable{System.Data.IDataRecord},Xpandables.Net.Data.Options.IDataExecutableOptions)">
             <summary>
             Asynchronously maps the data source to the specified type.
             </summary>
@@ -2338,7 +2338,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.MapAsync``1(System.Collections.Generic.IEnumerable{System.Data.IDataRecord},Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.MapAsync``1(System.Collections.Generic.IEnumerable{System.Data.IDataRecord},Xpandables.Net.Data.Options.IDataExecutableOptions)">
             <summary>
             Asynchronously maps the data source collection to the specified type.
             </summary>
@@ -2348,7 +2348,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="options"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.MapAsync``1(System.Data.IDataRecord,Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.Mappers.IDataMapper.MapAsync``1(System.Data.IDataRecord,Xpandables.Net.Data.Options.IDataExecutableOptions)">
             <summary>
             Asynchronously maps the record to the specified type.
             </summary>
@@ -2397,7 +2397,7 @@
             Provides with a method to map a record to an entity.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Mappers.IDataMapperRow.MapAsync``1(System.Data.IDataRecord,Xpandables.Net.Data.Options.IDataOptions)">
+        <member name="M:Xpandables.Net.Data.Mappers.IDataMapperRow.MapAsync``1(System.Data.IDataRecord,Xpandables.Net.Data.Options.IDataExecutableOptions)">
             <summary>
             Asynchronously maps an entity with the record value.
             </summary>
@@ -2450,128 +2450,128 @@
             Gets the instance creator.
             </summary>
         </member>
-        <member name="T:Xpandables.Net.Data.Options.DataOptions">
+        <member name="T:Xpandables.Net.Data.Options.DataExecutableOptions">
             <summary>
-            Contains execution behaviors. Use <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> to build options.
+            Contains execution behaviors. Use <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder"/> to build options.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.DataOptions.IsTransactionEnabled">
+        <member name="P:Xpandables.Net.Data.Options.DataExecutableOptions.IsTransactionEnabled">
             <summary>
-            Gets the value whether or not to use transaction. The default value is <see langword="false"/>.
+            Gets the value indicating whether or not to use transaction. The default value is <see langword="false"/>.
             if so, contains <see langword="true"/>, otherwise contains <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.DataOptions.IsolationLevel">
+        <member name="P:Xpandables.Net.Data.Options.DataExecutableOptions.IsolationLevel">
             <summary>
-            Gets the isolation level for transaction. Only used if <see cref="P:Xpandables.Net.Data.Options.DataOptions.IsTransactionEnabled"/> is <see langword="true"/>.
+            Gets the isolation level for transaction. Only used if <see cref="P:Xpandables.Net.Data.Options.DataExecutableOptions.IsTransactionEnabled"/> is <see langword="true"/>.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.DataOptions.ConditionalMapping">
+        <member name="P:Xpandables.Net.Data.Options.DataExecutableOptions.ConditionalMapping">
             <summary>
             Defines the delegate that determines whether or not a property should be mapped.
             Its default behavior return <see langword="true"/>.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.DataOptions.IsConditionalMappingEnabled">
+        <member name="P:Xpandables.Net.Data.Options.DataExecutableOptions.IsConditionalMappingEnabled">
             <summary>
-            Gets the value whether or not the conditional mapping has been defined. The default value is <see langword="false"/>.
+            Gets the value indicating whether or not the conditional mapping has been defined. The default value is <see langword="false"/>.
             if so, contains <see langword="true"/>, otherwise contains <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.DataOptions.MappedNames">
+        <member name="P:Xpandables.Net.Data.Options.DataExecutableOptions.MappedNames">
             <summary>
             Contains a collection of manual names mapping.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.DataOptions.NotMappedNames">
+        <member name="P:Xpandables.Net.Data.Options.DataExecutableOptions.NotMappedNames">
             <summary>
             Contains a collection of manual names from types that should not to be mapped.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.DataOptions.Converters">
+        <member name="P:Xpandables.Net.Data.Options.DataExecutableOptions.Converters">
             <summary>
             Contains a collection of converters.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.DataOptions.CancellationToken">
+        <member name="P:Xpandables.Net.Data.Options.DataExecutableOptions.CancellationToken">
             <summary>
             Contains the cancellation token to be used.
             The default value is <see cref="P:System.Threading.CancellationToken.None"/>.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.DataOptions.ContainsNotMappedNames">
+        <member name="P:Xpandables.Net.Data.Options.DataExecutableOptions.ContainsNotMappedNames">
             <summary>
-            Gets the value whether or not the filtered delegate has been defined. The default value is <see langword="false"/>
+            Gets the value indicating whether or not the filtered delegate has been defined. The default value is <see langword="false"/>
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.DataOptions.IsIdentityRetrieved">
+        <member name="P:Xpandables.Net.Data.Options.DataExecutableOptions.IsIdentityRetrieved">
             <summary>
-            Gets the value whether or not to retrieve the newly created identity from SQL command.
+            Gets the value indicating whether or not to retrieve the newly created identity from SQL command.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.DataOptions.IsOnExceptionDefined">
+        <member name="P:Xpandables.Net.Data.Options.DataExecutableOptions.IsOnExceptionDefined">
             <summary>
-            Gets the value whether <see cref="E:Xpandables.Net.Data.Options.DataOptions.OnException"/> event is defined.
+            Gets the value indicating whether <see cref="E:Xpandables.Net.Data.Options.DataExecutableOptions.OnException"/> event is defined.
             </summary>
         </member>
-        <member name="E:Xpandables.Net.Data.Options.DataOptions.OnException">
+        <member name="E:Xpandables.Net.Data.Options.DataExecutableOptions.OnException">
             <summary>
             Contains the event to raise when exception is handled.
             If defined, the process do not throws exception.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptions.OnExceptionHandled(System.Exception)">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptions.OnExceptionHandled(System.Exception)">
             <summary>
-            Raises the <see cref="E:Xpandables.Net.Data.Options.DataOptions.OnException"/> event.
+            Raises the <see cref="E:Xpandables.Net.Data.Options.DataExecutableOptions.OnException"/> event.
             </summary>
             <param name="exception">The handled exception.</param>
         </member>
-        <member name="T:Xpandables.Net.Data.Options.DataOptionsBuilder">
+        <member name="T:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder">
             <summary>
-            Allows application author to build <see cref="T:Xpandables.Net.Data.Options.DataOptions"/>.
+            Allows application author to build <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptions"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.#ctor">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.#ctor">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Options.DataOptionsBuilder"/> class
-            used to build a <see cref="T:Xpandables.Net.Data.Options.DataOptions"/>.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder"/> class
+            used to build a <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptions"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.Build">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.Build">
             <summary>
-            Returns a new instance of <see cref="T:Xpandables.Net.Data.Options.DataOptions"/> using registered information.
+            Returns a new instance of <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptions"/> using registered information.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.BuildDefault">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.BuildDefault">
             <summary>
-            Returns a the default instance of <see cref="T:Xpandables.Net.Data.Options.DataOptions"/>.
+            Returns a the default instance of <see cref="T:Xpandables.Net.Data.Options.DataExecutableOptions"/>.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddTransaction(System.Data.IsolationLevel)">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.AddTransaction(System.Data.IsolationLevel)">
             <summary>
             Enables use of transaction. The transaction will be closed just after the current execution.
             </summary>
             <param name="isolationLevel">The isolation level to be used. The default value used by the server is <see cref="F:System.Data.IsolationLevel.ReadCommitted"/> </param>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddExceptionEvent(System.Action{System.Exception})">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.AddExceptionEvent(System.Action{System.Exception})">
             <summary>
             Adds the event action that will be raised on exception.
             </summary>
             <param name="onException">The action that get called on exception.</param>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddMappable(System.Func{Xpandables.Net.Data.Elements.DataProperty,System.Boolean})">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.AddMappable(System.Func{Xpandables.Net.Data.Elements.DataProperty,System.Boolean})">
             <summary>
             This is the highest level of mapping.
             Adds a delegate that determines whether or not a property should be mapped.
             The delegate will received an instance of the processing property and should return <see langword="true"/> if the property should be
             mapped, otherwise <see langword="false"/>. This action should be used for complex mapping and be aware of the performance impact.
             <para>The definition here takes priority over all attributes <see cref="T:Xpandables.Net.Data.Attributes.DataNotMappedAttribute"/>
-            and other <see cref="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddNotMappedName``1(System.Linq.Expressions.Expression{System.Func{``0,System.String}})"/>.</para>
+            and other <see cref="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.AddNotMappedName``1(System.Linq.Expressions.Expression{System.Func{``0,System.String}})"/>.</para>
             </summary>
             <param name="mappable">The delegate that determine if a property is used or not.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="mappable"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddDataName``1(System.Linq.Expressions.Expression{System.Func{``0,System.String}},System.String)">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.AddDataName``1(System.Linq.Expressions.Expression{System.Func{``0,System.String}},System.String)">
             <summary>
             Bounds the specified model property name to the column data row specific name.
             Behaves like the <see cref="T:Xpandables.Net.Data.Attributes.DataNameAttribute"/> attribute but takes priority over this attribute
@@ -2587,7 +2587,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="sourceColumnName"/> is null or empty.</exception>
             <exception cref="T:System.ArgumentException">The property can no be bound to the data row property.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddNotMappedName``1(System.Linq.Expressions.Expression{System.Func{``0,System.String}})">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.AddNotMappedName``1(System.Linq.Expressions.Expression{System.Func{``0,System.String}})">
             <summary>
             Specifies that selected property of the model must not be bound to the result.
             Behaves like the <see cref="T:Xpandables.Net.Data.Attributes.DataNotMappedAttribute"/> attribute but takes priority over this attribute.
@@ -2599,7 +2599,7 @@
             <exception cref="T:System.ArgumentException">The property can no be found in the target type.</exception>
             <exception cref="T:System.ArgumentException">The property already exist in the filter of target type.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddNotMappedNames``1(System.Linq.Expressions.Expression{System.Func{``0,System.String}}[])">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.AddNotMappedNames``1(System.Linq.Expressions.Expression{System.Func{``0,System.String}}[])">
             <summary>
             Specifies that selected properties of the model must not be bound to the result.
             Behaves like the <see cref="T:Xpandables.Net.Data.Attributes.DataNotMappedAttribute"/> attribute but takes priority over this attribute.
@@ -2611,7 +2611,7 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="propertySelectors"/> is null or empty.</exception>
             <exception cref="T:System.ArgumentException">The property already exist in the filter of target type.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddNotMappedNames``1(System.String[])">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.AddNotMappedNames``1(System.String[])">
             <summary>
             Specifies that collection of property names of the model must not be bound to the result.
             Behaves like the <see cref="T:Xpandables.Net.Data.Attributes.DataNotMappedAttribute"/> attribute but takes priority over this attribute.
@@ -2624,7 +2624,7 @@
             <exception cref="T:System.ArgumentException">The model does not contains the specified property.</exception>
             <exception cref="T:System.ArgumentException">The property already exist in the filter of target type.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddConverter``1(Xpandables.Net.Data.Elements.DataPropertyConverter)">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.AddConverter``1(Xpandables.Net.Data.Elements.DataPropertyConverter)">
             <summary>
             Adds a delegate to be used for converting data row value to the target type.
             The delegate will receive an instance of the target property and the value from the data row.
@@ -2636,20 +2636,20 @@
             <param name="converter">The delegate to be used to convert a data row value for the target <typeparamref name="TType"/> type.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="converter"/> is null.</exception>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.AddCancellationToken(System.Threading.CancellationToken)">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.AddCancellationToken(System.Threading.CancellationToken)">
             <summary>
             Defines the cancellation token for the execution.
             The default used value is <see cref="P:System.Threading.CancellationToken.None"/>.
             </summary>
             <param name="cancellationToken">The cancellation token to be used.</param>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.UseRetrievedIdentity">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.UseRetrievedIdentity">
             <summary>
             Defines that the current execution should retrieve the last identity from the query.
             Be aware of the fact that the query must be an insertion, otherwise you will face an exception.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.DataOptionsBuilder.GetMemberNameFromExpression``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+        <member name="M:Xpandables.Net.Data.Options.DataExecutableOptionsBuilder.GetMemberNameFromExpression``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
             <summary>
             Returns the member name from the expression if found, otherwise returns null.
             </summary>
@@ -2658,79 +2658,79 @@
             <param name="propertyExpression">The expression that contains the member name.</param>
             <returns>A string that represents the name of the member found in the expression.</returns>
         </member>
-        <member name="T:Xpandables.Net.Data.Options.IDataOptions">
+        <member name="T:Xpandables.Net.Data.Options.IDataExecutableOptions">
             <summary>
              Represents a set of values data base executable options properties.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.IDataOptions.IsTransactionEnabled">
+        <member name="P:Xpandables.Net.Data.Options.IDataExecutableOptions.IsTransactionEnabled">
             <summary>
-            Gets the value whether or not to use transaction. The default value is <see langword="false"/>.
+            Gets the value indicating whether or not to use transaction. The default value is <see langword="false"/>.
             if so, contains <see langword="true"/>, otherwise contains <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.IDataOptions.IsolationLevel">
+        <member name="P:Xpandables.Net.Data.Options.IDataExecutableOptions.IsolationLevel">
             <summary>
-            Gets the isolation level for transaction. Only used if <see cref="P:Xpandables.Net.Data.Options.IDataOptions.IsTransactionEnabled"/> is <see langword="true"/>.
+            Gets the isolation level for transaction. Only used if <see cref="P:Xpandables.Net.Data.Options.IDataExecutableOptions.IsTransactionEnabled"/> is <see langword="true"/>.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.IDataOptions.ConditionalMapping">
+        <member name="P:Xpandables.Net.Data.Options.IDataExecutableOptions.ConditionalMapping">
             <summary>
             Defines the delegate that determines whether or not a property should be mapped.
             Its default behavior return <see langword="true"/>.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.IDataOptions.IsConditionalMappingEnabled">
+        <member name="P:Xpandables.Net.Data.Options.IDataExecutableOptions.IsConditionalMappingEnabled">
             <summary>
-            Gets the value whether or not the conditional mapping has been defined. The default value is <see langword="false"/>.
+            Gets the value indicating whether or not the conditional mapping has been defined. The default value is <see langword="false"/>.
             if so, contains <see langword="true"/>, otherwise contains <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.IDataOptions.MappedNames">
+        <member name="P:Xpandables.Net.Data.Options.IDataExecutableOptions.MappedNames">
             <summary>
             Contains a collection of manual names mapping.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.IDataOptions.NotMappedNames">
+        <member name="P:Xpandables.Net.Data.Options.IDataExecutableOptions.NotMappedNames">
             <summary>
             Contains a collection of manual names from types that should not to be mapped.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.IDataOptions.Converters">
+        <member name="P:Xpandables.Net.Data.Options.IDataExecutableOptions.Converters">
             <summary>
             Contains a collection of converters.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.IDataOptions.CancellationToken">
+        <member name="P:Xpandables.Net.Data.Options.IDataExecutableOptions.CancellationToken">
             <summary>
             Contains the cancellation token to be used.
             The default value is <see cref="P:System.Threading.CancellationToken.None"/>.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.IDataOptions.ContainsNotMappedNames">
+        <member name="P:Xpandables.Net.Data.Options.IDataExecutableOptions.ContainsNotMappedNames">
             <summary>
-            Gets the value whether or not the filtered delegate has been defined. The default value is <see langword="false"/>
+            Gets the value indicating whether or not the filtered delegate has been defined. The default value is <see langword="false"/>
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.IDataOptions.IsIdentityRetrieved">
+        <member name="P:Xpandables.Net.Data.Options.IDataExecutableOptions.IsIdentityRetrieved">
             <summary>
-            Gets the value whether or not to retrieve the newly created identity from SQL command.
+            Gets the value indicating whether or not to retrieve the newly created identity from SQL command.
             </summary>
         </member>
-        <member name="P:Xpandables.Net.Data.Options.IDataOptions.IsOnExceptionDefined">
+        <member name="P:Xpandables.Net.Data.Options.IDataExecutableOptions.IsOnExceptionDefined">
             <summary>
-            Gets the value whether <see cref="E:Xpandables.Net.Data.Options.IDataOptions.OnException"/> event is defined.
+            Gets the value indicating whether <see cref="E:Xpandables.Net.Data.Options.IDataExecutableOptions.OnException"/> event is defined.
             </summary>
         </member>
-        <member name="E:Xpandables.Net.Data.Options.IDataOptions.OnException">
+        <member name="E:Xpandables.Net.Data.Options.IDataExecutableOptions.OnException">
             <summary>
             Contains the event to raise when exception is handled.
             If defined, the process do not throws exception.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Data.Options.IDataOptions.OnExceptionHandled(System.Exception)">
+        <member name="M:Xpandables.Net.Data.Options.IDataExecutableOptions.OnExceptionHandled(System.Exception)">
             <summary>
-            Raises the <see cref="E:Xpandables.Net.Data.Options.IDataOptions.OnException"/> event.
+            Raises the <see cref="E:Xpandables.Net.Data.Options.IDataExecutableOptions.OnException"/> event.
             </summary>
             <param name="exception">The handled exception.</param>
         </member>
@@ -3218,6 +3218,20 @@
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
         </member>
+        <member name="T:Xpandables.Net.EntityFramework.DataContext`1">
+            <summary>
+            This is the generic db context class that implements <see cref="T:Xpandables.Net.EntityFramework.IDataContext`1"/>.
+            </summary>
+            <typeparam name="TEntity">The Domain object type.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.DataContext`1.#ctor(Xpandables.Net.EntityFramework.IDataContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Xpandables.Net.EntityFramework.DataContext`1"/> class
+            using the original data context.
+            </summary>
+            <param name="dataContext">The original data context.</param>
+            <exception cref="T:System.ArgumentNullException">the <paramref name="dataContext"/> is null.</exception>
+        </member>
         <member name="T:Xpandables.Net.EntityFramework.IDataContext">
             <summary>
             Allows an application author to manage domain objects using EntityFrameworkCore.
@@ -3373,6 +3387,128 @@
             To disable the delegate, just set the handler to <see langword="null"/>.
             </summary>
             <param name="persistenceExceptionHandler">The optional delegate instance.</param>
+        </member>
+        <member name="T:Xpandables.Net.EntityFramework.IDataContext`1">
+            <summary>
+            Allows an application author to manage a specific domain objects using EntityFrameworkCore.
+            This interface inherits from <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/>.
+            When argument is null, an <see cref="T:System.ArgumentNullException"/> will be thrown.
+            When a value is not found, a default value of the expected type should be returned.
+            The implementation must be thread-safe when working in a multi-threaded environment.
+            </summary>
+            <typeparam name="TEntity">The Domain object type.</typeparam>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext`1.FindAsync(System.Func{System.Linq.IQueryable{`0},System.Linq.IQueryable{`0}},System.Threading.CancellationToken)">
+            <summary>
+            Returns an entity of the <typeparamref name="TEntity"/> type specified by the selector.
+            If not found, returns the <see langword="default"/> value of the type.
+            </summary>
+            <param name="selector">Expression used for selecting entities.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>A task that represents an object of <typeparamref name="TEntity"/> type or not.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext`1.FindAsync``1(System.Func{System.Linq.IQueryable{`0},System.Linq.IQueryable{``0}},System.Threading.CancellationToken)">
+            <summary>
+            Returns an anonymous type of <typeparamref name="TResult"/> specified by the selector.
+            If not found, returns the <see langword="default"/> value of the type.
+            </summary>
+            <typeparam name="TResult">Anonymous type to be returned.</typeparam>
+            <param name="selector">Expression used for selecting entities.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext`1.FindAllAsync(System.Func{System.Linq.IQueryable{`0},System.Linq.IQueryable{`0}},System.Threading.CancellationToken)">
+            <summary>
+            Returns an asynchronous enumerable of <typeparamref name="TEntity"/> entities specified by the selector.
+            If no result found, returns an empty enumerable.
+            </summary>
+            <param name="selector">Expression used for selecting entities.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>A collection of <typeparamref name="TEntity"/> that can be asynchronously enumerated.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext`1.FindAllAsync``1(System.Func{System.Linq.IQueryable{`0},System.Linq.IQueryable{``0}},System.Threading.CancellationToken)">
+            <summary>
+            Returns an asynchronous enumerable of <typeparamref name="TResult"/> anonymous type specified by the selector.
+            If no result found, returns an empty enumerable.
+            </summary>
+            <typeparam name="TResult">Anonymous type to be returned.</typeparam>
+            <param name="selector">Expression used for selecting entities.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext`1.AddEntityRangeAsync(System.Collections.Generic.IEnumerable{`0},System.Threading.CancellationToken)">
+            <summary>
+            Adds a collection of domain objects to the data storage that will be inserted
+            into the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.PersistAsync(System.Threading.CancellationToken)"/> is called.
+            </summary>
+            <param name="entities">The domain objects collection to be added and persisted.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="entities"/> is null or empty.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext`1.AddEntityAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Adds a domain object to the data storage that will be inserted
+            into the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.PersistAsync(System.Threading.CancellationToken)"/> is called.
+            </summary>
+            <param name="entity">The domain object to be added and persisted.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="entity"/> is null or empty.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext`1.DeleteEntityAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Deletes the domain object matching the specified entity that will be removed from the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.PersistAsync(System.Threading.CancellationToken)"/>
+            is called.
+            </summary>
+            <param name="deletedEntity">The entity to be deleted.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="deletedEntity"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext`1.DeleteEntityAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Threading.CancellationToken)">
+            <summary>
+            Deletes the domain objects matching the predicate that will be removed from the database when <see cref="M:Xpandables.Net.EntityFramework.IDataContext.PersistAsync(System.Threading.CancellationToken)"/>
+            is called. You can use a third party library for performance.
+            </summary>
+            <param name="predicate">The predicate to be used to filter domain objects.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext`1.UpdateEntityAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Updates the domain object matching the specify entity.
+            </summary>
+            <param name="updatedEntity">the updated entity.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="updatedEntity"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext`1.UpdateEntityRangeAsync``1(System.Collections.Generic.IEnumerable{``0},System.Threading.CancellationToken)">
+            <summary>
+            Updates the domain objects matching the collection of entities.
+            Only the columns corresponding to properties you set in the object will be updated -- any properties
+            you don't set will be left alone. If you have property you want to set to its default,
+            then you must explicitly set that property's value.
+            </summary>
+            <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
+            <param name="updatedEntities">Contains the collection of updated values.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="updatedEntities"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.EntityFramework.IDataContext`1.UpdateEntityAsync``1(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Func{`0,``0},System.Threading.CancellationToken)">
+            <summary>
+            Updates the domain objects matching the predicate by using the updater.
+            Only the columns corresponding to properties you set in the object will be updated -- any properties
+            you don't set will be left alone. If you have property you want to set to its default,
+            then you must explicitly set that property's value.
+            </summary>
+            <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
+            <param name="predicate">The predicate to be used to filter domain objects.</param>
+            <param name="updater">The delegate to be used for updating domain objects.</param>
+            <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="updater"/> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.EntityFramework.IPersistenceDecorator">
             <summary>
