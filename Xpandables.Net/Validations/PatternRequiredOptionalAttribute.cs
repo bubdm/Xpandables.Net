@@ -45,7 +45,7 @@ namespace Xpandables.Net.Validations
         /// <param name="validationContext">The context information about the validation operation.</param>
         /// <returns>An instance of the <see cref="ValidationResult"/> class.</returns>
         /// <exception cref="InvalidOperationException">The current attribute is malformed.</exception>
-        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             _ = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
 

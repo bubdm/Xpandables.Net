@@ -109,7 +109,7 @@ namespace Xpandables.Net.QrCodes.Presenter
 #pragma warning restore CA1822 // Mark members as static
         {
             if (colorString.StartsWith("#"))
-                colorString = colorString.Substring(1);
+                colorString = colorString[1..];
             byte[] byteColor = new byte[colorString.Length / 2];
             for (int i = 0; i < byteColor.Length; i++)
                 byteColor[i] = byte.Parse(colorString.Substring(i * 2, 2), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture);

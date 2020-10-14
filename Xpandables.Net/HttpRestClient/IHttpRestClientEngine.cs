@@ -230,7 +230,6 @@ namespace Xpandables.Net.HttpRestClient
                     var cookieSource = cookieLocationRequest.GetCookieSource();
                     foreach (var parameter in cookieSource)
                     {
-                        httpRequestMessage.Options.Remove(parameter.Key, out _);
                         httpRequestMessage.Options.TryAdd(parameter.Key, parameter.Value);
                     }
                 }
