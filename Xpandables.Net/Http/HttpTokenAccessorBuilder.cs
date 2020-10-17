@@ -24,7 +24,7 @@ namespace Xpandables.Net.Http
     /// </summary>
     /// <param name="key">The key to read the token from.</param>
     /// <returns>A string token value if found or null.</returns>
-    public delegate string HttpTokenAccessorDelegate(string key);
+    public delegate string? HttpTokenAccessorDelegate(string key);
 
     /// <summary>
     /// A helper class used to implement the <see cref="IHttpTokenAccessor"/> interface.

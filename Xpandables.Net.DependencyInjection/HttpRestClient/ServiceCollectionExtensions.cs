@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
+using Xpandables.Net.HttpRestClient;
 using Xpandables.Net.HttpRestClient.Network;
 
 namespace Xpandables.Net.DependencyInjection
@@ -28,6 +29,34 @@ namespace Xpandables.Net.DependencyInjection
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds the default <see cref="IHttpRestClientEngine"/> implementation to the services.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXHttpRestClientEngine(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddTransient<IHttpRestClientEngine, HttpRestClientEngine>();
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IHttpRestClientEngine"/> implementation to the services.
+        /// </summary>
+        /// <typeparam name="THttpRestClientEngine">The type of the HTTP rest client engine.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXHttpRestClientEngine<THttpRestClientEngine>(this IServiceCollection services)
+            where THttpRestClientEngine : class, IHttpRestClientEngine
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddTransient<IHttpRestClientEngine, THttpRestClientEngine>();
+
+            return services;
+        }
+
         /// <summary>
         /// Adds an <see cref="IHttpRestClientIPHandler"/> to retrieve the IPAddress.
         /// </summary>

@@ -4631,7 +4631,7 @@
             Initializes a new instance of <see cref="T:Xpandables.Net.HttpRestClient.HttpRestClientHandler"/> class with the HTTP typed client.
             </summary>
             <param name="httpClient">The HTTP client type to be used.</param>
-            <param name="httpRestClientEngine">The http rest client engine.</param>
+            <param name="httpRestClientEngine">The HTTP rest client engine.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="httpClient"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="httpRestClientEngine"/> is null.</exception>/// 
         </member>
@@ -5148,6 +5148,11 @@
         <member name="P:Xpandables.Net.HttpRestClient.IHttpRestClientHandler.HttpClient">
             <summary>
             Contains the <see cref="T:System.Net.Http.HttpContent"/> instance for the current handler.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.HttpRestClient.IHttpRestClientHandler.HttpRestClientEngine">
+            <summary>
+            Contains the <see cref="T:Xpandables.Net.HttpRestClient.IHttpRestClientEngine"/> instance.
             </summary>
         </member>
         <member name="M:Xpandables.Net.HttpRestClient.IHttpRestClientHandler.HandleAsync``1(Xpandables.Net.Queries.IAsyncQuery{``0},System.Threading.CancellationToken)">

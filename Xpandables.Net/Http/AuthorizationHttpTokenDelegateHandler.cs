@@ -27,16 +27,16 @@ namespace Xpandables.Net.Http
     /// Provides with a handler that can be used with <see cref="HttpClient"/> to add header authorization value
     /// before request execution.
     /// </summary>
-    public class AuthorizationHttpTokenHandler : HttpClientHandler
+    public class AuthorizationHttpTokenDelegateHandler : DelegatingHandler
     {
-        private readonly IHttpTokenDelegateAccessor _httpTokenAccessor;
+        private readonly IHttpTokenAccessor _httpTokenAccessor;
 
         /// <summary>
         /// Initializes a new instance of <see cref="AuthorizationHttpTokenHandler"/> class with the token accessor.
         /// </summary>
         /// <param name="httpTokenAccessor">The token accessor to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="httpTokenAccessor"/> is null.</exception>
-        public AuthorizationHttpTokenHandler(IHttpTokenDelegateAccessor httpTokenAccessor)
+        public AuthorizationHttpTokenDelegateHandler(IHttpTokenAccessor httpTokenAccessor)
             => _httpTokenAccessor = httpTokenAccessor ?? throw new ArgumentNullException(nameof(httpTokenAccessor));
 
         /// <summary>

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Platforms>x64</Platforms>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+    <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+    <Authors>Francis-Black EWANE</Authors>
+    <Product>Xpandables Net Api</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Xpandables.Net.Api.Models\Xpandables.Net.Api.Models.csproj" />
+  </ItemGroup>
+
+</Project>

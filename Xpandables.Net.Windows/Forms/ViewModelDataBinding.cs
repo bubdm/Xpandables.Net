@@ -29,17 +29,17 @@ namespace Xpandables.Net.Windows.Forms
     /// <summary>
     /// Provides with a mechanism to dynamically bind data in Windows Form.
     /// </summary>
-    /// <typeparam name="TData">The data source type to be used for binding.</typeparam>
-    public abstract class ViewData<TData> : Form
-        where TData : class, INotifyPropertyChanged, new()
+    /// <typeparam name="TViewModel">The view model source type to be used for binding.</typeparam>
+    public abstract class ViewModelDataBinding<TViewModel> : Form
+        where TViewModel : class, INotifyPropertyChanged
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="ViewData{TData}"/> class that initializes the data to its default value and the binding source.
+        /// Initializes a new instance of <see cref="ViewModelDataBinding{TViewModel}"/> class that initializes the data to its default value and the binding source.
         /// </summary>
-        protected ViewData()
+        protected ViewModelDataBinding(TViewModel viewModel)
         {
-            Data = new TData();
-            BindingSource = new BindingSource() { DataSource = Data };
+            ViewModel = viewModel;
+            BindingSource = new BindingSource() { DataSource = ViewModel };
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Xpandables.Net.Windows.Forms
         public void MultipleBinding<TControl, TControlProperty, TDataProperty>(
             IEnumerable<TControl> controls,
             Expression<Func<TControl, TControlProperty>> controlPropertyAccessor,
-            Expression<Func<TData, TDataProperty>> dataPropertyAccessor,
+            Expression<Func<TViewModel, TDataProperty>> dataPropertyAccessor,
             Func<TDataProperty, TControlProperty>? controlTransformAccessor = default,
             DataSourceUpdateMode dataUpdateMode = DataSourceUpdateMode.OnPropertyChanged)
             where TControl : Control
@@ -89,7 +89,7 @@ namespace Xpandables.Net.Windows.Forms
         public void Binding<TControl, TControlProperty, TDataProperty>(
             TControl control,
             Expression<Func<TControl, TControlProperty>> controlPropertyAccessor,
-            Expression<Func<TData, TDataProperty>> dataPropertyAccessor,
+            Expression<Func<TViewModel, TDataProperty>> dataPropertyAccessor,
             Func<TDataProperty, TControlProperty>? controlTransformAccessor = default,
             DataSourceUpdateMode dataUpdateMode = DataSourceUpdateMode.OnPropertyChanged)
             where TControl : class, IBindableComponent
@@ -107,9 +107,9 @@ namespace Xpandables.Net.Windows.Forms
         }
 
         /// <summary>
-        /// Gets the data source current instance.
+        /// Gets the view model source current instance.
         /// </summary>
-        protected TData Data { get; }
+        protected TViewModel ViewModel { get; }
 
         /// <summary>
         /// Gets the binding source instance.

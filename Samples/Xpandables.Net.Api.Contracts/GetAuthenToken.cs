@@ -16,10 +16,13 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-
-using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 using Xpandables.Net.Api.Models;
 using Xpandables.Net.Api.Models.Domains;
@@ -28,6 +31,7 @@ using Xpandables.Net.HttpRestClient;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Validations;
 
+[assembly: InternalsVisibleTo("Xpandables.Net.Api")]
 namespace Xpandables.Net.Api.Contracts
 {
     public sealed class AuthenToken : Response<AuthenToken>
@@ -35,16 +39,18 @@ namespace Xpandables.Net.Api.Contracts
         internal AuthenToken AddToken(string token) => this.Assign(s => s.Token = token);
         internal AuthenToken AddType(string type) => this.Assign(s => s.Type = type);
         internal AuthenToken AddExpiry(DateTime expiry) => this.Assign(s => s.Expiry = expiry);
+        internal AuthenToken AddKey(string key) => this.Assign(s => s.Key = key);
         public string Token { get; set; } = null!;
         public string Type { get; set; } = null!;
         public DateTime Expiry { get; set; }
+        public string Key { get; set; } = null!;
     }
 
-    [HttpRestClient(Path = "api/authenticate", Method = "Post", IsSecured = false, IsNullable = true)]
-    public sealed class RequestAuthenToken : QueryExpression<User>, IQuery<AuthenToken>, IValidationDecorator
+    [HttpRestClient(Path = "api/authenticate", Method = "Post", IsSecured = false, IsNullable = true, In = ParameterLocation.Header)]
+    public sealed class GetAuthenToken : QueryExpression<User>, IQuery<AuthenToken>, IValidationDecorator, IHeaderLocationRequest
     {
-        public RequestAuthenToken() { }
-        public RequestAuthenToken(string phone, string password)
+        public GetAuthenToken() { }
+        public GetAuthenToken(string phone, string password)
         {
             Phone = phone;
             Password = password;
@@ -52,9 +58,16 @@ namespace Xpandables.Net.Api.Contracts
 
         public override Expression<Func<User, bool>> GetExpression() => user => user.Phone.Value == Phone && user.IsActive && !user.IsDeleted;
 
-        [Required, FromHeader]
+        [return: NotNull]
+        public IDictionary<string, string?> GetHeaderSource()
+        {
+            var basicAuthen = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Phone}:{Password}"));
+            return new Dictionary<string, string?> { { "Authorization", $"{nameof(AuthenticationSchemes.Basic)} {basicAuthen}" } };
+        }
+
+        [Required]
         public string Phone { get; set; } = null!;
-        [Required, FromHeader]
+        [Required]
         public string Password { get; set; } = null!;
     }
 }

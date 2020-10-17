@@ -15,10 +15,13 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Runtime.CompilerServices;
+
 using Newtonsoft.Json;
 
 using Xpandables.Net.HttpRestClient;
 
+[assembly:InternalsVisibleTo("Xpandables.Net.Api.Contracts")]
 namespace Xpandables.Net.Api.Models
 {
     public class Response

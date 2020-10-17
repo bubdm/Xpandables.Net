@@ -60,9 +60,45 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the <see cref="IHttpTokenDelegateAccessor"/> to the services with scoped life time.
+        /// Note : Do not use with <see cref="AddXHttpTokenAccessor(IServiceCollection)"/>.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXHttpTokenDelegateAccessor(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddSingleton<HttpTokenDelegateAccessor>();
+            services.AddSingleton<IHttpTokenAccessor>(provider => provider.GetRequiredService<HttpTokenDelegateAccessor>());
+            services.AddSingleton<IHttpTokenDelegateAccessor>(provider => provider.GetRequiredService<HttpTokenDelegateAccessor>());
+            return services;
+        }
+
+        /// <summary>
         /// Adds a delegate that will be used to provide the authorization token before request execution
         /// using an implementation of <see cref="IHttpTokenAccessor"/>. You can register the default implementation using
         /// the <see cref="AddXHttpTokenAccessor(IServiceCollection)"/>.
+        /// </summary>
+        /// <param name="builder">The Microsoft.Extensions.DependencyInjection.IHttpClientBuilder.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
+        public static IHttpClientBuilder ConfigureXPrimaryAuthorizationTokenDelegateHandler(this IHttpClientBuilder builder)
+        {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+
+            builder.ConfigurePrimaryHttpMessageHandler(provider =>
+            {
+                var httpTokenProvider = provider.GetRequiredService<IHttpTokenAccessor>();
+                return new AuthorizationHttpTokenDelegateHandler(httpTokenProvider);
+            });
+
+            return builder;
+        }
+
+        /// <summary>
+        /// Adds a delegate that will be used to provide the authorization token before request execution
+        /// using an implementation of <see cref="IHttpTokenDelegateAccessor"/>. You need to register the default implementation using
+        /// the <see cref="AddXHttpTokenDelegateAccessor(IServiceCollection)"/>.
         /// </summary>
         /// <param name="builder">The Microsoft.Extensions.DependencyInjection.IHttpClientBuilder.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
@@ -72,7 +108,7 @@ namespace Xpandables.Net.DependencyInjection
 
             builder.ConfigurePrimaryHttpMessageHandler(provider =>
             {
-                var httpTokenProvider = provider.GetRequiredService<IHttpTokenAccessor>();
+                var httpTokenProvider = provider.GetRequiredService<IHttpTokenDelegateAccessor>();
                 return new AuthorizationHttpTokenHandler(httpTokenProvider);
             });
 
@@ -87,7 +123,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="tokenProvider">The delegate token provider to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="tokenProvider"/> is null.</exception>
-        public static IHttpClientBuilder ConfigureXPrimaryAuthorizationTokenHandler(
+        public static IHttpClientBuilder ConfigureXPrimaryAuthorizationTokenDelegateHandler(
             this IHttpClientBuilder builder, HttpTokenAccessorDelegate tokenProvider)
         {
             _ = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -96,7 +132,7 @@ namespace Xpandables.Net.DependencyInjection
             builder.ConfigurePrimaryHttpMessageHandler(() =>
             {
                 var httpTokenProvider = new HttpTokenAccessorBuilder(tokenProvider);
-                return new AuthorizationHttpTokenHandler(httpTokenProvider);
+                return new AuthorizationHttpTokenDelegateHandler(httpTokenProvider);
             });
 
             return builder;

@@ -18,17 +18,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Xpandables.Net.Api.Contracts;
-using Xpandables.Net.DependencyInjection.HttpRestClient;
 using Xpandables.Net.Http;
 using Xpandables.Net.HttpRestClient;
 using Xpandables.Net.HttpRestClient.Network;
@@ -40,7 +36,8 @@ namespace Xpandables.Net.Tests
     [TestClass]
     public class AuthenticationTest
     {
-        static IHttpRestClientHandler httpClientHandler = null!;
+        static IHttpRestClientHandler authenHandler = null!;
+        static IHttpRestClientHandler anonymousHandler = null!;
         static string token = null!;
         static readonly HttpTokenAccessorDelegate httpTokenAccessor = key => token;
         static readonly IStringCryptography stringCryptography = new StringCryptography(new StringGenerator());
@@ -50,20 +47,19 @@ namespace Xpandables.Net.Tests
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
             var factory = new WebApplicationFactory<Api.Program>();
-            var client = factory.CreateDefaultClient(new AuthorizationHttpTokenHandler(new HttpTokenAccessorBuilder(httpTokenAccessor)));
+            var authenClient = factory.CreateDefaultClient(new AuthorizationHttpTokenDelegateHandler(new HttpTokenAccessorBuilder(httpTokenAccessor)));
+            var client = factory.CreateClient();
 
-            httpClientHandler = new HttpRestClientHandler(client, new HttpRestClientEngine());
+            authenHandler = new HttpRestClientHandler(authenClient, new HttpRestClientEngine());
+            anonymousHandler = new HttpRestClientHandler(client, new HttpRestClientEngine());
         }
 
         [TestMethod]
         [DataRow("+33123456789", "motdepasse")]
         public async Task RequestAuthenticationTokenAsync(string phone, string password)
         {
-            token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{phone}:{password}"));
-            httpClientHandler.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationSchemes.Basic.ToString(), token);
-
-            var request = RequestAuthenToken.Default();
-            using var response = await httpClientHandler.HandleAsync(request).ConfigureAwait(false);
+            var request = new GetAuthenToken(phone, password);
+            using var response = await authenHandler.HandleAsync(request).ConfigureAwait(false);
 
             var result = response.Result;
             Assert.IsNotNull(result.Token);
@@ -74,11 +70,8 @@ namespace Xpandables.Net.Tests
         [DataRow("+33123456789", "motdepasse")]
         public async Task AuthenAndEditUserInformationAsync(string phone, string password)
         {
-            token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{phone}:{password}"));
-            httpClientHandler.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationSchemes.Basic.ToString(), token);
-
-            var request = RequestAuthenToken.Default();
-            using var response = await httpClientHandler.HandleAsync(request).ConfigureAwait(false);
+            var request = new GetAuthenToken(phone, password);
+            using var response = await anonymousHandler.HandleAsync(request).ConfigureAwait(false);
 
             var auth = response.Result;
             token = auth.Token;
@@ -89,7 +82,7 @@ namespace Xpandables.Net.Tests
 
                 var editUser = new EditUser(email, default, default);
 
-                using var responseUser = await httpClientHandler.HandleAsync(editUser).ConfigureAwait(false);
+                using var responseUser = await authenHandler.HandleAsync(editUser).ConfigureAwait(false);
                 Assert.IsTrue(responseUser.IsValid());
             }
         }
@@ -98,18 +91,15 @@ namespace Xpandables.Net.Tests
         [DataRow("+33123456789", "motdepasse")]
         public async Task AutheAndListEventLogsAsync(string phone, string password)
         {
-            token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{phone}:{password}"));
-            httpClientHandler.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationSchemes.Basic.ToString(), token);
-
-            var request = RequestAuthenToken.Default();
-            using var response = await httpClientHandler.HandleAsync(request).ConfigureAwait(false);
+            var request = new GetAuthenToken(phone, password);
+            using var response = await anonymousHandler.HandleAsync(request).ConfigureAwait(false);
 
             var auth = response.Result;
             token = auth.Token;
 
-            var eventLogRequest = new EventLogList() { StartOccuredOn = new DateTime(2020, 10, 11, 10, 00, 35) };
+            var eventLogRequest = new EventLogList() { StartOccuredOn = new DateTime(2020, 8, 11, 10, 00, 35) };
 
-            using var listResponse = await httpClientHandler.HandleAsync(eventLogRequest).ConfigureAwait(false);
+            using var listResponse = await authenHandler.HandleAsync(eventLogRequest).ConfigureAwait(false);
             if (listResponse.IsValid())
             {
                 var results = Optional<IAsyncEnumerable<Log>>.Some(listResponse.Result);
@@ -127,17 +117,14 @@ namespace Xpandables.Net.Tests
         [DataRow("+33123456789", "motdepasse")]
         public async Task GetUserAsync(string phone, string password)
         {
-            token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{phone}:{password}"));
-            httpClientHandler.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationSchemes.Basic.ToString(), token);
-
-            var request = RequestAuthenToken.Default();
-            using var response = await httpClientHandler.HandleAsync(request).ConfigureAwait(false);
+            var request = new GetAuthenToken(phone, password);
+            using var response = await anonymousHandler.HandleAsync(request).ConfigureAwait(false);
 
             var auth = response.Result;
             token = auth.Token;
-            var getUser = new GetUser("IKHTJDQMZWSOKSPYIOFUBMRCHPDAJ197");
+            var getUser = new GetUser(response.Result.Key);
 
-            using var userResponse = await httpClientHandler.HandleAsync(getUser).ConfigureAwait(false);
+            using var userResponse = await authenHandler.HandleAsync(getUser).ConfigureAwait(false);
             if (userResponse.IsValid())
             {
                 var user = userResponse.Result;
@@ -161,22 +148,7 @@ namespace Xpandables.Net.Tests
             Trace.WriteLine($"Ip ; {response.Result}");
         }
 
-        [TestMethod]
-        public async Task GetGeoLocationAsync()
-        {
-            IHttpRestClientIPHandler clientHandler = new HttpRestClientIPHandler(
-          new HttpClient(new HttpRestClientIPMessageHandler()) { BaseAddress = new Uri("https://ipinfo.io/ip") }, new HttpRestClientEngine());
-            using var response = await clientHandler.ReadIPAddressAsync().ConfigureAwait(false);
-
-            IHttpRestClientLocationHandler clientHandler1 = new HttpRestClientLocationHandler(
-                new HttpClient() { BaseAddress = new Uri("http://api.ipstack.com") }, new HttpRestClientEngine());
-            using var response1 = await clientHandler1.ReadLocationAsync(new GetLocation(response.Result, "868cb9ec7403caf372f47373a8d525fa")).ConfigureAwait(false);
-
-            Assert.IsNotNull(response1.Result.Ip);
-            Trace.WriteLine($"City : {response1.Result.City}");
-        }
-
         [ClassCleanup]
-        public static void CleanUp() => httpClientHandler?.Dispose();
+        public static void CleanUp() => authenHandler?.Dispose();
     }
 }

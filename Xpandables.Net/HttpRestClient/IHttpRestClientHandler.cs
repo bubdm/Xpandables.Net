@@ -44,6 +44,11 @@ namespace Xpandables.Net.HttpRestClient
         HttpClient HttpClient { get; }
 
         /// <summary>
+        /// Contains the <see cref="IHttpRestClientEngine"/> instance.
+        /// </summary>
+        IHttpRestClientEngine HttpRestClientEngine { get; }
+
+        /// <summary>
         /// Handles the query as asynchronous operation.
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>

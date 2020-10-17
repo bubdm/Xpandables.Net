@@ -36,16 +36,19 @@ namespace Xpandables.Net.HttpRestClient
     public sealed class HttpRestClientHandler : Disposable, IHttpRestClientHandler
     {
         private readonly IHttpRestClientEngine _httpRestClientEngine;
+
         /// <summary>
         /// Gets the <see cref="System.Net.Http.HttpClient"/> current instance.
         /// </summary>
         public HttpClient HttpClient { get; }
 
+        IHttpRestClientEngine IHttpRestClientHandler.HttpRestClientEngine => _httpRestClientEngine;
+
         /// <summary>
         /// Initializes a new instance of <see cref="HttpRestClientHandler"/> class with the HTTP typed client.
         /// </summary>
         /// <param name="httpClient">The HTTP client type to be used.</param>
-        /// <param name="httpRestClientEngine">The http rest client engine.</param>
+        /// <param name="httpRestClientEngine">The HTTP rest client engine.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="httpClient"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientEngine"/> is null.</exception>/// 
         public HttpRestClientHandler(HttpClient httpClient, IHttpRestClientEngine httpRestClientEngine)

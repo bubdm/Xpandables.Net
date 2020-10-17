@@ -31,18 +31,18 @@ using static Xpandables.Net.Validations.ValidationAttributeExtensions;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class RequestAuthenTokenHandler : IQueryHandler<RequestAuthenToken, AuthenToken>
+    public sealed class GetAuthenTokenHandler : IQueryHandler<GetAuthenToken, AuthenToken>
     {
         private readonly IDataContext<User> _dataContext;
         private readonly IHttpTokenEngine _tokenService;
 
-        public RequestAuthenTokenHandler(IDataContext<User> dataContext, IHttpTokenEngine tokenService)
+        public GetAuthenTokenHandler(IDataContext<User> dataContext, IHttpTokenEngine tokenService)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
         }
 
-        public async Task<AuthenToken> HandleAsync(RequestAuthenToken query, CancellationToken cancellationToken = default)
+        public async Task<AuthenToken> HandleAsync(GetAuthenToken query, CancellationToken cancellationToken = default)
         {
             var user = await _dataContext.FindAsync(u => u.Where(query), cancellationToken).ConfigureAwait(false)
             ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, query.Phone, new[] { nameof(query.Phone) });
@@ -55,7 +55,8 @@ namespace Xpandables.Net.Api.Handlers
                 .Create()
                 .AddExpiry(token.Expiry)
                 .AddToken(token.Value)
-                .AddType(token.Type);
+                .AddType(token.Type)
+                .AddKey(user.Id);
         }
     }
 }

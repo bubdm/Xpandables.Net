@@ -41,8 +41,9 @@ namespace Xpandables.Net.Api.Controllers
         [HttpPost, AllowAnonymous]
         [BasicAuthentication]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response))]
-        public async Task<IActionResult> PostAsync([FromHeader] RequestAuthenToken requestAuthen, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> PostAsync(CancellationToken cancellationToken = default)
         {
+            var requestAuthen = new GetAuthenToken(ControllerContext.HttpContext.Request.Headers["Phone"], ControllerContext.HttpContext.Request.Headers["Password"]);
             var response = await _dispatcher.InvokeAsync(requestAuthen, cancellationToken).ConfigureAwait(false);
             return Ok(response);
         }

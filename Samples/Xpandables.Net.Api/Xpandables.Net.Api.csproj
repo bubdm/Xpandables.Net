@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\Xpandables.Net.DependencyInjection\Xpandables.Net.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\Xpandables.Net.EntityFramework\Xpandables.Net.EntityFramework.csproj" />
     <ProjectReference Include="..\..\Xpandables.NetCore\Xpandables.NetCore.csproj" />
+    <ProjectReference Include="..\Xpandables.Net.Api.Contracts\Xpandables.Net.Api.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

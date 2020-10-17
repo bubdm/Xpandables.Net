@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.DependencyIn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.EntityFramework", "Xpandables.Net.EntityFramework\Xpandables.Net.EntityFramework.csproj", "{4B83F394-55C9-45F6-8EBE-742D6F40869A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Api", "Xpandables.Net.Api\Xpandables.Net.Api.csproj", "{EA6F3416-3632-41A3-ACC5-161F70117443}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Tests", "Xpandables.Net.Tests\Xpandables.Net.Tests.csproj", "{EB926986-C18B-4D9D-9570-40DCBFCE33C9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.QrCodes", "Xpandables.Net.QrCodes\Xpandables.Net.QrCodes.csproj", "{43E841CA-4BD7-427E-93B2-6DD919DF58F1}"
@@ -24,6 +22,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Desktop", "Samples\Xpandables.Net.Desktop\Xpandables.Net.Desktop.csproj", "{AF2DA2C2-F47E-4150-82C4-33D36E544FD8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Api", "Samples\Xpandables.Net.Api\Xpandables.Net.Api.csproj", "{B5377C67-DCD2-41A4-9289-EE588D16B54F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Api.Contracts", "Samples\Xpandables.Net.Api.Contracts\Xpandables.Net.Api.Contracts.csproj", "{E69E5DE9-90A5-45AB-BF75-A413192BEDAC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Api.Models", "Samples\Xpandables.Net.Api.Models\Xpandables.Net.Api.Models.csproj", "{8AA61F4B-71BC-4769-BDEE-2D443805AAF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,14 +66,6 @@ Global
 		{4B83F394-55C9-45F6-8EBE-742D6F40869A}.Release|Any CPU.ActiveCfg = Release|x64
 		{4B83F394-55C9-45F6-8EBE-742D6F40869A}.Release|x64.ActiveCfg = Release|x64
 		{4B83F394-55C9-45F6-8EBE-742D6F40869A}.Release|x64.Build.0 = Release|x64
-		{EA6F3416-3632-41A3-ACC5-161F70117443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA6F3416-3632-41A3-ACC5-161F70117443}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA6F3416-3632-41A3-ACC5-161F70117443}.Debug|x64.ActiveCfg = Debug|x64
-		{EA6F3416-3632-41A3-ACC5-161F70117443}.Debug|x64.Build.0 = Debug|x64
-		{EA6F3416-3632-41A3-ACC5-161F70117443}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA6F3416-3632-41A3-ACC5-161F70117443}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA6F3416-3632-41A3-ACC5-161F70117443}.Release|x64.ActiveCfg = Release|x64
-		{EA6F3416-3632-41A3-ACC5-161F70117443}.Release|x64.Build.0 = Release|x64
 		{EB926986-C18B-4D9D-9570-40DCBFCE33C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EB926986-C18B-4D9D-9570-40DCBFCE33C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB926986-C18B-4D9D-9570-40DCBFCE33C9}.Debug|x64.ActiveCfg = Debug|x64
@@ -104,6 +98,22 @@ Global
 		{B5377C67-DCD2-41A4-9289-EE588D16B54F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5377C67-DCD2-41A4-9289-EE588D16B54F}.Release|x64.ActiveCfg = Release|x64
 		{B5377C67-DCD2-41A4-9289-EE588D16B54F}.Release|x64.Build.0 = Release|x64
+		{E69E5DE9-90A5-45AB-BF75-A413192BEDAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E69E5DE9-90A5-45AB-BF75-A413192BEDAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E69E5DE9-90A5-45AB-BF75-A413192BEDAC}.Debug|x64.ActiveCfg = Debug|x64
+		{E69E5DE9-90A5-45AB-BF75-A413192BEDAC}.Debug|x64.Build.0 = Debug|x64
+		{E69E5DE9-90A5-45AB-BF75-A413192BEDAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E69E5DE9-90A5-45AB-BF75-A413192BEDAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E69E5DE9-90A5-45AB-BF75-A413192BEDAC}.Release|x64.ActiveCfg = Release|x64
+		{E69E5DE9-90A5-45AB-BF75-A413192BEDAC}.Release|x64.Build.0 = Release|x64
+		{8AA61F4B-71BC-4769-BDEE-2D443805AAF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AA61F4B-71BC-4769-BDEE-2D443805AAF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AA61F4B-71BC-4769-BDEE-2D443805AAF0}.Debug|x64.ActiveCfg = Debug|x64
+		{8AA61F4B-71BC-4769-BDEE-2D443805AAF0}.Debug|x64.Build.0 = Debug|x64
+		{8AA61F4B-71BC-4769-BDEE-2D443805AAF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AA61F4B-71BC-4769-BDEE-2D443805AAF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AA61F4B-71BC-4769-BDEE-2D443805AAF0}.Release|x64.ActiveCfg = Release|x64
+		{8AA61F4B-71BC-4769-BDEE-2D443805AAF0}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,6 +121,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{AF2DA2C2-F47E-4150-82C4-33D36E544FD8} = {F19BDA64-6A4D-4C38-96FD-24E37E219BFF}
 		{B5377C67-DCD2-41A4-9289-EE588D16B54F} = {F19BDA64-6A4D-4C38-96FD-24E37E219BFF}
+		{E69E5DE9-90A5-45AB-BF75-A413192BEDAC} = {F19BDA64-6A4D-4C38-96FD-24E37E219BFF}
+		{8AA61F4B-71BC-4769-BDEE-2D443805AAF0} = {F19BDA64-6A4D-4C38-96FD-24E37E219BFF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {946F08A7-BB6F-4954-B369-EA86BFE7923E}

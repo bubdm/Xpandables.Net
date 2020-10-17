@@ -28,9 +28,7 @@ using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
-using Xpandables.Net.HttpRestClient;
-
-namespace Xpandables.Net.DependencyInjection.HttpRestClient
+namespace Xpandables.Net.HttpRestClient
 {
     /// <summary>
     /// The default implementation of <see cref="IHttpRestClientEngine"/> that uses <see cref="Newtonsoft.Json"/> for async-enumerable from stream.
