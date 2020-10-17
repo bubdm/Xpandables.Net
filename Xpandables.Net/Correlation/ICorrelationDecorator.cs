@@ -30,13 +30,6 @@ namespace Xpandables.Net.Correlation
     /// giving you access to all data still alive on the control flow and the <see cref="IAsyncCorrelationContext.RollbackEvent"/>
     /// will only be raised when exception. The exception in that case in accessible through the
     /// <see cref="IAsyncCorrelationContext.RollbackEvent"/>.
-    /// <para></para>
-    /// You need to register the expected behavior using the appropriate extension method.
-    /// <para></para>
-    /// <see cref="IAsyncQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncQueryCorrelationDecorator{TQuery, TResult}"/>.
-    /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandCorrelationDecorator{TCommand}"/>.
-    /// <see cref="IQuery{TResult}"/> class implementation will be decorated with <see cref="QueryCorrelationDecorator{TQuery, TResult}"/>.
-    /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandCorrelationDecorator{TCommand}"/>.
     /// </summary>
     public interface ICorrelationDecorator { }
 }

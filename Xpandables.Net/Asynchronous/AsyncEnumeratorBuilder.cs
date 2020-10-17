@@ -25,7 +25,7 @@ namespace Xpandables.Net.Asynchronous
     /// Add asynchronous iteration support to a generic collection.
     /// This class implements <see cref="IAsyncEnumerator{T}"/>.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of the elements in the collection.</typeparam>
     public sealed class AsyncEnumeratorBuilder<T> : IAsyncEnumerator<T>
     {
         private readonly IEnumerator<T> _inner;

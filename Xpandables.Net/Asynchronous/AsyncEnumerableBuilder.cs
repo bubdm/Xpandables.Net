@@ -35,14 +35,22 @@ namespace Xpandables.Net.Asynchronous
         /// </summary>
         /// <param name="collection">The collection to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
-        public AsyncEnumerableBuilder(IEnumerable<T> collection) => _asyncEnumerator = _ => new AsyncEnumeratorBuilder<T>(collection.GetEnumerator());
+        public AsyncEnumerableBuilder(IEnumerable<T> collection)
+        {
+            _ = collection ?? throw new ArgumentNullException(nameof(collection));
+            _asyncEnumerator = _ => new AsyncEnumeratorBuilder<T>(collection.GetEnumerator());
+        }
 
         /// <summary>
         /// Initializes a new instance of <see cref="AsyncEnumerableBuilder{T}"/> with the async enumerator.
         /// </summary>
         /// <param name="asyncEnumerator">The delegate for async enumerator.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="asyncEnumerator"/> is null.</exception>
-        public AsyncEnumerableBuilder(Func<CancellationToken, IAsyncEnumerator<T>> asyncEnumerator) => _asyncEnumerator = asyncEnumerator ?? throw new ArgumentNullException(nameof(asyncEnumerator));
+        public AsyncEnumerableBuilder(Func<CancellationToken, IAsyncEnumerator<T>> asyncEnumerator)
+        {
+            _ = asyncEnumerator ?? throw new ArgumentNullException(nameof(asyncEnumerator));
+            _asyncEnumerator = asyncEnumerator ?? throw new ArgumentNullException(nameof(asyncEnumerator));
+        }
 
         /// <summary>
         /// Returns an enumerator that iterates asynchronously through the collection.

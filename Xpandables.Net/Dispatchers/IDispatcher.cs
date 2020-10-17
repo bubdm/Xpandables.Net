@@ -29,8 +29,8 @@ using Xpandables.Net.Types;
 namespace Xpandables.Net.Dispatchers
 {
     /// <summary>
-    /// Defines a set of methods to automatically handle <see cref="IAsyncCommand"/> and <see cref="IAsyncQuery{TResult}"/>
-    /// when targeting <see cref="IAsyncQueryHandler{TQuery, TResult}"/> or/and <see cref="IAsyncCommandHandler{TCommand}"/>.
+    /// Defines a set of methods to automatically handle <see cref="IAsyncCommand"/>, <see cref="IQuery{TResult}"/> and <see cref="IAsyncQuery{TResult}"/>
+    /// when targeting <see cref="IAsyncQueryHandler{TQuery, TResult}"/>, <see cref="IQueryHandler{TQuery, TResult}"/> or/and <see cref="IAsyncCommandHandler{TCommand}"/>.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     public interface IDispatcher

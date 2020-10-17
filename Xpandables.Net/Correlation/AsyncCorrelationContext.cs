@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Correlation
 {
     /// <summary>
-    /// Default implementation of <see cref="IAsyncCorrelationContext"/>.
+    /// The implementation of <see cref="IAsyncCorrelationContext"/>.
     /// Defines two tasks that can be used to follow process after a control flow with <see cref="PostEvent"/>
     /// and on exception during the control flow with <see cref="RollbackEvent"/>.
     /// </summary>
@@ -34,12 +34,12 @@ namespace Xpandables.Net.Correlation
 
         /// <summary>
         /// The event that will be asynchronously raised after the main one in the same control flow only if there is no exception.
-        /// The event will received the control flow return value for non-void method.
+        /// The event will received the control flow return value for non-void method. Its default behavior does nothing.
         /// </summary>
         public event AsyncCorrelationPostEvent PostEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
 
         /// <summary>
-        /// The event that will be asynchronously raised after the main one when exception. The event will received the control flow handled exception.
+        /// The event that will be asynchronously raised after the main one when exception. The event will received the control flow handled exception. Its default behavior does nothing.
         /// </summary>
         public event AsyncCorrelationRollbackEvent RollbackEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
 

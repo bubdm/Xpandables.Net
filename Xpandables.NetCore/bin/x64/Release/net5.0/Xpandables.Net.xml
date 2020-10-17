@@ -88,6 +88,7 @@
             <typeparam name="TResult">The type of result.</typeparam>
             <param name="func">The asynchronous function to execute synchronously.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="func"/> is null.</exception>
+            <returns>An object of <typeparamref name="TResult"/> type.</returns>
         </member>
         <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableExtensions.RunSync``1(System.Threading.Tasks.Task{``0})">
             <summary>
@@ -96,6 +97,7 @@
             <typeparam name="TResult">The type of result.</typeparam>
             <param name="task">The asynchronous function to execute synchronously.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="task"/> is null.</exception>
+            <returns>An object of <typeparamref name="TResult"/> type.</returns>
         </member>
         <member name="M:Xpandables.Net.Asynchronous.AsyncEnumerableExtensions.RunSync(System.Threading.Tasks.Task)">
             <summary>
@@ -108,7 +110,7 @@
             <summary>
             Returns an empty async-enumerable.
             </summary>
-            <typeparam name="TResult">The type of the result.</typeparam>
+            <typeparam name="T">The type of the elements in the collection.</typeparam>
             <returns>An async-enumerable sequence with no elements.</returns>
         </member>
         <member name="T:Xpandables.Net.Asynchronous.AsyncEnumeratorBuilder`1">
@@ -116,7 +118,7 @@
             Add asynchronous iteration support to a generic collection.
             This class implements <see cref="T:System.Collections.Generic.IAsyncEnumerator`1"/>.
             </summary>
-            <typeparam name="T"></typeparam>
+            <typeparam name="T">The type of the elements in the collection.</typeparam>
         </member>
         <member name="M:Xpandables.Net.Asynchronous.AsyncEnumeratorBuilder`1.#ctor(System.Collections.Generic.IEnumerator{`0})">
             <summary>
@@ -201,7 +203,7 @@
         </member>
         <member name="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1">
             <summary>
-            This class allows the application author to add post/rollback event support to command control flow.
+            This class allows the application author to add post/rollback event support to command handler control flow.
             The target command should implement the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface in order to activate the behavior.
             The class decorates the target command handler with an implementation of <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/> that
             adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
@@ -221,7 +223,7 @@
         </member>
         <member name="M:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handle the specified command adding post/rollback event to the decorated handler.
+            Asynchronously handles the specified command adding post/rollback event to the decorated handler.
             </summary>
             <param name="command">The command instance to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -232,7 +234,7 @@
         </member>
         <member name="T:Xpandables.Net.Correlation.AsyncCorrelationContext">
             <summary>
-            Default implementation of <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/>.
+            The implementation of <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/>.
             Defines two tasks that can be used to follow process after a control flow with <see cref="E:Xpandables.Net.Correlation.AsyncCorrelationContext.PostEvent"/>
             and on exception during the control flow with <see cref="E:Xpandables.Net.Correlation.AsyncCorrelationContext.RollbackEvent"/>.
             </summary>
@@ -245,12 +247,12 @@
         <member name="E:Xpandables.Net.Correlation.AsyncCorrelationContext.PostEvent">
             <summary>
             The event that will be asynchronously raised after the main one in the same control flow only if there is no exception.
-            The event will received the control flow return value for non-void method.
+            The event will received the control flow return value for non-void method. Its default behavior does nothing.
             </summary>
         </member>
         <member name="E:Xpandables.Net.Correlation.AsyncCorrelationContext.RollbackEvent">
             <summary>
-            The event that will be asynchronously raised after the main one when exception. The event will received the control flow handled exception.
+            The event that will be asynchronously raised after the main one when exception. The event will received the control flow handled exception. Its default behavior does nothing.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Correlation.AsyncCorrelationContext.OnPostEventAsync(System.Object)">
@@ -305,7 +307,7 @@
         </member>
         <member name="T:Xpandables.Net.Correlation.CorrelationCollection`2">
             <summary>
-            Provides a collection of objects that need to be shared across asynchronous control flows.
+            Provides with a collection of objects that need to be shared across asynchronous control flows.
             This collection implements <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>
             </summary>
             <typeparam name="TKey">The type of the key.</typeparam>
@@ -327,13 +329,13 @@
         </member>
         <member name="T:Xpandables.Net.Correlation.AsyncCorrelationPostEvent">
             <summary>
-            Defines a method signature to be used to handle post event in correlation context <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/>.
+            Represents a method signature to be used to handle post event in correlation context <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/>.
             </summary>
             <param name="returnValue">The control flow return value only for non-void method.</param>
         </member>
         <member name="T:Xpandables.Net.Correlation.AsyncCorrelationRollbackEvent">
             <summary>
-            Defines a method signature to be used to handler rollback event in correlation context <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/>.
+            Represents a method signature to be used to handler rollback event in correlation context <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/>.
             </summary>
             <param name="exception">The control flow handled exception.</param>
         </member>
@@ -341,10 +343,8 @@
             <summary>
             Defines two tasks that can be used to follow process after a control flow with <see cref="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.PostEvent"/>
             and on exception during the control flow with <see cref="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.RollbackEvent"/>.
-            In order to be activated, the target class should implement
-            the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface,
-            the target handling class should reference the current interface (to set the action) and you should
-            register the behavior with the expected extension method.
+            In order to be activated, the target class should implement the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> interface, 
+            the target handling class should reference the current interface (to set the action).
             </summary>
         </member>
         <member name="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.PostEvent">
@@ -369,13 +369,6 @@
             giving you access to all data still alive on the control flow and the <see cref="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.RollbackEvent"/>
             will only be raised when exception. The exception in that case in accessible through the
             <see cref="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.RollbackEvent"/>.
-            <para></para>
-            You need to register the expected behavior using the appropriate extension method.
-            <para></para>
-            <see cref="T:Xpandables.Net.Queries.IAsyncQuery`1"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncQueryCorrelationDecorator`2"/>.
-            <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1"/>.
-            <see cref="T:Xpandables.Net.Queries.IQuery`1"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2"/>.
-            <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Correlation.AsyncCommandCorrelationDecorator`1"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2">
@@ -392,16 +385,16 @@
         </member>
         <member name="M:Xpandables.Net.Correlation.QueryCorrelationDecorator`2.#ctor(Xpandables.Net.Correlation.AsyncCorrelationContext,Xpandables.Net.Queries.IQueryHandler{`0,`1})">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2"/> class.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Correlation.QueryCorrelationDecorator`2"/> class with the correlation context and the query handler to be decorated.
             </summary>
-            <param name="correlationContext">the event register.</param>
+            <param name="correlationContext">the correlation context.</param>
             <param name="decoratee">The decorated query handler.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
             <exception cref="T:System.ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.Correlation.QueryCorrelationDecorator`2.HandleAsync(`0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously handles the specified query and returns the expected result.
+            Asynchronously handles the specified query and returns the expected result, adding post/rollback event to the decorated handler.
             </summary>
             <param name="query">The query to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -417,7 +410,7 @@
         </member>
         <member name="P:Xpandables.Net.Creators.IInstanceCreator.Cache">
             <summary>
-            Contains the instance cache.
+            Contains the instance cache that can be cleared to free memory.
             </summary>
         </member>
         <member name="P:Xpandables.Net.Creators.IInstanceCreator.OnException">
@@ -427,28 +420,27 @@
         </member>
         <member name="M:Xpandables.Net.Creators.IInstanceCreator.Create(System.Type)">
             <summary>
-            Returns an instance of the <paramref name="type"/> or null if exception.
+            Returns an instance of the <paramref name="type"/> with a parameterless constructor or null if exception.
             In case of exception, the <see cref="P:Xpandables.Net.Creators.IInstanceCreator.OnException"/> will be raised.
             </summary>
             <param name="type">The type to be created.</param>
-            <returns>An instance of the <paramref name="type"/> if OK.</returns>
+            <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.Creators.IInstanceCreator.Create``1(System.Type,``0)">
             <summary>
-            Returns an instance of the <paramref name="type"/> or null if exception.
+            Returns an instance (using cache) of the <paramref name="type"/> with a constructor that takes an argument of a type-specific or null if exception.
             In case of exception, the <see cref="P:Xpandables.Net.Creators.IInstanceCreator.OnException"/> will be raised.
             </summary>
             <typeparam name="TParam">The type of the parameter to pass to the constructor.</typeparam>
             <param name="type">The type to be created.</param>
             <param name="param">The parameter to pass to the constructor.</param>
-            <returns>An instance of the <paramref name="type"/> if OK.</returns>
+            <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="param"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.Creators.IInstanceCreator.Create``2(System.Type,``0,``1)">
             <summary>
-            Returns an instance of the <paramref name="type"/> or null if exception.
+            Returns an instance (using cache) of the <paramref name="type"/> with a constructor that takes two arguments of specific-type or null if exception.
             In case of exception, the <see cref="P:Xpandables.Net.Creators.IInstanceCreator.OnException"/> will be raised.
             </summary>
             <typeparam name="TParam1">The type of the first parameter to pass to the constructor.</typeparam>
@@ -456,14 +448,12 @@
             <param name="type">The type to be created.</param>
             <param name="param1">The first parameter to pass to the constructor.</param>
             <param name="param2">The first parameter to pass to the constructor.</param>
-            <returns>An instance of the <paramref name="type"/> if OK.</returns>
+            <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="param1"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="param2"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.Creators.IInstanceCreator.Create``3(System.Type,``0,``1,``2)">
             <summary>
-            Returns an instance of the <paramref name="type"/> or null if exception.
+            Returns an instance (using cache) of the <paramref name="type"/> with a constructor that takes three arguments of specific-type or null if exception..
             In case of exception, the <see cref="P:Xpandables.Net.Creators.IInstanceCreator.OnException"/> will be raised.
             </summary>
             <typeparam name="TParam1">The type of the first parameter to pass to the constructor.</typeparam>
@@ -473,11 +463,8 @@
             <param name="param1">The first parameter to pass to the constructor.</param>
             <param name="param2">The first parameter to pass to the constructor.</param>
             <param name="param3">The first parameter to pass to the constructor.</param>
-            <returns>An instance of the <paramref name="type"/> if OK.</returns>
+            <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
             <exception cref="T:System.ArgumentNullException">The <paramref name="type"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="param1"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="param2"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="param3"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.Creators.IInstanceCreator.ClearCache">
             <summary>
@@ -486,8 +473,8 @@
         </member>
         <member name="T:Xpandables.Net.Creators.InstanceCreator">
             <summary>
-            Default implementation for <see cref="T:Xpandables.Net.Creators.IInstanceCreator"/>.
-            You can customize the behavior providing your own implementing of <see cref="T:Xpandables.Net.Creators.IInstanceCreator"/> interface.
+            The implementation for <see cref="T:Xpandables.Net.Creators.IInstanceCreator"/>.
+            You can customize the behavior providing your own, implementing of <see cref="T:Xpandables.Net.Creators.IInstanceCreator"/> interface.
             </summary>
         </member>
         <member name="P:Xpandables.Net.Creators.InstanceCreator.OnException">
@@ -497,12 +484,12 @@
         </member>
         <member name="P:Xpandables.Net.Creators.InstanceCreator.Cache">
             <summary>
-            Contains the instance cache.
+            Contains the instance cache that can be cleared to free memory.
             </summary>
         </member>
         <member name="M:Xpandables.Net.Creators.InstanceCreator.#ctor">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Creators.InstanceCreator"/>.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Creators.InstanceCreator"/> settings the cache to its default value.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Data.Attributes.DataConverterAttribute">
@@ -919,6 +906,55 @@
             Determines whether or not the instance contains valid information.
             If so, returns <see langword="true"/> otherwise returns <see langword="false"/>.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Data.DataBase">
+            <summary>
+            Provides with a default implementation of <see cref="T:Xpandables.Net.Data.IDataBase"/>.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/>.
+            </summary>
+            <param name="dataConnectionContextProvider">The data context provider.</param>
+            <param name="dataExecutableProvider">The data executable provider.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Connections.IDataConnectionOptions)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/> with a default data connection.
+            </summary>
+            <param name="dataConnectionContextProvider">The data context provider.</param>
+            <param name="dataExecutableProvider">The data executable provider.</param>
+            <param name="dataConnection">The default data connection to be used.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Options.IDataExecutableOptions)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/> with a default data options.
+            </summary>
+            <param name="dataConnectionContextProvider">The data context provider.</param>
+            <param name="dataExecutableProvider">The data executable provider.</param>
+            <param name="dataOptions">The default data options to be used.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataOptions"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataExecutableOptions)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/> with a default data options and connection.
+            </summary>
+            <param name="dataConnectionContextProvider">The data context provider.</param>
+            <param name="dataExecutableProvider">The data executable provider.</param>
+            <param name="dataConnection">The default data connection to be used.</param>
+            <param name="dataOptions">The default data options to be used.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="dataOptions"/> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.Data.DataBaseExtensions">
             <summary>
@@ -2274,55 +2310,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="commandText" /> is null.</exception>
             <exception cref="T:System.InvalidOperationException">the execution failed. See inner exception.</exception>
         </member>
-        <member name="T:Xpandables.Net.Data.DataBase">
-            <summary>
-            Provides with a default implementation of <see cref="T:Xpandables.Net.Data.IDataBase"/>.
-            </summary>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/>.
-            </summary>
-            <param name="dataConnectionContextProvider">The data context provider.</param>
-            <param name="dataExecutableProvider">The data executable provider.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Connections.IDataConnectionOptions)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/> with a default data connection.
-            </summary>
-            <param name="dataConnectionContextProvider">The data context provider.</param>
-            <param name="dataExecutableProvider">The data executable provider.</param>
-            <param name="dataConnection">The default data connection to be used.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Options.IDataExecutableOptions)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/> with a default data options.
-            </summary>
-            <param name="dataConnectionContextProvider">The data context provider.</param>
-            <param name="dataExecutableProvider">The data executable provider.</param>
-            <param name="dataOptions">The default data options to be used.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataOptions"/> is null.</exception>
-        </member>
-        <member name="M:Xpandables.Net.Data.DataBase.#ctor(Xpandables.Net.Data.Connections.IDataConnectionContextProvider,Xpandables.Net.Data.Executables.IDataExecutableProvider,Xpandables.Net.Data.Connections.IDataConnectionOptions,Xpandables.Net.Data.Options.IDataExecutableOptions)">
-            <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Data.DataBase"/> with a default data options and connection.
-            </summary>
-            <param name="dataConnectionContextProvider">The data context provider.</param>
-            <param name="dataExecutableProvider">The data executable provider.</param>
-            <param name="dataConnection">The default data connection to be used.</param>
-            <param name="dataOptions">The default data options to be used.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnectionContextProvider"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataExecutableProvider"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataConnection"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="dataOptions"/> is null.</exception>
-        </member>
         <member name="T:Xpandables.Net.Data.Mappers.IDataMapper">
             <summary>
             Provides with methods to map a source to entities.
@@ -2836,8 +2823,8 @@
         </member>
         <member name="T:Xpandables.Net.Dispatchers.Dispatcher">
             <summary>
-            The default implementation for <see cref="T:Xpandables.Net.Dispatchers.IDispatcher"/>.
-            Implements methods to execute the <see cref="T:Xpandables.Net.Queries.IAsyncQueryHandler`2"/> and
+            The implementation for <see cref="T:Xpandables.Net.Dispatchers.IDispatcher"/>.
+            Implements methods to execute the <see cref="T:Xpandables.Net.Queries.IAsyncQueryHandler`2"/>, <see cref="T:Xpandables.Net.Queries.IQueryHandler`2"/> and
             <see cref="T:Xpandables.Net.Commands.IAsyncCommandHandler`1"/> process dynamically.
             This class can not be inherited.
             </summary>
@@ -2849,7 +2836,7 @@
         </member>
         <member name="M:Xpandables.Net.Dispatchers.Dispatcher.#ctor(Xpandables.Net.Dispatchers.IDispatcherHandlerProvider)">
             <summary>
-            Initializes a new instance of <see cref="T:Xpandables.Net.Dispatchers.Dispatcher"/>.
+            Initializes a new instance of <see cref="T:Xpandables.Net.Dispatchers.Dispatcher"/> with the handlers service provider.
             </summary>
             <param name="dispatcherHandlerProvider">The handler service provider.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="dispatcherHandlerProvider"/> is null.</exception>
@@ -2882,8 +2869,8 @@
         </member>
         <member name="T:Xpandables.Net.Dispatchers.IDispatcher">
             <summary>
-            Defines a set of methods to automatically handle <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> and <see cref="T:Xpandables.Net.Queries.IAsyncQuery`1"/>
-            when targeting <see cref="T:Xpandables.Net.Queries.IAsyncQueryHandler`2"/> or/and <see cref="T:Xpandables.Net.Commands.IAsyncCommandHandler`1"/>.
+            Defines a set of methods to automatically handle <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/>, <see cref="T:Xpandables.Net.Queries.IQuery`1"/> and <see cref="T:Xpandables.Net.Queries.IAsyncQuery`1"/>
+            when targeting <see cref="T:Xpandables.Net.Queries.IAsyncQueryHandler`2"/>, <see cref="T:Xpandables.Net.Queries.IQueryHandler`2"/> or/and <see cref="T:Xpandables.Net.Commands.IAsyncCommandHandler`1"/>.
             The implementation must be thread-safe when working in a multi-threaded environment.
             </summary>
         </member>
@@ -3216,7 +3203,10 @@
             </summary>
             <param name="command">The command instance to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="command"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
+            <returns>A task that represents the asynchronous operation.</returns>
         </member>
         <member name="T:Xpandables.Net.EntityFramework.DataContext`1">
             <summary>
@@ -3390,7 +3380,7 @@
         </member>
         <member name="T:Xpandables.Net.EntityFramework.IDataContext`1">
             <summary>
-            Allows an application author to manage a specific domain objects using EntityFrameworkCore.
+            Allows an application author to manage a specific-type domain objects using EntityFrameworkCore.
             This interface inherits from <see cref="T:Xpandables.Net.EntityFramework.IDataContext"/>.
             When argument is null, an <see cref="T:System.ArgumentNullException"/> will be thrown.
             When a value is not found, a default value of the expected type should be returned.
@@ -3518,11 +3508,6 @@
             In order to control the behavior, you can add the <see cref="T:Xpandables.Net.Correlation.ICorrelationDecorator"/> to the command/query class and reference
             the <see cref="T:Xpandables.Net.Correlation.IAsyncCorrelationContext"/> in the handler class implementation, to defines actions to be applied after the control flow with
             <see cref="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.PostEvent"/> on success and <see cref="E:Xpandables.Net.Correlation.IAsyncCorrelationContext.RollbackEvent"/> on exception.
-            <para></para>
-            You need to register the expected behavior to the service collections using the appropriate extension method,
-            register the data context using and extension method.
-            <para></para>
-            <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.EntityFramework.AsyncCommandPersistenceDecorator`1"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.EntityFramework.QueryPersistenceDecorator`2">
@@ -3582,6 +3567,8 @@
             <param name="action">Action to invoke for each element.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
             <returns>A task that represents the asynchronous operation.</returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="action"/> is null.</exception>
         </member>
         <member name="M:Xpandables.Net.Enumerables.EnumerableExtensions.ToReadOnlyCollection``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
@@ -6155,7 +6142,9 @@
             </summary>
             <param name="command">The command instance to act on.</param>
             <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="command" /> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="command"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The operation failed. See inner exception.</exception>
+            <exception cref="T:System.OperationCanceledException">The operation has been canceled.</exception>
             <returns>A task that represents the asynchronous operation.</returns>
         </member>
         <member name="T:Xpandables.Net.Identities.AsyncQueryTokenClaimDecorator`2">
@@ -6242,8 +6231,7 @@
             A marker interface that allows the command/query class to be filled with claims identity. The class should derive from
             <see cref="T:Xpandables.Net.Identities.TokenClaim"/>, <see cref="T:Xpandables.Net.Identities.TokenClaim`1"/> or <see cref="T:Xpandables.Net.Identities.TokenClaimExpression`2"/>
             for a query-bale class. You need to provide with an
-            implementation for <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider"/>
-            and register the expected class using the correct extension method.
+            implementation for <see cref="T:Xpandables.Net.Identities.ITokenClaimProvider"/>.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Identities.ITokenClaimExpression`2">
@@ -8072,8 +8060,6 @@
             the decorated class type :
             <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Transactions.AsyncCommandTransactionDecorator`1"/>.
             You must implement the <see cref="T:Xpandables.Net.Transactions.ITransactionScopeProvider"/> to provide the transaction scope.
-            <para></para>
-            You need to register the expected behavior to the service collections using the appropriate extension method.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Transactions.ITransactionScopeProvider">
@@ -8711,9 +8697,6 @@
             <see cref="T:Xpandables.Net.Commands.IAsyncCommand"/> class implementation will be decorated with <see cref="T:Xpandables.Net.Validations.AsyncCommandValidatorDecorator`1"/>.
             The default validation behavior uses the data annotations validator on validation attributes. You can implement the interface
             <see cref="T:Xpandables.Net.Validations.IValidation`1"/> to customize a validation behavior.
-            <para></para>
-            You need to register the expected behavior to the service collections using the appropriate extension method
-            for the validation behavior and to register all your custom implementations.
             </summary>
         </member>
         <member name="T:Xpandables.Net.Validations.MetadataDescriptionProvider">

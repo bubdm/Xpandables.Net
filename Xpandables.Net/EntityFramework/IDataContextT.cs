@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
-    /// Allows an application author to manage a specific domain objects using EntityFrameworkCore.
+    /// Allows an application author to manage a specific-type domain objects using EntityFrameworkCore.
     /// This interface inherits from <see cref="IDataContext"/>.
     /// When argument is null, an <see cref="ArgumentNullException"/> will be thrown.
     /// When a value is not found, a default value of the expected type should be returned.

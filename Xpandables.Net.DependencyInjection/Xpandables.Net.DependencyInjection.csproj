@@ -15,10 +15,10 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net.DependencyInjection</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>5.0.0-rc.2.0.0</Version>
+    <Version>5.0.0-rc.2.0.1</Version>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0</FileVersion>
-    <PackageVersion>5.0.0-rc.2.0.0</PackageVersion>
+    <PackageVersion>5.0.0-rc.2.0.1</PackageVersion>
     <PackageId>Xpandables.Net.DependencyInjection</PackageId>
     <PackageTags>XTryDecorate, XRegister.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>

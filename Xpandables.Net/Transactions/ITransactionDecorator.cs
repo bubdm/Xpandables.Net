@@ -25,8 +25,6 @@ namespace Xpandables.Net.Transactions
     /// the decorated class type :
     /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandTransactionDecorator{TCommand}"/>.
     /// You must implement the <see cref="ITransactionScopeProvider"/> to provide the transaction scope.
-    /// <para></para>
-    /// You need to register the expected behavior to the service collections using the appropriate extension method.
     /// </summary>
     public interface ITransactionDecorator { }
 }

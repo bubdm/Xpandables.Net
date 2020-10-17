@@ -41,6 +41,7 @@ namespace Xpandables.Net.Asynchronous
         /// <typeparam name="TResult">The type of result.</typeparam>
         /// <param name="func">The asynchronous function to execute synchronously.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="func"/> is null.</exception>
+        /// <returns>An object of <typeparamref name="TResult"/> type.</returns>
         public static TResult RunSync<TResult>(this Func<Task<TResult>> func)
         {
             _ = func ?? throw new ArgumentNullException(nameof(func));
@@ -53,6 +54,7 @@ namespace Xpandables.Net.Asynchronous
         /// <typeparam name="TResult">The type of result.</typeparam>
         /// <param name="task">The asynchronous function to execute synchronously.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="task"/> is null.</exception>
+        /// <returns>An object of <typeparamref name="TResult"/> type.</returns>
         public static TResult RunSync<TResult>(this Task<TResult> task)
         {
             _ = task ?? throw new ArgumentNullException(nameof(task));
@@ -73,9 +75,8 @@ namespace Xpandables.Net.Asynchronous
         /// <summary>
         /// Returns an empty async-enumerable.
         /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="T">The type of the elements in the collection.</typeparam>
         /// <returns>An async-enumerable sequence with no elements.</returns>
-        public static IAsyncEnumerable<TResult> Empty<TResult>() => new AsyncEnumerableBuilder<TResult>(Enumerable.Empty<TResult>());
-
+        public static IAsyncEnumerable<T> Empty<T>() => new AsyncEnumerableBuilder<T>(Enumerable.Empty<T>());
     }
 }

@@ -24,7 +24,7 @@ using Xpandables.Net.Commands;
 namespace Xpandables.Net.Correlation
 {
     /// <summary>
-    /// This class allows the application author to add post/rollback event support to command control flow.
+    /// This class allows the application author to add post/rollback event support to command handler control flow.
     /// The target command should implement the <see cref="ICorrelationDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IAsyncCorrelationContext"/> that
     /// adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
@@ -52,7 +52,7 @@ namespace Xpandables.Net.Correlation
         }
 
         /// <summary>
-        /// Asynchronously handle the specified command adding post/rollback event to the decorated handler.
+        /// Asynchronously handles the specified command adding post/rollback event to the decorated handler.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

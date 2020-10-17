@@ -25,9 +25,6 @@ namespace Xpandables.Net.Validations
     /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandValidatorDecorator{TCommand}"/>.
     /// The default validation behavior uses the data annotations validator on validation attributes. You can implement the interface
     /// <see cref="IValidation{TArgument}"/> to customize a validation behavior.
-    /// <para></para>
-    /// You need to register the expected behavior to the service collections using the appropriate extension method
-    /// for the validation behavior and to register all your custom implementations.
     /// </summary>
     public interface IValidationDecorator { }
 }

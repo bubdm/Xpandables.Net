@@ -23,8 +23,8 @@ using Xpandables.Net.Queries;
 namespace Xpandables.Net.Dispatchers
 {
     /// <summary>
-    /// The default implementation for <see cref="IDispatcher"/>.
-    /// Implements methods to execute the <see cref="IAsyncQueryHandler{TQuery, TResult}"/> and
+    /// The implementation for <see cref="IDispatcher"/>.
+    /// Implements methods to execute the <see cref="IAsyncQueryHandler{TQuery, TResult}"/>, <see cref="IQueryHandler{TQuery, TResult}"/> and
     /// <see cref="IAsyncCommandHandler{TCommand}"/> process dynamically.
     /// This class can not be inherited.
     /// </summary>
@@ -36,7 +36,7 @@ namespace Xpandables.Net.Dispatchers
         public IDispatcherHandlerProvider DispatcherHandlerProvider { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Dispatcher"/>.
+        /// Initializes a new instance of <see cref="Dispatcher"/> with the handlers service provider.
         /// </summary>
         /// <param name="dispatcherHandlerProvider">The handler service provider.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="dispatcherHandlerProvider"/> is null.</exception>

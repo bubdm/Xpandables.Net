@@ -21,13 +21,13 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Correlation
 {
     /// <summary>
-    /// Defines a method signature to be used to handle post event in correlation context <see cref="IAsyncCorrelationContext"/>.
+    /// Represents a method signature to be used to handle post event in correlation context <see cref="IAsyncCorrelationContext"/>.
     /// </summary>
     /// <param name="returnValue">The control flow return value only for non-void method.</param>
     public delegate Task AsyncCorrelationPostEvent(object? returnValue = default);
 
     /// <summary>
-    /// Defines a method signature to be used to handler rollback event in correlation context <see cref="IAsyncCorrelationContext"/>.
+    /// Represents a method signature to be used to handler rollback event in correlation context <see cref="IAsyncCorrelationContext"/>.
     /// </summary>
     /// <param name="exception">The control flow handled exception.</param>
     public delegate Task AsyncCorrelationRollbackEvent(Exception exception);
@@ -35,10 +35,8 @@ namespace Xpandables.Net.Correlation
     /// <summary>
     /// Defines two tasks that can be used to follow process after a control flow with <see cref="PostEvent"/>
     /// and on exception during the control flow with <see cref="RollbackEvent"/>.
-    /// In order to be activated, the target class should implement
-    /// the <see cref="ICorrelationDecorator"/> interface,
-    /// the target handling class should reference the current interface (to set the action) and you should
-    /// register the behavior with the expected extension method.
+    /// In order to be activated, the target class should implement the <see cref="ICorrelationDecorator"/> interface, 
+    /// the target handling class should reference the current interface (to set the action).
     /// </summary>
     public interface IAsyncCorrelationContext
     {

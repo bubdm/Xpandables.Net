@@ -39,9 +39,9 @@ namespace Xpandables.Net.Correlation
         private readonly AsyncCorrelationContext _correlationContext;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="QueryCorrelationDecorator{TQuery, TResult}"/> class.
+        /// Initializes a new instance of <see cref="QueryCorrelationDecorator{TQuery, TResult}"/> class with the correlation context and the query handler to be decorated.
         /// </summary>
-        /// <param name="correlationContext">the event register.</param>
+        /// <param name="correlationContext">the correlation context.</param>
         /// <param name="decoratee">The decorated query handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
@@ -52,7 +52,7 @@ namespace Xpandables.Net.Correlation
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result.
+        /// Asynchronously handles the specified query and returns the expected result, adding post/rollback event to the decorated handler.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

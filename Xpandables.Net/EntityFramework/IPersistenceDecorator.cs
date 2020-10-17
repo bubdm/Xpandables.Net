@@ -15,7 +15,6 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Commands;
 using Xpandables.Net.Correlation;
 
 namespace Xpandables.Net.EntityFramework
@@ -27,11 +26,6 @@ namespace Xpandables.Net.EntityFramework
     /// In order to control the behavior, you can add the <see cref="ICorrelationDecorator"/> to the command/query class and reference
     /// the <see cref="IAsyncCorrelationContext"/> in the handler class implementation, to defines actions to be applied after the control flow with
     /// <see cref="IAsyncCorrelationContext.PostEvent"/> on success and <see cref="IAsyncCorrelationContext.RollbackEvent"/> on exception.
-    /// <para></para>
-    /// You need to register the expected behavior to the service collections using the appropriate extension method,
-    /// register the data context using and extension method.
-    /// <para></para>
-    /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandPersistenceDecorator{TCommand}"/>.
     /// </summary>
     public interface IPersistenceDecorator { }
 }

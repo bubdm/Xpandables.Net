@@ -58,6 +58,8 @@ namespace Xpandables.Net.Enumerables
         /// <param name="action">Action to invoke for each element.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="action"/> is null.</exception>
         public static async Task ForEachAsync<TSource>(this IAsyncEnumerable<TSource> source, Action<TSource> action, CancellationToken cancellationToken = default)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -83,11 +85,10 @@ namespace Xpandables.Net.Enumerables
         /// <returns>A new <see cref="ReadOnlyCollection{T}"/></returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public static IReadOnlyCollection<TSource> ToReadOnlyCollection<TSource>(this IEnumerable<TSource> source)
-            => source switch
-            {
-                null => throw new ArgumentNullException(nameof(source)),
-                _ => new ReadOnlyCollectionBuilder<TSource>(source).ToReadOnlyCollection()
-            };
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            return new ReadOnlyCollectionBuilder<TSource>(source).ToReadOnlyCollection();
+        }
 
         /// <summary>
         /// Returns the first element of the specified sequence or an empty optional if the sequence contains no elements.
@@ -97,11 +98,10 @@ namespace Xpandables.Net.Enumerables
         /// <returns>The first element from the sequence or an empty result if the sequence contains no elements.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public static Optional<TSource> FirstOrEmpty<TSource>(this IEnumerable<TSource> source)
-            => source switch
-            {
-                null => throw new ArgumentNullException(nameof(source)),
-                _ => source.FirstOrDefault() is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty()
-            };
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            return source.FirstOrDefault() is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty();
+        }
 
         /// <summary>
         /// Returns the first element of the specified sequence or an empty optional if the sequence contains no elements.
@@ -132,12 +132,12 @@ namespace Xpandables.Net.Enumerables
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
         public static Optional<TSource> FirstOrEmpty<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
-             => (source, predicate) switch
-             {
-                 (_, null) => throw new ArgumentNullException(nameof(predicate)),
-                 (null, _) => throw new ArgumentNullException(nameof(source)),
-                 ({ }, { }) => source.FirstOrDefault(predicate) is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty()
-             };
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            _ = predicate ?? throw new ArgumentNullException(nameof(predicate));
+
+            return source.FirstOrDefault(predicate) is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty();
+        }
 
         /// <summary>
         /// Returns the first element of the sequence that satisfies the predicate or an empty optional if no such element is found.
@@ -173,11 +173,10 @@ namespace Xpandables.Net.Enumerables
         /// <returns>The last element from the sequence or an empty result if the sequence contains no elements.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public static Optional<TSource> LastOrEmpty<TSource>(this IEnumerable<TSource> source)
-            => source switch
-            {
-                null => throw new ArgumentNullException(nameof(source)),
-                _ => source.LastOrDefault() is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty()
-            };
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            return source.LastOrDefault() is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty();
+        }
 
         /// <summary>
         /// Returns the last elements of a sequence or an empty optional if the sequence contains no elements.
@@ -213,12 +212,12 @@ namespace Xpandables.Net.Enumerables
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
         public static Optional<TSource> LastOrEmpty<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
-            => (source, predicate) switch
-            {
-                (_, null) => throw new ArgumentNullException(nameof(predicate)),
-                (null, _) => throw new ArgumentNullException(nameof(source)),
-                ({ }, { }) => source.LastOrDefault(predicate) is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty()
-            };
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            _ = predicate ?? throw new ArgumentNullException(nameof(predicate));
+
+            return source.LastOrDefault(predicate) is { } value ? Optional<TSource>.Some(value) : Optional<TSource>.Empty();
+        }
 
         /// <summary>
         /// Returns the last elements of a sequence or an empty optional if the sequence contains no elements.
@@ -256,11 +255,10 @@ namespace Xpandables.Net.Enumerables
         /// <param name="index">The zero-based index of the element to retrieve.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public static Optional<TSource> ElementAtOrEmpty<TSource>(this IEnumerable<TSource> source, int index)
-            => source switch
-            {
-                null => throw new ArgumentNullException(nameof(source)),
-                _ => source.ElementAtOrDefault(index) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty()
-            };
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            return source.ElementAtOrDefault(index) is { } result ? Optional<TSource>.Some(result) : Optional<TSource>.Empty();
+        }
 
         /// <summary>
         /// Returns the element at the specified index in a sequence or an empty optional if the index is out of range

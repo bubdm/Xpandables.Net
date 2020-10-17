@@ -31,7 +31,7 @@ namespace Xpandables.Net.Creators
     public interface IInstanceCreator
     {
         /// <summary>
-        /// Contains the instance cache.
+        /// Contains the instance cache that can be cleared to free memory.
         /// </summary>
         ConcurrentDictionary<string, Delegate> Cache { get; }
 
@@ -41,11 +41,11 @@ namespace Xpandables.Net.Creators
         Action<ExceptionDispatchInfo>? OnException { get; set; }
 
         /// <summary>
-        /// Returns an instance of the <paramref name="type"/> or null if exception.
+        /// Returns an instance of the <paramref name="type"/> with a parameterless constructor or null if exception.
         /// In case of exception, the <see cref="OnException"/> will be raised.
         /// </summary>
         /// <param name="type">The type to be created.</param>
-        /// <returns>An instance of the <paramref name="type"/> if OK.</returns>
+        /// <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         [return: MaybeNull]
         public object Create(Type type)
@@ -67,20 +67,18 @@ namespace Xpandables.Net.Creators
         }
 
         /// <summary>
-        /// Returns an instance of the <paramref name="type"/> or null if exception.
+        /// Returns an instance (using cache) of the <paramref name="type"/> with a constructor that takes an argument of a type-specific or null if exception.
         /// In case of exception, the <see cref="OnException"/> will be raised.
         /// </summary>
         /// <typeparam name="TParam">The type of the parameter to pass to the constructor.</typeparam>
         /// <param name="type">The type to be created.</param>
         /// <param name="param">The parameter to pass to the constructor.</param>
-        /// <returns>An instance of the <paramref name="type"/> if OK.</returns>
+        /// <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="param"/> is null.</exception>
         [return: MaybeNull]
         public object Create<TParam>(Type type, TParam param)
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
-            _ = param ?? throw new ArgumentNullException(nameof(param));
 
             try
             {
@@ -97,7 +95,7 @@ namespace Xpandables.Net.Creators
         }
 
         /// <summary>
-        /// Returns an instance of the <paramref name="type"/> or null if exception.
+        /// Returns an instance (using cache) of the <paramref name="type"/> with a constructor that takes two arguments of specific-type or null if exception.
         /// In case of exception, the <see cref="OnException"/> will be raised.
         /// </summary>
         /// <typeparam name="TParam1">The type of the first parameter to pass to the constructor.</typeparam>
@@ -105,16 +103,12 @@ namespace Xpandables.Net.Creators
         /// <param name="type">The type to be created.</param>
         /// <param name="param1">The first parameter to pass to the constructor.</param>
         /// <param name="param2">The first parameter to pass to the constructor.</param>
-        /// <returns>An instance of the <paramref name="type"/> if OK.</returns>
+        /// <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="param1"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="param2"/> is null.</exception>
         [return: MaybeNull]
         public object Create<TParam1, TParam2>(Type type, TParam1 param1, TParam2 param2)
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
-            _ = param1 ?? throw new ArgumentNullException(nameof(param1));
-            _ = param2 ?? throw new ArgumentNullException(nameof(param2));
 
             try
             {
@@ -134,7 +128,7 @@ namespace Xpandables.Net.Creators
         }
 
         /// <summary>
-        /// Returns an instance of the <paramref name="type"/> or null if exception.
+        /// Returns an instance (using cache) of the <paramref name="type"/> with a constructor that takes three arguments of specific-type or null if exception..
         /// In case of exception, the <see cref="OnException"/> will be raised.
         /// </summary>
         /// <typeparam name="TParam1">The type of the first parameter to pass to the constructor.</typeparam>
@@ -144,18 +138,12 @@ namespace Xpandables.Net.Creators
         /// <param name="param1">The first parameter to pass to the constructor.</param>
         /// <param name="param2">The first parameter to pass to the constructor.</param>
         /// <param name="param3">The first parameter to pass to the constructor.</param>
-        /// <returns>An instance of the <paramref name="type"/> if OK.</returns>
+        /// <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="param1"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="param2"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="param3"/> is null.</exception>
         [return: MaybeNull]
         public object Create<TParam1, TParam2, TParam3>(Type type, TParam1 param1, TParam2 param2, TParam3 param3)
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
-            _ = param1 ?? throw new ArgumentNullException(nameof(param1));
-            _ = param2 ?? throw new ArgumentNullException(nameof(param2));
-            _ = param3 ?? throw new ArgumentNullException(nameof(param3));
 
             try
             {
@@ -173,7 +161,6 @@ namespace Xpandables.Net.Creators
                 return default;
             }
         }
-
 
         /// <summary>
         /// Clear the creator cache.
@@ -206,27 +193,5 @@ namespace Xpandables.Net.Creators
 
             return key;
         }
-    }
-
-    /// <summary>
-    /// Default implementation for <see cref="IInstanceCreator"/>.
-    /// You can customize the behavior providing your own implementing of <see cref="IInstanceCreator"/> interface.
-    /// </summary>
-    public sealed class InstanceCreator : IInstanceCreator
-    {
-        /// <summary>
-        /// Define an action that will be called in case of handled exception during a create method execution.
-        /// </summary>
-        public Action<ExceptionDispatchInfo>? OnException { get; set; }
-
-        /// <summary>
-        /// Contains the instance cache.
-        /// </summary>
-        public ConcurrentDictionary<string, Delegate> Cache { get; }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="InstanceCreator"/>.
-        /// </summary>
-        public InstanceCreator() => (Cache, OnException) = (new ConcurrentDictionary<string, Delegate>(), default);
     }
 }
