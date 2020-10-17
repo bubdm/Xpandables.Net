@@ -5805,13 +5805,36 @@
             <param name="request">The request to act with.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="request"/> is null.</exception>
         </member>
+        <member name="T:Xpandables.Net.Http.AuthorizationHttpTokenDelegateHandler">
+            <summary>
+            Provides with a handler that can be used with <see cref="T:System.Net.Http.HttpClient"/> to add header authorization value
+            before request execution.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Http.AuthorizationHttpTokenDelegateHandler.#ctor(Xpandables.Net.Http.IHttpTokenAccessor)">
+            <summary>
+            Initializes a new instance of <see cref="T:Xpandables.Net.Http.AuthorizationHttpTokenHandler"/> class with the token accessor.
+            </summary>
+            <param name="httpTokenAccessor">The token accessor to act with.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="httpTokenAccessor"/> is null.</exception>
+        </member>
+        <member name="M:Xpandables.Net.Http.AuthorizationHttpTokenDelegateHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Creates an instance of System.Net.Http.HttpResponseMessage based on the information
+            provided in the System.Net.Http.HttpRequestMessage as an operation that will not block.
+            </summary>
+            <param name="request">The HTTP request message.</param>
+            <param name="cancellationToken">A cancellation token to cancel the operation.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="request"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">The token is not available. See inner exception.</exception>
+        </member>
         <member name="T:Xpandables.Net.Http.AuthorizationHttpTokenHandler">
             <summary>
             Provides with a handler that can be used with <see cref="T:System.Net.Http.HttpClient"/> to add header authorization value
             before request execution.
             </summary>
         </member>
-        <member name="M:Xpandables.Net.Http.AuthorizationHttpTokenHandler.#ctor(Xpandables.Net.Http.IHttpTokenAccessor)">
+        <member name="M:Xpandables.Net.Http.AuthorizationHttpTokenHandler.#ctor(Xpandables.Net.Http.IHttpTokenDelegateAccessor)">
             <summary>
             Initializes a new instance of <see cref="T:Xpandables.Net.Http.AuthorizationHttpTokenHandler"/> class with the token accessor.
             </summary>
@@ -5878,6 +5901,16 @@
             </summary>
             <param name="key">The token key to find.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="key" /> is null.</exception>
+        </member>
+        <member name="T:Xpandables.Net.Http.HttpTokenDelegateAccessor">
+            <summary>
+            The default implementation for <see cref="T:Xpandables.Net.Http.IHttpTokenDelegateAccessor"/>.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Http.HttpTokenDelegateAccessor.HttpTokenAccessorDelegate">
+            <summary>
+            Gets or sets the delegate use to retrieve the token value.
+            </summary>
         </member>
         <member name="T:Xpandables.Net.Http.IHttpFormFileEngine">
             <summary>
@@ -5965,6 +5998,23 @@
             Returns the current token value from the current HTTP request matching the "Authorization" key.
             If not found, returns an empty value.
             </summary>
+        </member>
+        <member name="T:Xpandables.Net.Http.IHttpTokenDelegateAccessor">
+            <summary>
+            Defines a method delegate used to retrieve the ambient token string from the current HTTP request header.
+            </summary>
+        </member>
+        <member name="P:Xpandables.Net.Http.IHttpTokenDelegateAccessor.HttpTokenAccessorDelegate">
+            <summary>
+            Gets or sets the delegate use to retrieve the token value.
+            </summary>
+        </member>
+        <member name="M:Xpandables.Net.Http.IHttpTokenDelegateAccessor.ReadToken(System.String)">
+            <summary>
+            Returns the current token value from the current HTTP request with the specified key.
+            </summary>
+            <param name="key">The token key to find.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="key"/> is null.</exception>
         </member>
         <member name="T:Xpandables.Net.Http.IHttpTokenEngine">
             <summary>
