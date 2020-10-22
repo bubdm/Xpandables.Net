@@ -28,6 +28,7 @@ namespace Xpandables.Net.HttpRestClient
 {
     /// <summary>
     /// Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.
+    /// You need to register the <see cref="IHttpRestClientEngine"/> with the appropriate extension method.
     /// The queries and commands should implement one of the following interfaces :
     /// <see cref="IStringRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, <see cref="IFormUrlEncodedRequest"/>,
     /// <see cref="IMultipartRequest"/> and <see cref="IQueryStringLocationRequest"/>.

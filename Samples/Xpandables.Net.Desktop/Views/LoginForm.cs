@@ -23,8 +23,8 @@ namespace Xpandables.Samples.Desktop.Views
 
         private void DisplayError()
         {
-            if (ViewModel.Errors.TryGetValue(Phone.Name, out var phoneMessage)) LoginErrorProvider.SetError(Phone, phoneMessage);
-            if (ViewModel.Errors.TryGetValue(Password.Name, out var pwdMessage)) LoginErrorProvider.SetError(Password, pwdMessage);
+            if (ViewModel.Errors.TryGetValue(Phone.Name.ToUpper(), out var phoneMessage)) LoginErrorProvider.SetError(Phone, phoneMessage);
+            if (ViewModel.Errors.TryGetValue(Password.Name.ToUpper(), out var pwdMessage)) LoginErrorProvider.SetError(Password, pwdMessage);
         }
 
         private async void BtnConnect_Click(object sender, EventArgs e)

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Platforms>x64</Platforms>
+    <Platforms>AnyCPU</Platforms>
     <PublishTrimmed>true</PublishTrimmed>
     <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
     <LangVersion>preview</LangVersion>
@@ -15,10 +15,10 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net.QrCodes</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>5.0.0-rc.2.0.1</Version>
+    <Version>5.0.0-rc.2.0.2</Version>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0</FileVersion>
-    <PackageVersion>5.0.0-rc.2.0.1</PackageVersion>
+    <PackageVersion>5.0.0-rc.2.0.2</PackageVersion>
     <PackageId>Xpandables.Net.QrCodes</PackageId>
     <PackageTags>IQrCode.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
@@ -38,20 +38,20 @@
     <Company>EFB Entreprises</Company>  
   </PropertyGroup>
   
- <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+ <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors />
     <NoWarn></NoWarn>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DocumentationFile>bin\x64\Debug\net5.0\Xpandables.Net.QrCodes.xml</DocumentationFile>
+    <OutputPath>bin\AnyCPU\Debug\</OutputPath>
+    <DocumentationFile>bin\AnyCPU\Debug\net5.0\Xpandables.Net.QrCodes.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningsAsErrors />
     <NoWarn></NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DocumentationFile>bin\x64\Release\net5.0\Xpandables.Net.QrCodes.xml</DocumentationFile>
+    <OutputPath>bin\AnyCPU\Release\</OutputPath>
+    <DocumentationFile>bin\AnyCPU\Release\net5.0\Xpandables.Net.QrCodes.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

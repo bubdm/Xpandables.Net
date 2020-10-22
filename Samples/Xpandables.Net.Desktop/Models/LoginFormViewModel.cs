@@ -80,7 +80,7 @@ namespace Xpandables.Net.Desktop.Models
 
             if (_httpRestClientHandler.HttpRestClientEngine.IsHttpRestClientValidation(response.Exception, out var exception))
             {
-                Errors = exception.ToDictionary(d => d.Key, d => string.Join("-", d.Value));
+                Errors = exception.ToDictionary(d => d.Key.ToUpper(), d => string.Join("-", d.Value));
             }
             else
             {

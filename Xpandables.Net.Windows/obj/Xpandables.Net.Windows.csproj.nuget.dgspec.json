@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Windows\\Xpandables.Net.Windows.csproj": {
-      "version": "5.0.0-rc.2.0.1",
+      "version": "5.0.0-rc.2.0.2",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Windows\\Xpandables.Net.Windows.csproj",
         "projectName": "Xpandables.Net.Windows",
@@ -77,7 +77,7 @@
       }
     },
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
-      "version": "5.0.0-rc.2.0.1",
+      "version": "5.0.0-rc.2.0.2",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
         "projectName": "Xpandables.Net",

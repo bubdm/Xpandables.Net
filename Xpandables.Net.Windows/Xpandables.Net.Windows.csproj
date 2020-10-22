@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
-    <Platforms>x64</Platforms>
+    <Platforms>AnyCPU</Platforms>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWpf>true</UseWpf>
     <PublishTrimmed>true</PublishTrimmed>
@@ -17,10 +17,10 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net.Windows</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>5.0.0-rc.2.0.1</Version>
+    <Version>5.0.0-rc.2.0.2</Version>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0</FileVersion>
-    <PackageVersion>5.0.0-rc.2.0.1</PackageVersion>
+    <PackageVersion>5.0.0-rc.2.0.2</PackageVersion>
     <PackageId>Xpandables.Net.Windows</PackageId>
     <PackageTags>WinForms, WPF.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
@@ -41,20 +41,20 @@
 
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors />
     <NoWarn></NoWarn>
-    <OutputPath>bin\x64\Debug\net5.0\</OutputPath>
-    <DocumentationFile>bin\x64\Debug\net5.0\Xpandables.Net.Windows.xml</DocumentationFile>
+    <OutputPath>bin\AnyCPU\Debug\net5.0\</OutputPath>
+    <DocumentationFile>bin\AnyCPU\Debug\net5.0\Xpandables.Net.Windows.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningsAsErrors />
     <NoWarn></NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <OutputPath>bin\x64\Release\net5.0\</OutputPath>
-    <DocumentationFile>bin\x64\Release\net5.0\Xpandables.Net.Windows.xml</DocumentationFile>
+    <OutputPath>bin\AnyCPU\Release\net5.0\</OutputPath>
+    <DocumentationFile>bin\AnyCPU\Release\net5.0\Xpandables.Net.Windows.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -45,7 +45,7 @@ namespace Xpandables.Net.Api.Handlers
         public async Task<AuthenToken> HandleAsync(GetAuthenToken query, CancellationToken cancellationToken = default)
         {
             var user = await _dataContext.FindAsync(u => u.Where(query), cancellationToken).ConfigureAwait(false)
-            ?? throw CreateValidationException(LocalizationService.PHONE_INVALID, query.Phone, new[] { nameof(query.Phone) });
+            ?? throw CreateValidationException(LocalizationService.PHONE_PWD_INVALID, query.Phone, new[] { nameof(query.Phone), nameof(query.Password) });
 
 
             var tokenClaims = user.CreateTokenClaims();

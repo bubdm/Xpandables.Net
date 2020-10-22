@@ -38,7 +38,7 @@
           "build/Microsoft.NetFramework.Analyzers.props": {}
         }
       },
-      "Xpandables.Net/5.0.0-rc.2.0.1": {
+      "Xpandables.Net/5.0.0-rc.2.0.2": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
         "compile": {
@@ -455,7 +455,7 @@
         "tools/uninstall.ps1"
       ]
     },
-    "Xpandables.Net/5.0.0-rc.2.0.1": {
+    "Xpandables.Net/5.0.0-rc.2.0.2": {
       "type": "project",
       "path": "../Xpandables.Net/Xpandables.Net.csproj",
       "msbuildProject": "../Xpandables.Net/Xpandables.Net.csproj"
@@ -464,7 +464,7 @@
   "projectFileDependencyGroups": {
     "net5.0": [
       "Microsoft.CodeAnalysis.FxCopAnalyzers >= 3.3.0",
-      "Xpandables.Net >= 5.0.0-rc.2.0.1"
+      "Xpandables.Net >= 5.0.0-rc.2.0.2"
     ]
   },
   "packageFolders": {
@@ -472,7 +472,7 @@
     "D:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
-    "version": "5.0.0-rc.2.0.1",
+    "version": "5.0.0-rc.2.0.2",
     "restore": {
       "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj",
       "projectName": "Xpandables.NetCore",
