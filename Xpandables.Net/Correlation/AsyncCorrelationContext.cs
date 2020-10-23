@@ -28,7 +28,7 @@ namespace Xpandables.Net.Correlation
     public sealed class AsyncCorrelationContext : IAsyncCorrelationContext
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncCorrelationContext"/>.
+        /// Initializes a new instance of the <see cref="AsyncCorrelationContext"/> class using default initialization for event.
         /// </summary>
         public AsyncCorrelationContext() { }
 

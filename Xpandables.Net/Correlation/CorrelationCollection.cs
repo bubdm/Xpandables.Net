@@ -40,7 +40,7 @@ namespace Xpandables.Net.Correlation
         public CorrelationCollection() : base() { }
 
         /// <summary>
-        /// Returns an enumerator that iterates asynchronously through the collection.
+        /// Returns an enumerator that iterates asynchronously through the current collection.
         /// </summary>
         /// <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
         /// <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>

@@ -15,9 +15,6 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Commands;
-using Xpandables.Net.Queries;
-
 namespace Xpandables.Net.Correlation
 {
     /// <summary>

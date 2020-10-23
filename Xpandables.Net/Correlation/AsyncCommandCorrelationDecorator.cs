@@ -39,7 +39,7 @@ namespace Xpandables.Net.Correlation
         private readonly AsyncCorrelationContext _correlationContext;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncCommandCorrelationDecorator{TCommand}"/> class with the correlation context and the command handler to be decorated.
+        /// Initializes a new instance of the <see cref="AsyncCommandCorrelationDecorator{TCommand}"/> class with the correlation context and the command handler to be decorated.
         /// </summary>
         /// <param name="correlationContext">The correlation context.</param>
         /// <param name="decoratee">The command handler to be decorated.</param>
@@ -52,7 +52,8 @@ namespace Xpandables.Net.Correlation
         }
 
         /// <summary>
-        /// Asynchronously handles the specified command adding post/rollback event to the decorated handler.
+        /// Asynchronously handles the specified command using the decorated handler, executes the post event before returning the task,
+        /// and executes the rollback event in case of exception.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
