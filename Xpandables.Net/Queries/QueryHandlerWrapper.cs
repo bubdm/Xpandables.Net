@@ -31,9 +31,9 @@ namespace Xpandables.Net.Queries
         private readonly IQueryHandler<TQuery, TResult> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="QueryHandlerWrapper{TQuery, TResult}"/> class.
+        /// Initializes a new instance of the <see cref="QueryHandlerWrapper{TQuery, TResult}"/> class with the  handler to be wrapped.
         /// </summary>
-        /// <param name="decoratee">The query handler instance.</param>
+        /// <param name="decoratee">The query handler instance to be wrapped.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         public QueryHandlerWrapper(IQueryHandler<TQuery, TResult> decoratee)
             => _decoratee = decoratee ?? throw new ArgumentNullException($"{decoratee} : {nameof(TQuery)}.{nameof(TResult)}");
@@ -48,7 +48,7 @@ namespace Xpandables.Net.Queries
         public bool CanHandle(object argument) => _decoratee.CanHandle(argument);
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result.
+        /// Asynchronously handles the specified query with the wrapped handler and returns the task result.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

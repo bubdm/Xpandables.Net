@@ -19,10 +19,9 @@
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// This interface is used as a marker for queries when using the query pattern that contains a specific-type result.
-    /// <para>Class implementation is used with the <see cref="IQueryHandler{TQuery, TResult}"/> where
-    /// "TQuery" is <see cref="IQuery{TResult}"/> class implementation.</para>
-    /// This can also be enhanced with some useful decorators.
+    /// This interface is used as a marker for queries when using the synchronous query pattern that contains a specific-type result.
+    /// Class implementation is used with the <see cref="IQueryHandler{TQuery, TResult}"/> where
+    /// "TQuery" is a class that implements the <see cref="IQuery{TResult}"/> interface. This can also be enhanced with some useful decorators.
     /// </summary>
     /// <typeparam name="TResult">Type of the result of the query.</typeparam>
     public interface IQuery<out TResult> { }

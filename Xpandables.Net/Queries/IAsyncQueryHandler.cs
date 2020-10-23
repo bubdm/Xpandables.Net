@@ -22,8 +22,7 @@ using System.Threading;
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// Defines a generic method that a class implements to asynchronously handle a type-specific query and
-    /// returns an asynchronous enumerable type-specific result.
+    /// Defines a generic method that a class implements to asynchronously handle a type-specific query and returns an asynchronous enumerable type-specific result.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the query can be handled. Its default behavior returns <see langword="true"/>.
     /// </summary>
@@ -33,7 +32,7 @@ namespace Xpandables.Net.Queries
         where TQuery : class, IAsyncQuery<TResult>
     {
         /// <summary>
-        /// Asynchronously handles the specified query and returns an asynchronous result type.
+        /// Asynchronously handles the specified query and returns an asynchronous enumerable of specific-type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

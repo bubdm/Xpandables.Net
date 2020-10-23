@@ -21,13 +21,13 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// This interface allows application authors to avoid use of C# dynamics with query pattern and allows type inference.
+    /// Represents a wrapper interface that avoids use of C# dynamics with query pattern and allows type inference for <see cref="IQueryHandler{TQuery, TResult}"/>.
     /// </summary>
     /// <typeparam name="TResult">Type of the result.</typeparam>
     public interface IQueryHandlerWrapper<TResult> : ICanHandle
     {
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result.
+        /// Asynchronously handles the specified query and returns the task result.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
