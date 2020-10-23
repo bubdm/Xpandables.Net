@@ -45,6 +45,6 @@ namespace Xpandables.Net.Correlation
         /// <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
         /// <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
         public IAsyncEnumerator<KeyValuePair<TKey, TValue>> GetAsyncEnumerator(CancellationToken cancellationToken = default)
-            => new AsyncEnumeratorBuilder<KeyValuePair<TKey, TValue>>(GetEnumerator());
+            => new AsyncEnumerator<KeyValuePair<TKey, TValue>>(GetEnumerator());
     }
 }

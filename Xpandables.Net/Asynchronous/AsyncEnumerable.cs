@@ -22,33 +22,32 @@ using System.Threading;
 namespace Xpandables.Net.Asynchronous
 {
     /// <summary>
-    /// Allows a generic collection to be asynchronously enumerated.
+    /// Represents a helper class that allows a generic collection to be asynchronously enumerated.
     /// This class implements <see cref="IAsyncEnumerable{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the collection.</typeparam>
-    public sealed class AsyncEnumerableBuilder<T> : IAsyncEnumerable<T>
+    public sealed class AsyncEnumerable<T> : IAsyncEnumerable<T>
     {
         private readonly Func<CancellationToken, IAsyncEnumerator<T>> _asyncEnumerator;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncEnumerableBuilder{T}"/> with the collection to be asynchronously enumerated.
+        /// Initializes a new instance of the <see cref="AsyncEnumerable{T}"/> class with the collection to be asynchronously enumerated.
         /// </summary>
         /// <param name="collection">The collection to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
-        public AsyncEnumerableBuilder(IEnumerable<T> collection)
+        public AsyncEnumerable(IEnumerable<T> collection)
         {
             _ = collection ?? throw new ArgumentNullException(nameof(collection));
-            _asyncEnumerator = _ => new AsyncEnumeratorBuilder<T>(collection.GetEnumerator());
+            _asyncEnumerator = _ => new AsyncEnumerator<T>(collection.GetEnumerator());
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncEnumerableBuilder{T}"/> with the async enumerator.
+        /// Initializes a new instance of the <see cref="AsyncEnumerable{T}"/> class with the enumerator to be asynchronously enumerated.
         /// </summary>
-        /// <param name="asyncEnumerator">The delegate for async enumerator.</param>
+        /// <param name="asyncEnumerator">The delegate that provides the async enumerator.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="asyncEnumerator"/> is null.</exception>
-        public AsyncEnumerableBuilder(Func<CancellationToken, IAsyncEnumerator<T>> asyncEnumerator)
+        public AsyncEnumerable(Func<CancellationToken, IAsyncEnumerator<T>> asyncEnumerator)
         {
-            _ = asyncEnumerator ?? throw new ArgumentNullException(nameof(asyncEnumerator));
             _asyncEnumerator = asyncEnumerator ?? throw new ArgumentNullException(nameof(asyncEnumerator));
         }
 

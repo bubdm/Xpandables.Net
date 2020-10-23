@@ -86,7 +86,7 @@ namespace Xpandables.Net.Optionals
         /// </summary>
         /// <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
         /// <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
-        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) => new AsyncEnumeratorBuilder<T>(GetEnumerator());
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) => new AsyncEnumerator<T>(GetEnumerator());
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.

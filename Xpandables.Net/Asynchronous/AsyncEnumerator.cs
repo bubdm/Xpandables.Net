@@ -22,20 +22,20 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Asynchronous
 {
     /// <summary>
-    /// Add asynchronous iteration support to a generic collection.
+    /// Represents a helper class that adds asynchronous iteration support to a generic collection.
     /// This class implements <see cref="IAsyncEnumerator{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the collection.</typeparam>
-    public sealed class AsyncEnumeratorBuilder<T> : IAsyncEnumerator<T>
+    public sealed class AsyncEnumerator<T> : IAsyncEnumerator<T>
     {
         private readonly IEnumerator<T> _inner;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncEnumeratorBuilder{T}"/> with the enumerator.
+        /// Initializes a new instance of the <see cref="AsyncEnumerator{T}"/> class with the specified enumerator.
         /// </summary>
         /// <param name="inner">The enumerator to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="inner"/> is null.</exception>
-        public AsyncEnumeratorBuilder(IEnumerator<T> inner) => _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+        public AsyncEnumerator(IEnumerator<T> inner) => _inner = inner ?? throw new ArgumentNullException(nameof(inner));
 
         /// <summary>
         /// Gets the element in the collection at the current position of the enumerator.
@@ -55,8 +55,8 @@ namespace Xpandables.Net.Asynchronous
         /// <summary>
         ///  Advances the enumerator asynchronously to the next element of the collection.
         /// </summary>
-        /// <returns> A System.Threading.Tasks.ValueTask`1 that will complete with a result of true if the enumerator was successfully 
-        /// advanced to the next element, or false if the enumerator has passed the end of the collection.</returns>
+        /// <returns> A <see cref="ValueTask{TResult}"/>  that will complete with a result of <see langword="true"/> if the enumerator was successfully 
+        /// advanced to the next element, or <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
         public ValueTask<bool> MoveNextAsync() => new ValueTask<bool>(_inner.MoveNext());
     }
 }
