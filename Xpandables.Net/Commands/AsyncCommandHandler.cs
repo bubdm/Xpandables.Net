@@ -22,17 +22,16 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Commands
 {
     /// <summary>
-    /// This helper class allows the application author to implement the <see cref="IAsyncCommandHandler{TCommand}"/>
-    /// interface without dedicated class.
+    /// Represents a helper class that allows implementation of <see cref="IAsyncCommandHandler{TCommand}"/> interface without dedicated class.
     /// </summary>
     /// <typeparam name="TCommand">Type of command to act on.</typeparam>
-    public sealed class AsyncCommandHandlerBuilder<TCommand> : IAsyncCommandHandler<TCommand>
+    public sealed class AsyncCommandHandler<TCommand> : IAsyncCommandHandler<TCommand>
         where TCommand : class, IAsyncCommand
     {
         private readonly Func<TCommand, CancellationToken, Task> _handler;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncCommandHandlerBuilder{TArgument}"/> class with the delegate to be used
+        /// Initializes a new instance of the <see cref="AsyncCommandHandler{TArgument}"/> class with the delegate to be used
         /// as <see cref="IAsyncCommandHandler{TCommand}.HandleAsync(TCommand, CancellationToken)"/> implementation.
         /// </summary>
         /// <param name="handler">The delegate to be used when the handler will be invoked.
@@ -40,7 +39,7 @@ namespace Xpandables.Net.Commands
         /// the <see cref="IAsyncCommandHandler{TCommand}.HandleAsync(TCommand, CancellationToken)"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
-        public AsyncCommandHandlerBuilder(Func<TCommand, CancellationToken, Task> handler)
+        public AsyncCommandHandler(Func<TCommand, CancellationToken, Task> handler)
             => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
 
         /// <summary>
