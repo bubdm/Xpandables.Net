@@ -177,10 +177,9 @@ namespace Xpandables.Net.Creators
 
             static TDelegate ConstructDelegate(Type t, params Type[] types)
             {
-                if (t.TryGetConstructorDelegate<TDelegate>(out var constructorDelegate, out var exception, types))
-                    return constructorDelegate!;
-
-                throw exception;
+                return t.TryGetConstructorDelegate<TDelegate>(out var constructorDelegate, out var exception, types)
+                    ? constructorDelegate
+                    : throw exception;
             }
         }
 
