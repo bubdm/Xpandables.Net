@@ -41,6 +41,8 @@ namespace Xpandables.Net.EntityFramework
     /// </summary>
     public interface IDataContext : IDisposable, IAsyncDisposable
     {
+        internal object InternalDbSet<T>() where T : Entity;
+
         /// <summary>
         /// Returns an entity of the <typeparamref name="T"/> type specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.

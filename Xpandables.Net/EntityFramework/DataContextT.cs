@@ -77,6 +77,7 @@ namespace Xpandables.Net.EntityFramework
 
         void IDisposable.Dispose() => _dataContext.Dispose();
         ValueTask IAsyncDisposable.DisposeAsync() => _dataContext.DisposeAsync();
+        object IDataContext.InternalDbSet<T>() => _dataContext.InternalDbSet<T>();
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

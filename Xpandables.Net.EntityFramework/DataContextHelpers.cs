@@ -34,6 +34,21 @@ namespace Xpandables.Net.EntityFramework
     public static class DataContextHelpers
     {
         /// <summary>
+        /// Represents a <see cref="DbSet{TEntity}"/> that can be used to query and save instances of <typeparamref name="TEntity"/>.
+        /// LINQ queries against a <see cref="DbSet{TEntity}"/> will be translated into queries against the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of entity being operated on by this set.</typeparam>
+        /// <param name="dataContext">The target instance of db context.</param>
+        /// <returns>An instance of <see cref="DbSet{TEntity}"/> for the specific type.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
+        public static DbSet<TEntity> SetOf<TEntity>(this IDataContext dataContext)
+            where TEntity : Entity
+        {
+            _ = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            return (DbSet<TEntity>)dataContext.InternalDbSet<TEntity>();
+        }
+
+        /// <summary>
         /// Specifies the converter to be used for the generic property type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The generic target <typeparamref name="T"/> to act on.</typeparam>
@@ -77,8 +92,14 @@ namespace Xpandables.Net.EntityFramework
             return modelBuilder;
 
             static bool IsTypeEnumeration(IMutableEntityType entityType)
-                => !entityType.ClrType.IsSubclassOf(typeof(EnumerationType));
-            bool IsPropertyType(PropertyInfo propertyInfo) => propertyInfo.PropertyType == type;
+            {
+                return !entityType.ClrType.IsSubclassOf(typeof(EnumerationType));
+            }
+
+            bool IsPropertyType(PropertyInfo propertyInfo)
+            {
+                return propertyInfo.PropertyType == type;
+            }
         }
     }
 }

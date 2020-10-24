@@ -73,8 +73,9 @@ namespace Xpandables.Net.EntityFramework
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataContext"/> class
-        /// using the specified options. The <see langword="DataContext.OnConfiguring(DbContextOptionsBuilder)"/>
+        /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
         /// method will still be called to allow further configuration of the options.
+        /// Applies the tracked delegate for automatically set <see cref="Entity.CreatedOn"/>, <see cref="Entity.UpdatedOn"/> and <see cref="Entity.DeletedOn"/> properties.
         /// </summary>
         /// <param name="contextOptions">The options for this context.</param>
         protected DataContext(DbContextOptions contextOptions)

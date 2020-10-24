@@ -34,6 +34,8 @@ namespace Xpandables.Net.EntityFramework
     /// </summary>
     public abstract partial class DataContext : IDataContext
     {
+        object IDataContext.InternalDbSet<T>() => Set<T>();
+
         /// <summary>
         /// Returns an entity of the <typeparamref name="T"/> type specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
