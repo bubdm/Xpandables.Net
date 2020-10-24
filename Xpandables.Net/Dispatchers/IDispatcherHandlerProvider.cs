@@ -26,7 +26,7 @@ namespace Xpandables.Net.Dispatchers
     public interface IDispatcherHandlerProvider
     {
         /// <summary>
-        /// Gets the handler of the <typeparamref name="THandler"/> type.
+        /// Returns the handler of the <typeparamref name="THandler"/> type.
         /// </summary>
         /// <typeparam name="THandler">The type of the handler to look for.</typeparam>
         /// <returns>A handler of the <typeparamref name="THandler"/> type -or- null if there is no <typeparamref name="THandler"/> type.</returns>
@@ -34,7 +34,7 @@ namespace Xpandables.Net.Dispatchers
         THandler GetHandler<THandler>() where THandler : class;
 
         /// <summary>
-        /// Gets the handler of the specified type.
+        /// Returns the handler of the specified type.
         /// </summary>
         /// <param name="handlerType">An object that specifies the type of handler object to get.</param>
         /// <returns>A handler of the <paramref name="handlerType"/> -or- null if there is no handler of <paramref name="handlerType"/>.</returns>

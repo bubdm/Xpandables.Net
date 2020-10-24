@@ -31,14 +31,14 @@ namespace Xpandables.Net.Dispatchers
     public sealed class Dispatcher : IDispatcher
     {
         /// <summary>
-        /// Gets the handlers service provider.
+        /// Gets the handlers provider.
         /// </summary>
         public IDispatcherHandlerProvider DispatcherHandlerProvider { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Dispatcher"/> with the handlers service provider.
+        /// Initializes a new instance of the <see cref="Dispatcher"/> class with the handlers provider.
         /// </summary>
-        /// <param name="dispatcherHandlerProvider">The handler service provider.</param>
+        /// <param name="dispatcherHandlerProvider">The handlers provider.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="dispatcherHandlerProvider"/> is null.</exception>
         public Dispatcher(IDispatcherHandlerProvider dispatcherHandlerProvider)
             => DispatcherHandlerProvider = dispatcherHandlerProvider ?? throw new ArgumentNullException(nameof(dispatcherHandlerProvider));

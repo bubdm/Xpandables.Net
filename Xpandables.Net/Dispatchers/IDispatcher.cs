@@ -36,12 +36,13 @@ namespace Xpandables.Net.Dispatchers
     public interface IDispatcher
     {
         /// <summary>
-        /// Gets the handlers service provider.
+        /// Gets the handlers provider.
         /// </summary>
         IDispatcherHandlerProvider DispatcherHandlerProvider { get; }
 
         /// <summary>
-        /// Asynchronously invokes the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
+        /// Asynchronously invokes the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query 
+        /// and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TResult">Type of the result.</typeparam>
         /// <param name="query">The query to act on.</param>
@@ -56,7 +57,7 @@ namespace Xpandables.Net.Dispatchers
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            if (!typeof(AsyncQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { query.GetType(), typeof(TResult) }))
+            if (!typeof(AsyncQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new[] { query.GetType(), typeof(TResult) }))
                 throw new InvalidOperationException("Building Query wrapper failed.", typeException);
 
             if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IAsyncQueryHandlerWrapper<TResult> handler)
@@ -70,7 +71,8 @@ namespace Xpandables.Net.Dispatchers
         }
 
         /// <summary>
-        /// Asynchronously invokes the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
+        /// Asynchronously invokes the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query
+        /// and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TQuery">Type of the query.</typeparam>
         /// <typeparam name="TResult">Type of the result.</typeparam>
@@ -113,9 +115,9 @@ namespace Xpandables.Net.Dispatchers
                     resultExist = false;
                     switch (exception)
                     {
-                        case ArgumentException: throw;
-                        case ValidationException: throw;
-                        case OperationCanceledException: throw;
+                        case ArgumentException:
+                        case ValidationException:
+                        case OperationCanceledException:
                         case InvalidOperationException: throw;
                         default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
                     };
@@ -159,9 +161,9 @@ namespace Xpandables.Net.Dispatchers
             {
                 switch (exception)
                 {
-                    case ArgumentException: throw;
-                    case ValidationException: throw;
-                    case OperationCanceledException: throw;
+                    case ArgumentException:
+                    case ValidationException:
+                    case OperationCanceledException:
                     case InvalidOperationException: throw;
                     default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
                 };
@@ -201,9 +203,9 @@ namespace Xpandables.Net.Dispatchers
             {
                 switch (exception)
                 {
-                    case ArgumentException: throw;
-                    case ValidationException: throw;
-                    case OperationCanceledException: throw;
+                    case ArgumentException:
+                    case ValidationException:
+                    case OperationCanceledException:
                     case InvalidOperationException: throw;
                     default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
                 };
@@ -245,9 +247,9 @@ namespace Xpandables.Net.Dispatchers
             {
                 switch (exception)
                 {
-                    case ArgumentException: throw;
-                    case ValidationException: throw;
-                    case OperationCanceledException: throw;
+                    case ArgumentException:
+                    case ValidationException:
+                    case OperationCanceledException:
                     case InvalidOperationException: throw;
                     default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
                 };
