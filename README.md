@@ -77,7 +77,7 @@ public class LoginRequest : QueryExpression<User>, IQuery<LoginResponse>, IValid
 {
     public Login(string name, string password) => (Name, Password) = (name, password);
     
-    protected override Expression<Func<User, bool>> BuildExpression() => user => user.Name == Name;
+    public override Expression<Func<User, bool>> GetExpression() => user => user.Name == Name;
     
     [Required]
     public string Name { get; set; } = null!;
@@ -95,7 +95,7 @@ public sealed class LoginResponse
 // The request validator will be called before the LoginRequestHandler
 public sealed class LoginRequestValidator : IValidation<LoginRequest>
 {
-    public void Validate(LoginRequest argument)
+    public Task ValidateAsync(LoginRequest argument)
     {
         // code validation
         ...
@@ -112,14 +112,14 @@ public sealed class UserContext : DataContext // DataContext implements the IDat
 // The LoginRequest handler...
 public sealed class LoginRequestHandler : IQueryHandler<LoginRequest, LoginResponse>
 {
-    private readonly IDataContext _dataContext;
+    private readonly IDataContext<User> _dataContext;
     private readonly ITokenService _tokenService;
     
-    public LoginRequestHandler(IDataContext dataContext, ITokenService tokenService) => (_dataContext, _tokenService) = (dataContext, tokenService);
+    public LoginRequestHandler(IDataContext<User> dataContext, ITokenService tokenService) => (_dataContext, _tokenService) = (dataContext, tokenService);
     
     public async Task<LoginResponse> HandleAsync(LoginRequest query, CancellationToken cancellationToken = default)
     {
-        var user = await _dataContext.FindAsync<User>(u=>u.Where(query), cancellationToken).configureAwait(false)
+        var user = await _dataContext.FindAsync(u=>u.Where(query), cancellationToken).configureAwait(false)
             ?? throw ... or something else
         
         if(!user.Password.IsEqualTo(query.Password))
