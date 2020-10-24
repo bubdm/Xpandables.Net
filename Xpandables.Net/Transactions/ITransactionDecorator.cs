@@ -15,15 +15,11 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Commands;
-using Xpandables.Net.Queries;
-
 namespace Xpandables.Net.Transactions
 {
     /// <summary>
-    /// A marker interface that allows the command handler class implementation to be decorated with transaction behavior according to
-    /// the decorated class type :
-    /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandTransactionDecorator{TCommand}"/>.
+    /// A marker interface that allows the command/query handler class implementation to be decorated with transaction behavior according to
+    /// the decorated class type.
     /// You must implement the <see cref="ITransactionScopeProvider"/> to provide the transaction scope.
     /// </summary>
     public interface ITransactionDecorator { }

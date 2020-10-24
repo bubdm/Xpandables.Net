@@ -23,8 +23,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
-
 namespace Xpandables.Net.Strings
 {
     /// <summary>
@@ -59,6 +57,7 @@ namespace Xpandables.Net.Strings
             return await EncryptAsync(value, key, salt).ConfigureAwait(false);
         }
 
+
         /// <summary>
         /// Returns an encrypted string from the value string using the specified key and the salt value.
         /// If <paramref name="key"/> or <paramref name="salt"/> is not provided, a default value will be used.
@@ -70,6 +69,7 @@ namespace Xpandables.Net.Strings
         /// <returns>An encrypted object that contains the encrypted value, its key and its salt.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The encryption failed. See inner exception.</exception>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "SCS0011:CBC mode is weak", Justification = "<Pending>")]
         public async Task<ValueEncrypted> EncryptAsync(string value, string? key = default, string? salt = default)
         {
             if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
@@ -134,6 +134,7 @@ namespace Xpandables.Net.Strings
         /// <exception cref="InvalidOperationException">The decryption failed. See inner exception.</exception>
         public async Task<string> DecryptAsync(string key, string value, string salt) => await DecryptAsync(new ValueEncrypted(key, value, salt)).ConfigureAwait(false);
 
+
         /// <summary>
         /// Returns an decrypted string from the encrypted object.
         /// The process uses the <see cref="RijndaelManaged"/> algorithm with the <see cref="SHA256"/>.
@@ -141,6 +142,7 @@ namespace Xpandables.Net.Strings
         /// <param name="encrypted">The object that contains encrypted information.</param>
         /// <returns>A decrypted string from the encrypted object.</returns>
         /// <exception cref="InvalidOperationException">The decryption failed. See inner exception.</exception>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "SCS0011:CBC mode is weak", Justification = "<Pending>")]
         public async Task<string> DecryptAsync(ValueEncrypted encrypted)
         {
             try

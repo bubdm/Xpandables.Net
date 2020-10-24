@@ -27,10 +27,8 @@ namespace Xpandables.Net.Transactions
     /// <summary>
     /// This class allows the application author to add transaction support to command control flow.
     /// The target command should implement the <see cref="ITransactionDecorator"/> in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="ITransactionScopeProvider"/>, that you should
-    /// provide an implementation and use the extension method <see langword="AddTransactionScopeDecorator{TTransactionScopeProvider}"/>
-    /// for registration. The transaction scope definition comes from the
-    /// <see cref="ITransactionScopeProvider.GetTransactionScope{TCommand}(TCommand)"/> method.
+    /// The class decorates the target command handler with an implementation of <see cref="ITransactionScopeProvider"/>.
+    /// The transaction scope definition comes from the <see cref="ITransactionScopeProvider.GetTransactionScope{TArgument}(TArgument)"/> method.
     /// if no transaction is returned, the execution is done normally.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
@@ -41,7 +39,8 @@ namespace Xpandables.Net.Transactions
         private readonly ITransactionScopeProvider _transactionScopeProvider;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncCommandTransactionDecorator{TCommand}"/>.
+        /// Initializes a new instance of the <see cref="AsyncCommandTransactionDecorator{TCommand}"/> class 
+        /// with the handler to be decorated and the transaction scope provider.
         /// </summary>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <param name="transactionScopeProvider">The transaction scope provider.</param>
@@ -54,7 +53,7 @@ namespace Xpandables.Net.Transactions
         }
 
         /// <summary>
-        /// Asynchronously handles the specified command.
+        /// Asynchronously handles the specified command applying a transaction scope if available.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

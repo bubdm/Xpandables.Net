@@ -22,8 +22,6 @@ namespace Xpandables.Net.Transactions
 {
     /// <summary>
     /// Provides with a method to retrieve a definition of a transaction scope to be applied to the target command/query.
-    /// You should provide an implementation of this interface that will be used with the <see cref="AsyncCommandTransactionDecorator{TCommand}"/>
-    /// decorator to add transaction behavior to the execution flow.
     /// </summary>
     public interface ITransactionScopeProvider
     {

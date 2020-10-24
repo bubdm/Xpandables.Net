@@ -20,6 +20,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.Commands;
+using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
 
 namespace Xpandables.Net.DependencyInjection
@@ -54,6 +55,7 @@ namespace Xpandables.Net.DependencyInjection
             if (services is null) throw new ArgumentNullException(nameof(services));
 
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandTransactionDecorator<>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryTransactionDecorator<,>));
             return services;
         }
     }
