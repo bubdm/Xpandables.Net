@@ -267,35 +267,21 @@ namespace Xpandables.Net.EntityFramework
         [DebuggerStepThrough]
         private void ExceptionHandler(Exception exception)
         {
-            if (PersistenceExceptionHandler is null)
+            var rethrowException = OnPersistenceException is null ? exception : OnPersistenceException.Invoke(exception);
+
+            if (rethrowException is not null)
             {
                 throw new InvalidOperationException(
                     "Persistence operation failed. See inner exception.",
                     exception);
             }
-
-            if (PersistenceExceptionHandler.Invoke(exception) is Exception rethrownException)
-            {
-                throw new InvalidOperationException(
-                    "Persistence operation failed. See inner exception.",
-                    rethrownException);
-            }
         }
 
         /// <summary>
-        /// May contain a delegate that get called on persistence exception.
-        /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null value.
-        /// If there's not delegate, the handled exception will be re-thrown normally.
+        /// Allows to set or unset the delegate that get called on persistence exception.
+        /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null.
+        /// To disable the delegate, just set the handler to <see langword="null"/>.
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public Func<Exception, Exception?>? PersistenceExceptionHandler { get; private set; }
-
-        /// <summary>
-        /// Allows the application author to set or unset the delegate that get called on persistence exception.
-        /// To disable the delegate, just set the handler to <see langword="null" />.
-        /// </summary>
-        /// <param name="persistenceExceptionHandler">The optional delegate instance.</param>
-        public void OnPersistenceException(Func<Exception, Exception?>? persistenceExceptionHandler)
-            => PersistenceExceptionHandler = persistenceExceptionHandler;
+        public PersistenceExceptionHandler? OnPersistenceException { get; set; }
     }
 }

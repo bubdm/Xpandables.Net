@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -26,7 +25,16 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
-    /// Allows an application author to manage domain objects using EntityFrameworkCore.
+    /// Represents a method used to handler persistence exception.
+    /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null exception.
+    /// If there's not delegate, the handled exception will be re-thrown normally.
+    /// </summary>
+    /// <param name="exception">The handled exception during persistence.</param>
+    /// <returns>An exception to re-throw or null if not.</returns>
+    public delegate Exception? PersistenceExceptionHandler(Exception exception);
+
+    /// <summary>
+    /// Represents a set of command to manage domain objects using EntityFrameworkCore.
     /// When argument is null, an <see cref="ArgumentNullException"/> will be thrown.
     /// When a value is not found, a default value of the expected type should be returned.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
@@ -166,7 +174,7 @@ namespace Xpandables.Net.EntityFramework
 
         /// <summary>
         /// Persists all pending domain objects to the data storage.
-        /// You can use the <see cref="OnPersistenceException(Func{Exception, Exception?}?)"/> to manage exception.
+        /// You can use the <see cref="OnPersistenceException"/> to manage exception.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous persist all operation.</returns>
@@ -175,19 +183,10 @@ namespace Xpandables.Net.EntityFramework
         Task PersistAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// May contain a delegate that get called on persistence exception.
-        /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null exception.
-        /// If there's not delegate, the handled exception will be re-thrown normally.
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        Func<Exception, Exception?>? PersistenceExceptionHandler { get; }
-
-        /// <summary>
-        /// Allows the application author to set or unset the delegate that get called on persistence exception.
+        /// Allows to set or unset the delegate that get called on persistence exception.
         /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null.
         /// To disable the delegate, just set the handler to <see langword="null"/>.
         /// </summary>
-        /// <param name="persistenceExceptionHandler">The optional delegate instance.</param>
-        void OnPersistenceException(Func<Exception, Exception?>? persistenceExceptionHandler);
+        PersistenceExceptionHandler? OnPersistenceException { get; set; }
     }
 }

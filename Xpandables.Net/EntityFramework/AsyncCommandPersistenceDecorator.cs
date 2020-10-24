@@ -28,9 +28,8 @@ namespace Xpandables.Net.EntityFramework
     /// The target command should implement the <see cref="IPersistenceDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/> and executes the
     /// the <see cref="IDataContext.PersistAsync(CancellationToken)"/> after the main one in the same control flow only
-    /// if there is no exception. You can set the <see cref="IDataContext.PersistenceExceptionHandler"/> with the
-    /// <see cref="IDataContext.OnPersistenceException(Func{Exception, Exception?})"/> command, in order to manage
-    /// the exception.
+    /// if there is no exception. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
+    /// delegate command, in order to manage the exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     public sealed class AsyncCommandPersistenceDecorator<TCommand> : IAsyncCommandHandler<TCommand>
@@ -40,7 +39,8 @@ namespace Xpandables.Net.EntityFramework
         private readonly IAsyncCommandHandler<TCommand> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncCommandPersistenceDecorator{TCommand}"/> class.
+        /// Initializes a new instance of the <see cref="AsyncCommandPersistenceDecorator{TCommand}"/> class with 
+        /// the decorated handler and the db context to act on.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
         /// <param name="decoratee">The decorated command handler.</param>
@@ -53,7 +53,7 @@ namespace Xpandables.Net.EntityFramework
         }
 
         /// <summary>
-        /// Asynchronously handles the specified command.
+        /// Asynchronously handles the specified command and persists changes to database.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

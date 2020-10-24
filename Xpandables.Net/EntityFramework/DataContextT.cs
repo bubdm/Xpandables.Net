@@ -26,7 +26,7 @@ namespace Xpandables.Net.EntityFramework
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     /// <summary>
-    /// This is the generic db context class that implements <see cref="IDataContext{T}"/>.
+    /// This is the generic db context class that implements <see cref="IDataContext{T}"/> for a specific-type of entity.
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
 #pragma warning disable ET001 // Type name does not match file name
@@ -36,13 +36,11 @@ namespace Xpandables.Net.EntityFramework
     {
         IDataContext IDataContext<TEntity>.DataContext => _dataContext;
 
-        Func<Exception, Exception?>? IDataContext.PersistenceExceptionHandler => _dataContext.PersistenceExceptionHandler;
-
         private readonly IDataContext _dataContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataContext{T}"/> class
-        /// using the original data context.
+        /// using the original data context to be wrapped.
         /// </summary>
         /// <param name="dataContext">The original data context.</param>
         /// <exception cref="ArgumentNullException">the <paramref name="dataContext"/> is null.</exception>
@@ -71,7 +69,12 @@ namespace Xpandables.Net.EntityFramework
         Task IDataContext.UpdateEntityAsync<T, TUpdated>(Expression<Func<T, bool>> predicate, Func<T, TUpdated> updater, CancellationToken cancellationToken)
             => _dataContext.UpdateEntityAsync(predicate, updater, cancellationToken);
         Task IDataContext.PersistAsync(CancellationToken cancellationToken) => _dataContext.PersistAsync(cancellationToken);
-        void IDataContext.OnPersistenceException(Func<Exception, Exception?>? persistenceExceptionHandler) => _dataContext.OnPersistenceException(persistenceExceptionHandler);
+        PersistenceExceptionHandler? IDataContext.OnPersistenceException
+        {
+            get => _dataContext.OnPersistenceException;
+            set => _dataContext.OnPersistenceException = value;
+        }
+
         void IDisposable.Dispose() => _dataContext.Dispose();
         ValueTask IAsyncDisposable.DisposeAsync() => _dataContext.DisposeAsync();
     }
