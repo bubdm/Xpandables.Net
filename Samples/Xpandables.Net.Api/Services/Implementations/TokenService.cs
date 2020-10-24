@@ -24,7 +24,6 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-using Xpandables.Net.Api.Models;
 using Xpandables.Net.Api.Settings;
 using Xpandables.Net.Http;
 using Xpandables.Net.Types;
@@ -79,14 +78,6 @@ namespace Xpandables.Net.Api.Services.Implementations
 
             var handler = new JwtSecurityTokenHandler().ValidateToken(token, validationParameters, out _);
             return handler.Claims;
-        }
-
-        public object ReadTokenClaim(IEnumerable<Claim> claims) => new TokenClaims(claims);
-
-        public object ReadTokenClaim(string token)
-        {
-            var claims = ReadToken(token);
-            return ReadTokenClaim(claims);
         }
     }
 }

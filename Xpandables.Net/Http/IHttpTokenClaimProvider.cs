@@ -38,7 +38,7 @@ namespace Xpandables.Net.Http
         /// <typeparam name="TTokenClaim">The type of the token claims.</typeparam>
         /// <returns>An object of <typeparamref name="TTokenClaim"/> type or null.</returns>
         /// <exception cref="UnauthorizedAccessException">Failed to find claims.</exception>
-        [return: MaybeNull]
-        public TTokenClaim ReadTokenClaim<TTokenClaim>() where TTokenClaim : class => ReadTokenClaim() as TTokenClaim;
+        [return: NotNull]
+        public TTokenClaim ReadTokenClaim<TTokenClaim>() where TTokenClaim : class => ReadTokenClaim() as TTokenClaim ?? throw new UnauthorizedAccessException();
     }
 }

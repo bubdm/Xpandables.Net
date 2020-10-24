@@ -67,8 +67,7 @@ namespace Xpandables.Net.Desktop
                         var apiSettings = serviceProvider.GetRequiredService<IOptions<ApiSettings>>().Value;
                         httpClient.BaseAddress = new Uri($"{apiSettings.Url}/");
                         httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    })
-                    .ConfigureXPrimaryAuthorizationTokenHandler();
+                    });
                 })
                 .ConfigureLogging(logging => logging.AddConsole())
                 .Build();

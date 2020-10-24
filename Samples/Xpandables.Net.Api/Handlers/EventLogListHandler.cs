@@ -23,8 +23,10 @@ using System.Threading;
 using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Api.Contracts;
+using Xpandables.Net.Api.Models;
 using Xpandables.Net.Api.Models.Domains;
 using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Http;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api.Handlers
@@ -32,14 +34,22 @@ namespace Xpandables.Net.Api.Handlers
     public sealed class EventLogListHandler : IAsyncQueryHandler<EventLogList, Log>
     {
         private readonly IDataContext<User> _dataContext;
+        private readonly IHttpTokenClaimProvider _httpTokenClaimProvider;
 
-        public EventLogListHandler(IDataContext<User> dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+        public EventLogListHandler(IDataContext<User> dataContext, IHttpTokenClaimProvider httpTokenClaimProvider)
+        {
+            _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            _httpTokenClaimProvider = httpTokenClaimProvider ?? throw new ArgumentNullException(nameof(httpTokenClaimProvider));
+        }
 
         public IAsyncEnumerable<Log> HandleAsync(EventLogList query, CancellationToken cancellationToken = default)
         {
+            var claims = _httpTokenClaimProvider.ReadTokenClaim<TokenClaims>();
+
             return _dataContext.FindAllAsync(u => u
                  .AsNoTracking()
                  .Include(i => i.EventLogs)
+                 .Where(w => w.Id == claims.Id)
                  .SelectMany(user => user.EventLogs)
                  .Where(query)
                  .Select(log => new Log(log.EventName, log.OccuredOn, log.Description)), cancellationToken);

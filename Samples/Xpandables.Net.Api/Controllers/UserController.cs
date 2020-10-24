@@ -40,9 +40,11 @@ namespace Xpandables.Net.Api.Controllers
         public UserController(IDispatcher dispatcher) => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
 
         [HttpPost]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> PostAsync([FromBody] EditUser editUser, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> PostAsync([FromRoute] string id, [FromBody] EditUser editUser, CancellationToken cancellationToken = default)
         {
+            editUser.Id = id;
             await _dispatcher.InvokeAsync(editUser, cancellationToken).ConfigureAwait(false);
             return Ok();
         }

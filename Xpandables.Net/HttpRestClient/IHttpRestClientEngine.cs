@@ -42,13 +42,14 @@ namespace Xpandables.Net.HttpRestClient
         /// </summary>
         /// <typeparam name="TSource">The type of the object.</typeparam>
         /// <param name="source">The source object.</param>
+        /// <param name="httpClient">The target HTTP client.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A tack that represents an <see cref="HttpRequestMessage"/> object.</returns>
-        public async Task<HttpRequestMessage> WriteHttpRequestMessageAsync<TSource>(TSource source, CancellationToken cancellationToken = default)
+        public async Task<HttpRequestMessage> WriteHttpRequestMessageAsync<TSource>(TSource source, HttpClient httpClient, CancellationToken cancellationToken = default)
             where TSource : class
         {
             var attribute = ReadHttpClientAttribute(source);
-            return await ReadHttpRequestMessageAsync(attribute, source, cancellationToken).ConfigureAwait(false);
+            return await ReadHttpRequestMessageAsync(attribute, source, httpClient, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -57,14 +58,16 @@ namespace Xpandables.Net.HttpRestClient
         /// <typeparam name="TSource">the type of the source.</typeparam>
         /// <param name="attribute">The <see cref="HttpRestClientAttribute"/> attribute.</param>
         /// <param name="source">The source of data.</param>
+        /// <param name="httpClient">The target HTTP client.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public async Task<HttpRequestMessage> ReadHttpRequestMessageAsync<TSource>(
-            HttpRestClientAttribute attribute, TSource source, CancellationToken cancellationToken = default)
+            HttpRestClientAttribute attribute, TSource source, HttpClient httpClient, CancellationToken cancellationToken = default)
             where TSource : notnull
         {
             _ = attribute ?? throw new ArgumentNullException(nameof(attribute));
             _ = source ?? throw new ArgumentNullException(nameof(source));
+            _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
             attribute.Path ??= "/";
 
@@ -102,7 +105,9 @@ namespace Xpandables.Net.HttpRestClient
             }
 
             if (attribute.IsSecured)
-                httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(attribute.Scheme);
+                httpRequestMessage.Headers.Authorization = httpClient.DefaultRequestHeaders.Authorization is not null
+                    ? httpClient.DefaultRequestHeaders.Authorization
+                    : new AuthenticationHeaderValue(attribute.Scheme);
 
             return httpRequestMessage;
         }

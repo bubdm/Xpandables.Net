@@ -16,29 +16,34 @@
  *
 ************************************************************************************************************/
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
-using Xpandables.Net.Api.Models;
 using Xpandables.Net.Api.Models.Domains;
 using Xpandables.Net.Commands;
 using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Expressions;
 using Xpandables.Net.HttpRestClient;
-using Xpandables.Net.Identities;
 
 namespace Xpandables.Net.Api.Contracts
 {
     [HttpRestClient(Path = "api/user", Method = "Post", IsSecured = true, IsNullable = false)]
-    public sealed class EditUser : TokenClaimExpression<TokenClaims, User>, IAsyncCommand, IPersistenceDecorator
+    public sealed class EditUser : QueryExpression<User>, IAsyncCommand, IPersistenceDecorator
     {
-        public EditUser(string? email, string? password, string? phone)
+        [return: NotNull]
+        public override Expression<Func<User, bool>> GetExpression() => user => user.Id == Id && user.IsActive && !user.IsDeleted;
+        public EditUser() { }
+        public EditUser(string id, string? email, string? password, string? phone)
         {
+            Id = id;
             Email = email;
             Password = password;
             Phone = phone;
         }
 
-        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Phone.Value == Claims.Phone.Value && user.IsActive && !user.IsDeleted;
-
+        [Required]
+        public string Id { get; set; } = null!;
         public string? Email { get; set; }
         public string? Password { get; set; }
         public string? Phone { get; set; }

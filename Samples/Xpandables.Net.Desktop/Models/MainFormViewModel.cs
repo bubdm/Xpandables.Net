@@ -22,7 +22,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Contracts;
-using Xpandables.Net.Http;
 using Xpandables.Net.HttpRestClient;
 using Xpandables.Net.Notifications;
 
@@ -31,7 +30,6 @@ namespace Xpandables.Net.Desktop.Models
     public sealed class MainFormViewModel : NotifyPropertyChanged<MainFormViewModel>
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
-        private readonly IHttpTokenDelegateAccessor _httpTokenDelegateAccessor;
 
         private string token;
         private string lastName;
@@ -41,11 +39,7 @@ namespace Xpandables.Net.Desktop.Models
         private Image picture;
         private string pictureInfo;
 
-        public MainFormViewModel(IHttpRestClientHandler httpRestClientHandler, IHttpTokenDelegateAccessor httpTokenDelegateAccessor)
-        {
-            _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
-            _httpTokenDelegateAccessor = httpTokenDelegateAccessor ?? throw new ArgumentNullException(nameof(httpTokenDelegateAccessor));
-        }
+        public MainFormViewModel(IHttpRestClientHandler httpRestClientHandler) => _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
 
         public string Phone { get => phone; set => SetProperty(ref phone, value); }
         public string Token { get => token; set => SetProperty(ref token, value); }
@@ -67,7 +61,7 @@ namespace Xpandables.Net.Desktop.Models
 
         public async Task UpdateInfoAsync(AuthenToken authenToken)
         {
-            _httpTokenDelegateAccessor.HttpTokenAccessorDelegate = _ => authenToken.Token;
+            _httpRestClientHandler.HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(authenToken.Type, authenToken.Token);
             var user = await _httpRestClientHandler.HandleAsync(new GetUser(authenToken.Key));
             Phone = user.Result.Phone;
             Token = authenToken.Token;

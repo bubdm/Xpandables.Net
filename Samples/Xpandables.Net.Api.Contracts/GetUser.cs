@@ -17,12 +17,12 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
-using Xpandables.Net.Api.Models;
 using Xpandables.Net.Api.Models.Domains;
+using Xpandables.Net.Expressions;
 using Xpandables.Net.HttpRestClient;
-using Xpandables.Net.Identities;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Validations;
 
@@ -43,13 +43,13 @@ namespace Xpandables.Net.Api.Contracts
     }
 
     [HttpRestClient(Path = "api/user/{id}", IsSecured = true, IsNullable = true, Method = "Get", In = ParameterLocation.Path)]
-    public sealed class GetUser : TokenClaimExpression<TokenClaims, User>, IQuery<UserItem>, IValidationDecorator, ITokenClaimDecorator, IPathStringLocationRequest
+    public sealed class GetUser : QueryExpression<User>, IQuery<UserItem>, IValidationDecorator, IPathStringLocationRequest
     {
+        [return: NotNull]
+        public override Expression<Func<User, bool>> GetExpression() => user => user.Id == Id && user.IsActive && !user.IsDeleted;
         public GetUser(string id) => Id = id;
 
         public GetUser() => Id = null!;
-
-        protected override Expression<Func<User, bool>> BuildExpression() => user => user.Id == Id && user.IsActive && !user.IsDeleted;
 
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
 

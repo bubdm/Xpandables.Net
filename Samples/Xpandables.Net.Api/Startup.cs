@@ -43,10 +43,7 @@ namespace Xpandables.Net.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public IConfiguration Configuration { get; }
 
@@ -77,8 +74,8 @@ namespace Xpandables.Net.Api
 
             services.AddHttpContextAccessor();
             services.AddXStringGeneratorCryptography();
-            services.AddXHttpTokenAccessor();
             services.AddXHttpHeaderAccessor();
+            services.AddXHttpTokenClaimProvider<HttpTokenClaimProvider>();
 
             services.AddXHttpTokenEngine<TokenService>();
             services.AddScoped<ITwoFactorService, TwoFactorService>();
@@ -95,17 +92,13 @@ namespace Xpandables.Net.Api
             {
                 options.UsePersistenceDecorator();
                 options.UseValidatorDecorator();
-                options.UseIdentityDecorator();
             });
 
             services.AddXDispatcher();
             services.AddAuthentication()
                     .AddJwtBearer();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Xpandables.Net.Api", Version = "v1" });
-            });
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Xpandables.Net.Api", Version = "v1" }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -24,7 +24,6 @@ using Xpandables.Net.Api.Models;
 using Xpandables.Net.Api.Models.Domains;
 using Xpandables.Net.Expressions;
 using Xpandables.Net.HttpRestClient;
-using Xpandables.Net.Identities;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api.Contracts
@@ -42,14 +41,11 @@ namespace Xpandables.Net.Api.Contracts
         public DateTime OccuredOn { get; set; }
         public string Description { get; set; } = null!;
 
-        public override string ToString()
-        {
-            return $"{Name} - {OccuredOn} - {Description}";
-        }
+        public override string ToString() => $"{Name} - {OccuredOn} - {Description}";
     }
 
     [HttpRestClient(Path = "api/user", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
-    public sealed class EventLogList : TokenClaimExpression<TokenClaims, EventLog>, IAsyncQuery<Log>, ITokenClaimDecorator, IQueryStringLocationRequest
+    public sealed class EventLogList : QueryExpression<EventLog>, IAsyncQuery<Log>, IQueryStringLocationRequest
     {
 
         public EventLogList() { }
@@ -68,7 +64,7 @@ namespace Xpandables.Net.Api.Contracts
             { nameof(EndOccuredOn), EndOccuredOn?.ToString("yyyy-MM-dd HH:mm:ss") }
         };
 
-        protected override Expression<Func<EventLog, bool>> BuildExpression()
+        public override Expression<Func<EventLog, bool>> GetExpression()
         {
             var queryExpression = QueryExpressionFactory.Create<EventLog>();
             if (Name is not null) queryExpression = queryExpression.And(el => el.EventName.Contains(Name));

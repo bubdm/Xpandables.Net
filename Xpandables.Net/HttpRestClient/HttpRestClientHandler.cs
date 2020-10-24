@@ -72,7 +72,7 @@ namespace Xpandables.Net.HttpRestClient
 
             try
             {
-                using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(query, cancellationToken).ConfigureAwait(false);
+                using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(query, HttpClient, cancellationToken).ConfigureAwait(false);
                 // Due to the fact that the result is an IAsyncEnumerable, the response can not be disposed before.
                 var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
@@ -121,7 +121,7 @@ namespace Xpandables.Net.HttpRestClient
 
             try
             {
-                using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(command, cancellationToken).ConfigureAwait(false);
+                using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(command, HttpClient, cancellationToken).ConfigureAwait(false);
                 using var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
@@ -159,7 +159,7 @@ namespace Xpandables.Net.HttpRestClient
 
             try
             {
-                using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(query, cancellationToken).ConfigureAwait(false);
+                using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(query, HttpClient, cancellationToken).ConfigureAwait(false);
                 using var response = await HttpClient.SendAsync(
                     request,
                     HttpCompletionOption.ResponseHeadersRead,

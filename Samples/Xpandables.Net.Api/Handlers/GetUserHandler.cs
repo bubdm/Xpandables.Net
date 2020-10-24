@@ -37,7 +37,6 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<UserItem> HandleAsync(GetUser query, CancellationToken cancellationToken = default)
         {
-            //var user = await _dataContext.FindAsync<User>(u => u.Where(query), cancellationToken).ConfigureAwait(false);
             var user = await _dataContext.SetOf<User>().FirstAsync(query, cancellationToken).ConfigureAwait(false);
             return new UserItem(user!.Id, user.Phone, user.Email);
         }
