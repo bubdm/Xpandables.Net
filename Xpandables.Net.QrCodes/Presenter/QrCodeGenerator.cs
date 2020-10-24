@@ -88,11 +88,7 @@ namespace Xpandables.Net.QrCodes.Presenter
         /// <exception cref="QrCodeException">Thrown when the payload is too big to be encoded in a QR code.</exception>
         /// <returns>Returns the raw QR code data which can be used for rendering.</returns>
 #pragma warning disable CA1822 // Mark members as static
-        public QrCodeData CreateQrCode(PayloadGenerator.Payload payload)
-#pragma warning restore CA1822 // Mark members as static
-        {
-            return GenerateQrCode(payload);
-        }
+        public QrCodeData CreateQrCode(PayloadGenerator.Payload payload) => GenerateQrCode(payload);
 
         /// <summary>
         /// Calculates the QR code data which than can be used in one of the rendering classes to generate a graphical representation.
@@ -102,11 +98,7 @@ namespace Xpandables.Net.QrCodes.Presenter
         /// <exception cref="QrCodeException">Thrown when the payload is too big to be encoded in a QR code.</exception>
         /// <returns>Returns the raw QR code data which can be used for rendering.</returns>
 #pragma warning disable CA1822 // Mark members as static
-        public QrCodeData CreateQrCode(PayloadGenerator.Payload payload, ECCLevel eccLevel)
-#pragma warning restore CA1822 // Mark members as static
-        {
-            return GenerateQrCode(payload, eccLevel);
-        }
+        public QrCodeData CreateQrCode(PayloadGenerator.Payload payload, ECCLevel eccLevel) => GenerateQrCode(payload, eccLevel);
 
         /// <summary>
         /// Calculates the QR code data which than can be used in one of the rendering classes to generate a graphical representation.
@@ -120,11 +112,7 @@ namespace Xpandables.Net.QrCodes.Presenter
         /// <exception cref="QrCodeException">Thrown when the payload is too big to be encoded in a QR code.</exception>
         /// <returns>Returns the raw QR code data which can be used for rendering.</returns>
 #pragma warning disable CA1822 // Mark members as static
-        public QrCodeData CreateQrCode(string plainText, ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, EciMode eciMode = EciMode.Default, int requestedVersion = -1)
-#pragma warning restore CA1822 // Mark members as static
-        {
-            return GenerateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion);
-        }
+        public QrCodeData CreateQrCode(string plainText, ECCLevel eccLevel, bool forceUtf8 = false, bool utf8BOM = false, EciMode eciMode = EciMode.Default, int requestedVersion = -1) => GenerateQrCode(plainText, eccLevel, forceUtf8, utf8BOM, eciMode, requestedVersion);
 
         /// <summary>
         /// Calculates the QR code data which than can be used in one of the rendering classes to generate a graphical representation.
@@ -134,11 +122,7 @@ namespace Xpandables.Net.QrCodes.Presenter
         /// <exception cref="QrCodeException">Thrown when the payload is too big to be encoded in a QR code.</exception>
         /// <returns>Returns the raw QR code data which can be used for rendering.</returns>
 #pragma warning disable CA1822 // Mark members as static
-        public QrCodeData CreateQrCode(byte[] binaryData, ECCLevel eccLevel)
-#pragma warning restore CA1822 // Mark members as static
-        {
-            return GenerateQrCode(binaryData, eccLevel);
-        }
+        public QrCodeData CreateQrCode(byte[] binaryData, ECCLevel eccLevel) => GenerateQrCode(binaryData, eccLevel);
 
         /// <summary>
         /// Calculates the QR code data which than can be used in one of the rendering classes to generate a graphical representation.
@@ -608,9 +592,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 }
             }
 
-            public static void ReserveSeperatorAreas(int size, ref List<Rectangle> blockedModules)
-            {
-                blockedModules.AddRange(new[]{
+            public static void ReserveSeperatorAreas(int size, ref List<Rectangle> blockedModules) => blockedModules.AddRange(new[]{
                     new Rectangle(7, 0, 1, 8),
                     new Rectangle(0, 7, 7, 1),
                     new Rectangle(0, size-8, 8, 1),
@@ -618,7 +600,6 @@ namespace Xpandables.Net.QrCodes.Presenter
                     new Rectangle(size-8, 0, 1, 8),
                     new Rectangle(size-7, 7, 7, 1)
                 });
-            }
 
             public static void ReserveVersionAreas(int size, int version, ref List<Rectangle> blockedModules)
             {
@@ -716,10 +697,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 });
             }
 
-            private static bool Intersects(Rectangle r1, Rectangle r2)
-            {
-                return r2.X < r1.X + r1.Width && r1.X < r2.X + r2.Width && r2.Y < r1.Y + r1.Height && r1.Y < r2.Y + r2.Height;
-            }
+            private static bool Intersects(Rectangle r1, Rectangle r2) => r2.X < r1.X + r1.Width && r1.X < r2.X + r2.Width && r2.Y < r1.Y + r1.Height && r1.Y < r2.Y + r2.Height;
 
             private static bool IsBlocked(Rectangle r1, List<Rectangle> blockedModules)
             {
@@ -735,45 +713,21 @@ namespace Xpandables.Net.QrCodes.Presenter
 
             private static class MaskPattern
             {
-                public static bool Pattern1(int x, int y)
-                {
-                    return (x + y) % 2 == 0;
-                }
+                public static bool Pattern1(int x, int y) => (x + y) % 2 == 0;
 
-                public static bool Pattern2(int _, int y)
-                {
-                    return y % 2 == 0;
-                }
+                public static bool Pattern2(int _, int y) => y % 2 == 0;
 
-                public static bool Pattern3(int x, int _)
-                {
-                    return x % 3 == 0;
-                }
+                public static bool Pattern3(int x, int _) => x % 3 == 0;
 
-                public static bool Pattern4(int x, int y)
-                {
-                    return (x + y) % 3 == 0;
-                }
+                public static bool Pattern4(int x, int y) => (x + y) % 3 == 0;
 
-                public static bool Pattern5(int x, int y)
-                {
-                    return (int)(Math.Floor(y / 2d) + Math.Floor(x / 3d)) % 2 == 0;
-                }
+                public static bool Pattern5(int x, int y) => (int)(Math.Floor(y / 2d) + Math.Floor(x / 3d)) % 2 == 0;
 
-                public static bool Pattern6(int x, int y)
-                {
-                    return x * y % 2 + x * y % 3 == 0;
-                }
+                public static bool Pattern6(int x, int y) => x * y % 2 + x * y % 3 == 0;
 
-                public static bool Pattern7(int x, int y)
-                {
-                    return (x * y % 2 + x * y % 3) % 2 == 0;
-                }
+                public static bool Pattern7(int x, int y) => (x * y % 2 + x * y % 3) % 2 == 0;
 
-                public static bool Pattern8(int x, int y)
-                {
-                    return ((x + y) % 2 + x * y % 3) % 2 == 0;
-                }
+                public static bool Pattern8(int x, int y) => ((x + y) % 2 + x * y % 3) % 2 == 0;
 
                 public static int Score(ref QrCodeData qrCode)
                 {
@@ -1045,10 +999,7 @@ namespace Xpandables.Net.QrCodes.Presenter
             return result;                              // either numeric or alphanumeric
         }
 
-        private static bool IsInRange(char c, char min, char max)
-        {
-            return (uint)(c - min) <= (uint)(max - min);
-        }
+        private static bool IsInRange(char c, char min, char max) => (uint)(c - min) <= (uint)(max - min);
 
         private static Polynom CalculateMessagePolynom(string bitString)
         {
@@ -1096,20 +1047,11 @@ namespace Xpandables.Net.QrCodes.Presenter
             return blocklist;
         }
 
-        private static List<int> BinaryStringListToDecList(List<string> binaryStringList)
-        {
-            return binaryStringList.Select(binaryString => BinToDec(binaryString)).ToList();
-        }
+        private static List<int> BinaryStringListToDecList(List<string> binaryStringList) => binaryStringList.Select(binaryString => BinToDec(binaryString)).ToList();
 
-        private static int BinToDec(string binStr)
-        {
-            return Convert.ToInt32(binStr, 2);
-        }
+        private static int BinToDec(string binStr) => Convert.ToInt32(binStr, 2);
 
-        private static string DecToBin(int decNum)
-        {
-            return Convert.ToString(decNum, 2);
-        }
+        private static string DecToBin(int decNum) => Convert.ToString(decNum, 2);
 
         private static string DecToBin(int decNum, int padLeftUpTo)
         {
@@ -1174,15 +1116,9 @@ namespace Xpandables.Net.QrCodes.Presenter
             }
         }
 
-        private static int GetDataLength(EncodingMode encoding, string plainText, string codedText, bool forceUtf8)
-        {
-            return forceUtf8 || IsUtf8(encoding, plainText) ? codedText.Length / 8 : plainText.Length;
-        }
+        private static int GetDataLength(EncodingMode encoding, string plainText, string codedText, bool forceUtf8) => forceUtf8 || IsUtf8(encoding, plainText) ? codedText.Length / 8 : plainText.Length;
 
-        private static bool IsUtf8(EncodingMode encoding, string plainText)
-        {
-            return encoding == EncodingMode.Byte && !IsValidISO(plainText);
-        }
+        private static bool IsUtf8(EncodingMode encoding, string plainText) => encoding == EncodingMode.Byte && !IsValidISO(plainText);
 
         private static bool IsValidISO(string input)
         {
@@ -1369,21 +1305,13 @@ namespace Xpandables.Net.QrCodes.Presenter
             return resultPolynom;
         }
 
-        private static int GetIntValFromAlphaExp(int exp)
-        {
-            return galoisField.Find(alog => alog.ExponentAlpha == exp).IntegerValue;
-        }
+        private static int GetIntValFromAlphaExp(int exp) => galoisField.Find(alog => alog.ExponentAlpha == exp).IntegerValue;
 
-        private static int GetAlphaExpFromIntVal(int intVal)
-        {
-            return galoisField.Find(alog => alog.IntegerValue == intVal).ExponentAlpha;
-        }
+        private static int GetAlphaExpFromIntVal(int intVal) => galoisField.Find(alog => alog.IntegerValue == intVal).ExponentAlpha;
 
-        private static int ShrinkAlphaExp(int alphaExp)
-        {
+        private static int ShrinkAlphaExp(int alphaExp) =>
             // ReSharper disable once PossibleLossOfFraction
-            return (int)(alphaExp % 256 + Math.Floor((double)(alphaExp / 256)));
-        }
+            (int)(alphaExp % 256 + Math.Floor((double)(alphaExp / 256)));
 
         private static Dictionary<char, int> CreateAlphanumEncDict()
         {

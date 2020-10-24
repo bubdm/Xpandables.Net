@@ -31,10 +31,7 @@ namespace Xpandables.Net.Api.Storage
     public sealed class UserContextInitializer : IHostedService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        public UserContextInitializer(IServiceScopeFactory serviceScopeFactory)
-        {
-            _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
-        }
+        public UserContextInitializer(IServiceScopeFactory serviceScopeFactory) => _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -50,9 +47,6 @@ namespace Xpandables.Net.Api.Storage
             await dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
-        {
-            await Task.CompletedTask.ConfigureAwait(false);
-        }
+        public async Task StopAsync(CancellationToken cancellationToken) => await Task.CompletedTask.ConfigureAwait(false);
     }
 }

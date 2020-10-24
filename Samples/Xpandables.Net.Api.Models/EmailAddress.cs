@@ -26,10 +26,7 @@ namespace Xpandables.Net.Api.Models
     public sealed class EmailAddress : ValueObject
     {
         private const string EmailRegex = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
-        public EmailAddress(string value)
-        {
-            Value = AssertIsNotNullAndValid(value);
-        }
+        public EmailAddress(string value) => Value = AssertIsNotNullAndValid(value);
 
         public string Value { get; }
 

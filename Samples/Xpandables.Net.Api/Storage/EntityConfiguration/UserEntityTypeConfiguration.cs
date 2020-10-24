@@ -30,10 +30,7 @@ namespace Xpandables.Net.Api.Storage.EntityConfiguration
             builder.HasIndex(new string[] { nameof(User.Id) }).IsUnique();
 
             builder
-                .OwnsOne(user => user.Phone, phone =>
-                {
-                    phone.Property(p => p.Value);
-                })
+                .OwnsOne(user => user.Phone, phone => phone.Property(p => p.Value))
                 .OwnsOne(user => user.Password, pwd =>
                 {
                     pwd.Property(p => p.Key);
@@ -48,10 +45,7 @@ namespace Xpandables.Net.Api.Storage.EntityConfiguration
                     pic.Property(p => p.Title);
                     pic.Property(p => p.Width);
                 })
-                .OwnsOne(user => user.Email, email =>
-                {
-                    email.Property(p => p.Value);
-                });
+                .OwnsOne(user => user.Email, email => email.Property(p => p.Value));
 
             builder
                 .HasMany(user => user.EventLogs)

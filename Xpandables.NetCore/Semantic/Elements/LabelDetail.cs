@@ -23,9 +23,6 @@ namespace Xpandables.NetCore.Semantic.Elements
     public class LabelDetail : ComponentBase
     {
         /// <inheritdoc />
-        protected override void ConfigureComponent()
-        {
-            ElementClass = "detail";
-        }
+        protected override void ConfigureComponent() => ElementClass = "detail";
     }
 }

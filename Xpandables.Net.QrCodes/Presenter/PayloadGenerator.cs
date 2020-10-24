@@ -1068,10 +1068,7 @@ namespace Xpandables.Net.QrCodes.Presenter
 
                 /// <summary>Returns a string that represents the current object.</summary>
                 /// <returns>A string that represents the current object.</returns>
-                public override string ToString()
-                {
-                    return iban.Replace("-", "").Replace("\n", "").Replace(" ", "");
-                }
+                public override string ToString() => iban.Replace("-", "").Replace("\n", "").Replace(" ", "");
 
                 /// <summary>
                 ///
@@ -2785,8 +2782,8 @@ namespace Xpandables.Net.QrCodes.Presenter
             [Obsolete("This property is obsolete, use " + nameof(AuthAlgorithm) + " instead", false)]
             public OoneTimePasswordAuthAlgorithm Algorithm
             {
-                get { return (OoneTimePasswordAuthAlgorithm)Enum.Parse(typeof(OoneTimePasswordAuthAlgorithm), AuthAlgorithm.ToString()); }
-                set { AuthAlgorithm = (OneTimePasswordAuthAlgorithm)Enum.Parse(typeof(OneTimePasswordAuthAlgorithm), value.ToString()); }
+                get => (OoneTimePasswordAuthAlgorithm)Enum.Parse(typeof(OoneTimePasswordAuthAlgorithm), AuthAlgorithm.ToString());
+                set => AuthAlgorithm = (OneTimePasswordAuthAlgorithm)Enum.Parse(typeof(OneTimePasswordAuthAlgorithm), value.ToString());
             }
 
             /// <summary>
@@ -3446,10 +3443,7 @@ namespace Xpandables.Net.QrCodes.Presenter
             /// </summary>
             public override QRCodeGenerator.EciMode EciMode => QRCodeGenerator.EciMode.Iso8859_2;
 
-            private string LimitLength(string value, int maxLength)
-            {
-                return value.Length <= maxLength ? value : value.Substring(0, maxLength);
-            }
+            private string LimitLength(string value, int maxLength) => value.Length <= maxLength ? value : value.Substring(0, maxLength);
 
             /// <summary>
             ///
@@ -3589,10 +3583,7 @@ namespace Xpandables.Net.QrCodes.Presenter
             return IsValidIban(iban) && foundQrIid;
         }
 
-        private static bool IsValidBic(string bic)
-        {
-            return Regex.IsMatch(bic.Replace(" ", ""), "^([a-zA-Z]{4}[a-zA-Z]{2}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?)$");
-        }
+        private static bool IsValidBic(string bic) => Regex.IsMatch(bic.Replace(" ", ""), "^([a-zA-Z]{4}[a-zA-Z]{2}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?)$");
 
         private static string ConvertStringToEncoding(string message, string encoding)
         {
@@ -3638,9 +3629,6 @@ namespace Xpandables.Net.QrCodes.Presenter
             return checksum == Convert.ToInt32(digits[^1]) - 48;
         }
 
-        private static bool IsHexStyle(string inp)
-        {
-            return Regex.IsMatch(inp, @"\A\b[0-9a-fA-F]+\b\Z") || Regex.IsMatch(inp, @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z");
-        }
+        private static bool IsHexStyle(string inp) => Regex.IsMatch(inp, @"\A\b[0-9a-fA-F]+\b\Z") || Regex.IsMatch(inp, @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z");
     }
 }

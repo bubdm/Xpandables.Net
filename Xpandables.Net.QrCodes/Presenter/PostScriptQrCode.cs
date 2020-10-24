@@ -77,10 +77,7 @@ namespace Xpandables.Net.QrCodes.Presenter
         /// <param name="viewBox"></param>
         /// <param name="drawQuietZones"></param>
         /// <param name="epsFormat"></param>
-        public string GetGraphic(Size viewBox, bool drawQuietZones = true, bool epsFormat = false)
-        {
-            return GetGraphic(viewBox, Color.Black, Color.White, drawQuietZones, epsFormat);
-        }
+        public string GetGraphic(Size viewBox, bool drawQuietZones = true, bool epsFormat = false) => GetGraphic(viewBox, Color.Black, Color.White, drawQuietZones, epsFormat);
 
         /// <summary>
         /// Returns a strings that contains the resulting QR code as postscript chars.
@@ -90,10 +87,7 @@ namespace Xpandables.Net.QrCodes.Presenter
         /// <param name="lightColorHex"></param>
         /// <param name="drawQuietZones"></param>
         /// <param name="epsFormat"></param>
-        public string GetGraphic(Size viewBox, string darkColorHex, string lightColorHex, bool drawQuietZones = true, bool epsFormat = false)
-        {
-            return GetGraphic(viewBox, ColorTranslator.FromHtml(darkColorHex), ColorTranslator.FromHtml(lightColorHex), drawQuietZones, epsFormat);
-        }
+        public string GetGraphic(Size viewBox, string darkColorHex, string lightColorHex, bool drawQuietZones = true, bool epsFormat = false) => GetGraphic(viewBox, ColorTranslator.FromHtml(darkColorHex), ColorTranslator.FromHtml(lightColorHex), drawQuietZones, epsFormat);
 
         /// <summary>
         /// Returns a strings that contains the resulting QR code as postscript chars.
@@ -131,12 +125,9 @@ namespace Xpandables.Net.QrCodes.Presenter
         }
 
 #pragma warning disable CA1822 // Mark members as static
-        private string CleanSvgVal(double input)
-#pragma warning restore CA1822 // Mark members as static
-        {
+        private string CleanSvgVal(double input) =>
             //Clean double values for international use/formats
-            return input.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        }
+            input.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
         private const string psHeader = @"%!PS-Adobe-3.0 {3}
 %%Creator: Xpandables.Net

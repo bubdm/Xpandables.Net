@@ -139,10 +139,7 @@ namespace Xpandables.Net.QrCodes.Presenter
 
             private readonly MemoryStream stream = new MemoryStream();
 
-            public void Dispose()
-            {
-                stream?.Dispose();
-            }
+            public void Dispose() => stream?.Dispose();
 
             public byte[] GetBytes()
             {

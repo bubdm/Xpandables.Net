@@ -77,10 +77,7 @@ namespace Xpandables.Net.QrCodes.Presenter
         /// <param name="viewBox"></param>
         /// <param name="drawQuietZones"></param>
         /// <param name="sizingMode"></param>
-        public string GetGraphic(Size viewBox, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute)
-        {
-            return GetGraphic(viewBox, Color.Black, Color.White, drawQuietZones, sizingMode);
-        }
+        public string GetGraphic(Size viewBox, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute) => GetGraphic(viewBox, Color.Black, Color.White, drawQuietZones, sizingMode);
 
         /// <summary>
         /// Returns a strings that contains the resulting QR code as SVG.
@@ -90,10 +87,7 @@ namespace Xpandables.Net.QrCodes.Presenter
         /// <param name="lightColor"></param>
         /// <param name="drawQuietZones"></param>
         /// <param name="sizingMode"></param>
-        public string GetGraphic(Size viewBox, Color darkColor, Color lightColor, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute)
-        {
-            return GetGraphic(viewBox, ColorTranslator.ToHtml(Color.FromArgb(darkColor.ToArgb())), ColorTranslator.ToHtml(Color.FromArgb(lightColor.ToArgb())), drawQuietZones, sizingMode);
-        }
+        public string GetGraphic(Size viewBox, Color darkColor, Color lightColor, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute) => GetGraphic(viewBox, ColorTranslator.ToHtml(Color.FromArgb(darkColor.ToArgb())), ColorTranslator.ToHtml(Color.FromArgb(lightColor.ToArgb())), drawQuietZones, sizingMode);
 
         /// <summary>
         /// Returns a strings that contains the resulting QR code as SVG.
@@ -129,12 +123,9 @@ namespace Xpandables.Net.QrCodes.Presenter
         }
 
 #pragma warning disable CA1822 // Mark members as static
-        private string CleanSvgVal(double input)
-#pragma warning restore CA1822 // Mark members as static
-        {
+        private string CleanSvgVal(double input) =>
             //Clean double values for international use/formats
-            return input.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        }
+            input.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
         /// <summary>
         /// Sizing Mode.

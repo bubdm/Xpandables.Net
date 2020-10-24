@@ -50,15 +50,9 @@ namespace Xpandables.Net.Api.Models.Domains
             AddEventLog(nameof(ValueEncrypted), reason);
         }
 
-        public void ChangePicture(Picture picture)
-        {
-            Picture = picture ?? throw new ArgumentNullException(nameof(picture));
-        }
+        public void ChangePicture(Picture picture) => Picture = picture ?? throw new ArgumentNullException(nameof(picture));
 
-        public void RemovePicture()
-        {
-            Picture = Picture.Clear();
-        }
+        public void RemovePicture() => Picture = Picture.Clear();
 
         private User(PhoneNumber phone, EmailAddress email, ValueEncrypted password, Role role, Picture picture)
                 : this(role)

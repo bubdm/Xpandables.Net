@@ -29,10 +29,7 @@ namespace Xpandables.Net.Api.Migrations
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_User", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "EventLog",

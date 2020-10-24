@@ -27,16 +27,11 @@ namespace Xpandables.Net.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+        public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder
+                .ConfigureWebHostDefaults(webBuilder => webBuilder
                         .ConfigureAppConfiguration((buildContext, config) =>
                         {
                             var env = buildContext.HostingEnvironment;
@@ -50,7 +45,6 @@ namespace Xpandables.Net.Api
                             services.AddTransient<ApiExceptionHandlerMiddleware>();
                             services.AddTransient<ApiExceptionHandlerFilterAttribute>();
                         })
-                        .UseStartup<Startup>();
-                });
+                        .UseStartup<Startup>());
     }
 }
