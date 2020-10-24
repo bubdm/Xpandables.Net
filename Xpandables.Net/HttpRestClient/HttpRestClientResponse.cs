@@ -142,27 +142,24 @@ namespace Xpandables.Net.HttpRestClient
     public class HttpRestClientResponse<TResult> : HttpRestClientResponse
     {
         /// <summary>
-        /// Converts the source <see cref="HttpRestClientResponse"/> to the generic of <typeparamref name="TResult"/> type.
+        /// Converts the current <see cref="HttpRestClientResponse"/> to the generic of <typeparamref name="TTarget"/> type.
         /// </summary>
-        /// <param name="source">The response to act on.</param>
-        /// <param name="result">The result content if exist.</param>
-        /// <returns>A new instance of <see cref="HttpRestClientResponse{TResult}"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public static HttpRestClientResponse<TResult> Convert(HttpRestClientResponse source, TResult result)
+        /// <typeparam name="TTarget">The type of target result.</typeparam>
+        /// <param name="target">The target result content if exist.</param>
+        /// <returns>A new instance of <see cref="HttpRestClientResponse{TTarget}"/>.</returns>
+        public HttpRestClientResponse<TTarget> ConvertTo<TTarget>(TTarget target)
         {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-
-            var response = (source.Exception, result) switch
+            var response = (Exception, target) switch
             {
-                (null, TResult value) => new HttpRestClientResponse<TResult>(value, source.StatusCode),
-                (Exception exception, null) => new HttpRestClientResponse<TResult>(exception, source.StatusCode),
-                (Exception exception, TResult) => new HttpRestClientResponse<TResult>(exception, source.StatusCode),
-                (_, _) => new HttpRestClientResponse<TResult>(source.StatusCode),
+                (null, TTarget value) => new HttpRestClientResponse<TTarget>(value, StatusCode),
+                (Exception exception, null) => new HttpRestClientResponse<TTarget>(exception, StatusCode),
+                (Exception exception, TTarget) => new HttpRestClientResponse<TTarget>(exception, StatusCode),
+                (_, _) => new HttpRestClientResponse<TTarget>(StatusCode),
             };
 
-            if (source.Headers is not null) response.AddHeaders(source.Headers);
-            if (source.ReasonPhrase is not null) response.AddReasonPhrase(source.ReasonPhrase);
-            if (source.Version is not null) response.AddVersion(source.Version);
+            if (Headers is not null) response.AddHeaders(Headers);
+            if (ReasonPhrase is not null) response.AddReasonPhrase(ReasonPhrase);
+            if (Version is not null) response.AddVersion(Version);
 
             return response;
 

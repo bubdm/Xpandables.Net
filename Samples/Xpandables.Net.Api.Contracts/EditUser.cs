@@ -28,7 +28,7 @@ using Xpandables.Net.Identities;
 namespace Xpandables.Net.Api.Contracts
 {
     [HttpRestClient(Path = "api/user", Method = "Post", IsSecured = true, IsNullable = false)]
-    public sealed class EditUser : TokenClaimExpression<TokenClaims, User>, IAsyncCommand, ITokenClaimDecorator, IPersistenceDecorator
+    public sealed class EditUser : TokenClaimExpression<TokenClaims, User>, IAsyncCommand, IPersistenceDecorator
     {
         public EditUser(string? email, string? password, string? phone)
         {

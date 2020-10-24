@@ -24,7 +24,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Correlation;
 using Xpandables.Net.EntityFramework;
-using Xpandables.Net.Identities;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
 using Xpandables.Net.Validations;
@@ -62,30 +61,11 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         public CommandQueryOptions UseTransactionDecorator() => this.Assign(cq => cq.IsTransactionEnabled = true);
 
-        /// <summary>
-        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="ITokenClaimDecorator"/>.
-        /// </summary>
-        public CommandQueryOptions UseIdentityDecorator<TIdentityDataProvider>()
-            where TIdentityDataProvider : class, ITokenClaimProvider => this.Assign(cq => cq.IsIdentityDataEnabled = typeof(TIdentityDataProvider));
-
-        /// <summary>
-        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="ITokenClaimDecorator"/> using the default identity provider.
-        /// </summary>
-        public CommandQueryOptions UseIdentityDecorator() => this.Assign(cq => cq.IsIdentityDataEnabled = typeof(TokenClaimProvider));
-
-        /// <summary>
-        /// Enables identity data behavior to commands and queries that are decorated with the <see cref="ITokenClaimDecorator"/>.
-        /// </summary>
-        /// <param name="identityDataProvider">The identity data provider type.</param>
-        public CommandQueryOptions UseIdentityDecorator(Type identityDataProvider)
-            => this.Assign(cq => cq.IsIdentityDataEnabled = identityDataProvider ?? throw new ArgumentNullException(nameof(identityDataProvider)));
-
         internal bool IsValidatorEnabled { get; private set; }
         internal bool IsVisitorEnabled { get; private set; }
         internal bool IsTransactionEnabled { get; private set; }
         internal bool IsPersistenceEnabled { get; private set; }
         internal bool IsCorrelationEnabled { get; private set; }
-        internal Type? IsIdentityDataEnabled { get; private set; }
     }
 
     /// <summary>
@@ -156,12 +136,6 @@ namespace Xpandables.Net.DependencyInjection
             {
                 services.AddXValidations(assemblies);
                 services.AddXValidationDecorator();
-            }
-
-            if (definedOptions.IsIdentityDataEnabled is { })
-            {
-                services.AddXTokenClaimProvider(definedOptions.IsIdentityDataEnabled);
-                services.AddXTokenClaimDecorator();
             }
 
             return services;

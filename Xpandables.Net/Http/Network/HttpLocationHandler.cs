@@ -19,22 +19,24 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.HttpRestClient.Network
+using Xpandables.Net.HttpRestClient;
+
+namespace Xpandables.Net.Http.Network
 {
     /// <summary>
-    /// Default implementation for <see cref="IHttpRestClientLocationHandler"/>.
+    /// Default implementation for <see cref="IHttpLocationHandler"/>.
     /// </summary>
-    public sealed class HttpRestClientLocationHandler : Disposable, IHttpRestClientLocationHandler
+    public sealed class HttpLocationHandler : Disposable, IHttpLocationHandler
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="HttpRestClientLocationHandler"/> class with the client to be used.
+        /// Initializes a new instance of <see cref="HttpLocationHandler"/> class with the client to be used.
         /// </summary>
         /// <param name="httpClient">The HTTP client to be used to request Geo location.</param>
         /// <param name="httpRestClientEngine">The HTTP Rest client engine.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="httpClient"/> is null.</exception>
-        public HttpRestClientLocationHandler(HttpClient httpClient, IHttpRestClientEngine httpRestClientEngine)
+        public HttpLocationHandler(HttpClient httpClient, IHttpRestClientEngine httpRestClientEngine)
             => _httpRestClientHandler = new HttpRestClientHandler(httpClient, httpRestClientEngine);
 
         /// <summary>
@@ -42,7 +44,7 @@ namespace Xpandables.Net.HttpRestClient.Network
         /// </summary>
         /// <param name="request">The request to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        public async Task<HttpRestClientResponse<GeoLocation>> ReadLocationAsync(GetLocation request)
+        public async Task<HttpRestClientResponse<GeoLocation>> ReadLocationAsync(LocationRequest request)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
             return await _httpRestClientHandler.HandleAsync(request).ConfigureAwait(false);

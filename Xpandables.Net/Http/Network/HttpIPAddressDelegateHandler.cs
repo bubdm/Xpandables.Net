@@ -16,29 +16,19 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Http
+namespace Xpandables.Net.Http.Network
 {
     /// <summary>
-    /// Provides with a handler that can be used with <see cref="HttpClient"/> to add header authorization value
-    /// before request execution.
+    /// Provides with a handler that is used with <see cref="HttpClient"/> to format IpLocation result before returning response.
     /// </summary>
-    public class AuthorizationHttpTokenDelegateHandler : DelegatingHandler
+    public sealed class HttpIPAddressDelegateHandler : HttpClientHandler
     {
-        private readonly IHttpTokenAccessor _httpTokenAccessor;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="AuthorizationHttpTokenHandler"/> class with the token accessor.
-        /// </summary>
-        /// <param name="httpTokenAccessor">The token accessor to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="httpTokenAccessor"/> is null.</exception>
-        public AuthorizationHttpTokenDelegateHandler(IHttpTokenAccessor httpTokenAccessor)
-            => _httpTokenAccessor = httpTokenAccessor ?? throw new ArgumentNullException(nameof(httpTokenAccessor));
-
         /// <summary>
         /// Creates an instance of System.Net.Http.HttpResponseMessage based on the information
         /// provided in the System.Net.Http.HttpRequestMessage as an operation that will not block.
@@ -47,17 +37,17 @@ namespace Xpandables.Net.Http
         /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The token is not available. See inner exception.</exception>
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            _ = request ?? throw new ArgumentNullException(nameof(request));
-
-            if (request.Headers.Authorization is AuthenticationHeaderValue authorization && authorization.Parameter is null)
+            var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                var token = _httpTokenAccessor.ReadToken() ?? throw new InvalidOperationException("Expected token not found.");
-                request.Headers.Authorization = new AuthenticationHeaderValue(authorization.Scheme, token);
+                var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                content = $"'{ content.Replace("\n", "", StringComparison.InvariantCulture)}'";
+                response.Content = new StringContent(content, Encoding.UTF8);
             }
 
-            return base.SendAsync(request, cancellationToken);
+            return response;
         }
     }
 }

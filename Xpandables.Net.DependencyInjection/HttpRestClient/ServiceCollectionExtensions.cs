@@ -15,12 +15,11 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Xpandables.Net.HttpRestClient;
-using Xpandables.Net.HttpRestClient.Network;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -55,44 +54,6 @@ namespace Xpandables.Net.DependencyInjection
             services.AddTransient<IHttpRestClientEngine, THttpRestClientEngine>();
 
             return services;
-        }
-
-        /// <summary>
-        /// Adds an <see cref="IHttpRestClientIPHandler"/> to retrieve the IPAddress.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpRestClientIPHandler(this IServiceCollection services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.AddTransient<HttpRestClientIPMessageHandler>();
-            services.AddHttpClient<IHttpRestClientIPHandler, HttpRestClientIPHandler>(httpClient =>
-            {
-                httpClient.BaseAddress = new Uri("https://ipinfo.io/ip");
-                httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
-            })
-            .ConfigurePrimaryHttpMessageHandler<HttpRestClientIPMessageHandler>();
-
-            return services;
-        }
-
-        /// <summary>
-        /// Adds an <see cref="IHttpRestClientLocationHandler"/> to retrieve the user location.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpRestClientLocationHandler(this IServiceCollection services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.AddHttpClient<IHttpRestClientLocationHandler, HttpRestClientLocationHandler>(httpClient =>
-            {
-                httpClient.BaseAddress = new Uri("http://api.ipstack.com");
-                httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-            });
-
-            return services;
-        }
+        }        
     }
 }

@@ -15,13 +15,23 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Xpandables.Net.Queries;
+using System;
+using System.Threading.Tasks;
 
-namespace Xpandables.Net.HttpRestClient.Network
+using Xpandables.Net.HttpRestClient;
+
+namespace Xpandables.Net.Http.Network
 {
     /// <summary>
-    /// Defines the location IP request.
+    /// Provides with methods to request Geo-location using a typed client HTTP Client.
     /// </summary>
-    [HttpRestClient(Path = "", IsNullable = true, IsSecured = false, Method = "Get")]
-    public sealed class GetIP : IQuery<string> { }
+    public interface IHttpLocationHandler : IDisposable
+    {
+        /// <summary>
+        /// Asynchronously gets the IPAddress Geo-location of the specified IPAddress request using http://api.ipstack.com.
+        /// </summary>
+        /// <param name="request">The request to act with.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
+        Task<HttpRestClientResponse<GeoLocation>> ReadLocationAsync(LocationRequest request);
+    }
 }

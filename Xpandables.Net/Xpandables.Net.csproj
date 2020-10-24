@@ -56,10 +56,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Identities\IIdentityDataProvider.cs~RF14eb0cd2.TMP" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\Xpandables.png" Link="Xpandables.png">
       <PackagePath></PackagePath>
       <Pack>True</Pack>

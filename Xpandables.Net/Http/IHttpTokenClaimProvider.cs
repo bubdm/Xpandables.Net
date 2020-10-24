@@ -18,19 +18,17 @@
 using System.Diagnostics.CodeAnalysis;
 using System;
 
-namespace Xpandables.Net.Identities
+namespace Xpandables.Net.Http
 {
     /// <summary>
-    /// Provides with a method to retrieve token claims.
-    /// You should provide an implementation of this interface that will be used with the <see cref="AsyncCommandTokenClaimDecorator{TCommand}"/>
-    /// or <see cref="AsyncQueryTokenClaimDecorator{TQuery, TResult}"/> decorator to fill the target instance with the token claims.
+    /// Provides with a method to retrieve token claims as type.
     /// </summary>
-    public interface ITokenClaimProvider
+    public interface IHttpTokenClaimProvider
     {
         /// <summary>
-        /// Returns an instance that contains token claims or throw an exception if not found.
+        /// Returns an instance that contains token claims or throw <see cref="UnauthorizedAccessException"/> exception if not found.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Failed to find claims</exception>
+        /// <exception cref="UnauthorizedAccessException">Failed to find claims</exception>
         [return: NotNull]
         object ReadTokenClaim();
 
@@ -39,7 +37,7 @@ namespace Xpandables.Net.Identities
         /// </summary>
         /// <typeparam name="TTokenClaim">The type of the token claims.</typeparam>
         /// <returns>An object of <typeparamref name="TTokenClaim"/> type or null.</returns>
-        /// <exception cref="InvalidOperationException">Failed to find claims.</exception>
+        /// <exception cref="UnauthorizedAccessException">Failed to find claims.</exception>
         [return: MaybeNull]
         public TTokenClaim ReadTokenClaim<TTokenClaim>() where TTokenClaim : class => ReadTokenClaim() as TTokenClaim;
     }

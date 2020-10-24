@@ -61,7 +61,6 @@ namespace Xpandables.Net.Desktop
                     services.AddTransient<MainForm>();
                     services.AddTransient<LoginForm>();
 
-                    services.AddXHttpTokenDelegateAccessor();
                     services.AddXHttpRestClientEngine();
                     services.AddHttpClient<IHttpRestClientHandler, HttpRestClientHandler>("ApiClient", (serviceProvider, httpClient) =>
                     {
@@ -71,10 +70,7 @@ namespace Xpandables.Net.Desktop
                     })
                     .ConfigureXPrimaryAuthorizationTokenHandler();
                 })
-                .ConfigureLogging(logging =>
-                {
-                    logging.AddConsole();
-                })
+                .ConfigureLogging(logging => logging.AddConsole())
                 .Build();
 
             using var serviceScope = host.Services.CreateScope();

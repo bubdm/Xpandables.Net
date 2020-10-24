@@ -37,10 +37,7 @@ namespace Xpandables.Net.Desktop.Models
         private string _loading;
         private bool _isBusy;
 
-        public LoginFormViewModel(IHttpRestClientHandler httpRestClientHandler)
-        {
-            _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
-        }
+        public LoginFormViewModel(IHttpRestClientHandler httpRestClientHandler) => _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
 
         public string Phone { get => _phone; set => SetProperty(ref _phone, value); }
         public string Password { get => _password; set => SetProperty(ref _password, value); }

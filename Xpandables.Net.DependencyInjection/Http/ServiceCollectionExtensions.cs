@@ -15,15 +15,12 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
+
 using Microsoft.Extensions.DependencyInjection;
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-
 using Xpandables.Net.Http;
-using Xpandables.Net.Types;
+using Xpandables.Net.Http.Network;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -32,112 +29,6 @@ namespace Xpandables.Net.DependencyInjection
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
-        const string HttpHeaderAccessorAssemblyName = "Xpandables.NetCore.dll";
-        const string HttpHeaderAccessorName = "HttpHeaderAccessor";
-
-        /// <summary>
-        /// Adds the default HTTP request header values accessor that implements the <see cref="IHttpHeaderAccessor"/> from "Xpandables.NetCore.dll" assembly.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpHeaderAccessorExtended(this IServiceCollection services)
-        {
-            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, HttpHeaderAccessorAssemblyName);
-            if (path.TryLoadAssembly(out var assembly, out var exception))
-            {
-                var httpHeaderAccessor = assembly
-                    .GetExportedTypes()
-                    .First(type => type.Name.Equals(HttpHeaderAccessorName, StringComparison.InvariantCulture));
-
-                services.AddScoped(typeof(IHttpHeaderAccessor), httpHeaderAccessor);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Type not found : {HttpHeaderAccessorName}. Add reference to {HttpHeaderAccessorAssemblyName}", exception);
-            }
-
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the <see cref="IHttpTokenDelegateAccessor"/> to the services with scoped life time.
-        /// Note : Do not use with <see cref="AddXHttpTokenAccessor(IServiceCollection)"/>.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpTokenDelegateAccessor(this IServiceCollection services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.AddSingleton<HttpTokenDelegateAccessor>();
-            services.AddSingleton<IHttpTokenAccessor>(provider => provider.GetRequiredService<HttpTokenDelegateAccessor>());
-            services.AddSingleton<IHttpTokenDelegateAccessor>(provider => provider.GetRequiredService<HttpTokenDelegateAccessor>());
-            return services;
-        }
-
-        /// <summary>
-        /// Adds a delegate that will be used to provide the authorization token before request execution
-        /// using an implementation of <see cref="IHttpTokenAccessor"/>. You can register the default implementation using
-        /// the <see cref="AddXHttpTokenAccessor(IServiceCollection)"/>.
-        /// </summary>
-        /// <param name="builder">The Microsoft.Extensions.DependencyInjection.IHttpClientBuilder.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
-        public static IHttpClientBuilder ConfigureXPrimaryAuthorizationTokenDelegateHandler(this IHttpClientBuilder builder)
-        {
-            _ = builder ?? throw new ArgumentNullException(nameof(builder));
-
-            builder.ConfigurePrimaryHttpMessageHandler(provider =>
-            {
-                var httpTokenProvider = provider.GetRequiredService<IHttpTokenAccessor>();
-                return new AuthorizationHttpTokenDelegateHandler(httpTokenProvider);
-            });
-
-            return builder;
-        }
-
-        /// <summary>
-        /// Adds a delegate that will be used to provide the authorization token before request execution
-        /// using an implementation of <see cref="IHttpTokenDelegateAccessor"/>. You need to register the default implementation using
-        /// the <see cref="AddXHttpTokenDelegateAccessor(IServiceCollection)"/>.
-        /// </summary>
-        /// <param name="builder">The Microsoft.Extensions.DependencyInjection.IHttpClientBuilder.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
-        public static IHttpClientBuilder ConfigureXPrimaryAuthorizationTokenHandler(this IHttpClientBuilder builder)
-        {
-            _ = builder ?? throw new ArgumentNullException(nameof(builder));
-
-            builder.ConfigurePrimaryHttpMessageHandler(provider =>
-            {
-                var httpTokenProvider = provider.GetRequiredService<IHttpTokenDelegateAccessor>();
-                return new AuthorizationHttpTokenHandler(httpTokenProvider);
-            });
-
-            return builder;
-        }
-
-        /// <summary>
-        /// Adds a delegate that will be used to provide the authorization token before request execution
-        /// using the token provider function.
-        /// </summary>
-        /// <param name="builder">The Microsoft.Extensions.DependencyInjection.IHttpClientBuilder.</param>
-        /// <param name="tokenProvider">The delegate token provider to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="tokenProvider"/> is null.</exception>
-        public static IHttpClientBuilder ConfigureXPrimaryAuthorizationTokenDelegateHandler(
-            this IHttpClientBuilder builder, HttpTokenAccessorDelegate tokenProvider)
-        {
-            _ = builder ?? throw new ArgumentNullException(nameof(builder));
-            _ = tokenProvider ?? throw new ArgumentNullException(nameof(tokenProvider));
-
-            builder.ConfigurePrimaryHttpMessageHandler(() =>
-            {
-                var httpTokenProvider = new HttpTokenAccessorBuilder(tokenProvider);
-                return new AuthorizationHttpTokenDelegateHandler(httpTokenProvider);
-            });
-
-            return builder;
-        }
-
         /// <summary>
         /// Adds the specified HTTP request header values accessor that implements the <see cref="IHttpHeaderAccessor"/>.
         /// </summary>
@@ -155,27 +46,53 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the default HTTP request token accessor that implements the <see cref="IHttpTokenAccessor"/>.
+        /// Adds the specified HTTP request file validation that implements the <see cref="IHttpFormFileEngine"/>.
         /// </summary>
+        /// <typeparam name="THttpFormFileEngine">The type of HTTP form file engine.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpTokenAccessor(this IServiceCollection services)
-            => services.AddXHttpTokenAccessor<HttpTokenAccessor>();
-
-        /// <summary>
-        /// Adds the specified HTTP request token accessor.
-        /// The type should implement the <see cref="IHttpTokenAccessor"/>.
-        /// </summary>
-        /// <typeparam name="THttpTokenAccessor">The type of HTTP request token.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpTokenAccessor<THttpTokenAccessor>(this IServiceCollection services)
-            where THttpTokenAccessor : class, IHttpTokenAccessor
+        public static IServiceCollection AddXHttpForFileEngine<THttpFormFileEngine>(
+            this IServiceCollection services)
+            where THttpFormFileEngine : class, IHttpFormFileEngine
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IHttpTokenAccessor, THttpTokenAccessor>();
+            services.AddScoped<IHttpFormFileEngine, THttpFormFileEngine>();
             return services;
+        }
+
+        /// <summary>
+        /// Adds the specified HTTP request token claim provider that implements the <see cref="IHttpTokenClaimProvider"/>.
+        /// </summary>
+        /// <typeparam name="THttpTokenClaimProvider">The type of HTTP token claim provider.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXHttpTokenClaimProvider<THttpTokenClaimProvider>(
+            this IServiceCollection services)
+            where THttpTokenClaimProvider : class, IHttpTokenClaimProvider
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<IHttpTokenClaimProvider, THttpTokenClaimProvider>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the token claims provider type to the services.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="tokenClaimProviderType">The token claims provider type.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="tokenClaimProviderType"/> is null.</exception>
+        public static IServiceCollection AddXHttpTokenClaimProvider(this IServiceCollection services, Type tokenClaimProviderType)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = tokenClaimProviderType ?? throw new ArgumentNullException(nameof(tokenClaimProviderType));
+
+            if (!typeof(IHttpTokenClaimProvider).IsAssignableFrom(tokenClaimProviderType))
+                throw new ArgumentException($"{nameof(tokenClaimProviderType)} must implement {nameof(IHttpTokenClaimProvider)}.");
+
+            return services.AddScoped(typeof(IHttpTokenClaimProvider), tokenClaimProviderType);
         }
 
         /// <summary>
@@ -205,6 +122,64 @@ namespace Xpandables.Net.DependencyInjection
             _ = tokenEngineType ?? throw new ArgumentNullException(nameof(tokenEngineType));
 
             services.AddScoped(typeof(IHttpTokenEngine), tokenEngineType);
+            return services;
+        }
+
+        /// <summary>
+        /// Adds a delegate that will be used to provide the authorization token before request execution
+        /// using an implementation of <see cref="IHttpHeaderAccessor"/>. You need to register the implementation using
+        /// the <see cref="AddXHttpHeaderAccessor{THttpHeaderAccessor}(IServiceCollection)"/> or the default extension.
+        /// </summary>
+        /// <param name="builder">The Microsoft.Extensions.DependencyInjection.IHttpClientBuilder.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
+        public static IHttpClientBuilder ConfigureXPrimaryAuthorizationTokenHandler(this IHttpClientBuilder builder)
+        {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+
+            builder.ConfigurePrimaryHttpMessageHandler(provider =>
+            {
+                var httpHeaderAccessor = provider.GetRequiredService<IHttpHeaderAccessor>();
+                return new AuthorizationHttpTokenHandler(httpHeaderAccessor);
+            });
+
+            return builder;
+        }
+
+        /// <summary>
+        /// Adds an <see cref="IHttpIPAddressHandler"/> to retrieve the IPAddress.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXHttpIPAddressHandler(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddTransient<HttpIPAddressDelegateHandler>();
+            services.AddHttpClient<IHttpIPAddressHandler, HttpIPAddressHandler>(httpClient =>
+            {
+                httpClient.BaseAddress = new Uri("https://ipinfo.io/ip");
+                httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
+            })
+            .ConfigurePrimaryHttpMessageHandler<HttpIPAddressDelegateHandler>();
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds an <see cref="IHttpLocationHandler"/> to retrieve the user location.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXHttpLocationHandler(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddHttpClient<IHttpLocationHandler, HttpLocationHandler>(httpClient =>
+            {
+                httpClient.BaseAddress = new Uri("http://api.ipstack.com");
+                httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
+
             return services;
         }
     }

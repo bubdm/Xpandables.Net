@@ -16,18 +16,21 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.HttpRestClient.Network
+using Xpandables.Net.HttpRestClient;
+
+namespace Xpandables.Net.Http.Network
 {
     /// <summary>
     /// Provides with a method to request IP address.
     /// </summary>
-    public interface IHttpRestClientIPHandler : IDisposable
+    public interface IHttpIPAddressHandler : IDisposable
     {
         /// <summary>
         /// Asynchronously gets the IPAddress of the current caller.
         /// </summary>
-        Task<HttpRestClientResponse<string>> ReadIPAddressAsync();
+        Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync();
     }
 }

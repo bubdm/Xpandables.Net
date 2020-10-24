@@ -27,17 +27,17 @@ namespace Xpandables.Net.Http
     /// Provides with a handler that can be used with <see cref="HttpClient"/> to add header authorization value
     /// before request execution.
     /// </summary>
-    public class AuthorizationHttpTokenHandler : HttpClientHandler
+    public class AuthorizationHttpTokenHandler : DelegatingHandler
     {
-        private readonly IHttpTokenDelegateAccessor _httpTokenAccessor;
+        private readonly IHttpHeaderAccessor _httpHeaderAccessor;
 
         /// <summary>
         /// Initializes a new instance of <see cref="AuthorizationHttpTokenHandler"/> class with the token accessor.
         /// </summary>
-        /// <param name="httpTokenAccessor">The token accessor to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="httpTokenAccessor"/> is null.</exception>
-        public AuthorizationHttpTokenHandler(IHttpTokenDelegateAccessor httpTokenAccessor)
-            => _httpTokenAccessor = httpTokenAccessor ?? throw new ArgumentNullException(nameof(httpTokenAccessor));
+        /// <param name="httpHeaderAccessor">The token accessor to act with.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="httpHeaderAccessor"/> is null.</exception>
+        public AuthorizationHttpTokenHandler(IHttpHeaderAccessor httpHeaderAccessor)
+            => _httpHeaderAccessor = httpHeaderAccessor ?? throw new ArgumentNullException(nameof(httpHeaderAccessor));
 
         /// <summary>
         /// Creates an instance of System.Net.Http.HttpResponseMessage based on the information
@@ -53,7 +53,7 @@ namespace Xpandables.Net.Http
 
             if (request.Headers.Authorization is AuthenticationHeaderValue authorization && authorization.Parameter is null)
             {
-                var token = _httpTokenAccessor.ReadToken() ?? throw new InvalidOperationException("Expected token not found.");
+                var token = _httpHeaderAccessor.ReadValue("Authorization") ?? throw new InvalidOperationException("Expected token not found.");
                 request.Headers.Authorization = new AuthenticationHeaderValue(authorization.Scheme, token);
             }
 

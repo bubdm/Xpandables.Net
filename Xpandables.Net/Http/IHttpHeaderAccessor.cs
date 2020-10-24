@@ -41,7 +41,7 @@ namespace Xpandables.Net.Http
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         public sealed IEnumerable<string> ReadValues(string key)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
+            _ = key ?? throw new ArgumentNullException(nameof(key));
             return ReadValues().TryGetValue(key, out var values) ? values.AsEnumerable() : Enumerable.Empty<string>();
         }
 

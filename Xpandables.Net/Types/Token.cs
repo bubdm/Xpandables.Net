@@ -45,6 +45,12 @@ namespace Xpandables.Net.Types
         public DateTime Expiry { get; }
 
         /// <summary>
+        /// Gets a collection of custom properties.
+        /// </summary>
+        [Required]
+        public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
+
+        /// <summary>
         /// Creates an instance of <see cref="Token"/> with the specified value.
         /// </summary>
         /// <param name="value">The token value.</param>
@@ -71,6 +77,7 @@ namespace Xpandables.Net.Types
             yield return Value;
             yield return Type;
             yield return Expiry;
+            yield return Properties;
         }
 
         private Token(string value, string type, DateTime expiry)

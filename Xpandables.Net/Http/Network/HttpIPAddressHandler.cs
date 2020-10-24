@@ -16,32 +16,39 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.HttpRestClient.Network
+using Xpandables.Net.HttpRestClient;
+
+namespace Xpandables.Net.Http.Network
 {
     /// <summary>
-    /// Default implementation for <see cref="IHttpRestClientIPHandler"/>.
+    /// Default implementation for <see cref="IHttpIPAddressHandler"/>.
     /// </summary>
-    public sealed class HttpRestClientIPHandler : Disposable, IHttpRestClientIPHandler
+    public sealed class HttpIPAddressHandler : Disposable, IHttpIPAddressHandler
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="HttpRestClientIPHandler"/> class with the client to be used.
+        /// Initializes a new instance of <see cref="HttpIPAddressHandler"/> class with the client to be used.
         /// </summary>
         /// <param name="httpClient">The client to be used to get the IP address.</param>
         /// <param name="httpRestClientEngine">The HTTP Rest client engine.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="httpClient"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientEngine"/> is null.</exception>
-        public HttpRestClientIPHandler(HttpClient httpClient, IHttpRestClientEngine httpRestClientEngine)
+        public HttpIPAddressHandler(HttpClient httpClient, IHttpRestClientEngine httpRestClientEngine)
             => _httpRestClientHandler = new HttpRestClientHandler(httpClient, httpRestClientEngine);
 
         /// <summary>
         /// Asynchronously gets the IPAddress of the current caller using https://ipinfo.io/ip.
         /// </summary>
-        public async Task<HttpRestClientResponse<string>> ReadIPAddressAsync() => await _httpRestClientHandler.HandleAsync(new GetIP()).ConfigureAwait(false);
+        public async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync()
+        {
+            var response = await _httpRestClientHandler.HandleAsync(new IPRequest()).ConfigureAwait(false);
+            return response.ConvertTo(IPAddress.Parse(response.Result));
+        }
 
         private bool _isDisposed;
 
