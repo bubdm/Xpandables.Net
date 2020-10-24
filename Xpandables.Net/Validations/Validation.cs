@@ -23,22 +23,22 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Validations
 {
     /// <summary>
-    /// This helper class allows the application author to implement the <see cref="IValidation{TArgument}"/>
+    /// Represents a helper class that allows implementation of the <see cref="IValidation{TArgument}"/>
     /// interface without dedicated class.
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument.</typeparam>
-    public sealed class ValidationBuilder<TArgument> : IValidation<TArgument>
+    public sealed class Validation<TArgument> : IValidation<TArgument>
         where TArgument : class
     {
         private readonly Func<TArgument, Task> _validator;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="ValidationBuilder{TArgument}"/> class with the delegate to be used
+        /// Initializes a new instance of the <see cref="Validation{TArgument}"/> class with the delegate to be used
         /// as <see cref="IValidation{TArgument}"/> implementation.
         /// </summary>
         /// <param name="validator">The delegate validator.</param>
         /// <exception cref="ArgumentException">The <paramref name="validator"/> is null.</exception>
-        public ValidationBuilder(Func<TArgument, Task> validator) => _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+        public Validation(Func<TArgument, Task> validator) => _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 
         /// <summary>
         /// Asynchronously validates the argument and throws the <see cref="ValidationException"/> if necessary.

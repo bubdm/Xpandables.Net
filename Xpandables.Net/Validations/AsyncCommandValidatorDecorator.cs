@@ -38,9 +38,10 @@ namespace Xpandables.Net.Validations
         private readonly ICompositeValidation<TCommand> _validator;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncCommandValidatorDecorator{TCommand}"/>.
+        /// Initializes a new instance of the <see cref="AsyncCommandValidatorDecorator{TCommand}"/> class 
+        /// with the handler to be decorated and the composite validator.
         /// </summary>
-        /// <param name="decoratee">The decorated command handler.</param>
+        /// <param name="decoratee">The command handler to be decorated.</param>
         /// <param name="validator">The validator instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
@@ -51,7 +52,7 @@ namespace Xpandables.Net.Validations
         }
 
         /// <summary>
-        /// Asynchronously handle the specified command.
+        /// Asynchronously validates the command before handling.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

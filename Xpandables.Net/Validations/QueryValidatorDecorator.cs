@@ -38,7 +38,8 @@ namespace Xpandables.Net.Validations
         private readonly ICompositeValidation<TQuery> _validator;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="QueryValidatorDecorator{TQuery, TResult}"/>.
+        /// Initializes a new instance of the <see cref="QueryValidatorDecorator{TQuery, TResult}"/> class with
+        /// the handler to be decorated and the composite validator.
         /// </summary>
         /// <param name="decoratee">The query handler to decorate.</param>
         /// <param name="validator">The validator instance.</param>
@@ -51,7 +52,7 @@ namespace Xpandables.Net.Validations
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns the expected result.
+        /// Asynchronously validates the query before handling and returns the task result.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

@@ -32,7 +32,7 @@ namespace Xpandables.Net.Validations
     public sealed class PatternRequiredOptionalAttribute : RequiredAttribute
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="PatternRequiredOptionalAttribute"/> with the regex pattern the value must match.
+        /// Initializes a new instance of the <see cref="PatternRequiredOptionalAttribute"/> class with the regex pattern the value must match.
         /// </summary>
         /// <param name="regexPattern">The regex pattern to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="regexPattern"/> is <see langword="null"/>.</exception>
