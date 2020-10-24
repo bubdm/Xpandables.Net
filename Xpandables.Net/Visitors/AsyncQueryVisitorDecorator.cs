@@ -40,7 +40,8 @@ namespace Xpandables.Net.Visitors
         private readonly ICompositeVisitor<TQuery> _visitor;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AsyncQueryVisitorDecorator{TQuery, TResult}"/>.
+        /// Initializes a new instance of the <see cref="AsyncQueryVisitorDecorator{TQuery, TResult}"/> class with
+        /// the query handler to be decorated and the composite visitor.
         /// </summary>
         /// <param name="decoratee">The query to be decorated.</param>
         /// <param name="visitor">The composite visitor to apply</param>
@@ -53,7 +54,7 @@ namespace Xpandables.Net.Visitors
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query and returns an asynchronous result type.
+        /// Asynchronously applies visitor before handling the query and returns an asynchronous result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

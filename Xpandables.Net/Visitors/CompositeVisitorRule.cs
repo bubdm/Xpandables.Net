@@ -34,7 +34,7 @@ namespace Xpandables.Net.Visitors
         IEnumerable<IVisitor<TElement>> ICompositeVisitor<TElement>.VisitorInstances => _visitorInstances;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="CompositeVisitorRule{TElement}"/> with a collection of visitors.
+        /// Initializes a new instance of the <see cref="CompositeVisitorRule{TElement}"/> class with a collection of visitors.
         /// </summary>
         /// <param name="visitors">The collection of visitors for a specific type.</param>
         public CompositeVisitorRule(IEnumerable<IVisitor<TElement>> visitors)
