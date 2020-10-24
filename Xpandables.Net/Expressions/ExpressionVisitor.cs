@@ -55,16 +55,13 @@ namespace Xpandables.Net.Expressions
             };
         }
 
-        protected virtual MemberBinding VisitBinding(MemberBinding binding)
+        protected virtual MemberBinding VisitBinding(MemberBinding binding) => binding.BindingType switch
         {
-            return binding.BindingType switch
-            {
-                MemberBindingType.Assignment => VisitMemberAssignment((MemberAssignment)binding),
-                MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding)binding),
-                MemberBindingType.ListBinding => VisitMemberListBinding((MemberListBinding)binding),
-                _ => throw new Exception(string.Format("Unhandled binding type '{0}'", binding.BindingType)),
-            };
-        }
+            MemberBindingType.Assignment => VisitMemberAssignment((MemberAssignment)binding),
+            MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding)binding),
+            MemberBindingType.ListBinding => VisitMemberListBinding((MemberListBinding)binding),
+            _ => throw new Exception(string.Format("Unhandled binding type '{0}'", binding.BindingType)),
+        };
 
         protected virtual ElementInit VisitElementInitializer(ElementInit initializer)
         {

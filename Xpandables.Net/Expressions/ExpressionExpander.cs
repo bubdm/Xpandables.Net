@@ -108,11 +108,9 @@ namespace Xpandables.Net.Expressions
             };
         }
 
-        protected override Expression VisitMemberAccess(MemberExpression m)
-        {
+        protected override Expression VisitMemberAccess(MemberExpression m) =>
             // Strip out any references to expressions captured by outer variables - LINQ to SQL can't handle these:
-            return m.Member.DeclaringType!.Name.StartsWith("<>") ? TransformExpr(m) : base.VisitMemberAccess(m);
-        }
+            m.Member.DeclaringType!.Name.StartsWith("<>") ? TransformExpr(m) : base.VisitMemberAccess(m);
 
         [return: MaybeNull]
         Expression TransformExpr(MemberExpression input)
