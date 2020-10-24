@@ -102,7 +102,9 @@ namespace Xpandables.Net.Enumerations
             return GetAll<TEnumeration>().FirstOrDefault(predicateFind);
 
             bool PredicateExecute(TEnumeration enumeration)
-                => enumeration.DisplayName.Equals(displayName, StringComparison.OrdinalIgnoreCase);
+            {
+                return enumeration.DisplayName.Equals(displayName, StringComparison.OrdinalIgnoreCase);
+            }
         }
 
         /// <summary>
@@ -123,7 +125,9 @@ namespace Xpandables.Net.Enumerations
             return GetAll(enumerationType).OfType<EnumerationType>().FirstOrDefault(predicateFind);
 
             bool PredicateExecute(EnumerationType enumeration)
-                => enumeration.DisplayName.Equals(displayName, StringComparison.OrdinalIgnoreCase);
+            {
+                return enumeration.DisplayName.Equals(displayName, StringComparison.OrdinalIgnoreCase);
+            }
         }
 
         /// <summary>
@@ -139,7 +143,10 @@ namespace Xpandables.Net.Enumerations
 
             return GetAll<TEnumeration>().FirstOrDefault(predicateFind);
 
-            bool PredicateExecute(TEnumeration enumeration) => enumeration.Value.Equals(value);
+            bool PredicateExecute(TEnumeration enumeration)
+            {
+                return enumeration.Value.Equals(value);
+            }
         }
 
         /// <summary>
@@ -189,7 +196,10 @@ namespace Xpandables.Net.Enumerations
 
             return GetAll(enumerationType).OfType<EnumerationType>().FirstOrDefault(predicateFind);
 
-            bool PredicateExecute(EnumerationType enumeration) => enumeration.Value.Equals(value);
+            bool PredicateExecute(EnumerationType enumeration)
+            {
+                return enumeration.Value.Equals(value);
+            }
         }
 
         /// <summary>
