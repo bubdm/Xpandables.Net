@@ -216,8 +216,15 @@ namespace Xpandables.Net.Notifications
                         dependencies.Add(dependency, new List<string> { property.Name });
                     }
 
-                    bool PredicateFindDependency(string value) => value == dependency;
-                    bool PredicateFindProperty(string value) => value == property.Name;
+                    bool PredicateFindDependency(string value)
+                    {
+                        return value == dependency;
+                    }
+
+                    bool PredicateFindProperty(string value)
+                    {
+                        return value == property.Name;
+                    }
                 }
             }
             return dependencies;

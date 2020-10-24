@@ -39,10 +39,9 @@ namespace Xpandables.Net.Optionals
     {
         private readonly Type[] _genericTypes;
         private readonly T[] _values;
-#pragma warning disable CA1822 // Mark members as static
-        private readonly bool IsEnumerbaleOrAsyncEnumerable => typeof(T).IsEnumerable() || typeof(T).IsAsyncEnumerable();
-        private readonly bool IsEnumerbale => typeof(T).IsEnumerable();       
-#pragma warning restore CA1822 // Mark members as static
+
+        private readonly bool IsEnumerbale => typeof(T).IsEnumerable();
+        private readonly bool IsAsyncEnumerable => typeof(T).IsAsyncEnumerable();
 
         private static readonly MethodInfo _arrayEmpty = typeof(Array).GetMethod("Empty")!;
         private static readonly MethodInfo _asyncEmpty = typeof(AsyncEnumerableExtensions).GetMethod("Empty")!;
@@ -62,24 +61,46 @@ namespace Xpandables.Net.Optionals
         }
 
         /// <summary>
-        /// Returns the available enumerable collection value when <typeparamref name="T"/> is an enumerable.
+        /// Returns the available enumerable collection value when <typeparamref name="T"/> is an <see cref="IEnumerable"/>.
         /// If enumerable value is null, it'll return an empty enumerable.
         /// Otherwise, its will throw an exception.
         /// </summary>
+        /// <returns>An enumerator that can be synchronously enumerated.</returns>
         /// <exception cref="InvalidOperationException">The <typeparamref name="T"/> is not an enumerable.</exception>
         public T GetEnumerable()
         {
-            if (!ValueIsEnumerable())
+            if (!IsEnumerbale)
                 throw new InvalidOperationException($"{typeof(T).Name} is not an enumerable nor asynchronous enumerable !");
 
             return IsValue() ? _values[0] : GetDefaultEnumerable();
         }
 
         /// <summary>
-        /// Gets a state whether the internal value is an enumerable or asynchronous enumerable.
+        /// Returns the available async-enumerable collection value when <typeparamref name="T"/> is <see cref="IAsyncEnumerable{T}"/>.
+        /// If enumerable value is null, it'll return an empty enumerable.
+        /// Otherwise, its will throw an exception.
+        /// </summary>
+        /// <returns>An enumerator that can be asynchronously enumerated.</returns>
+        /// <exception cref="InvalidOperationException">The <typeparamref name="T"/> is not an async-enumerable.</exception>
+        public T GetAsyncEnumerable()
+        {
+            if (!IsAsyncEnumerable)
+                throw new InvalidOperationException($"{typeof(T).Name} is not an asynchronous enumerable !");
+
+            return IsValue() ? _values[0] : GetDefaultEnumerable();
+        }
+
+        /// <summary>
+        /// Gets a state indicating whether the internal value is an enumerable.
         /// </summary>
         /// <returns><see langword="true"/> if so, otherwise <see langword="false"/>.</returns>
-        public bool ValueIsEnumerable() => IsEnumerbaleOrAsyncEnumerable;
+        public bool ValueIsEnumerable() => IsEnumerbale;
+
+        /// <summary>
+        /// Gets a state indicating whether the internal value is an asynchronous enumerable.
+        /// </summary>
+        /// <returns><see langword="true"/> if so, otherwise <see langword="false"/>.</returns>
+        public bool ValueIsAsyncEnumerable() => IsAsyncEnumerable;
 
         /// <summary>
         /// Returns an enumerator that iterates asynchronously through the collection.

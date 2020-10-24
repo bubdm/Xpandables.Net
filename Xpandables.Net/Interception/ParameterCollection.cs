@@ -89,13 +89,11 @@ namespace Xpandables.Net.Interception
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private int IndexForParameterName(string paramName)
-        {
-            return _parameters.FindIndex(parameter => parameter.Name.Equals(paramName, StringComparison.OrdinalIgnoreCase)) switch
+            => _parameters.FindIndex(parameter => parameter.Name.Equals(paramName, StringComparison.OrdinalIgnoreCase)) switch
             {
                 int foundIndex when foundIndex >= 0 => foundIndex,
                 _ => throw new ArgumentOutOfRangeException($"Invalid parameter name : {paramName}")
             };
-        }
 
         private static IEnumerable<Parameter> BuildParameters(MethodInfo method, params object?[]? arguments)
         {
