@@ -82,7 +82,9 @@ namespace Xpandables.Net.Data.Providers
             };
 
             static string FormatDisplayName(string displayName)
-                => Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, $"{ displayName}.dll");
+            {
+                return Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, $"{ displayName}.dll");
+            }
         }
     }
 }

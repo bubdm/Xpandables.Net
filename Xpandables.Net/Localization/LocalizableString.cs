@@ -81,10 +81,7 @@ namespace Xpandables.Net.Localization
         ///     Clears any cached values, forcing <see cref="GetLocalizableValue" /> to
         ///     perform evaluation.
         /// </summary>
-        private void ClearCache()
-        {
-            _cachedResult = null;
-        }
+        private void ClearCache() => _cachedResult = null;
 
         /// <summary>
         ///     Gets the potentially localized value.

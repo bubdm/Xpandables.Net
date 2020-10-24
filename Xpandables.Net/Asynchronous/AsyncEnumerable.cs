@@ -46,10 +46,7 @@ namespace Xpandables.Net.Asynchronous
         /// </summary>
         /// <param name="asyncEnumerator">The delegate that provides the async enumerator.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="asyncEnumerator"/> is null.</exception>
-        public AsyncEnumerable(Func<CancellationToken, IAsyncEnumerator<T>> asyncEnumerator)
-        {
-            _asyncEnumerator = asyncEnumerator ?? throw new ArgumentNullException(nameof(asyncEnumerator));
-        }
+        public AsyncEnumerable(Func<CancellationToken, IAsyncEnumerator<T>> asyncEnumerator) => _asyncEnumerator = asyncEnumerator ?? throw new ArgumentNullException(nameof(asyncEnumerator));
 
         /// <summary>
         /// Returns an enumerator that iterates asynchronously through the collection.
