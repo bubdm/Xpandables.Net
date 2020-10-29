@@ -29,7 +29,7 @@ namespace Xpandables.Net.Correlation
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TValue">The type of the value.</typeparam>
-    public class CorrelationCollection<TKey, TValue> : ConcurrentDictionary<TKey, TValue>, IAsyncEnumerable<KeyValuePair<TKey, TValue>>
+    public sealed class CorrelationCollection<TKey, TValue> : ConcurrentDictionary<TKey, TValue>, IAsyncEnumerable<KeyValuePair<TKey, TValue>>
         where TKey : notnull
     {
         /// <summary>

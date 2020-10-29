@@ -24,6 +24,7 @@
     <PackageOutputPath>..\Packages\</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!--<PackageReleaseNotes>Start All-in-one.</PackageReleaseNotes>-->
+     <!--<AdditionalFileItemNames>$(AdditionalFileItemNames);Content</AdditionalFileItemNames>-->
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AssemblyName>Xpandables.Net</AssemblyName>
     <RootNamespace>Xpandables.Net</RootNamespace>
@@ -36,6 +37,7 @@
     <AssemblyOriginatorKeyFile>Xpandables.Net.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
     <Company>EFB Entreprises</Company>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
   </PropertyGroup>
 
@@ -54,6 +56,10 @@
     <OutputPath>bin\AnyCPU\Release\</OutputPath>
     <DocumentationFile>bin\AnyCPU\Release\net5.0\Xpandables.Net.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Asynchronous\AsyncEnumerable.cs~RF14a4b967.TMP" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\Xpandables.png" Link="Xpandables.png">

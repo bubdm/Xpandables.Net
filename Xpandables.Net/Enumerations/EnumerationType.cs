@@ -248,9 +248,7 @@ namespace Xpandables.Net.Enumerations
         public bool Equals(EnumerationType? other)
         {
             if (other is null)
-            {
                 return false;
-            }
 
             return GetType() == other.GetType()
                 && Value.Equals(other.Value)

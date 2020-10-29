@@ -55,7 +55,7 @@ namespace Xpandables.Net.Correlation
             }
             finally
             {
-                Reset("post");
+                PostEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
             }
         }
 
@@ -71,18 +71,8 @@ namespace Xpandables.Net.Correlation
             }
             finally
             {
-                Reset("rollback");
+                RollbackEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
             }
-        }
-
-        /// <summary>
-        /// Clears the event.
-        /// </summary>
-        /// <param name="event">The event to reset.</param>
-        private void Reset(string @event = "post")
-        {
-            if (@event == "post") PostEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
-            if (@event == "rollback") RollbackEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
         }
     }
 }

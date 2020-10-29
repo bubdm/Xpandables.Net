@@ -32,9 +32,8 @@ namespace Xpandables.Net.EntityFramework
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
-#pragma warning disable ET001 // Type name does not match file name
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "ET001:Type name does not match file name", Justification = "<Pending>")]
     public interface IDataContext<TEntity> : IDataContext, IDisposable, IAsyncDisposable
-#pragma warning restore ET001 // Type name does not match file name
         where TEntity : Entity
     {
         internal IDataContext DataContext { get; }

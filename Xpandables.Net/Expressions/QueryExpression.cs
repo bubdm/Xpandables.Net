@@ -62,7 +62,8 @@ namespace Xpandables.Net.Expressions
             if (obj is not QueryExpression<TSource, TResult> objVal) return false;
             if (ReferenceEquals(this, objVal)) return true;
 
-            return ExpressionComparer.AreEqual(GetExpression(), objVal.GetExpression());
+            return 
+                ExpressionComparer.AreEqual(GetExpression(), objVal.GetExpression());
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

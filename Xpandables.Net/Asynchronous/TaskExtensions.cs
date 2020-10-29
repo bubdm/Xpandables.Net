@@ -24,10 +24,10 @@ namespace Xpandables.Net.Asynchronous
     /// <summary>
     /// Provides with methods used to execute asynchronous operation synchronously.
     /// </summary>
-    public static class TaskExtensions
+    public static partial class AsyncEnumerableExtensions
     {
         // Defines the static task factory.
-        private static readonly TaskFactory _taskFactory = new TaskFactory(
+        internal static readonly TaskFactory _taskFactory = new TaskFactory(
             CancellationToken.None,
             TaskCreationOptions.None,
             TaskContinuationOptions.None,

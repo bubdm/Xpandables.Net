@@ -36,23 +36,22 @@ namespace Xpandables.Net.Asynchronous
         /// <param name="collection">The collection to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
         public AsyncEnumerable(IEnumerable<T> collection)
-        {
-            _ = collection ?? throw new ArgumentNullException(nameof(collection));
-            _asyncEnumerator = _ => new AsyncEnumerator<T>(collection.GetEnumerator());
-        }
+            => _asyncEnumerator = _ => new AsyncEnumerator<T>(collection?.GetEnumerator() ?? throw new ArgumentNullException(nameof(collection)));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncEnumerable{T}"/> class with the enumerator to be asynchronously enumerated.
         /// </summary>
         /// <param name="asyncEnumerator">The delegate that provides the async enumerator.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="asyncEnumerator"/> is null.</exception>
-        public AsyncEnumerable(Func<CancellationToken, IAsyncEnumerator<T>> asyncEnumerator) => _asyncEnumerator = asyncEnumerator ?? throw new ArgumentNullException(nameof(asyncEnumerator));
+        public AsyncEnumerable(Func<CancellationToken, IAsyncEnumerator<T>> asyncEnumerator)
+            => _asyncEnumerator = asyncEnumerator ?? throw new ArgumentNullException(nameof(asyncEnumerator));
 
         /// <summary>
         /// Returns an enumerator that iterates asynchronously through the collection.
         /// </summary>
         /// <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
         /// <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
-        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) => _asyncEnumerator(cancellationToken);
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+            => _asyncEnumerator(cancellationToken);
     }
 }

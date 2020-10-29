@@ -40,7 +40,10 @@ namespace Xpandables.Net.Optionals
         private readonly Type[] _genericTypes;
         private readonly T[] _values;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
         private readonly bool IsEnumerbale => typeof(T).IsEnumerable();
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
         private readonly bool IsAsyncEnumerable => typeof(T).IsAsyncEnumerable();
 
         private static readonly MethodInfo _arrayEmpty = typeof(Array).GetMethod("Empty")!;

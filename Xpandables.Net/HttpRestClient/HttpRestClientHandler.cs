@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -68,11 +69,10 @@ namespace Xpandables.Net.HttpRestClient
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
-            _ = HttpClient ?? throw new InvalidOperationException($"The HTTP client needs to be initialized.");
-
             try
             {
                 using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(query, HttpClient, cancellationToken).ConfigureAwait(false);
+
                 // Due to the fact that the result is an IAsyncEnumerable, the response can not be disposed before.
                 var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
@@ -117,8 +117,6 @@ namespace Xpandables.Net.HttpRestClient
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         public async Task<HttpRestClientResponse> HandleAsync(IAsyncCommand command, CancellationToken cancellationToken = default)
         {
-            _ = HttpClient ?? throw new InvalidOperationException($"The HTTP client needs to be initialized.");
-
             try
             {
                 using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(command, HttpClient, cancellationToken).ConfigureAwait(false);
@@ -155,8 +153,6 @@ namespace Xpandables.Net.HttpRestClient
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         public async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         {
-            _ = HttpClient ?? throw new InvalidOperationException($"The HTTP client needs to be initialized.");
-
             try
             {
                 using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(query, HttpClient, cancellationToken).ConfigureAwait(false);

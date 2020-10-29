@@ -18,8 +18,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Runtime.ExceptionServices;
+using System.Security.Cryptography;
+using System.Text;
 
 using Xpandables.Net.Types;
 
@@ -31,12 +34,13 @@ namespace Xpandables.Net.Creators
     public interface IInstanceCreator
     {
         /// <summary>
-        /// Contains the instance cache that can be cleared to free memory.
+        /// Contains the instance cache that contains a string key for a constructor type and the target delegate.
+        /// it can be cleared to free memory.
         /// </summary>
         ConcurrentDictionary<string, Delegate> Cache { get; }
 
         /// <summary>
-        /// Define an action that will be called in case of handled exception during a create method execution.
+        /// Represents the action that will be called in case of handled exception during a create method execution.
         /// </summary>
         Action<ExceptionDispatchInfo>? OnException { get; set; }
 
@@ -57,9 +61,7 @@ namespace Xpandables.Net.Creators
                 var lambdaConstructor = GetConstructorDelegate<Func<object>>(type, Array.Empty<Type>());
                 return lambdaConstructor.Invoke();
             }
-#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception exception)
-#pragma warning restore CA1031 // Do not catch general exception types
             {
                 OnException?.Invoke(ExceptionDispatchInfo.Capture(exception));
                 return default;
@@ -85,9 +87,7 @@ namespace Xpandables.Net.Creators
                 var lambdaConstructor = GetConstructorDelegate<Func<TParam, object>>(type, new[] { typeof(TParam) });
                 return lambdaConstructor.Invoke(param);
             }
-#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception exception)
-#pragma warning restore CA1031 // Do not catch general exception types
             {
                 OnException?.Invoke(ExceptionDispatchInfo.Capture(exception));
                 return default;
@@ -113,14 +113,11 @@ namespace Xpandables.Net.Creators
             try
             {
                 var lambdaConstructor = GetConstructorDelegate<Func<TParam1, TParam2, object>>(
-                    type,
-                    new[] { typeof(TParam1), typeof(TParam2) });
+                    type, new[] { typeof(TParam1), typeof(TParam2) });
 
                 return lambdaConstructor.Invoke(param1, param2);
             }
-#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception exception)
-#pragma warning restore CA1031 // Do not catch general exception types
             {
                 OnException?.Invoke(ExceptionDispatchInfo.Capture(exception));
                 return default;
@@ -148,14 +145,11 @@ namespace Xpandables.Net.Creators
             try
             {
                 var lambdaConstructor = GetConstructorDelegate<Func<TParam1, TParam2, TParam3, object>>(
-                    type,
-                    new[] { typeof(TParam1), typeof(TParam2), typeof(TParam3) });
+                    type, new[] { typeof(TParam1), typeof(TParam2), typeof(TParam3) });
 
                 return lambdaConstructor.Invoke(param1, param2, param3);
             }
-#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception exception)
-#pragma warning restore CA1031 // Do not catch general exception types
             {
                 OnException?.Invoke(ExceptionDispatchInfo.Capture(exception));
                 return default;
@@ -167,8 +161,8 @@ namespace Xpandables.Net.Creators
         /// </summary>
         public void ClearCache() => Cache.Clear();
 
-        private TDelegate GetConstructorDelegate<TDelegate>(Type type, params Type[] parameterTypes)
-                 where TDelegate : Delegate
+        internal TDelegate GetConstructorDelegate<TDelegate>(Type type, params Type[] parameterTypes)
+            where TDelegate : Delegate
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -184,13 +178,26 @@ namespace Xpandables.Net.Creators
         }
 
         // Build a key for a type
-        private static string KeyBuilder(Type type, params Type[] parameterTypes)
+        internal const string key = "b14ca5898a4e4133bbce2ea2315a1916";
+        internal static string KeyBuilder(Type type, params Type[] parameterTypes)
         {
-            var key = type.FullName!;
-            if (parameterTypes.Length > 0) key += string.Concat(parameterTypes.Select(t => t.Name));
-            if (type.IsGenericType) key += "'1";
+            using var aes = Aes.Create();
+            aes.Key = Encoding.UTF8.GetBytes(key);
+            aes.IV = new byte[16];
 
-            return key;
+            using var encryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+            using var memoryStream = new MemoryStream();
+            using var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
+            using var streamWriter = new StreamWriter(cryptoStream);
+
+            var plainText = type.FullName!;
+            if (parameterTypes.Any()) plainText += string.Concat(parameterTypes.Select(t => t.Name));
+            if (type.IsGenericType) plainText += "'1";
+
+            streamWriter.Write(plainText);
+            var encrypted = memoryStream.ToArray();
+
+            return Convert.ToBase64String(encrypted);
         }
     }
 }

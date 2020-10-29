@@ -31,6 +31,7 @@ namespace Xpandables.Net.EntityFramework
     /// </summary>
     /// <param name="exception">The handled exception during persistence.</param>
     /// <returns>An exception to re-throw or null if not.</returns>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "ET001:Type name does not match file name", Justification = "<Pending>")]
     public delegate Exception? PersistenceExceptionHandler(Exception exception);
 
     /// <summary>

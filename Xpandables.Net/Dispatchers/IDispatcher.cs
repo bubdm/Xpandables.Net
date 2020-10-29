@@ -35,10 +35,7 @@ namespace Xpandables.Net.Dispatchers
     /// </summary>
     public interface IDispatcher
     {
-        /// <summary>
-        /// Gets the handlers provider.
-        /// </summary>
-        IDispatcherHandlerProvider DispatcherHandlerProvider { get; }
+        internal IDispatcherHandlerProvider DispatcherHandlerProvider { get; }
 
         /// <summary>
         /// Asynchronously invokes the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query 

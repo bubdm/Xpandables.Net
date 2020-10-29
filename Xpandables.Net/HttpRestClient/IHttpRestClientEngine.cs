@@ -52,6 +52,7 @@ namespace Xpandables.Net.HttpRestClient
             return await ReadHttpRequestMessageAsync(attribute, source, httpClient, cancellationToken).ConfigureAwait(false);
         }
 
+
         /// <summary>
         /// Returns the <see cref="HttpRequestMessage"/> from the attribute.
         /// </summary>
@@ -61,6 +62,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="httpClient">The target HTTP client.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        [SuppressMessage("Usage", "SecurityIntelliSenseCS:MS Security rules violation", Justification = "<Pending>")]
         public async Task<HttpRequestMessage> ReadHttpRequestMessageAsync<TSource>(
             HttpRestClientAttribute attribute, TSource source, HttpClient httpClient, CancellationToken cancellationToken = default)
             where TSource : notnull
@@ -383,7 +385,7 @@ namespace Xpandables.Net.HttpRestClient
         }
 
         /// <summary>
-        /// Returns headers from the http response.
+        /// Returns headers from the HTTP response.
         /// </summary>
         /// <param name="httpResponse">The response to act on.</param>
         /// <returns>A collection of keys/values.</returns>
