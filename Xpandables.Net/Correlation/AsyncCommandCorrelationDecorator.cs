@@ -75,4 +75,60 @@ namespace Xpandables.Net.Correlation
             }
         }
     }
+
+    /// <summary>
+    /// This class allows the application author to add post/rollback event support to command handler control flow.
+    /// The target command should implement the <see cref="ICorrelationDecorator"/> interface in order to activate the behavior.
+    /// The class decorates the target command handler with an implementation of <see cref="IAsyncCorrelationContext"/> that
+    /// adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
+    /// and an event (roll back event) to be raised when exception. The target command handler class implementation should reference the
+    /// <see cref="IAsyncCorrelationContext"/> interface in order to set the expected actions.
+    /// </summary>
+    /// <typeparam name="TCommand">Type of the command to be handled.</typeparam>
+    /// <typeparam name="TResult">Type of the result of the command.</typeparam>
+    public sealed class AsyncCommandCorrelationDecorator<TCommand, TResult> : IAsyncCommandHandler<TCommand, TResult>
+        where TCommand : class, IAsyncCommand<TResult>, ICorrelationDecorator
+    {
+        private readonly IAsyncCommandHandler<TCommand, TResult> _decoratee;
+        private readonly AsyncCorrelationContext _correlationContext;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncCommandCorrelationDecorator{TCommand}"/> class with the correlation context and the command handler to be decorated.
+        /// </summary>
+        /// <param name="correlationContext">The correlation context.</param>
+        /// <param name="decoratee">The command handler to be decorated.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
+        public AsyncCommandCorrelationDecorator(AsyncCorrelationContext correlationContext, IAsyncCommandHandler<TCommand, TResult> decoratee)
+        {
+            _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
+            _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
+        }
+
+        /// <summary>
+        /// Asynchronously handles the specified command using the decorated handler, executes the post event before returning the task of result,
+        /// and executes the rollback event in case of exception.
+        /// </summary>
+        /// <param name="command">The command instance to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="command"/>.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public async Task<TResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var result = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                await _correlationContext.OnPostEventAsync().ConfigureAwait(false);
+                return result;
+            }
+            catch (Exception exception)
+            {
+                await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
+                throw;
+            }
+        }
+    }
 }

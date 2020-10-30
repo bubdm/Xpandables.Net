@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.Types;
@@ -60,6 +61,25 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Registers a configuration instance which TOptions will bind against and adds a transient service of the type specified in <typeparamref name="TOptions"/>.
+        /// </summary>
+        /// <typeparam name="TOptions">The type of options being configured.</typeparam>
+        /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
+        /// <param name="configuration">The configuration instance.</param>
+        /// <returns> The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
+        public static IServiceCollection XConfigureOptions<TOptions>(this IServiceCollection services, IConfiguration configuration)
+            where TOptions : class
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
+            services.Configure<TOptions>(configuration.GetSection(typeof(TOptions).Name));
+            services.AddTransient(_ => configuration.GetSection(typeof(TOptions).Name).Get<TOptions>());
+
+            return services;
+        }
+
+        /// <summary>
         /// Determines whether or not the collection of services already contain the specified service type.
         /// </summary>
         /// <param name="services">The collection of services to act on.</param>
@@ -68,8 +88,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="serviceType"/> is null.</exception>
         public static bool HasRegistration(this IServiceCollection services, Type serviceType)
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
-            if (serviceType is null) throw new ArgumentNullException(nameof(serviceType));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = serviceType ?? throw new ArgumentNullException(nameof(serviceType));
 
             return services.Any(descriptor => descriptor.ServiceType == serviceType);
         }
@@ -82,9 +102,9 @@ namespace Xpandables.Net.DependencyInjection
         public static bool HasRegistration<TService>(this IServiceCollection services)
             where TService : class
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
             return services.HasRegistration(typeof(TService));
-        }  
+        }
 
         /// <summary>
         /// Ensures that the supplied <typeparamref name="TDecorator"/> decorator is returned, wrapping the
@@ -111,7 +131,7 @@ namespace Xpandables.Net.DependencyInjection
             where TService : class
             where TDecorator : class, TService
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
             return services.XTryDecorate(typeof(TService), typeof(TDecorator));
         }
 
@@ -141,8 +161,8 @@ namespace Xpandables.Net.DependencyInjection
             Func<TService, IServiceProvider, TService> decorator)
             where TService : class
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
-            if (decorator is null) throw new ArgumentNullException(nameof(decorator));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = decorator ?? throw new ArgumentNullException(nameof(decorator));
 
             return services.DecorateDescriptors(typeof(TService), serviceDescriptor => serviceDescriptor.DecorateDescriptor(decorator));
         }
@@ -174,8 +194,8 @@ namespace Xpandables.Net.DependencyInjection
             Type serviceType,
             Func<object, IServiceProvider, object> decorator)
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
-            if (decorator is null) throw new ArgumentNullException(nameof(decorator));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = decorator ?? throw new ArgumentNullException(nameof(decorator));
 
             return services.DecorateDescriptors(serviceType, serviceDescriptor => serviceDescriptor.DecorateDescriptor(decorator));
         }
@@ -206,8 +226,8 @@ namespace Xpandables.Net.DependencyInjection
             Func<TService, TService> decorator)
             where TService : class
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
-            if (decorator is null) throw new ArgumentNullException(nameof(decorator));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = decorator ?? throw new ArgumentNullException(nameof(decorator));
 
             return services.DecorateDescriptors(typeof(TService), serviceDescriptor => serviceDescriptor.DecorateDescriptor(decorator));
         }
@@ -239,9 +259,9 @@ namespace Xpandables.Net.DependencyInjection
             Type serviceType,
             Func<object, object> decorator)
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
-            if (serviceType is null) throw new ArgumentNullException(nameof(serviceType));
-            if (decorator is null) throw new ArgumentNullException(nameof(decorator));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = serviceType ?? throw new ArgumentNullException(nameof(serviceType));
+            _ = decorator ?? throw new ArgumentNullException(nameof(decorator));
 
             return services.DecorateDescriptors(serviceType, serviceDescriptor => serviceDescriptor.DecorateDescriptor(decorator));
         }
@@ -272,9 +292,9 @@ namespace Xpandables.Net.DependencyInjection
             Type serviceType,
             Type decoratorType)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
-            if (decoratorType == null) throw new ArgumentNullException(nameof(decoratorType));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = serviceType ?? throw new ArgumentNullException(nameof(serviceType));
+            _ = decoratorType ?? throw new ArgumentNullException(nameof(decoratorType));
 
             return serviceType.GetTypeInfo().IsGenericTypeDefinition && decoratorType.GetTypeInfo().IsGenericTypeDefinition
                 ? services.DecorateOpenGenerics(serviceType, decoratorType)
@@ -350,16 +370,16 @@ namespace Xpandables.Net.DependencyInjection
 
         private static ServiceDescriptor WithFactory(this ServiceDescriptor descriptor, Func<IServiceProvider, object> factory)
         {
-            if (descriptor is null) throw new ArgumentNullException(nameof(descriptor));
-            if (factory is null) throw new ArgumentNullException(nameof(factory));
+            _ = descriptor ?? throw new ArgumentNullException(nameof(descriptor));
+            _ = factory ?? throw new ArgumentNullException(nameof(factory));
 
             return ServiceDescriptor.Describe(descriptor.ServiceType, factory, descriptor.Lifetime);
         }
 
         private static object GetInstance(this IServiceProvider serviceProvider, ServiceDescriptor descriptor)
         {
-            if (serviceProvider is null) throw new ArgumentNullException(nameof(serviceProvider));
-            if (descriptor is null) throw new ArgumentNullException(nameof(descriptor));
+            _ = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _ = descriptor ?? throw new ArgumentNullException(nameof(descriptor));
 
             if (descriptor.ImplementationInstance != null)
                 return descriptor.ImplementationInstance;

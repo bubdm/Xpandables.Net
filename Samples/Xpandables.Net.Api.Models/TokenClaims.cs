@@ -33,7 +33,7 @@ namespace Xpandables.Net.Api.Models
         public const string Role = ClaimTypes.Role;
     }
 
-    public sealed class TokenClaims : ValueObject, IEnumerable<Claim>
+    public sealed class TokenClaims : IEnumerable<Claim>
     {
         public TokenClaims(string id, PhoneNumber phone, Role role, EmailAddress emailAddress)
         {
@@ -72,14 +72,6 @@ namespace Xpandables.Net.Api.Models
             yield return new Claim(TokenClaimType.Phone, Phone.Value);
             yield return new Claim(TokenClaimType.Role, Role);
             yield return new Claim(TokenClaimType.EmailAddress, EmailAddress);
-        }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Id;
-            yield return Phone.Value;
-            yield return Role;
-            yield return EmailAddress;
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

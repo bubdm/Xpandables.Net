@@ -97,6 +97,19 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the command handler wrapper necessary to resolve handlers using type inference.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXCommandHandlerWrapper(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddTransient(typeof(AsyncCommandHandlerWrapper<,>));
+            return services;
+        }
+
+        /// <summary>
         /// Adds and configures the <see cref="IAsyncCommandHandler{TCommand}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -111,6 +124,7 @@ namespace Xpandables.Net.DependencyInjection
             if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
 
             services.AddXQueryHandlerWrapper();
+            services.AddXCommandHandlerWrapper();
             services.AddXCommandHandlers(assemblies);
             services.AddXQueryHandlers(assemblies);
 

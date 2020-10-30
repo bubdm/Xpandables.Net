@@ -29,7 +29,7 @@ namespace Xpandables.Net
     [Serializable]
     [DebuggerDisplay("Min = {Min} : Max = {Max}")]
     [TypeConverter(typeof(ValueRangeTypeConverter))]
-    public sealed class ValueRange<TValue>
+    public readonly struct ValueRange<TValue>
         where TValue : unmanaged, IComparable, IFormattable, IConvertible, IComparable<TValue>, IEquatable<TValue>
     {
         /// <summary>
@@ -44,11 +44,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="source">The range to be copied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public ValueRange(ValueRange<TValue> source)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            (Min, Max) = (source.Min, source.Max);
-        }
+        public ValueRange(ValueRange<TValue> source) => (Min, Max) = (source.Min, source.Max);
 
         /// <summary>
         /// Provides with deconstruction for <see cref="ValueRange{TValue}"/>.
@@ -60,12 +56,12 @@ namespace Xpandables.Net
         /// <summary>
         /// Gets the minimal value of range.
         /// </summary>
-        public TValue Min { get; }
+        public readonly TValue Min { get; }
 
         /// <summary>
         /// Gets the maximal value of range.
         /// </summary>
-        public TValue Max { get; }
+        public readonly TValue Max { get; }
 
         /// <summary>
         /// Creates a string representation of the <see cref="ValueRange{T}"/> separated by ":".
@@ -100,8 +96,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
-        public static bool operator ==(ValueRange<TValue> left, ValueRange<TValue> right)
-            => left is null && right is null || !(left is null) && !(right is null) && left.Equals(right);
+        public static bool operator ==(ValueRange<TValue> left, ValueRange<TValue> right) => left.Equals(right);
 
         /// <summary>
         /// Applies non equality operator.
@@ -114,7 +109,7 @@ namespace Xpandables.Net
         /// Compares <see cref="ValueRange{TValue}"/> with the value of type <typeparamref name="TValue"/>.
         /// </summary>
         /// <param name="other">Option to compare with.</param>
-        public bool Equals(ValueRange<TValue> other) => other is ValueRange<TValue> && Min.Equals(other.Min) && Max.Equals(other.Max);
+        public bool Equals(ValueRange<TValue> other) => Min.Equals(other.Min) && Max.Equals(other.Max);
 
         /// <summary>
         /// Determines whether this range is empty or not.

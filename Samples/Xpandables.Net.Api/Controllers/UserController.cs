@@ -42,6 +42,7 @@ namespace Xpandables.Net.Api.Controllers
         [HttpPost]
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> PostAsync([FromRoute] string id, [FromBody] EditUser editUser, CancellationToken cancellationToken = default)
         {
             editUser.Id = id;

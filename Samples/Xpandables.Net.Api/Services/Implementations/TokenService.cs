@@ -26,7 +26,6 @@ using Microsoft.IdentityModel.Tokens;
 
 using Xpandables.Net.Api.Settings;
 using Xpandables.Net.Http;
-using Xpandables.Net.Types;
 
 namespace Xpandables.Net.Api.Services.Implementations
 {
@@ -36,7 +35,7 @@ namespace Xpandables.Net.Api.Services.Implementations
 
         public TokenService(IOptions<JwtSettings> options) => _jwtSettings = options?.Value ?? throw new ArgumentNullException(nameof(options));
 
-        public Token WriteToken(IEnumerable<Claim> claims)
+        public ValueToken WriteToken(IEnumerable<Claim> claims)
         {
             _ = claims ?? throw new ArgumentNullException(nameof(claims));
 
@@ -56,7 +55,7 @@ namespace Xpandables.Net.Api.Services.Implementations
             var securityToken = handler.CreateToken(tokenDescriptor);
             var token = handler.WriteToken(securityToken);
 
-            return Token.Create(token, "Bearer", expiry);
+            return ValueToken.Create(token, "Bearer", expiry);
         }
 
         public IEnumerable<Claim> ReadToken(string token)

@@ -16,14 +16,13 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 using static Xpandables.Net.Validations.ValidationAttributeExtensions;
 
 namespace Xpandables.Net.Api.Models
 {
-    public sealed class PhoneNumber : ValueObject
+    public sealed class PhoneNumber
     {
         public const string PhoneRegex = @"^\+(?:[0-9]●?){6,14}[0-9]$";
         public PhoneNumber(string value)
@@ -47,11 +46,6 @@ namespace Xpandables.Net.Api.Models
             {
                 throw CreateValidationException($"Invalid phone number.", value, new[] { "Phone" });
             }
-        }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
         }
 
         public override string ToString() => Value;

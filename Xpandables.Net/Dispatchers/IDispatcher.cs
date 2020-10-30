@@ -50,7 +50,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        public IAsyncEnumerable<TResult> InvokeAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<TResult> InvokeEnumerableAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
@@ -81,7 +81,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        public IAsyncEnumerable<TResult> InvokeQueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<TResult> InvokeEnumerableAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
             where TQuery : class, IAsyncQuery<TResult>
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
@@ -168,6 +168,92 @@ namespace Xpandables.Net.Dispatchers
         }
 
         /// <summary>
+        /// Asynchronously invokes the command handler(<see cref="IAsyncCommandHandler{TCommand, TResult}"/> implementation) on the specified command
+        /// and returns a result of <typeparamref name="TResult"/> type.
+        /// </summary>
+        /// <typeparam name="TCommand">Type of the command.</typeparam>
+        /// <typeparam name="TResult">Type of the result.</typeparam>
+        /// <param name="command">The command to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="command"/>.</exception>
+        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        public async Task<TResult> InvokeCommandAsync<TCommand, TResult>(TCommand command, CancellationToken cancellationToken = default)
+            where TCommand : class, IAsyncCommand<TResult>
+        {
+            _ = command ?? throw new ArgumentNullException(nameof(command));
+
+            var handler = DispatcherHandlerProvider.GetHandler<IAsyncCommandHandler<TCommand, TResult>>()
+                    ?? throw new NotImplementedException($"The matching command handler for {typeof(TCommand).Name} is missing.");
+
+            if (!handler.CanHandle(command))
+                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
+
+            try
+            {
+                return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                switch (exception)
+                {
+                    case ArgumentException:
+                    case ValidationException:
+                    case OperationCanceledException:
+                    case InvalidOperationException: throw;
+                    default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
+                };
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously invokes the command handler(<see cref="IAsyncCommandHandler{TCommand, TResult}"/> implementation) on the specified command
+        /// and returns a result of <typeparamref name="TResult"/> type.
+        /// </summary>
+        /// <typeparam name="TResult">Type of the result.</typeparam>
+        /// <param name="command">The command to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="command"/>.</exception>
+        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        public async Task<TResult> InvokeAsync<TResult>(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default)
+        {
+            _ = command ?? throw new ArgumentNullException(nameof(command));
+
+            if (!typeof(AsyncCommandHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { command.GetType(), typeof(TResult) }))
+                throw new InvalidOperationException("Building Command wrapper failed.", typeException);
+
+            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IAsyncCommandHandlerWrapper<TResult> handler)
+                throw new NotImplementedException(
+                    $"The matching command handler for {command.GetType().Name} is missing. Be sure the {typeof(AsyncCommandHandlerWrapper<,>).Name} is registered.");
+
+            if (!handler.CanHandle(command))
+                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
+
+            try
+            {
+                return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                switch (exception)
+                {
+                    case ArgumentException:
+                    case ValidationException:
+                    case OperationCanceledException:
+                    case InvalidOperationException: throw;
+                    default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
+                };
+            }
+        }
+
+        /// <summary>
         /// Asynchronously invokes the query handler(<see cref="IQueryHandler{TQuery, TResult}"/> implementation) on the specified query
         /// and returns a result of <typeparamref name="TResult"/> type.
         /// </summary>
@@ -181,7 +267,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public async Task<TResult> InvokeAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+        public async Task<TResult> InvokeQueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
             where TQuery : class, IQuery<TResult>
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));

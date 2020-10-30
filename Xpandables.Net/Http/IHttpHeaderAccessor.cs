@@ -40,10 +40,7 @@ namespace Xpandables.Net.Http
         /// <param name="key">The key of the value to match.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         public sealed IEnumerable<string> ReadValues(string key)
-        {
-            _ = key ?? throw new ArgumentNullException(nameof(key));
-            return ReadValues().TryGetValue(key, out var values) ? values.AsEnumerable() : Enumerable.Empty<string>();
-        }
+            => ReadValues().TryGetValue(key, out var values) ? values.AsEnumerable() : Enumerable.Empty<string>();
 
         /// <summary>
         /// Gets all HTTP header values from the current HTTP request.

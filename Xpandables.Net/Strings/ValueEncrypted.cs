@@ -16,10 +16,10 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
+
+using Xpandables.Net.Asynchronous;
 
 namespace Xpandables.Net.Strings
 {
@@ -30,7 +30,7 @@ namespace Xpandables.Net.Strings
     [Serializable]
     [DebuggerDisplay("Key = {Key}, Value = {Value}, Salt = {Salt}")]
     [TypeConverter(typeof(ValueEncryptedTypeConverter))]
-    public sealed class ValueEncrypted : ValueObject
+    public readonly struct ValueEncrypted
     {
         /// <summary>
         /// Returns a new instance of <see cref="ValueEncrypted"/> with the key and value.
@@ -52,11 +52,7 @@ namespace Xpandables.Net.Strings
         /// </summary>
         /// <param name="source">The encrypted value to be copied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public ValueEncrypted(ValueEncrypted source)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            (Key, Value, Salt) = (source.Key, source.Value, source.Salt);
-        }
+        public ValueEncrypted(ValueEncrypted source) => (Key, Value, Salt) = (source.Key, source.Value, source.Salt);
 
         /// <summary>
         /// Provides with deconstruction for <see cref="ValueEncrypted"/>.
@@ -67,17 +63,6 @@ namespace Xpandables.Net.Strings
         public void Deconstruct(out string key, out string value, out string salt) => (key, value, salt) = (Key, Value, Salt);
 
         /// <summary>
-        /// Provides the list of components that comprise that class.
-        /// </summary>
-        /// <returns>An enumerable components of the derived class.</returns>
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Key;
-            yield return Value;
-            yield return Salt;
-        }
-
-        /// <summary>
         /// Compares the encrypted value with the specified one.
         /// Returns <see langword="true"/> if equality otherwise <see langword="false"/>.
         /// </summary>
@@ -85,31 +70,28 @@ namespace Xpandables.Net.Strings
         /// <param name="stringCryptography">The cryptography instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="stringCryptography"/> is null.</exception>
-        public async Task<bool> IsEqualTo(string value, IStringCryptography stringCryptography)
+        public bool IsEqualTo(string value, IStringCryptography stringCryptography)
         {
             _ = value ?? throw new ArgumentNullException(nameof(value));
             _ = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
 
-            return await stringCryptography.AreEqual(this, value).ConfigureAwait(false);
+            return stringCryptography.AreEqual(this, value).RunSync();
         }
 
         /// <summary>
         /// Contains the encryption key.
         /// </summary>
-        [field: NonSerialized]
-        public string Key { get; }
+        public readonly string Key { get; }
 
         /// <summary>
         /// Contains the base64 encrypted value.
         /// </summary>
-        [field: NonSerialized]
-        public string Value { get; }
+        public readonly string Value { get; }
 
         /// <summary>
         /// Contains the base64 salt value.
         /// </summary>
-        [field: NonSerialized]
-        public string Salt { get; }
+        public readonly string Salt { get; }
 
         /// <summary>
         /// Compares the <see cref="ValueEncrypted"/> with other object.
@@ -122,8 +104,7 @@ namespace Xpandables.Net.Strings
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
-        public static bool operator ==(ValueEncrypted left, ValueEncrypted right) =>
-            left is null && right is null || !(left is null) && !(right is null) && left.Equals(right);
+        public static bool operator ==(ValueEncrypted left, ValueEncrypted right) => left.Equals(right);
 
         /// <summary>
         /// Applies non equality operator.
@@ -136,7 +117,7 @@ namespace Xpandables.Net.Strings
         /// Compares <see cref="ValueEncrypted"/> with the value.
         /// </summary>
         /// <param name="other">Option to compare with.</param>
-        public bool Equals(ValueEncrypted other) => other is ValueEncrypted && (Key, Value, Salt) == (other.Key, other.Value, other.Salt);
+        public bool Equals(ValueEncrypted other) => (Key, Value, Salt) == (other.Key, other.Value, other.Salt);
 
         /// <summary>
         /// Computes the hash-code for the <see cref="ValueEncrypted"/> instance.

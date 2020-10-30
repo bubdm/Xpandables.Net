@@ -19,8 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-using Xpandables.Net.Types;
-
 namespace Xpandables.Net.Http
 {
     /// <summary>
@@ -36,7 +34,7 @@ namespace Xpandables.Net.Http
         /// <returns>An instance of string token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="claims"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to write token from claims. See inner exception.</exception>
-        Token WriteToken(IEnumerable<Claim> claims);
+        ValueToken WriteToken(IEnumerable<Claim> claims);
 
         /// <summary>
         /// Uses the source object to build a string token. The default behavior throws <see cref="NotImplementedException"/>.
@@ -45,7 +43,7 @@ namespace Xpandables.Net.Http
         /// <returns>An instance of string token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to write token from source. See inner exception.</exception>
-        public Token WriteToken(object source) => throw new NotImplementedException();
+        public ValueToken WriteToken(object source) => throw new NotImplementedException();
 
         /// <summary>
         /// Returns the collection of claims from the specified token.
@@ -61,8 +59,7 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <param name="token">The token string.</param>
         /// <returns>An collection of claims if OK.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to read claims from token object. See inner exception.</exception>
-        public IEnumerable<Claim> ReadToken(Token token) => ReadToken(token.Value);
+        public IEnumerable<Claim> ReadToken(ValueToken token) => ReadToken(token.Value);
     }
 }

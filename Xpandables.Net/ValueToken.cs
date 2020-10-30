@@ -19,68 +19,68 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Xpandables.Net.Types
+namespace Xpandables.Net
 {
     /// <summary>
-    /// Contains a token value.
+    /// Contains properties for a token.
     /// </summary>
-    public sealed class Token : ValueObject
+    public readonly struct ValueToken
     {
         /// <summary>
         /// Gets the token value.
         /// </summary>
-        [Required, DataType(DataType.Text)]
-        public string Value { get; }
+        public readonly string Value { get; }
 
         /// <summary>
         /// Gets the type of the token : Bearer, Basic....
         /// </summary>
         [Required, DataType(DataType.Text)]
-        public string Type { get; }
+        public readonly string Type { get; }
 
         /// <summary>
         /// Gets the token expiry.
         /// </summary>
         [Required, DataType(DataType.DateTime)]
-        public DateTime Expiry { get; }
+        public readonly DateTime Expiry { get; }
 
         /// <summary>
         /// Gets a collection of custom properties.
         /// </summary>
         [Required]
-        public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
+        public readonly IDictionary<string, object> Properties { get; }
 
         /// <summary>
-        /// Creates an instance of <see cref="Token"/> with the specified value.
+        /// Creates an instance of <see cref="ValueToken"/> with the specified value.
         /// </summary>
         /// <param name="value">The token value.</param>
         /// <param name="type">The token type.</param>
         /// <param name="expiry">The token expiry.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        public static Token Create(string value, string type, DateTime expiry) => new Token(value, type, expiry);
+        public static ValueToken Create(string value, string type, DateTime expiry) => new ValueToken(value, type, expiry, new Dictionary<string, object>());
 
         /// <summary>
-        /// Provides with deconstruction for <see cref="Token"/>.
+        /// Creates an instance of <see cref="ValueToken"/> with the specified value.
+        /// </summary>
+        /// <param name="value">The token value.</param>
+        /// <param name="type">The token type.</param>
+        /// <param name="expiry">The token expiry.</param>
+        /// <param name="properties">The collection of custom properties.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="properties"/> is null.</exception>
+        public static ValueToken Create(string value, string type, DateTime expiry, IDictionary<string, object> properties) => new ValueToken(value, type, expiry, properties);
+
+        /// <summary>
+        /// Provides with deconstruction for <see cref="ValueToken"/>.
         /// </summary>
         /// <param name="value">The output token value.</param>
         /// <param name="type">The output token type.</param>
         /// <param name="expiry">The output token expiry date.</param>
         public void Deconstruct(out string value, out string type, out DateTime expiry) => (value, type, expiry) = (Value, Type, Expiry);
 
-        /// <summary>
-        /// Provides the list of components that comprise that class.
-        /// </summary>
-        /// <returns>An enumerable components of the derived class.</returns>
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-            yield return Type;
-            yield return Expiry;
-            yield return Properties;
-        }
-
-        private Token(string value, string type, DateTime expiry)
-            => (Value, Type, Expiry) = (value ?? throw new ArgumentNullException(nameof(value)), type ?? throw new ArgumentNullException(nameof(type)), expiry);
+        private ValueToken(string value, string type, DateTime expiry, IDictionary<string, object> properties)
+            => (Value, Type, Expiry, Properties)
+            = (value ?? throw new ArgumentNullException(nameof(value)), type ?? throw new ArgumentNullException(nameof(type)), expiry, properties ?? throw new ArgumentNullException(nameof(properties)));
     }
 }

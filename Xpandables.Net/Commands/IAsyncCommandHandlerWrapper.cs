@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,24 +19,24 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Queries
+namespace Xpandables.Net.Commands
 {
     /// <summary>
-    /// Represents a wrapper interface that avoids use of C# dynamics with query pattern and allows type inference for <see cref="IQueryHandler{TQuery, TResult}"/>.
+    /// Represents a wrapper interface that avoids use of C# dynamics with command pattern and allows type inference for <see cref="IAsyncCommandHandler{TCommand, TResult}"/>.
     /// </summary>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public interface IQueryHandlerWrapper<TResult> : ICanHandle
+    public interface IAsyncCommandHandlerWrapper<TResult> : ICanHandle
     {
         /// <summary>
-        /// Asynchronously handles the specified query and returns the task result.
+        /// Asynchronously handles the specified command and returns a task of the result type.
         /// </summary>
-        /// <param name="query">The query to act on.</param>
+        /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="command"/>.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        Task<TResult> HandleAsync(IQuery<TResult> query, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents the <typeparamref name="TResult"/> type.</returns>
+        Task<TResult> HandleAsync(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default);
     }
 }

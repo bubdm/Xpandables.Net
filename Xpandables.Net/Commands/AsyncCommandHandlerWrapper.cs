@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,28 +15,28 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
-namespace Xpandables.Net.Queries
+namespace Xpandables.Net.Commands
 {
     /// <summary>
-    /// Implementation for <see cref="IAsyncQueryHandlerWrapper{TResult}"/>.
+    /// Implementation for <see cref="IAsyncCommandHandlerWrapper{TResult}"/>.
     /// </summary>
-    /// <typeparam name="TQuery">Type of query.</typeparam>
+    /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class AsyncQueryHandlerWrapper<TQuery, TResult> : IAsyncQueryHandlerWrapper<TResult>
-        where TQuery : class, IAsyncQuery<TResult>
+    public sealed class AsyncCommandHandlerWrapper<TCommand, TResult> : IAsyncCommandHandlerWrapper<TResult>
+        where TCommand : class, IAsyncCommand<TResult>
     {
-        private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
+        private readonly IAsyncCommandHandler<TCommand, TResult> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncQueryHandlerWrapper{TQuery, TResult}"/> class with the handler to be wrapped.
+        /// Initializes a new instance of the <see cref="AsyncCommandHandlerWrapper{TCommand, TResult}"/> class with the  handler to be wrapped.
         /// </summary>
-        /// <param name="decoratee">The query handler instance to be wrapped.</param>
+        /// <param name="decoratee">The command handler instance to be wrapped.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        public AsyncQueryHandlerWrapper(IAsyncQueryHandler<TQuery, TResult> decoratee)
-            => _decoratee = decoratee ?? throw new ArgumentNullException($"{decoratee} : {nameof(TQuery)}.{nameof(TResult)}");
+        public AsyncCommandHandlerWrapper(IAsyncCommandHandler<TCommand, TResult> decoratee)
+            => _decoratee = decoratee ?? throw new ArgumentNullException($"{decoratee} : {nameof(TCommand)}.{nameof(TResult)}");
 
         /// <summary>
         /// Determines whether or not a an argument can be handled by the underlying context.
@@ -49,16 +48,16 @@ namespace Xpandables.Net.Queries
         public bool CanHandle(object argument) => _decoratee.CanHandle(argument);
 
         /// <summary>
-        /// Asynchronously handles the specified query with the wrapped handler and returns an asynchronous enumerable result type.
+        /// Asynchronously handles the specified command with the wrapped handler and returns the task result.
         /// </summary>
-        /// <param name="query">The query to act on.</param>
+        /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="command"/>.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        public IAsyncEnumerable<TResult> HandleAsync(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
-            => _decoratee.HandleAsync((TQuery)query, cancellationToken);
+        /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        public async Task<TResult> HandleAsync(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default)
+            => await _decoratee.HandleAsync((TCommand)command, cancellationToken).ConfigureAwait(false);
     }
 }

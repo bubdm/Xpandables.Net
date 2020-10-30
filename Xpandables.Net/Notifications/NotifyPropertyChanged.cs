@@ -141,7 +141,7 @@ namespace Xpandables.Net.Notifications
         /// not a <see cref="ConstantExpression"/>.</exception>
         private static string GetMemberNameFromExpression(Expression<Func<T, string>> nameOfExpression)
         {
-            if (nameOfExpression is null) throw new ArgumentNullException(nameof(nameOfExpression));
+            _ = nameOfExpression ?? throw new ArgumentNullException(nameof(nameOfExpression));
 
             return nameOfExpression.Body is ConstantExpression constantExpression
                 ? constantExpression.Value!.ToString()!
@@ -157,7 +157,7 @@ namespace Xpandables.Net.Notifications
         /// <exception cref="ArgumentNullException">The <paramref name="propertyExpression"/> is null.</exception>
         private static string GetMemberNameFromExpression<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
         {
-            if (propertyExpression is null) throw new ArgumentNullException(nameof(propertyExpression));
+            _ = propertyExpression ?? throw new ArgumentNullException(nameof(propertyExpression));
 
             return (propertyExpression.Body as MemberExpression
                 ?? ((UnaryExpression)propertyExpression.Body).Operand as MemberExpression)

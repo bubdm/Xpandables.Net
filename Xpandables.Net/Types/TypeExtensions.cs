@@ -24,7 +24,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Types
@@ -585,50 +584,24 @@ namespace Xpandables.Net.Types
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
 
-            return DoGetBaseTypes();
+            TypeInfo typeInfo = type.GetTypeInfo();
 
-            IEnumerable<Type> DoGetBaseTypes()
+            foreach (var implementedInterface in typeInfo.ImplementedInterfaces)
             {
-                TypeInfo typeInfo = type.GetTypeInfo();
-
-                foreach (var implementedInterface in typeInfo.ImplementedInterfaces)
-                {
-                    yield return implementedInterface;
-                }
-
-                var baseType = typeInfo.BaseType;
-
-                while (baseType != null)
-                {
-                    var baseTypeInfo = baseType.GetTypeInfo();
-
-                    yield return baseType;
-
-                    baseType = baseTypeInfo.BaseType;
-                }
+                yield return implementedInterface;
             }
-        }
 
-        /// <summary>
-        /// Determines whether or not the underlying type is assignable to the specified type.
-        /// </summary>
-        /// <param name="type">The type to act on.</param>
-        /// <param name="targetType">The type to check.</param>
-        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="targetType"/> is null.</exception>
-        public static bool IsAssignableTo(this Type type, Type targetType)
-        {
-            _ = type ?? throw new ArgumentNullException(nameof(type));
-            _ = targetType ?? throw new ArgumentNullException(nameof(targetType));
+            var baseType = typeInfo.BaseType;
 
-            var typeInfo = type.GetTypeInfo();
-            var otherTypeInfo = targetType.GetTypeInfo();
+            while (baseType != null)
+            {
+                var baseTypeInfo = baseType.GetTypeInfo();
 
-            return otherTypeInfo.IsGenericTypeDefinition
-                ? typeInfo.IsAssignableToGenericTypeDefinition(otherTypeInfo)
-                : otherTypeInfo.IsAssignableFrom(typeInfo);
-        }   
+                yield return baseType;
+
+                baseType = baseTypeInfo.BaseType;
+            }
+        }    
 
         /// <summary>
         /// Determines whether or not the type contains the specified type attribute.
@@ -664,146 +637,6 @@ namespace Xpandables.Net.Types
             return type.GetTypeInfo()
                 .GetCustomAttributes<TAttribute>(inherit: true)
                 .Any(predicate);
-        }
-
-        /// <summary>
-        /// Determines whether or not the type is in the name space.
-        /// </summary>
-        /// <param name="type">The type to act on.</param>
-        /// <param name="namespace">The name space.</param>
-        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="namespace"/> is null.</exception>
-        public static bool IsInNamespace(this Type type, string @namespace)
-        {
-            _ = type ?? throw new ArgumentNullException(nameof(type));
-            _ = @namespace ?? throw new ArgumentNullException(nameof(@namespace));
-
-            var typeNamespace = type.Namespace ?? string.Empty;
-
-            if (@namespace.Length > typeNamespace.Length)
-                return false;
-
-            var typeSubNamespace = typeNamespace.Substring(0, @namespace.Length);
-
-            if (typeSubNamespace.Equals(@namespace, StringComparison.Ordinal))
-            {
-                if (typeNamespace.Length == @namespace.Length)
-                {
-                    //exactly the same
-                    return true;
-                }
-
-                //is a sub-namespace?
-                return typeNamespace[@namespace.Length] == '.';
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Determines whether or not the type is in the specified namespace.
-        /// </summary>
-        /// <param name="type">The type to act on.</param>
-        /// <param name="namespace">The name space.</param>
-        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="namespace"/> is null.</exception>
-        public static bool IsInExactNamespace(this Type type, string @namespace)
-        {
-            _ = type ?? throw new ArgumentNullException(nameof(type));
-            _ = @namespace ?? throw new ArgumentNullException(nameof(@namespace));
-
-            return string.Equals(type.Namespace, @namespace, StringComparison.Ordinal);
-        }
-
-            /// <summary>
-        /// Determines whether an interface type and a type have matching arity.
-        /// </summary>
-        /// <param name="interfaceType">The interface type.</param>
-        /// <param name="typeInfo">The target type.</param>
-        /// <returns>Returns <see langword="true"/> if OK and <see langword="false"/> otherwise.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="interfaceType"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="typeInfo"/> is null.</exception>
-        public static bool HasMatchingGenericArity(this Type interfaceType, TypeInfo typeInfo)
-        {
-            _ = interfaceType ?? throw new ArgumentNullException(nameof(interfaceType));
-            _ = typeInfo ?? throw new ArgumentNullException(nameof(typeInfo));
-
-            if (typeInfo.IsGenericType)
-            {
-                var interfaceTypeInfo = interfaceType.GetTypeInfo();
-
-                if (interfaceTypeInfo.IsGenericType)
-                {
-                    var argumentCount = interfaceType.GenericTypeArguments.Length;
-                    var parameterCount = typeInfo.GenericTypeParameters.Length;
-
-                    return argumentCount == parameterCount;
-                }
-
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Returns the registration type from an interface.
-        /// </summary>
-        /// <param name="interfaceType">the interface type to act on.</param>
-        /// <param name="typeInfo">The type info.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="interfaceType"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="typeInfo"/> is null.</exception>
-        public static Type GetRegistrationType(this Type interfaceType, TypeInfo typeInfo)
-        {
-            _ = interfaceType ?? throw new ArgumentNullException(nameof(interfaceType));
-            _ = typeInfo ?? throw new ArgumentNullException(nameof(typeInfo));
-
-            if (typeInfo.IsGenericTypeDefinition)
-            {
-                var interfaceTypeInfo = interfaceType.GetTypeInfo();
-
-                if (interfaceTypeInfo.IsGenericType)
-                {
-                    return interfaceType.GetGenericTypeDefinition();
-                }
-            }
-
-            return interfaceType;
-        }
-
-        private static bool IsAssignableToGenericTypeDefinition(this TypeInfo typeInfo, TypeInfo genericTypeInfo)
-        {
-            foreach (var interfaceType in typeInfo.ImplementedInterfaces.Select(t => t.GetTypeInfo()))
-            {
-                if (interfaceType.IsGenericType)
-                {
-                    var typeDefinitionTypeInfo = interfaceType
-                        .GetGenericTypeDefinition()
-                        .GetTypeInfo();
-
-                    if (typeDefinitionTypeInfo.Equals(genericTypeInfo))
-                        return true;
-                }
-            }
-
-            if (typeInfo.IsGenericType)
-            {
-                var typeDefinitionTypeInfo = typeInfo
-                    .GetGenericTypeDefinition()
-                    .GetTypeInfo();
-
-                if (typeDefinitionTypeInfo.Equals(genericTypeInfo))
-                    return true;
-            }
-
-            var baseTypeInfo = typeInfo.BaseType?.GetTypeInfo();
-
-            if (baseTypeInfo is null)
-                return false;
-
-            return baseTypeInfo.IsAssignableToGenericTypeDefinition(genericTypeInfo);
         }
     }
 }

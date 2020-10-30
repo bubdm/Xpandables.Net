@@ -15,7 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Reflection;
 
 using Microsoft.AspNetCore.Authentication;
@@ -37,7 +36,6 @@ using Xpandables.Net.Api.Services.Implementations;
 using Xpandables.Net.Api.Settings;
 using Xpandables.Net.Api.Storage;
 using Xpandables.Net.DependencyInjection;
-using Xpandables.NetCore.Startup;
 
 namespace Xpandables.Net.Api
 {

@@ -16,14 +16,13 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 using static Xpandables.Net.Validations.ValidationAttributeExtensions;
 
 namespace Xpandables.Net.Api.Models
 {
-    public sealed class EmailAddress : ValueObject
+    public sealed class EmailAddress
     {
         private const string EmailRegex = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
         public EmailAddress(string value) => Value = AssertIsNotNullAndValid(value);
@@ -44,11 +43,6 @@ namespace Xpandables.Net.Api.Models
             {
                 throw CreateValidationException($"Invalid email address", value, new[] { "Email" });
             }
-        }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
         }
 
         public static implicit operator string(EmailAddress emailAddress) => emailAddress.Value;

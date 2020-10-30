@@ -24,4 +24,13 @@ namespace Xpandables.Net.Commands
     /// This can also be enhanced with some useful decorators.
     /// </summary>
     public interface IAsyncCommand { }
+
+    /// <summary>
+    /// This interface is used as a marker for commands when using the asynchronous command pattern with a specific-type result.
+    /// Class implementation is used with the <see cref="IAsyncCommandHandler{TCommand}"/> where
+    /// "TCommand" is a class that implements <see cref="IAsyncCommand{TResult}"/>.
+    /// This can also be enhanced with some useful decorators.
+    /// </summary>
+    /// <typeparam name="TResult">Type of the result of the command.</typeparam>
+    public interface IAsyncCommand<out TResult> : IAsyncCommand { }
 }

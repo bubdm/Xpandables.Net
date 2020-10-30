@@ -28,19 +28,7 @@ using Xpandables.Net.Validations;
 
 namespace Xpandables.Net.Api.Contracts
 {
-    public sealed class UserItem
-    {
-        public UserItem(string id, string phone, string email)
-        {
-            Id = id;
-            Phone = phone;
-            Email = email;
-        }
-
-        public string Id { get; set; }
-        public string Phone { get; set; }
-        public string Email { get; set; }
-    }
+    public sealed record UserItem(string Id, string Phone, string Email);
 
     [HttpRestClient(Path = "api/user/{id}", IsSecured = true, IsNullable = true, Method = "Get", In = ParameterLocation.Path)]
     public sealed class GetUser : QueryExpression<User>, IQuery<UserItem>, IValidationDecorator, IPathStringLocationRequest
