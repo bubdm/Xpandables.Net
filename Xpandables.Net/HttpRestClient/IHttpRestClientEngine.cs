@@ -30,6 +30,9 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Asynchronous;
+using Xpandables.Net.Types;
+
 namespace Xpandables.Net.HttpRestClient
 {
     /// <summary>
@@ -433,15 +436,25 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="stream"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="stream"/> does not support reading.</exception> 
+        /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception> 
         public async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream, CancellationToken cancellationToken = default)
         {
             _ = stream ?? throw new ArgumentNullException(nameof(stream));
-            if (!stream.CanRead) throw new ArgumentException($"{nameof(stream)} does not support reading.");
 
-            var result = await JsonSerializer.DeserializeAsync<TResult>(stream, cancellationToken: cancellationToken).ConfigureAwait(false);
+            try
+            {
+                if (!stream.CanRead) throw new ArgumentException($"{nameof(stream)} does not support reading.");
 
-            return result!;
+                var result = await JsonSerializer.DeserializeAsync<TResult>(stream, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                return result!;
+            }
+            catch (Exception exception) when (exception is JsonException
+                                            || exception is NotSupportedException
+                                            || exception is ArgumentException)
+            {
+                throw new InvalidOperationException($"Stream deserialization failed. See inner exception.", exception);
+            }
         }
 
         /// <summary>
@@ -506,6 +519,18 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="stream">The stream source to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<TResult> ReadAsyncEnumerableFromStreamAsync<TResult>(Stream stream, CancellationToken cancellationToken = default);
+        public IAsyncEnumerable<TResult> ReadAsyncEnumerableFromStreamAsync<TResult>(Stream stream, CancellationToken cancellationToken = default)
+        {
+            return new AsyncEnumerable<TResult>(DoRead(stream));
+
+            static IEnumerable<TResult> DoRead(Stream stream)
+            {
+                using var jsonReadStream = new Utf8JsonStreamReader(stream, 32 * 1024);
+                while (jsonReadStream.Read())
+                    if (jsonReadStream.TokenType == JsonTokenType.StartObject)
+                        yield return jsonReadStream.Deserialise<TResult>()!;
+            }
+
+        }
     }
 }
