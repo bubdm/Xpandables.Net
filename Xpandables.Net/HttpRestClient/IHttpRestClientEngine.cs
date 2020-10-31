@@ -24,17 +24,21 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
-using Xpandables.Net.Types;
+using Newtonsoft.Json;
 
 namespace Xpandables.Net.HttpRestClient
 {
+    /// <summary>
+    /// The default implementation of <see cref="IHttpRestClientEngine"/>.
+    /// </summary>
+    public sealed class HttpRestClientEngine : IHttpRestClientEngine { }
+
     /// <summary>
     /// Provides with helper methods for <see cref="IHttpRestClientHandler"/>.
     /// </summary>
@@ -319,9 +323,9 @@ namespace Xpandables.Net.HttpRestClient
         {
             ValidateInterfaceImplementation<IStringRequest>(source, true);
             if (source is IStringRequest stringRequest)
-                return new StringContent(JsonSerializer.Serialize(stringRequest.GetStringContent()), Encoding.UTF8, attribute.ContentType);
+                return new StringContent(JsonConvert.SerializeObject(stringRequest.GetStringContent()), Encoding.UTF8, attribute.ContentType);
 
-            return new StringContent(JsonSerializer.Serialize(source), Encoding.UTF8, attribute.ContentType);
+            return new StringContent(JsonConvert.SerializeObject(source), Encoding.UTF8, attribute.ContentType);
         }
 
         /// <summary>
@@ -339,7 +343,13 @@ namespace Xpandables.Net.HttpRestClient
             object streamContent = source is IStreamRequest streamRequest ? streamRequest.GetStreamContent() : source;
 
             var memoryStream = new MemoryStream();
-            await JsonSerializer.SerializeAsync(memoryStream, streamContent, cancellationToken: cancellationToken).ConfigureAwait(false);
+            using (var streamWriter = new StreamWriter(memoryStream, new UTF8Encoding(false), 1028, true))
+            using (var jsonTextWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.None })
+            {
+                JsonSerializer.CreateDefault().Serialize(jsonTextWriter, streamContent);
+                await jsonTextWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
+            }
+
             memoryStream.Seek(0, SeekOrigin.Begin);
             return new StreamContent(memoryStream);
         }
@@ -440,21 +450,12 @@ namespace Xpandables.Net.HttpRestClient
         public async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream, CancellationToken cancellationToken = default)
         {
             _ = stream ?? throw new ArgumentNullException(nameof(stream));
+            if (!stream.CanRead) throw new ArgumentException($"{nameof(stream)} does not support reading.");
 
-            try
-            {
-                if (!stream.CanRead) throw new ArgumentException($"{nameof(stream)} does not support reading.");
-
-                var result = await JsonSerializer.DeserializeAsync<TResult>(stream, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-                return result!;
-            }
-            catch (Exception exception) when (exception is JsonException
-                                            || exception is NotSupportedException
-                                            || exception is ArgumentException)
-            {
-                throw new InvalidOperationException($"Stream deserialization failed. See inner exception.", exception);
-            }
+            using var streamReader = new StreamReader(stream);
+            using var jsonTextReader = new JsonTextReader(streamReader);
+            var result = JsonSerializer.CreateDefault().Deserialize<TResult>(jsonTextReader);
+            return await Task.FromResult(result!).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -465,13 +466,11 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="value">The JSON to deserialize.</param>
         /// <param name="result">The deserialized object from the JSON string.</param>
         /// <param name="exception">The exception.</param>
-        /// <param name="options">The JSON serializer options.</param>
         /// <returns><see langword="true"/> if OK, otherwise <see langword="false"/>.</returns>
         public bool TryDeserialize<TResult>(
             string value,
             [MaybeNullWhen(false)] out TResult result,
-            [MaybeNullWhen(true)] out Exception exception,
-            JsonSerializerOptions? options = default)
+            [MaybeNullWhen(true)] out Exception exception)
             where TResult : class
         {
             result = default;
@@ -479,7 +478,7 @@ namespace Xpandables.Net.HttpRestClient
 
             try
             {
-                result = JsonSerializer.Deserialize<TResult>(value, options);
+                result = JsonConvert.DeserializeObject<TResult>(value);
                 if (result is null)
                 {
                     exception = new ArgumentNullException(nameof(value), "No result from deserialization.");
@@ -519,18 +518,16 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="stream">The stream source to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        public IAsyncEnumerable<TResult> ReadAsyncEnumerableFromStreamAsync<TResult>(Stream stream, CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<TResult> ReadAsyncEnumerableFromStreamAsync<TResult>(Stream stream, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            return new AsyncEnumerable<TResult>(DoRead(stream));
-
-            static IEnumerable<TResult> DoRead(Stream stream)
+            var jsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault();
+            using var streamReader = new StreamReader(stream);
+            using var jsonTextReader = new JsonTextReader(streamReader);
+            while (await jsonTextReader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                using var jsonReadStream = new Utf8JsonStreamReader(stream, 32 * 1024);
-                while (jsonReadStream.Read())
-                    if (jsonReadStream.TokenType == JsonTokenType.StartObject)
-                        yield return jsonReadStream.Deserialise<TResult>()!;
+                if (jsonTextReader.TokenType == JsonToken.StartObject)
+                    yield return jsonSerializer.Deserialize<TResult>(jsonTextReader)!;
             }
-
         }
     }
 }

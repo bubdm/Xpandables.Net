@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
+using Newtonsoft.Json;
+
 namespace Xpandables.Net.Strings
 {
     /// <summary>
@@ -161,6 +163,45 @@ namespace Xpandables.Net.Strings
             {
                 dateTimeException = exception;
                 result = default;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries to deserialize the JSON string to the specified type.
+        /// The default implementation used the <see cref="System.Text.Json"/> API.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the object to deserialize to.</typeparam>
+        /// <param name="value">The JSON to deserialize.</param>
+        /// <param name="result">The deserialized object from the JSON string.</param>
+        /// <param name="exception">The exception.</param>
+        /// <param name="options">The JSON serializer options.</param>
+        /// <returns><see langword="true"/> if OK, otherwise <see langword="false"/>.</returns>
+        public static bool TryDeserialize<TResult>(this
+            string value,
+            [MaybeNullWhen(false)] out TResult result,
+            [MaybeNullWhen(true)] out Exception exception,
+            JsonSerializerSettings? options = default)
+            where TResult : class
+        {
+            result = default;
+            exception = default;
+
+            try
+            {
+                result = JsonConvert.DeserializeObject<TResult>(value, options);
+                if (result is null)
+                {
+                    exception = new ArgumentNullException(nameof(value), "No result from deserialization.");
+                    return false;
+                }
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
                 return false;
             }
         }

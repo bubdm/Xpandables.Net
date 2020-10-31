@@ -17,86 +17,27 @@
 ************************************************************************************************************/
 using System.Reflection;
 
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 
-using Xpandables.Net.Api.Configurations;
-using Xpandables.Net.Api.Middlewares;
-using Xpandables.Net.Api.Services;
-using Xpandables.Net.Api.Services.Implementations;
-using Xpandables.Net.Api.Settings;
-using Xpandables.Net.Api.Storage;
 using Xpandables.Net.DependencyInjection;
 
 namespace Xpandables.Net.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration) => Configuration = configuration;
-
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOptions();
-
-            services.XConfigureOptions<JwtSettings>(Configuration);
-
-            services.AddSingleton<IConfigureOptions<AuthenticationOptions>, ApiAuthenticationOptions>();
-            services.AddSingleton<IConfigureOptions<MvcOptions>, ApiMvcOptions>();
-            services.AddSingleton<IConfigureOptions<MvcNewtonsoftJsonOptions>, ApiNewtonsoftJsonOptions>();
-            services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, ApiJwtBearerOptions>();
-
-            services.AddRouting(options =>
-            {
-                options.ConstraintMap.Add("string", typeof(StringConstraintMap));
-                options.LowercaseUrls = true;
-                options.LowercaseQueryStrings = true;
-            });
-
-            services.AddMemoryCache();
-
-            services
-                .AddControllers()
-                .AddNewtonsoftJson();
-
-            services.AddHttpContextAccessor();
-            services.AddXStringGeneratorCryptography();
-            services.AddXHttpHeaderAccessor();
-            services.AddXHttpTokenClaimProvider<HttpTokenClaimProvider>();
-
-            services.AddXHttpTokenEngine<TokenService>();
-            services.AddScoped<ITwoFactorService, TwoFactorService>();
-
-            services.AddDbContext<UserContext>(options => options.UseSqlServer(Configuration.GetConnectionString("default"))
-                .EnableDetailedErrors()
-                .EnableSensitiveDataLogging()
-                .EnableServiceProviderCaching());
-
-            services.AddXDataContext(provider => provider.GetRequiredService<UserContext>());
-            services.AddHostedService<UserContextInitializer>();
-
-            services.AddXCommandQueriesHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
-            {
-                options.UsePersistenceDecorator();
-                options.UseValidatorDecorator();
-            });
-
+            services.AddControllers();
             services.AddXDispatcher();
-            services.AddAuthentication()
-                    .AddJwtBearer();
-
-            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Xpandables.Net.Api", Version = "v1" }));
+            services.AddXCommandHandlerWrapper();
+            services.AddXQueryHandlerWrapper();
+            services.AddXCommandHandlers(new[] { Assembly.GetExecutingAssembly() });
+            services.AddXQueryHandlers(new[] { Assembly.GetExecutingAssembly() });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,17 +46,10 @@ namespace Xpandables.Net.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Xpandables.Net.Api v1"));
             }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseRouting();
 
-            app.UseAuthorization();
-            app.UseAuthentication();
-            app.UseMiddleware<ApiExceptionHandlerMiddleware>();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }

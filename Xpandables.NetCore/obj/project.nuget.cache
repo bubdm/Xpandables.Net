@@ -1,14 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "gjIJTXYBpHSX4YPwvdeu0zP+Aerijrkbsehl3AckZYF5pkdtJomvA3Mg+R5jrrZvDPLLvIqPvg4aaOQYW47zNQ==",
+  "dgSpecHash": "kc+ATBoPGv7Sijj9oJ4SC681zilaq7BCW8rZjuqP1HGV2C/TAEYpPQDImSNpkjPUC4bL41gJpnNriXmdoew0DA==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codeanalysis.fxcopanalyzers\\3.3.0\\microsoft.codeanalysis.fxcopanalyzers.3.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codeanalysis.versioncheckanalyzer\\3.3.0\\microsoft.codeanalysis.versioncheckanalyzer.3.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codequality.analyzers\\3.3.0\\microsoft.codequality.analyzers.3.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.analyzers\\3.3.0\\microsoft.netcore.analyzers.3.3.0.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netframework.analyzers\\3.3.0\\microsoft.netframework.analyzers.3.3.0.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codeanalysis.fxcopanalyzers\\3.3.1\\microsoft.codeanalysis.fxcopanalyzers.3.3.1.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codeanalysis.versioncheckanalyzer\\3.3.1\\microsoft.codeanalysis.versioncheckanalyzer.3.3.1.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codequality.analyzers\\3.3.1\\microsoft.codequality.analyzers.3.3.1.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.analyzers\\3.3.1\\microsoft.netcore.analyzers.3.3.1.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netframework.analyzers\\3.3.1\\microsoft.netframework.analyzers.3.3.1.nupkg.sha512",
+    "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
   ],
   "logs": []
 }

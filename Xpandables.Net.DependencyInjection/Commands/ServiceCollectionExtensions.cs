@@ -86,8 +86,8 @@ namespace Xpandables.Net.DependencyInjection
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             var commandTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterface(typeof(IAsyncCommandHandler<>).Name) is not null)
-                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IAsyncCommandHandler<>).Name)! })
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && (type.GetInterface(typeof(IAsyncCommandHandler<>).Name) is not null || type.GetInterface(typeof(IAsyncCommandHandler<,>).Name) is not null))
+                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IAsyncCommandHandler<>).Name) ?? type.GetInterface(typeof(IAsyncCommandHandler<,>).Name)! })
                 .ToList();
 
             foreach (var commandType in commandTypes)

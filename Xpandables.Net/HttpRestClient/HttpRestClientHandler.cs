@@ -78,13 +78,14 @@ namespace Xpandables.Net.HttpRestClient
 
                 if (response.IsSuccessStatusCode)
                     return await WriteResponseAsync<IAsyncEnumerable<TResult>, TResult>(response, stream =>
-                        new AsyncEnumerable<TResult>(cancellation => _httpRestClientEngine.ReadAsyncEnumerableFromStreamAsync<TResult>(stream, cancellationToken).GetAsyncEnumerator(cancellationToken)));
+                        _httpRestClientEngine.ReadAsyncEnumerableFromStreamAsync<TResult>(stream, cancellationToken));
 
                 return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)await WriteBadResponseAsync(
                     HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure, response)
                     .ConfigureAwait(false);
             }
             catch (Exception exception) when (exception is ArgumentNullException
+                                            || exception is ArgumentException
                                             || exception is InvalidOperationException
                                             || exception is OperationCanceledException
                                             || exception is HttpRequestException
@@ -134,12 +135,49 @@ namespace Xpandables.Net.HttpRestClient
                 return await WriteBadResponseAsync(HttpRestClientResponse.Failure, response).ConfigureAwait(false);
             }
             catch (Exception exception) when (exception is ArgumentNullException
+                                            || exception is ArgumentException
                                             || exception is InvalidOperationException
                                             || exception is OperationCanceledException
                                             || exception is HttpRequestException
                                             || exception is TaskCanceledException)
             {
                 return HttpRestClientResponse.Failure(exception);
+            }
+        }
+
+        /// <summary>
+        /// Handles the command as asynchronous operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        public async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(command, HttpClient, cancellationToken).ConfigureAwait(false);
+                using var response = await HttpClient.SendAsync(
+                    request,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken)
+                    .ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                    return await WriteResponseAsync<TResult, TResult>(response, stream => _httpRestClientEngine.DeserializeJsonFromStreamAsync<TResult>(stream, cancellationToken).RunSync()).ConfigureAwait(false);
+
+                return (HttpRestClientResponse<TResult>)await WriteBadResponseAsync(
+                    HttpRestClientResponse<TResult>.Failure, response)
+                    .ConfigureAwait(false);
+            }
+            catch (Exception exception) when (exception is ArgumentNullException
+                                            || exception is InvalidOperationException
+                                            || exception is OperationCanceledException
+                                            || exception is HttpRequestException
+                                            || exception is TaskCanceledException)
+            {
+                return HttpRestClientResponse<TResult>.Failure(exception);
             }
         }
 

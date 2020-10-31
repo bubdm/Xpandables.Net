@@ -83,6 +83,16 @@ namespace Xpandables.Net.HttpRestClient
         Task<HttpRestClientResponse> HandleAsync(IAsyncCommand command, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Handles the command as asynchronous operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Handles the query as asynchronous operation.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>

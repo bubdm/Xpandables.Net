@@ -32,5 +32,5 @@ namespace Xpandables.Net.Commands
     /// This can also be enhanced with some useful decorators.
     /// </summary>
     /// <typeparam name="TResult">Type of the result of the command.</typeparam>
-    public interface IAsyncCommand<out TResult> : IAsyncCommand { }
+    public interface IAsyncCommand<out TResult> { }
 }

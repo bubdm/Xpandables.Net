@@ -15,36 +15,20 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
-using Xpandables.Net.Api.Middlewares;
 
 namespace Xpandables.Net.Api
 {
     public class Program
     {
-        public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => webBuilder
-                        .ConfigureAppConfiguration((buildContext, config) =>
-                        {
-                            var env = buildContext.HostingEnvironment;
-                            config.SetBasePath(env.ContentRootPath);
-                            config.AddJsonFile("appsettings.json", false, true)
-                                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", false, true)
-                                    .AddEnvironmentVariables();
-                        })
-                        .ConfigureServices((_, services) =>
-                        {
-                            services.AddTransient<ApiExceptionHandlerMiddleware>();
-                            services.AddTransient<ApiExceptionHandlerFilterAttribute>();
-                        })
-                        .UseStartup<Startup>());
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
     }
 }

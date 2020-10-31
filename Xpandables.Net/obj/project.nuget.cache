@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "xa71WlKyou3sOs2mj+7AALYp8PzdHgxqyHHCWbGJAvir8ijXhUrhlYa1a+uc9LtH/bih9xJ4H7Vvpx/XysO/gQ==",
+  "dgSpecHash": "tbHfAw1Kah6xAkB43uM2BSIoWdd5M2mH0+csiCHdfrRzQhf+K5W7Vg3Gi1u3eGIz/lwLFGI8X9NJTbhy6Osgow==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

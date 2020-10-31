@@ -1,0 +1,123 @@
+﻿
+/************************************************************************************************************
+ * Copyright (C) 2020 Francis-Black EWANE
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+************************************************************************************************************/
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Xpandables.Net.Asynchronous;
+using Xpandables.Net.Commands;
+using Xpandables.Net.HttpRestClient;
+using Xpandables.Net.Queries;
+
+namespace Xpandables.Net.Api
+{
+    public sealed record Contact(int Id, string Name, string Address, string City);
+    [HttpRestClient(Path = "api/contacts", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
+    public sealed record SelectAll : IAsyncQuery<Contact>, IQueryStringLocationRequest
+    {
+        public IDictionary<string, string?>? GetQueryStringSource() => new Dictionary<string, string?>();
+    }
+
+    [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
+    public sealed record Select([Required] int Id) : IQuery<Contact?>, IPathStringLocationRequest
+    {
+        [return: NotNull]
+        public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), $"{Id}" } };
+    }
+
+    [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
+    public sealed record Add([Required] string Name, [Required] string Address, [Required] string City) : IAsyncCommand<int>;
+
+    [HttpRestClient(Path = "api/contacts/{id}", Method = "Delete", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
+    public sealed record Delete([Required] int Id) : IAsyncCommand, IPathStringLocationRequest
+    {
+        [return: NotNull]
+        public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), $"{Id}" } };
+    }
+
+    [HttpRestClient(Path = "api/contacts", Method = "Put", IsSecured = true, IsNullable = false, In = ParameterLocation.Body)]
+    public sealed record Edit([Required] int Id, string? Name = default, string? Address = default, string? City = default) : IAsyncCommand<Contact>;
+
+    sealed class ContactService
+    {
+        internal static readonly List<Contact> Contacts = new List<Contact>
+        {
+            new Contact(1, "Filip W", "Paris 01", "Paris"),
+            new Contact(2, "Jean Pierre", "25 Liberty Street", "Lyon"),
+            new Contact(3, "Paul Louis", "1 Jean Paul Street", "Paris"),
+            new Contact(4, "Alexandre LeGrand", "12 New Street", "Paris"),
+            new Contact(5, "André José", "18 Alexandre Street", "Paris")
+        };
+    }
+
+    public sealed class SelectAllHandler : IAsyncQueryHandler<SelectAll, Contact>
+    {
+        public IAsyncEnumerable<Contact> HandleAsync(SelectAll query, CancellationToken cancellationToken = default) => new AsyncEnumerable<Contact>(ContactService.Contacts);
+    }
+
+    public sealed class SelectHandler : IQueryHandler<Select, Contact?>
+    {
+        public Task<Contact?> HandleAsync(Select query, CancellationToken cancellationToken = default)
+        {
+            var result = ContactService.Contacts.FirstOrDefault(c => c.Id == query.Id);
+            return Task.FromResult(result);
+        }
+    }
+
+    public sealed class AddHandler : IAsyncCommandHandler<Add, int>
+    {
+        public Task<int> HandleAsync(Add command, CancellationToken cancellationToken = default)
+        {
+            var newId = (ContactService.Contacts.LastOrDefault()?.Id ?? 0) + 1;
+            ContactService.Contacts.Add(new Contact(newId, command.Name, command.Address, command.City));
+            return Task.FromResult(newId);
+        }
+    }
+
+    public sealed class DeleteHandler : IAsyncCommandHandler<Delete>
+    {
+        public Task HandleAsync(Delete command, CancellationToken cancellationToken = default)
+        {
+            var result = ContactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
+            if (result is null) throw new KeyNotFoundException();
+            return Task.CompletedTask;
+        }
+    }
+
+    public sealed class EditHandler : IAsyncCommandHandler<Edit, Contact>
+    {
+        public Task<Contact> HandleAsync(Edit command, CancellationToken cancellationToken = default)
+        {
+            var result = ContactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
+
+            if (result is null) throw new KeyNotFoundException();
+
+            var index = ContactService.Contacts.IndexOf(result);
+            if (command.Name is not null) result = result with { Name = command.Name };
+            if (command.Address is not null) result = result with { Address = command.Address };
+            if (command.City is not null) result = result with { City = command.City };
+
+            ContactService.Contacts[index] = result;
+
+            return Task.FromResult(result);
+        }
+    }
+}
