@@ -26,7 +26,7 @@
     <!--<PackageReleaseNotes>Start All-in-one.</PackageReleaseNotes>-->
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AssemblyName>Xpandables.Net.DependencyInjection</AssemblyName>
-    <RootNamespace>Xpandables.Net.DependencyInjection</RootNamespace>
+    <RootNamespace>Xpandables.Net</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <summary>A utility library in .Net5.0 that adds dependency injection to Xpandables.Net.</summary>

@@ -28,7 +28,7 @@ using System.Resources;
 
 using Xpandables.Net.Localization;
 
-namespace Xpandables.NetCore.TagHelpers
+namespace Xpandables.Net.TagHelpers
 {
     /// <summary>
     /// A helper that uses the <see cref="DisplayAttribute.Name"/> as value tag and tool-tip tag for <see cref="DisplayAttribute.Description"/>.

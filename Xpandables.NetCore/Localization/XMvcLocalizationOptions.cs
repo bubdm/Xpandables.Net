@@ -20,7 +20,7 @@ using Microsoft.Extensions.Options;
 
 using System;
 
-namespace Xpandables.NetCore.Localization
+namespace Xpandables.Net.Localization
 {
     /// <summary>
     /// Provides with <see cref="MvcOptions"/> localization configuration.

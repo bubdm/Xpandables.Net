@@ -19,9 +19,7 @@ using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Http;
 
-using Xpandables.Net.Http;
-
-namespace Xpandables.NetCore.Http
+namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Implementation of <see cref="IHttpFormFileEngine"/>.

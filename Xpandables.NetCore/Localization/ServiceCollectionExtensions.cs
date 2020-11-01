@@ -15,14 +15,13 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-using System;
-
-using Xpandables.NetCore.Localization;
 using Xpandables.Net.Localization;
 
 namespace Xpandables.Net.DependencyInjection

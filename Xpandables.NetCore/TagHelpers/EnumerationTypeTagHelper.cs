@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 using Xpandables.Net.Enumerations;
 using Xpandables.Net.Localization;
 
-namespace Xpandables.NetCore.TagHelpers
+namespace Xpandables.Net.TagHelpers
 {
     /// <summary>
     /// A helper that uses the <see cref="DisplayAttribute.Name"/> of an <see cref="EnumerationType.DisplayName"/> with localization

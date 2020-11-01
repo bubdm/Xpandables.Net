@@ -22,7 +22,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Xpandables.NetCore.TagHelpers
+namespace Xpandables.Net.TagHelpers
 {
     /// <summary>
     /// A helper that uses the <see cref="RequiredAttribute"/> to add required tag.

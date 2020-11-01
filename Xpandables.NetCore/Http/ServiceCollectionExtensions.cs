@@ -15,11 +15,10 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
 
-using Xpandables.NetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+
 using Xpandables.Net.Http;
 
 namespace Xpandables.Net.DependencyInjection

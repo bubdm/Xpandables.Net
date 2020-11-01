@@ -17,37 +17,27 @@
 ************************************************************************************************************/
 using System;
 using System.Net.Http;
-using System.Threading.Tasks;
 
-using Xpandables.Net.HttpRestClient;
+using Xpandables.Net.HttpRest;
 
 namespace Xpandables.Net.Http.Network
 {
     /// <summary>
-    /// Default implementation for <see cref="IHttpLocationHandler"/>.
+    /// Default implementation for <see cref="IHttpLocationAccessor"/>.
     /// </summary>
-    public sealed class HttpLocationHandler : Disposable, IHttpLocationHandler
+    public sealed class HttpLocationAccessor : Disposable, IHttpLocationAccessor
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
+        IHttpRestClientHandler IHttpLocationAccessor.HttpRestClientHandler => _httpRestClientHandler;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="HttpLocationHandler"/> class with the client to be used.
+        /// Initializes a new instance of the <see cref="HttpLocationAccessor"/> class that uses the http://api.ipstack.com to retrieve the user location.
         /// </summary>
-        /// <param name="httpClient">The HTTP client to be used to request Geo location.</param>
-        /// <param name="httpRestClientEngine">The HTTP Rest client engine.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="httpClient"/> is null.</exception>
-        public HttpLocationHandler(HttpClient httpClient, IHttpRestClientEngine httpRestClientEngine)
-            => _httpRestClientHandler = new HttpRestClientHandler(httpClient, httpRestClientEngine);
-
-        /// <summary>
-        /// Asynchronously gets the IPAddress Geo-location of the specified IPAddress request using http://api.ipstack.com.
-        /// </summary>
-        /// <param name="request">The request to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        public async Task<HttpRestClientResponse<GeoLocation>> ReadLocationAsync(LocationRequest request)
+        public HttpLocationAccessor()
         {
-            _ = request ?? throw new ArgumentNullException(nameof(request));
-            return await _httpRestClientHandler.HandleAsync(request).ConfigureAwait(false);
+            var httpClient = new HttpClient { BaseAddress = new Uri("http://api.ipstack.com") };
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
+            _httpRestClientHandler = new HttpRestClientHandler(httpClient);
         }
 
         private bool _isDisposed;

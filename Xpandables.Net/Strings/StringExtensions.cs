@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Text.Json;
 
 using Newtonsoft.Json;
 
@@ -65,8 +66,9 @@ namespace Xpandables.Net.Strings
         /// Serializes the current instance to JSON string.
         /// </summary>
         /// <param name="source">The object to act on.</param>
+        /// <param name="options">The serializer options to be applied.</param>
         /// <returns>A JSOn string representation of the object.</returns>
-        public static string ToJsonString<T>(this T source) => System.Text.Json.JsonSerializer.Serialize(source);
+        public static string ToJsonString<T>(this T source, JsonSerializerOptions? options = default) => System.Text.Json.JsonSerializer.Serialize(source, options);
 
         /// <summary>
         /// Concatenates all the elements of an <see cref="IEnumerable{T}"/>,

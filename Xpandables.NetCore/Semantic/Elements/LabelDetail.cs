@@ -15,7 +15,7 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.NetCore.Semantic.Elements
+namespace Xpandables.Net.Semantic.Elements
 {
     /// <summary>
     /// A label displays content classification.

@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Xpandables.Net.Api;
-using Xpandables.Net.HttpRestClient;
+using Xpandables.Net.Http.Network;
+using Xpandables.Net.HttpRest;
+using Xpandables.Net.Strings;
 
 namespace Xpandables.Net.Tests
 {
@@ -20,7 +22,7 @@ namespace Xpandables.Net.Tests
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
             var factory = new WebApplicationFactory<Program>();
             var client = factory.CreateClient();
-            httpRestClientHandler = new HttpRestClientHandler(client, new HttpRestClientEngine());
+            httpRestClientHandler = new HttpRestClientHandler(client);
         }
 
         [TestCleanup]
@@ -99,6 +101,26 @@ namespace Xpandables.Net.Tests
 
                 Assert.AreEqual(contact.Name, newName);
             }
+        }
+
+        [TestMethod]
+        public async Task IPLocationTest()
+        {
+            using IHttpIPAddressAccessor ipHandler = new HttpIPAddressAccessor();
+            var response = await ipHandler.ReadIPAddressAsync().ConfigureAwait(false);
+
+            if (!response.IsValid())
+                Trace.WriteLine($"{response.StatusCode}");
+            else
+                Trace.WriteLine($"IP Address : {response.Result}");
+
+            using IHttpLocationAccessor locationHandler = new HttpLocationAccessor();
+            var location = await locationHandler.ReadLocationAsync(new LocationRequest(response.Result.ToString(), "enter your api access key"));
+
+            if (!location.IsValid())
+                Trace.WriteLine($"{location.StatusCode}");
+            else
+                Trace.WriteLine($"IP Address : {location.Result.ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true })}");
         }
     }
 }

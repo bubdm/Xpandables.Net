@@ -24,7 +24,7 @@ using System.Windows.Forms;
 
 using Xpandables.Net.Expressions;
 
-namespace Xpandables.Net.Windows.Forms
+namespace Xpandables.Net.Forms
 {
     /// <summary>
     /// Provides with a mechanism to dynamically bind data in Windows Form.

@@ -17,11 +17,11 @@
 ************************************************************************************************************/
 using Microsoft.AspNetCore.Components;
 
-using Xpandables.NetCore.Semantic.Enumerations;
-using Xpandables.NetCore.Semantic.Enumerations.Icons;
+using Xpandables.Net.Semantic.Enumerations;
+using Xpandables.Net.Semantic.Enumerations.Icons;
 using Xpandables.Net.Types;
 
-namespace Xpandables.NetCore.Semantic.Elements
+namespace Xpandables.Net.Semantic.Elements
 {
     /// <summary>
     /// An icon is a glyph used to represent something else.

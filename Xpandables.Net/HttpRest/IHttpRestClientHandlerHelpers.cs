@@ -21,10 +21,10 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
@@ -32,17 +32,9 @@ using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
-namespace Xpandables.Net.HttpRestClient
+namespace Xpandables.Net.HttpRest
 {
-    /// <summary>
-    /// The default implementation of <see cref="IHttpRestClientEngine"/>.
-    /// </summary>
-    public sealed class HttpRestClientEngine : IHttpRestClientEngine { }
-
-    /// <summary>
-    /// Provides with helper methods for <see cref="IHttpRestClientHandler"/>.
-    /// </summary>
-    public interface IHttpRestClientEngine
+    public partial interface IHttpRestClientHandler
     {
         /// <summary>
         /// Returns an <see cref="HttpRequestMessage"/> from the source.
@@ -52,13 +44,12 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="httpClient">The target HTTP client.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A tack that represents an <see cref="HttpRequestMessage"/> object.</returns>
-        public async Task<HttpRequestMessage> WriteHttpRequestMessageAsync<TSource>(TSource source, HttpClient httpClient, CancellationToken cancellationToken = default)
+        internal static async Task<HttpRequestMessage> WriteHttpRequestMessageAsync<TSource>(TSource source, HttpClient httpClient, CancellationToken cancellationToken = default)
             where TSource : class
         {
             var attribute = ReadHttpClientAttribute(source);
             return await ReadHttpRequestMessageAsync(attribute, source, httpClient, cancellationToken).ConfigureAwait(false);
         }
-
 
         /// <summary>
         /// Returns the <see cref="HttpRequestMessage"/> from the attribute.
@@ -70,7 +61,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         [SuppressMessage("Usage", "SecurityIntelliSenseCS:MS Security rules violation", Justification = "<Pending>")]
-        public async Task<HttpRequestMessage> ReadHttpRequestMessageAsync<TSource>(
+        internal static async Task<HttpRequestMessage> ReadHttpRequestMessageAsync<TSource>(
             HttpRestClientAttribute attribute, TSource source, HttpClient httpClient, CancellationToken cancellationToken = default)
             where TSource : notnull
         {
@@ -80,17 +71,13 @@ namespace Xpandables.Net.HttpRestClient
 
             attribute.Path ??= "/";
 
-            if (attribute.In == ParameterLocation.Path || attribute.In == ParameterLocation.Query)
+            if (attribute.In is ParameterLocation.Path or ParameterLocation.Query)
             {
                 WriteLocationPath(source, attribute);
                 WriteLocationQuery(source, attribute);
+            }
 
-                attribute.Uri = new Uri(attribute.Path, UriKind.Relative);
-            }
-            else
-            {
-                attribute.Uri = new Uri(attribute.Path, UriKind.Relative);
-            }
+            attribute.Uri = new Uri(attribute.Path, UriKind.Relative);
 
             var httpRequestMessage = new HttpRequestMessage(new HttpMethod(attribute.Method), attribute.Uri);
             httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(attribute.Accept));
@@ -129,7 +116,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <returns>The combined result.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="path"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="pathString"/> is null.</exception>
-        public string AddPathString(string path, IDictionary<string, string> pathString)
+        internal static string AddPathString(string path, IDictionary<string, string> pathString)
         {
             _ = path ?? throw new ArgumentNullException(nameof(path));
             _ = pathString ?? throw new ArgumentNullException(nameof(pathString));
@@ -150,7 +137,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="queryString">A collection of name value query pairs to append.</param>
         /// <returns>The combined result.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="path"/> is null.</exception>
-        public string AddQueryString(string path, IDictionary<string, string?>? queryString)
+        internal static string AddQueryString(string path, IDictionary<string, string?>? queryString)
         {
             _ = path ?? throw new ArgumentNullException(nameof(path));
 
@@ -192,7 +179,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
-        public void WriteLocationPath<TSource>(TSource source, HttpRestClientAttribute attribute)
+        internal static void WriteLocationPath<TSource>(TSource source, HttpRestClientAttribute attribute)
             where TSource : notnull
         {
             if (attribute.In == ParameterLocation.Path)
@@ -212,7 +199,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
-        public void WriteLocationQuery<TSource>(TSource source, HttpRestClientAttribute attribute)
+        internal static void WriteLocationQuery<TSource>(TSource source, HttpRestClientAttribute attribute)
             where TSource : notnull
         {
             if (attribute.In == ParameterLocation.Query)
@@ -233,7 +220,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
         /// <param name="httpRequestMessage">The target request message.</param>
-        public void WriteLocationCookie<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage)
+        internal static void WriteLocationCookie<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage)
               where TSource : notnull
         {
             if (attribute.In == ParameterLocation.Cookie)
@@ -257,7 +244,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
         /// <param name="httpRequestMessage">The target request message.</param>
-        public void WriteLocationHeader<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage)
+        internal static void WriteLocationHeader<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage)
                 where TSource : notnull
         {
             if (attribute.In == ParameterLocation.Header)
@@ -282,7 +269,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="source">The source object instance.</param>
         /// <returns>A byte array content.</returns>
         [return: MaybeNull]
-        public HttpContent ReadByteArrayContent<TSource>(TSource source)
+        internal static HttpContent ReadByteArrayContent<TSource>(TSource source)
                where TSource : notnull
         {
             ValidateInterfaceImplementation<IByteArrayRequest>(source, false);
@@ -300,7 +287,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="source">The source object instance.</param>
         /// <returns>An URL encoded content.</returns>
         [return: MaybeNull]
-        public HttpContent ReadFormUrlEncodedContent<TSource>(TSource source)
+        internal static HttpContent ReadFormUrlEncodedContent<TSource>(TSource source)
             where TSource : notnull
         {
             ValidateInterfaceImplementation<IFormUrlEncodedRequest>(source, false);
@@ -318,7 +305,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
         /// <returns>A string content.</returns>
-        public HttpContent ReadStringContent<TSource>(TSource source, HttpRestClientAttribute attribute)
+        internal static HttpContent ReadStringContent<TSource>(TSource source, HttpRestClientAttribute attribute)
             where TSource : notnull
         {
             ValidateInterfaceImplementation<IStringRequest>(source, true);
@@ -336,7 +323,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="source">The source object instance.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A stream content.</returns>
-        public async Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source, CancellationToken cancellationToken)
+        internal static async Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source, CancellationToken cancellationToken)
           where TSource : notnull
         {
             ValidateInterfaceImplementation<IStreamRequest>(source, false);
@@ -363,7 +350,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="attribute">The target attribute.</param>
         /// <returns>A multi part content.</returns>
         [return: MaybeNull]
-        public HttpContent ReadMultipartContent<TSource>(TSource source, HttpRestClientAttribute attribute)
+        internal static HttpContent ReadMultipartContent<TSource>(TSource source, HttpRestClientAttribute attribute)
             where TSource : notnull
         {
             ValidateInterfaceImplementation<IMultipartRequest>(source, false);
@@ -387,7 +374,7 @@ namespace Xpandables.Net.HttpRestClient
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
         /// <returns>A <see cref="HttpRestClientAttribute"/> attribute.</returns>
-        public HttpRestClientAttribute ReadHttpClientAttribute<TSource>(TSource source)
+        internal static HttpRestClientAttribute ReadHttpClientAttribute<TSource>(TSource source)
                     where TSource : class
         {
             if (source is IHttpRestClientAttributeProvider httpRestClientAttributeProvider)
@@ -402,7 +389,7 @@ namespace Xpandables.Net.HttpRestClient
         /// </summary>
         /// <param name="httpResponse">The response to act on.</param>
         /// <returns>A collection of keys/values.</returns>
-        public NameValueCollection ReadHttpResponseHeaders(HttpResponseMessage httpResponse)
+        internal static NameValueCollection ReadHttpResponseHeaders(HttpResponseMessage httpResponse)
             => Enumerable
                 .Empty<(string Name, string Value)>()
                 .Concat(
@@ -423,6 +410,7 @@ namespace Xpandables.Net.HttpRestClient
                     resultSelector: nvc => nvc
                     );
 
+
         /// <summary>
         /// Checks whether if the target source implements the specified interface.
         /// Throws an exception if interface not found and it's not optional.
@@ -431,102 +419,77 @@ namespace Xpandables.Net.HttpRestClient
         /// <param name="source">The source object to act on.</param>
         /// <param name="implementationIsOptional">The value indicating whether or not the interface implementation is mandatory.</param>
         /// <exception cref="ArgumentException">The <paramref name="source"/> must implement <typeparamref name="TInterface"/> interface.</exception>
-        public static void ValidateInterfaceImplementation<TInterface>(object source, bool implementationIsOptional = false)
+        internal static void ValidateInterfaceImplementation<TInterface>(object source, bool implementationIsOptional = false)
         {
             if (!typeof(TInterface).IsAssignableFrom(source.GetType()) && !implementationIsOptional)
                 throw new ArgumentException($"{source.GetType().Name} must implement {typeof(TInterface).Name} interface");
         }
 
         /// <summary>
-        /// De-serializes a JSON string from stream.
-        /// The default implementation used the <see cref="System.Text.Json"/> API.
+        /// Returns an <see cref="HttpRestClientResponse"/> for success response.
         /// </summary>
-        /// <typeparam name="TResult">The type of the deserialized object.</typeparam>
-        /// <param name="stream">The stream to act on.</param>
-        /// <param name="cancellationToken">A cancellation token.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TResult"/> type.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="stream"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception> 
-        public async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream, CancellationToken cancellationToken = default)
+        /// <typeparam name="TResponse">The response type.</typeparam>
+        /// <typeparam name="TElement">The response content type model.</typeparam>
+        /// <param name="httpResponse">The target HTTP response.</param>
+        /// <param name="streamConverter">The stream converter to act with.</param>
+        /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
+        internal static async Task<HttpRestClientResponse<TResponse>> WriteResponseAsync<TResponse, TElement>(HttpResponseMessage httpResponse, Func<Stream, TResponse> streamConverter)
         {
-            _ = stream ?? throw new ArgumentNullException(nameof(stream));
-            if (!stream.CanRead) throw new ArgumentException($"{nameof(stream)} does not support reading.");
-
-            using var streamReader = new StreamReader(stream);
-            using var jsonTextReader = new JsonTextReader(streamReader);
-            var result = JsonSerializer.CreateDefault().Deserialize<TResult>(jsonTextReader);
-            return await Task.FromResult(result!).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Tries to deserialize the JSON string to the specified type.
-        /// The default implementation used the <see cref="System.Text.Json"/> API.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the object to deserialize to.</typeparam>
-        /// <param name="value">The JSON to deserialize.</param>
-        /// <param name="result">The deserialized object from the JSON string.</param>
-        /// <param name="exception">The exception.</param>
-        /// <returns><see langword="true"/> if OK, otherwise <see langword="false"/>.</returns>
-        public bool TryDeserialize<TResult>(
-            string value,
-            [MaybeNullWhen(false)] out TResult result,
-            [MaybeNullWhen(true)] out Exception exception)
-            where TResult : class
-        {
-            result = default;
-            exception = default;
-
             try
             {
-                result = JsonConvert.DeserializeObject<TResult>(value);
-                if (result is null)
+                if (httpResponse.Content is { })
                 {
-                    exception = new ArgumentNullException(nameof(value), "No result from deserialization.");
-                    return false;
+                    var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    if (stream is { })
+                    {
+                        var results = streamConverter(stream);
+                        return HttpRestClientResponse<TResponse>
+                            .Success(results, httpResponse.StatusCode)
+                            .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                            .AddVersion(httpResponse.Version)
+                            .AddReasonPhrase(httpResponse.ReasonPhrase);
+                    }
                 }
 
-                return true;
-
+                return HttpRestClientResponse<TResponse>
+                    .Success(httpResponse.StatusCode)
+                    .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                exception = ex;
-                return false;
+                return HttpRestClientResponse<TResponse>
+                    .Failure(exception, HttpStatusCode.BadRequest)
+                    .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
             }
         }
 
         /// <summary>
-        /// Determines whether the current exception message is <see cref="HttpRestClientValidation"/>.
+        /// Returns an <see cref="HttpRestClientResponse"/> for a bad request.
         /// </summary>
-        /// <param name="exception">The target exception.</param>
-        /// <param name="validationException">The <see cref="HttpRestClientValidation"/> if OK.</param>
-        /// <returns><see langword="true"/> if exception message is <see cref="HttpRestClientValidation"/>, otherwise <see langword="false"/>.</returns>
-        public bool IsHttpRestClientValidation(HttpRestClientException exception, [MaybeNullWhen(false)] out HttpRestClientValidation validationException)
+        /// <param name="responseBuilder">The response content builder.</param>
+        /// <param name="httpResponse">The target HTTP response.</param>
+        /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
+        internal static async Task<HttpRestClientResponse> WriteBadResponseAsync(Func<Exception, HttpStatusCode, HttpRestClientResponse> responseBuilder, HttpResponseMessage httpResponse)
         {
-            _ = exception ?? throw new ArgumentNullException(nameof(exception));
-
-            if (TryDeserialize(exception.Message, out validationException, out _))
-                return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Returns an async-enumerable from stream used for asynchronous result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="stream">The stream source to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        public async IAsyncEnumerable<TResult> ReadAsyncEnumerableFromStreamAsync<TResult>(Stream stream, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            var jsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault();
-            using var streamReader = new StreamReader(stream);
-            using var jsonTextReader = new JsonTextReader(streamReader);
-            while (await jsonTextReader.ReadAsync(cancellationToken).ConfigureAwait(false))
+            var response = httpResponse.Content switch
             {
-                if (jsonTextReader.TokenType == JsonToken.StartObject)
-                    yield return jsonSerializer.Deserialize<TResult>(jsonTextReader)!;
+                { } => await WriteBadResponseContentAsync().ConfigureAwait(false),
+                null => responseBuilder(new HttpRestClientException(), httpResponse.StatusCode)
+            };
+
+            return response
+                .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                .AddVersion(httpResponse.Version)
+                .AddReasonPhrase(httpResponse.ReasonPhrase);
+
+            async Task<HttpRestClientResponse> WriteBadResponseContentAsync()
+            {
+                var content = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return responseBuilder(new HttpRestClientException(content), httpResponse.StatusCode);
             }
         }
     }

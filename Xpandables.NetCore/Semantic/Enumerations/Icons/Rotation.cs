@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.ComponentModel;
 
-namespace Xpandables.NetCore.Semantic.Enumerations.Icons
+namespace Xpandables.Net.Semantic.Enumerations.Icons
 {
     /// <summary>
     /// Icon rotation

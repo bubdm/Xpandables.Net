@@ -146,40 +146,28 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds an <see cref="IHttpIPAddressHandler"/> to retrieve the IPAddress.
+        /// Adds an <see cref="IHttpIPAddressAccessor"/> to retrieve the IPAddress.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpIPAddressHandler(this IServiceCollection services)
+        public static IServiceCollection AddXHttpIPAddressAccessor(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient<HttpIPAddressDelegateHandler>();
-            services.AddHttpClient<IHttpIPAddressHandler, HttpIPAddressHandler>(httpClient =>
-            {
-                httpClient.BaseAddress = new Uri("https://ipinfo.io/ip");
-                httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
-            })
-            .ConfigurePrimaryHttpMessageHandler<HttpIPAddressDelegateHandler>();
-
+            services.AddTransient<IHttpIPAddressAccessor, HttpIPAddressAccessor>();
             return services;
         }
 
         /// <summary>
-        /// Adds an <see cref="IHttpLocationHandler"/> to retrieve the user location.
+        /// Adds an <see cref="IHttpLocationAccessor"/> to retrieve the user location.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpLocationHandler(this IServiceCollection services)
+        public static IServiceCollection AddXHttpLocationAccessor(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddHttpClient<IHttpLocationHandler, HttpLocationHandler>(httpClient =>
-            {
-                httpClient.BaseAddress = new Uri("http://api.ipstack.com");
-                httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-            });
-
+            services.AddTransient<IHttpLocationAccessor, HttpLocationAccessor>();
             return services;
         }
     }

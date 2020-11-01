@@ -22,12 +22,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.HttpRest;
+
 namespace Xpandables.Net.Http.Network
 {
     /// <summary>
     /// Provides with a handler that is used with <see cref="HttpClient"/> to format IpLocation result before returning response.
     /// </summary>
-    public sealed class HttpIPAddressDelegateHandler : HttpClientHandler
+    internal sealed class HttpIPAddressDelegateHandler : HttpClientHandler
     {
         /// <summary>
         /// Creates an instance of System.Net.Http.HttpResponseMessage based on the information
@@ -48,6 +50,43 @@ namespace Xpandables.Net.Http.Network
             }
 
             return response;
+        }
+    }
+
+    /// <summary>
+    /// Default implementation for <see cref="IHttpIPAddressAccessor"/>.
+    /// </summary>
+    public sealed class HttpIPAddressAccessor : Disposable, IHttpIPAddressAccessor
+    {
+        private readonly IHttpRestClientHandler _httpRestClientHandler;
+        IHttpRestClientHandler IHttpIPAddressAccessor.HttpRestClientHandler => _httpRestClientHandler;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpIPAddressAccessor"/> class that uses the https://ipinfo.io/ip to retrieve the user ip address.
+        /// </summary>
+        public HttpIPAddressAccessor()
+        {
+            var httpClient = new HttpClient(new HttpIPAddressDelegateHandler(), true) { BaseAddress = new Uri("https://ipinfo.io/ip") };
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
+            _httpRestClientHandler = new HttpRestClientHandler(httpClient);
+        }
+
+        private bool _isDisposed;
+
+        /// <summary>
+        /// Disposes the <see cref="IHttpRestClientHandler"/> instance.
+        /// </summary>
+        /// <param name="disposing">Determine whether the dispose has already been called.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (_isDisposed)
+                return;
+
+            if (disposing)
+                _httpRestClientHandler?.Dispose();
+
+            _isDisposed = true;
+            base.Dispose(disposing);
         }
     }
 }

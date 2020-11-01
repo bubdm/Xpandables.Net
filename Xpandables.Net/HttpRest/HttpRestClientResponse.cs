@@ -18,13 +18,10 @@
 using System;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Optionals;
-
-namespace Xpandables.Net.HttpRestClient
+namespace Xpandables.Net.HttpRest
 {
     /// <summary>
     /// Represents an HTTP Rest client response. Implements <see cref="IDisposable"/>.

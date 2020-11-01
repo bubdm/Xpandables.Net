@@ -21,7 +21,7 @@ using System.ComponentModel;
 using System.Globalization;
 
 using Xpandables.Net.Enumerations;
-using Xpandables.Net.HttpRestClient;
+using Xpandables.Net.HttpRest;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Http.Network
@@ -35,7 +35,7 @@ namespace Xpandables.Net.Http.Network
         /// Initializes a new instance of the <see cref="LocationRequest"/> class with IP address to locate.
         /// </summary>
         /// <param name="ipAddress">The target IP address.</param>
-        /// <param name="accessKey">The security access key.</param>
+        /// <param name="accessKey">Your security access key for the http://api.ipstack.com .</param>
         /// <param name="enableSecurity">Enable the security mode = 1 for professional subscription.</param>
         /// <param name="enableHostName">Enable host-name = 1</param>
         /// <param name="output">The output format, the default is <see cref="LocationOutput.Json"/>.</param>

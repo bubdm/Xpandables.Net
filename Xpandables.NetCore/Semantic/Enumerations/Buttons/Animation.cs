@@ -15,7 +15,7 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.NetCore.Semantic.Enumerations.Buttons
+namespace Xpandables.Net.Semantic.Enumerations.Buttons
 {
     /// <summary>
     /// Button animation

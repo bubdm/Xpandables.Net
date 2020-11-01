@@ -26,7 +26,7 @@
     <!--<PackageReleaseNotes>Start All-in-one.</PackageReleaseNotes>-->
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AssemblyName>Xpandables.Net.QrCodes</AssemblyName>
-    <RootNamespace>Xpandables.Net.QrCodes</RootNamespace>
+    <RootNamespace>Xpandables.Net</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <summary>A utility library in .Net5.0 to create qr-codes.</summary>

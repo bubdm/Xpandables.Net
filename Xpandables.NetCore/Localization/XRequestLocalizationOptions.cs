@@ -15,17 +15,15 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Options;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Xpandables.Net.Localization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 
-namespace Xpandables.NetCore.Localization
+namespace Xpandables.Net.Localization
 {
     /// <summary>
     /// Provides with <see cref="RequestLocalizationOptions"/> localization configuration.

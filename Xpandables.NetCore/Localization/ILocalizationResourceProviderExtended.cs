@@ -23,7 +23,7 @@ using System.ComponentModel.DataAnnotations;
 
 using Xpandables.Net.Localization;
 
-namespace Xpandables.NetCore.Localization
+namespace Xpandables.Net.Localization
 {
     /// <summary>
     ///  Defines a method signature to be used to handle custom model binder attributes for localization binding.

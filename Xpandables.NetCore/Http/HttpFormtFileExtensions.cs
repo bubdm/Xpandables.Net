@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Xpandables.NetCore.Http
+namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Provides with helper methods for validating HTTP request file content.

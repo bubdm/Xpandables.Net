@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.ComponentModel;
 
-namespace Xpandables.NetCore.Semantic.Enumerations.Elements
+namespace Xpandables.Net.Semantic.Enumerations.Elements
 {
     /// <summary>
     /// Semantic flag

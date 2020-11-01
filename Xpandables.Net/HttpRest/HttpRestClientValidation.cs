@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Xpandables.Net.HttpRestClient
+namespace Xpandables.Net.HttpRest
 {
     /// <summary>
     /// Contains HTTP Rest API validation model result that contains member name with its list of error messages.

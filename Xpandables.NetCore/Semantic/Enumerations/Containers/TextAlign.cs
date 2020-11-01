@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.ComponentModel;
 
-namespace Xpandables.NetCore.Semantic.Enumerations.Containers
+namespace Xpandables.Net.Semantic.Enumerations.Containers
 {
     /// <summary>
     /// Text align

@@ -21,7 +21,7 @@ using System;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Xpandables.NetCore
+namespace Xpandables.Net
 {
     /// <summary>
     /// Provides with helper to add script to partial views.

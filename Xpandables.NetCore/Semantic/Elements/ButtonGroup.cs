@@ -16,10 +16,10 @@
  *
 ************************************************************************************************************/
 using Microsoft.AspNetCore.Components;
-using Xpandables.NetCore.Semantic.Enumerations;
+using Xpandables.Net.Semantic.Enumerations;
 using Xpandables.Net.Types;
 
-namespace Xpandables.NetCore.Semantic.Elements
+namespace Xpandables.Net.Semantic.Elements
 {
     /// <summary>
     /// Buttons can be grouped.

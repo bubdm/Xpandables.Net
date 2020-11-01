@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.ComponentModel;
 
-namespace Xpandables.NetCore.Semantic.Enumerations
+namespace Xpandables.Net.Semantic.Enumerations
 {
     /// <summary>
     /// Horizontal position

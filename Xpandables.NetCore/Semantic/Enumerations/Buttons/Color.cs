@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.ComponentModel;
 
-namespace Xpandables.NetCore.Semantic.Enumerations.Buttons
+namespace Xpandables.Net.Semantic.Enumerations.Buttons
 {
     /// <summary>
     /// Semantic button color

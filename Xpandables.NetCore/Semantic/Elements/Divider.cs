@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using Microsoft.AspNetCore.Components;
 
-namespace Xpandables.NetCore.Semantic.Elements
+namespace Xpandables.Net.Semantic.Elements
 {
     /// <summary>
     /// A divider visually segments content into groups.

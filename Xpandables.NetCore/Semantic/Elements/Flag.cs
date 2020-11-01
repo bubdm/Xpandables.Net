@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Components;
 
 using Xpandables.Net.Types;
 
-namespace Xpandables.NetCore.Semantic.Elements
+namespace Xpandables.Net.Semantic.Elements
 {
     /// <summary>
     /// A flag is used to represent a political state.

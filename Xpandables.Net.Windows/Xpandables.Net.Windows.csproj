@@ -28,7 +28,7 @@
     <!--<PackageReleaseNotes>Initializes.</PackageReleaseNotes>-->
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AssemblyName>Xpandables.Net.Windows</AssemblyName>
-    <RootNamespace>Xpandables.Net.Windows</RootNamespace>
+    <RootNamespace>Xpandables.Net</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <summary>A utility library in .Net5.0 to extend Windows Forms and WPF behaviors.</summary>

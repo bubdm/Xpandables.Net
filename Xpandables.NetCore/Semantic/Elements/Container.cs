@@ -17,10 +17,10 @@
 ************************************************************************************************************/
 using Microsoft.AspNetCore.Components;
 
-using Xpandables.NetCore.Semantic.Enumerations.Containers;
+using Xpandables.Net.Semantic.Enumerations.Containers;
 using Xpandables.Net.Types;
 
-namespace Xpandables.NetCore.Semantic.Elements
+namespace Xpandables.Net.Semantic.Elements
 {
     /// <summary>
     /// A container limits content to a maximum width.

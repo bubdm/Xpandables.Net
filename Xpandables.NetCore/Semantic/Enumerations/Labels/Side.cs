@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.ComponentModel;
 
-namespace Xpandables.NetCore.Semantic.Enumerations.Labels
+namespace Xpandables.Net.Semantic.Enumerations.Labels
 {
     /// <summary>
     /// Side

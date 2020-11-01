@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Xpandables.NetCore.Semantic
+namespace Xpandables.Net.Semantic
 {
     /// <summary>
     /// Component base for semantic components

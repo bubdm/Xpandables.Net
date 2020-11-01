@@ -17,11 +17,11 @@
 ************************************************************************************************************/
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Xpandables.NetCore.Semantic.Enumerations;
-using Xpandables.NetCore.Semantic.Enumerations.Buttons;
+using Xpandables.Net.Semantic.Enumerations;
+using Xpandables.Net.Semantic.Enumerations.Buttons;
 using Xpandables.Net.Types;
 
-namespace Xpandables.NetCore.Semantic.Elements
+namespace Xpandables.Net.Semantic.Elements
 {
     /// <summary>
     /// A Button indicates a possible user action.

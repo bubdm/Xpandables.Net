@@ -21,9 +21,7 @@ using System.Linq;
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-using Xpandables.Net.HttpRestClient;
-
-namespace Xpandables.NetCore.HttpRestClient
+namespace Xpandables.Net.HttpRest
 {
     /// <summary>
     /// Helpers for <see cref="IHttpRestClientHandler"/>.

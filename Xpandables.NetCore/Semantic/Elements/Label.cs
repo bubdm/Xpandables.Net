@@ -17,11 +17,11 @@
 ************************************************************************************************************/
 using Microsoft.AspNetCore.Components;
 
-using Xpandables.NetCore.Semantic.Enumerations;
-using Xpandables.NetCore.Semantic.Enumerations.Labels;
+using Xpandables.Net.Semantic.Enumerations;
+using Xpandables.Net.Semantic.Enumerations.Labels;
 using Xpandables.Net.Types;
 
-namespace Xpandables.NetCore.Semantic.Elements
+namespace Xpandables.Net.Semantic.Elements
 {
     /// <summary>
     /// A label displays content classification.

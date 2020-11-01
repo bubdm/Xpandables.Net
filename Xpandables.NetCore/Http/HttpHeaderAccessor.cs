@@ -15,17 +15,15 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.AspNetCore.Http;
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-using Xpandables.Net.Http;
+using Microsoft.AspNetCore.Http;
 
-namespace Xpandables.NetCore.Http
+namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Implementation for <see cref="IHttpHeaderAccessor"/>.

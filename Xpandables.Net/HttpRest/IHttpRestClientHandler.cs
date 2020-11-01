@@ -17,46 +17,31 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Queries;
 
-namespace Xpandables.Net.HttpRestClient
+namespace Xpandables.Net.HttpRest
 {
     /// <summary>
-    /// This helper class allows the application author to implement the <see cref="IHttpRestClientHandler"/> interface.
-    /// You must derive from this class in order to customize its behaviors.
+    /// Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.
+    /// The queries and commands should implement one of the following interfaces :
+    /// <see cref="IStringRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, <see cref="IFormUrlEncodedRequest"/>,
+    /// <see cref="IMultipartRequest"/> and <see cref="IQueryStringLocationRequest"/>.
+    /// <para>You should register the handler using one of the extension methods 
+    /// <see langword="AddHttpClient{TClient, TImplementation}(IServiceCollection)"/> and you may add 
+    /// <see langword="HttpClientBuilderExtensions.ConfigureHttpClient(IHttpClientBuilder, Action{HttpClient})"/> or other 
+    /// to customize the client behaviors.</para>
     /// </summary>
-    public sealed class HttpRestClientHandler : Disposable, IHttpRestClientHandler
+    public partial interface IHttpRestClientHandler : IDisposable
     {
-        private readonly IHttpRestClientEngine _httpRestClientEngine;
-
         /// <summary>
-        /// Gets the <see cref="System.Net.Http.HttpClient"/> current instance.
+        /// Contains the <see cref="HttpContent"/> instance for the current handler.
         /// </summary>
-        public HttpClient HttpClient { get; }
-
-        IHttpRestClientEngine IHttpRestClientHandler.HttpRestClientEngine => _httpRestClientEngine;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="HttpRestClientHandler"/> class with the HTTP typed client.
-        /// </summary>
-        /// <param name="httpClient">The HTTP client type to be used.</param>
-        /// <param name="httpRestClientEngine">The HTTP rest client engine.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="httpClient"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientEngine"/> is null.</exception>/// 
-        public HttpRestClientHandler(HttpClient httpClient, IHttpRestClientEngine httpRestClientEngine)
-        {
-            HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            _httpRestClientEngine = httpRestClientEngine ?? throw new ArgumentNullException(nameof(httpRestClientEngine));
-        }
+        HttpClient HttpClient { get; }
 
         /// <summary>
         /// Handles the query as asynchronous operation.
@@ -71,14 +56,14 @@ namespace Xpandables.Net.HttpRestClient
         {
             try
             {
-                using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(query, HttpClient, cancellationToken).ConfigureAwait(false);
+                using var request = await WriteHttpRequestMessageAsync(query, HttpClient, cancellationToken).ConfigureAwait(false);
 
                 // Due to the fact that the result is an IAsyncEnumerable, the response can not be disposed before.
                 var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
                     return await WriteResponseAsync<IAsyncEnumerable<TResult>, TResult>(response, stream =>
-                        _httpRestClientEngine.ReadAsyncEnumerableFromStreamAsync<TResult>(stream, cancellationToken));
+                        stream.ReadAsyncEnumerableFromStreamAsync<TResult>(cancellationToken));
 
                 return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)await WriteBadResponseAsync(
                     HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure, response)
@@ -120,14 +105,14 @@ namespace Xpandables.Net.HttpRestClient
         {
             try
             {
-                using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(command, HttpClient, cancellationToken).ConfigureAwait(false);
+                using var request = await WriteHttpRequestMessageAsync(command, HttpClient, cancellationToken).ConfigureAwait(false);
                 using var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
                 {
                     return HttpRestClientResponse
                         .Success()
-                        .AddHeaders(_httpRestClientEngine.ReadHttpResponseHeaders(response))
+                        .AddHeaders(ReadHttpResponseHeaders(response))
                         .AddVersion(response.Version)
                         .AddReasonPhrase(response.ReasonPhrase);
                 }
@@ -157,7 +142,7 @@ namespace Xpandables.Net.HttpRestClient
         {
             try
             {
-                using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(command, HttpClient, cancellationToken).ConfigureAwait(false);
+                using var request = await WriteHttpRequestMessageAsync(command, HttpClient, cancellationToken).ConfigureAwait(false);
                 using var response = await HttpClient.SendAsync(
                     request,
                     HttpCompletionOption.ResponseHeadersRead,
@@ -165,7 +150,7 @@ namespace Xpandables.Net.HttpRestClient
                     .ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
-                    return await WriteResponseAsync<TResult, TResult>(response, stream => _httpRestClientEngine.DeserializeJsonFromStreamAsync<TResult>(stream, cancellationToken).RunSync()).ConfigureAwait(false);
+                    return await WriteResponseAsync<TResult, TResult>(response, stream => stream.DeserializeJsonFromStream<TResult>()).ConfigureAwait(false);
 
                 return (HttpRestClientResponse<TResult>)await WriteBadResponseAsync(
                     HttpRestClientResponse<TResult>.Failure, response)
@@ -193,7 +178,7 @@ namespace Xpandables.Net.HttpRestClient
         {
             try
             {
-                using var request = await _httpRestClientEngine.WriteHttpRequestMessageAsync(query, HttpClient, cancellationToken).ConfigureAwait(false);
+                using var request = await WriteHttpRequestMessageAsync(query, HttpClient, cancellationToken).ConfigureAwait(false);
                 using var response = await HttpClient.SendAsync(
                     request,
                     HttpCompletionOption.ResponseHeadersRead,
@@ -201,7 +186,7 @@ namespace Xpandables.Net.HttpRestClient
                     .ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
-                    return await WriteResponseAsync<TResult, TResult>(response, stream => _httpRestClientEngine.DeserializeJsonFromStreamAsync<TResult>(stream, cancellationToken).RunSync()).ConfigureAwait(false);
+                    return await WriteResponseAsync<TResult, TResult>(response, stream => stream.DeserializeJsonFromStream<TResult>()).ConfigureAwait(false);
 
                 return (HttpRestClientResponse<TResult>)await WriteBadResponseAsync(
                     HttpRestClientResponse<TResult>.Failure, response)
@@ -214,78 +199,6 @@ namespace Xpandables.Net.HttpRestClient
                                             || exception is TaskCanceledException)
             {
                 return HttpRestClientResponse<TResult>.Failure(exception);
-            }
-        }
-
-        private bool _isDisposed;
-
-        /// <summary>
-        /// Disposes the HTTP client instance.
-        /// </summary>
-        /// <param name="disposing">Determine whether the dispose has already been called.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (_isDisposed)
-                return;
-
-            if (disposing)
-                HttpClient?.Dispose();
-
-            _isDisposed = true;
-            base.Dispose(disposing);
-        }
-
-        private async Task<HttpRestClientResponse<TResponse>> WriteResponseAsync<TResponse, TElement>(HttpResponseMessage httpResponse, Func<Stream, TResponse> streamConverter)
-        {
-            try
-            {
-                if (httpResponse.Content is { })
-                {
-                    var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                    if (stream is { })
-                    {
-                        var results = streamConverter(stream);
-                        return HttpRestClientResponse<TResponse>
-                            .Success(results, httpResponse.StatusCode)
-                            .AddHeaders(_httpRestClientEngine.ReadHttpResponseHeaders(httpResponse))
-                            .AddVersion(httpResponse.Version)
-                            .AddReasonPhrase(httpResponse.ReasonPhrase);
-                    }
-                }
-
-                return HttpRestClientResponse<TResponse>
-                    .Success(httpResponse.StatusCode)
-                    .AddHeaders(_httpRestClientEngine.ReadHttpResponseHeaders(httpResponse))
-                    .AddVersion(httpResponse.Version)
-                    .AddReasonPhrase(httpResponse.ReasonPhrase);
-            }
-            catch (Exception exception)
-            {
-                return HttpRestClientResponse<TResponse>
-                    .Failure(exception, HttpStatusCode.BadRequest)
-                    .AddHeaders(_httpRestClientEngine.ReadHttpResponseHeaders(httpResponse))
-                    .AddVersion(httpResponse.Version)
-                    .AddReasonPhrase(httpResponse.ReasonPhrase);
-            }
-        }
-
-        private async Task<HttpRestClientResponse> WriteBadResponseAsync(Func<Exception, HttpStatusCode, HttpRestClientResponse> responseBuilder, HttpResponseMessage httpResponse)
-        {
-            var response = httpResponse.Content switch
-            {
-                { } => await WriteBadResponseContentAsync().ConfigureAwait(false),
-                null => responseBuilder(new HttpRestClientException(), httpResponse.StatusCode)
-            };
-
-            return response
-                .AddHeaders(_httpRestClientEngine.ReadHttpResponseHeaders(httpResponse))
-                .AddVersion(httpResponse.Version)
-                .AddReasonPhrase(httpResponse.ReasonPhrase);
-
-            async Task<HttpRestClientResponse> WriteBadResponseContentAsync()
-            {
-                var content = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return responseBuilder(new HttpRestClientException(content), httpResponse.StatusCode);
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,22 +14,18 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Net;
-using System.Threading.Tasks;
 
-using Xpandables.Net.HttpRestClient;
-
-namespace Xpandables.Net.Http.Network
+namespace Xpandables.Net.HttpRest
 {
     /// <summary>
-    /// Provides with a method to request IP address.
+    /// An interface representing an <see cref="HttpRestClientAttribute"/> to be dynamically applied on the implementing class.
+    /// This interface takes priority over the <see cref="HttpRestClientAttribute"/> declaration.
     /// </summary>
-    public interface IHttpIPAddressHandler : IDisposable
+    public interface IHttpRestClientAttributeProvider
     {
         /// <summary>
-        /// Asynchronously gets the IPAddress of the current caller.
+        /// Returns the <see cref="HttpRestClientAttribute"/> to be applied on the current instance.
         /// </summary>
-        Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync();
+        HttpRestClientAttribute ReadHttpRestClientAttribute();
     }
 }

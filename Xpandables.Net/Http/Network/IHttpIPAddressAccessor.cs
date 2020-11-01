@@ -15,17 +15,28 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 using System.Net;
+using System.Threading.Tasks;
 
-using Xpandables.Net.HttpRestClient;
-
-using Xpandables.Net.Queries;
+using Xpandables.Net.HttpRest;
 
 namespace Xpandables.Net.Http.Network
 {
     /// <summary>
-    /// Represents a query to request an <see cref="IPAddress"/>.
+    /// Provides with a method to request IP address.
     /// </summary>
-    [HttpRestClient(Path = "", IsNullable = true, IsSecured = false, Method = "Get")]
-    public sealed class IPRequest : IQuery<string> { }
+    public interface IHttpIPAddressAccessor : IDisposable
+    {
+        internal IHttpRestClientHandler HttpRestClientHandler { get; }
+
+        /// <summary>
+        /// Asynchronously gets the IPAddress of the current caller.
+        /// </summary>
+        public async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync()
+        {
+            var response = await HttpRestClientHandler.HandleAsync(new IPAddressRequest()).ConfigureAwait(false);
+            return response.ConvertTo(IPAddress.TryParse(response.Result, out var ipAddress) ? ipAddress : IPAddress.None);
+        }
+    }
 }

@@ -18,7 +18,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace Xpandables.NetCore.Localization
+namespace Xpandables.Net.Localization
 {
     /// <summary>
     /// Provides with data annotations validator/binder for localization engine.
