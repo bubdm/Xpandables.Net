@@ -43,7 +43,7 @@ namespace Xpandables.Net.Http
         /// <returns>An instance of string token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to write token from source. See inner exception.</exception>
-        public ValueToken WriteToken(object source) => throw new NotImplementedException();
+        public virtual ValueToken WriteToken(object source) => throw new NotImplementedException();
 
         /// <summary>
         /// Returns the collection of claims from the specified token.
@@ -60,6 +60,6 @@ namespace Xpandables.Net.Http
         /// <param name="token">The token string.</param>
         /// <returns>An collection of claims if OK.</returns>
         /// <exception cref="InvalidOperationException">Unable to read claims from token object. See inner exception.</exception>
-        public IEnumerable<Claim> ReadToken(ValueToken token) => ReadToken(token.Value);
+        public virtual IEnumerable<Claim> ReadToken(ValueToken token) => ReadToken(token.Value);
     }
 }

@@ -83,7 +83,7 @@ namespace Xpandables.Net.Localization
         /// Each view model is associated with a resource type name that matches the <see langword="{ViewModelName}Localization"/> or can contains
         /// only one localization file in case of singe file use.
         /// </summary>
-        public CorrelationCollection<string, Type> ViewModelResourceTypeCollection
+        public virtual CorrelationCollection<string, Type> ViewModelResourceTypeCollection
         {
             get
             {

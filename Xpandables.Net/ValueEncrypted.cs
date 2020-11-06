@@ -20,8 +20,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 
 using Xpandables.Net.Asynchronous;
+using Xpandables.Net.Strings;
 
-namespace Xpandables.Net.Strings
+namespace Xpandables.Net
 {
     /// <summary>
     /// Defines a representation of an encrypted value, its key and its salt.

@@ -34,7 +34,7 @@ namespace Xpandables.Net.Validations
         /// Gets the zero-base order in which the validator will be executed.
         /// The default value is zero.
         /// </summary>
-        public int Order => 0;
+        public virtual int Order => 0;
 
         /// <summary>
         /// Asynchronously validates the argument and throws the <see cref="ValidationException"/> if necessary.
@@ -43,7 +43,7 @@ namespace Xpandables.Net.Validations
         /// <param name="argument">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
         /// <exception cref="ValidationException">Any validation exception.</exception>
-        public async Task ValidateAsync(TArgument argument)
+        public virtual async Task ValidateAsync(TArgument argument)
         {
             Validator.ValidateObject(argument, new ValidationContext(argument, null, null), true);
             await Task.CompletedTask.ConfigureAwait(false);

@@ -33,7 +33,7 @@ namespace Xpandables.Net.Http.Network
         /// <summary>
         /// Asynchronously gets the IPAddress of the current caller.
         /// </summary>
-        public async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync()
+        public virtual async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync()
         {
             var response = await HttpRestClientHandler.HandleAsync(new IPAddressRequest()).ConfigureAwait(false);
             return response.ConvertTo(IPAddress.TryParse(response.Result, out var ipAddress) ? ipAddress : IPAddress.None);

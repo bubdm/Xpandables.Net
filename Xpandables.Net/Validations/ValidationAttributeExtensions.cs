@@ -27,10 +27,11 @@ namespace Xpandables.Net.Validations
         /// <summary>
         /// Creates a new <see cref="ValidationException"/> using the specified arguments.
         /// </summary>
+        /// <param name="_"></param>
         /// <param name="errorMessage">The error message.</param>
         /// <param name="value">The value of the object that caused the attribute to trigger the validation error.</param>
         /// <param name="memberNames">The list of member names that have validation errors.</param>
-        public static ValidationException CreateValidationException(string? errorMessage, object? value, params string[]? memberNames)
+        public static ValidationException CreateValidationException(this object _, string? errorMessage, object? value, params string[]? memberNames)
             => new ValidationException(new ValidationResult(errorMessage, memberNames), default, value);
     }
 }

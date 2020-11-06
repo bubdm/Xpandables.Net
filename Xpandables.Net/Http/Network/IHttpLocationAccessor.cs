@@ -34,7 +34,7 @@ namespace Xpandables.Net.Http.Network
         /// </summary>
         /// <param name="request">The request to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        public async Task<HttpRestClientResponse<GeoLocation>> ReadLocationAsync(LocationRequest request)
+        public virtual async Task<HttpRestClientResponse<GeoLocation>> ReadLocationAsync(LocationRequest request)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
             return await HttpRestClientHandler.HandleAsync(request).ConfigureAwait(false);

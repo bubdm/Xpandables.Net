@@ -39,7 +39,7 @@ namespace Xpandables.Net.Validations
         /// <param name="argument">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
         /// <exception cref="ValidationException">Any validation exception.</exception>
-        public new async Task ValidateAsync(TArgument argument)
+        public new virtual async Task ValidateAsync(TArgument argument)
         {
             var tasks = ValidationInstances.OrderBy(o => o.Order).Select(validator => validator.ValidateAsync(argument));
             await Task.WhenAll(tasks).ConfigureAwait(false);

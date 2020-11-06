@@ -42,7 +42,7 @@ namespace Xpandables.Net.Strings
         /// <exception cref="ArgumentException">The <paramref name="length"/> must be greater than zero
         /// and lower or equal to <see cref="ushort.MaxValue"/>.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="lookupCharacters"/> is null.</exception>
-        public string Generate(ushort length, string lookupCharacters = LookupCharacters)
+        public virtual string Generate(ushort length, string lookupCharacters = LookupCharacters)
         {
             if (length == 0) throw new ArgumentException($"{nameof(length)} must be greater than zero and lower or equal to {ushort.MaxValue}");
             if (string.IsNullOrWhiteSpace(lookupCharacters)) throw new ArgumentNullException(nameof(lookupCharacters));
@@ -78,7 +78,7 @@ namespace Xpandables.Net.Strings
         /// <exception cref="ArgumentOutOfRangeException">The <paramref name="length"/> must be greater than zero
         /// and lower or equal to <see cref="ushort.MaxValue"/>.</exception>
         /// <exception cref="InvalidOperationException">Generating the salt failed. See inner exception.</exception>
-        public string GenerateSalt(ushort length = 32)
+        public virtual string GenerateSalt(ushort length = 32)
         {
             if (length == 0) throw new ArgumentException($"{nameof(length)} must be greater than zero and lower or equal to {ushort.MaxValue}");
 
@@ -104,7 +104,7 @@ namespace Xpandables.Net.Strings
         /// <returns>A new string of the specified length with random characters.</returns>
         /// <exception cref="ArgumentException">The <paramref name="length"/> must be greater than zero
         /// and lower or equal to <see cref="ushort.MaxValue"/>.</exception>
-        public string Generate(ushort length) => Generate(length, LookupCharacters);
+        public virtual string Generate(ushort length) => Generate(length, LookupCharacters);
     }
 
     /// <summary>

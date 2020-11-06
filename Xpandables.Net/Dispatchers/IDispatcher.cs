@@ -50,7 +50,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        public IAsyncEnumerable<TResult> InvokeEnumerableAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
+        public virtual IAsyncEnumerable<TResult> InvokeEnumerableAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
@@ -67,33 +67,33 @@ namespace Xpandables.Net.Dispatchers
             return DoAsyncEnumerableInvokeAsync(handler.HandleAsync(query, cancellationToken), cancellationToken);
         }
 
-        /// <summary>
-        /// Asynchronously invokes the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query
-        /// and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
-        /// </summary>
-        /// <typeparam name="TQuery">Type of the query.</typeparam>
-        /// <typeparam name="TResult">Type of the result.</typeparam>
-        /// <param name="query">The query to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
-        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        public IAsyncEnumerable<TResult> InvokeEnumerableAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
-            where TQuery : class, IAsyncQuery<TResult>
-        {
-            _ = query ?? throw new ArgumentNullException(nameof(query));
+        ///// <summary>
+        ///// Asynchronously invokes the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query
+        ///// and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
+        ///// </summary>
+        ///// <typeparam name="TQuery">Type of the query.</typeparam>
+        ///// <typeparam name="TResult">Type of the result.</typeparam>
+        ///// <param name="query">The query to act on.</param>
+        ///// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        ///// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        ///// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
+        ///// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
+        ///// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        ///// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        ///// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
+        //public virtual IAsyncEnumerable<TResult> InvokeEnumerableAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+        //    where TQuery : class, IAsyncQuery<TResult>
+        //{
+        //    _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            var handler = DispatcherHandlerProvider.GetHandler<IAsyncQueryHandler<TQuery, TResult>>()
-                ?? throw new NotImplementedException($"The matching query handler for {typeof(TQuery).Name} is missing.");
+        //    var handler = DispatcherHandlerProvider.GetHandler<IAsyncQueryHandler<TQuery, TResult>>()
+        //        ?? throw new NotImplementedException($"The matching query handler for {typeof(TQuery).Name} is missing.");
 
-            if (!handler.CanHandle(query))
-                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
+        //    if (!handler.CanHandle(query))
+        //        throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
 
-            return DoAsyncEnumerableInvokeAsync(handler.HandleAsync(query, cancellationToken), cancellationToken);
-        }
+        //    return DoAsyncEnumerableInvokeAsync(handler.HandleAsync(query, cancellationToken), cancellationToken);
+        //}
 
         private static async IAsyncEnumerable<TResult> DoAsyncEnumerableInvokeAsync<TResult>(IAsyncEnumerable<TResult> asyncEnumerable, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
@@ -139,7 +139,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task InvokeAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+        public virtual async Task InvokeAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
             where TCommand : class, IAsyncCommand
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
@@ -181,7 +181,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public async Task<TResult> InvokeCommandAsync<TCommand, TResult>(TCommand command, CancellationToken cancellationToken = default)
+        public virtual async Task<TResult> InvokeCommandAsync<TCommand, TResult>(TCommand command, CancellationToken cancellationToken = default)
             where TCommand : class, IAsyncCommand<TResult>
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
@@ -222,7 +222,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public async Task<TResult> InvokeAsync<TResult>(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default)
+        public virtual async Task<TResult> InvokeAsync<TResult>(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
@@ -267,7 +267,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public async Task<TResult> InvokeQueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+        public virtual async Task<TResult> InvokeQueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
             where TQuery : class, IQuery<TResult>
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
@@ -308,7 +308,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public async Task<TResult> InvokeAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+        public virtual async Task<TResult> InvokeAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 

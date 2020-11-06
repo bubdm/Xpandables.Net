@@ -44,7 +44,7 @@ namespace Xpandables.Net.Interception
         /// </summary>
         /// <param name="invocation">The method argument to be called.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="invocation"/> is null.</exception>
-        public void Intercept(IInvocation invocation)
+        public virtual void Intercept(IInvocation invocation)
         {
             _ = invocation ?? throw new ArgumentNullException(nameof(invocation));
             invocation.Proceed();

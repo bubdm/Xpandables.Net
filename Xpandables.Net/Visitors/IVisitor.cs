@@ -32,7 +32,7 @@ namespace Xpandables.Net.Visitors
         /// Gets the zero-base order in which the visitor will be applied.
         /// The default value is zero.
         /// </summary>
-        public int Order => 0;
+        public virtual int Order => 0;
 
         /// <summary>
         /// Declares a Visit operation.
@@ -42,7 +42,7 @@ namespace Xpandables.Net.Visitors
         /// <param name="element">Element to be visited.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public async Task VisitAsync(TElement element)
+        public virtual async Task VisitAsync(TElement element)
         {
             _ = element ?? throw new ArgumentNullException(nameof(element));
             await Task.CompletedTask.ConfigureAwait(false);

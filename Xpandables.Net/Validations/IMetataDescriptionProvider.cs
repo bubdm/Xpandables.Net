@@ -47,7 +47,7 @@ namespace Xpandables.Net.Validations
         /// <exception cref="ArgumentNullException">Exception thrown when the <paramref name="instance"/> is null.</exception>
         /// <exception cref="ArgumentNullException">Exception thrown when the <paramref name="metadataDescriptionTypeName"/> is null.</exception>
         /// <exception cref="ArgumentNullException">Exception thrown when the <paramref name="assemblies"/> is null.</exception>
-        public void AddProvider<TSource>(TSource instance, string metadataDescriptionTypeName, Assembly[] assemblies)
+        public virtual void AddProvider<TSource>(TSource instance, string metadataDescriptionTypeName, Assembly[] assemblies)
             where TSource : class
             => AddProviderFromStringName(instance, metadataDescriptionTypeName, assemblies);
 
@@ -60,7 +60,7 @@ namespace Xpandables.Net.Validations
         /// <param name="metadataDescriptionType">Contains the meta-data type description to add to the current <paramref name="instance"/>.</param>
         /// <exception cref="ArgumentNullException">Exception thrown when the <paramref name="instance"/> is null.</exception>
         /// <exception cref="ArgumentNullException">Exception thrown when the <paramref name="metadataDescriptionType"/> is null.</exception>
-        public void AddProvider<TSource>(TSource instance, Type metadataDescriptionType)
+        public virtual void AddProvider<TSource>(TSource instance, Type metadataDescriptionType)
             where TSource : class
             => AddMetadataDescriptionType(instance, metadataDescriptionType);
 
@@ -72,7 +72,7 @@ namespace Xpandables.Net.Validations
         /// <typeparam name="TSource">The type of the object.</typeparam>
         /// <param name="instance">Contains the instance to which the meta-data type description will be added.</param>
         /// <exception cref="ArgumentNullException">Exception thrown when the <paramref name="instance"/> is null.</exception>
-        public void AddProvider<TSource>(TSource instance)
+        public virtual void AddProvider<TSource>(TSource instance)
             where TSource : class
         {
             _ = instance ?? throw new ArgumentNullException(nameof(instance));

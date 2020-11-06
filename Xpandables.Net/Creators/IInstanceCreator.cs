@@ -52,7 +52,7 @@ namespace Xpandables.Net.Creators
         /// <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         [return: MaybeNull]
-        public object Create(Type type)
+        public virtual object Create(Type type)
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -78,7 +78,7 @@ namespace Xpandables.Net.Creators
         /// <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         [return: MaybeNull]
-        public object Create<TParam>(Type type, TParam param)
+        public virtual object Create<TParam>(Type type, TParam param)
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -106,7 +106,7 @@ namespace Xpandables.Net.Creators
         /// <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         [return: MaybeNull]
-        public object Create<TParam1, TParam2>(Type type, TParam1 param1, TParam2 param2)
+        public virtual object Create<TParam1, TParam2>(Type type, TParam1 param1, TParam2 param2)
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -138,7 +138,7 @@ namespace Xpandables.Net.Creators
         /// <returns>An instance of the <paramref name="type"/> if OK or null.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="type"/> is null.</exception>
         [return: MaybeNull]
-        public object Create<TParam1, TParam2, TParam3>(Type type, TParam1 param1, TParam2 param2, TParam3 param3)
+        public virtual object Create<TParam1, TParam2, TParam3>(Type type, TParam1 param1, TParam2 param2, TParam3 param3)
         {
             _ = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -159,7 +159,7 @@ namespace Xpandables.Net.Creators
         /// <summary>
         /// Clear the creator cache.
         /// </summary>
-        public void ClearCache() => Cache.Clear();
+        public virtual void ClearCache() => Cache.Clear();
 
         internal TDelegate GetConstructorDelegate<TDelegate>(Type type, params Type[] parameterTypes)
             where TDelegate : Delegate

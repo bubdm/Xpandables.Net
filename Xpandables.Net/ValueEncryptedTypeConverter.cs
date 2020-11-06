@@ -19,7 +19,7 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace Xpandables.Net.Strings
+namespace Xpandables.Net
 {
     /// <summary>
     /// Provides a type converter to convert <see cref="ValueEncrypted"/> objects to <see cref="string"/>and from <see cref="string"/> representations.

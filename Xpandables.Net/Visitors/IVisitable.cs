@@ -36,7 +36,7 @@ namespace Xpandables.Net.Visitors
         /// <param name="visitor">The visitor to be applied on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public async Task AcceptAsync(IVisitor<TVisitable> visitor)
+        public virtual async Task AcceptAsync(IVisitor<TVisitable> visitor)
         {
             _ = visitor ?? throw new ArgumentNullException(nameof(visitor));
             await visitor.VisitAsync((TVisitable)this).ConfigureAwait(false);

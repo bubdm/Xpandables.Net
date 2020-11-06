@@ -39,7 +39,7 @@ namespace Xpandables.Net.Visitors
         /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="element"/> does not implement <see cref="IVisitable{TVisitable}"/>.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public new async Task VisitAsync(TElement element)
+        public new virtual async Task VisitAsync(TElement element)
         {
             _ = element ?? throw new ArgumentNullException(nameof(element));
 

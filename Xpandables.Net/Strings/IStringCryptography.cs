@@ -47,7 +47,7 @@ namespace Xpandables.Net.Strings
         /// <exception cref="ArgumentException">The <paramref name="keySize"/> must be greater than zero
         /// and lower or equal to <see cref="ushort.MaxValue"/>.</exception>
         /// <exception cref="InvalidOperationException">The encryption failed. See inner exception.</exception>
-        public async Task<ValueEncrypted> EncryptAsync(string value, ushort keySize)
+        public virtual async Task<ValueEncrypted> EncryptAsync(string value, ushort keySize)
         {
             _ = value ?? throw new ArgumentNullException(nameof(value));
             if (keySize == 0) throw new ArgumentException($"{nameof(keySize)} must be greater than zero and lower or equal to {ushort.MaxValue}");
@@ -70,7 +70,7 @@ namespace Xpandables.Net.Strings
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The encryption failed. See inner exception.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "SCS0011:CBC mode is weak", Justification = "<Pending>")]
-        public async Task<ValueEncrypted> EncryptAsync(string value, string? key = default, string? salt = default)
+        public virtual async Task<ValueEncrypted> EncryptAsync(string value, string? key = default, string? salt = default)
         {
             if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
             key ??= StringGenerator.Generate(12);
@@ -132,7 +132,7 @@ namespace Xpandables.Net.Strings
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="salt"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The decryption failed. See inner exception.</exception>
-        public async Task<string> DecryptAsync(string key, string value, string salt) => await DecryptAsync(new ValueEncrypted(key, value, salt)).ConfigureAwait(false);
+        public virtual async Task<string> DecryptAsync(string key, string value, string salt) => await DecryptAsync(new ValueEncrypted(key, value, salt)).ConfigureAwait(false);
 
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Xpandables.Net.Strings
         /// <returns>A decrypted string from the encrypted object.</returns>
         /// <exception cref="InvalidOperationException">The decryption failed. See inner exception.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "SCS0011:CBC mode is weak", Justification = "<Pending>")]
-        public async Task<string> DecryptAsync(ValueEncrypted encrypted)
+        public virtual async Task<string> DecryptAsync(ValueEncrypted encrypted)
         {
             try
             {
@@ -198,7 +198,7 @@ namespace Xpandables.Net.Strings
         /// <param name="value">The value to compare with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The comparison failed. See inner exception.</exception>
-        public async Task<bool> AreEqual(ValueEncrypted encrypted, string value)
+        public virtual async Task<bool> AreEqual(ValueEncrypted encrypted, string value)
         {
             _ = value ?? throw new ArgumentNullException(nameof(value));
 
