@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "dOJ4ypTz5waXq/JGd3RHmiAOdRZaHP2JLeL3EZA8vq3g0pLzWZGBUY21fxCdciPj78YAcIR03BDDO3e+7bXu5w==",
+  "dgSpecHash": "Mm/m/obj8657Mo7FhR0vlPJxEhEj7tUs1BvN6jrvkTr7T4kKwANEJBjKk+YgSbHzEQ83vKB/P0cBlRhHEJFz4w==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net.Windows\\Xpandables.Net.Windows.csproj",
   "expectedPackageFiles": [
@@ -9,8 +9,7 @@
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.codequality.analyzers\\3.3.1\\microsoft.codequality.analyzers.3.3.1.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netcore.analyzers\\3.3.1\\microsoft.netcore.analyzers.3.3.1.nupkg.sha512",
     "C:\\Users\\fewan\\.nuget\\packages\\microsoft.netframework.analyzers\\3.3.1\\microsoft.netframework.analyzers.3.3.1.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
-    "C:\\Users\\fewan\\.nuget\\packages\\xpandables.net\\5.0.0-rc.2.1.3\\xpandables.net.5.0.0-rc.2.1.3.nupkg.sha512"
+    "C:\\Users\\fewan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
   ],
   "logs": []
 }
