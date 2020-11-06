@@ -202,12 +202,12 @@ namespace Xpandables.Net.Dispatchers
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            if (!typeof(QueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { query.GetType(), typeof(TResult) }))
+            if (!typeof(AsyncQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { query.GetType(), typeof(TResult) }))
                 throw new InvalidOperationException("Building Query wrapper failed.", typeException);
 
-            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IQueryHandlerWrapper<TResult> handler)
+            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IAsyncQueryHandlerWrapper<TResult> handler)
                 throw new NotImplementedException(
-                    $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} is registered.");
+                    $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerWrapper<,>).Name} is registered.");
 
             if (!handler.CanHandle(query))
                 throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");

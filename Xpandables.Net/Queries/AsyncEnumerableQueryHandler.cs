@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,34 +16,35 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of the <see cref="IAsyncQueryHandler{TQuery, TResult}"/> interface without dedicated class.
+    /// Represents a helper class that allows implementation of the <see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}"/> interface without dedicated class.
     /// </summary>
     /// <typeparam name="TQuery">Type of argument to act on.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class QueryHandler<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
-        where TQuery : class, IAsyncQuery<TResult>
+    public sealed class AsyncEnumerableQueryHandler<TQuery, TResult> : IAsyncEnumerableQueryHandler<TQuery, TResult>
+        where TQuery : class, IAsyncEnumerableQuery<TResult>
     {
-        private readonly Func<TQuery, CancellationToken, Task<TResult>> _handler;
+        private readonly Func<TQuery, CancellationToken, IAsyncEnumerable<TResult>> _handler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryHandler{TQuery, TResult}"/> class with the delegate to be used
-        /// as <see cref="IAsyncQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/> implementation.
+        /// Initializes a new instance of the <see cref="AsyncEnumerableQueryHandler{TQuery, TResult}"/> class with the delegate to be used
+        /// as <see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/> implementation.
         /// </summary>
         /// <param name="handler">The delegate to be used when the handler will be invoked.
         /// <para>The delegate should match all the behaviors expected in
-        /// the <see cref="IAsyncQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/>
+        /// the <see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
-        public QueryHandler(Func<TQuery, CancellationToken, Task<TResult>> handler) => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
+        public AsyncEnumerableQueryHandler(Func<TQuery, CancellationToken, IAsyncEnumerable<TResult>> handler)
+            => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
 
         /// <summary>
-        /// Asynchronously handles the specified query using the delegate from the constructor and returns the task result.
+        /// Asynchronously handles the specified query using the delegate from the constructor and returns an asynchronous enumerable of result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -50,7 +52,7 @@ namespace Xpandables.Net.Queries
         /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public async Task<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default) => await _handler(query, cancellationToken).ConfigureAwait(false);
+        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
+        public IAsyncEnumerable<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default) => _handler(query, cancellationToken);
     }
 }

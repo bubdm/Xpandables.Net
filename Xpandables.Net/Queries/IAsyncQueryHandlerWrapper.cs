@@ -24,7 +24,7 @@ namespace Xpandables.Net.Queries
     /// Represents a wrapper interface that avoids use of C# dynamics with query pattern and allows type inference for <see cref="IAsyncQueryHandler{TQuery, TResult}"/>.
     /// </summary>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public interface IQueryHandlerWrapper<TResult> : ICanHandle
+    public interface IAsyncQueryHandlerWrapper<TResult> : ICanHandle
     {
         /// <summary>
         /// Asynchronously handles the specified query and returns the task result.

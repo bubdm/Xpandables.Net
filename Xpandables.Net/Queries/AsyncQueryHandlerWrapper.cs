@@ -21,21 +21,21 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// Implementation for <see cref="IQueryHandlerWrapper{TResult}"/>.
+    /// Implementation for <see cref="IAsyncQueryHandlerWrapper{TResult}"/>.
     /// </summary>
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class QueryHandlerWrapper<TQuery, TResult> : IQueryHandlerWrapper<TResult>
+    public sealed class AsyncQueryHandlerWrapper<TQuery, TResult> : IAsyncQueryHandlerWrapper<TResult>
         where TQuery : class, IAsyncQuery<TResult>
     {
         private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryHandlerWrapper{TQuery, TResult}"/> class with the  handler to be wrapped.
+        /// Initializes a new instance of the <see cref="AsyncQueryHandlerWrapper{TQuery, TResult}"/> class with the  handler to be wrapped.
         /// </summary>
         /// <param name="decoratee">The query handler instance to be wrapped.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        public QueryHandlerWrapper(IAsyncQueryHandler<TQuery, TResult> decoratee)
+        public AsyncQueryHandlerWrapper(IAsyncQueryHandler<TQuery, TResult> decoratee)
             => _decoratee = decoratee ?? throw new ArgumentNullException($"{decoratee} : {nameof(TQuery)}.{nameof(TResult)}");
 
         /// <summary>

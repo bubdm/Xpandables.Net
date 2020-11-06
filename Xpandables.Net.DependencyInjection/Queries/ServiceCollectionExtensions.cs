@@ -63,7 +63,7 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddTransient(typeof(AsyncEnumerableQueryHandlerWrapper<,>));
-            services.AddTransient(typeof(QueryHandlerWrapper<,>));
+            services.AddTransient(typeof(AsyncQueryHandlerWrapper<,>));
             return services;
         }
     }
