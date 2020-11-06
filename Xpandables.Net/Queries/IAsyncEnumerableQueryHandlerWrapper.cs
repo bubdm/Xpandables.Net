@@ -22,10 +22,10 @@ using System.Threading;
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// Represents a wrapper interface that avoids use of C# dynamics with query pattern and allows type inference for <see cref="IAsyncQueryHandler{TQuery, TResult}"/>.
+    /// Represents a wrapper interface that avoids use of C# dynamics with query pattern and allows type inference for <see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}"/>.
     /// </summary>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public interface IAsyncQueryHandlerWrapper<TResult> : ICanHandle
+    public interface IAsyncEnumerableQueryHandlerWrapper<TResult> : ICanHandle
     {
         /// <summary>
         /// Asynchronously handles the specified query and returns an asynchronous result type.
@@ -37,6 +37,6 @@ namespace Xpandables.Net.Queries
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<TResult> HandleAsync(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<TResult> HandleAsync(IAsyncEnumerableQuery<TResult> query, CancellationToken cancellationToken = default);
     }
 }

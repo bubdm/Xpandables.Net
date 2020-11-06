@@ -33,10 +33,10 @@ namespace Xpandables.Net.Validations
     /// </summary>
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class AsyncQueryValidatorDecorator<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
-        where TQuery : class, IAsyncQuery<TResult>, IValidationDecorator
+    public sealed class AsyncQueryValidatorDecorator<TQuery, TResult> : IAsyncEnumerableQueryHandler<TQuery, TResult>
+        where TQuery : class, IAsyncEnumerableQuery<TResult>, IValidationDecorator
     {
-        private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
+        private readonly IAsyncEnumerableQueryHandler<TQuery, TResult> _decoratee;
         private readonly ICompositeValidation<TQuery> _validator;
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Xpandables.Net.Validations
         /// <param name="validator">The validator instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
-        public AsyncQueryValidatorDecorator(IAsyncQueryHandler<TQuery, TResult> decoratee, ICompositeValidation<TQuery> validator)
+        public AsyncQueryValidatorDecorator(IAsyncEnumerableQueryHandler<TQuery, TResult> decoratee, ICompositeValidation<TQuery> validator)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));

@@ -31,13 +31,13 @@ namespace Xpandables.Net.Api
 {
     public sealed record Contact(int Id, string Name, string Address, string City);
     [HttpRestClient(Path = "api/contacts", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
-    public sealed record SelectAll : IAsyncQuery<Contact>, IQueryStringLocationRequest
+    public sealed record SelectAll : IAsyncEnumerableQuery<Contact>, IQueryStringLocationRequest
     {
         public IDictionary<string, string?>? GetQueryStringSource() => new Dictionary<string, string?>();
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed record Select([Required] int Id) : IQuery<Contact?>, IPathStringLocationRequest
+    public sealed record Select([Required] int Id) : IAsyncQuery<Contact?>, IPathStringLocationRequest
     {
         [return: NotNull]
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), $"{Id}" } };
@@ -68,12 +68,12 @@ namespace Xpandables.Net.Api
         };
     }
 
-    public sealed class SelectAllHandler : IAsyncQueryHandler<SelectAll, Contact>
+    public sealed class SelectAllHandler : IAsyncEnumerableQueryHandler<SelectAll, Contact>
     {
         public IAsyncEnumerable<Contact> HandleAsync(SelectAll query, CancellationToken cancellationToken = default) => new AsyncEnumerable<Contact>(ContactService.Contacts);
     }
 
-    public sealed class SelectHandler : IQueryHandler<Select, Contact?>
+    public sealed class SelectHandler : IAsyncQueryHandler<Select, Contact?>
     {
         public Task<Contact?> HandleAsync(Select query, CancellationToken cancellationToken = default)
         {

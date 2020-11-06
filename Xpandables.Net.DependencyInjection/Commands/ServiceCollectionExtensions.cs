@@ -110,7 +110,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds and configures the <see cref="IAsyncCommandHandler{TCommand}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
+        /// Adds and configures the <see cref="IAsyncCommandHandler{TCommand}"/> and <see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>

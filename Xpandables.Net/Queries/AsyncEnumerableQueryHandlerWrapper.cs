@@ -22,21 +22,21 @@ using System.Threading;
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// Implementation for <see cref="IAsyncQueryHandlerWrapper{TResult}"/>.
+    /// Implementation for <see cref="IAsyncEnumerableQueryHandlerWrapper{TResult}"/>.
     /// </summary>
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class AsyncQueryHandlerWrapper<TQuery, TResult> : IAsyncQueryHandlerWrapper<TResult>
-        where TQuery : class, IAsyncQuery<TResult>
+    public sealed class AsyncEnumerableQueryHandlerWrapper<TQuery, TResult> : IAsyncEnumerableQueryHandlerWrapper<TResult>
+        where TQuery : class, IAsyncEnumerableQuery<TResult>
     {
-        private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
+        private readonly IAsyncEnumerableQueryHandler<TQuery, TResult> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncQueryHandlerWrapper{TQuery, TResult}"/> class with the handler to be wrapped.
+        /// Initializes a new instance of the <see cref="AsyncEnumerableQueryHandlerWrapper{TQuery, TResult}"/> class with the handler to be wrapped.
         /// </summary>
         /// <param name="decoratee">The query handler instance to be wrapped.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        public AsyncQueryHandlerWrapper(IAsyncQueryHandler<TQuery, TResult> decoratee)
+        public AsyncEnumerableQueryHandlerWrapper(IAsyncEnumerableQueryHandler<TQuery, TResult> decoratee)
             => _decoratee = decoratee ?? throw new ArgumentNullException($"{decoratee} : {nameof(TQuery)}.{nameof(TResult)}");
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Xpandables.Net.Queries
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        public IAsyncEnumerable<TResult> HandleAsync(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<TResult> HandleAsync(IAsyncEnumerableQuery<TResult> query, CancellationToken cancellationToken = default)
             => _decoratee.HandleAsync((TQuery)query, cancellationToken);
     }
 }

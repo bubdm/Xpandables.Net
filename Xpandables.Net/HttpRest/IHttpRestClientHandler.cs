@@ -52,7 +52,7 @@ namespace Xpandables.Net.HttpRest
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        public virtual async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
+        public virtual async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IAsyncEnumerableQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace Xpandables.Net.HttpRest
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         public virtual async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
-            where TQuery : class, IAsyncQuery<TResult>
+            where TQuery : class, IAsyncEnumerableQuery<TResult>
             => await HandleAsync(query, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Xpandables.Net.HttpRest
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        public virtual async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+        public virtual async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             try
             {

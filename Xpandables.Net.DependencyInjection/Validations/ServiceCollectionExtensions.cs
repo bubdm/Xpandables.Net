@@ -45,8 +45,8 @@ namespace Xpandables.Net.DependencyInjection
             services.AddTransient(typeof(ICompositeValidation<>), typeof(CompositeValidation<>));
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandValidatorDecorator<>));
             services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandValidatorDecorator<,>));
-            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryValidatorDecorator<,>));
-            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryValidatorDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncQueryValidatorDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(QueryValidatorDecorator<,>));
             return services;
         }
 

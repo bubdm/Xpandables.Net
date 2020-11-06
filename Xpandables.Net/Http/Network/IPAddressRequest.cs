@@ -27,5 +27,5 @@ namespace Xpandables.Net.Http.Network
     /// Represents a query to request an <see cref="IPAddress"/>.
     /// </summary>
     [HttpRestClient(Path = "", IsNullable = true, IsSecured = false, Method = "Get")]
-    public sealed class IPAddressRequest : IQuery<string> { }
+    public sealed class IPAddressRequest : IAsyncQuery<string> { }
 }

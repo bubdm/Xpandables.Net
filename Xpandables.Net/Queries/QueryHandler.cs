@@ -21,22 +21,22 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of the <see cref="IQueryHandler{TQuery, TResult}"/> interface without dedicated class.
+    /// Represents a helper class that allows implementation of the <see cref="IAsyncQueryHandler{TQuery, TResult}"/> interface without dedicated class.
     /// </summary>
     /// <typeparam name="TQuery">Type of argument to act on.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class QueryHandler<TQuery, TResult> : IQueryHandler<TQuery, TResult>
-        where TQuery : class, IQuery<TResult>
+    public sealed class QueryHandler<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
+        where TQuery : class, IAsyncQuery<TResult>
     {
         private readonly Func<TQuery, CancellationToken, Task<TResult>> _handler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryHandler{TQuery, TResult}"/> class with the delegate to be used
-        /// as <see cref="IQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/> implementation.
+        /// as <see cref="IAsyncQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/> implementation.
         /// </summary>
         /// <param name="handler">The delegate to be used when the handler will be invoked.
         /// <para>The delegate should match all the behaviors expected in
-        /// the <see cref="IQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/>
+        /// the <see cref="IAsyncQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
         public QueryHandler(Func<TQuery, CancellationToken, Task<TResult>> handler) => _handler = handler ?? throw new ArgumentNullException(nameof(handler));

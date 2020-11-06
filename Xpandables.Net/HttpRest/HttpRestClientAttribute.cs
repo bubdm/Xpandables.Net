@@ -27,7 +27,7 @@ namespace Xpandables.Net.HttpRest
 {
     /// <summary>
     /// Describes the parameters for a request used with <see cref="IHttpRestClientHandler"/>.
-    /// The attribute should decorate implementations of <see cref="IAsyncQuery{TResult}"/> or <see cref="IAsyncCommand"/>
+    /// The attribute should decorate implementations of <see cref="IAsyncEnumerableQuery{TResult}"/> or <see cref="IAsyncCommand"/>
     /// in order to be used with <see cref="IHttpRestClientHandler"/>.
     /// Your class can implement the <see cref="IHttpRestClientAttributeProvider"/> to dynamically return a <see cref="HttpRestClientAttribute"/>.
     /// </summary>

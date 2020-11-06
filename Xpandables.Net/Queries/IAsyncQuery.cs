@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +16,10 @@
  *
 ************************************************************************************************************/
 
-using System.Collections.Generic;
-
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// This interface is used as a marker for queries when using the asynchronous query pattern that contains a <see cref="IAsyncEnumerable{TResult}"/>  of specific-type result.
+    /// This interface is used as a marker for queries when using the synchronous query pattern that contains a specific-type result.
     /// Class implementation is used with the <see cref="IAsyncQueryHandler{TQuery, TResult}"/> where
     /// "TQuery" is a class that implements the <see cref="IAsyncQuery{TResult}"/> interface. This can also be enhanced with some useful decorators.
     /// </summary>

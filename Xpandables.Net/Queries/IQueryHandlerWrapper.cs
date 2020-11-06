@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// Represents a wrapper interface that avoids use of C# dynamics with query pattern and allows type inference for <see cref="IQueryHandler{TQuery, TResult}"/>.
+    /// Represents a wrapper interface that avoids use of C# dynamics with query pattern and allows type inference for <see cref="IAsyncQueryHandler{TQuery, TResult}"/>.
     /// </summary>
     /// <typeparam name="TResult">Type of the result.</typeparam>
     public interface IQueryHandlerWrapper<TResult> : ICanHandle
@@ -36,6 +36,6 @@ namespace Xpandables.Net.Queries
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        Task<TResult> HandleAsync(IQuery<TResult> query, CancellationToken cancellationToken = default);
+        Task<TResult> HandleAsync(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default);
     }
 }

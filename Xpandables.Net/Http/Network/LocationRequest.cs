@@ -29,7 +29,7 @@ namespace Xpandables.Net.Http.Network
     /// <summary>
     /// Represents a query to request IP Address Geo-location.
     /// </summary>
-    public class LocationRequest : IQuery<GeoLocation>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
+    public class LocationRequest : IAsyncQuery<GeoLocation>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationRequest"/> class with IP address to locate.

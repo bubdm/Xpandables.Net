@@ -34,10 +34,10 @@ namespace Xpandables.Net.Correlation
     /// </summary>
     /// <typeparam name="TQuery">Type of the query.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public sealed class AsyncQueryCorrelationDecorator<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
-        where TQuery : class, IAsyncQuery<TResult>, ICorrelationDecorator
+    public sealed class AsyncQueryCorrelationDecorator<TQuery, TResult> : IAsyncEnumerableQueryHandler<TQuery, TResult>
+        where TQuery : class, IAsyncEnumerableQuery<TResult>, ICorrelationDecorator
     {
-        private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
+        private readonly IAsyncEnumerableQueryHandler<TQuery, TResult> _decoratee;
         private readonly AsyncCorrelationContext _correlationContext;
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Xpandables.Net.Correlation
         /// <param name="decoratee">The decorated query handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
-        public AsyncQueryCorrelationDecorator(AsyncCorrelationContext correlationContext, IAsyncQueryHandler<TQuery, TResult> decoratee)
+        public AsyncQueryCorrelationDecorator(AsyncCorrelationContext correlationContext, IAsyncEnumerableQueryHandler<TQuery, TResult> decoratee)
         {
             _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));

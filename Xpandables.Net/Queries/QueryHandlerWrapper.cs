@@ -26,16 +26,16 @@ namespace Xpandables.Net.Queries
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
     public sealed class QueryHandlerWrapper<TQuery, TResult> : IQueryHandlerWrapper<TResult>
-        where TQuery : class, IQuery<TResult>
+        where TQuery : class, IAsyncQuery<TResult>
     {
-        private readonly IQueryHandler<TQuery, TResult> _decoratee;
+        private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryHandlerWrapper{TQuery, TResult}"/> class with the  handler to be wrapped.
         /// </summary>
         /// <param name="decoratee">The query handler instance to be wrapped.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        public QueryHandlerWrapper(IQueryHandler<TQuery, TResult> decoratee)
+        public QueryHandlerWrapper(IAsyncQueryHandler<TQuery, TResult> decoratee)
             => _decoratee = decoratee ?? throw new ArgumentNullException($"{decoratee} : {nameof(TQuery)}.{nameof(TResult)}");
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Xpandables.Net.Queries
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public async Task<TResult> HandleAsync(IQuery<TResult> query, CancellationToken cancellationToken = default)
+        public async Task<TResult> HandleAsync(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
             => await _decoratee.HandleAsync((TQuery)query, cancellationToken).ConfigureAwait(false);
     }
 }

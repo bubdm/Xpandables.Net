@@ -39,7 +39,7 @@ namespace Xpandables.Net.Api.Controllers
         [HttpGet]
         public async IAsyncEnumerable<Contact> SelectAllAsync([FromQuery] SelectAll selectAll, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await foreach (var contact in _dispatcher.InvokeEnumerableAsync(selectAll, cancellationToken).ConfigureAwait(false))
+            await foreach (var contact in _dispatcher.InvokeAsync(selectAll, cancellationToken).ConfigureAwait(false))
                 yield return contact;
         }
 

@@ -31,7 +31,7 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="IAsyncQueryHandler{TQuery, TResult}"/> to the services with transient life time.
+        /// Adds the <see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -43,8 +43,8 @@ namespace Xpandables.Net.DependencyInjection
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             var queryTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && (type.GetInterface(typeof(IAsyncQueryHandler<,>).Name) is not null || type.GetInterface(typeof(IQueryHandler<,>).Name) is not null))
-                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IAsyncQueryHandler<,>).Name) ?? type.GetInterface(typeof(IQueryHandler<,>).Name)! })
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && (type.GetInterface(typeof(IAsyncEnumerableQueryHandler<,>).Name) is not null || type.GetInterface(typeof(IAsyncQueryHandler<,>).Name) is not null))
+                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IAsyncEnumerableQueryHandler<,>).Name) ?? type.GetInterface(typeof(IAsyncQueryHandler<,>).Name)! })
                 .ToList();
 
             foreach (var queryType in queryTypes)
@@ -62,7 +62,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient(typeof(AsyncQueryHandlerWrapper<,>));
+            services.AddTransient(typeof(AsyncEnumerableQueryHandlerWrapper<,>));
             services.AddTransient(typeof(QueryHandlerWrapper<,>));
             return services;
         }
