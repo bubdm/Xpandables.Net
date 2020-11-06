@@ -81,20 +81,6 @@ namespace Xpandables.Net.HttpRest
         }
 
         /// <summary>
-        /// Handles the query as asynchronous operation.
-        /// Make use of <see langword="using"/> key work when call.
-        /// </summary>
-        /// <typeparam name="TQuery">Type of the query.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        public virtual async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
-            where TQuery : class, IAsyncEnumerableQuery<TResult>
-            => await HandleAsync(query, cancellationToken).ConfigureAwait(false);
-
-        /// <summary>
         /// Handles the command as asynchronous operation.
         /// </summary>
         /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>

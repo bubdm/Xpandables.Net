@@ -23,6 +23,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Asynchronous;
+
 namespace Xpandables.Net.Strings
 {
     /// <summary>
@@ -198,11 +200,11 @@ namespace Xpandables.Net.Strings
         /// <param name="value">The value to compare with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The comparison failed. See inner exception.</exception>
-        public virtual async Task<bool> AreEqual(ValueEncrypted encrypted, string value)
+        public bool AreEqual(ValueEncrypted encrypted, string value)
         {
             _ = value ?? throw new ArgumentNullException(nameof(value));
 
-            var comp = await EncryptAsync(value, encrypted.Key, encrypted.Salt).ConfigureAwait(false);
+            var comp = EncryptAsync(value, encrypted.Key, encrypted.Salt).RunSync();
             return comp == encrypted;
         }
     }

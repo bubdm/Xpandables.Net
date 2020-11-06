@@ -19,9 +19,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 
-using Xpandables.Net.Asynchronous;
-using Xpandables.Net.Strings;
-
 namespace Xpandables.Net
 {
     /// <summary>
@@ -62,22 +59,6 @@ namespace Xpandables.Net
         /// <param name="value">The output value.</param>
         /// <param name="salt">the output salt value.</param>
         public void Deconstruct(out string key, out string value, out string salt) => (key, value, salt) = (Key, Value, Salt);
-
-        /// <summary>
-        /// Compares the encrypted value with the specified one.
-        /// Returns <see langword="true"/> if equality otherwise <see langword="false"/>.
-        /// </summary>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="stringCryptography">The cryptography instance.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="stringCryptography"/> is null.</exception>
-        public bool IsEqualTo(string value, IStringCryptography stringCryptography)
-        {
-            _ = value ?? throw new ArgumentNullException(nameof(value));
-            _ = stringCryptography ?? throw new ArgumentNullException(nameof(stringCryptography));
-
-            return stringCryptography.AreEqual(this, value).RunSync();
-        }
 
         /// <summary>
         /// Contains the encryption key.
