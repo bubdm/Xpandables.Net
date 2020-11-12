@@ -18,7 +18,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Visitors
+using Xpandables.Net.Visitors;
+
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// Defines an Accept operation that takes a visitor as an argument.

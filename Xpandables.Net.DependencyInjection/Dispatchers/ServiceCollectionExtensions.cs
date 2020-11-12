@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-using Xpandables.Net.Dispatchers;
+using Xpandables.Net.CQRS;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -29,7 +29,7 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the default <see cref="IDispatcher"/> implementation to the services with scoped life time.
+        /// Adds the default <see cref="IDispatcher"/> and <see cref="IDispatcherHandlerProvider"/> implementations to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -43,7 +43,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TDispatcher"/> type to the services with scoped life time.
+        /// Adds the <typeparamref name="TDispatcher"/> and <typeparamref name="TDispatcherHandlerProvider"/> types to the services with scoped life time.
         /// </summary>
         /// <typeparam name="TDispatcher">The dispatcher type implementation.</typeparam>
         /// <typeparam name="TDispatcherHandlerProvider">The dispatcher handler provider type implementation.</typeparam>

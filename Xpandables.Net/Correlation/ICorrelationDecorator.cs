@@ -15,7 +15,9 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Correlation
+using Xpandables.Net.Correlation;
+
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// A marker interface that allows the command/query class to add correlation decorator context event after control flow.

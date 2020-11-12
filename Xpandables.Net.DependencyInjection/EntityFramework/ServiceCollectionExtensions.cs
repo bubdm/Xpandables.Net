@@ -19,9 +19,8 @@ using System;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Xpandables.Net.Commands;
+using Xpandables.Net.CQRS;
 using Xpandables.Net.EntityFramework;
-using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -31,16 +30,15 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="IDataContext"/> class implementation found from the executing assembly to the services with scoped life time.
+        /// Adds the <see cref="IDataContext"/> class reference implementation found from the executing assembly to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <param name="implementationFactory">The factory that creates the data context.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDataContext<TDataContext>(this IServiceCollection services, Func<IServiceProvider, TDataContext> implementationFactory)
+        public static IServiceCollection AddXDataContext<TDataContext>(this IServiceCollection services)
             where TDataContext : class, IDataContext
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            var serviceDescriptor = new ServiceDescriptor(typeof(IDataContext), implementationFactory, ServiceLifetime.Scoped);
+            var serviceDescriptor = new ServiceDescriptor(typeof(IDataContext), provider => provider.GetRequiredService<TDataContext>(), ServiceLifetime.Scoped);
             services.Add(serviceDescriptor);
             services.AddScoped(typeof(IDataContext<>), typeof(DataContext<>));
 

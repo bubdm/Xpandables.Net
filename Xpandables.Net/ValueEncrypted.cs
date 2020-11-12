@@ -28,7 +28,7 @@ namespace Xpandables.Net
     [Serializable]
     [DebuggerDisplay("Key = {Key}, Value = {Value}, Salt = {Salt}")]
     [TypeConverter(typeof(ValueEncryptedTypeConverter))]
-    public readonly struct ValueEncrypted
+    public sealed record ValueEncrypted
     {
         /// <summary>
         /// Returns a new instance of <see cref="ValueEncrypted"/> with the key and value.
@@ -63,49 +63,17 @@ namespace Xpandables.Net
         /// <summary>
         /// Contains the encryption key.
         /// </summary>
-        public readonly string Key { get; }
+        public string Key { get; }
 
         /// <summary>
         /// Contains the base64 encrypted value.
         /// </summary>
-        public readonly string Value { get; }
+        public string Value { get; }
 
         /// <summary>
         /// Contains the base64 salt value.
         /// </summary>
-        public readonly string Salt { get; }
-
-        /// <summary>
-        /// Compares the <see cref="ValueEncrypted"/> with other object.
-        /// </summary>
-        /// <param name="obj">Object to compare with.</param>
-        public override bool Equals(object? obj) => obj is ValueEncrypted encryptedValue && this == encryptedValue;
-
-        /// <summary>
-        /// Applies equality operator.
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        public static bool operator ==(ValueEncrypted left, ValueEncrypted right) => left.Equals(right);
-
-        /// <summary>
-        /// Applies non equality operator.
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        public static bool operator !=(ValueEncrypted left, ValueEncrypted right) => !(left == right);
-
-        /// <summary>
-        /// Compares <see cref="ValueEncrypted"/> with the value.
-        /// </summary>
-        /// <param name="other">Option to compare with.</param>
-        public bool Equals(ValueEncrypted other) => (Key, Value, Salt) == (other.Key, other.Value, other.Salt);
-
-        /// <summary>
-        /// Computes the hash-code for the <see cref="ValueEncrypted"/> instance.
-        /// </summary>
-        public override int GetHashCode()
-            => Key.GetHashCode(StringComparison.InvariantCultureIgnoreCase) ^ Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase) ^ Salt.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
+        public string Salt { get; }
 
         /// <summary>
         /// Creates a string representation of the <see cref="ValueEncrypted"/>.

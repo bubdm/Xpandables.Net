@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -27,7 +28,6 @@ namespace Xpandables.Net
     /// <summary>
     /// The domain object base implementation that provides an identifier and a key generator for derived class.
     /// This is an <see langword="abstract"/>class.
-    /// <para>You have to decorate the <see cref="Id"/> property with key attributes or use another one.</para>
     /// </summary>
     [DebuggerDisplay("Id = {Id}")]
     public abstract class Entity
@@ -43,14 +43,8 @@ namespace Xpandables.Net
         /// Gets the domain object identity.
         /// The value comes from <see cref="KeyGenerator"/>.
         /// </summary>
+        [Key]
         public string Id { get; protected set; }
-
-        /// <summary>
-        /// Determines whether or not the underlying instance is new.
-        /// The default implementation just compare the <see cref="Id"/> value to its default one.
-        /// You must override this property in order to match your request.
-        /// </summary>
-        public bool IsNew() => string.IsNullOrWhiteSpace(Id);
 
         /// <summary>
         /// Gets a value indicating whether or not the underlying instance is marked as deleted.
@@ -63,17 +57,17 @@ namespace Xpandables.Net
         public bool IsActive { get; protected set; } = true;
 
         /// <summary>
-        /// Gets the creation date of the underlying instance.
+        /// Gets the creation date of the underlying instance. This property is automatically set by the context.
         /// </summary>
         public DateTime CreatedOn { get; protected set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// Gets the last update date of the underlying instance if exist.
+        /// Gets the last update date of the underlying instance if exist. This property is automatically set by the context.
         /// </summary>
         public DateTime? UpdatedOn { get; protected set; }
 
         /// <summary>
-        /// Gets the deleted date of the underlying instance if exist.
+        /// Gets the deleted date of the underlying instance if exist. This property is automatically set by the context.
         /// </summary>
         public DateTime? DeletedOn { get; protected set; }
 

@@ -16,8 +16,9 @@
 ************************************************************************************************************/
 
 using Xpandables.Net.Correlation;
+using Xpandables.Net.EntityFramework;
 
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// A marker interface that allows the command handler class implementation to use persistence data across the control flow.

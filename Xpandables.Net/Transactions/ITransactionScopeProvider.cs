@@ -18,6 +18,8 @@
 using System;
 using System.Transactions;
 
+using Xpandables.Net.CQRS;
+
 namespace Xpandables.Net.Transactions
 {
     /// <summary>

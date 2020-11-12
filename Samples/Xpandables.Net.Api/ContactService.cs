@@ -23,9 +23,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Asynchronous;
-using Xpandables.Net.Commands;
+using Xpandables.Net.CQRS;
 using Xpandables.Net.HttpRest;
-using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api
 {

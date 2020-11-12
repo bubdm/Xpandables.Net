@@ -59,8 +59,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="configureOptions"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public static IServiceCollection AddXServiceExport(
-            this IServiceCollection services, IConfiguration configuration, Action<ExportServiceOptions> configureOptions)
+        public static IServiceCollection AddXServiceExport(this IServiceCollection services, IConfiguration configuration, Action<ExportServiceOptions> configureOptions)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = configuration ?? throw new ArgumentNullException(nameof(configuration));

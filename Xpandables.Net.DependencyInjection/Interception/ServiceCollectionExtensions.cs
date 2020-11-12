@@ -21,6 +21,7 @@ using System.Reflection;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Xpandables.Net.CQRS;
 using Xpandables.Net.Interception;
 
 namespace Xpandables.Net.DependencyInjection
@@ -66,8 +67,9 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXInterceptor(this IServiceCollection services, Type serviceType, Type interceptorType)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            if (serviceType is null) throw new ArgumentNullException(nameof(serviceType));
-            if (interceptorType is null) throw new ArgumentNullException(nameof(interceptorType));
+            _ = serviceType ?? throw new ArgumentNullException(nameof(serviceType));
+            _ = interceptorType ?? throw new ArgumentNullException(nameof(interceptorType));
+
             if (!typeof(IInterceptor).IsAssignableFrom(interceptorType))
                 throw new ArgumentException($"{nameof(interceptorType)} must implement {nameof(IInterceptor)}.");
 
@@ -93,8 +95,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
         public static IServiceCollection AddXInterceptor<TInterceptor>(
             this IServiceCollection services, bool bindToInterface, Predicate<Type> predicate, params Assembly[] assemblies)
-            where TInterceptor : class, IInterceptor
-            => services.AddXInterceptor(typeof(TInterceptor), bindToInterface, predicate, assemblies);
+            where TInterceptor : class, IInterceptor => services.AddXInterceptor(typeof(TInterceptor), bindToInterface, predicate, assemblies);
 
         /// <summary>
         /// Ensures that the supplied interceptor is returned, wrapping all original registered

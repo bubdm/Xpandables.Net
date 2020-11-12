@@ -15,7 +15,9 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Interception
+using Xpandables.Net.Interception;
+
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// A marker interface that allows the class implementation to be intercepted.

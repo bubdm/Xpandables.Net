@@ -14,10 +14,9 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Xpandables.Net.Commands;
-using Xpandables.Net.Queries;
+using Xpandables.Net.Validations;
 
-namespace Xpandables.Net.Validations
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// A marker interface that allows the command/query class to be decorated with the validation behavior according to the class type :

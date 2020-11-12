@@ -50,9 +50,9 @@ namespace Xpandables.Net.Interception
             Arguments = new ParameterCollection(targetMethod, argsValue);
         }
 
-        public IInvocation AddException(Exception? exception) => this.Assign(invocation => invocation.Exception = exception);
-        public IInvocation AddReturnValue(object? returnValue) => this.Assign(invocation => invocation.ReturnValue = returnValue);
-        public IInvocation AddElapsedTime(TimeSpan elapsedTime) => this.Assign(invocation => invocation.ElapsedTime = elapsedTime);
+        public IInvocation AddException(Exception? exception) => this.With(invocation => invocation.Exception = exception);
+        public IInvocation AddReturnValue(object? returnValue) => this.With(invocation => invocation.ReturnValue = returnValue);
+        public IInvocation AddElapsedTime(TimeSpan elapsedTime) => this.With(invocation => invocation.ElapsedTime = elapsedTime);
         public void Proceed()
         {
             var watch = Stopwatch.StartNew();

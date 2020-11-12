@@ -18,9 +18,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Queries;
+using Xpandables.Net.Correlation;
 
-namespace Xpandables.Net.Correlation
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// This decorator class allows the application author to add post/rollback event support to query control flow.

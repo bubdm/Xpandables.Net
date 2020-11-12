@@ -43,37 +43,21 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddScoped<IHttpHeaderAccessor, THttpHeaderAccessor>();
             return services;
-        }
+        }     
 
         /// <summary>
-        /// Adds the specified HTTP request file validation that implements the <see cref="IHttpFormFileEngine"/>.
+        /// Adds the specified HTTP request token claim provider that implements the <see cref="ITokenEntityProvider"/>.
         /// </summary>
-        /// <typeparam name="THttpFormFileEngine">The type of HTTP form file engine.</typeparam>
+        /// <typeparam name="THttpTokenEntityProvider">The type of HTTP token claim provider.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpForFileEngine<THttpFormFileEngine>(
+        public static IServiceCollection AddXHttpTokenClaimProvider<THttpTokenEntityProvider>(
             this IServiceCollection services)
-            where THttpFormFileEngine : class, IHttpFormFileEngine
+            where THttpTokenEntityProvider : class, ITokenEntityProvider
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IHttpFormFileEngine, THttpFormFileEngine>();
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the specified HTTP request token claim provider that implements the <see cref="IHttpTokenClaimProvider"/>.
-        /// </summary>
-        /// <typeparam name="THttpTokenClaimProvider">The type of HTTP token claim provider.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpTokenClaimProvider<THttpTokenClaimProvider>(
-            this IServiceCollection services)
-            where THttpTokenClaimProvider : class, IHttpTokenClaimProvider
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.AddScoped<IHttpTokenClaimProvider, THttpTokenClaimProvider>();
+            services.AddScoped<ITokenEntityProvider, THttpTokenEntityProvider>();
             return services;
         }
 
@@ -89,10 +73,10 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = tokenClaimProviderType ?? throw new ArgumentNullException(nameof(tokenClaimProviderType));
 
-            if (!typeof(IHttpTokenClaimProvider).IsAssignableFrom(tokenClaimProviderType))
-                throw new ArgumentException($"{nameof(tokenClaimProviderType)} must implement {nameof(IHttpTokenClaimProvider)}.");
+            if (!typeof(ITokenEntityProvider).IsAssignableFrom(tokenClaimProviderType))
+                throw new ArgumentException($"{nameof(tokenClaimProviderType)} must implement {nameof(ITokenEntityProvider)}.");
 
-            return services.AddScoped(typeof(IHttpTokenClaimProvider), tokenClaimProviderType);
+            return services.AddScoped(typeof(ITokenEntityProvider), tokenClaimProviderType);
         }
 
         /// <summary>
@@ -102,7 +86,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXHttpTokenEngine<THttpTokenEngine>(this IServiceCollection services)
-            where THttpTokenEngine : class, IHttpTokenEngine
+            where THttpTokenEngine : class, ITokenEngine
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
@@ -113,7 +97,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the specified token engine to the services collection with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <param name="tokenEngineType">The type that implements <see cref="IHttpTokenEngine"/>.</param>
+        /// <param name="tokenEngineType">The type that implements <see cref="ITokenEngine"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="tokenEngineType"/> is null.</exception>
         public static IServiceCollection AddXHttpTokenEngine(this IServiceCollection services, Type tokenEngineType)
@@ -121,7 +105,7 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = tokenEngineType ?? throw new ArgumentNullException(nameof(tokenEngineType));
 
-            services.AddScoped(typeof(IHttpTokenEngine), tokenEngineType);
+            services.AddScoped(typeof(ITokenEngine), tokenEngineType);
             return services;
         }
 
@@ -139,7 +123,7 @@ namespace Xpandables.Net.DependencyInjection
             builder.ConfigurePrimaryHttpMessageHandler(provider =>
             {
                 var httpHeaderAccessor = provider.GetRequiredService<IHttpHeaderAccessor>();
-                return new AuthorizationHttpTokenHandler(httpHeaderAccessor);
+                return new HttpRestClientAuthorizationHandler(httpHeaderAccessor);
             });
 
             return builder;

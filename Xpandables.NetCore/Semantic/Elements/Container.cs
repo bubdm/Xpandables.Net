@@ -18,7 +18,6 @@
 using Microsoft.AspNetCore.Components;
 
 using Xpandables.Net.Semantic.Enumerations.Containers;
-using Xpandables.Net.Types;
 
 namespace Xpandables.Net.Semantic.Elements
 {

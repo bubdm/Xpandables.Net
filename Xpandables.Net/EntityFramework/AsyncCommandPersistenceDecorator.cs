@@ -19,9 +19,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Commands;
+using Xpandables.Net.EntityFramework;
 
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// This class allows the application author to add persistence support to command control flow.

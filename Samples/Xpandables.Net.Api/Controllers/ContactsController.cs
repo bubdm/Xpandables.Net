@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Xpandables.Net.Dispatchers;
+using Xpandables.Net.CQRS;
 
 namespace Xpandables.Net.Api.Controllers
 {

@@ -20,9 +20,9 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-using Xpandables.Net.Queries;
+using Xpandables.Net.Correlation;
 
-namespace Xpandables.Net.Correlation
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// This class allows the application author to add post/rollback event support to query control flow.

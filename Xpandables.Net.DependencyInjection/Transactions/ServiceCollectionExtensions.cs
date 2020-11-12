@@ -19,8 +19,7 @@ using System;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Xpandables.Net.Commands;
-using Xpandables.Net.Queries;
+using Xpandables.Net.CQRS;
 using Xpandables.Net.Transactions;
 
 namespace Xpandables.Net.DependencyInjection

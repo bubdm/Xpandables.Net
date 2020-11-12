@@ -15,7 +15,9 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Transactions
+using Xpandables.Net.Transactions;
+
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// A marker interface that allows the command/query handler class implementation to be decorated with transaction behavior according to

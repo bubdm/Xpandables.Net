@@ -8,7 +8,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Xpandables.Net.Api;
 using Xpandables.Net.Http.Network;
 using Xpandables.Net.HttpRest;
-using Xpandables.Net.Strings;
 
 namespace Xpandables.Net.Tests
 {

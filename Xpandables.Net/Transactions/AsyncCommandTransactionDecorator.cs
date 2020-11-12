@@ -20,9 +20,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 
-using Xpandables.Net.Commands;
+using Xpandables.Net.Transactions;
 
-namespace Xpandables.Net.Transactions
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// This class allows the application author to add transaction support to command control flow.

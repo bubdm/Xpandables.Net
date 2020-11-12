@@ -21,8 +21,7 @@ using System.Reflection;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Xpandables.Net.Commands;
-using Xpandables.Net.Queries;
+using Xpandables.Net.CQRS;
 using Xpandables.Net.Validations;
 
 namespace Xpandables.Net.DependencyInjection
@@ -33,6 +32,19 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
+        /// Adds <see cref="IMetadataDescriptionProvider"/> to the services collection.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXMetadataDescriptionProvider(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddTransient<IMetadataDescriptionProvider, MetadataDescriptionProvider>();
+            return services;
+        }
+
+
+        /// <summary>
         /// Adds validation behavior to commands and queries that are decorated with the <see cref="IValidationDecorator"/> to the services
         /// with transient life time.
         /// </summary>
@@ -40,7 +52,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXValidationDecorator(this IServiceCollection services)
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
+            _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddTransient(typeof(ICompositeValidation<>), typeof(CompositeValidation<>));
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandValidatorDecorator<>));

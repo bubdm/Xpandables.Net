@@ -24,7 +24,7 @@ namespace Xpandables.Net
     /// <summary>
     /// Defines the <see cref="ValuePicture"/> class that holds properties for an image.
     /// </summary>
-    public readonly struct ValuePicture
+    public sealed record ValuePicture
     {
         /// <summary>
         /// Initializes a new instance <see cref="ValuePicture"/> with all properties.
@@ -61,9 +61,18 @@ namespace Xpandables.Net
         /// Creates a new picture from another.
         /// </summary>
         /// <param name="source">the picture source.</param>
-        /// <returns>A new instance of <see cref="ValuePicture"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public static ValuePicture Create(ValuePicture source) => new ValuePicture(source.Title, source.Content, source.Height, source.Width, source.Extension);
+        public ValuePicture(ValuePicture source)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+
+            Title = source.Title;
+            Content = new byte[source.Content.Length];
+            source.Content.CopyTo(Content, 0);
+            Height = source.Height;
+            Width = source.Width;
+            Extension = source.Extension;
+        }
 
         /// <summary>
         /// Clears the content of the picture.
@@ -80,26 +89,26 @@ namespace Xpandables.Net
         /// <summary>
         /// Gets the picture title.
         /// </summary>
-        public readonly string Title { get; }
+        public string Title { get; }
 
         /// <summary>
         /// Gets the picture byte content.
         /// </summary>
-        public readonly byte[] Content { get; }
+        public byte[] Content { get; }
 
         /// <summary>
         /// Gets the height, in pixels, of this picture.
         /// </summary>
-        public readonly int Height { get; }
+        public int Height { get; }
 
         /// <summary>
         /// Gets the width, in pixels, of this picture.
         /// </summary>
-        public readonly int Width { get; }
+        public int Width { get; }
 
         /// <summary>
         /// Gets the file format of this picture.
         /// </summary>
-        public readonly string Extension { get; }
+        public string Extension { get; }
     }
 }

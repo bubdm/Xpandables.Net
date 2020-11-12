@@ -29,7 +29,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="argument">The argument to handle.</param>
         /// <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
-        public bool CanHandle(object argument) => true;
+        public virtual bool CanHandle(object argument) => true;
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="argument">The argument to handle.</param>
         /// <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
-        public bool CanHandle(TArgument argument) => true;
+        public virtual bool CanHandle(TArgument argument) => true;
 
         /// <summary>
         /// Determines whether or not a an argument can be handled by the underlying context.

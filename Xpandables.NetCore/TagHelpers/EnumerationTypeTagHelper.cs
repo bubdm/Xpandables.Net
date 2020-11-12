@@ -26,13 +26,12 @@ using System.Linq;
 using System.Resources;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Enumerations;
 using Xpandables.Net.Localization;
 
 namespace Xpandables.Net.TagHelpers
 {
     /// <summary>
-    /// A helper that uses the <see cref="DisplayAttribute.Name"/> of an <see cref="EnumerationType.DisplayName"/> with localization
+    /// A helper that uses the <see cref="DisplayAttribute.Name"/> of an <see cref="EnumerationType.Name"/> with localization
     /// value for value tag. You must provide an implementation of <see cref="ILocalizationResourceProvider"/> for localization.
     /// The behavior is available only for label
     /// </summary>
@@ -85,7 +84,7 @@ namespace Xpandables.Net.TagHelpers
 #pragma warning disable CA2208 // Instantiate argument exceptions correctly
             if (EnumType is null) throw new ArgumentNullException(nameof(EnumType));
 #pragma warning restore CA2208 // Instantiate argument exceptions correctly
-            var enumTranslated = EnumType.DisplayName;
+            var enumTranslated = EnumType.Name;
             if (_localization is { })
             {
                 var pageName = GetModelPageName(_localization, ViewContext.ViewData.Model.GetType());
@@ -93,7 +92,7 @@ namespace Xpandables.Net.TagHelpers
                 if (_localization.ViewModelResourceTypeCollection.TryGetValue(pageName, out var resourceType))
                 {
                     var resourceManager = new ResourceManager(resourceType.FullName!, resourceType.Assembly);
-                    enumTranslated = resourceManager.GetString($"Enum{EnumType.DisplayName}", CultureInfo.InvariantCulture) ?? enumTranslated;
+                    enumTranslated = resourceManager.GetString($"Enum{EnumType.Name}", CultureInfo.InvariantCulture) ?? enumTranslated;
                 }
             }
 

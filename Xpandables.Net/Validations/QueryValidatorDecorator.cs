@@ -18,9 +18,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Queries;
+using Xpandables.Net.Validations;
 
-namespace Xpandables.Net.Validations
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// This class allows the application author to add validation support to query control flow.

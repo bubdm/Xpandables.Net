@@ -23,8 +23,6 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Xpandables.Net.Enumerations;
-
 namespace Xpandables.Net.EntityFramework
 {
     public abstract partial class DataContext : DbContext
@@ -36,10 +34,10 @@ namespace Xpandables.Net.EntityFramework
             typeof(DataContext).GetMethod(nameof(ConvertStringToEnumeration), BindingFlags.NonPublic | BindingFlags.Static)!;
 
         private static string ConvertEnumerationToString<T>(T enumeration)
-            where T : EnumerationType => enumeration.DisplayName;
+            where T : EnumerationType => enumeration.Name;
 
         private static T ConvertStringToEnumeration<T>(string displayName)
-            where T : EnumerationType => EnumerationType.FromDisplayName<T>(displayName)!;
+            where T : EnumerationType => EnumerationType.FromName<T>(displayName)!;
 
         private static Expression<Func<T, U>> ConverterMethodToLambdaExpression<T, U>(
             MethodInfo methodInfo,

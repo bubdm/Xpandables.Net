@@ -20,9 +20,9 @@ using System.Collections.Generic;
 using System.Threading;
 
 using Xpandables.Net.Asynchronous;
-using Xpandables.Net.Queries;
+using Xpandables.Net.Visitors;
 
-namespace Xpandables.Net.Visitors
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// This class allows the application author to add visitor support to query control flow.

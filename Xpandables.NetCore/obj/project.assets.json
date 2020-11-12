@@ -43,21 +43,9 @@
           "build/Microsoft.NetFramework.Analyzers.targets": {}
         }
       },
-      "Newtonsoft.Json/12.0.3": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
-        }
-      },
-      "Xpandables.Net/5.0.0-rc.2.1.4": {
+      "Xpandables.Net/5.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
-        "dependencies": {
-          "Newtonsoft.Json": "12.0.3"
-        },
         "compile": {
           "bin/placeholder/Xpandables.Net.dll": {}
         },
@@ -477,38 +465,7 @@
         "tools/uninstall.ps1"
       ]
     },
-    "Newtonsoft.Json/12.0.3": {
-      "sha512": "6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
-      "type": "package",
-      "path": "newtonsoft.json/12.0.3",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.md",
-        "lib/net20/Newtonsoft.Json.dll",
-        "lib/net20/Newtonsoft.Json.xml",
-        "lib/net35/Newtonsoft.Json.dll",
-        "lib/net35/Newtonsoft.Json.xml",
-        "lib/net40/Newtonsoft.Json.dll",
-        "lib/net40/Newtonsoft.Json.xml",
-        "lib/net45/Newtonsoft.Json.dll",
-        "lib/net45/Newtonsoft.Json.xml",
-        "lib/netstandard1.0/Newtonsoft.Json.dll",
-        "lib/netstandard1.0/Newtonsoft.Json.xml",
-        "lib/netstandard1.3/Newtonsoft.Json.dll",
-        "lib/netstandard1.3/Newtonsoft.Json.xml",
-        "lib/netstandard2.0/Newtonsoft.Json.dll",
-        "lib/netstandard2.0/Newtonsoft.Json.xml",
-        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.dll",
-        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.xml",
-        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.dll",
-        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
-        "newtonsoft.json.12.0.3.nupkg.sha512",
-        "newtonsoft.json.nuspec",
-        "packageIcon.png"
-      ]
-    },
-    "Xpandables.Net/5.0.0-rc.2.1.4": {
+    "Xpandables.Net/5.0.0": {
       "type": "project",
       "path": "../Xpandables.Net/Xpandables.Net.csproj",
       "msbuildProject": "../Xpandables.Net/Xpandables.Net.csproj"
@@ -517,15 +474,16 @@
   "projectFileDependencyGroups": {
     "net5.0": [
       "Microsoft.CodeAnalysis.FxCopAnalyzers >= 3.3.1",
-      "Xpandables.Net >= 5.0.0-rc.2.1.4"
+      "Xpandables.Net >= 5.0.0"
     ]
   },
   "packageFolders": {
     "C:\\Users\\fewan\\.nuget\\packages\\": {},
+    "D:\\Applications\\VisualStudio\\Shared\\NuGetPackages": {},
     "D:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
-    "version": "5.0.0-rc.2.1.4",
+    "version": "5.0.0",
     "restore": {
       "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\Xpandables.NetCore.csproj",
       "projectName": "Xpandables.NetCore",
@@ -534,10 +492,12 @@
       "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.NetCore\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
+        "D:\\Applications\\VisualStudio\\Shared\\NuGetPackages",
         "D:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
         "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
@@ -592,7 +552,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-rc.2.20479.15\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }

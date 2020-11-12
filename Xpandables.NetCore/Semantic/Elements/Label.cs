@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Components;
 
 using Xpandables.Net.Semantic.Enumerations;
 using Xpandables.Net.Semantic.Enumerations.Labels;
-using Xpandables.Net.Types;
 
 namespace Xpandables.Net.Semantic.Elements
 {

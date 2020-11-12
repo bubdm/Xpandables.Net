@@ -19,8 +19,6 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Xpandables.Net.Enumerables;
-
 namespace Xpandables.Net
 {
     /// <summary>
@@ -38,7 +36,7 @@ namespace Xpandables.Net
         /// <returns>The same object after applying the action on it.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="action"/> is null.</exception>
-        public static TSource Assign<TSource>(this TSource source, Action<TSource> action)
+        public static TSource With<TSource>(this TSource source, Action<TSource> action)
             where TSource : class
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -58,7 +56,7 @@ namespace Xpandables.Net
         /// <returns>The same object after applying the action on it.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="actions"/> is null.</exception>
-        public static TSource Assign<TSource>(this TSource source, params Action<TSource>[] actions)
+        public static TSource With<TSource>(this TSource source, params Action<TSource>[] actions)
             where TSource : class
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -81,7 +79,7 @@ namespace Xpandables.Net
         /// <exception cref="ArgumentNullException">The <paramref name="nameOfExpression"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="nameOfExpression"/> is not valid.</exception>
         /// <exception cref="TargetInvocationException">An error occurred while setting the property value. See inner exception.</exception>
-        public static TSource Assign<TSource>(this TSource source, Expression<Func<TSource, string>> nameOfExpression, object value)
+        public static TSource With<TSource>(this TSource source, Expression<Func<TSource, string>> nameOfExpression, object value)
             where TSource : class
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -90,22 +88,30 @@ namespace Xpandables.Net
             if (nameOfExpression.Body is not ConstantExpression constantExpression)
                 throw new ArgumentNullException($"Constant Expression expected. {nameof(nameOfExpression)}");
 
-            if (constantExpression.Value is null)
+            if (constantExpression.Value is null || constantExpression.Value.ToString() is not string propertyName)
                 throw new ArgumentException($"Constant Expression Value is null. {nameof(nameOfExpression)}");
 
-            if (source.GetType().GetProperty(constantExpression.Value.ToString()!) is not PropertyInfo propertyInfo)
-                throw new ArgumentException($"Property {constantExpression.Value} does not exist in the {source.GetType().Name}.");
+            if (source.GetType().GetProperty(propertyName) is not PropertyInfo propertyInfo)
+                throw new ArgumentException($"Property {propertyName} does not exist in the {source.GetType().Name}.");
 
-            if (!(propertyInfo.GetSetMethod() is MethodInfo))
+            if (propertyInfo.GetSetMethod() is not MethodInfo)
                 throw new ArgumentException($"Property {propertyInfo.Name} is not settable.");
 
-            if (value != null && !propertyInfo.PropertyType.IsAssignableFrom(value.GetType()))
-                throw new ArgumentException($"Property type of {propertyInfo.Name} and type of the value does not match.");
+            if (value is not null && !propertyInfo.PropertyType.IsAssignableFrom(value.GetType()))
+                throw new ArgumentException($"Property type '{propertyInfo.PropertyType.Name}' of {propertyName} and type of the value '{value.GetType().Name}' does not match.");
 
-            if (value is null && !(Nullable.GetUnderlyingType(propertyInfo.PropertyType) is Type))
-                throw new ArgumentException($"Property type of {propertyInfo.Name} is not nullable.");
+            if (value is null && Nullable.GetUnderlyingType(propertyInfo.PropertyType) is not Type)
+                throw new ArgumentException($"Unable to assign null to a property type '{propertyInfo.PropertyType.Name}' of {propertyName} that is not nullable.");
 
-            propertyInfo.SetValue(source, value);
+            try
+            {
+                propertyInfo.SetValue(source, value);
+            }
+            catch (Exception exception) when (exception is ArgumentException || exception is TargetException || exception is MethodAccessException || exception is TargetInvocationException)
+            {
+                throw new InvalidOperationException($"Unable to set '{typeof(TSource).Name}.{propertyName}' with the specified value : {value}.");
+            }
+
             return source;
         }
     }

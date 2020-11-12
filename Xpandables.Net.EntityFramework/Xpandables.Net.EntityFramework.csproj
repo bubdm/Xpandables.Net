@@ -15,10 +15,10 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net.EntityFramework</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>5.0.0-rc.2.1.4</Version>
+    <Version>5.0.0</Version>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0</FileVersion>
-    <PackageVersion>5.0.0-rc.2.1.4</PackageVersion>
+    <PackageVersion>5.0.0</PackageVersion>
     <PackageId>Xpandables.Net.EntityFramework</PackageId>
     <PackageTags>IDataContext, IDataContextProvider.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
@@ -63,7 +63,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.0-rc.2.20475.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

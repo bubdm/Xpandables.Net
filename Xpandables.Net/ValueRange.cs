@@ -29,7 +29,7 @@ namespace Xpandables.Net
     [Serializable]
     [DebuggerDisplay("Min = {Min} : Max = {Max}")]
     [TypeConverter(typeof(ValueRangeTypeConverter))]
-    public readonly struct ValueRange<TValue>
+    public sealed record ValueRange<TValue>
         where TValue : unmanaged, IComparable, IFormattable, IConvertible, IComparable<TValue>, IEquatable<TValue>
     {
         /// <summary>
@@ -56,12 +56,12 @@ namespace Xpandables.Net
         /// <summary>
         /// Gets the minimal value of range.
         /// </summary>
-        public readonly TValue Min { get; }
+        public TValue Min { get; }
 
         /// <summary>
         /// Gets the maximal value of range.
         /// </summary>
-        public readonly TValue Max { get; }
+        public TValue Max { get; }
 
         /// <summary>
         /// Creates a string representation of the <see cref="ValueRange{T}"/> separated by ":".
@@ -79,37 +79,6 @@ namespace Xpandables.Net
         /// <exception cref="FormatException">The <paramref name="format"/> is invalid or
         /// the index of a format item is not zero or one.</exception>
         public string ToString(string format, IFormatProvider formatProvider) => string.Format(formatProvider, format, Min, Max);
-
-        /// <summary>
-        /// Compares the <see cref="ValueRange{TValue}"/> with other object.
-        /// </summary>
-        /// <param name="obj">Object to compare with.</param>
-        public override bool Equals(object? obj) => obj is ValueRange<TValue> signedValues && this == signedValues;
-
-        /// <summary>
-        /// Computes the hash-code for the <see cref="ValueRange{TValue}"/> instance.
-        /// </summary>
-        public override int GetHashCode() => Min.GetHashCode() ^ Max.GetHashCode();
-
-        /// <summary>
-        /// Applies equality operator.
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        public static bool operator ==(ValueRange<TValue> left, ValueRange<TValue> right) => left.Equals(right);
-
-        /// <summary>
-        /// Applies non equality operator.
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        public static bool operator !=(ValueRange<TValue> left, ValueRange<TValue> right) => !(left == right);
-
-        /// <summary>
-        /// Compares <see cref="ValueRange{TValue}"/> with the value of type <typeparamref name="TValue"/>.
-        /// </summary>
-        /// <param name="other">Option to compare with.</param>
-        public bool Equals(ValueRange<TValue> other) => Min.Equals(other.Min) && Max.Equals(other.Max);
 
         /// <summary>
         /// Determines whether this range is empty or not.

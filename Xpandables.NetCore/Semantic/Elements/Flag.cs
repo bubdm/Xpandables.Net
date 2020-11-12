@@ -17,8 +17,6 @@
 ************************************************************************************************************/
 using Microsoft.AspNetCore.Components;
 
-using Xpandables.Net.Types;
-
 namespace Xpandables.Net.Semantic.Elements
 {
     /// <summary>
