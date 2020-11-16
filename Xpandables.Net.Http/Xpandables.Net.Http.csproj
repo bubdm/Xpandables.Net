@@ -15,10 +15,10 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net.Http</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>5.0.0</Version>
-    <AssemblyVersion>5.0.0</AssemblyVersion>
-    <FileVersion>5.0.0</FileVersion>
-    <PackageVersion>5.0.0</PackageVersion>
+    <Version>5.0.1</Version>
+    <AssemblyVersion>5.0.1</AssemblyVersion>
+    <FileVersion>5.0.1</FileVersion>
+    <PackageVersion>5.0.1</PackageVersion>
     <PackageId>Xpandables.Net.Http</PackageId>
     <PackageTags>IHttpRestClientHandler...</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>

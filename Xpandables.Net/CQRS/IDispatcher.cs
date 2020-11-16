@@ -116,7 +116,7 @@ namespace Xpandables.Net.CQRS
             dynamic handler = DispatcherHandlerProvider.GetHandler(handlerType)
                 ?? throw new NotImplementedException($"The matching command handler for {command.GetType().Name} is missing.");
 
-            if (!handler.CanHandle(command))
+            if (!((ICanHandle)handler).CanHandle(command))
                 throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
 
             try

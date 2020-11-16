@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -78,6 +79,26 @@ namespace Xpandables.Net.Tests
                 Trace.WriteLine($"{contact.Id} {contact.Name} {contact.Address} {contact.City}");
 
                 Assert.AreEqual(response.Result, contact.Id);
+            }
+        }
+
+        [TestMethod]
+        public async Task DeleteTest()
+        {
+            var selectAll = new SelectAll();
+
+            var response = await httpRestClientHandler.HandleAsync(selectAll).ConfigureAwait(false);
+            if (!response.IsValid())
+                Trace.WriteLine($"{response.StatusCode}");
+            else
+            {
+                var toDelete = await response.Result.FirstAsync().ConfigureAwait(false);
+                var delete = new Delete(toDelete.Id);
+                var delResponse = await httpRestClientHandler.HandleAsync(delete).ConfigureAwait(false);
+                if (!delResponse.IsValid())
+                    Trace.WriteLine($"{response.StatusCode}");
+                else
+                    Assert.IsTrue(true);
             }
         }
 
