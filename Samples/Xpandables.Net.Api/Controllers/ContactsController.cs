@@ -36,10 +36,11 @@ namespace Xpandables.Net.Api.Controllers
 
         [Route("")]
         [HttpGet]
-        public async IAsyncEnumerable<Contact> SelectAllAsync([FromQuery] SelectAll selectAll, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<Contact> SelectAllAsync([FromQuery] SelectAll selectAll, CancellationToken cancellationToken = default)
         {
-            await foreach (var contact in _dispatcher.InvokeAsync(selectAll, cancellationToken).ConfigureAwait(false))
-                yield return contact;
+            return _dispatcher.InvokeAsync(selectAll, cancellationToken);
+            //await foreach (var contact in _dispatcher.InvokeAsync(selectAll, cancellationToken).ConfigureAwait(false))
+            //    yield return contact;
         }
 
         [Route("{id}", Name = "ContactLink")]

@@ -22,7 +22,7 @@ using System.Net.Http.Headers;
 
 using Xpandables.Net.CQRS;
 
-namespace Xpandables.Net.HttpRest
+namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Describes the parameters for a request used with <see cref="IHttpRestClientHandler"/>.
@@ -76,7 +76,7 @@ namespace Xpandables.Net.HttpRest
         /// Gets or sets the content type.
         /// The default value is <see cref="ContentType.Json"/>.
         /// </summary>
-        public string ContentType { get; set; } = HttpRest.ContentType.Json;
+        public string ContentType { get; set; } = Http.ContentType.Json;
 
         /// <summary>
         /// Gets or sets the accept content.

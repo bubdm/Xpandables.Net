@@ -18,8 +18,6 @@
 using System;
 using System.Net.Http;
 
-using Xpandables.Net.HttpRest;
-
 namespace Xpandables.Net.Http.Network
 {
     /// <summary>

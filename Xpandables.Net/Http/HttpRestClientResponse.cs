@@ -21,7 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.HttpRest
+namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Represents an HTTP Rest client response. Implements <see cref="IDisposable"/>.

@@ -17,7 +17,7 @@
 
 using System;
 
-namespace Xpandables.Net.HttpRest
+namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Represents an HTTP Rest API exception.

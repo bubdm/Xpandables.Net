@@ -21,7 +21,6 @@ using System.ComponentModel;
 using System.Globalization;
 
 using Xpandables.Net.CQRS;
-using Xpandables.Net.HttpRest;
 
 namespace Xpandables.Net.Http.Network
 {

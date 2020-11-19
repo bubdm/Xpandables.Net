@@ -16,15 +16,10 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Threading;
+using System.Text.Json;
 
-using Newtonsoft.Json;
-
-namespace Xpandables.Net.HttpRest
+namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Provides with extension method for <see cref="IHttpRestClientHandler"/>.
@@ -40,50 +35,7 @@ namespace Xpandables.Net.HttpRest
         public static bool IsHttpRestClientValidation(this HttpRestClientException exception, [MaybeNullWhen(false)] out HttpRestClientValidation validationException)
         {
             _ = exception ?? throw new ArgumentNullException(nameof(exception));
-
-            if (TryDeserialize(exception.Message, out validationException, out _))
-                return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// De-serializes a JSON string from stream.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the deserialized object.</typeparam>
-        /// <param name="stream">The stream to act on.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TResult"/> type.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="stream"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception> 
-        public static TResult DeserializeJsonFromStream<TResult>(this Stream stream)
-        {
-            _ = stream ?? throw new ArgumentNullException(nameof(stream));
-            if (!stream.CanRead) throw new ArgumentException($"{nameof(stream)} does not support reading.");
-
-            using var streamReader = new StreamReader(stream);
-            using var jsonTextReader = new JsonTextReader(streamReader);
-            var result = JsonSerializer.CreateDefault().Deserialize<TResult>(jsonTextReader);
-            return result!;
-        }
-
-        /// <summary>
-        /// Returns an async-enumerable from stream used for asynchronous result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="stream">The stream source to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        public static async IAsyncEnumerable<TResult> ReadAsyncEnumerableFromStreamAsync<TResult>(this Stream stream, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            var jsonSerializer = JsonSerializer.CreateDefault();
-            using var streamReader = new StreamReader(stream);
-            using var jsonTextReader = new JsonTextReader(streamReader);
-            while (await jsonTextReader.ReadAsync(cancellationToken).ConfigureAwait(false))
-            {
-                if (jsonTextReader.TokenType == JsonToken.StartObject)
-                    if (jsonSerializer.Deserialize<TResult>(jsonTextReader) is TResult result)
-                        yield return result;
-            }
+            return exception.Message.TryDeserialize(out validationException, out _);
         }
 
         /// <summary>
@@ -93,11 +45,13 @@ namespace Xpandables.Net.HttpRest
         /// <param name="jsonString">The JSON to deserialize.</param>
         /// <param name="result">The deserialized object from the JSON string.</param>
         /// <param name="exception">The exception.</param>
+        /// <param name="options">The JSON serializer options.</param>
         /// <returns><see langword="true"/> if OK, otherwise <see langword="false"/>.</returns>
         public static bool TryDeserialize<TResult>(
             this string jsonString,
             [MaybeNullWhen(false)] out TResult result,
-            [MaybeNullWhen(true)] out Exception exception)
+            [MaybeNullWhen(true)] out Exception exception,
+            JsonSerializerOptions? options = default)
             where TResult : class
         {
             result = default;
@@ -105,7 +59,7 @@ namespace Xpandables.Net.HttpRest
 
             try
             {
-                result = JsonConvert.DeserializeObject<TResult>(jsonString);
+                result = JsonSerializer.Deserialize<TResult>(jsonString, options);
                 if (result is null)
                 {
                     exception = new ArgumentNullException(nameof(jsonString), "No result from deserialization.");

@@ -21,8 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Api", "Sampl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Tests", "Samples\Xpandables.Net.Tests\Xpandables.Net.Tests.csproj", "{3AA9A5A6-6D2D-4029-A2FD-83BA912C4A6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.Http", "Xpandables.Net.Http\Xpandables.Net.Http.csproj", "{A20D0802-6B6E-43C4-A217-D3586C042473}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,14 +93,6 @@ Global
 		{3AA9A5A6-6D2D-4029-A2FD-83BA912C4A6E}.Release|Any CPU.Build.0 = Release|x64
 		{3AA9A5A6-6D2D-4029-A2FD-83BA912C4A6E}.Release|x64.ActiveCfg = Release|Any CPU
 		{3AA9A5A6-6D2D-4029-A2FD-83BA912C4A6E}.Release|x64.Build.0 = Release|Any CPU
-		{A20D0802-6B6E-43C4-A217-D3586C042473}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A20D0802-6B6E-43C4-A217-D3586C042473}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A20D0802-6B6E-43C4-A217-D3586C042473}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A20D0802-6B6E-43C4-A217-D3586C042473}.Debug|x64.Build.0 = Debug|Any CPU
-		{A20D0802-6B6E-43C4-A217-D3586C042473}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A20D0802-6B6E-43C4-A217-D3586C042473}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A20D0802-6B6E-43C4-A217-D3586C042473}.Release|x64.ActiveCfg = Release|Any CPU
-		{A20D0802-6B6E-43C4-A217-D3586C042473}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

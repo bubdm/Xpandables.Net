@@ -24,11 +24,12 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Asynchronous;
 using Xpandables.Net.CQRS;
-using Xpandables.Net.HttpRest;
+using Xpandables.Net.Http;
 
 namespace Xpandables.Net.Api
 {
     public sealed record Contact(int Id, string Name, string Address, string City);
+
     [HttpRestClient(Path = "api/contacts", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
     public sealed record SelectAll : IAsyncEnumerableQuery<Contact>, IQueryStringLocationRequest
     {
@@ -62,8 +63,10 @@ namespace Xpandables.Net.Api
             new Contact(1, "Filip W", "Paris 01", "Paris"),
             new Contact(2, "Jean Pierre", "25 Liberty Street", "Lyon"),
             new Contact(3, "Paul Louis", "1 Jean Paul Street", "Paris"),
-            new Contact(4, "Alexandre LeGrand", "12 New Street", "Paris"),
-            new Contact(5, "André José", "18 Alexandre Street", "Paris")
+            new Contact(4, "Alexandre LeGrand", "12 New Street", "Marseille"),
+            new Contact(5, "André José", "18 Alexandre Street", "Paris"),
+            new Contact(6, "Joseph Paul", "Paris 02 Street", "Metz"),
+            new Contact(7, "Louis Jean", "14 Pierre Street", "Nantes")
         };
     }
 

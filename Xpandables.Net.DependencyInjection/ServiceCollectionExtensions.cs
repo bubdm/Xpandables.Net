@@ -144,6 +144,70 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the specified HTTP request token claim provider that implements the <see cref="ITokenEntityProvider"/>.
+        /// </summary>
+        /// <typeparam name="TTokenEntityProvider">The type of HTTP token claim provider.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXTokenEntityProvider<TTokenEntityProvider>(
+            this IServiceCollection services)
+            where TTokenEntityProvider : class, ITokenEntityProvider
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<ITokenEntityProvider, TTokenEntityProvider>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the specified HTTP request token claim provider that implements the <see cref="ITokenEntityProvider"/>.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="tokenClaimProviderType">The token claims provider type.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="tokenClaimProviderType"/> is null.</exception>
+        public static IServiceCollection AddXTokenEntityProvider(this IServiceCollection services, Type tokenClaimProviderType)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = tokenClaimProviderType ?? throw new ArgumentNullException(nameof(tokenClaimProviderType));
+
+            if (!typeof(ITokenEntityProvider).IsAssignableFrom(tokenClaimProviderType))
+                throw new ArgumentException($"{nameof(tokenClaimProviderType)} must implement {nameof(ITokenEntityProvider)}.");
+
+            return services.AddScoped(typeof(ITokenEntityProvider), tokenClaimProviderType);
+        }
+
+        /// <summary>
+        /// Adds the specified token engine to the services collection with scoped life time..
+        /// </summary>
+        /// <typeparam name="TTokenEngine">The token engine type.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXTokenEngine<TTokenEngine>(this IServiceCollection services)
+            where TTokenEngine : class, ITokenEngine
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            return services.AddXTokenEngine(typeof(TTokenEngine));
+        }
+
+        /// <summary>
+        /// Adds the specified token engine to the services collection with scoped life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="tokenEngineType">The type that implements <see cref="ITokenEngine"/>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="tokenEngineType"/> is null.</exception>
+        public static IServiceCollection AddXTokenEngine(this IServiceCollection services, Type tokenEngineType)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = tokenEngineType ?? throw new ArgumentNullException(nameof(tokenEngineType));
+
+            services.AddScoped(typeof(ITokenEngine), tokenEngineType);
+            return services;
+        }
+
+        /// <summary>
         /// Ensures that any <see cref="Lazy{T}"/> requested service will return <see cref="LazyResolved{T}"/> wrapping the original registered type.
         /// </summary>
         /// <param name="services">The collection of services.</param>

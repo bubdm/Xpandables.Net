@@ -79,6 +79,8 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
+            services.AddXCommandHandlerWrapper();
+
             var commandTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
                 .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && (type.GetInterface(typeof(IAsyncCommandHandler<>).Name) is not null || type.GetInterface(typeof(IAsyncCommandHandler<,>).Name) is not null))
                 .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IAsyncCommandHandler<>).Name) ?? type.GetInterface(typeof(IAsyncCommandHandler<,>).Name)! })
@@ -117,8 +119,6 @@ namespace Xpandables.Net.DependencyInjection
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
             if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
 
-            services.AddXQueryHandlerWrapper();
-            services.AddXCommandHandlerWrapper();
             services.AddXCommandHandlers(assemblies);
             services.AddXQueryHandlers(assemblies);
 
@@ -160,6 +160,8 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+
+            services.AddXQueryHandlerWrapper();
 
             var queryTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
                 .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && (type.GetInterface(typeof(IAsyncEnumerableQueryHandler<,>).Name) is not null || type.GetInterface(typeof(IAsyncQueryHandler<,>).Name) is not null))

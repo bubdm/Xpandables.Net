@@ -22,8 +22,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.HttpRest;
-
 namespace Xpandables.Net.Http.Network
 {
     /// <summary>

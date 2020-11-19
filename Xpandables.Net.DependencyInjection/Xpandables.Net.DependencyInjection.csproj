@@ -15,15 +15,15 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net.DependencyInjection</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>5.0.1</Version>
-    <AssemblyVersion>5.0.1</AssemblyVersion>
-    <FileVersion>5.0.1</FileVersion>
-    <PackageVersion>5.0.1</PackageVersion>
+    <Version>5.0.2</Version>
+    <AssemblyVersion>5.0.2</AssemblyVersion>
+    <FileVersion>5.0.2</FileVersion>
+    <PackageVersion>5.0.2</PackageVersion>
+    <PackageReleaseNotes>Move to System.Text.Json.</PackageReleaseNotes>
     <PackageId>Xpandables.Net.DependencyInjection</PackageId>
     <PackageTags>XTryDecorate, XRegister.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <!--<PackageReleaseNotes>Start All-in-one.</PackageReleaseNotes>-->
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AssemblyName>Xpandables.Net.DependencyInjection</AssemblyName>
     <RootNamespace>Xpandables.Net</RootNamespace>
@@ -72,7 +72,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Xpandables.Net.Http\Xpandables.Net.Http.csproj" />
+    <ProjectReference Include="..\Xpandables.Net\Xpandables.Net.csproj" />
   </ItemGroup>
 
 </Project>

@@ -26,6 +26,7 @@ namespace Xpandables.Net
     // Taken from https://github.com/evil-dr-nick/utf8jsonstreamreader/blob/master/Utf8JsonStreamReader/Utf8JsonStreamReader.cs
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
     public ref struct Utf8JsonStreamReader
     {
         private readonly Stream _stream;

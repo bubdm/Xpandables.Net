@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,18 +15,15 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Net;
 
-namespace Xpandables.Net.HttpRest
+using Xpandables.Net.CQRS;
+
+namespace Xpandables.Net.Http.Network
 {
     /// <summary>
-    /// An interface representing an <see cref="HttpRestClientAttribute"/> to be dynamically applied on the implementing class.
-    /// This interface takes priority over the <see cref="HttpRestClientAttribute"/> declaration.
+    /// Represents a query to request an <see cref="IPAddress"/>.
     /// </summary>
-    public interface IHttpRestClientAttributeProvider
-    {
-        /// <summary>
-        /// Returns the <see cref="HttpRestClientAttribute"/> to be applied on the current instance.
-        /// </summary>
-        HttpRestClientAttribute ReadHttpRestClientAttribute();
-    }
+    [HttpRestClient(Path = "", IsNullable = true, IsSecured = false, Method = "Get")]
+    public sealed class IPAddressRequest : IAsyncQuery<string> { }
 }

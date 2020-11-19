@@ -34,8 +34,6 @@ namespace Xpandables.Net.Api
         {
             services.AddControllers();
             services.AddXDispatcher();
-            services.AddXCommandHandlerWrapper();
-            services.AddXQueryHandlerWrapper();
             services.AddXCommandHandlers(new[] { Assembly.GetExecutingAssembly() });
             services.AddXQueryHandlers(new[] { Assembly.GetExecutingAssembly() });
         }
