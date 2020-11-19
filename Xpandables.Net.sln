@@ -5,10 +5,6 @@ VisualStudioVersion = 16.0.30323.103
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net", "Xpandables.Net\Xpandables.Net.csproj", "{F750226E-B0C4-4C2D-8B43-BDA4CAAEFC52}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.NetCore", "Xpandables.NetCore\Xpandables.NetCore.csproj", "{023B6831-0D75-4F74-8FDE-E9C244DE86AD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Windows", "Xpandables.Net.Windows\Xpandables.Net.Windows.csproj", "{453827F9-17CD-490B-8CD9-7AE67C1EB21A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.DependencyInjection", "Xpandables.Net.DependencyInjection\Xpandables.Net.DependencyInjection.csproj", "{1FAA3842-7FF0-4D00-978C-1BECB64994D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.EntityFramework", "Xpandables.Net.EntityFramework\Xpandables.Net.EntityFramework.csproj", "{4B83F394-55C9-45F6-8EBE-742D6F40869A}"
@@ -37,22 +33,6 @@ Global
 		{F750226E-B0C4-4C2D-8B43-BDA4CAAEFC52}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F750226E-B0C4-4C2D-8B43-BDA4CAAEFC52}.Release|x64.ActiveCfg = Release|x64
 		{F750226E-B0C4-4C2D-8B43-BDA4CAAEFC52}.Release|x64.Build.0 = Release|x64
-		{023B6831-0D75-4F74-8FDE-E9C244DE86AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{023B6831-0D75-4F74-8FDE-E9C244DE86AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{023B6831-0D75-4F74-8FDE-E9C244DE86AD}.Debug|x64.ActiveCfg = Debug|x64
-		{023B6831-0D75-4F74-8FDE-E9C244DE86AD}.Debug|x64.Build.0 = Debug|x64
-		{023B6831-0D75-4F74-8FDE-E9C244DE86AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{023B6831-0D75-4F74-8FDE-E9C244DE86AD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{023B6831-0D75-4F74-8FDE-E9C244DE86AD}.Release|x64.ActiveCfg = Release|x64
-		{023B6831-0D75-4F74-8FDE-E9C244DE86AD}.Release|x64.Build.0 = Release|x64
-		{453827F9-17CD-490B-8CD9-7AE67C1EB21A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{453827F9-17CD-490B-8CD9-7AE67C1EB21A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{453827F9-17CD-490B-8CD9-7AE67C1EB21A}.Debug|x64.ActiveCfg = Debug|x64
-		{453827F9-17CD-490B-8CD9-7AE67C1EB21A}.Debug|x64.Build.0 = Debug|x64
-		{453827F9-17CD-490B-8CD9-7AE67C1EB21A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{453827F9-17CD-490B-8CD9-7AE67C1EB21A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{453827F9-17CD-490B-8CD9-7AE67C1EB21A}.Release|x64.ActiveCfg = Release|x64
-		{453827F9-17CD-490B-8CD9-7AE67C1EB21A}.Release|x64.Build.0 = Release|x64
 		{1FAA3842-7FF0-4D00-978C-1BECB64994D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1FAA3842-7FF0-4D00-978C-1BECB64994D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FAA3842-7FF0-4D00-978C-1BECB64994D1}.Debug|x64.ActiveCfg = Debug|x64
