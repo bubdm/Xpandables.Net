@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -52,6 +54,20 @@ namespace Xpandables.Net.Tests
 
             memoryStream.Seek(0, SeekOrigin.Begin);
             return new StreamContent(memoryStream);
+        }
+
+        protected override async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(
+            Stream stream, [EnumeratorCancellation] CancellationToken cancellationToken = default, JsonSerializerOptions? options = null)
+        {
+            var jsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault();
+            using var streamReader = new StreamReader(stream);
+            using var jsonTextReader = new JsonTextReader(streamReader);
+            while (await jsonTextReader.ReadAsync(cancellationToken).ConfigureAwait(false))
+            {
+                if (jsonTextReader.TokenType == JsonToken.StartObject)
+                    if (jsonSerializer.Deserialize<TResult>(jsonTextReader) is TResult result)
+                        yield return result;
+            }
         }
     }
 }

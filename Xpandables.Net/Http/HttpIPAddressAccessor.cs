@@ -62,11 +62,13 @@ namespace Xpandables.Net.Http.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpIPAddressAccessor"/> class that uses the https://ipinfo.io/ip to retrieve the user ip address.
         /// </summary>
-        public HttpIPAddressAccessor()
+        public HttpIPAddressAccessor(IHttpRestClientHandler httpRestClientHandler)
         {
-            var httpClient = new HttpClient(new HttpIPAddressDelegateHandler(), true) { BaseAddress = new Uri("https://ipinfo.io/ip") };
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
-            _httpRestClientHandler = new HttpRestClientHandler(httpClient);
+            _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
+            
+            ((HttpRestClientHandler)_httpRestClientHandler).HttpClient = new HttpClient(new HttpIPAddressDelegateHandler(), true) { BaseAddress = new Uri("https://ipinfo.io/ip") };
+            _httpRestClientHandler.HttpClient.DefaultRequestHeaders.Clear();
+            _httpRestClientHandler.HttpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
         }
 
         private bool _isDisposed;

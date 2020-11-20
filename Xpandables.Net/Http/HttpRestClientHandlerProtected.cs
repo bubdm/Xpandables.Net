@@ -499,7 +499,7 @@ namespace Xpandables.Net.Http
         /// <param name="options">The JSON serializer options.</param>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         [SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "<Pending>")]
-        protected async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(
+        protected virtual async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(
             Stream stream, [EnumeratorCancellation] CancellationToken cancellationToken = default, JsonSerializerOptions? options = default)
         {
             using var blockingCollection = new BlockingCollection<TResult>();

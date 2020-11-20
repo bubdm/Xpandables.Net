@@ -31,11 +31,13 @@ namespace Xpandables.Net.Http.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpLocationAccessor"/> class that uses the http://api.ipstack.com to retrieve the user location.
         /// </summary>
-        public HttpLocationAccessor()
+        public HttpLocationAccessor(IHttpRestClientHandler httpRestClientHandler)
         {
-            var httpClient = new HttpClient { BaseAddress = new Uri("http://api.ipstack.com") };
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
-            _httpRestClientHandler = new HttpRestClientHandler(httpClient);
+            _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
+
+            ((HttpRestClientHandler)_httpRestClientHandler).HttpClient = new HttpClient { BaseAddress = new Uri("http://api.ipstack.com") };
+            _httpRestClientHandler.HttpClient.DefaultRequestHeaders.Clear();
+            _httpRestClientHandler.HttpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
         }
 
         private bool _isDisposed;

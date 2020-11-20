@@ -36,7 +36,7 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// Gets the target <see cref="System.Net.Http.HttpClient"/> instance.
         /// </summary>
-        public HttpClient HttpClient { get; }
+        public HttpClient HttpClient { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpRestClientHandler"/> class with the HTTP typed client.

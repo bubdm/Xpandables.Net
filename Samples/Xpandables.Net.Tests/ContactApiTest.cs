@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -148,7 +147,7 @@ namespace Xpandables.Net.Tests
         [TestMethod]
         public async Task IPLocationTest()
         {
-            using IHttpIPAddressAccessor ipHandler = new HttpIPAddressAccessor();
+            using IHttpIPAddressAccessor ipHandler = new HttpIPAddressAccessor(httpRestClientHandler);
             var response = await ipHandler.ReadIPAddressAsync().ConfigureAwait(false);
 
             if (!response.IsValid())
@@ -159,7 +158,7 @@ namespace Xpandables.Net.Tests
             else
                 Trace.WriteLine($"IP Address : {response.Result}");
 
-            using IHttpLocationAccessor locationHandler = new HttpLocationAccessor();
+            using IHttpLocationAccessor locationHandler = new HttpLocationAccessor(httpRestClientHandler);
             var location = await locationHandler.ReadLocationAsync(new LocationRequest(response.Result.ToString(), "enter your api access key"));
 
             if (!location.IsValid())
