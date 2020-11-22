@@ -42,13 +42,13 @@ namespace Xpandables.Net.Http
         #region HttpRestClientResponse Builder
 
         /// <summary>
-        /// Returns an <see cref="HttpRestClientResponse"/> for success response.
+        /// Returns an <see cref="HttpRestClientResponse"/> for success response on async enumerable.
         /// </summary>
         /// <typeparam name="TResult">The response content type.</typeparam>
         /// <param name="httpResponse">The target HTTP response.</param>
         /// <param name="streamToResponseConverter">The converter to be used from stream to <typeparamref name="TResult"/>.</param>
         /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
-        protected virtual async Task<HttpRestClientResponse<TResult>> WriteSuccessResponseAsync<TResult>(HttpResponseMessage httpResponse, Func<Stream, TResult> streamToResponseConverter)
+        protected virtual async Task<HttpRestClientResponse<TResult>> WriteEnumerableResultSuccessResponseAsync<TResult>(HttpResponseMessage httpResponse, Func<Stream, TResult> streamToResponseConverter)
         {
             try
             {
@@ -58,6 +58,47 @@ namespace Xpandables.Net.Http
                     if (stream is { })
                     {
                         var results = streamToResponseConverter(stream);
+                        return HttpRestClientResponse<TResult>
+                            .Success(results, httpResponse.StatusCode)
+                            .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                            .AddVersion(httpResponse.Version)
+                            .AddReasonPhrase(httpResponse.ReasonPhrase);
+                    }
+                }
+
+                return HttpRestClientResponse<TResult>
+                    .Success(httpResponse.StatusCode)
+                    .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
+            }
+            catch (Exception exception)
+            {
+                return HttpRestClientResponse<TResult>
+                    .Failure(exception, HttpStatusCode.BadRequest)
+                    .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
+            }
+        }
+
+        /// <summary>
+        /// Returns an <see cref="HttpRestClientResponse"/> for success response on result.
+        /// </summary>
+        /// <typeparam name="TResult">The response content type.</typeparam>
+        /// <param name="httpResponse">The target HTTP response.</param>
+        /// <param name="streamToResponseConverter">The converter to be used from stream to <typeparamref name="TResult"/>.</param>
+        /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
+        protected virtual async Task<HttpRestClientResponse<TResult>> WriteResultSuccessResponseAsync<TResult>(HttpResponseMessage httpResponse, Func<Stream, Task<TResult>> streamToResponseConverter)
+        {
+            try
+            {
+                if (httpResponse.Content is { })
+                {
+                    var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    if (stream is { })
+                    {
+                        var results = await streamToResponseConverter(stream).ConfigureAwait(false);
                         return HttpRestClientResponse<TResult>
                             .Success(results, httpResponse.StatusCode)
                             .AddHeaders(ReadHttpResponseHeaders(httpResponse))

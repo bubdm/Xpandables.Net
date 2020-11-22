@@ -66,7 +66,7 @@ namespace Xpandables.Net.Http
                 var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
-                    return await WriteSuccessResponseAsync(response, stream => AsyncEnumerableBuilderFromStreamAsync<TResult>(stream, cancellationToken, options));
+                    return await WriteEnumerableResultSuccessResponseAsync(response, stream => AsyncEnumerableBuilderFromStreamAsync<TResult>(stream, cancellationToken, options));
 
                 return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)await WriteBadResponseAsync(
                     HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure, response)
@@ -140,7 +140,7 @@ namespace Xpandables.Net.Http
                     .ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
-                    return await WriteSuccessResponseAsync(response, stream => DeserializeJsonFromStreamAsync<TResult>(stream, options).RunSync()).ConfigureAwait(false);
+                    return await WriteResultSuccessResponseAsync(response, stream => DeserializeJsonFromStreamAsync<TResult>(stream, options)).ConfigureAwait(false);
 
                 return (HttpRestClientResponse<TResult>)await WriteBadResponseAsync(
                     HttpRestClientResponse<TResult>.Failure, response)
@@ -177,7 +177,7 @@ namespace Xpandables.Net.Http
                     .ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
-                    return await WriteSuccessResponseAsync(response, stream => DeserializeJsonFromStreamAsync<TResult>(stream, options).RunSync()).ConfigureAwait(false);
+                    return await WriteResultSuccessResponseAsync(response, stream => DeserializeJsonFromStreamAsync<TResult>(stream, options)).ConfigureAwait(false);
 
                 return (HttpRestClientResponse<TResult>)await WriteBadResponseAsync(
                     HttpRestClientResponse<TResult>.Failure, response)
