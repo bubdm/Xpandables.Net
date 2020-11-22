@@ -15,11 +15,11 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net.QrCodes</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>5.0.3</Version>
-    <AssemblyVersion>5.0.3</AssemblyVersion>
-    <FileVersion>5.0.3</FileVersion>
-    <PackageVersion>5.0.3</PackageVersion>
-    <PackageReleaseNotes>Fix IHttpLocationAccessor/IHttpIPAddressAccessor handler.</PackageReleaseNotes>
+    <Version>5.0.4</Version>
+    <AssemblyVersion>5.0.4</AssemblyVersion>
+    <FileVersion>5.0.4</FileVersion>
+    <PackageVersion>5.0.4</PackageVersion>
+    <PackageReleaseNotes>Fix IHttpRestClientHandler async.</PackageReleaseNotes>
     <PackageId>Xpandables.Net.QrCodes</PackageId>
     <PackageTags>IQrCode.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
