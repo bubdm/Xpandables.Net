@@ -22,7 +22,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
 using Xpandables.Net.CQRS;
 using Xpandables.Net.Http;
 

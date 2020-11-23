@@ -23,8 +23,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
-
 namespace Xpandables.Net
 {
     /// <summary>

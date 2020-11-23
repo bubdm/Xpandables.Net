@@ -33,8 +33,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
-
 namespace Xpandables.Net.Http
 {
     public partial class HttpRestClientHandler

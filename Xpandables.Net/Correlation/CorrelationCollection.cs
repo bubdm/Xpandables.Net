@@ -19,8 +19,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
-using Xpandables.Net.Asynchronous;
-
 namespace Xpandables.Net.Correlation
 {
     /// <summary>

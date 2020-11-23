@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Asynchronous
+namespace Xpandables.Net
 {
     /// <summary>
     /// Represents a helper class that adds asynchronous iteration support to a generic collection.

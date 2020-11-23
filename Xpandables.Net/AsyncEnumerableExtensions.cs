@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Xpandables.Net.Asynchronous
+namespace Xpandables.Net
 {
     /// <summary>
     /// Provides with helper methods for <see cref="IAsyncEnumerable{T}"/>.

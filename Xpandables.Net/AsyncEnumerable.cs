@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Xpandables.Net.Asynchronous
+namespace Xpandables.Net
 {
     /// <summary>
     /// Represents a helper class that allows a generic collection to be asynchronously enumerated.

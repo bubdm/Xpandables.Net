@@ -59,10 +59,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Asynchronous\AsyncEnumerable.cs~RF14a4b967.TMP" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\Xpandables.png" Link="Xpandables.png">
       <PackagePath></PackagePath>
       <Pack>True</Pack>

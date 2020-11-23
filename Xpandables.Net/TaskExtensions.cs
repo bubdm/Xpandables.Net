@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Asynchronous
+namespace Xpandables.Net
 {
     /// <summary>
     /// Provides with methods used to execute asynchronous operation synchronously.
