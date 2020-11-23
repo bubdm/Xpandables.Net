@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,16 +15,13 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
-
-using Xpandables.Net.Correlation;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// This class allows the application author to add post/rollback event support to query control flow.
+    /// This decorator class allows the application author to add post/rollback event support to query control flow.
     /// The target query should implement the <see cref="ICorrelationDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target query handler with an implementation of <see cref="IAsyncCorrelationContext"/> that
     /// adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
@@ -34,28 +30,27 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TQuery">Type of the query.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public sealed class AsyncEnumerableQueryCorrelationDecorator<TQuery, TResult> : IAsyncEnumerableQueryHandler<TQuery, TResult>
-        where TQuery : class, IAsyncEnumerableQuery<TResult>, ICorrelationDecorator
+    public sealed class QueryCorrelationDecorator<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
+        where TQuery : class, IAsyncQuery<TResult>, ICorrelationDecorator
     {
-        private readonly IAsyncEnumerableQueryHandler<TQuery, TResult> _decoratee;
+        private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
         private readonly AsyncCorrelationContext _correlationContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncEnumerableQueryCorrelationDecorator{TQuery, TResult}"/> class
-        /// with the correlation context and the query handler to be decorated..
+        /// Initializes a new instance of the <see cref="QueryCorrelationDecorator{TQuery, TResult}"/> class with the correlation context and the query handler to be decorated.
         /// </summary>
-        /// <param name="correlationContext">the event register.</param>
+        /// <param name="correlationContext">the correlation context.</param>
         /// <param name="decoratee">The decorated query handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
-        public AsyncEnumerableQueryCorrelationDecorator(AsyncCorrelationContext correlationContext, IAsyncEnumerableQueryHandler<TQuery, TResult> decoratee)
+        public QueryCorrelationDecorator(AsyncCorrelationContext correlationContext, IAsyncQueryHandler<TQuery, TResult> decoratee)
         {
             _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
         /// <summary>
-        /// Asynchronously handles the specified query using the decorated handler, executes the post event before returning each result,
+        /// Asynchronously handles the specified query using the decorated handler, executes the post event before returning the task result,
         /// and executes the rollback event in case of exception.
         /// </summary>
         /// <param name="query">The query to act on.</param>
@@ -64,32 +59,19 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {      
-            await using var asyncEnumerator = _decoratee.HandleAsync(query, cancellationToken).GetAsyncEnumerator(cancellationToken);
-            for (var resultExist = true; resultExist;)
+        /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        public async Task<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
+        {
+            try
             {
-                try
-                {
-                    resultExist = await asyncEnumerator.MoveNextAsync().ConfigureAwait(false);
-                }
-                catch (Exception exception)
-                {
-                    resultExist = false;
-                    await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
-                    throw;
-                }
-
-                if (resultExist)
-                {
-                    await _correlationContext.OnPostEventAsync(asyncEnumerator.Current).ConfigureAwait(false);
-                    yield return asyncEnumerator.Current;
-                }
-                else
-                {
-                    yield break;
-                }
+                var result = await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
+                await _correlationContext.OnPostEventAsync(result).ConfigureAwait(false);
+                return result;
+            }
+            catch (Exception exception)
+            {
+                await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
+                throw;
             }
         }
     }

@@ -18,7 +18,6 @@ using System;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Xpandables.Net.Correlation;
 using Xpandables.Net.CQRS;
 
 namespace Xpandables.Net.DependencyInjection

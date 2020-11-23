@@ -18,9 +18,7 @@
 using System;
 using System.Threading.Tasks;
 
-using Xpandables.Net.CQRS;
-
-namespace Xpandables.Net.Correlation
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// Represents a method signature to be used to handle post event in correlation context <see cref="IAsyncCorrelationContext"/>.

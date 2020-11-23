@@ -15,8 +15,6 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Correlation;
-
 namespace Xpandables.Net.CQRS
 {
     /// <summary>

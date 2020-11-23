@@ -18,7 +18,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Correlation
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// The implementation of <see cref="IAsyncCorrelationContext"/>.

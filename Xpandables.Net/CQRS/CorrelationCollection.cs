@@ -19,7 +19,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Xpandables.Net.Correlation
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// Provides with a collection of objects that need to be shared across asynchronous control flows.
