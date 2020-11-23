@@ -17,9 +17,10 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
-using Xpandables.Net.Asynchronous;
 using Xpandables.Net.Visitors;
 
 namespace Xpandables.Net.CQRS
@@ -62,12 +63,13 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
-        public IAsyncEnumerable<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            query.AcceptAsync(_visitor).RunSync();
-            return _decoratee.HandleAsync(query, cancellationToken);
+            await query.AcceptAsync(_visitor).ConfigureAwait(false);
+            await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false))
+                yield return result;
         }
     }
 }
