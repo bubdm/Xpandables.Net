@@ -90,7 +90,8 @@ namespace Xpandables.Net.Http.Network
         /// Returns the <see cref="HttpRestClientAttribute" /> to be applied on the current instance.
         /// </summary>
         public HttpRestClientAttribute ReadHttpRestClientAttribute()
-            => new HttpRestClientAttribute { Path = IpAddress, IsNullable = true, IsSecured = false, In = ParameterLocation.Query };
+            => new()
+            { Path = IpAddress, IsNullable = true, IsSecured = false, In = ParameterLocation.Query };
 
         /// <summary>
         /// Returns the keys and values for the Uri.
@@ -125,12 +126,12 @@ namespace Xpandables.Net.Http.Network
         /// <summary>
         /// The XML output.
         /// </summary>
-        public static LocationOutput Xml => new LocationOutput("xml", 0);
+        public static LocationOutput Xml => new("xml", 0);
 
         /// <summary>
         /// The JSON output.
         /// </summary>
-        public static LocationOutput Json => new LocationOutput("json", 1);
+        public static LocationOutput Json => new("json", 1);
     }
 
     /// <summary>
@@ -157,42 +158,42 @@ namespace Xpandables.Net.Http.Network
         /// <summary>
         /// The English language.
         /// </summary>
-        public static LocationLanguage EnglishUS => new LocationLanguage("en", nameof(EnglishUS), 0);
+        public static LocationLanguage EnglishUS => new("en", nameof(EnglishUS), 0);
 
         /// <summary>
         /// The Germain language.
         /// </summary>
-        public static LocationLanguage Germain => new LocationLanguage("de", nameof(Germain), 1);
+        public static LocationLanguage Germain => new("de", nameof(Germain), 1);
 
         /// <summary>
         /// The Spanish language.
         /// </summary>
-        public static LocationLanguage Spanish => new LocationLanguage("es", nameof(Spanish), 2);
+        public static LocationLanguage Spanish => new("es", nameof(Spanish), 2);
 
         /// <summary>
         /// The French language.
         /// </summary>
-        public static LocationLanguage French => new LocationLanguage("fr", nameof(French), 3);
+        public static LocationLanguage French => new("fr", nameof(French), 3);
 
         /// <summary>
         /// The Japanese language.
         /// </summary>
-        public static LocationLanguage Japanese => new LocationLanguage("ja", nameof(Japanese), 4);
+        public static LocationLanguage Japanese => new("ja", nameof(Japanese), 4);
 
         /// <summary>
         /// The Portuguese Brazil language.
         /// </summary>
-        public static LocationLanguage PortugeseBrazil => new LocationLanguage("pt-br", nameof(PortugeseBrazil), 5);
+        public static LocationLanguage PortugeseBrazil => new("pt-br", nameof(PortugeseBrazil), 5);
 
         /// <summary>
         /// The Russian language.
         /// </summary>
-        public static LocationLanguage Russian => new LocationLanguage("ru", nameof(Russian), 6);
+        public static LocationLanguage Russian => new("ru", nameof(Russian), 6);
 
         /// <summary>
         /// The Chinese language.
         /// </summary>
-        public static LocationLanguage Chinese => new LocationLanguage("zh", nameof(Chinese), 7);
+        public static LocationLanguage Chinese => new("zh", nameof(Chinese), 7);
     }
 
     /// <summary>

@@ -29,7 +29,7 @@ namespace Xpandables.Net.Extensibility
     /// </summary>
     public sealed class RecursiveDirectoryCatalog : ComposablePartCatalog, INotifyComposablePartCatalogChanged, ICompositionElement
     {
-        private readonly AggregateCatalog _aggregateCatalog = new AggregateCatalog();
+        private readonly AggregateCatalog _aggregateCatalog = new();
         private readonly string _path;
 
         /// <summary>

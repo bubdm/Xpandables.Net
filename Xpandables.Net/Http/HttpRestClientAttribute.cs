@@ -222,7 +222,7 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// Collections of content type from data format.
         /// </summary>
-        public static readonly Dictionary<DataFormat, string> FromDataFormat = new Dictionary<DataFormat, string>
+        public static readonly Dictionary<DataFormat, string> FromDataFormat = new()
         {
             { DataFormat.Xml, Xml },
             { DataFormat.Json, Json },

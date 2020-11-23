@@ -137,7 +137,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 Indexed = 3
             }
 
-            private readonly MemoryStream stream = new MemoryStream();
+            private readonly MemoryStream stream = new();
 
             public void Dispose() => stream?.Dispose();
 

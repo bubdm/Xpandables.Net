@@ -33,7 +33,7 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <param name="statusCode">The status code of the response.</param>
         internal static HttpRestClientResponse Success(HttpStatusCode statusCode = HttpStatusCode.OK)
-            => new HttpRestClientResponse(statusCode);
+            => new(statusCode);
 
         /// <summary>
         /// Returns a failure HTTP status response.
@@ -42,14 +42,14 @@ namespace Xpandables.Net.Http
         /// <param name="statusCode">The status code of the response.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
         internal static HttpRestClientResponse Failure(Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
-            => new HttpRestClientResponse(exception, statusCode);
+            => new(exception, statusCode);
 
         /// <summary>
         /// Returns a failure HTTP status response.
         /// </summary>
         /// <param name="statusCode">The status code of the response.</param>        
         internal static HttpRestClientResponse Failure(HttpStatusCode statusCode = HttpStatusCode.BadRequest)
-            => new HttpRestClientResponse(statusCode);
+            => new(statusCode);
 
         /// <summary>
         /// Initializes a new instance of <see cref="HttpRestClientResponse"/> class with the status code.
@@ -168,14 +168,14 @@ namespace Xpandables.Net.Http
         /// <param name="result">The result instance.</param>
         /// <param name="statusCode">The status response code.</param>
         internal static HttpRestClientResponse<TResult> Success(TResult result, HttpStatusCode statusCode = HttpStatusCode.OK)
-            => new HttpRestClientResponse<TResult>(result, statusCode);
+            => new(result, statusCode);
 
         /// <summary>
         ///  Returns a success HTTP status response.
         /// </summary>
         /// <param name="statusCode">The status response code.</param>
         internal static new HttpRestClientResponse<TResult> Success(HttpStatusCode statusCode = HttpStatusCode.OK)
-            => new HttpRestClientResponse<TResult>(statusCode);
+            => new(statusCode);
 
         /// <summary>
         /// Returns a failure HTTP status response.
@@ -185,14 +185,14 @@ namespace Xpandables.Net.Http
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
         internal static new HttpRestClientResponse<TResult> Failure(
             Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
-            => new HttpRestClientResponse<TResult>(exception, statusCode);
+            => new(exception, statusCode);
 
         /// <summary>
         /// Returns a failure HTTP status response.
         /// </summary>
         /// <param name="statusCode">The status code of the response.</param>
         internal static new HttpRestClientResponse<TResult> Failure(HttpStatusCode statusCode = HttpStatusCode.BadRequest)
-            => new HttpRestClientResponse<TResult>(statusCode);
+            => new(statusCode);
 
         /// <summary>
         ///  Returns a failure HTTP status response.
@@ -202,7 +202,7 @@ namespace Xpandables.Net.Http
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
         internal static HttpRestClientResponse<TResult> Failure(
             HttpRestClientException exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
-            => new HttpRestClientResponse<TResult>(exception, statusCode);
+            => new(exception, statusCode);
 
         /// <summary>
         /// Initializes a new instance of <see cref="HttpRestClientResponse{TResult}"/> class with the status code.

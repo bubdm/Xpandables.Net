@@ -27,7 +27,7 @@ namespace Xpandables.Net.Asynchronous
     public static partial class AsyncEnumerableExtensions
     {
         // Defines the static task factory.
-        internal static readonly TaskFactory _taskFactory = new TaskFactory(
+        internal static readonly TaskFactory _taskFactory = new(
             CancellationToken.None,
             TaskCreationOptions.None,
             TaskContinuationOptions.None,

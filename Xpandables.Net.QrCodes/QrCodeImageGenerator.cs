@@ -29,7 +29,7 @@ namespace Xpandables.Net.QrCodes
     /// </summary>
     public sealed class QrCodeImageGenerator : IDisposable, IQrCodeImageGenerator
     {
-        private readonly QRCodeGenerator _qRCodeGenerator = new QRCodeGenerator();
+        private readonly QRCodeGenerator _qRCodeGenerator = new();
 
         /// <summary>
         /// Generates a list of qr-codes.

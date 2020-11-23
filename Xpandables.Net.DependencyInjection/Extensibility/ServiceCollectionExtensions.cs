@@ -117,7 +117,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         private static ImportDefinition BuildAddImportDefinition()
-            => new ImportDefinition(
+            => new(
                     _ => true,
                     typeof(IAddServiceExport).FullName,
                     ImportCardinality.ZeroOrMore,

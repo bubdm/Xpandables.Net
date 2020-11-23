@@ -55,7 +55,7 @@ namespace Xpandables.Net
         /// Creates a <see cref="ValuePicture"/> with the default image content.
         /// </summary>
         /// <returns>A new instance of <see cref="ValuePicture"/> with default image content.</returns>
-        public static ValuePicture Default() => new ValuePicture("Default", Resources.Default, 1500, 1500, "Png");
+        public static ValuePicture Default() => new("Default", Resources.Default, 1500, 1500, "Png");
 
         /// <summary>
         /// Creates a new picture from another.

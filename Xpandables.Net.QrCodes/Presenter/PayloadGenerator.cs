@@ -2969,7 +2969,7 @@ namespace Xpandables.Net.QrCodes.Presenter
             private readonly string hostname, password, methodStr;
             private readonly string? tag, parameter;
             private readonly int port;
-            private readonly Dictionary<string, string> encryptionTexts = new Dictionary<string, string>() {
+            private readonly Dictionary<string, string> encryptionTexts = new() {
                 { "Chacha20IetfPoly1305", "chacha20-ietf-poly1305" },
                 { "Aes128Gcm", "aes-128-gcm" },
                 { "Aes192Gcm", "aes-192-gcm" },
@@ -3048,7 +3048,7 @@ namespace Xpandables.Net.QrCodes.Presenter
                 }, tag)
             { }
 
-            private readonly Dictionary<string, string> UrlEncodeTable = new Dictionary<string, string>
+            private readonly Dictionary<string, string> UrlEncodeTable = new()
             {
                 [" "] = "+",
                 ["\0"] = "%00",

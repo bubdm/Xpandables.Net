@@ -58,7 +58,7 @@ namespace Xpandables.Net.Api
 
     sealed class ContactService
     {
-        internal static readonly List<Contact> Contacts = new List<Contact>
+        internal static readonly List<Contact> Contacts = new()
         {
             new Contact(1, "Filip W", "Paris 01", "Paris"),
             new Contact(2, "Jean Pierre", "25 Liberty Street", "Lyon"),

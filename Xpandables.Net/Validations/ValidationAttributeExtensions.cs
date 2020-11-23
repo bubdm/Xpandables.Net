@@ -32,6 +32,6 @@ namespace Xpandables.Net.Validations
         /// <param name="value">The value of the object that caused the attribute to trigger the validation error.</param>
         /// <param name="memberNames">The list of member names that have validation errors.</param>
         public static ValidationException CreateValidationException(this object _, string? errorMessage, object? value, params string[]? memberNames)
-            => new ValidationException(new ValidationResult(errorMessage, memberNames), default, value);
+            => new(new ValidationResult(errorMessage, memberNames), default, value);
     }
 }
