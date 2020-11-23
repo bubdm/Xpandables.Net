@@ -69,7 +69,7 @@ namespace Xpandables.Net.DependencyInjection
 
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandCorrelationDecorator<>));
             services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandCorrelationDecorator<,>));
-            services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncQueryCorrelationDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncEnumerableQueryCorrelationDecorator<,>));
             services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(QueryCorrelationDecorator<,>));
 
             return services;
