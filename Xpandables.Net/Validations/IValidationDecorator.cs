@@ -20,7 +20,7 @@ namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// A marker interface that allows the command/query class to be decorated with the validation behavior according to the class type :
-    /// <see cref="IAsyncEnumerableQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncQueryValidatorDecorator{TQuery, TResult}"/> while
+    /// <see cref="IAsyncEnumerableQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncEnumerableQueryValidatorDecorator{TQuery, TResult}"/> while
     /// <see cref="IAsyncCommand"/> class implementation will be decorated with <see cref="AsyncCommandValidatorDecorator{TCommand}"/>.
     /// The default validation behavior uses the data annotations validator on validation attributes. You can implement the interface
     /// <see cref="IValidation{TArgument}"/> to customize a validation behavior.

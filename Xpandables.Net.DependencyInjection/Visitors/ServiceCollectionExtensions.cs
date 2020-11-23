@@ -44,7 +44,7 @@ namespace Xpandables.Net.DependencyInjection
             services.AddTransient(typeof(ICompositeVisitor<>), typeof(CompositeVisitorRule<>));
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandVisitorDecorator<>));
             services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandVisitorDecorator<,>));
-            services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncQueryVisitorDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncEnumerableQueryVisitorDecorator<,>));
             services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(QueryVisitorDecorator<,>));
             return services;
         }

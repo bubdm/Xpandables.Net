@@ -34,21 +34,21 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class AsyncQueryVisitorDecorator<TQuery, TResult> : IAsyncEnumerableQueryHandler<TQuery, TResult>
+    public sealed class AsyncEnumerableQueryVisitorDecorator<TQuery, TResult> : IAsyncEnumerableQueryHandler<TQuery, TResult>
         where TQuery : class, IAsyncEnumerableQuery<TResult>, IVisitable<TQuery>
     {
         private readonly IAsyncEnumerableQueryHandler<TQuery, TResult> _decoratee;
         private readonly ICompositeVisitor<TQuery> _visitor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncQueryVisitorDecorator{TQuery, TResult}"/> class with
+        /// Initializes a new instance of the <see cref="AsyncEnumerableQueryVisitorDecorator{TQuery, TResult}"/> class with
         /// the query handler to be decorated and the composite visitor.
         /// </summary>
         /// <param name="decoratee">The query to be decorated.</param>
         /// <param name="visitor">The composite visitor to apply</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        public AsyncQueryVisitorDecorator(IAsyncEnumerableQueryHandler<TQuery, TResult> decoratee, ICompositeVisitor<TQuery> visitor)
+        public AsyncEnumerableQueryVisitorDecorator(IAsyncEnumerableQueryHandler<TQuery, TResult> decoratee, ICompositeVisitor<TQuery> visitor)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));
