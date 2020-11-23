@@ -220,13 +220,25 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddXCommandHandlerWrapper();
 
-            var commandTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && (type.GetInterface(typeof(IAsyncCommandHandler<>).Name) is not null || type.GetInterface(typeof(IAsyncCommandHandler<,>).Name) is not null))
-                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IAsyncCommandHandler<>).Name) ?? type.GetInterface(typeof(IAsyncCommandHandler<,>).Name)! })
+            var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncCommandHandler<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncCommandHandler<>)) })
                 .ToList();
 
-            foreach (var commandType in commandTypes)
-                services.AddScoped(commandType.Interface, commandType.Type);
+            foreach (var handler in genericHandlers)
+                foreach (var interf in handler.Interfaces)
+                    services.AddScoped(interf, handler.Type);
+
+            var genericResultHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncCommandHandler<,>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncCommandHandler<,>)) })
+                .ToList();
+
+            foreach (var handler in genericResultHandlers)
+                foreach (var interf in handler.Interfaces)
+                    services.AddScoped(interf, handler.Type);
 
             return services;
         }
@@ -302,13 +314,25 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddXQueryHandlerWrapper();
 
-            var queryTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && (type.GetInterface(typeof(IAsyncEnumerableQueryHandler<,>).Name) is not null || type.GetInterface(typeof(IAsyncQueryHandler<,>).Name) is not null))
-                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IAsyncEnumerableQueryHandler<,>).Name) ?? type.GetInterface(typeof(IAsyncQueryHandler<,>).Name)! })
+            var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncQueryHandler<,>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncQueryHandler<,>)) })
                 .ToList();
 
-            foreach (var queryType in queryTypes)
-                services.AddScoped(queryType.Interface, queryType.Type);
+            foreach (var handler in genericHandlers)
+                foreach (var interf in handler.Interfaces)
+                    services.AddScoped(interf, handler.Type);
+
+            var genericResultHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncEnumerableQueryHandler<,>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncEnumerableQueryHandler<,>)) })
+                .ToList();
+
+            foreach (var handler in genericResultHandlers)
+                foreach (var interf in handler.Interfaces)
+                    services.AddScoped(interf, handler.Type);
 
             return services;
         }
@@ -369,13 +393,15 @@ namespace Xpandables.Net.DependencyInjection
             if (services is null) throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
-            var validatorTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterface(typeof(IValidation<>).Name) is not null)
-                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IValidation<>).Name)! })
+            var genericValidators = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidation<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidation<>)) })
                 .ToList();
 
-            foreach (var validatorType in validatorTypes)
-                services.AddScoped(validatorType.Interface, validatorType.Type);
+            foreach (var validator in genericValidators)
+                foreach (var interf in validator.Interfaces)
+                    services.AddScoped(interf, validator.Type);
 
             return services;
         }
@@ -410,13 +436,15 @@ namespace Xpandables.Net.DependencyInjection
             if (services is null) throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
-            var visitorTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterface(typeof(IVisitor<>).Name) is not null)
-                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IVisitor<>).Name)! })
+            var genericVisitors = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IVisitor<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IVisitor<>)) })
                 .ToList();
 
-            foreach (var visitorType in visitorTypes)
-                services.AddTransient(visitorType.Interface, visitorType.Type);
+            foreach (var handler in genericVisitors)
+                foreach (var interf in handler.Interfaces)
+                    services.AddScoped(interf, handler.Type);
 
             return services;
         }

@@ -69,42 +69,27 @@ namespace Xpandables.Net.Api
         };
     }
 
-    public sealed class SelectAllHandler : IAsyncEnumerableQueryHandler<SelectAll, Contact>
+    public sealed class ContactHandler : 
+        IAsyncEnumerableQueryHandler<SelectAll, Contact>, IAsyncQueryHandler<Select, Contact?>, IAsyncCommandHandler<Add, int>, IAsyncCommandHandler<Delete>, IAsyncCommandHandler<Edit, Contact>
     {
         public IAsyncEnumerable<Contact> HandleAsync(SelectAll query, CancellationToken cancellationToken = default) => new AsyncEnumerable<Contact>(ContactService.Contacts);
-    }
-
-    public sealed class SelectHandler : IAsyncQueryHandler<Select, Contact?>
-    {
         public Task<Contact?> HandleAsync(Select query, CancellationToken cancellationToken = default)
         {
             var result = ContactService.Contacts.FirstOrDefault(c => c.Id == query.Id);
             return Task.FromResult(result);
         }
-    }
-
-    public sealed class AddHandler : IAsyncCommandHandler<Add, int>
-    {
         public Task<int> HandleAsync(Add command, CancellationToken cancellationToken = default)
         {
             var newId = (ContactService.Contacts.LastOrDefault()?.Id ?? 0) + 1;
             ContactService.Contacts.Add(new Contact(newId, command.Name, command.Address, command.City));
             return Task.FromResult(newId);
         }
-    }
-
-    public sealed class DeleteHandler : IAsyncCommandHandler<Delete>
-    {
         public Task HandleAsync(Delete command, CancellationToken cancellationToken = default)
         {
             var result = ContactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
             if (result is null) throw new KeyNotFoundException();
             return Task.CompletedTask;
         }
-    }
-
-    public sealed class EditHandler : IAsyncCommandHandler<Edit, Contact>
-    {
         public Task<Contact> HandleAsync(Edit command, CancellationToken cancellationToken = default)
         {
             var result = ContactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
