@@ -15,11 +15,11 @@
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net</title>
     <PackageIcon>Xpandables.png</PackageIcon>
-    <Version>5.0.4</Version>
-    <AssemblyVersion>5.0.4</AssemblyVersion>
-    <FileVersion>5.0.4</FileVersion>
-    <PackageVersion>5.0.4</PackageVersion>
-    <PackageReleaseNotes>Fix IHttpRestClientHandler async.</PackageReleaseNotes>    
+    <Version>5.0.5</Version>
+    <AssemblyVersion>5.0.5</AssemblyVersion>
+    <FileVersion>5.0.5</FileVersion>
+    <PackageVersion>5.0.5</PackageVersion>
+    <PackageReleaseNotes>Fix Multi interface CQRS registration.</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand, IDispatcher, IQuery{TResult}, Enumeration, ILogger, Interception, ICommandHandler{TCommand}, IQueryHandler{TQuery, TResult}, ValueObject...</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>

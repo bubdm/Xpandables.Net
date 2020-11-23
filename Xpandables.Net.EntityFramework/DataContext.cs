@@ -26,9 +26,7 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
-using Xpandables.Net.CQRS;
-
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/>

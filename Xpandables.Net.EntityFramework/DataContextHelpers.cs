@@ -15,18 +15,15 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
+using System.Linq;
+using System.Reflection;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-using System;
-
-using System.Linq;
-using System.Reflection;
-
-using Xpandables.Net.CQRS;
-
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     ///  Provides with methods used to extend <see cref="IDataContext"/>.

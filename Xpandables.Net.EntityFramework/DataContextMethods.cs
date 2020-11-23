@@ -15,15 +15,15 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Xpandables.Net.EntityFramework
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+namespace Xpandables.Net.CQRS
 {
     public abstract partial class DataContext : DbContext
     {
