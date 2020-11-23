@@ -37,14 +37,6 @@ namespace Xpandables.Net.CQRS
             => _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
         /// <summary>
-        /// Returns the handler of the <typeparamref name="THandler"/> type.
-        /// </summary>
-        /// <typeparam name="THandler">The type of the handler to look for.</typeparam>
-        /// <returns>A handler of the <typeparamref name="THandler"/> type -or- null if there is no <typeparamref name="THandler"/> type.</returns>
-        [return: MaybeNull]
-        public THandler GetHandler<THandler>() where THandler : class => _serviceProvider.GetService(typeof(THandler)) as THandler;
-
-        /// <summary>
         /// Returns the handler of the specified type.
         /// </summary>
         /// <param name="handlerType">An object that specifies the type of handler object to get.</param>

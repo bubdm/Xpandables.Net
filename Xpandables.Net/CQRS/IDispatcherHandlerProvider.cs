@@ -31,7 +31,7 @@ namespace Xpandables.Net.CQRS
         /// <typeparam name="THandler">The type of the handler to look for.</typeparam>
         /// <returns>A handler of the <typeparamref name="THandler"/> type -or- null if there is no <typeparamref name="THandler"/> type.</returns>
         [return: MaybeNull]
-        THandler GetHandler<THandler>() where THandler : class;
+        public sealed THandler GetHandler<THandler>() where THandler : class => GetHandler(typeof(THandler)) as THandler;
 
         /// <summary>
         /// Returns the handler of the specified type.
