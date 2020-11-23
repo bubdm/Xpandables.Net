@@ -24,6 +24,8 @@ using System;
 using System.Linq;
 using System.Reflection;
 
+using Xpandables.Net.CQRS;
+
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>

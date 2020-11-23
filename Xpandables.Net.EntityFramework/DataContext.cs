@@ -26,6 +26,8 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
+using Xpandables.Net.CQRS;
+
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>

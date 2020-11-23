@@ -22,7 +22,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.CQRS
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     /// <summary>

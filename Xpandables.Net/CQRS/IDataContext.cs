@@ -22,7 +22,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// Represents a method used to handler persistence exception.

@@ -20,7 +20,6 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.CQRS;
-using Xpandables.Net.EntityFramework;
 
 namespace Xpandables.Net.DependencyInjection
 {
