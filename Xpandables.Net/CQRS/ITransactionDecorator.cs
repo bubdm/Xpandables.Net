@@ -15,8 +15,6 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Transactions;
-
 namespace Xpandables.Net.CQRS
 {
     /// <summary>

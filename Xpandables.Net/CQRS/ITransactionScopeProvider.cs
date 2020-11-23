@@ -18,9 +18,7 @@
 using System;
 using System.Transactions;
 
-using Xpandables.Net.CQRS;
-
-namespace Xpandables.Net.Transactions
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// Provides with a method to retrieve a definition of a transaction scope to be applied to the target command/query.
