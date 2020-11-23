@@ -68,6 +68,145 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
+        /// Adds the <see cref="CorrelationCollection{TKey, TValue}"/> to the services with scoped life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXCorrelationCollection(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped(typeof(CorrelationCollection<,>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IAsyncCorrelationContext"/> to the services with scoped life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXCorrelationContext(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<AsyncCorrelationContext>();
+            services.AddScoped<IAsyncCorrelationContext>(provider => provider.GetRequiredService<AsyncCorrelationContext>());
+            return services;
+        }
+
+        /// <summary>
+        /// Adds correlation behavior to commands and queries that are decorated with the <see cref="ICorrelationDecorator"/> to the services
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXCorrelationDecorator(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<AsyncCorrelationContext>();
+            services.AddScoped<IAsyncCorrelationContext>(provider => provider.GetRequiredService<AsyncCorrelationContext>());
+
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandCorrelationDecorator<>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandCorrelationDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncEnumerableQueryCorrelationDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(QueryCorrelationDecorator<,>));
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IDispatcher"/> and <see cref="IDispatcherHandlerProvider"/> implementations to the services with scoped life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXDispatcher(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<IDispatcherHandlerProvider, DispatcherHandlerProvider>();
+            services.AddScoped<IDispatcher, Dispatcher>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <typeparamref name="TDispatcher"/> and <typeparamref name="TDispatcherHandlerProvider"/> types to the services with scoped life time.
+        /// </summary>
+        /// <typeparam name="TDispatcher">The dispatcher type implementation.</typeparam>
+        /// <typeparam name="TDispatcherHandlerProvider">The dispatcher handler provider type implementation.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXDispatcher<TDispatcher, TDispatcherHandlerProvider>(this IServiceCollection services)
+            where TDispatcher : class, IDispatcher
+            where TDispatcherHandlerProvider : class, IDispatcherHandlerProvider
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<IDispatcherHandlerProvider, TDispatcherHandlerProvider>();
+            services.AddScoped<IDispatcher, TDispatcher>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IDataContext"/> class reference implementation found from the executing assembly to the services with scoped life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXDataContext<TDataContext>(this IServiceCollection services)
+            where TDataContext : class, IDataContext
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            var serviceDescriptor = new ServiceDescriptor(typeof(IDataContext), provider => provider.GetRequiredService<TDataContext>(), ServiceLifetime.Scoped);
+            services.Add(serviceDescriptor);
+            services.AddScoped(typeof(IDataContext<>), typeof(DataContext<>));
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds persistence behavior to commands and queries that are decorated with the <see cref="IPersistenceDecorator"/> to the services
+        /// with transient life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXPersistenceDecorator(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandPersistenceDecorator<>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandPersistenceDecorator<,>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the transaction type provider to the services.
+        /// </summary>
+        /// <typeparam name="TTransactionScopeProvider">The type transaction scope provider.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXTransactionScopeProvider<TTransactionScopeProvider>(this IServiceCollection services)
+            where TTransactionScopeProvider : class, ITransactionScopeProvider
+        {
+            if (services is null) throw new ArgumentNullException(nameof(services));
+            return services.AddScoped<ITransactionScopeProvider, TTransactionScopeProvider>();
+        }
+
+        /// <summary>
+        /// Adds transaction scope behavior to commands and queries that are decorated with the <see cref="ITransactionDecorator"/>
+        /// to the services
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXTransactionDecorator(this IServiceCollection services)
+        {
+            if (services is null) throw new ArgumentNullException(nameof(services));
+
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandTransactionDecorator<>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandTransactionDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncCommandTransactionDecorator<,>));
+            return services;
+        }
+
+        /// <summary>
         /// Adds the <see cref="IAsyncCommandHandler{TCommand}"/> and <see cref="IAsyncCommandHandler{TCommand, TResult}"/> to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -185,6 +324,100 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddTransient(typeof(AsyncEnumerableQueryHandlerWrapper<,>));
             services.AddTransient(typeof(AsyncQueryHandlerWrapper<,>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds <see cref="IMetadataDescriptionProvider"/> to the services collection.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXMetadataDescriptionProvider(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddTransient<IMetadataDescriptionProvider, MetadataDescriptionProvider>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds validation behavior to commands and queries that are decorated with the <see cref="IValidationDecorator"/> to the services
+        /// with transient life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXValidationDecorator(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddTransient(typeof(ICompositeValidation<>), typeof(CompositeValidation<>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandValidatorDecorator<>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandValidatorDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncEnumerableQueryValidatorDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(QueryValidatorDecorator<,>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IValidation{TArgument}"/> to the services with transient life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
+        public static IServiceCollection AddXValidations(this IServiceCollection services, Assembly[] assemblies)
+        {
+            if (services is null) throw new ArgumentNullException(nameof(services));
+            if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+
+            var validatorTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterface(typeof(IValidation<>).Name) is not null)
+                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IValidation<>).Name)! })
+                .ToList();
+
+            foreach (var validatorType in validatorTypes)
+                services.AddScoped(validatorType.Interface, validatorType.Type);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds visitor behavior to commands and queries that are decorated with the <see cref="IVisitable{TVisitable}"/> to the services
+        /// with transient life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXVisitorDecorator(this IServiceCollection services)
+        {
+            if (services is null) throw new ArgumentNullException(nameof(services));
+
+            services.AddTransient(typeof(ICompositeVisitor<>), typeof(CompositeVisitorRule<>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandVisitorDecorator<>));
+            services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandVisitorDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncEnumerableQueryVisitorDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(QueryVisitorDecorator<,>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IVisitor{TElement}"/> to the services with transient life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
+        public static IServiceCollection AddXVisitors(this IServiceCollection services, Assembly[] assemblies)
+        {
+            if (services is null) throw new ArgumentNullException(nameof(services));
+            if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+
+            var visitorTypes = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterface(typeof(IVisitor<>).Name) is not null)
+                .Select(type => new { Type = type, Interface = type.GetInterface(typeof(IVisitor<>).Name)! })
+                .ToList();
+
+            foreach (var visitorType in visitorTypes)
+                services.AddTransient(visitorType.Interface, visitorType.Type);
+
             return services;
         }
     }
