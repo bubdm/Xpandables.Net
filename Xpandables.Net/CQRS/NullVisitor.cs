@@ -17,9 +17,7 @@
 ************************************************************************************************************/
 using System.Threading.Tasks;
 
-using Xpandables.Net.CQRS;
-
-namespace Xpandables.Net.Visitors
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// Visitor when no explicit registration exist for a given type.

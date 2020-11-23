@@ -16,38 +16,35 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
-using Xpandables.Net.CQRS;
-
-namespace Xpandables.Net.Visitors
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// Allows an application author to apply the visitor pattern : The generic Visitor definition.
+    /// Allows an application author to apply the visitor pattern by composition using a decorator.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     /// <typeparam name="TElement">Type of element to be visited.</typeparam>
-    public interface IVisitor<in TElement>
+    public interface ICompositeVisitor<in TElement> : IVisitor<TElement>
         where TElement : class, IVisitable<TElement>
     {
-        /// <summary>
-        /// Gets the zero-base order in which the visitor will be applied.
-        /// The default value is zero.
-        /// </summary>
-        public virtual int Order => 0;
+        internal IEnumerable<IVisitor<TElement>> VisitorInstances { get; }
 
         /// <summary>
-        /// Declares a Visit operation.
-        /// When overridden in derived class, this method will do the actual job of visiting the specified element.
-        /// The default behavior checks that the argument is not null.
+        /// Asynchronously applies all found visitors to the element according to the visitor order.
         /// </summary>
-        /// <param name="element">Element to be visited.</param>
+        /// <param name="element">The element to be visited.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="element"/> does not implement <see cref="IVisitable{TVisitable}"/>.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public virtual async Task VisitAsync(TElement element)
+        public new virtual async Task VisitAsync(TElement element)
         {
             _ = element ?? throw new ArgumentNullException(nameof(element));
-            await Task.CompletedTask.ConfigureAwait(false);
+
+            var tasks = VisitorInstances.OrderBy(o => o.Order).Select(visitor => element.AcceptAsync(visitor));
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
     }
 }

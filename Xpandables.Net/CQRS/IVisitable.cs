@@ -18,8 +18,6 @@
 using System;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Visitors;
-
 namespace Xpandables.Net.CQRS
 {
     /// <summary>

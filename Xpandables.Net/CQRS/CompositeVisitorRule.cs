@@ -19,9 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Xpandables.Net.CQRS;
-
-namespace Xpandables.Net.Visitors
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// The composite visitor used to wrap all visitors for a specific visitable type.
@@ -40,6 +38,6 @@ namespace Xpandables.Net.Visitors
         /// </summary>
         /// <param name="visitors">The collection of visitors for a specific type.</param>
         public CompositeVisitorRule(IEnumerable<IVisitor<TElement>> visitors)
-            => _visitorInstances = visitors ?? Enumerable.Empty<IVisitor<TElement>>();    
+            => _visitorInstances = visitors ?? Enumerable.Empty<IVisitor<TElement>>();
     }
 }
