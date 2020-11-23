@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Validations
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// Validator when no explicit registration exist for a given type.

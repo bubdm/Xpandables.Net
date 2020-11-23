@@ -15,30 +15,23 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Validations
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of the <see cref="IValidation{TArgument}"/>
-    /// interface without dedicated class.
+    /// Defines method contracts used to validate a type-specific argument by composition using a decorator.
+    /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
-    /// <typeparam name="TArgument">Type of the argument.</typeparam>
-    public sealed class Validation<TArgument> : IValidation<TArgument>
+    /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
+    public interface ICompositeValidation<in TArgument> : IValidation<TArgument>
         where TArgument : class
     {
-        private readonly Func<TArgument, Task> _validator;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Validation{TArgument}"/> class with the delegate to be used
-        /// as <see cref="IValidation{TArgument}"/> implementation.
-        /// </summary>
-        /// <param name="validator">The delegate validator.</param>
-        /// <exception cref="ArgumentException">The <paramref name="validator"/> is null.</exception>
-        public Validation(Func<TArgument, Task> validator) => _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+        internal IEnumerable<IValidation<TArgument>> ValidationInstances { get; }
 
         /// <summary>
         /// Asynchronously validates the argument and throws the <see cref="ValidationException"/> if necessary.
@@ -46,6 +39,10 @@ namespace Xpandables.Net.Validations
         /// <param name="argument">The target argument to be validated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
         /// <exception cref="ValidationException">Any validation exception.</exception>
-        public async Task ValidateAsync(TArgument argument) => await _validator(argument).ConfigureAwait(false);
+        public new virtual async Task ValidateAsync(TArgument argument)
+        {
+            var tasks = ValidationInstances.OrderBy(o => o.Order).Select(validator => validator.ValidateAsync(argument));
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+        }
     }
 }

@@ -22,7 +22,6 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.CQRS;
-using Xpandables.Net.Validations;
 
 namespace Xpandables.Net.DependencyInjection
 {

@@ -19,7 +19,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Validations
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// Defines method contracts used to validate a type-specific argument using a decorator.

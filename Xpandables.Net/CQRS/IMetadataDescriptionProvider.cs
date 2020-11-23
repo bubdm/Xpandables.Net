@@ -24,7 +24,7 @@ using System.Reflection;
 
 using static System.FormattableString;
 
-namespace Xpandables.Net.Validations
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// Default implementation of <see cref="IMetadataDescriptionProvider"/>.

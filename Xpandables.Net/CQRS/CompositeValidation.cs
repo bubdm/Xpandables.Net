@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Xpandables.Net.Validations
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// The composite validation class used to wrap all validators for a specific type.

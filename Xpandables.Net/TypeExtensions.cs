@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -33,6 +34,16 @@ namespace Xpandables.Net
     /// </summary>
     public static class TypeExtensions
     {
+        /// <summary>
+        /// Creates a new <see cref="ValidationException"/> using the specified arguments.
+        /// </summary>
+        /// <param name="_"></param>
+        /// <param name="errorMessage">The error message.</param>
+        /// <param name="value">The value of the object that caused the attribute to trigger the validation error.</param>
+        /// <param name="memberNames">The list of member names that have validation errors.</param>
+        public static ValidationException CreateValidationException(this object _, string? errorMessage, object? value, params string[]? memberNames)
+            => new(new ValidationResult(errorMessage, memberNames), default, value);
+
         /// <summary>
         /// Returns the description string attribute of the current <see cref="Enum"/> value type.
         /// if not found, returns the value as string.
