@@ -58,14 +58,12 @@ namespace Xpandables.Net.CQRS
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            await query.AcceptAsync(_visitor).ConfigureAwait(false);
+            await query.AcceptAsync(_visitor, cancellationToken).ConfigureAwait(false);
             await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false))
                 yield return result;
         }

@@ -27,8 +27,8 @@ namespace Xpandables.Net.CQRS
     /// This class allows the application author to add validation support to query control flow.
     /// The target query should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target query handler with an implementation of <see cref="ICompositeValidation{TArgument}"/>
-    /// and applies all validators found to the target query before the command get handled. You should provide with implementation
-    /// of <see cref="IValidation{TArgument}"/> for validation.
+    /// and applies all validators found for the target query before the command get handled. If a validator is failed, returns an empty enumerable.
+    /// You should provide with implementation of <see cref="IValidation{TArgument}"/> for validation.
     /// </summary>
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
@@ -54,16 +54,18 @@ namespace Xpandables.Net.CQRS
 
         /// <summary>
         /// Asynchronously validates the query before handling and returns an asynchronous result type.
+        /// if a validator is failed, returns an empty enumerable.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await _validator.ValidateAsync(query).ConfigureAwait(false);
+            var resultState = await _validator.ValidateAsync(query, cancellationToken).ConfigureAwait(false);
+            if (resultState.IsFailed())
+                yield break;
+
             await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false))
                 yield return result;
         }

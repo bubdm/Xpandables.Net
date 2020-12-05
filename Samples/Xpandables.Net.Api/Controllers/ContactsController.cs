@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,14 +48,14 @@ namespace Xpandables.Net.Api.Controllers
         {
             var contact = await _dispatcher.InvokeAsync(select, cancellationToken).ConfigureAwait(false);
 
-            return contact is not null ? Ok(contact) : NotFound();
+            return contact.IsSuccess() ? Ok(contact.Value) : NotFound();
         }
 
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] Add add, CancellationToken cancellationToken = default)
         {
             var id = await _dispatcher.InvokeAsync(add, cancellationToken).ConfigureAwait(false);
-            return CreatedAtRoute("ContactLink", new { id }, id);
+            return CreatedAtRoute("ContactLink", new { id = id.Value }, id.Value);
         }
 
         [HttpDelete]
@@ -71,7 +70,7 @@ namespace Xpandables.Net.Api.Controllers
         public async Task<IActionResult> EditAsync([FromBody] Edit edit, CancellationToken cancellationToken = default)
         {
             var updated = await _dispatcher.InvokeAsync(edit, cancellationToken).ConfigureAwait(false);
-            return Ok(updated);
+            return Ok(updated.Value);
         }
     }
 }

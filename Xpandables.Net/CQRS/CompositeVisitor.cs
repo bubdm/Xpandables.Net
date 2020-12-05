@@ -26,7 +26,7 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TElement">Type of the element to be visited</typeparam>
     [Serializable]
-    public sealed class CompositeVisitorRule<TElement> : ICompositeVisitor<TElement>
+    public sealed class CompositeVisitor<TElement> : ICompositeVisitor<TElement>
         where TElement : class, IVisitable<TElement>
     {
         private readonly IEnumerable<IVisitor<TElement>> _visitorInstances;
@@ -34,10 +34,10 @@ namespace Xpandables.Net.CQRS
         IEnumerable<IVisitor<TElement>> ICompositeVisitor<TElement>.VisitorInstances => _visitorInstances;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompositeVisitorRule{TElement}"/> class with a collection of visitors.
+        /// Initializes a new instance of the <see cref="CompositeVisitor{TElement}"/> class with a collection of visitors.
         /// </summary>
         /// <param name="visitors">The collection of visitors for a specific type.</param>
-        public CompositeVisitorRule(IEnumerable<IVisitor<TElement>> visitors)
+        public CompositeVisitor(IEnumerable<IVisitor<TElement>> visitors)
             => _visitorInstances = visitors ?? Enumerable.Empty<IVisitor<TElement>>();
     }
 }

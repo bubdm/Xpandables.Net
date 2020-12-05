@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
@@ -36,15 +37,13 @@ namespace Xpandables.Net.CQRS
         /// Asynchronously applies all found visitors to the element according to the visitor order.
         /// </summary>
         /// <param name="element">The element to be visited.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="element"/> does not implement <see cref="IVisitable{TVisitable}"/>.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public new virtual async Task VisitAsync(TElement element)
+        public new virtual async Task VisitAsync(TElement element, CancellationToken cancellationToken = default)
         {
             _ = element ?? throw new ArgumentNullException(nameof(element));
-
-            var tasks = VisitorInstances.OrderBy(o => o.Order).Select(visitor => element.AcceptAsync(visitor));
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            foreach (var visitor in VisitorInstances.OrderBy(o => o.Order))
+                await visitor.VisitAsync(element, cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -16,7 +16,9 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
@@ -37,16 +39,31 @@ namespace Xpandables.Net.CQRS
         public virtual int Order => 0;
 
         /// <summary>
-        /// Asynchronously validates the argument and throws the <see cref="ValidationException"/> if necessary.
-        /// The default behavior uses <see cref="Validator.ValidateObject(object, ValidationContext, bool)"/>.
+        /// Asynchronously validates the argument and returns validation state with errors if necessary.
+        /// The default behavior uses <see cref="Validator.TryValidateObject(object, ValidationContext, ICollection{ValidationResult}?, bool)"/>.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <exception cref="ValidationException">Any validation exception.</exception>
-        public virtual async Task ValidateAsync(TArgument argument)
+        /// <returns>Returns a result state that contains validation informations.</returns>
+        public virtual async Task<IResultState> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
         {
-            Validator.ValidateObject(argument, new ValidationContext(argument, null, null), true);
-            await Task.CompletedTask.ConfigureAwait(false);
+            var validationResults = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(argument, new ValidationContext(argument, null, null), validationResults, true))
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                var errors = new ResultErrorCollection();
+                foreach (var validationResult in validationResults)
+                    foreach (var member in validationResult.MemberNames)
+                        if (validationResult.ErrorMessage is not null)
+                            errors.Add(new(member, new[] { validationResult.ErrorMessage }));
+
+                return ResultState.Failed(errors);
+            }
+
+            return await Task.FromResult(ResultState.Success()).ConfigureAwait(false);
         }
     }
 }

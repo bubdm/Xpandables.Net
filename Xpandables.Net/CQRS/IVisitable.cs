@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
@@ -34,24 +35,24 @@ namespace Xpandables.Net.CQRS
         /// The default behavior just call the visit method of the visitor on the current instance.
         /// </summary>
         /// <param name="visitor">The visitor to be applied on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public virtual async Task AcceptAsync(IVisitor<TVisitable> visitor)
+        public virtual async Task AcceptAsync(IVisitor<TVisitable> visitor, CancellationToken cancellationToken = default)
         {
             _ = visitor ?? throw new ArgumentNullException(nameof(visitor));
-            await visitor.VisitAsync((TVisitable)this).ConfigureAwait(false);
+            await visitor.VisitAsync((TVisitable)this, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Defines the Accept operation with <see cref="ICompositeVisitor{TElement}"/>.
         /// </summary>
         /// <param name="visitor">The composite visitor to be applied on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public sealed async Task AcceptAsync(ICompositeVisitor<TVisitable> visitor)
+        public sealed async Task AcceptAsync(ICompositeVisitor<TVisitable> visitor, CancellationToken cancellationToken = default)
         {
             _ = visitor ?? throw new ArgumentNullException(nameof(visitor));
-            await visitor.VisitAsync((TVisitable)this).ConfigureAwait(false);
+            await visitor.VisitAsync((TVisitable)this, cancellationToken).ConfigureAwait(false);
         }
     }
 }

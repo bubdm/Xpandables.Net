@@ -18,6 +18,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
@@ -30,7 +31,7 @@ namespace Xpandables.Net.CQRS
     public sealed class Validation<TArgument> : IValidation<TArgument>
         where TArgument : class
     {
-        private readonly Func<TArgument, Task> _validator;
+        private readonly Func<TArgument, CancellationToken, Task<IResultState>> _validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Validation{TArgument}"/> class with the delegate to be used
@@ -38,14 +39,14 @@ namespace Xpandables.Net.CQRS
         /// </summary>
         /// <param name="validator">The delegate validator.</param>
         /// <exception cref="ArgumentException">The <paramref name="validator"/> is null.</exception>
-        public Validation(Func<TArgument, Task> validator) => _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+        public Validation(Func<TArgument, CancellationToken, Task<IResultState>> validator) => _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 
         /// <summary>
         /// Asynchronously validates the argument and throws the <see cref="ValidationException"/> if necessary.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <exception cref="ValidationException">Any validation exception.</exception>
-        public async Task ValidateAsync(TArgument argument) => await _validator(argument).ConfigureAwait(false);
+        public async Task ValidateAsync(TArgument argument, CancellationToken cancellationToken = default) => await _validator(argument, cancellationToken).ConfigureAwait(false);
     }
 }

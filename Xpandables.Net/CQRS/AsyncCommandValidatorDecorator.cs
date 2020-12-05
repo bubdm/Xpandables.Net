@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace Xpandables.Net.CQRS
     /// This class allows the application author to add validation support to command control flow.
     /// The target command should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ICompositeValidation{TArgument}"/>
-    /// and applies all validators found to the target command before the command get handled. You should provide with implementation
+    /// and applies all validators found to the target command before the command get handled if there is no error. You should provide with implementation
     /// of <see cref="IValidation{TArgument}"/> for validation.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
@@ -50,16 +51,19 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously validates the command before handling.
+        /// Asynchronously validates the command before handling if there is no error.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken)
+        /// <returns>A task that represents an object of <see cref="IResultState"/>.</returns>
+        public async Task<IResultState> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
-            await _validator.ValidateAsync(command).ConfigureAwait(false);
-            await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            var resultState = await _validator.ValidateAsync(command, cancellationToken).ConfigureAwait(false);
+            if (resultState.IsSuccess())
+                return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+
+            return resultState;
         }
     }
 
@@ -67,7 +71,7 @@ namespace Xpandables.Net.CQRS
     /// This class allows the application author to add validation support to command control flow.
     /// The target command should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ICompositeValidation{TArgument}"/>
-    /// and applies all validators found to the target command before the command get handled. You should provide with implementation
+    /// and applies all validators found to the target command before the command get handled if there is no error. You should provide with implementation
     /// of <see cref="IValidation{TArgument}"/> for validation.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
@@ -93,16 +97,19 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously validates the command before handling.
+        /// Asynchronously validates the command before handling if there is no error.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task<TResult> HandleAsync(TCommand command, CancellationToken cancellationToken)
+        /// <returns>A task that represents an object of <see cref="IResultState{TValue}"/>.</returns>
+        public async Task<IResultState<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
-            await _validator.ValidateAsync(command).ConfigureAwait(false);
-            return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            var resultState = await _validator.ValidateAsync(command, cancellationToken).ConfigureAwait(false);
+            if (resultState.IsSuccess())
+                return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+
+            return ResultState.Failed<TResult>(resultState.Errors.ToList());
         }
     }
 }

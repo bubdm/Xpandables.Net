@@ -416,7 +416,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient(typeof(ICompositeVisitor<>), typeof(CompositeVisitorRule<>));
+            services.AddTransient(typeof(ICompositeVisitor<>), typeof(CompositeVisitor<>));
             services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandVisitorDecorator<>));
             services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandVisitorDecorator<,>));
             services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncEnumerableQueryVisitorDecorator<,>));

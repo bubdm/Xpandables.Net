@@ -26,7 +26,7 @@ namespace Xpandables.Net.CQRS
     /// The target command should implement the <see cref="IPersistenceDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/> and executes the
     /// the <see cref="IDataContext.PersistAsync(CancellationToken)"/> after the main one in the same control flow only
-    /// if there is no exception. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
+    /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
     /// delegate command, in order to manage the exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
@@ -51,19 +51,19 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously handles the specified command and persists changes to database.
+        /// Asynchronously handles the specified command and persists changes to database if there is no exception or error.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        /// <returns>A task that represents an object of <see cref="IResultState"/>.</returns>
+        public async Task<IResultState> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
-            await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            await _dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
+            var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            if (resultState.IsSuccess())
+                await _dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
+
+            return resultState;
         }
     }
 
@@ -72,7 +72,7 @@ namespace Xpandables.Net.CQRS
     /// The target command should implement the <see cref="IPersistenceDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/> and executes the
     /// the <see cref="IDataContext.PersistAsync(CancellationToken)"/> after the main one in the same control flow only
-    /// if there is no exception. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
+    /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
     /// delegate command, in order to manage the exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
@@ -98,20 +98,19 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously handles the specified command and persists changes to database.
+        /// Asynchronously handles the specified command and persists changes to database if there is no exception or error.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents the <typeparamref name="TResult"/> operation.</returns>
-        public async Task<TResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        /// <returns>A task that represents an object of <see cref="IResultState{TValue}"/>.</returns>
+        public async Task<IResultState<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
-            var result = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            await _dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
-            return result;
+            var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            if (resultState.IsSuccess())
+                await _dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
+
+            return resultState;
         }
     }
 }

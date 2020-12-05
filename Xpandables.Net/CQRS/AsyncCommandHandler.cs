@@ -28,7 +28,7 @@ namespace Xpandables.Net.CQRS
     public sealed class AsyncCommandHandler<TCommand> : IAsyncCommandHandler<TCommand>
         where TCommand : class, IAsyncCommand
     {
-        private readonly Func<TCommand, CancellationToken, Task> _handler;
+        private readonly Func<TCommand, CancellationToken, Task<IResultState>> _handler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncCommandHandler{TArgument}"/> class with the delegate to be used
@@ -39,7 +39,7 @@ namespace Xpandables.Net.CQRS
         /// the <see cref="IAsyncCommandHandler{TCommand}.HandleAsync(TCommand, CancellationToken)"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
-        public AsyncCommandHandler(Func<TCommand, CancellationToken, Task> handler)
+        public AsyncCommandHandler(Func<TCommand, CancellationToken, Task<IResultState>> handler)
             => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
 
         /// <summary>
@@ -48,11 +48,8 @@ namespace Xpandables.Net.CQRS
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="command"/>.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        /// <returns>A task that represents an object of <see cref="IResultState"/>.</returns>
+        public async Task<IResultState> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
             => await _handler(command, cancellationToken).ConfigureAwait(false);
     }
 }

@@ -17,8 +17,8 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
@@ -34,15 +34,23 @@ namespace Xpandables.Net.CQRS
         internal IEnumerable<IValidation<TArgument>> ValidationInstances { get; }
 
         /// <summary>
-        /// Asynchronously validates the argument and throws the <see cref="ValidationException"/> if necessary.
+        /// Asynchronously validates the argument and returns validation state with errors if necessary.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <exception cref="ValidationException">Any validation exception.</exception>
-        public new virtual async Task ValidateAsync(TArgument argument)
+        /// <returns>Returns a result state that contains validation informations.</returns>
+        public new virtual async Task<IResultState> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
         {
-            var tasks = ValidationInstances.OrderBy(o => o.Order).Select(validator => validator.ValidateAsync(argument));
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            var errors = new ResultErrorCollection();
+            foreach (var validator in ValidationInstances.OrderBy(o => o.Order))
+            {
+                if (cancellationToken.IsCancellationRequested) cancellationToken.ThrowIfCancellationRequested();
+                var result = await validator.ValidateAsync(argument, cancellationToken).ConfigureAwait(false);
+                if (result.IsFailed()) errors.Merge(result.Errors);
+            }
+
+            return await Task.FromResult(ResultState.Failed(errors)).ConfigureAwait(false);
         }
     }
 }

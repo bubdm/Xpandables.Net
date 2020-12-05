@@ -106,7 +106,7 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public virtual async Task InvokeAsync(IAsyncCommand command, CancellationToken cancellationToken = default)
+        public virtual async Task<IResultState> InvokeAsync(IAsyncCommand command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
@@ -121,7 +121,7 @@ namespace Xpandables.Net.CQRS
 
             try
             {
-                await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
+                return await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -149,7 +149,7 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public virtual async Task<TResult> InvokeAsync<TResult>(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default)
+        public virtual async Task<IResultState<TResult>> InvokeAsync<TResult>(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
@@ -193,7 +193,7 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public virtual async Task<TResult> InvokeAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
+        public virtual async Task<IResultState<TResult>> InvokeAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 

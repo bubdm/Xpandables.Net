@@ -27,7 +27,7 @@ namespace Xpandables.Net.CQRS
     /// The target command should implement the <see cref="ITransactionDecorator"/> in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ITransactionScopeProvider"/>.
     /// The transaction scope definition comes from the <see cref="ITransactionScopeProvider.GetTransactionScope{TArgument}(TArgument)"/> method.
-    /// if no transaction is returned, the execution is done normally.
+    /// if no transaction is returned, the execution is done normally. If operation is failed, do nothing.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
     public sealed class AsyncCommandTransactionDecorator<TCommand> : IAsyncCommandHandler<TCommand>
@@ -51,23 +51,26 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously handles the specified command applying a transaction scope if available.
+        /// Asynchronously handles the specified command applying a transaction scope if available and if there is no error.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        /// <returns>A task that represents an object of <see cref="IResultState"/>.</returns>
+        public async Task<IResultState> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             if (_transactionScopeProvider.GetTransactionScope(command) is TransactionScope transaction)
             {
                 using var scope = transaction;
-                await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                scope.Complete();
+                var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                if (resultState.IsSuccess())
+                    scope.Complete();
+
+                return resultState;
             }
             else
             {
-                await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
             }
         }
     }
@@ -77,7 +80,7 @@ namespace Xpandables.Net.CQRS
     /// The target query should implement the <see cref="ITransactionDecorator"/> in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ITransactionScopeProvider"/>.
     /// The transaction scope definition comes from the <see cref="ITransactionScopeProvider.GetTransactionScope{TArgument}(TArgument)"/> method.
-    /// if no transaction is returned, the execution is done normally.
+    /// if no transaction is returned, the execution is done normally. If operation is failed, do nothing.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command that will be used as argument.</typeparam>
     /// <typeparam name="TResult">Type of the result of the query.</typeparam>
@@ -102,23 +105,22 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously handles the specified command applying a transaction scope if available and returns the task result.
+        /// Asynchronously handles the specified command applying a transaction scope if available, no error and returns the task result.
         /// </summary>
         /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public async Task<TResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        /// <returns>A task that represents an object of <see cref="IResultState{TValue}"/>.</returns>
+        public async Task<IResultState<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             if (_transactionScopeProvider.GetTransactionScope(command) is TransactionScope transaction)
             {
                 using var scope = transaction;
-                var result = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                scope.Complete();
+                var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                if (resultState.IsSuccess())
+                    scope.Complete();
 
-                return result;
+                return resultState;
             }
             else
             {

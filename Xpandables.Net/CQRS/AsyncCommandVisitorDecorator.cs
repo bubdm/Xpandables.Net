@@ -50,20 +50,18 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously applies visitor and handle the specified command.
+        /// Asynchronously applies visitor and handles the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken)
+        /// <returns>A task that represents an object of <see cref="IResultState"/>.</returns>
+        public async Task<IResultState> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
-            await command.AcceptAsync(_visitor).ConfigureAwait(false);
-            await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+            await command.AcceptAsync(_visitor, cancellationToken).ConfigureAwait(false);
+            return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -97,19 +95,17 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously applies visitor and handle the specified command.
+        /// Asynchronously applies visitor and handles the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task<TResult> HandleAsync(TCommand command, CancellationToken cancellationToken)
+        /// <returns>A task that represents an object of <see cref="IResultState{TValue}"/>.</returns>
+        public async Task<IResultState<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
-            await command.AcceptAsync(_visitor).ConfigureAwait(false);
+            await command.AcceptAsync(_visitor, cancellationToken).ConfigureAwait(false);
             return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
         }
     }

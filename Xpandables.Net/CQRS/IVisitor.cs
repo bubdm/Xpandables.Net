@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
@@ -40,9 +41,9 @@ namespace Xpandables.Net.CQRS
         /// The default behavior checks that the argument is not null.
         /// </summary>
         /// <param name="element">Element to be visited.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public virtual async Task VisitAsync(TElement element)
+        public virtual async Task VisitAsync(TElement element, CancellationToken cancellationToken = default)
         {
             _ = element ?? throw new ArgumentNullException(nameof(element));
             await Task.CompletedTask.ConfigureAwait(false);

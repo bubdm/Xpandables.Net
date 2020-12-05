@@ -51,22 +51,21 @@ namespace Xpandables.Net.CQRS
 
         /// <summary>
         /// Asynchronously handles the specified command using the decorated handler, executes the post event before returning the task,
-        /// and executes the rollback event in case of exception.
+        /// and executes the rollback event in case of exception and re-throws that exception.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        /// <returns>A task that represents an object of <see cref="IResultState"/>.</returns>
+        public async Task<IResultState> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             try
             {
-                await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                await _correlationContext.OnPostEventAsync().ConfigureAwait(false);
+                var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                await _correlationContext.OnPostEventAsync(resultState).ConfigureAwait(false);
+                return resultState;
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not ArgumentNullException)
             {
                 await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
                 throw;
@@ -105,22 +104,19 @@ namespace Xpandables.Net.CQRS
 
         /// <summary>
         /// Asynchronously handles the specified command using the decorated handler, executes the post event before returning the task of result,
-        /// and executes the rollback event in case of exception.
+        /// and executes the rollback event in case of exception and re-throws that exception.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="command"/>.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task<TResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+        /// <returns>A task that represents an object of <see cref="IResultState{TValue}"/>.</returns>
+        public async Task<IResultState<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             try
             {
-                var result = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                await _correlationContext.OnPostEventAsync().ConfigureAwait(false);
-                return result;
+                var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                await _correlationContext.OnPostEventAsync(resultState).ConfigureAwait(false);
+                return resultState;
             }
             catch (Exception exception)
             {
