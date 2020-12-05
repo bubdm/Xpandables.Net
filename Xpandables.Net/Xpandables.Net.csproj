@@ -21,7 +21,7 @@
     <AssemblyVersion>5.0.6</AssemblyVersion>
     <FileVersion>5.0.6</FileVersion>
     <PackageVersion>5.0.6</PackageVersion>
-    <PackageReleaseNotes>Fix Multi interface CQRS registration.</PackageReleaseNotes>    
+    <PackageReleaseNotes>Add IResultState and IResultState{TValue}</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
