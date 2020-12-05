@@ -17,10 +17,10 @@
     <PackageIcon>Xpandables.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.0.6</Version>
-    <AssemblyVersion>5.0.6</AssemblyVersion>
-    <FileVersion>5.0.6</FileVersion>
-    <PackageVersion>5.0.6</PackageVersion>
+    <Version>5.1.0</Version>
+    <AssemblyVersion>5.1.0</AssemblyVersion>
+    <FileVersion>5.1.0</FileVersion>
+    <PackageVersion>5.1.0</PackageVersion>
     <PackageReleaseNotes>Add IResultState and IResultState{TValue}</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>

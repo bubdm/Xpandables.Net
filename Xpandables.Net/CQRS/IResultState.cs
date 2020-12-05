@@ -205,6 +205,13 @@ namespace Xpandables.Net.CQRS
         internal ResultState(ResultErrorCollection errors) => Errors = errors ?? throw new ArgumentNullException(nameof(errors));
 
         /// <summary>
+        /// Initializes a new instance of <see cref="ResultState"/> with the specified error.
+        /// </summary>
+        /// <param name="error">The error.</param>
+        /// <exception cref="ArgumentNullException">the <paramref name="error"/> is null.</exception>
+        internal ResultState(ResultError error) => Errors = new ResultErrorCollection(new[] { error ?? throw new ArgumentNullException(nameof(error)) });
+
+        /// <summary>
         /// Initializes a new instance of <see cref="ResultState"/> with the specified error list.
         /// </summary>
         /// <param name="errors">The error list.</param>
@@ -224,6 +231,14 @@ namespace Xpandables.Net.CQRS
         /// <returns>A result state with errors.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
         public static ResultState Failed(ResultErrorCollection errors) => new(errors);
+
+        /// <summary>
+        /// Returns a failed result state with the specified error.
+        /// </summary>
+        /// <param name="error">The error.</param>
+        /// <returns>A result state with errors.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="error"/> is null.</exception>
+        public static ResultState Failed(ResultError error) => new(error);
 
         /// <summary>
         /// Returns a failed result state with the specified error list.
@@ -249,6 +264,15 @@ namespace Xpandables.Net.CQRS
         /// <returns>A result state with errors.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
         public static ResultState<TValue> Failed<TValue>(ResultErrorCollection errors) => new(errors);
+
+        /// <summary>
+        /// Returns a failed result state with the specified error.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the value.</typeparam>
+        /// <param name="error">The error.</param>
+        /// <returns>A result state with errors.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="error"/> is null.</exception>
+        public static ResultState<TValue> Failed<TValue>(ResultError error) => new(error);
 
         /// <summary>
         /// Returns a failed result state with the specified errors list.
@@ -283,6 +307,13 @@ namespace Xpandables.Net.CQRS
         /// <param name="errors">The error collection.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
         internal ResultState(ResultErrorCollection errors) : base(errors) => Value = default!;
+
+        /// <summary>
+        /// Initializes a new failed instance of <see cref="ResultState{TValue}"/> with the specified error.
+        /// </summary>
+        /// <param name="error">The error.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="error"/> is null.</exception>
+        internal ResultState(ResultError error) : base(error) => Value = default!;
 
         /// <summary>
         /// Initializes a new failed instance of <see cref="ResultState{TValue}"/> with the specified error list.
