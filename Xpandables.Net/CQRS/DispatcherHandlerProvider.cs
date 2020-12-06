@@ -16,7 +16,9 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Xpandables.Net.CQRS
 {
@@ -43,5 +45,12 @@ namespace Xpandables.Net.CQRS
         /// <returns>A handler of the <paramref name="handlerType"/> -or- null if there is no <paramref name="handlerType"/>.</returns>
         [return: MaybeNull]
         public object GetHandler(Type handlerType) => _serviceProvider.GetService(handlerType);
+
+        /// <summary>
+        /// Returns all the handlers of the specified type.
+        /// </summary>
+        /// <param name="handlerType">An object that specifies the type of handler object to get.</param>
+        /// <returns>A collection of handlers of the <paramref name="handlerType"/> -or- empty collection if there is no handler of <paramref name="handlerType"/>.</returns>
+        public IEnumerable<object> GetHandlers(Type handlerType) => _serviceProvider.GetService(typeof(IEnumerable<>).MakeGenericType(handlerType)) as IEnumerable<object> ?? Enumerable.Empty<object>();
     }
 }

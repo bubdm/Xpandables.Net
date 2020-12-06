@@ -17,10 +17,10 @@
     <PackageIcon>Xpandables.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.1.1</Version>
-    <AssemblyVersion>5.1.1</AssemblyVersion>
-    <FileVersion>5.1.1</FileVersion>
-    <PackageVersion>5.1.1</PackageVersion>
+    <Version>5.2.0</Version>
+    <AssemblyVersion>5.2.0</AssemblyVersion>
+    <FileVersion>5.2.0</FileVersion>
+    <PackageVersion>5.2.0</PackageVersion>
     <PackageReleaseNotes>Add IOperationResult and IOperationResult{TValue}</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>
@@ -61,10 +61,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="CQRS\ContentDialog1.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\Xpandables.png" Link="Xpandables.png">
       <PackagePath></PackagePath>
       <Pack>True</Pack>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="CQRS\ContentDialog1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

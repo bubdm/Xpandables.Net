@@ -29,10 +29,10 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class QueryVisitorDecorator<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
-        where TQuery : class, IAsyncQuery<TResult>, IVisitable<TQuery>
+    public sealed class QueryVisitorDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
+        where TQuery : class, IQuery<TResult>, IVisitable<TQuery>
     {
-        private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
+        private readonly IQueryHandler<TQuery, TResult> _decoratee;
         private readonly ICompositeVisitor<TQuery> _visitor;
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="visitor">The composite visitor to apply</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        public QueryVisitorDecorator(IAsyncQueryHandler<TQuery, TResult> decoratee, ICompositeVisitor<TQuery> visitor)
+        public QueryVisitorDecorator(IQueryHandler<TQuery, TResult> decoratee, ICompositeVisitor<TQuery> visitor)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));

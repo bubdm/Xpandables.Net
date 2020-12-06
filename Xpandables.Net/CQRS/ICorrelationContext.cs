@@ -21,19 +21,19 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// Represents a method signature to be used to handle post event in correlation context <see cref="IAsyncCorrelationContext"/>.
+    /// Represents a method signature to be used to handle post event in correlation context <see cref="ICorrelationContext"/>.
     /// </summary>
     /// <param name="returnValue">The control flow return value only for non-void method.</param>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "ET001:Type name does not match file name", Justification = "<Pending>")]
-    public delegate Task AsyncCorrelationPostEvent(object? returnValue = default);
+    public delegate Task CorrelationPostEvent(object? returnValue = default);
 
 
     /// <summary>
-    /// Represents a method signature to be used to handler rollback event in correlation context <see cref="IAsyncCorrelationContext"/>.
+    /// Represents a method signature to be used to handler rollback event in correlation context <see cref="ICorrelationContext"/>.
     /// </summary>
     /// <param name="exception">The control flow handled exception.</param>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "ET001:Type name does not match file name", Justification = "<Pending>")]
-    public delegate Task AsyncCorrelationRollbackEvent(Exception exception);
+    public delegate Task CorrelationRollbackEvent(Exception exception);
 
     /// <summary>
     /// Defines two tasks that can be used to follow process after a control flow with <see cref="PostEvent"/>
@@ -41,19 +41,19 @@ namespace Xpandables.Net.CQRS
     /// In order to be activated, the target class should implement the <see cref="ICorrelationDecorator"/> interface, 
     /// the target handling class should reference the current interface (to set the action).
     /// </summary>
-    public interface IAsyncCorrelationContext
+    public interface ICorrelationContext
     {
         /// <summary>
         /// The event that will be asynchronously raised after the main one in the same control flow only if there is no exception.
         /// The event will contain the control flow "return value" for non-void method.
         /// Note that the event will be automatically removed after execution.
         /// </summary>
-        event AsyncCorrelationPostEvent PostEvent;
+        event CorrelationPostEvent PostEvent;
 
         /// <summary>
         /// The event that will be asynchronously raised after the main one when exception. The event will contain the control flow handled exception.
         /// Note that the event will be automatically removed after execution.
         /// </summary>
-        event AsyncCorrelationRollbackEvent RollbackEvent;
+        event CorrelationRollbackEvent RollbackEvent;
     }
 }

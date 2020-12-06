@@ -21,21 +21,21 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// Implementation for <see cref="IAsyncCommandHandlerWrapper{TResult}"/>.
+    /// Implementation for <see cref="ICommandHandlerWrapper{TResult}"/>.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class AsyncCommandHandlerWrapper<TCommand, TResult> : IAsyncCommandHandlerWrapper<TResult>
-        where TCommand : class, IAsyncCommand<TResult>
+    public sealed class CommandHandlerWrapper<TCommand, TResult> : ICommandHandlerWrapper<TResult>
+        where TCommand : class, ICommand<TResult>
     {
-        private readonly IAsyncCommandHandler<TCommand, TResult> _decoratee;
+        private readonly ICommandHandler<TCommand, TResult> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCommandHandlerWrapper{TCommand, TResult}"/> class with the  handler to be wrapped.
+        /// Initializes a new instance of the <see cref="CommandHandlerWrapper{TCommand, TResult}"/> class with the  handler to be wrapped.
         /// </summary>
         /// <param name="decoratee">The command handler instance to be wrapped.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        public AsyncCommandHandlerWrapper(IAsyncCommandHandler<TCommand, TResult> decoratee)
+        public CommandHandlerWrapper(ICommandHandler<TCommand, TResult> decoratee)
             => _decoratee = decoratee ?? throw new ArgumentNullException($"{decoratee} : {nameof(TCommand)}.{nameof(TResult)}");
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        public async Task<IOperationResult<TResult>> HandleAsync(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult<TResult>> HandleAsync(ICommand<TResult> command, CancellationToken cancellationToken = default)
             => await _decoratee.HandleAsync((TCommand)command, cancellationToken).ConfigureAwait(false);
     }
 }

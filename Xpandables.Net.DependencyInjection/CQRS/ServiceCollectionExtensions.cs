@@ -26,34 +26,34 @@ using Xpandables.Net.CQRS;
 namespace Xpandables.Net.DependencyInjection
 {
     /// <summary>
-    /// Defines options to configure command/query handlers.
+    /// Defines options to configure operations options.
     /// </summary>
-    public sealed class CommandQueryOptions
+    public sealed class HandlerOptions
     {
         /// <summary>
-        /// Enables validation behavior to commands and queries that are decorated with the <see cref="IValidationDecorator"/>.
+        /// Enables validation behavior to operations that are decorated with the <see cref="IValidationDecorator"/>.
         /// </summary>
-        public CommandQueryOptions UseValidationDecorator() => this.With(cq => cq.IsValidatorEnabled = true);
+        public HandlerOptions UseValidationDecorator() => this.With(cq => cq.IsValidatorEnabled = true);
 
         /// <summary>
-        /// Enables visitor behavior to commands and queries that implement the <see cref="IVisitable{TVisitable}"/> interface.
+        /// Enables visitor behavior to operations that implement the <see cref="IVisitable{TVisitable}"/> interface.
         /// </summary>
-        public CommandQueryOptions UseVisitDecorator() => this.With(cq => cq.IsVisitorEnabled = true);
+        public HandlerOptions UseVisitDecorator() => this.With(cq => cq.IsVisitorEnabled = true);
 
         /// <summary>
-        /// Enables persistence behavior to commands and queries that are decorated with the <see cref="IPersistenceDecorator"/> .
+        /// Enables persistence behavior to commands that are decorated with the <see cref="IPersistenceDecorator"/> .
         /// </summary>
-        public CommandQueryOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
+        public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
 
         /// <summary>
-        /// Enables correlation behavior to commands and queries that are decorated with the <see cref="ICorrelationDecorator"/>.
+        /// Enables correlation behavior to operations that are decorated with the <see cref="ICorrelationDecorator"/>.
         /// </summary>
-        public CommandQueryOptions UseCorrelationDecorator() => this.With(cq => cq.IsCorrelationEnabled = true);
+        public HandlerOptions UseCorrelationDecorator() => this.With(cq => cq.IsCorrelationEnabled = true);
 
         /// <summary>
-        /// Enables transaction behavior to commands and queries that are decorated with the <see cref="ITransactionDecorator"/>.
+        /// Enables transaction behavior to commands that are decorated with the <see cref="ITransactionDecorator"/>.
         /// </summary>
-        public CommandQueryOptions UseTransactionDecorator() => this.With(cq => cq.IsTransactionEnabled = true);
+        public HandlerOptions UseTransactionDecorator() => this.With(cq => cq.IsTransactionEnabled = true);
 
         internal bool IsValidatorEnabled { get; private set; }
         internal bool IsVisitorEnabled { get; private set; }
@@ -81,7 +81,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IAsyncCorrelationContext"/> to the services with scoped life time.
+        /// Adds the <see cref="ICorrelationContext"/> to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -89,8 +89,8 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<AsyncCorrelationContext>();
-            services.AddScoped<IAsyncCorrelationContext>(provider => provider.GetRequiredService<AsyncCorrelationContext>());
+            services.AddScoped<CorrelationContext>();
+            services.AddScoped<ICorrelationContext>(provider => provider.GetRequiredService<CorrelationContext>());
             return services;
         }
 
@@ -103,13 +103,13 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<AsyncCorrelationContext>();
-            services.AddScoped<IAsyncCorrelationContext>(provider => provider.GetRequiredService<AsyncCorrelationContext>());
+            services.AddScoped<CorrelationContext>();
+            services.AddScoped<ICorrelationContext>(provider => provider.GetRequiredService<CorrelationContext>());
 
-            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandCorrelationDecorator<>));
-            services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandCorrelationDecorator<,>));
-            services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncEnumerableQueryCorrelationDecorator<,>));
-            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(QueryCorrelationDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandCorrelationDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandCorrelationDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryCorrelationDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryCorrelationDecorator<,>));
 
             return services;
         }
@@ -172,8 +172,8 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandPersistenceDecorator<>));
-            services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandPersistenceDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandPersistenceDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandPersistenceDecorator<,>));
             return services;
         }
 
@@ -200,14 +200,14 @@ namespace Xpandables.Net.DependencyInjection
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
 
-            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandTransactionDecorator<>));
-            services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandTransactionDecorator<,>));
-            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncCommandTransactionDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandTransactionDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandTransactionDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(CommandTransactionDecorator<,>));
             return services;
         }
 
         /// <summary>
-        /// Adds the <see cref="IAsyncCommandHandler{TCommand}"/> and <see cref="IAsyncCommandHandler{TCommand, TResult}"/> to the services with scope life time.
+        /// Adds the <see cref="ICommandHandler{TCommand}"/> and <see cref="ICommandHandler{TCommand, TResult}"/> to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -222,8 +222,8 @@ namespace Xpandables.Net.DependencyInjection
 
             var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
                 .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncCommandHandler<>)))
-                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncCommandHandler<>)) })
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(ICommandHandler<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(ICommandHandler<>)) })
                 .ToList();
 
             foreach (var handler in genericHandlers)
@@ -232,8 +232,8 @@ namespace Xpandables.Net.DependencyInjection
 
             var genericResultHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
                 .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncCommandHandler<,>)))
-                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncCommandHandler<,>)) })
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(ICommandHandler<,>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(ICommandHandler<,>)) })
                 .ToList();
 
             foreach (var handler in genericResultHandlers)
@@ -252,19 +252,44 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient(typeof(AsyncCommandHandlerWrapper<,>));
+            services.AddTransient(typeof(CommandHandlerWrapper<,>));
             return services;
         }
 
         /// <summary>
-        /// Adds and configures the <see cref="IAsyncCommandHandler{TCommand}"/> and <see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}"/> behaviors.
+        /// Adds the <see cref="INotificationHandler{TNotification}"/> implementations to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
-        /// <param name="configureOptions">A delegate to configure the <see cref="CommandQueryOptions"/>.</param>///
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXCommandQueriesHandlers(
-            this IServiceCollection services, Assembly[] assemblies, Action<CommandQueryOptions> configureOptions)
+        /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
+        public static IServiceCollection AddXNotificationHandlers(this IServiceCollection services, Assembly[] assemblies)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+
+            var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<>)) })
+                .ToList();
+
+            foreach (var handler in genericHandlers)
+                foreach (var interf in handler.Interfaces)
+                    services.AddScoped(interf, handler.Type);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds and configures the <see cref="ICommandHandler{TCommand}"/>, <see cref="INotificationHandler{TNotification}"/>, <see cref="IQueryHandler{TQuery, TResult}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <param name="configureOptions">A delegate to configure the <see cref="HandlerOptions"/>.</param>///
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXHandlers(
+            this IServiceCollection services, Assembly[] assemblies, Action<HandlerOptions> configureOptions)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
             if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
@@ -272,8 +297,9 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddXCommandHandlers(assemblies);
             services.AddXQueryHandlers(assemblies);
+            services.AddXNotificationHandlers(assemblies);
 
-            var definedOptions = new CommandQueryOptions();
+            var definedOptions = new HandlerOptions();
             configureOptions.Invoke(definedOptions);
 
             if (definedOptions.IsCorrelationEnabled)
@@ -301,7 +327,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}"/> to the services with transient life time.
+        /// Adds the <see cref="IAsyncQueryHandler{TQuery, TResult}"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -316,8 +342,8 @@ namespace Xpandables.Net.DependencyInjection
 
             var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
                 .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncQueryHandler<,>)))
-                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncQueryHandler<,>)) })
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IQueryHandler<,>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IQueryHandler<,>)) })
                 .ToList();
 
             foreach (var handler in genericHandlers)
@@ -326,8 +352,8 @@ namespace Xpandables.Net.DependencyInjection
 
             var genericResultHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
                 .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncEnumerableQueryHandler<,>)))
-                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncEnumerableQueryHandler<,>)) })
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncQueryHandler<,>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncQueryHandler<,>)) })
                 .ToList();
 
             foreach (var handler in genericResultHandlers)
@@ -346,8 +372,8 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient(typeof(AsyncEnumerableQueryHandlerWrapper<,>));
             services.AddTransient(typeof(AsyncQueryHandlerWrapper<,>));
+            services.AddTransient(typeof(QueryHandlerWrapper<,>));
             return services;
         }
 
@@ -374,10 +400,10 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddTransient(typeof(ICompositeValidation<>), typeof(CompositeValidation<>));
-            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandValidatorDecorator<>));
-            services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandValidatorDecorator<,>));
-            services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncEnumerableQueryValidatorDecorator<,>));
-            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(QueryValidatorDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandValidatorDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandValidatorDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryValidatorDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryValidatorDecorator<,>));
             return services;
         }
 
@@ -417,10 +443,10 @@ namespace Xpandables.Net.DependencyInjection
             if (services is null) throw new ArgumentNullException(nameof(services));
 
             services.AddTransient(typeof(ICompositeVisitor<>), typeof(CompositeVisitor<>));
-            services.XTryDecorate(typeof(IAsyncCommandHandler<>), typeof(AsyncCommandVisitorDecorator<>));
-            services.XTryDecorate(typeof(IAsyncCommandHandler<,>), typeof(AsyncCommandVisitorDecorator<,>));
-            services.XTryDecorate(typeof(IAsyncEnumerableQueryHandler<,>), typeof(AsyncEnumerableQueryVisitorDecorator<,>));
-            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(QueryVisitorDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandVisitorDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandVisitorDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryVisitorDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryVisitorDecorator<,>));
             return services;
         }
 

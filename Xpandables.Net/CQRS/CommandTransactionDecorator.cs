@@ -30,21 +30,21 @@ namespace Xpandables.Net.CQRS
     /// if no transaction is returned, the execution is done normally. If operation is failed, do nothing.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
-    public sealed class AsyncCommandTransactionDecorator<TCommand> : IAsyncCommandHandler<TCommand>
-        where TCommand : class, IAsyncCommand, ITransactionDecorator
+    public sealed class CommandTransactionDecorator<TCommand> : ICommandHandler<TCommand>
+        where TCommand : class, ICommand, ITransactionDecorator
     {
-        private readonly IAsyncCommandHandler<TCommand> _decoratee;
+        private readonly ICommandHandler<TCommand> _decoratee;
         private readonly ITransactionScopeProvider _transactionScopeProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCommandTransactionDecorator{TCommand}"/> class 
+        /// Initializes a new instance of the <see cref="CommandTransactionDecorator{TCommand}"/> class 
         /// with the handler to be decorated and the transaction scope provider.
         /// </summary>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <param name="transactionScopeProvider">The transaction scope provider.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="transactionScopeProvider"/> is null.</exception>
-        public AsyncCommandTransactionDecorator(IAsyncCommandHandler<TCommand> decoratee, ITransactionScopeProvider transactionScopeProvider)
+        public CommandTransactionDecorator(ICommandHandler<TCommand> decoratee, ITransactionScopeProvider transactionScopeProvider)
         {
             _transactionScopeProvider = transactionScopeProvider ?? throw new ArgumentNullException(nameof(transactionScopeProvider));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
@@ -84,21 +84,21 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TCommand">Type of the command that will be used as argument.</typeparam>
     /// <typeparam name="TResult">Type of the result of the query.</typeparam>
-    public sealed class AsyncCommandTransactionDecorator<TCommand, TResult> : IAsyncCommandHandler<TCommand, TResult>
-        where TCommand : class, IAsyncCommand<TResult>, ITransactionDecorator
+    public sealed class CommandTransactionDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+        where TCommand : class, ICommand<TResult>, ITransactionDecorator
     {
-        private readonly IAsyncCommandHandler<TCommand, TResult> _decoratee;
+        private readonly ICommandHandler<TCommand, TResult> _decoratee;
         private readonly ITransactionScopeProvider _transactionScopeProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCommandTransactionDecorator{TCommand, TResult}"/> class 
+        /// Initializes a new instance of the <see cref="CommandTransactionDecorator{TCommand, TResult}"/> class 
         /// with the handler to be decorated and the transaction scope provider.
         /// </summary>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <param name="transactionScopeProvider">The transaction scope provider.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="transactionScopeProvider"/> is null.</exception>
-        public AsyncCommandTransactionDecorator(IAsyncCommandHandler<TCommand, TResult> decoratee, ITransactionScopeProvider transactionScopeProvider)
+        public CommandTransactionDecorator(ICommandHandler<TCommand, TResult> decoratee, ITransactionScopeProvider transactionScopeProvider)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _transactionScopeProvider = transactionScopeProvider ?? throw new ArgumentNullException(nameof(transactionScopeProvider));

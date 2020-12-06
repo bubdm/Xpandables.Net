@@ -30,30 +30,30 @@ namespace Xpandables.Net.Api
     public sealed record Contact(int Id, string Name, string Address, string City);
 
     [HttpRestClient(Path = "api/contacts", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
-    public sealed record SelectAll : IAsyncEnumerableQuery<Contact>, IQueryStringLocationRequest
+    public sealed record SelectAll : IAsyncQuery<Contact>, IQueryStringLocationRequest
     {
         public IDictionary<string, string?>? GetQueryStringSource() => new Dictionary<string, string?>();
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed record Select([Required] int Id) : IAsyncQuery<Contact?>, IPathStringLocationRequest
+    public sealed record Select([Required] int Id) : IQuery<Contact?>, IPathStringLocationRequest
     {
         [return: NotNull]
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), $"{Id}" } };
     }
 
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
-    public sealed record Add([Required] string Name, [Required] string Address, [Required] string City) : IAsyncCommand<int>;
+    public sealed record Add([Required] string Name, [Required] string Address, [Required] string City) : ICommand<int>;
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = "Delete", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed record Delete([Required] int Id) : IAsyncCommand, IPathStringLocationRequest
+    public sealed record Delete([Required] int Id) : ICommand, IPathStringLocationRequest
     {
         [return: NotNull]
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), $"{Id}" } };
     }
 
     [HttpRestClient(Path = "api/contacts", Method = "Put", IsSecured = true, IsNullable = false, In = ParameterLocation.Body)]
-    public sealed record Edit([Required] int Id, string? Name = default, string? Address = default, string? City = default) : IAsyncCommand<Contact>;
+    public sealed record Edit([Required] int Id, string? Name = default, string? Address = default, string? City = default) : ICommand<Contact>;
 
     sealed class ContactService
     {
@@ -70,7 +70,7 @@ namespace Xpandables.Net.Api
     }
 
     public sealed class ContactHandler :
-        IAsyncEnumerableQueryHandler<SelectAll, Contact>, IAsyncQueryHandler<Select, Contact?>, IAsyncCommandHandler<Add, int>, IAsyncCommandHandler<Delete>, IAsyncCommandHandler<Edit, Contact>
+        IAsyncQueryHandler<SelectAll, Contact>, IQueryHandler<Select, Contact?>, ICommandHandler<Add, int>, ICommandHandler<Delete>, ICommandHandler<Edit, Contact>
     {
         public IAsyncEnumerable<Contact> HandleAsync(SelectAll query, CancellationToken cancellationToken = default) => new AsyncEnumerable<Contact>(ContactService.Contacts);
         public async Task<IOperationResult<Contact?>> HandleAsync(Select query, CancellationToken cancellationToken = default)

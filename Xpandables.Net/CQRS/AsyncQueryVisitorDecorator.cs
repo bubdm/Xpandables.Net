@@ -24,37 +24,36 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// This class allows the application author to add validation support to query control flow.
-    /// The target query should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
-    /// The class decorates the target query handler with an implementation of <see cref="ICompositeValidation{TArgument}"/>
-    /// and applies all validators found for the target query before the command get handled. If a validator is failed, returns an empty enumerable.
-    /// You should provide with implementation of <see cref="IValidation{TArgument}"/> for validation.
+    /// This class allows the application author to add visitor support to query control flow.
+    /// The target query should implement the <see cref="IVisitable{TVisitable}"/> interface in order to activate the behavior.
+    /// The class decorates the target query handler with an implementation of <see cref="ICompositeVisitor{TElement}"/>
+    /// and applies all visitors found to the target query before the query get handled. You should provide with implementation
+    /// of <see cref="IVisitor{TElement}"/>.
     /// </summary>
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class AsyncEnumerableQueryValidatorDecorator<TQuery, TResult> : IAsyncEnumerableQueryHandler<TQuery, TResult>
-        where TQuery : class, IAsyncEnumerableQuery<TResult>, IValidationDecorator
+    public sealed class AsyncQueryVisitorDecorator<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
+        where TQuery : class, IAsyncQuery<TResult>, IVisitable<TQuery>
     {
-        private readonly IAsyncEnumerableQueryHandler<TQuery, TResult> _decoratee;
-        private readonly ICompositeValidation<TQuery> _validator;
+        private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
+        private readonly ICompositeVisitor<TQuery> _visitor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncEnumerableQueryValidatorDecorator{TQuery, TResult}"/> class with
-        /// the handler to be decorated and the composite validator.
+        /// Initializes a new instance of the <see cref="AsyncQueryVisitorDecorator{TQuery, TResult}"/> class with
+        /// the query handler to be decorated and the composite visitor.
         /// </summary>
-        /// <param name="decoratee">The query handler to decorate.</param>
-        /// <param name="validator">The validator instance.</param>
+        /// <param name="decoratee">The query to be decorated.</param>
+        /// <param name="visitor">The composite visitor to apply</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
-        public AsyncEnumerableQueryValidatorDecorator(IAsyncEnumerableQueryHandler<TQuery, TResult> decoratee, ICompositeValidation<TQuery> validator)
+        /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
+        public AsyncQueryVisitorDecorator(IAsyncQueryHandler<TQuery, TResult> decoratee, ICompositeVisitor<TQuery> visitor)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+            _visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));
         }
 
         /// <summary>
-        /// Asynchronously validates the query before handling and returns an asynchronous result type.
-        /// if a validator is failed, returns an empty enumerable.
+        /// Asynchronously applies visitor before handling the query and returns an asynchronous result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -62,10 +61,9 @@ namespace Xpandables.Net.CQRS
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var resultState = await _validator.ValidateAsync(query, cancellationToken).ConfigureAwait(false);
-            if (resultState.IsFailed())
-                yield break;
+            _ = query ?? throw new ArgumentNullException(nameof(query));
 
+            await query.AcceptAsync(_visitor, cancellationToken).ConfigureAwait(false);
             await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false))
                 yield return result;
         }

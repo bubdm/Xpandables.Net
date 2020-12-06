@@ -30,21 +30,21 @@ namespace Xpandables.Net.CQRS
     /// delegate command, in order to manage the exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
-    public sealed class AsyncCommandPersistenceDecorator<TCommand> : IAsyncCommandHandler<TCommand>
-        where TCommand : class, IAsyncCommand, IPersistenceDecorator
+    public sealed class CommandPersistenceDecorator<TCommand> : ICommandHandler<TCommand>
+        where TCommand : class, ICommand, IPersistenceDecorator
     {
         private readonly IDataContext _dataContext;
-        private readonly IAsyncCommandHandler<TCommand> _decoratee;
+        private readonly ICommandHandler<TCommand> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCommandPersistenceDecorator{TCommand}"/> class with 
+        /// Initializes a new instance of the <see cref="CommandPersistenceDecorator{TCommand}"/> class with 
         /// the decorated handler and the db context to act on.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public AsyncCommandPersistenceDecorator(IDataContext dataContext, IAsyncCommandHandler<TCommand> decoratee)
+        public CommandPersistenceDecorator(IDataContext dataContext, ICommandHandler<TCommand> decoratee)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
@@ -77,21 +77,21 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public sealed class AsyncCommandPersistenceDecorator<TCommand, TResult> : IAsyncCommandHandler<TCommand, TResult>
-        where TCommand : class, IAsyncCommand<TResult>, IPersistenceDecorator
+    public sealed class CommandPersistenceDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+        where TCommand : class, ICommand<TResult>, IPersistenceDecorator
     {
         private readonly IDataContext _dataContext;
-        private readonly IAsyncCommandHandler<TCommand, TResult> _decoratee;
+        private readonly ICommandHandler<TCommand, TResult> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCommandPersistenceDecorator{TCommand, TResult}"/> class with 
+        /// Initializes a new instance of the <see cref="CommandPersistenceDecorator{TCommand, TResult}"/> class with 
         /// the decorated handler and the db context to act on.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public AsyncCommandPersistenceDecorator(IDataContext dataContext, IAsyncCommandHandler<TCommand, TResult> decoratee)
+        public CommandPersistenceDecorator(IDataContext dataContext, ICommandHandler<TCommand, TResult> decoratee)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));

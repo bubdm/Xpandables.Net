@@ -34,8 +34,7 @@ namespace Xpandables.Net.Api
         {
             services.AddControllers();
             services.AddXDispatcher();
-            services.AddXCommandHandlers(new[] { Assembly.GetExecutingAssembly() });
-            services.AddXQueryHandlers(new[] { Assembly.GetExecutingAssembly() });
+            services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, _ => { });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

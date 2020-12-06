@@ -15,15 +15,13 @@
  *
 ************************************************************************************************************/
 
-using System.Collections.Generic;
-
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// This interface is used as a marker for queries when using the asynchronous query pattern that contains a <see cref="IAsyncEnumerable{TResult}"/>  of specific-type result.
-    /// Class implementation is used with the <see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}"/> where
-    /// "TQuery" is a class that implements the <see cref="IAsyncEnumerableQuery{TResult}"/> interface. This can also be enhanced with some useful decorators.
+    /// This interface is used as a marker for queries when using the synchronous query pattern that contains a specific-type result.
+    /// Class implementation is used with the <see cref="IQueryHandler{TQuery, TResult}"/> where
+    /// "TQuery" is a class that implements the <see cref="IQuery{TResult}"/> interface. This can also be enhanced with some useful decorators.
     /// </summary>
     /// <typeparam name="TResult">Type of the result of the query.</typeparam>
-    public interface IAsyncEnumerableQuery<TResult> { }
+    public interface IQuery<out TResult> : ICommandQueryNotification { }
 }

@@ -55,7 +55,7 @@ namespace Xpandables.Net.Http
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "<Pending>")]
         Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(
-            IAsyncEnumerableQuery<TResult> query, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default);
+            IAsyncQuery<TResult> query, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default);
 
         /// <summary>
         /// Handles the command as asynchronous operation.
@@ -64,7 +64,7 @@ namespace Xpandables.Net.Http
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        Task<HttpRestClientResponse> HandleAsync(IAsyncCommand command, CancellationToken cancellationToken = default);
+        Task<HttpRestClientResponse> HandleAsync(ICommand command, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Handles the command as asynchronous operation.
@@ -76,7 +76,7 @@ namespace Xpandables.Net.Http
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "<Pending>")]
-        Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default);
+        Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default);
 
         /// <summary>
         /// Handles the query as asynchronous operation.
@@ -88,6 +88,6 @@ namespace Xpandables.Net.Http
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "<Pending>")]
-        Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default);
+        Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default);
     }
 }

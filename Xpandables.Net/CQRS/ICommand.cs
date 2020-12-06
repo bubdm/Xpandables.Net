@@ -15,22 +15,24 @@
  *
 ************************************************************************************************************/
 
+using System;
+
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// This interface is used as a marker for commands when using the asynchronous command pattern.
-    /// Class implementation is used with the <see cref="IAsyncCommandHandler{TCommand}"/> where
-    /// "TCommand" is a class that implements <see cref="IAsyncCommand"/>.
+    /// Class implementation is used with the <see cref="ICommandHandler{TCommand}"/> where
+    /// "TCommand" is a class that implements <see cref="ICommand"/>.
     /// This can also be enhanced with some useful decorators.
     /// </summary>
-    public interface IAsyncCommand { }
+    public interface ICommand : ICommandQueryNotification { }
 
     /// <summary>
     /// This interface is used as a marker for commands when using the asynchronous command pattern with a specific-type result.
-    /// Class implementation is used with the <see cref="IAsyncCommandHandler{TCommand}"/> where
-    /// "TCommand" is a class that implements <see cref="IAsyncCommand{TResult}"/>.
+    /// Class implementation is used with the <see cref="ICommandHandler{TCommand}"/> where
+    /// "TCommand" is a class that implements <see cref="ICommand{TResult}"/>.
     /// This can also be enhanced with some useful decorators.
     /// </summary>
     /// <typeparam name="TResult">Type of the result of the command.</typeparam>
-    public interface IAsyncCommand<out TResult> { }
+    public interface ICommand<out TResult> : ICommandQueryNotification { }
 }

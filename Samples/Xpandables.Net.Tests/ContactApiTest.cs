@@ -118,7 +118,7 @@ namespace Xpandables.Net.Tests
             }
         }
 
-        public record Name(string Value) : IAsyncCommand;
+        public record Name(string Value) : ICommand;
 
         [TestMethod]
         [DataRow(2, "New Name")]

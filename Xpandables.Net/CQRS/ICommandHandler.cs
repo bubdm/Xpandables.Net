@@ -22,13 +22,13 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// Provides with a method to asynchronously handle a command of specific type that implements <see cref="IAsyncCommand"/> interface.
+    /// Provides with a method to asynchronously handle a command of specific type that implements <see cref="ICommand"/> interface.
     /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the command can be handled. Its default behavior returns <see langword="true"/>.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to act on.</typeparam>
-    public interface IAsyncCommandHandler<in TCommand> : ICanHandle<TCommand>
-        where TCommand : class, IAsyncCommand
+    public interface ICommandHandler<in TCommand> : ICanHandle<TCommand>
+        where TCommand : class, ICommand
     {
         /// <summary>
         /// Asynchronously handles the specified command.
@@ -41,14 +41,14 @@ namespace Xpandables.Net.CQRS
     }
 
     /// <summary>
-    /// Provides with a method to asynchronously handle a command of specific type that implements <see cref="IAsyncCommand{TResult}"/> interface.
+    /// Provides with a method to asynchronously handle a command of specific type that implements <see cref="ICommand{TResult}"/> interface.
     /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the command can be handled. Its default behavior returns <see langword="true"/>.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to act on.</typeparam>
     /// <typeparam name="TResult">Type of the result of the command.</typeparam>
-    public interface IAsyncCommandHandler<in TCommand, TResult> : ICanHandle<TCommand>
-        where TCommand : class, IAsyncCommand<TResult>
+    public interface ICommandHandler<in TCommand, TResult> : ICanHandle<TCommand>
+        where TCommand : class, ICommand<TResult>
     {
         /// <summary>
         /// Asynchronously handles the specified command and returns the task result.

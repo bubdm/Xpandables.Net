@@ -30,21 +30,21 @@ namespace Xpandables.Net.CQRS
     /// of <see cref="IValidation{TArgument}"/> for validation.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
-    public sealed class AsyncCommandValidatorDecorator<TCommand> : IAsyncCommandHandler<TCommand>
-        where TCommand : class, IAsyncCommand, IValidationDecorator
+    public sealed class CommandValidatorDecorator<TCommand> : ICommandHandler<TCommand>
+        where TCommand : class, ICommand, IValidationDecorator
     {
-        private readonly IAsyncCommandHandler<TCommand> _decoratee;
+        private readonly ICommandHandler<TCommand> _decoratee;
         private readonly ICompositeValidation<TCommand> _validator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCommandValidatorDecorator{TCommand}"/> class 
+        /// Initializes a new instance of the <see cref="CommandValidatorDecorator{TCommand}"/> class 
         /// with the handler to be decorated and the composite validator.
         /// </summary>
         /// <param name="decoratee">The command handler to be decorated.</param>
         /// <param name="validator">The validator instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
-        public AsyncCommandValidatorDecorator(IAsyncCommandHandler<TCommand> decoratee, ICompositeValidation<TCommand> validator)
+        public CommandValidatorDecorator(ICommandHandler<TCommand> decoratee, ICompositeValidation<TCommand> validator)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
@@ -76,21 +76,21 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public sealed class AsyncCommandValidatorDecorator<TCommand, TResult> : IAsyncCommandHandler<TCommand, TResult>
-        where TCommand : class, IAsyncCommand<TResult>, IValidationDecorator
+    public sealed class CommandValidatorDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+        where TCommand : class, ICommand<TResult>, IValidationDecorator
     {
-        private readonly IAsyncCommandHandler<TCommand, TResult> _decoratee;
+        private readonly ICommandHandler<TCommand, TResult> _decoratee;
         private readonly ICompositeValidation<TCommand> _validator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCommandValidatorDecorator{TCommand, TResult}"/> class 
+        /// Initializes a new instance of the <see cref="CommandValidatorDecorator{TCommand, TResult}"/> class 
         /// with the handler to be decorated and the composite validator.
         /// </summary>
         /// <param name="decoratee">The command handler to be decorated.</param>
         /// <param name="validator">The validator instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
-        public AsyncCommandValidatorDecorator(IAsyncCommandHandler<TCommand, TResult> decoratee, ICompositeValidation<TCommand> validator)
+        public CommandValidatorDecorator(ICommandHandler<TCommand, TResult> decoratee, ICompositeValidation<TCommand> validator)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));

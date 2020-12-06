@@ -20,13 +20,13 @@ namespace Xpandables.Net.CQRS
     /// <summary>
     /// A marker interface that allows the command/query class to add correlation decorator context event after control flow.
     /// In the class handling the query or command, you should reference
-    /// the <see cref="IAsyncCorrelationContext"/> and set the <see cref="IAsyncCorrelationContext.PostEvent"/> and/or
-    /// <see cref="IAsyncCorrelationContext.RollbackEvent"/>.
+    /// the <see cref="ICorrelationContext"/> and set the <see cref="ICorrelationContext.PostEvent"/> and/or
+    /// <see cref="ICorrelationContext.RollbackEvent"/>.
     /// <para></para>
-    /// Note that <see cref="IAsyncCorrelationContext.PostEvent"/> will be raised at the end of the control only if there is no exception,
-    /// giving you access to all data still alive on the control flow and the <see cref="IAsyncCorrelationContext.RollbackEvent"/>
+    /// Note that <see cref="ICorrelationContext.PostEvent"/> will be raised at the end of the control only if there is no exception,
+    /// giving you access to all data still alive on the control flow and the <see cref="ICorrelationContext.RollbackEvent"/>
     /// will only be raised when exception. The exception in that case in accessible through the
-    /// <see cref="IAsyncCorrelationContext.RollbackEvent"/>.
+    /// <see cref="ICorrelationContext.RollbackEvent"/>.
     /// </summary>
     public interface ICorrelationDecorator { }
 }

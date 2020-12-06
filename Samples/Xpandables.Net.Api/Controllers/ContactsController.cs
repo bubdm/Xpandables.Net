@@ -37,7 +37,7 @@ namespace Xpandables.Net.Api.Controllers
         [HttpGet]
         public IAsyncEnumerable<Contact> SelectAllAsync([FromQuery] SelectAll selectAll, CancellationToken cancellationToken = default)
         {
-            return _dispatcher.InvokeAsync(selectAll, cancellationToken);
+            return _dispatcher.FetchAsync(selectAll, cancellationToken);
             //await foreach (var contact in _dispatcher.InvokeAsync(selectAll, cancellationToken).ConfigureAwait(false))
             //    yield return contact;
         }
@@ -46,7 +46,7 @@ namespace Xpandables.Net.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> SelectAsync([FromRoute] Select select, CancellationToken cancellationToken = default)
         {
-            var contact = await _dispatcher.InvokeAsync(select, cancellationToken).ConfigureAwait(false);
+            var contact = await _dispatcher.FetchAsync(select, cancellationToken).ConfigureAwait(false);
 
             return contact.IsSuccess() ? Ok(contact.Value) : NotFound();
         }
@@ -54,7 +54,7 @@ namespace Xpandables.Net.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] Add add, CancellationToken cancellationToken = default)
         {
-            var id = await _dispatcher.InvokeAsync(add, cancellationToken).ConfigureAwait(false);
+            var id = await _dispatcher.SendAsync(add, cancellationToken).ConfigureAwait(false);
             return CreatedAtRoute("ContactLink", new { id = id.Value }, id.Value);
         }
 
@@ -62,14 +62,14 @@ namespace Xpandables.Net.Api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] Delete del, CancellationToken cancellationToken = default)
         {
-            await _dispatcher.InvokeAsync(del, cancellationToken).ConfigureAwait(false);
+            await _dispatcher.SendAsync(del, cancellationToken).ConfigureAwait(false);
             return Ok();
         }
 
         [HttpPut]
         public async Task<IActionResult> EditAsync([FromBody] Edit edit, CancellationToken cancellationToken = default)
         {
-            var updated = await _dispatcher.InvokeAsync(edit, cancellationToken).ConfigureAwait(false);
+            var updated = await _dispatcher.SendAsync(edit, cancellationToken).ConfigureAwait(false);
             return Ok(updated.Value);
         }
     }

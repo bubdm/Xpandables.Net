@@ -55,7 +55,7 @@ namespace Xpandables.Net.Http
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         public virtual async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(
-            IAsyncEnumerableQuery<TResult> query, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default)
+            IAsyncQuery<TResult> query, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace Xpandables.Net.Http
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        public virtual async Task<HttpRestClientResponse> HandleAsync(IAsyncCommand command, CancellationToken cancellationToken = default)
+        public virtual async Task<HttpRestClientResponse> HandleAsync(ICommand command, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace Xpandables.Net.Http
         /// <param name="options">The JSON serializer options used to customize deserialization.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        public virtual async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default)
+        public virtual async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace Xpandables.Net.Http
         /// <param name="options">The JSON serializer options used to customize deserialization.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        public virtual async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default)
+        public virtual async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default)
         {
             try
             {

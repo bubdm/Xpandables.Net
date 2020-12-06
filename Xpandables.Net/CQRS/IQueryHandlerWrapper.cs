@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,18 +21,18 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// Represents a wrapper interface that avoids use of C# dynamics with command pattern and allows type inference for <see cref="IAsyncCommandHandler{TCommand, TResult}"/>.
+    /// Represents a wrapper interface that avoids use of C# dynamics with query pattern and allows type inference for <see cref="IQueryHandler{TQuery, TResult}"/>.
     /// </summary>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public interface IAsyncCommandHandlerWrapper<TResult> : ICanHandle
+    public interface IQueryHandlerWrapper<TResult> : ICanHandle
     {
         /// <summary>
-        /// Asynchronously handles the specified command and returns a task of the result type.
+        /// Asynchronously handles the specified query and returns the task result.
         /// </summary>
-        /// <param name="command">The command to act on.</param>
+        /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        Task<IOperationResult<TResult>> HandleAsync(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default);
+        Task<IOperationResult<TResult>> HandleAsync(IQuery<TResult> query, CancellationToken cancellationToken = default);
     }
 }

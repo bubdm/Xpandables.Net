@@ -16,27 +16,24 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// Represents a wrapper interface that avoids use of C# dynamics with query pattern and allows type inference for <see cref="IAsyncQueryHandler{TQuery, TResult}"/>.
+    /// Represents a wrapper interface that avoids use of C# dynamics with command pattern and allows type inference for <see cref="ICommandHandler{TCommand, TResult}"/>.
     /// </summary>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public interface IAsyncQueryHandlerWrapper<TResult> : ICanHandle
+    public interface ICommandHandlerWrapper<TResult> : ICanHandle
     {
         /// <summary>
-        /// Asynchronously handles the specified query and returns an asynchronous result type.
+        /// Asynchronously handles the specified command and returns a task of the result type.
         /// </summary>
-        /// <param name="query">The query to act on.</param>
+        /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<TResult> HandleAsync(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        Task<IOperationResult<TResult>> HandleAsync(ICommand<TResult> command, CancellationToken cancellationToken = default);
     }
 }

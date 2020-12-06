@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,8 +26,8 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// Defines a set of methods to automatically handle <see cref="IAsyncCommand"/>, <see cref="IAsyncQuery{TResult}"/> and <see cref="IAsyncEnumerableQuery{TResult}"/>
-    /// when targeting <see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}"/>, <see cref="IAsyncQueryHandler{TQuery, TResult}"/> or/and <see cref="IAsyncCommandHandler{TCommand}"/>.
+    /// Defines a set of methods to automatically handle <see cref="ICommand"/>, <see cref="ICommand{TResult}"/>, <see cref="IQuery{TResult}"/>, <see cref="INotification"/> and <see cref="IAsyncQuery{TResult}"/>
+    /// when targeting <see cref="IAsyncQueryHandler{TQuery, TResult}"/>, <see cref="IQueryHandler{TQuery, TResult}"/>, <see cref="INotificationHandler{TNotification}"/> or/and <see cref="ICommandHandler{TCommand}"/>.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     public interface IDispatcher
@@ -34,7 +35,7 @@ namespace Xpandables.Net.CQRS
         internal IDispatcherHandlerProvider DispatcherHandlerProvider { get; }
 
         /// <summary>
-        /// Asynchronously invokes the query handler (<see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}"/> implementation) on the specified query 
+        /// Asynchronously fetches the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query 
         /// and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TResult">Type of the result.</typeparam>
@@ -46,16 +47,16 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        public virtual IAsyncEnumerable<TResult> InvokeAsync<TResult>(IAsyncEnumerableQuery<TResult> query, CancellationToken cancellationToken = default)
+        public virtual IAsyncEnumerable<TResult> FetchAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            if (!typeof(AsyncEnumerableQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new[] { query.GetType(), typeof(TResult) }))
+            if (!typeof(AsyncQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new[] { query.GetType(), typeof(TResult) }))
                 throw new InvalidOperationException("Building Query wrapper failed.", typeException);
 
-            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IAsyncEnumerableQueryHandlerWrapper<TResult> handler)
+            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IAsyncQueryHandlerWrapper<TResult> handler)
                 throw new NotImplementedException(
-                    $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncEnumerableQueryHandlerWrapper<,>).Name} is registered.");
+                    $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerWrapper<,>).Name} is registered.");
 
             if (!handler.CanHandle(query))
                 throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
@@ -96,7 +97,7 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously invokes the command handler (<see cref="IAsyncCommandHandler{TCommand}"/> implementation) on the specified command.
+        /// Asynchronously sends the command handler (<see cref="ICommandHandler{TCommand}"/> implementation) on the specified command.
         /// </summary>
         /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -106,11 +107,11 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public virtual async Task<IOperationResult> InvokeAsync(IAsyncCommand command, CancellationToken cancellationToken = default)
+        public virtual async Task<IOperationResult> SendAsync(ICommand command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
-            if (!typeof(IAsyncCommandHandler<>).TryMakeGenericType(out var handlerType, out var typeException, new[] { command.GetType() }))
+            if (!typeof(ICommandHandler<>).TryMakeGenericType(out var handlerType, out var typeException, new[] { command.GetType() }))
                 throw new InvalidOperationException("Building command handler failed.", typeException);
 
             dynamic handler = DispatcherHandlerProvider.GetHandler(handlerType)
@@ -137,7 +138,7 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously invokes the command handler(<see cref="IAsyncCommandHandler{TCommand, TResult}"/> implementation) on the specified command
+        /// Asynchronously sends the command handler(<see cref="ICommandHandler{TCommand, TResult}"/> implementation) on the specified command
         /// and returns a result of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TResult">Type of the result.</typeparam>
@@ -149,16 +150,16 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public virtual async Task<IOperationResult<TResult>> InvokeAsync<TResult>(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default)
+        public virtual async Task<IOperationResult<TResult>> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
-            if (!typeof(AsyncCommandHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { command.GetType(), typeof(TResult) }))
+            if (!typeof(CommandHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { command.GetType(), typeof(TResult) }))
                 throw new InvalidOperationException("Building Command wrapper failed.", typeException);
 
-            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IAsyncCommandHandlerWrapper<TResult> handler)
+            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not ICommandHandlerWrapper<TResult> handler)
                 throw new NotImplementedException(
-                    $"The matching command handler for {command.GetType().Name} is missing. Be sure the {typeof(AsyncCommandHandlerWrapper<,>).Name} is registered.");
+                    $"The matching command handler for {command.GetType().Name} is missing. Be sure the {typeof(CommandHandlerWrapper<,>).Name} is registered.");
 
             if (!handler.CanHandle(command))
                 throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
@@ -181,7 +182,7 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously invokes the query handler(<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query
+        /// Asynchronously fetches the query handler(<see cref="IQueryHandler{TQuery, TResult}"/> implementation) on the specified query
         /// and returns a result of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TResult">Type of the result.</typeparam>
@@ -192,17 +193,17 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public virtual async Task<IOperationResult<TResult>> InvokeAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        public virtual async Task<IOperationResult<TResult>> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            if (!typeof(AsyncQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { query.GetType(), typeof(TResult) }))
+            if (!typeof(QueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { query.GetType(), typeof(TResult) }))
                 throw new InvalidOperationException("Building Query wrapper failed.", typeException);
 
-            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IAsyncQueryHandlerWrapper<TResult> handler)
+            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IQueryHandlerWrapper<TResult> handler)
                 throw new NotImplementedException(
-                    $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerWrapper<,>).Name} is registered.");
+                    $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} is registered.");
 
             if (!handler.CanHandle(query))
                 throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
@@ -222,6 +223,28 @@ namespace Xpandables.Net.CQRS
                     default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
                 };
             }
+        }
+
+        /// <summary>
+        /// Asynchronously publishes the notification across all <see cref="INotificationHandler{TNotification}"/>.
+        /// </summary>
+        /// <param name="notification">The notification to be published.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
+        /// <exception cref="NotImplementedException">The corresponding handlers are missing.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        public virtual async Task PublishAsync(INotification notification, CancellationToken cancellationToken = default)
+        {
+            _ = notification ?? throw new ArgumentNullException(nameof(notification));
+
+            if (!typeof(INotificationHandler<>).TryMakeGenericType(out var typeHandler, out var typeException, notification.GetType()))
+                throw new InvalidOperationException("Building Notification Handler type failed.", typeException);
+
+            if (DispatcherHandlerProvider.GetHandlers(typeHandler) is not IEnumerable<INotificationHandler> handlers)
+                throw new NotImplementedException($"Matching notification handlers for {notification.GetType().Name} are missing.");
+
+            await Task.WhenAll(handlers.Select(handler => handler.HandleAsync(notification, cancellationToken))).ConfigureAwait(false);
         }
     }
 }

@@ -21,27 +21,27 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// The implementation of <see cref="IAsyncCorrelationContext"/>.
+    /// The implementation of <see cref="ICorrelationContext"/>.
     /// Defines two tasks that can be used to follow process after a control flow with <see cref="PostEvent"/>
     /// and on exception during the control flow with <see cref="RollbackEvent"/>.
     /// </summary>
-    public sealed class AsyncCorrelationContext : IAsyncCorrelationContext
+    public sealed class CorrelationContext : ICorrelationContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCorrelationContext"/> class using default initialization for event.
+        /// Initializes a new instance of the <see cref="CorrelationContext"/> class using default initialization for event.
         /// </summary>
-        public AsyncCorrelationContext() { }
+        public CorrelationContext() { }
 
         /// <summary>
         /// The event that will be asynchronously raised after the main one in the same control flow only if there is no exception.
         /// The event will received the control flow return value for non-void method. Its default behavior does nothing.
         /// </summary>
-        public event AsyncCorrelationPostEvent PostEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
+        public event CorrelationPostEvent PostEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
 
         /// <summary>
         /// The event that will be asynchronously raised after the main one when exception. The event will received the control flow handled exception. Its default behavior does nothing.
         /// </summary>
-        public event AsyncCorrelationRollbackEvent RollbackEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
+        public event CorrelationRollbackEvent RollbackEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
 
         /// <summary>
         /// Raises the <see cref="PostEvent"/> event.

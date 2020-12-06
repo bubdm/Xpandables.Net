@@ -21,8 +21,8 @@ namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// The implementation for <see cref="IDispatcher"/>.
-    /// Implements methods to execute the <see cref="IAsyncEnumerableQueryHandler{TQuery, TResult}"/>, <see cref="IAsyncQueryHandler{TQuery, TResult}"/> and
-    /// <see cref="IAsyncCommandHandler{TCommand}"/> process dynamically.
+    /// Implements methods to execute the <see cref="IAsyncQueryHandler{TQuery, TResult}"/>, <see cref="IQueryHandler{TQuery, TResult}"/> and
+    /// <see cref="ICommandHandler{TCommand}"/> process dynamically.
     /// </summary>
     public class Dispatcher : IDispatcher
     {

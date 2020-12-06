@@ -29,21 +29,21 @@ namespace Xpandables.Net.CQRS
     /// of <see cref="IVisitor{TElement}"/>.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
-    public sealed class AsyncCommandVisitorDecorator<TCommand> : IAsyncCommandHandler<TCommand>
-        where TCommand : class, IAsyncCommand, IVisitable<TCommand>
+    public sealed class CommandVisitorDecorator<TCommand> : ICommandHandler<TCommand>
+        where TCommand : class, ICommand, IVisitable<TCommand>
     {
-        private readonly IAsyncCommandHandler<TCommand> _decoratee;
+        private readonly ICommandHandler<TCommand> _decoratee;
         private readonly ICompositeVisitor<TCommand> _visitor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCommandVisitorDecorator{TCommand}"/> class with
+        /// Initializes a new instance of the <see cref="CommandVisitorDecorator{TCommand}"/> class with
         /// the handler to be decorated and the composite visitor.
         /// </summary>
         /// <param name="decoratee">the decorated command handler.</param>
         /// <param name="visitor">the visitor to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        public AsyncCommandVisitorDecorator(IAsyncCommandHandler<TCommand> decoratee, ICompositeVisitor<TCommand> visitor)
+        public CommandVisitorDecorator(ICommandHandler<TCommand> decoratee, ICompositeVisitor<TCommand> visitor)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));
@@ -74,21 +74,21 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public sealed class AsyncCommandVisitorDecorator<TCommand, TResult> : IAsyncCommandHandler<TCommand, TResult>
-        where TCommand : class, IAsyncCommand<TResult>, IVisitable<TCommand>
+    public sealed class CommandVisitorDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+        where TCommand : class, ICommand<TResult>, IVisitable<TCommand>
     {
-        private readonly IAsyncCommandHandler<TCommand, TResult> _decoratee;
+        private readonly ICommandHandler<TCommand, TResult> _decoratee;
         private readonly ICompositeVisitor<TCommand> _visitor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCommandVisitorDecorator{TCommand, TResult}"/> class with
+        /// Initializes a new instance of the <see cref="CommandVisitorDecorator{TCommand, TResult}"/> class with
         /// the handler to be decorated and the composite visitor.
         /// </summary>
         /// <param name="decoratee">the decorated command handler.</param>
         /// <param name="visitor">the visitor to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="visitor"/> is null.</exception>
-        public AsyncCommandVisitorDecorator(IAsyncCommandHandler<TCommand, TResult> decoratee, ICompositeVisitor<TCommand> visitor)
+        public CommandVisitorDecorator(ICommandHandler<TCommand, TResult> decoratee, ICompositeVisitor<TCommand> visitor)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));
