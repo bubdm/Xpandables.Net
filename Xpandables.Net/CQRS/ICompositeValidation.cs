@@ -40,9 +40,9 @@ namespace Xpandables.Net.CQRS
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
         /// <returns>Returns a result state that contains validation informations.</returns>
-        public new virtual async Task<IResultState> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
+        public new virtual async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
         {
-            var errors = new ResultErrorCollection();
+            var errors = new OperationErrorCollection();
             foreach (var validator in ValidationInstances.OrderBy(o => o.Order))
             {
                 if (cancellationToken.IsCancellationRequested) cancellationToken.ThrowIfCancellationRequested();
@@ -50,7 +50,7 @@ namespace Xpandables.Net.CQRS
                 if (result.IsFailed()) errors.Merge(result.Errors);
             }
 
-            return await Task.FromResult(ResultState.Failed(errors)).ConfigureAwait(false);
+            return await Task.FromResult<IOperationResult>(errors.Count > 0 ? new FailedOperationResult(errors) : new SuccessOperationResult()).ConfigureAwait(false);
         }
     }
 }

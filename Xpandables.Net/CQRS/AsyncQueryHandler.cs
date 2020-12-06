@@ -28,7 +28,7 @@ namespace Xpandables.Net.CQRS
     public sealed class AsyncQueryHandler<TQuery, TResult> : IAsyncQueryHandler<TQuery, TResult>
         where TQuery : class, IAsyncQuery<TResult>
     {
-        private readonly Func<TQuery, CancellationToken, Task<IResultState<TResult>>> _handler;
+        private readonly Func<TQuery, CancellationToken, Task<IOperationResult<TResult>>> _handler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncQueryHandler{TQuery, TResult}"/> class with the delegate to be used
@@ -39,7 +39,7 @@ namespace Xpandables.Net.CQRS
         /// the <see cref="IAsyncQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/>
         /// method such as thrown exceptions.</para></param>
         /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
-        public AsyncQueryHandler(Func<TQuery, CancellationToken, Task<IResultState<TResult>>> handler) => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
+        public AsyncQueryHandler(Func<TQuery, CancellationToken, Task<IOperationResult<TResult>>> handler) => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
 
         /// <summary>
         /// Asynchronously handles the specified query using the delegate from the constructor and returns the task result.
@@ -47,7 +47,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IResultState{TValue}"/>.</returns>
-        public async Task<IResultState<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default) => await _handler(query, cancellationToken).ConfigureAwait(false);
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        public async Task<IOperationResult<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default) => await _handler(query, cancellationToken).ConfigureAwait(false);
     }
 }

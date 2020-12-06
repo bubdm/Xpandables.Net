@@ -29,6 +29,6 @@ namespace Xpandables.Net.CQRS
         /// <summary>
         /// Does nothing.
         /// </summary>
-        public async Task<IResultState> ValidateAsync(TArgument _) => await Task.FromResult(ResultState.Success()).ConfigureAwait(false);
+        public async Task<IOperationResult> ValidateAsync(TArgument _) => await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
     }
 }

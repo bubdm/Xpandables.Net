@@ -60,7 +60,7 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
-        public async Task<IResultState<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
             try
             {

@@ -36,7 +36,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IResultState{TValue}"/>.</returns>
-        Task<IResultState<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        Task<IOperationResult<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
     }
 }

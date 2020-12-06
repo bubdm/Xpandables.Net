@@ -33,7 +33,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IResultState{TValue}"/>.</returns>
-        Task<IResultState<TResult>> HandleAsync(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        Task<IOperationResult<TResult>> HandleAsync(IAsyncCommand<TResult> command, CancellationToken cancellationToken = default);
     }
 }

@@ -73,24 +73,24 @@ namespace Xpandables.Net.Api
         IAsyncEnumerableQueryHandler<SelectAll, Contact>, IAsyncQueryHandler<Select, Contact?>, IAsyncCommandHandler<Add, int>, IAsyncCommandHandler<Delete>, IAsyncCommandHandler<Edit, Contact>
     {
         public IAsyncEnumerable<Contact> HandleAsync(SelectAll query, CancellationToken cancellationToken = default) => new AsyncEnumerable<Contact>(ContactService.Contacts);
-        public async Task<IResultState<Contact?>> HandleAsync(Select query, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult<Contact?>> HandleAsync(Select query, CancellationToken cancellationToken = default)
         {
             var result = ContactService.Contacts.FirstOrDefault(c => c.Id == query.Id);
-            return await Task.FromResult(ResultState.Success(result)).ConfigureAwait(false);
+            return await Task.FromResult(new SuccessOperationResult<Contact?>(result)).ConfigureAwait(false);
         }
-        public async Task<IResultState<int>> HandleAsync(Add command, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult<int>> HandleAsync(Add command, CancellationToken cancellationToken = default)
         {
             var newId = (ContactService.Contacts.LastOrDefault()?.Id ?? 0) + 1;
             ContactService.Contacts.Add(new Contact(newId, command.Name, command.Address, command.City));
-            return await Task.FromResult(ResultState.Success(newId)).ConfigureAwait(false);
+            return await Task.FromResult(new SuccessOperationResult<int>(newId)).ConfigureAwait(false);
         }
-        public async Task<IResultState> HandleAsync(Delete command, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult> HandleAsync(Delete command, CancellationToken cancellationToken = default)
         {
             var result = ContactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
             if (result is null) throw new KeyNotFoundException();
-            return await Task.FromResult(ResultState.Success()).ConfigureAwait(false);
+            return await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
         }
-        public async Task<IResultState<Contact>> HandleAsync(Edit command, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult<Contact>> HandleAsync(Edit command, CancellationToken cancellationToken = default)
         {
             var result = ContactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
 
@@ -103,7 +103,7 @@ namespace Xpandables.Net.Api
 
             ContactService.Contacts[index] = result;
 
-            return await Task.FromResult(ResultState.Success(result)).ConfigureAwait(false);
+            return await Task.FromResult(new SuccessOperationResult<Contact>(result)).ConfigureAwait(false);
         }
     }
 }

@@ -56,8 +56,8 @@ namespace Xpandables.Net.CQRS
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IResultState"/>.</returns>
-        public async Task<IResultState> HandleAsync(TCommand command, CancellationToken cancellationToken)
+        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             var resultState = await _validator.ValidateAsync(command, cancellationToken).ConfigureAwait(false);
             if (resultState.IsSuccess())
@@ -102,14 +102,14 @@ namespace Xpandables.Net.CQRS
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IResultState{TValue}"/>.</returns>
-        public async Task<IResultState<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken)
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             var resultState = await _validator.ValidateAsync(command, cancellationToken).ConfigureAwait(false);
             if (resultState.IsSuccess())
                 return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
 
-            return ResultState.Failed<TResult>(resultState.Errors.ToList());
+            return new FailedOperationResult<TResult>(resultState.Errors.ToList());
         }
     }
 }

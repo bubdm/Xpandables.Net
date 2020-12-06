@@ -31,7 +31,7 @@ namespace Xpandables.Net.CQRS
     public sealed class Validation<TArgument> : IValidation<TArgument>
         where TArgument : class
     {
-        private readonly Func<TArgument, CancellationToken, Task<IResultState>> _validator;
+        private readonly Func<TArgument, CancellationToken, Task<IOperationResult>> _validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Validation{TArgument}"/> class with the delegate to be used
@@ -39,7 +39,7 @@ namespace Xpandables.Net.CQRS
         /// </summary>
         /// <param name="validator">The delegate validator.</param>
         /// <exception cref="ArgumentException">The <paramref name="validator"/> is null.</exception>
-        public Validation(Func<TArgument, CancellationToken, Task<IResultState>> validator) => _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+        public Validation(Func<TArgument, CancellationToken, Task<IOperationResult>> validator) => _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 
         /// <summary>
         /// Asynchronously validates the argument and throws the <see cref="ValidationException"/> if necessary.

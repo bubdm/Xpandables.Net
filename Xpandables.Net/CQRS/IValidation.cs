@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,7 +47,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
         /// <returns>Returns a result state that contains validation informations.</returns>
-        public virtual async Task<IResultState> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
+        public virtual async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
         {
             var validationResults = new List<ValidationResult>();
             if (!Validator.TryValidateObject(argument, new ValidationContext(argument, null, null), validationResults, true))
@@ -54,16 +55,21 @@ namespace Xpandables.Net.CQRS
                 if (cancellationToken.IsCancellationRequested)
                     cancellationToken.ThrowIfCancellationRequested();
 
-                var errors = new ResultErrorCollection();
+                var errors = new OperationErrorCollection();
                 foreach (var validationResult in validationResults)
                     foreach (var member in validationResult.MemberNames)
                         if (validationResult.ErrorMessage is not null)
-                            errors.Add(new(member, new[] { validationResult.ErrorMessage }));
+                        {
+                            if (errors[member] is OperationError error)
+                                errors[member]!.ErrorMessages = error.ErrorMessages.Union(new[] { validationResult.ErrorMessage }).ToArray();
+                            else
+                                errors.Add(new(member, new[] { validationResult.ErrorMessage }));
+                        }
 
-                return ResultState.Failed(errors);
+                return new FailedOperationResult(errors);
             }
 
-            return await Task.FromResult(ResultState.Success()).ConfigureAwait(false);
+            return await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
         }
     }
 }
