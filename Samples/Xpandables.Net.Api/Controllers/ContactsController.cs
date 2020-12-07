@@ -46,9 +46,7 @@ namespace Xpandables.Net.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> SelectAsync([FromRoute] Select select, CancellationToken cancellationToken = default)
         {
-            var contact = await _dispatcher.FetchAsync(select, cancellationToken).ConfigureAwait(false);
-
-            return contact.IsSuccess() ? Ok(contact) : NotFound();
+            return Ok(await _dispatcher.FetchAsync(select, cancellationToken).ConfigureAwait(false));
         }
 
         [HttpPost]
@@ -62,15 +60,13 @@ namespace Xpandables.Net.Api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] Delete del, CancellationToken cancellationToken = default)
         {
-            await _dispatcher.SendAsync(del, cancellationToken).ConfigureAwait(false);
-            return Ok();
+            return Ok(await _dispatcher.SendAsync(del, cancellationToken).ConfigureAwait(false));
         }
 
         [HttpPut]
         public async Task<IActionResult> EditAsync([FromBody] Edit edit, CancellationToken cancellationToken = default)
         {
-            var updated = await _dispatcher.SendAsync(edit, cancellationToken).ConfigureAwait(false);
-            return Ok(updated.Value);
+            return Ok(await _dispatcher.SendAsync(edit, cancellationToken).ConfigureAwait(false));
         }
     }
 }

@@ -66,7 +66,7 @@ namespace Xpandables.Net.CQRS
                                 errors.Add(member, validationResult.ErrorMessage);
                         }
 
-                return new FailedOperationResult(errors);
+                return new FailedOperationResult(System.Net.HttpStatusCode.OK, errors);
             }
 
             return await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);

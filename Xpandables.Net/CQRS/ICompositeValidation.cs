@@ -50,7 +50,7 @@ namespace Xpandables.Net.CQRS
                 if (result.IsFailed()) errors.Merge(result.Errors);
             }
 
-            return await Task.FromResult<IOperationResult>(errors.Count > 0 ? new FailedOperationResult(errors) : new SuccessOperationResult()).ConfigureAwait(false);
+            return await Task.FromResult<IOperationResult>(errors.Count > 0 ? new FailedOperationResult(System.Net.HttpStatusCode.BadRequest, errors) : new SuccessOperationResult()).ConfigureAwait(false);
         }
     }
 }

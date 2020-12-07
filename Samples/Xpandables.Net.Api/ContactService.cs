@@ -79,7 +79,8 @@ namespace Xpandables.Net.Api
         public async Task<IOperationResult<Contact?>> HandleAsync(Select query, CancellationToken cancellationToken = default)
         {
             var result = _contactService.Contacts.FirstOrDefault(c => c.Id == query.Id);
-            IOperationResult<Contact?> response = result is not null ? new SuccessOperationResult<Contact?>(result) : new FailedOperationResult<Contact?>();
+            IOperationResult<Contact?> response = result is not null
+                ? new SuccessOperationResult<Contact?>(result) : new FailedOperationResult<Contact?>(System.Net.HttpStatusCode.NotFound, nameof(query.Id), "Contact not found");
             return await Task.FromResult(response).ConfigureAwait(false);
         }
         public async Task<IOperationResult<int>> HandleAsync(Add command, CancellationToken cancellationToken = default)
@@ -91,7 +92,7 @@ namespace Xpandables.Net.Api
         public async Task<IOperationResult> HandleAsync(Delete command, CancellationToken cancellationToken = default)
         {
             var result = _contactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
-            if (result is null) return new FailedOperationResult();
+            if (result is null) return new FailedOperationResult(System.Net.HttpStatusCode.NotFound, nameof(command.Id), "Contact not found");
             _contactService.Contacts.Remove(result);
             return await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
         }
@@ -99,7 +100,7 @@ namespace Xpandables.Net.Api
         {
             var result = _contactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
 
-            if (result is null) throw new KeyNotFoundException();
+            if (result is null) return new FailedOperationResult<Contact>(System.Net.HttpStatusCode.NotFound, nameof(command.Id), "Contact not found");
 
             var index = _contactService.Contacts.IndexOf(result);
             if (command.Name is not null) result = result with { Name = command.Name };

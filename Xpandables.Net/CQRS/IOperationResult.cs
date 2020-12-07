@@ -18,8 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Net;
 
 namespace Xpandables.Net.CQRS
 {
@@ -47,6 +46,12 @@ namespace Xpandables.Net.CQRS
     {
         internal OperationStatus Status { get; }
         internal IReadOnlyCollection<OperationError> Errors { get; }
+        internal HttpStatusCode StatusCode { get; }
+
+        /// <summary>
+        /// Returns the operation HTTP status code.
+        /// </summary>
+        public HttpStatusCode GetStatusCode() => StatusCode;
 
         /// <summary>
         /// Returns a value that indicates whether the operation is completed successfully and returns <see langword="true"/> if so, otherwise <see langword="false"/>.
@@ -91,44 +96,54 @@ namespace Xpandables.Net.CQRS
         protected readonly OperationStatus _status;
 
         /// <summary>
+        /// Contains the HTTP status code.
+        /// </summary>
+        protected readonly HttpStatusCode _statusCode = HttpStatusCode.OK;
+
+        /// <summary>
         /// Contains the errors collection.
         /// </summary>
         protected readonly IReadOnlyCollection<OperationError> _errors = new OperationErrorCollection();
 
         OperationStatus IOperationResult.Status => _status;
         IReadOnlyCollection<OperationError> IOperationResult.Errors => _errors;
+        HttpStatusCode IOperationResult.StatusCode => _statusCode;
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult"/> with the specified status.
         /// </summary>
         /// <param name="status">The operation status.</param>
-        protected OperationResult(OperationStatus status) => _status = status;
+        /// <param name="statusCode">The HTTP operation status code.</param>
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode) => (_status, _statusCode) = (status, statusCode);
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult"/> with the specified status and specified errors collection.
         /// </summary>
         /// <param name="status">The operation status.</param>
+        /// <param name="statusCode">The HTTP operation status code.</param>
         /// <param name="errors">The errors collection.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
-        protected OperationResult(OperationStatus status, IList<OperationError> errors) : this(status) => _errors = errors.ToList() ?? throw new ArgumentNullException(nameof(errors));
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, IList<OperationError> errors) : this(status, statusCode) => _errors = errors.ToList() ?? throw new ArgumentNullException(nameof(errors));
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult"/> with the specified status and specified error.
         /// </summary>
         /// <param name="status">The operation status.</param>
+        /// <param name="statusCode">The HTTP operation status code.</param>
         /// <param name="error">The error.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="error"/> is null.</exception>
-        protected OperationResult(OperationStatus status, OperationError error) : this(status, new[] { error ?? throw new ArgumentNullException(nameof(error)) }) { }
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, OperationError error) : this(status, statusCode, new[] { error ?? throw new ArgumentNullException(nameof(error)) }) { }
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult"/> with the specified status, the key and specified error messages.
         /// </summary>
         /// <param name="status">The operation status.</param>
+        /// <param name="statusCode">The HTTP operation status code.</param>
         /// <param name="key">The key of the error.</param>
         /// <param name="errorMessages">The array of error messages.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="errorMessages"/> is null.</exception>
-        protected OperationResult(OperationStatus status, string key, params string[] errorMessages) : this(status, new OperationError(key, errorMessages)) { }
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, string key, params string[] errorMessages) : this(status, statusCode, new OperationError(key, errorMessages)) { }
     }
 
     /// <summary>
@@ -145,38 +160,43 @@ namespace Xpandables.Net.CQRS
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult{TValue}"/> with the specified status and the target value.
         /// </summary>
-        /// <param name="state">The status of the operation result.</param>
+        /// <param name="status">The status of the operation result.</param>
+        /// <param name="statusCode">The HTTP operation status code.</param>
         /// <param name="value">The value of the specific type.</param>
-        protected OperationResult(OperationStatus state, TValue value) : base(state) => Value = value;
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, TValue value) : base(status, statusCode) => Value = value;
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult{TValue}"/> with the specified status, the specified error collection and the target value.
         /// </summary>
         /// <param name="state">The status of the operation result.</param>
+        /// <param name="statusCode">The HTTP operation status code.</param>
         /// <param name="errors">The errors collection.</param>
         /// <param name="value">The value of the specific type.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
-        protected OperationResult(OperationStatus state, IList<OperationError> errors, TValue value) : base(state, errors) => Value = value;
+        protected OperationResult(OperationStatus state, HttpStatusCode statusCode, IList<OperationError> errors, TValue value) : base(state, statusCode, errors) => Value = value;
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult{TValue}"/> with the specified status, the specified error and the target value.
         /// </summary>
         /// <param name="status">The operation status.</param>
+        /// <param name="statusCode">The HTTP operation status code.</param>
         /// <param name="error">The error.</param>
         /// <param name="value">The value of the specific type.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="error"/> is null.</exception>
-        protected OperationResult(OperationStatus status, OperationError error, TValue value) : this(status, new[] { error ?? throw new ArgumentNullException(nameof(error)) }, value) { }
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, OperationError error, TValue value)
+            : this(status, statusCode, new[] { error ?? throw new ArgumentNullException(nameof(error)) }, value) { }
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult{TValue}"/> with the specified status, the value, the key and specified error messages.
         /// </summary>
         /// <param name="status">The operation status.</param>
+        /// <param name="statusCode">The HTTP operation status code.</param>
         /// <param name="value">The value of the specific type.</param>
         /// <param name="key">The key of the error.</param>
         /// <param name="errorMessages">The array of error messages.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="errorMessages"/> is null.</exception>
-        protected OperationResult(OperationStatus status, TValue value, string key, params string[] errorMessages) : this(status, new OperationError(key, errorMessages), value) { }
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, TValue value, string key, params string[] errorMessages) : this(status, statusCode, new OperationError(key, errorMessages), value) { }
     }
 
     /// <summary>

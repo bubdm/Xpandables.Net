@@ -32,7 +32,8 @@ namespace Xpandables.Net.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddMvcOptions(options => options.Filters.Add<OperationResultFilter>(int.MinValue));
             services.AddXDispatcher();
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, _ => { });
             services.AddSingleton<ContactService>();
