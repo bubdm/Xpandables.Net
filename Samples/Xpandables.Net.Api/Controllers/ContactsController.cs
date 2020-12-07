@@ -48,7 +48,7 @@ namespace Xpandables.Net.Api.Controllers
         {
             var contact = await _dispatcher.FetchAsync(select, cancellationToken).ConfigureAwait(false);
 
-            return contact.IsSuccess() ? Ok(contact.Value) : NotFound();
+            return contact.IsSuccess() ? Ok(contact) : NotFound();
         }
 
         [HttpPost]

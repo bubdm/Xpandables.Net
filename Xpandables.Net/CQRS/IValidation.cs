@@ -63,7 +63,7 @@ namespace Xpandables.Net.CQRS
                             if (errors[member] is OperationError error)
                                 errors[member]!.ErrorMessages = error.ErrorMessages.Union(new[] { validationResult.ErrorMessage }).ToArray();
                             else
-                                errors.Add(new(member, new[] { validationResult.ErrorMessage }));
+                                errors.Add(member, validationResult.ErrorMessage);
                         }
 
                 return new FailedOperationResult(errors);

@@ -55,9 +55,9 @@ namespace Xpandables.Net.Api
     [HttpRestClient(Path = "api/contacts", Method = "Put", IsSecured = true, IsNullable = false, In = ParameterLocation.Body)]
     public sealed record Edit([Required] int Id, string? Name = default, string? Address = default, string? City = default) : ICommand<Contact>;
 
-    sealed class ContactService
+    public sealed class ContactService
     {
-        internal static readonly List<Contact> Contacts = new()
+        public readonly List<Contact> Contacts = new()
         {
             new Contact(1, "Filip W", "Paris 01", "Paris"),
             new Contact(2, "Jean Pierre", "25 Liberty Street", "Lyon"),
@@ -72,36 +72,41 @@ namespace Xpandables.Net.Api
     public sealed class ContactHandler :
         IAsyncQueryHandler<SelectAll, Contact>, IQueryHandler<Select, Contact?>, ICommandHandler<Add, int>, ICommandHandler<Delete>, ICommandHandler<Edit, Contact>
     {
-        public IAsyncEnumerable<Contact> HandleAsync(SelectAll query, CancellationToken cancellationToken = default) => new AsyncEnumerable<Contact>(ContactService.Contacts);
+        private readonly ContactService _contactService;
+        public ContactHandler(ContactService contactService) => _contactService = contactService ?? throw new System.ArgumentNullException(nameof(contactService));
+
+        public IAsyncEnumerable<Contact> HandleAsync(SelectAll query, CancellationToken cancellationToken = default) => new AsyncEnumerable<Contact>(_contactService.Contacts);
         public async Task<IOperationResult<Contact?>> HandleAsync(Select query, CancellationToken cancellationToken = default)
         {
-            var result = ContactService.Contacts.FirstOrDefault(c => c.Id == query.Id);
-            return await Task.FromResult(new SuccessOperationResult<Contact?>(result)).ConfigureAwait(false);
+            var result = _contactService.Contacts.FirstOrDefault(c => c.Id == query.Id);
+            IOperationResult<Contact?> response = result is not null ? new SuccessOperationResult<Contact?>(result) : new FailedOperationResult<Contact?>();
+            return await Task.FromResult(response).ConfigureAwait(false);
         }
         public async Task<IOperationResult<int>> HandleAsync(Add command, CancellationToken cancellationToken = default)
         {
-            var newId = (ContactService.Contacts.LastOrDefault()?.Id ?? 0) + 1;
-            ContactService.Contacts.Add(new Contact(newId, command.Name, command.Address, command.City));
+            var newId = (_contactService.Contacts.LastOrDefault()?.Id ?? 0) + 1;
+            _contactService.Contacts.Add(new Contact(newId, command.Name, command.Address, command.City));
             return await Task.FromResult(new SuccessOperationResult<int>(newId)).ConfigureAwait(false);
         }
         public async Task<IOperationResult> HandleAsync(Delete command, CancellationToken cancellationToken = default)
         {
-            var result = ContactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
-            if (result is null) throw new KeyNotFoundException();
+            var result = _contactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
+            if (result is null) return new FailedOperationResult();
+            _contactService.Contacts.Remove(result);
             return await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
         }
         public async Task<IOperationResult<Contact>> HandleAsync(Edit command, CancellationToken cancellationToken = default)
         {
-            var result = ContactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
+            var result = _contactService.Contacts.FirstOrDefault(c => c.Id == command.Id);
 
             if (result is null) throw new KeyNotFoundException();
 
-            var index = ContactService.Contacts.IndexOf(result);
+            var index = _contactService.Contacts.IndexOf(result);
             if (command.Name is not null) result = result with { Name = command.Name };
             if (command.Address is not null) result = result with { Address = command.Address };
             if (command.City is not null) result = result with { City = command.City };
 
-            ContactService.Contacts[index] = result;
+            _contactService.Contacts[index] = result;
 
             return await Task.FromResult(new SuccessOperationResult<Contact>(result)).ConfigureAwait(false);
         }

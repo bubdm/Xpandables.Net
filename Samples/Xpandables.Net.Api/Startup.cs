@@ -35,6 +35,7 @@ namespace Xpandables.Net.Api
             services.AddControllers();
             services.AddXDispatcher();
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, _ => { });
+            services.AddSingleton<ContactService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

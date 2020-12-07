@@ -177,25 +177,34 @@ namespace Xpandables.Net
 
         // Build a key for a type
         internal const string key = "b14ca5898a4e4133bbce2ea2315a1916";
+
+        [SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "<Pending>")]
         internal static string KeyBuilder(Type type, params Type[] parameterTypes)
         {
-            using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(key);
-            aes.IV = new byte[16];
+            using (var aes = Aes.Create())
+            {
+                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.IV = new byte[16];
 
-            using var encryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-            using var memoryStream = new MemoryStream();
-            using var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
-            using var streamWriter = new StreamWriter(cryptoStream);
+                using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
+                using (var memoryStream = new MemoryStream())
+                using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+                {
+                    using (var streamWriter = new StreamWriter(cryptoStream))
 
-            var plainText = type.FullName!;
-            if (parameterTypes.Any()) plainText += string.Concat(parameterTypes.Select(t => t.Name));
-            if (type.IsGenericType) plainText += "'1";
+                    {
+                        var plainText = type.FullName!;
+                        if (parameterTypes.Any()) plainText += string.Concat(parameterTypes.Select(t => t.Name));
+                        if (type.IsGenericType) plainText += "'1";
 
-            streamWriter.Write(plainText);
-            var encrypted = memoryStream.ToArray();
+                        streamWriter.Write(plainText);
+                    }
 
-            return Convert.ToBase64String(encrypted);
+                    var encrypted = memoryStream.ToArray();
+
+                    return Convert.ToBase64String(encrypted);
+                }
+            }
         }
     }
 
