@@ -39,8 +39,8 @@ namespace Xpandables.Net.CQRS
     }
 
     /// <summary>
-    /// Represents the status of an operation. The result contains <see cref="IsSuccess"/> and <see cref="IsFailed"/> which determines operation exit state 
-    /// and <see cref="Errors"/> which shows errors for failing operation execution.
+    /// Represents the status of an operation. The result contains <see cref="IsSuccess"/> and <see cref="IsFailed"/> which determines operation exit state,
+    /// <see cref="GetStatusCode"/> that returns the HTTP status code and <see cref="GetErrors"/> which shows errors for failing operation execution.
     /// </summary>
     public interface IOperationResult
     {
@@ -73,7 +73,8 @@ namespace Xpandables.Net.CQRS
 
     /// <summary>
     /// Represents the status of an operation that contains a return value of <typeparamref name="TValue"/> type.
-    /// The result contains <see langword="IsSuccess"/> and <see langword="IsFailed"/> which determines operation exit state and <see langword="Errors"/> which shows errors for failing operation execution.
+    /// The result contains <see cref="IOperationResult.IsSuccess"/> and <see cref="IOperationResult.IsFailed"/> which determines operation exit state,
+    /// <see cref="IOperationResult.GetStatusCode"/> that returns the HTTP status code and <see cref="IOperationResult.GetErrors"/> which shows errors for failing operation execution.
     /// </summary>
     /// <typeparam name="TValue">The type of the return value.</typeparam>
     public interface IOperationResult<out TValue> : IOperationResult
@@ -84,9 +85,8 @@ namespace Xpandables.Net.CQRS
         TValue Value { get; }
     }
 
-
     /// <summary>
-    /// The <see cref="OperationResult"/> represents the status of an operation and implement the <see cref="IOperationResult"/> interface.
+    /// The <see cref="OperationResult"/> represents the status of an operation and implements the <see cref="IOperationResult"/> interface.
     /// </summary>
     public abstract class OperationResult : IOperationResult
     {
@@ -147,7 +147,7 @@ namespace Xpandables.Net.CQRS
     }
 
     /// <summary>
-    /// The <see cref="OperationResult{TValue}"/> represents the status of an operation and implement the <see cref="IOperationResult{TValue}"/> interface with a value.
+    /// The <see cref="OperationResult{TValue}"/> represents the status of an operation and implements the <see cref="IOperationResult{TValue}"/> interface with a value.
     /// </summary>
     /// <typeparam name="TValue">the type of the value.</typeparam>
     public abstract class OperationResult<TValue> : OperationResult, IOperationResult<TValue>
