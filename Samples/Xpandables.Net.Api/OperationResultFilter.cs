@@ -34,21 +34,30 @@ namespace Xpandables.Net.Api
             {
                 if (operationResult.IsFailed())
                 {
-                    context.Result = operationResult.GetStatusCode() == System.Net.HttpStatusCode.NotFound
-                        ? new NotFoundObjectResult(new ValidationProblemDetails(operationResult.GetErrors().ToDictionary())
+                    context.Result = operationResult.GetStatusCode() switch
+                    {
+                        System.Net.HttpStatusCode.NotFound => new NotFoundObjectResult(new ValidationProblemDetails(operationResult.GetErrors().ToDictionary())
                         {
                             Instance = context.HttpContext.Request.Path,
                             Status = StatusCodes.Status404NotFound,
                             Title = "Request Not Found",
                             Detail = "Please refer to the errors for additional details"
-                        })
-                        : new BadRequestObjectResult(new ValidationProblemDetails(operationResult.GetErrors().ToDictionary())
+                        }),
+                        System.Net.HttpStatusCode.InternalServerError => new BadRequestObjectResult(new ValidationProblemDetails(operationResult.GetErrors().ToDictionary())
+                        {
+                            Instance = context.HttpContext.Request.Path,
+                            Status = StatusCodes.Status500InternalServerError,
+                            Title = "Internal Server Error",
+                            Detail = "Please refer to the errors for additional details"
+                        }),
+                        _ => new BadRequestObjectResult(new ValidationProblemDetails(operationResult.GetErrors().ToDictionary())
                         {
                             Instance = context.HttpContext.Request.Path,
                             Status = StatusCodes.Status400BadRequest,
                             Title = "Request Validation Errors",
                             Detail = "Please refer to the errors property for additional details"
-                        });
+                        })
+                    };
                 }
             }
 

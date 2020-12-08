@@ -54,12 +54,14 @@ namespace Xpandables.Net.CQRS
                 return AsyncEnumerableExtensions.Empty<TResult>();
             }
 
-            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IAsyncQueryHandlerWrapper<TResult> handler)
+            if (!DispatcherHandlerProvider.TryGetHandler(wrapperType, out var foundHandler, out var exception))
             {
-                WriteLineException(new NotImplementedException(
-                      $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerWrapper<,>).Name} and handler are registered."));
+                WriteLineException(new InvalidOperationException(
+                      $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerWrapper<,>).Name} and handler are registered.", exception));
                 return AsyncEnumerableExtensions.Empty<TResult>();
             }
+
+            var handler = (IAsyncQueryHandlerWrapper<TResult>)foundHandler;
 
             if (!handler.CanHandle(query))
             {
@@ -89,10 +91,9 @@ namespace Xpandables.Net.CQRS
                 return new FailedOperationResult(HttpStatusCode.InternalServerError, nameof(command), exception);
             }
 
-            dynamic? handler = DispatcherHandlerProvider.GetHandler(handlerType);
-            if (handler is null)
+            if (!DispatcherHandlerProvider.TryGetHandler(handlerType, out dynamic? handler, out var ex))
             {
-                var exception = new NotImplementedException($"The matching command handler for {command.GetType().Name} is missing.");
+                var exception = new InvalidOperationException($"The matching command handler for {command.GetType().Name} is missing.", ex);
                 WriteLineException(exception);
                 return new FailedOperationResult(HttpStatusCode.InternalServerError, nameof(command), exception);
             }
@@ -127,12 +128,14 @@ namespace Xpandables.Net.CQRS
                 return new FailedOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(command), exception);
             }
 
-            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not ICommandHandlerWrapper<TResult> handler)
+            if (!DispatcherHandlerProvider.TryGetHandler(wrapperType, out var foundHandler, out var ex))
             {
-                var exception = new NotImplementedException($"The matching command handler for {command.GetType().Name} is missing. Be sure the {typeof(CommandHandlerWrapper<,>).Name} and handler are registered.");
+                var exception = new InvalidOperationException($"The matching command handler for {command.GetType().Name} is missing. Be sure the {typeof(CommandHandlerWrapper<,>).Name} and handler are registered.", ex);
                 WriteLineException(exception);
                 return new FailedOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(command), exception);
             }
+
+            var handler = (ICommandHandlerWrapper<TResult>)foundHandler;
 
             if (!handler.CanHandle(command))
             {
@@ -164,12 +167,14 @@ namespace Xpandables.Net.CQRS
                 return new FailedOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(query), exception);
             }
 
-            if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IQueryHandlerWrapper<TResult> handler)
+            if (!DispatcherHandlerProvider.TryGetHandler(wrapperType, out var foundHandler, out var ex))
             {
-                var exception = new NotImplementedException($"The matching command handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} and handler are registered.");
+                var exception = new InvalidOperationException($"The matching command handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} and handler are registered.", ex);
                 WriteLineException(exception);
                 return new FailedOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(query), exception);
             }
+
+            var handler = (IQueryHandlerWrapper<TResult>)foundHandler;
 
             if (!handler.CanHandle(query))
             {
@@ -198,11 +203,13 @@ namespace Xpandables.Net.CQRS
                 return;
             }
 
-            if (DispatcherHandlerProvider.GetHandlers(typeHandler) is not IEnumerable<INotificationHandler> handlers)
+            if (!DispatcherHandlerProvider.TryGetHandlers(typeHandler, out var foundHandlers, out var ex))
             {
-                WriteLineException(new NotImplementedException($"Matching notification handlers for {notification.GetType().Name} are missing."));
+                WriteLineException(new InvalidOperationException($"Matching notification handlers for {notification.GetType().Name} are missing.", ex));
                 return;
             }
+
+            var handlers = (IEnumerable<INotificationHandler>)foundHandlers;
 
             await Task.WhenAll(handlers.Select(handler => handler.HandleAsync(notification, cancellationToken))).ConfigureAwait(false);
         }
