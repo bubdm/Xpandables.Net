@@ -53,7 +53,7 @@ namespace Xpandables.Net.CQRS
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
             Exception = exception ?? throw new ArgumentNullException(nameof(exception));
-            ErrorMessages = new[] { exception.Message };
+            ErrorMessages = new[] { $"{exception}" };
         }
 
         /// <summary>

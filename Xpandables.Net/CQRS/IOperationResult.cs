@@ -144,6 +144,17 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="errorMessages"/> is null.</exception>
         protected OperationResult(OperationStatus status, HttpStatusCode statusCode, string key, params string[] errorMessages) : this(status, statusCode, new OperationError(key, errorMessages)) { }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="OperationResult"/> with the specified status, the key and specified exception.
+        /// </summary>
+        /// <param name="status">The operation status.</param>
+        /// <param name="statusCode">The HTTP operation status code.</param>
+        /// <param name="key">The key of the error.</param>
+        /// <param name="exception">The handled exception.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, string key, Exception exception) : this(status, statusCode, new OperationError(key, exception)) { }
     }
 
     /// <summary>
@@ -197,6 +208,18 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="errorMessages"/> is null.</exception>
         protected OperationResult(OperationStatus status, HttpStatusCode statusCode, TValue value, string key, params string[] errorMessages) : this(status, statusCode, new OperationError(key, errorMessages), value) { }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="OperationResult{TValue}"/> with the specified status, the value, the key and specified exception.
+        /// </summary>
+        /// <param name="status">The operation status.</param>
+        /// <param name="statusCode">The HTTP operation status code.</param>
+        /// <param name="value">The value of the specific type.</param>
+        /// <param name="key">The key of the error.</param>
+        /// <param name="exception">The handled exception.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, TValue value, string key, Exception exception) : this(status, statusCode, new OperationError(key, exception), value) { }
     }
 
     /// <summary>

@@ -17,9 +17,9 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,58 +42,32 @@ namespace Xpandables.Net.CQRS
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
-        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
+        /// <remarks>if errors, see Debug or Trace.</remarks>
         public virtual IAsyncEnumerable<TResult> FetchAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
             if (!typeof(AsyncQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new[] { query.GetType(), typeof(TResult) }))
-                throw new InvalidOperationException("Building Query wrapper failed.", typeException);
+            {
+                WriteLineException(new InvalidOperationException("Building Query wrapper failed.", typeException));
+                return AsyncEnumerableExtensions.Empty<TResult>();
+            }
 
             if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IAsyncQueryHandlerWrapper<TResult> handler)
-                throw new NotImplementedException(
-                    $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerWrapper<,>).Name} is registered.");
+            {
+                WriteLineException(new NotImplementedException(
+                      $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerWrapper<,>).Name} and handler are registered."));
+                return AsyncEnumerableExtensions.Empty<TResult>();
+            }
 
             if (!handler.CanHandle(query))
-                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
-
-            return DoAsyncEnumerableInvokeAsync(handler.HandleAsync(query, cancellationToken), cancellationToken);
-        }
-
-        private static async IAsyncEnumerable<TResult> DoAsyncEnumerableInvokeAsync<TResult>(IAsyncEnumerable<TResult> asyncEnumerable, [EnumeratorCancellation] CancellationToken cancellationToken)
-        {
-            _ = asyncEnumerable ?? throw new ArgumentNullException(nameof(asyncEnumerable));
-
-            await using var asyncEnumerator = asyncEnumerable.GetAsyncEnumerator(cancellationToken);
-
-            for (var resultExist = true; resultExist;)
             {
-                try
-                {
-                    resultExist = await asyncEnumerator.MoveNextAsync().ConfigureAwait(false);
-                }
-                catch (Exception exception)
-                {
-                    resultExist = false;
-                    switch (exception)
-                    {
-                        case ArgumentException:
-                        case ValidationException:
-                        case OperationCanceledException:
-                        case InvalidOperationException: throw;
-                        default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
-                    };
-                }
-
-                if (resultExist)
-                    yield return asyncEnumerator.Current;
-                else
-                    yield break;
+                WriteLineException(new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type."));
+                return AsyncEnumerableExtensions.Empty<TResult>();
             }
+
+            return handler.HandleAsync(query, cancellationToken);
         }
 
         /// <summary>
@@ -102,127 +76,109 @@ namespace Xpandables.Net.CQRS
         /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="command"/>.</exception>
-        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        /// <remarks>if errors, see Debug or Trace.</remarks>
         public virtual async Task<IOperationResult> SendAsync(ICommand command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
             if (!typeof(ICommandHandler<>).TryMakeGenericType(out var handlerType, out var typeException, new[] { command.GetType() }))
-                throw new InvalidOperationException("Building command handler failed.", typeException);
+            {
+                var exception = new InvalidOperationException("Building command handler failed.", typeException);
+                WriteLineException(exception);
+                return new FailedOperationResult(HttpStatusCode.InternalServerError, nameof(command), exception);
+            }
 
-            dynamic handler = DispatcherHandlerProvider.GetHandler(handlerType)
-                ?? throw new NotImplementedException($"The matching command handler for {command.GetType().Name} is missing.");
+            dynamic? handler = DispatcherHandlerProvider.GetHandler(handlerType);
+            if (handler is null)
+            {
+                var exception = new NotImplementedException($"The matching command handler for {command.GetType().Name} is missing.");
+                WriteLineException(exception);
+                return new FailedOperationResult(HttpStatusCode.InternalServerError, nameof(command), exception);
+            }
 
             if (!((ICanHandle)handler).CanHandle(command))
-                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
+            {
+                var exception = new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
+                WriteLineException(exception);
+                return new FailedOperationResult(HttpStatusCode.InternalServerError, nameof(command), exception);
+            }
 
-            try
-            {
-                return await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                switch (exception)
-                {
-                    case ArgumentException:
-                    case ValidationException:
-                    case OperationCanceledException:
-                    case InvalidOperationException: throw;
-                    default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
-                };
-            }
+            return await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Asynchronously sends the command handler(<see cref="ICommandHandler{TCommand, TResult}"/> implementation) on the specified command
-        /// and returns a result of <typeparamref name="TResult"/> type.
+        /// Asynchronously sends the command handler(<see cref="ICommandHandler{TCommand, TResult}"/> implementation) on the specified command.
         /// </summary>
         /// <typeparam name="TResult">Type of the result.</typeparam>
         /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="command"/>.</exception>
-        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        /// <returns>A task that represents an object <typeparamref name="TResult"/> or not.</returns>
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        /// <remarks>if errors, see Debug or Trace.</remarks>
         public virtual async Task<IOperationResult<TResult>> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
             if (!typeof(CommandHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { command.GetType(), typeof(TResult) }))
-                throw new InvalidOperationException("Building Command wrapper failed.", typeException);
+            {
+                var exception = new InvalidOperationException("Building Command wrapper failed.", typeException);
+                WriteLineException(exception);
+                return new FailedOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(command), exception);
+            }
 
             if (DispatcherHandlerProvider.GetHandler(wrapperType) is not ICommandHandlerWrapper<TResult> handler)
-                throw new NotImplementedException(
-                    $"The matching command handler for {command.GetType().Name} is missing. Be sure the {typeof(CommandHandlerWrapper<,>).Name} is registered.");
+            {
+                var exception = new NotImplementedException($"The matching command handler for {command.GetType().Name} is missing. Be sure the {typeof(CommandHandlerWrapper<,>).Name} and handler are registered.");
+                WriteLineException(exception);
+                return new FailedOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(command), exception);
+            }
 
             if (!handler.CanHandle(command))
-                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
+            {
+                var exception = new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
+                WriteLineException(exception);
+                return new FailedOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(command), exception);
+            }
 
-            try
-            {
-                return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                switch (exception)
-                {
-                    case ArgumentException:
-                    case ValidationException:
-                    case OperationCanceledException:
-                    case InvalidOperationException: throw;
-                    default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
-                };
-            }
+            return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Asynchronously fetches the query handler(<see cref="IQueryHandler{TQuery, TResult}"/> implementation) on the specified query
-        /// and returns a result of <typeparamref name="TResult"/> type.
+        /// Asynchronously fetches the query handler(<see cref="IQueryHandler{TQuery, TResult}"/> implementation) on the specified query.
         /// </summary>
         /// <typeparam name="TResult">Type of the result.</typeparam>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
-        /// <exception cref="NotImplementedException">The corresponding handler is missing.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        /// <remarks>if errors, see Debug or Trace.</remarks>
         public virtual async Task<IOperationResult<TResult>> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
             if (!typeof(QueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { query.GetType(), typeof(TResult) }))
-                throw new InvalidOperationException("Building Query wrapper failed.", typeException);
+            {
+                var exception = new InvalidOperationException("Building Query wrapper failed.", typeException);
+                WriteLineException(exception);
+                return new FailedOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(query), exception);
+            }
 
             if (DispatcherHandlerProvider.GetHandler(wrapperType) is not IQueryHandlerWrapper<TResult> handler)
-                throw new NotImplementedException(
-                    $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} is registered.");
+            {
+                var exception = new NotImplementedException($"The matching command handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} and handler are registered.");
+                WriteLineException(exception);
+                return new FailedOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(query), exception);
+            }
 
             if (!handler.CanHandle(query))
-                throw new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
+            {
+                var exception = new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
+                WriteLineException(exception);
+                return new FailedOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(query), exception);
+            }
 
-            try
-            {
-                return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                switch (exception)
-                {
-                    case ArgumentException:
-                    case ValidationException:
-                    case OperationCanceledException:
-                    case InvalidOperationException: throw;
-                    default: throw new InvalidOperationException($"{nameof(IDispatcher)} execution failed. See inner exception", exception);
-                };
-            }
+            return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -231,20 +187,33 @@ namespace Xpandables.Net.CQRS
         /// <param name="notification">The notification to be published.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
-        /// <exception cref="NotImplementedException">The corresponding handlers are missing.</exception>
-        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+        /// <remarks>if errors, see Debug or Trace.</remarks>
         public virtual async Task PublishAsync(INotification notification, CancellationToken cancellationToken = default)
         {
             _ = notification ?? throw new ArgumentNullException(nameof(notification));
 
             if (!typeof(INotificationHandler<>).TryMakeGenericType(out var typeHandler, out var typeException, notification.GetType()))
-                throw new InvalidOperationException("Building Notification Handler type failed.", typeException);
+            {
+                WriteLineException(new InvalidOperationException("Building Notification Handler type failed.", typeException));
+                return;
+            }
 
             if (DispatcherHandlerProvider.GetHandlers(typeHandler) is not IEnumerable<INotificationHandler> handlers)
-                throw new NotImplementedException($"Matching notification handlers for {notification.GetType().Name} are missing.");
+            {
+                WriteLineException(new NotImplementedException($"Matching notification handlers for {notification.GetType().Name} are missing."));
+                return;
+            }
 
             await Task.WhenAll(handlers.Select(handler => handler.HandleAsync(notification, cancellationToken))).ConfigureAwait(false);
+        }
+
+        private static void WriteLineException(Exception exception)
+        {
+#if DEBUG
+            Debug.WriteLine(exception);
+#else
+            Trace.WriteLine(exception);
+#endif
         }
     }
 }
