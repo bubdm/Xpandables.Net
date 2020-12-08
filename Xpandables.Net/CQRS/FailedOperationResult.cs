@@ -24,7 +24,7 @@ namespace Xpandables.Net.CQRS
     /// <summary>
     ///  An <see cref="OperationResult"/> that will produces a <see cref="OperationStatus.Failed"/> status.
     /// </summary>
-    public sealed class FailedOperationResult : OperationResult
+    public class FailedOperationResult : OperationResult
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FailedOperationResult"/> class with <see cref="OperationStatus.Failed"/> status and <see cref="HttpStatusCode.BadRequest"/> status code.
@@ -68,7 +68,7 @@ namespace Xpandables.Net.CQRS
     /// An <see cref="OperationResult{TValue}"/> that will produces a <see cref="OperationStatus.Failed"/> status of generic type.
     /// </summary>
     /// <typeparam name="TValue">The type of the value.</typeparam>
-    public sealed class FailedOperationResult<TValue> : OperationResult<TValue>
+    public class FailedOperationResult<TValue> : OperationResult<TValue>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FailedOperationResult{TValue}"/> class with <see cref="OperationStatus.Failed"/> status and <see cref="HttpStatusCode.BadRequest"/> status code.

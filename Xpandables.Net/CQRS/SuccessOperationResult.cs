@@ -25,7 +25,7 @@ namespace Xpandables.Net.CQRS
     /// It is decorated with a <see cref="JsonConverterAttribute"/> with the <see cref="OperationResultJsonConverterFactory"/> type in order to automatically convert instance to nothing as it does not contain a value.
     /// </summary>
     [JsonConverter(typeof(OperationResultJsonConverterFactory))]
-    public sealed class SuccessOperationResult : OperationResult
+    public class SuccessOperationResult : OperationResult
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SuccessOperationResult"/> class with <see cref="OperationStatus.Success"/> status and <see cref="HttpStatusCode.OK"/> status code.
@@ -45,7 +45,7 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TValue">The type of the value.</typeparam>
     [JsonConverter(typeof(OperationResultJsonConverterFactory))]
-    public sealed class SuccessOperationResult<TValue> : OperationResult<TValue>
+    public class SuccessOperationResult<TValue> : OperationResult<TValue>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SuccessOperationResult{TValue}"/> class with <see cref="OperationStatus.Success"/> status, <see cref="HttpStatusCode.OK"/> status code and the content value.
