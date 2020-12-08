@@ -17,10 +17,10 @@
     <PackageIcon>Xpandables.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.2.2</Version>
-    <AssemblyVersion>5.2.2</AssemblyVersion>
-    <FileVersion>5.2.2</FileVersion>
-    <PackageVersion>5.2.2</PackageVersion>
+    <Version>5.2.3</Version>
+    <AssemblyVersion>5.2.3</AssemblyVersion>
+    <FileVersion>5.2.3</FileVersion>
+    <PackageVersion>5.2.3</PackageVersion>
     <PackageReleaseNotes>Add IOperationResult and IOperationResult{TValue}.</PackageReleaseNotes>
     <PackageId>Xpandables.Net.EntityFramework</PackageId>
     <PackageTags>IDataContext, IDataContextProvider.</PackageTags>
