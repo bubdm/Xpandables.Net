@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
     <title>Xpandables.Net</title>
-    <PackageIcon>Xpandables.png</PackageIcon>
+    <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Version>5.2.3</Version>
@@ -65,7 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\Xpandables.png" Link="Xpandables.png">
+    <None Include="..\Xpandables.Net.png" Link="Xpandables.Net.png">
       <PackagePath></PackagePath>
       <Pack>True</Pack>
     </None>
