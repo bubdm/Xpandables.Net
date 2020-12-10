@@ -89,12 +89,12 @@ public sealed class ContactModel : Entity
  
 ```
 
-## ContractValidation
+## Contracts Validation
 
 ```cs
 
 // IValidation{T} defines method contracts used to validate a type-specific argument using a decorator.
-The validator get called during the control flow before the handdler.
+// The validator get called during the control flow before the handdler.
 
 public sealed class ContactValidators : 
    IValidation<Select>, IValidation<Add>, IValidation<Delete>, IValidation<Edit>
@@ -138,7 +138,7 @@ public sealed class ContactValidators :
 
 ```
 
-## ContractHandlers
+## Contracts Handlers
 
 ```cs
 
