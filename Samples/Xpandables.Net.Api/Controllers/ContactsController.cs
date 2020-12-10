@@ -17,17 +17,25 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
+using Xpandables.Net.Api.Handlers;
 using Xpandables.Net.CQRS;
 
 namespace Xpandables.Net.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class ContactsController : ControllerBase
     {
         private readonly IDispatcher _dispatcher;
@@ -36,37 +44,54 @@ namespace Xpandables.Net.Api.Controllers
         [Route("")]
         [HttpGet]
         public IAsyncEnumerable<Contact> SelectAllAsync([FromQuery] SelectAll selectAll, CancellationToken cancellationToken = default)
-        {
-            return _dispatcher.FetchAsync(selectAll, cancellationToken);
-            //await foreach (var contact in _dispatcher.InvokeAsync(selectAll, cancellationToken).ConfigureAwait(false))
-            //    yield return contact;
-        }
+            => _dispatcher.FetchAsync(selectAll, cancellationToken);
 
         [Route("{id}", Name = "ContactLink")]
         [HttpGet]
         public async Task<IActionResult> SelectAsync([FromRoute] Select select, CancellationToken cancellationToken = default)
-        {
-            return Ok(await _dispatcher.FetchAsync(select, cancellationToken).ConfigureAwait(false));
-        }
+            => Ok(await _dispatcher.FetchAsync(select, cancellationToken).ConfigureAwait(false));
 
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] Add add, CancellationToken cancellationToken = default)
         {
-            var id = await _dispatcher.SendAsync(add, cancellationToken).ConfigureAwait(false);
-            return CreatedAtRoute("ContactLink", new { id = id.Value }, id.Value);
+            var createdResult = await _dispatcher.SendAsync(add, cancellationToken).ConfigureAwait(false);
+            if (createdResult.IsFailed()) return Ok(createdResult);
+
+            return CreatedAtRoute("ContactLink", new { id = createdResult.Value }, createdResult.Value);
         }
 
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] Delete del, CancellationToken cancellationToken = default)
+            => Ok(await _dispatcher.SendAsync(del, cancellationToken).ConfigureAwait(false));
+
+        [HttpPatch]
+        public async Task<IActionResult> EditAsync([FromRoute] string id, [FromBody] JsonPatchDocument<Edit> editPatch, CancellationToken cancellationToken = default)
         {
-            return Ok(await _dispatcher.SendAsync(del, cancellationToken).ConfigureAwait(false));
+            var edit = new Edit { Id = id, ApplyPatch = value => ApplyJsonPatch(value, editPatch) };
+            return Ok(await _dispatcher.SendAsync(edit, cancellationToken).ConfigureAwait(false));
         }
 
-        [HttpPut]
-        public async Task<IActionResult> EditAsync([FromBody] Edit edit, CancellationToken cancellationToken = default)
+        protected IOperationResult ApplyJsonPatch<TModel>(TModel model, JsonPatchDocument<TModel> jsonPatch)
+                   where TModel : class
         {
-            return Ok(await _dispatcher.SendAsync(edit, cancellationToken).ConfigureAwait(false));
+            if (jsonPatch.Operations.Any(op => op.OperationType != OperationType.Replace))
+                return new FailedOperationResult(
+                    HttpStatusCode.Unauthorized,
+                    jsonPatch.Operations.Where(op => op.OperationType != OperationType.Replace).Select(op => new OperationError($"op {op.OperationType}", "Unauthorized")).ToList());
+
+            jsonPatch.ApplyTo(model, ModelState);
+            return !ModelState.IsValid || !TryValidateModel(model) ? GetFailedOperationResult(ModelState) : new SuccessOperationResult();
+        }
+
+        protected IOperationResult GetFailedOperationResult(ModelStateDictionary modelState)
+        {
+            _ = modelState ?? throw new ArgumentNullException(nameof(modelState));
+            return new FailedOperationResult(System.Net.HttpStatusCode.BadRequest, modelState
+                .Keys
+                .Where(key => modelState[key].Errors.Count > 0)
+                .Select(key => new OperationError(key, modelState[key].Errors.Select(error => error.ErrorMessage).ToArray()))
+                .ToList());
         }
     }
 }

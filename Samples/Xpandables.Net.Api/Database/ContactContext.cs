@@ -1,4 +1,4 @@
-
+﻿
 /************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
@@ -15,22 +15,21 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Xpandables.Net.Api.Middlewares;
+using Microsoft.EntityFrameworkCore;
 
-namespace Xpandables.Net.Api
+using Xpandables.Net.Api.Models;
+using Xpandables.Net.CQRS;
+
+namespace Xpandables.Net.Api.Database
 {
-    public class Program
+    public sealed class ContactContext : DataContext
     {
-        public static void Main(string[] args)
+        public ContactContext(DbContextOptions<ContactContext> contextOptions) : base(contextOptions) { }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            CreateHostBuilder(args).Build().Run();
+            modelBuilder.Entity<ContactModel>().HasKey(new string[] { nameof(ContactModel.Id) });
+            modelBuilder.Entity<ContactModel>().HasIndex(new string[] { nameof(ContactModel.Id) }).IsUnique();
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => webBuilder.ConfigureServices((_, services) => services.AddTransient<OperationResultFilter>()).UseStartup<Startup>());
+        public DbSet<ContactModel> Contacts { get; set; } = default!;
     }
 }

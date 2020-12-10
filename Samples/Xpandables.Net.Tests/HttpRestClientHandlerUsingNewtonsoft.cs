@@ -14,9 +14,9 @@ using Xpandables.Net.Http;
 
 namespace Xpandables.Net.Tests
 {
-    public sealed class HttpRestClientHandlerCustom : HttpRestClientHandler
+    public sealed class HttpRestClientHandlerUsingNewtonsoft : HttpRestClientHandler
     {
-        public HttpRestClientHandlerCustom(HttpClient httpClient) : base(httpClient) { }
+        public HttpRestClientHandlerUsingNewtonsoft(HttpClient httpClient) : base(httpClient) { }
 
         protected override HttpContent ReadStringContent<TSource>(TSource source, HttpRestClientAttribute attribute)
         {

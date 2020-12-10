@@ -1,4 +1,4 @@
-
+﻿
 /************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
@@ -15,22 +15,18 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Xpandables.Net.Api.Middlewares;
+using System;
 
-namespace Xpandables.Net.Api
+using Xpandables.Net.Interception;
+
+namespace Xpandables.Net.Api.Services
 {
-    public class Program
+    public sealed class ContactInterceptor : IInterceptor
     {
-        public static void Main(string[] args)
+        public void Intercept(IInvocation invocation)
         {
-            CreateHostBuilder(args).Build().Run();
+            _ = invocation ?? throw new ArgumentNullException(nameof(invocation));
+            invocation.Proceed();
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => webBuilder.ConfigureServices((_, services) => services.AddTransient<OperationResultFilter>()).UseStartup<Startup>());
     }
 }

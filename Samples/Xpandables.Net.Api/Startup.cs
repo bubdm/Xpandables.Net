@@ -19,9 +19,13 @@ using System.Reflection;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Xpandables.Net.Api.Database;
+using Xpandables.Net.Api.Middlewares;
+using Xpandables.Net.Api.Services;
 using Xpandables.Net.DependencyInjection;
 
 namespace Xpandables.Net.Api
@@ -32,14 +36,26 @@ namespace Xpandables.Net.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
+            services
+                .AddControllers()
                 .AddMvcOptions(options => options.Filters.Add<OperationResultFilter>(int.MinValue));
+
+            services
+                .AddDbContext<ContactContext>(options => options.UseInMemoryDatabase(nameof(ContactContext))
+                .EnableServiceProviderCaching());
+
+            services.AddXDataContext<ContactContext>();
             services.AddXDispatcher();
-            services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, _ => { });
-            services.AddSingleton<ContactService>();
-            services.AddTransient<ContactInterceptor>();
-            //services.AddXInterceptor<ContactInterceptor>(true, _ => true, new[] { Assembly.GetExecutingAssembly() });
-            services.AddXInterceptorHandlers<ContactInterceptor>(new[] { Assembly.GetExecutingAssembly() });
+            services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
+            {
+                options.UsePersistenceDecorator();
+                options.UseValidationDecorator();
+            });
+
+            //services.AddTransient<ContactInterceptor>();
+            //services.AddXInterceptorHandlers<ContactInterceptor>(new[] { Assembly.GetExecutingAssembly() });
+
+            services.AddHostedService<ContactContextInitializer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
