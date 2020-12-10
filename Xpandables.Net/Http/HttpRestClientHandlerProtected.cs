@@ -593,7 +593,6 @@ namespace Xpandables.Net.Http
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="stream"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception> 
-        [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
         protected virtual async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream, JsonSerializerOptions? options = default)
         {
             _ = stream ?? throw new ArgumentNullException(nameof(stream));

@@ -15,6 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
@@ -24,6 +25,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.CQRS;
 using Xpandables.Net.Http;
+using Xpandables.Net.Interception;
 
 namespace Xpandables.Net.Api
 {
@@ -36,14 +38,14 @@ namespace Xpandables.Net.Api
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed record Select([Required] int Id) : IQuery<Contact?>, IPathStringLocationRequest
+    public sealed record Select([Required] int Id) : IQuery<Contact?>, IPathStringLocationRequest, IInterceptorDecorator
     {
         [return: NotNull]
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), $"{Id}" } };
     }
 
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
-    public sealed record Add([Required] string Name, [Required] string Address, [Required] string City) : ICommand<int>;
+    public sealed record Add([Required] string Name, [Required] string Address, [Required] string City) : ICommand<int>, IInterceptorDecorator;
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = "Delete", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
     public sealed record Delete([Required] int Id) : ICommand, IPathStringLocationRequest
@@ -110,6 +112,15 @@ namespace Xpandables.Net.Api
             _contactService.Contacts[index] = result;
 
             return await Task.FromResult(new SuccessOperationResult<Contact>(result)).ConfigureAwait(false);
+        }
+    }
+
+    public sealed class ContactInterceptor : IInterceptor
+    {
+        public void Intercept(IInvocation invocation)
+        {
+            _ = invocation ?? throw new ArgumentNullException(nameof(invocation));
+            invocation.Proceed();
         }
     }
 }

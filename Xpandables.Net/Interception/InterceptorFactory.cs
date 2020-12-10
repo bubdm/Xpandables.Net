@@ -40,7 +40,7 @@ namespace Xpandables.Net.Interception
         /// <summary>
         /// Creates an instance that will be intercepted with the specified interceptor.
         /// </summary>
-        /// <param name="interfaceType">The type of the instance</param>
+        /// <param name="interfaceType">The type of the interface</param>
         /// <param name="interceptor">An interceptor instance to apply</param>
         /// <param name="instance">The real instance of the type</param>
         /// <returns><see cref="object"/> proxy instance.</returns>
