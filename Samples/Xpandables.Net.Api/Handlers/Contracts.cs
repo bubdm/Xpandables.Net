@@ -65,7 +65,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
-    public sealed class Add : QueryExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator
+    public sealed class Add : QueryExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
         public Add(string name, string city, string address, string country)

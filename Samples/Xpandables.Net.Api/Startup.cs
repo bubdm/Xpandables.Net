@@ -42,9 +42,9 @@ namespace Xpandables.Net.Api
 
             services
                 .AddDbContext<ContactContext>(options => options.UseInMemoryDatabase(nameof(ContactContext))
-                .EnableServiceProviderCaching());
+                .EnableServiceProviderCaching())
+                .AddXDataContext<ContactContext>();
 
-            services.AddXDataContext<ContactContext>();
             services.AddXDispatcher();
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
             {
@@ -52,8 +52,9 @@ namespace Xpandables.Net.Api
                 options.UseValidationDecorator();
             });
 
-            //services.AddTransient<ContactInterceptor>();
-            //services.AddXInterceptorHandlers<ContactInterceptor>(new[] { Assembly.GetExecutingAssembly() });
+            // uncomment to disable Interception
+            services.AddTransient<ContactInterceptor>();
+            services.AddXInterceptorHandlers<ContactInterceptor>(new[] { Assembly.GetExecutingAssembly() });
 
             services.AddHostedService<ContactContextInitializer>();
         }
