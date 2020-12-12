@@ -35,7 +35,7 @@ namespace Xpandables.Net.CQRS
     public delegate Exception? PersistenceExceptionHandler(Exception exception);
 
     /// <summary>
-    /// Represents a set of command to manage domain objects using EntityFrameworkCore.
+    /// Represents a set of commands to manage domain objects using EntityFrameworkCore.
     /// When argument is null, an <see cref="ArgumentNullException"/> will be thrown.
     /// When a value is not found, a default value of the expected type should be returned.
     /// The implementation must be thread-safe when working in a multi-threaded environment.

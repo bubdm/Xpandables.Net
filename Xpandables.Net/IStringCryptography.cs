@@ -202,6 +202,7 @@ namespace Xpandables.Net
         /// <param name="value">The value to compare with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The comparison failed. See inner exception.</exception>
+        /// <returns><see langword="true"/> if equality otherwise <see langword="false"/>.</returns>
         public virtual bool AreEqual(ValueEncrypted encrypted, string value) => AreEqualAsync(encrypted, value).RunSync();
 
         /// <summary>
@@ -212,6 +213,7 @@ namespace Xpandables.Net
         /// <param name="value">The value to compare with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The comparison failed. See inner exception.</exception>
+        /// <returns><see langword="true"/> if equality otherwise <see langword="false"/>.</returns>
         public virtual async Task<bool> AreEqualAsync(ValueEncrypted encrypted, string value)
         {
             _ = value ?? throw new ArgumentNullException(nameof(value));

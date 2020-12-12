@@ -22,7 +22,7 @@ using System.Diagnostics;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// Defines a representation of an encrypted value, its key and its salt.
+    /// Defines a representation of an encrypted value, its key and its salt used with <see cref="IStringCryptography"/>.
     /// This class uses the <see cref="ValueEncryptedTypeConverter"/> type converter.
     /// </summary>
     [Serializable]
@@ -90,6 +90,15 @@ namespace Xpandables.Net
         /// <exception cref="FormatException">The <paramref name="format"/> is invalid or
         /// the index of a format item is not zero or one.</exception>
         public string ToString(string format, IFormatProvider formatProvider) => string.Format(formatProvider, format, Key, Value, Salt);
+
+        /// <summary>
+        /// Compares the encrypted object with the plain text one.
+        /// Returns <see langword="true"/> if equality otherwise <see langword="false"/>.
+        /// </summary>
+        /// <param name="stringCryptography">Contains methods to encrypt and decrypt string.</param>
+        /// <param name="compare">The value to compare with.</param>
+        /// <returns><see langword="true"/> if equality otherwise <see langword="false"/>.</returns>
+        public bool AreEqual(IStringCryptography stringCryptography, string compare) => stringCryptography.AreEqual(this, compare);
 
         /// <summary>
         /// Implicit converter from <see cref="ValueEncrypted"/> to <see cref="string"/>.
