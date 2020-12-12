@@ -62,7 +62,7 @@ namespace Xpandables.Net.Expressions
             if (obj is not QueryExpression<TSource, TResult> objVal) return false;
             if (ReferenceEquals(this, objVal)) return true;
 
-            return 
+            return
                 ExpressionComparer.AreEqual(GetExpression(), objVal.GetExpression());
         }
 

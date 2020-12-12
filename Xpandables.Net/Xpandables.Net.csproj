@@ -17,11 +17,11 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.2.3</Version>
-    <AssemblyVersion>5.2.3</AssemblyVersion>
-    <FileVersion>5.2.3</FileVersion>
-    <PackageVersion>5.2.3</PackageVersion>
-    <PackageReleaseNotes>Add IOperationResult and IOperationResult{TValue}</PackageReleaseNotes>    
+    <Version>5.2.4</Version>
+    <AssemblyVersion>5.2.4</AssemblyVersion>
+    <FileVersion>5.2.4</FileVersion>
+    <PackageVersion>5.2.4</PackageVersion>
+    <PackageReleaseNotes>Add RecordExpression</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>

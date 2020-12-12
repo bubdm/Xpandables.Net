@@ -18,50 +18,37 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Xpandables.Net.Expressions
+namespace Xpandables.Net.Expressions.Records
 {
+#pragma warning disable CS1572 // XML comment has a param tag, but there is no parameter by that name
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     /// <summary>
-    /// Provides the <see cref="QueryExpression{TSource, TResult}"/> "And" profile.
+    /// Provides the <see cref="RecordExpression{TSource, TResult}"/> "And" profile with the query expressions for composition.
     /// </summary>
+    /// <param name="Left">The query expression for the left side.</param>
+    /// <param name="Right">The query expression for the right side.</param>
     /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
     /// <typeparam name="TResult">The type of the result of expression.</typeparam>
-    public sealed class QueryExpressionAnd<TSource, TResult> : QueryExpression<TSource, TResult>
+    public sealed record RecordExpressionAnd<TSource, TResult>(IQueryExpression<TSource, TResult> Left, IQueryExpression<TSource, TResult> Right) : RecordExpression<TSource, TResult>
         where TSource : class
     {
-        private readonly IQueryExpression<TSource, TResult> _left;
-        private readonly IQueryExpression<TSource, TResult> _right;
         private Expression<Func<TSource, TResult>>? _cache;
 
         /// <summary>
-        /// Returns a new instance of <see cref="QueryExpressionAnd{TSource, TResult}"/> class with the query expressions for composition.
-        /// </summary>
-        /// <param name="left">The query expression for the left side.</param>
-        /// <param name="right">The query expression for the right side.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
-        public QueryExpressionAnd(IQueryExpression<TSource, TResult> left, IQueryExpression<TSource, TResult> right)
-        {
-            _left = left ?? throw new ArgumentNullException(nameof(left));
-            _right = right ?? throw new ArgumentNullException(nameof(right));
-        }
-
-        /// <summary>
-        /// Returns a new instance of <see cref="QueryExpressionAnd{TSource, TResult}"/> class with the expressions for composition.
+        /// Returns a new instance of <see cref="QueryExpressionAnd{TSource, TResult}"/> record with the expressions for composition.
         /// </summary>
         /// <param name="left">The query expression  for the left side.</param>
         /// <param name="rightExpression">The expression for the right side.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="rightExpression"/> is null.</exception>
-        public QueryExpressionAnd(IQueryExpression<TSource, TResult> left, Expression<Func<TSource, TResult>> rightExpression)
-        {
-            _left = left ?? throw new ArgumentNullException(nameof(left));
-            _right = new QueryExpressionBuilder<TSource, TResult>(rightExpression ?? throw new ArgumentNullException(nameof(rightExpression)));
-        }
+        public RecordExpressionAnd(IQueryExpression<TSource, TResult> left, Expression<Func<TSource, TResult>> rightExpression)
+            : this(Left: left, new QueryExpressionBuilder<TSource, TResult>(rightExpression ?? throw new ArgumentNullException(nameof(rightExpression)))) { }
 
         /// <summary>
         /// Returns the expression to be used for the clause <see langword="Where"/> in a query.
         /// </summary>
         public override Expression<Func<TSource, TResult>> GetExpression()
-            => _cache ??= ExpressionFactory<TResult>.And(_left.GetExpression(), _right.GetExpression());
+            => _cache ??= ExpressionFactory<TResult>.And(Left.GetExpression(), Right.GetExpression());
     }
 }

@@ -21,7 +21,7 @@ using System.Linq.Expressions;
 
 using Xpandables.Net.Api.Models;
 using Xpandables.Net.CQRS;
-using Xpandables.Net.Expressions;
+using Xpandables.Net.Expressions.Records;
 using Xpandables.Net.Http;
 
 namespace Xpandables.Net.Api.Handlers
@@ -29,7 +29,7 @@ namespace Xpandables.Net.Api.Handlers
     public sealed record Contact(string Id, string Name, string City, string Address, string Country);
 
     [HttpRestClient(Path = "api/contacts", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
-    public sealed class SelectAll : QueryExpression<ContactModel>, IAsyncQuery<Contact>, IQueryStringLocationRequest
+    public sealed record SelectAll : RecordExpression<ContactModel>, IAsyncQuery<Contact>, IQueryStringLocationRequest
     {
         public string? Name { get; set; }
         public string? City { get; set; }
@@ -37,7 +37,7 @@ namespace Xpandables.Net.Api.Handlers
         public string? Country { get; set; }
         public override Expression<Func<ContactModel, bool>> GetExpression()
         {
-            var queryExpression = QueryExpressionFactory.Create<ContactModel>();
+            var queryExpression = RecordExpressionFactory.Create<ContactModel>();
             if (Name is not null) queryExpression = queryExpression.And(contact => contact.Name.Contains(Name));
             if (City is not null) queryExpression = queryExpression.And(contact => contact.City.Contains(City));
             if (Address is not null) queryExpression = queryExpression.And(contact => contact.Address.Contains(Address));
@@ -54,7 +54,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed class Select : QueryExpression<ContactModel>, IQuery<Contact>, IPathStringLocationRequest, IInterceptorDecorator
+    public sealed record Select : RecordExpression<ContactModel>, IQuery<Contact>, IPathStringLocationRequest, IInterceptorDecorator
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         public Select(string id) => Id = id;
@@ -65,7 +65,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
-    public sealed class Add : QueryExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator
+    public sealed record Add : RecordExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
         public Add(string name, string city, string address, string country)
@@ -83,7 +83,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = "Delete", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed class Delete : QueryExpression<ContactModel>, ICommand, IValidationDecorator, IPersistenceDecorator, IPathStringLocationRequest
+    public sealed record Delete : RecordExpression<ContactModel>, ICommand, IValidationDecorator, IPersistenceDecorator, IPathStringLocationRequest
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         public Delete(string id) => Id = id;
@@ -93,7 +93,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts", Method = "Patch", IsSecured = true, IsNullable = false, In = ParameterLocation.Body)]
-    public sealed class Edit : QueryExpression<ContactModel>, ICommand<Contact>, IValidationDecorator, IPersistenceDecorator
+    public sealed record Edit : RecordExpression<ContactModel>, ICommand<Contact>, IValidationDecorator, IPersistenceDecorator
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         public string Id { get; set; } = null!;

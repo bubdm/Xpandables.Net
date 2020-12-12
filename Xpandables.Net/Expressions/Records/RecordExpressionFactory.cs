@@ -18,35 +18,35 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Xpandables.Net.Expressions
+namespace Xpandables.Net.Expressions.Records
 {
     /// <summary>
-    /// Provides the query expression factory that contains methods to create generic query expressions.
+    /// Provides the record expression factory that contains methods to create generic record expressions.
     /// </summary>   
-    public static class QueryExpressionFactory
+    public static class RecordExpressionFactory
     {
         /// <summary>
-        /// Creates a new instance of <see cref="QueryExpression{TSource, TResult}"/> with <see cref="bool"/> result that return <see langword="true"/>.
+        /// Creates a new instance of <see cref="RecordExpression{TSource, TResult}"/> with <see cref="bool"/> result that return <see langword="true"/>.
         /// </summary>
         /// <typeparam name="TSource">The data type source.</typeparam>
-        /// <returns>an new instance of <see cref="QueryExpression{TSource, TResult}"/> with boolean result.</returns>
-        public static QueryExpression<TSource, bool> Create<TSource>() where TSource : class => new QueryExpressionBuilder<TSource, bool>(_ => true);
+        /// <returns>an new instance of <see cref="RecordExpression{TSource, TResult}"/> with boolean result.</returns>
+        public static RecordExpression<TSource, bool> Create<TSource>() where TSource : class => new RecordExpressionBuilder<TSource, bool>(_ => true);
     }
 
     /// <summary>
-    /// Provides the query expression factory that contains methods to create generic query expressions.
+    /// Provides the record expression factory that contains methods to create generic record expressions.
     /// </summary>
     /// <typeparam name="TResult">The result type.</typeparam>
-    public static class QueryExpressionFactory<TResult>
+    public static class RecordExpressionFactory<TResult>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="QueryExpression{TSource, TResult}"/> with the specified expression.
+        /// Creates a new instance of <see cref="RecordExpression{TSource, TResult}"/> with the specified expression.
         /// </summary>
         /// <typeparam name="TSource">The data type source.</typeparam>
         /// <param name="expression">The expression to be used by the instance.</param>
         /// <returns>an new instance of <see cref="QueryExpression{TSource, TResult}"/></returns>
         /// <exception cref="ArgumentNullException">The <paramref name="expression"/> is null.</exception>
-        public static QueryExpression<TSource, TResult> Create<TSource>(Expression<Func<TSource, TResult>> expression)
-            where TSource : class => new QueryExpressionBuilder<TSource, TResult>(expression);
+        public static RecordExpression<TSource, TResult> Create<TSource>(Expression<Func<TSource, TResult>> expression)
+            where TSource : class => new RecordExpressionBuilder<TSource, TResult>(expression);
     }
 }

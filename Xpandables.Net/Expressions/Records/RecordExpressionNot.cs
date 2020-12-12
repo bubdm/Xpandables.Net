@@ -18,40 +18,33 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Xpandables.Net.Expressions
+namespace Xpandables.Net.Expressions.Records
 {
+#pragma warning disable CS1572 // XML comment has a param tag, but there is no parameter by that name
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     /// <summary>
-    /// Provides the <see cref="QueryExpression{TSource, TResult}"/> "Not" profile.
+    /// Provides the <see cref="QueryExpression{TSource, TResult}"/> "Not" profile with the query expression.
     /// </summary>
+    /// <param name="Expression">The query expression to act on.</param>
     /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
     /// <typeparam name="TResult">The type of the result of expression.</typeparam>
-    public sealed class QueryExpressionNot<TSource, TResult> : QueryExpression<TSource, TResult>
+    public sealed record RecordExpressionNot<TSource, TResult>(IQueryExpression<TSource, TResult> Expression) : RecordExpression<TSource, TResult>
         where TSource : class
     {
-        private readonly IQueryExpression<TSource, TResult> _expression;
         private Expression<Func<TSource, TResult>>? _cache;
 
         /// <summary>
-        /// Returns a new instance of <see cref="QueryExpressionNot{TSource, TResult}"/> class with the query expression.
+        /// Returns a new instance of <see cref="RecordExpressionNot{TSource, TResult}"/> record with the expression.
         /// </summary>
-        /// <param name="expression">The query expression  for the left side.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="expression"/> is null.</exception>
-        public QueryExpressionNot(IQueryExpression<TSource, TResult> expression)
-            => _expression = expression ?? throw new ArgumentNullException(nameof(expression));
-
-
-        /// <summary>
-        /// Returns a new instance of <see cref="QueryExpressionNot{TSource, TResult}"/> class with the expression.
-        /// </summary>
-        /// <param name="leftExpression">The query expression  for the left side.</param>
+        /// <param name="leftExpression">The query expression to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="leftExpression"/> is null.</exception>
-        public QueryExpressionNot(Expression<Func<TSource, TResult>> leftExpression)
-            => _expression = new QueryExpressionBuilder<TSource, TResult>(leftExpression ?? throw new ArgumentNullException(nameof(leftExpression)));
+        public RecordExpressionNot(Expression<Func<TSource, TResult>> leftExpression)
+            : this(Expression: new QueryExpressionBuilder<TSource, TResult>(leftExpression ?? throw new ArgumentNullException(nameof(leftExpression)))) { }
 
         /// <summary>
         /// Returns the expression to be used for the clause <see langword="Where"/> in a query.
         /// </summary>
-        public override Expression<Func<TSource, TResult>> GetExpression()
-            => _cache ??= ExpressionFactory<TResult>.Not(_expression.GetExpression());
+        public override Expression<Func<TSource, TResult>> GetExpression() => _cache ??= ExpressionFactory<TResult>.Not(Expression.GetExpression());
     }
 }
