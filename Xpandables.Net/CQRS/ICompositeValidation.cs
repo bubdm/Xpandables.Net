@@ -42,15 +42,15 @@ namespace Xpandables.Net.CQRS
         /// <returns>Returns a result state that contains validation informations.</returns>
         public new virtual async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
         {
-            var errors = new OperationErrorCollection();
             foreach (var validator in ValidationInstances.OrderBy(o => o.Order))
             {
                 if (cancellationToken.IsCancellationRequested) cancellationToken.ThrowIfCancellationRequested();
                 var result = await validator.ValidateAsync(argument, cancellationToken).ConfigureAwait(false);
-                if (result.IsFailed()) errors.Merge(result.Errors);
+                if (result.IsFailed())
+                    return result;
             }
 
-            return await Task.FromResult<IOperationResult>(errors.Count > 0 ? new FailedOperationResult(System.Net.HttpStatusCode.BadRequest, errors) : new SuccessOperationResult()).ConfigureAwait(false);
+            return new SuccessOperationResult();
         }
     }
 }

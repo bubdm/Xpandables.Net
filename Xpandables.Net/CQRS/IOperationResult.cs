@@ -51,24 +51,24 @@ namespace Xpandables.Net.CQRS
         /// <summary>
         /// Returns the operation HTTP status code.
         /// </summary>
-        public HttpStatusCode GetStatusCode() => StatusCode;
+        public sealed HttpStatusCode GetStatusCode() => StatusCode;
 
         /// <summary>
         /// Returns a value that indicates whether the operation is completed successfully and returns <see langword="true"/> if so, otherwise <see langword="false"/>.
         /// </summary>
         /// <returns><see langword="true"/> if the operation is completed successfully; otherwise, <see langword="false"/>.</returns>
-        public bool IsSuccess() => Status == OperationStatus.Success;
+        public sealed bool IsSuccess() => Status == OperationStatus.Success;
 
         /// <summary>
-        /// Returns a value that indicates whether the operation is failed and returns <see langword="false"/> if so, otherwise <see langword="true"/>.
+        /// Returns a value that indicates whether the operation is failed and returns <see langword="true"/> if so, otherwise <see langword="false"/>.
         /// </summary>
-        /// <returns><see langword="false"/> if the operation is failed; otherwise, <see langword="true"/>.</returns>
-        public bool IsFailed() => Status == OperationStatus.Failed;
+        /// <returns><see langword="true"/> if the operation is failed; otherwise, <see langword="true"/>.</returns>
+        public sealed bool IsFailed() => Status == OperationStatus.Failed;
 
         /// <summary>
         /// Returns the collection of errors.
         /// </summary>
-        public IReadOnlyCollection<OperationError> GetErrors() => Errors;
+        public sealed IReadOnlyCollection<OperationError> GetErrors() => Errors;
     }
 
     /// <summary>

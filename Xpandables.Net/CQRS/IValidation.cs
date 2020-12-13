@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -66,7 +67,7 @@ namespace Xpandables.Net.CQRS
                                 errors.Add(member, validationResult.ErrorMessage);
                         }
 
-                return new FailedOperationResult(System.Net.HttpStatusCode.OK, errors);
+                return new FailedOperationResult(HttpStatusCode.BadRequest, errors);
             }
 
             return await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
