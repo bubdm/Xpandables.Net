@@ -29,7 +29,7 @@ namespace Xpandables.Net
     /// <summary>
     /// Defines a representation of an encrypted value, its key and its salt used with <see cref="IStringCryptography"/>.
     /// This class uses the <see cref="ValueEncryptedTypeConverter"/> type converter.
-    /// Returns a new instance of <see cref="ValueEncrypted"/> with the key and value.
+    /// <para>Returns a new instance of <see cref="ValueEncrypted"/> with the key and value.</para>
     /// </summary>
     /// <param name="Key">Contains the encryption key.</param>
     /// <param name="Value">Contains the base64 encrypted value.</param>

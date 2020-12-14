@@ -28,7 +28,7 @@ namespace Xpandables.Net
 #pragma warning disable CS1572 // XML comment has a param tag, but there is no parameter by that name
     /// <summary>
     /// Defines the <see cref="ValuePicture"/> class that holds properties for an image.
-    /// Returns a new instance <see cref="ValuePicture"/> with all properties.
+    /// <para>Returns a new instance <see cref="ValuePicture"/> with all properties.</para>
     /// </summary>
     /// <param name="Title">The picture title.</param>
     /// <param name="Content">The picture byte content.</param>

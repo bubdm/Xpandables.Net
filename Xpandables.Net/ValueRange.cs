@@ -21,48 +21,23 @@ using System.Diagnostics;
 
 namespace Xpandables.Net
 {
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable CS1572 // XML comment has a param tag, but there is no parameter by that name
     /// <summary>
     /// Defines a pair of values, representing a segment.
     /// This class uses <see cref="ValueRangeTypeConverter"/> as type converter.
+    /// <para>Returns a new instance of <see cref="ValueRange{TValue}"/> with the specified pair of values.</para>
     /// </summary>
+    /// <param name="Min">The minimal value of range.</param>
+    /// <param name="Max">The maximal value of range.</param>
     /// <typeparam name="TValue">The Type of each of two values of range.</typeparam>
     [Serializable]
     [DebuggerDisplay("Min = {Min} : Max = {Max}")]
     [TypeConverter(typeof(ValueRangeTypeConverter))]
-    public sealed record ValueRange<TValue>
+    public sealed record ValueRange<TValue>(TValue Min, TValue Max)
         where TValue : unmanaged, IComparable, IFormattable, IConvertible, IComparable<TValue>, IEquatable<TValue>
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="ValueRange{TValue}"/> with the specified pair of values.
-        /// </summary>
-        /// <param name="min">The minimal value of range.</param>
-        /// <param name="max">The maximal value of range.</param>
-        public ValueRange(TValue min, TValue max) => (Min, Max) = (min, max);
-
-        /// <summary>
-        /// Creates a copy of the specified range value.
-        /// </summary>
-        /// <param name="source">The range to be copied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public ValueRange(ValueRange<TValue> source) => (Min, Max) = (source.Min, source.Max);
-
-        /// <summary>
-        /// Provides with deconstruction for <see cref="ValueRange{TValue}"/>.
-        /// </summary>
-        /// <param name="min">The output minimal value of range.</param>
-        /// <param name="max">The output maximal value of range.</param>
-        public void Deconstruct(out TValue min, out TValue max) => (min, max) = (Min, Max);
-
-        /// <summary>
-        /// Gets the minimal value of range.
-        /// </summary>
-        public TValue Min { get; }
-
-        /// <summary>
-        /// Gets the maximal value of range.
-        /// </summary>
-        public TValue Max { get; }
-
         /// <summary>
         /// Creates a string representation of the <see cref="ValueRange{T}"/> separated by ":".
         /// </summary>
