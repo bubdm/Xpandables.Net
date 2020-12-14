@@ -17,64 +17,31 @@
 ************************************************************************************************************/
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 
 namespace Xpandables.Net
 {
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable CS1734 // XML comment has a paramref tag, but there is no parameter by that name
+#pragma warning disable CS1572 // XML comment has a param tag, but there is no parameter by that name
     /// <summary>
     /// Defines a representation of an encrypted value, its key and its salt used with <see cref="IStringCryptography"/>.
     /// This class uses the <see cref="ValueEncryptedTypeConverter"/> type converter.
+    /// Returns a new instance of <see cref="ValueEncrypted"/> with the key and value.
     /// </summary>
+    /// <param name="Key">Contains the encryption key.</param>
+    /// <param name="Value">Contains the base64 encrypted value.</param>
+    /// <param name="Salt">Contains the base64 salt value.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="Key"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="Value"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="Salt"/> is null.</exception>
     [Serializable]
     [DebuggerDisplay("Key = {Key}, Value = {Value}, Salt = {Salt}")]
     [TypeConverter(typeof(ValueEncryptedTypeConverter))]
-    public sealed record ValueEncrypted
+    public sealed record ValueEncrypted([Required] string Key, [Required] string Value, [Required] string Salt)
     {
-        /// <summary>
-        /// Returns a new instance of <see cref="ValueEncrypted"/> with the key and value.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The encrypted value.</param>
-        /// <param name="salt">The salt value.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="salt"/> is null.</exception>
-        public ValueEncrypted(string key, string value, string salt)
-            => (Key, Value, Salt) =
-            (key ?? throw new ArgumentNullException(nameof(key)),
-            value ?? throw new ArgumentNullException(nameof(value)),
-            salt ?? throw new ArgumentNullException(nameof(salt)));
-
-        /// <summary>
-        /// Makes a copy of the value encrypted source.
-        /// </summary>
-        /// <param name="source">The encrypted value to be copied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public ValueEncrypted(ValueEncrypted source) => (Key, Value, Salt) = (source.Key, source.Value, source.Salt);
-
-        /// <summary>
-        /// Provides with deconstruction for <see cref="ValueEncrypted"/>.
-        /// </summary>
-        /// <param name="key">The output key.</param>
-        /// <param name="value">The output value.</param>
-        /// <param name="salt">the output salt value.</param>
-        public void Deconstruct(out string key, out string value, out string salt) => (key, value, salt) = (Key, Value, Salt);
-
-        /// <summary>
-        /// Contains the encryption key.
-        /// </summary>
-        public string Key { get; }
-
-        /// <summary>
-        /// Contains the base64 encrypted value.
-        /// </summary>
-        public string Value { get; }
-
-        /// <summary>
-        /// Contains the base64 salt value.
-        /// </summary>
-        public string Salt { get; }
-
         /// <summary>
         /// Creates a string representation of the <see cref="ValueEncrypted"/>.
         /// </summary>
