@@ -16,41 +16,32 @@
  *
 ************************************************************************************************************/
 using System;
+using System.ComponentModel.DataAnnotations;
 
 using Xpandables.Net.Properties;
 
 namespace Xpandables.Net
 {
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable CS1734 // XML comment has a paramref tag, but there is no parameter by that name
+#pragma warning disable CS1572 // XML comment has a param tag, but there is no parameter by that name
     /// <summary>
     /// Defines the <see cref="ValuePicture"/> class that holds properties for an image.
+    /// Returns a new instance <see cref="ValuePicture"/> with all properties.
     /// </summary>
-    public sealed record ValuePicture
+    /// <param name="Title">The picture title.</param>
+    /// <param name="Content">The picture byte content.</param>
+    /// <param name="Height">The picture height, in pixels, of this picture..</param>
+    /// <param name="Width">The picture width, in pixels, of this picture.</param>
+    /// <param name="Extension">The picture file format of this picture.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="Title"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="Content"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="Height"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="Width"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="Extension"/> is null.</exception>
+    public sealed record ValuePicture([Required] string Title, byte[] Content, int Height, int Width, [Required] string Extension)
     {
-        /// <summary>
-        /// Initializes a new instance <see cref="ValuePicture"/> with all properties.
-        /// </summary>
-        /// <param name="title">The picture title.</param>
-        /// <param name="content">The picture content.</param>
-        /// <param name="height">The picture height.</param>
-        /// <param name="width">The picture width.</param>
-        /// <param name="extension">The picture extension.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="title"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="content"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="height"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="width"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="extension"/> is null.</exception>
-        public ValuePicture(string title, byte[] content, int height, int width, string extension)
-        {
-            _ = content ?? throw new ArgumentNullException(nameof(content));
-            Title = title ?? throw new ArgumentNullException(nameof(title));
-            Height = height > 0 ? height : throw new ArgumentNullException(nameof(height));
-            Width = width > 0 ? width : throw new ArgumentNullException(nameof(width));
-            Extension = extension ?? throw new ArgumentNullException(nameof(extension));
-
-            Content = new byte[content.Length];
-            content.CopyTo(Content, 0);
-        }
-
         /// <summary>
         /// Creates a <see cref="ValuePicture"/> with the default image content.
         /// </summary>
@@ -84,31 +75,6 @@ namespace Xpandables.Net
         /// Returns the UTF8 encoded string of the image.
         /// </summary>
         /// <returns>An UTF8 string.</returns>
-        public override string ToString() => System.Text.Encoding.UTF8.GetString(Content, 0, Content.Length);
-
-        /// <summary>
-        /// Gets the picture title.
-        /// </summary>
-        public string Title { get; }
-
-        /// <summary>
-        /// Gets the picture byte content.
-        /// </summary>
-        public byte[] Content { get; }
-
-        /// <summary>
-        /// Gets the height, in pixels, of this picture.
-        /// </summary>
-        public int Height { get; }
-
-        /// <summary>
-        /// Gets the width, in pixels, of this picture.
-        /// </summary>
-        public int Width { get; }
-
-        /// <summary>
-        /// Gets the file format of this picture.
-        /// </summary>
-        public string Extension { get; }
+        public override string ToString() => System.Text.Encoding.UTF8.GetString(Content, 0, Content.Length);       
     }
 }
