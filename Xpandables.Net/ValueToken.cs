@@ -20,9 +20,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Xpandables.Net
 {
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable CS1734 // XML comment has a paramref tag, but there is no parameter by that name
+#pragma warning disable CS1572 // XML comment has a param tag, but there is no parameter by that name
     /// <summary>
     /// Contains properties for a token. This record can be extended using covariant return type.
+    /// <para>Returns a new instance of <see cref="Xpandables.Net.ValueToken"/> with its properties.</para>
     /// </summary>
-    public record ValueToken([Required] string Value, [Required, DataType(DataType.Text)] string Type, [Required, DataType(DataType.DateTime)] DateTime Expiry);
+    /// <param name="Value">The value of the token string.</param>
+    /// <param name="Type">The type of the token.</param>
+    /// <param name="Expiry">The token expiry date.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="Value"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="Type"/> is null.</exception>
+    public record ValueToken([Required, DataType(DataType.Text)] string Value, [Required, DataType(DataType.Text)] string Type, [Required, DataType(DataType.DateTime)] DateTime Expiry);
 }
