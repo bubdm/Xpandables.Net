@@ -27,10 +27,10 @@ namespace Xpandables.Net.Http.Network
     /// <summary>
     /// Represents a query to request IP Address Geo-location.
     /// </summary>
-    public class LocationRequest : IQuery<GeoLocation>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
+    public class IPAddressLocationRequest : IQuery<GeoLocation>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocationRequest"/> class with IP address to locate.
+        /// Initializes a new instance of the <see cref="IPAddressLocationRequest"/> class with IP address to locate.
         /// </summary>
         /// <param name="ipAddress">The target IP address.</param>
         /// <param name="accessKey">Your security access key for the http://api.ipstack.com .</param>
@@ -40,7 +40,7 @@ namespace Xpandables.Net.Http.Network
         /// <param name="language">The output language, the default is <see cref="LocationLanguage.EnglishUS"/></param>
         /// <exception cref="ArgumentNullException">The <paramref name="ipAddress"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="accessKey"/> is null.</exception>
-        public LocationRequest(
+        public IPAddressLocationRequest(
             string ipAddress,
             string accessKey,
             int enableSecurity = 0,
@@ -91,7 +91,12 @@ namespace Xpandables.Net.Http.Network
         /// </summary>
         public HttpRestClientAttribute ReadHttpRestClientAttribute()
             => new()
-            { Path = IpAddress, IsNullable = true, IsSecured = false, In = ParameterLocation.Query };
+            {
+                Path = IpAddress,
+                IsNullable = true,
+                IsSecured = false,
+                In = ParameterLocation.Query
+            };
 
         /// <summary>
         /// Returns the keys and values for the Uri.

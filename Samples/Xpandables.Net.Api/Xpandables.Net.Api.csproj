@@ -4,7 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
     <Platforms>x64</Platforms>
     <LangVersion>preview</LangVersion>
-    <Nullable>enable</Nullable>    
+    <Nullable>enable</Nullable>
+    <UserSecretsId>320fa61d-8239-4299-8a5e-274ef04de553</UserSecretsId>    
   </PropertyGroup>
 
   <ItemGroup>

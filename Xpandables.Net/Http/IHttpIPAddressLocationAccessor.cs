@@ -16,14 +16,15 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Http.Network
 {
     /// <summary>
-    /// Provides with a method to request Geo-location using a typed client HTTP Client.
+    /// Provides with a method to request IP Address Geo-location using a typed client HTTP Client.
     /// </summary>
-    public interface IHttpLocationAccessor : IDisposable
+    public interface IHttpIPAddressLocationAccessor : IDisposable
     {
         internal IHttpRestClientHandler HttpRestClientHandler { get; }
 
@@ -31,11 +32,12 @@ namespace Xpandables.Net.Http.Network
         /// Asynchronously gets the IPAddress Geo-location of the specified IPAddress request using http://api.ipstack.com.
         /// </summary>
         /// <param name="request">The request to act with.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        public virtual async Task<HttpRestClientResponse<GeoLocation>> ReadLocationAsync(LocationRequest request)
+        public virtual async Task<HttpRestClientResponse<GeoLocation>> ReadLocationAsync(IPAddressLocationRequest request, CancellationToken cancellationToken = default)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
-            return await HttpRestClientHandler.HandleAsync(request).ConfigureAwait(false);
+            return await HttpRestClientHandler.HandleAsync(request, cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -27,9 +27,11 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Configuration;
 
 using Xpandables.Net.Api.Handlers;
 using Xpandables.Net.CQRS;
+using Xpandables.Net.Http.Network;
 
 namespace Xpandables.Net.Api.Controllers
 {
@@ -70,6 +72,22 @@ namespace Xpandables.Net.Api.Controllers
         {
             var edit = new Edit { Id = id, ApplyPatch = value => ApplyJsonPatch(value, editPatch) };
             return Ok(await _dispatcher.SendAsync(edit, cancellationToken).ConfigureAwait(false));
+        }
+
+        [HttpPost]
+        [Route("{id}")]
+        public async Task<IActionResult> GetLocationAsync([FromRoute] GetIp ipAddress,
+            [FromServices] IHttpIPAddressAccessor httpIPAddressAccessor,
+            [FromServices] IHttpIPAddressLocationAccessor httpIPAddressLocationAccessor,
+            [FromServices] IConfiguration configuration,
+            CancellationToken cancellationToken = default)
+        {
+            //var ip = await httpIPAddressAccessor.ReadIPAddressAsync(cancellationToken).ConfigureAwait(false);
+            var key = configuration["IPAddressStackKey"]!;
+            var request = new IPAddressLocationRequest(ipAddress.Id, key);
+            var location = await httpIPAddressLocationAccessor.ReadLocationAsync(request, cancellationToken).ConfigureAwait(false);
+
+            return Ok(location.Result);
         }
 
         protected IOperationResult ApplyJsonPatch<TModel>(TModel model, JsonPatchDocument<TModel> jsonPatch)

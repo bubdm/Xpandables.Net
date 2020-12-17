@@ -21,23 +21,20 @@ using System.Net.Http;
 namespace Xpandables.Net.Http.Network
 {
     /// <summary>
-    /// Default implementation for <see cref="IHttpLocationAccessor"/>.
+    /// Default implementation for <see cref="IHttpIPAddressLocationAccessor"/>.
     /// </summary>
-    public sealed class HttpLocationAccessor : Disposable, IHttpLocationAccessor
+    public sealed class HttpIPAddressLocationAccessor : Disposable, IHttpIPAddressLocationAccessor
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
-        IHttpRestClientHandler IHttpLocationAccessor.HttpRestClientHandler => _httpRestClientHandler;
+        IHttpRestClientHandler IHttpIPAddressLocationAccessor.HttpRestClientHandler => _httpRestClientHandler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpLocationAccessor"/> class that uses the http://api.ipstack.com to retrieve the user location.
+        /// Initializes a new instance of the <see cref="HttpIPAddressLocationAccessor"/> class that uses the http://api.ipstack.com to retrieve the user location.
         /// </summary>
-        public HttpLocationAccessor(IHttpRestClientHandler httpRestClientHandler)
+        public HttpIPAddressLocationAccessor(HttpClient httpClient)
         {
-            _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
-
-            ((HttpRestClientHandler)_httpRestClientHandler).HttpClient = new HttpClient { BaseAddress = new Uri("http://api.ipstack.com") };
-            _httpRestClientHandler.HttpClient.DefaultRequestHeaders.Clear();
-            _httpRestClientHandler.HttpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
+            _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _httpRestClientHandler = new HttpRestClientHandler(httpClient);
         }
 
         private bool _isDisposed;

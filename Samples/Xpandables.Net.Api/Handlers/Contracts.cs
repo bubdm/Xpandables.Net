@@ -23,6 +23,7 @@ using Xpandables.Net.Api.Models;
 using Xpandables.Net.CQRS;
 using Xpandables.Net.Expressions.Records;
 using Xpandables.Net.Http;
+using Xpandables.Net.Http.Network;
 
 namespace Xpandables.Net.Api.Handlers
 {
@@ -89,6 +90,12 @@ namespace Xpandables.Net.Api.Handlers
         public Delete(string id) => Id = id;
         public Delete() => Id = null!;
         public string Id { get; set; }
+        public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
+    }
+
+    [HttpRestClient(Path = "api/contacts/{id}", Method = "Post", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
+    public sealed record GetIp(string Id) : IQuery<GeoLocation>, IPathStringLocationRequest
+    {
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
     }
 

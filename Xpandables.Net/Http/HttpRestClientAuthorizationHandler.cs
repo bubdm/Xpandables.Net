@@ -53,7 +53,7 @@ namespace Xpandables.Net.Http
 
             if (request.Headers.Authorization is AuthenticationHeaderValue authorization && authorization.Parameter is null)
             {
-                var token = _httpHeaderAccessor.ReadValue("Authorization") ?? throw new InvalidOperationException("Expected token not found.");
+                var token = _httpHeaderAccessor.ReadValue("Authorization") ?? throw new InvalidOperationException("Expected authorization not found.");
                 request.Headers.Authorization = new AuthenticationHeaderValue(authorization.Scheme, token);
             }
 

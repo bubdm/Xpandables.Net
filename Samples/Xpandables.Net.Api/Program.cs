@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Xpandables.Net.Api.Middlewares;
+using Microsoft.Extensions.Configuration;
 
 namespace Xpandables.Net.Api
 {
@@ -31,6 +32,13 @@ namespace Xpandables.Net.Api
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => webBuilder.ConfigureServices((_, services) => services.AddTransient<OperationResultFilter>()).UseStartup<Startup>());
+                .ConfigureWebHostDefaults(webBuilder =>
+                    webBuilder
+                        .ConfigureAppConfiguration((hostContext, builder) =>
+                        {
+                            if (hostContext.HostingEnvironment.IsDevelopment())
+                                builder.AddUserSecrets<Program>();
+                        })
+                        .ConfigureServices((_, services) => services.AddTransient<OperationResultFilter>()).UseStartup<Startup>());
     }
 }

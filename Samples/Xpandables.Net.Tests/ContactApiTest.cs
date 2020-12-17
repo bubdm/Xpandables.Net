@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Xpandables.Net.Api;
 using Xpandables.Net.Api.Handlers;
+using Xpandables.Net.Api.Services;
 using Xpandables.Net.Http;
 
 namespace Xpandables.Net.Tests
@@ -67,6 +68,24 @@ namespace Xpandables.Net.Tests
                 Trace.WriteLine($"{contact.Id} {contact.Name} {contact.City} {contact.Address} {contact.Country}");
 
                 Assert.AreEqual(response.Result, contact.Id);
+            }
+        }
+
+        [TestMethod]
+        public async Task GetIpTest()
+        {
+            var getIp = new GetIp("216.58.204.100");
+            using var response = await httpRestClientHandler.HandleAsync(getIp).ConfigureAwait(false);
+
+            if (!response.IsValid())
+            {
+                Trace.WriteLine($"{response.StatusCode}");
+                return;
+            }
+            else
+            {
+                var location = response.Result;
+                Trace.WriteLine($"{location.Ip} {location.City} {location.Country_Name} {location.Latitude} {location.Longitude}");
             }
         }
 

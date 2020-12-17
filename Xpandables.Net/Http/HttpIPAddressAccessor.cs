@@ -18,9 +18,12 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+[assembly: InternalsVisibleTo("Xpandables.Net.DependencyInjection, PublicKey=0024000004800000940000000602000000240000525341310004000001000100410b9f6b317bb83c59c2727a39ad3e0c3aff55cbfc6f1328e2a925ab2e85d44b1815b23cea3f22924ea4226a6b3318eb90d1f28234e0116be8b70c29a41849a93e1baa680deae7f56e8d75d352d6f3b8457746223adf8cc2085a2d1d8c3f7be439bc53f1a032cc696f75afa378e0e054f3eb325fb9a7898a31c612c21e9c3cb8")]
 
 namespace Xpandables.Net.Http.Network
 {
@@ -62,13 +65,10 @@ namespace Xpandables.Net.Http.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpIPAddressAccessor"/> class that uses the https://ipinfo.io/ip to retrieve the user ip address.
         /// </summary>
-        public HttpIPAddressAccessor(IHttpRestClientHandler httpRestClientHandler)
+        public HttpIPAddressAccessor(HttpClient httpClient)
         {
-            _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
-            
-            ((HttpRestClientHandler)_httpRestClientHandler).HttpClient = new HttpClient(new HttpIPAddressDelegateHandler(), true) { BaseAddress = new Uri("https://ipinfo.io/ip") };
-            _httpRestClientHandler.HttpClient.DefaultRequestHeaders.Clear();
-            _httpRestClientHandler.HttpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
+            _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _httpRestClientHandler = new HttpRestClientHandler(httpClient);
         }
 
         private bool _isDisposed;

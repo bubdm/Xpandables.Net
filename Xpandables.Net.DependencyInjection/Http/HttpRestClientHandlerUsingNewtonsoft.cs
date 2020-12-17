@@ -1,4 +1,21 @@
-﻿using System;
+﻿
+/************************************************************************************************************
+ * Copyright (C) 2020 Francis-Black EWANE
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+************************************************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -10,12 +27,19 @@ using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
-using Xpandables.Net.Http;
-
-namespace Xpandables.Net.Tests
+namespace Xpandables.Net.Http
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Provides with a derived class of <see cref="HttpRestClientHandlerUsingNewtonsoft"/> that uses <see cref="Newtonsoft"/>.
+    /// </summary>
     public sealed class HttpRestClientHandlerUsingNewtonsoft : HttpRestClientHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpRestClientHandler"/> class with the HTTP typed client.
+        /// </summary>
+        /// <param name="httpClient">The HTTP client type to be used.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="httpClient"/> is null.</exception>
         public HttpRestClientHandlerUsingNewtonsoft(HttpClient httpClient) : base(httpClient) { }
 
         protected override HttpContent ReadStringContent<TSource>(TSource source, HttpRestClientAttribute attribute)

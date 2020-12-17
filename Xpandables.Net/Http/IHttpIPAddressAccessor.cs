@@ -17,12 +17,13 @@
 ************************************************************************************************************/
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Http.Network
 {
     /// <summary>
-    /// Provides with a method to request IP address.
+    /// Provides with a method to request IP address of the caller.
     /// </summary>
     public interface IHttpIPAddressAccessor : IDisposable
     {
@@ -31,9 +32,10 @@ namespace Xpandables.Net.Http.Network
         /// <summary>
         /// Asynchronously gets the IPAddress of the current caller.
         /// </summary>
-        public virtual async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync()
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        public virtual async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(CancellationToken cancellationToken = default)
         {
-            var response = await HttpRestClientHandler.HandleAsync(new IPAddressRequest()).ConfigureAwait(false);
+            var response = await HttpRestClientHandler.HandleAsync(new IPAddressRequest(), cancellationToken).ConfigureAwait(false);
             return response.ConvertTo(IPAddress.TryParse(response.Result, out var ipAddress) ? ipAddress : IPAddress.None);
         }
     }

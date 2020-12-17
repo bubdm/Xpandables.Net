@@ -56,6 +56,9 @@ namespace Xpandables.Net.Api
             services.AddTransient<ContactInterceptor>();
             services.AddXInterceptorHandlers<ContactInterceptor>(new[] { Assembly.GetExecutingAssembly() });
 
+            services.AddXHttpIPAddressAccessorUsingNewtonsoft();
+            services.AddXHttpIPAddressLocationAccessorUsingNewtonsoft();
+
             services.AddHostedService<ContactContextInitializer>();
         }
 

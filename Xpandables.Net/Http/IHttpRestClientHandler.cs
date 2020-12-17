@@ -28,11 +28,11 @@ namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.
-    /// The queries and commands should implement one of the following interfaces :
+    /// The queries or commands should implement one of the following interfaces :
     /// <see cref="IStringRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, <see cref="IFormUrlEncodedRequest"/>,
-    /// <see cref="IMultipartRequest"/> and <see cref="IQueryStringLocationRequest"/>.
-    /// <para>You should register the handler using one of the extension methods 
-    /// <see langword="AddHttpClient{TClient, TImplementation}(IServiceCollection)"/> and you may add 
+    /// <see cref="IMultipartRequest"/>, <see cref="IQueryStringLocationRequest"/>, <see cref="ICookieLocationRequest"/>, <see cref="IHeaderLocationRequest"/> or <see cref="IPathStringLocationRequest"/>.
+    /// <para>When used with dependency injection, you should register the handler using one of the extension methods
+    /// <see langword="AddHttpClient{TClient, TImplementation}(Action{IserviceProvider, HttpClient})"/> and you may add 
     /// <see langword="HttpClientBuilderExtensions.ConfigureHttpClient(IHttpClientBuilder, Action{HttpClient})"/> or other 
     /// to customize the client behaviors.</para>
     /// </summary>
