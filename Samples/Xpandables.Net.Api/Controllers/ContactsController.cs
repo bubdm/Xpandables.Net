@@ -82,7 +82,6 @@ namespace Xpandables.Net.Api.Controllers
             [FromServices] IConfiguration configuration,
             CancellationToken cancellationToken = default)
         {
-            //var ip = await httpIPAddressAccessor.ReadIPAddressAsync(cancellationToken).ConfigureAwait(false);
             var key = configuration["IPAddressStackKey"]!;
             var request = new IPAddressLocationRequest(ipAddress.Id, key);
             var location = await httpIPAddressLocationAccessor.ReadLocationAsync(request, cancellationToken).ConfigureAwait(false);

@@ -17,11 +17,11 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.2.4</Version>
-    <AssemblyVersion>5.2.4</AssemblyVersion>
-    <FileVersion>5.2.4</FileVersion>
-    <PackageVersion>5.2.4</PackageVersion>
-    <PackageReleaseNotes>Add RecordExpression</PackageReleaseNotes>    
+    <Version>5.2.5</Version>
+    <AssemblyVersion>5.2.5</AssemblyVersion>
+    <FileVersion>5.2.5</FileVersion>
+    <PackageVersion>5.2.5</PackageVersion>
+    <PackageReleaseNotes>Add IHttpRestClientHandler registration</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
@@ -58,11 +58,7 @@
     <OutputPath>bin\AnyCPU\Release\</OutputPath>
     <DocumentationFile>bin\AnyCPU\Release\net5.0\Xpandables.Net.xml</DocumentationFile>
     <Optimize>false</Optimize>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="CQRS\ContentDialog1.xaml" />
-  </ItemGroup>
+  </PropertyGroup> 
 
   <ItemGroup>
     <None Include="..\Xpandables.Net.png" Link="Xpandables.Net.png">
@@ -70,13 +66,7 @@
       <Pack>True</Pack>
     </None>
   </ItemGroup>
-
-  <ItemGroup>
-    <Page Include="CQRS\ContentDialog1.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
+ 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
