@@ -47,12 +47,5 @@ namespace Xpandables.Net.DependencyInjection
         /// The default value is <see langword="false"/>.
         /// </summary>
         public bool SearchSubDirectories { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether or not the implementation type must be resolved from the service collection.
-        /// The default value is <see langword="false"/>.
-        /// </summary>
-        [Obsolete("For future.", true)]
-        public bool ResolveTypes { get; set; }
     }
 }

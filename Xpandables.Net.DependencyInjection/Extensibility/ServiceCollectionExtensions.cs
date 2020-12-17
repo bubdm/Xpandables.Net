@@ -35,7 +35,7 @@ namespace Xpandables.Net.DependencyInjection
     {
         /// <summary>
         /// Adds and configures registration of services using the <see cref="IAddServiceExport"/> implementations found in the current application path.
-        /// This method is used with MEF : Managed Extensibility Framework.
+        /// This method uses MEF : Managed Extensibility Framework.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="configuration">The application configuration.</param>
@@ -51,7 +51,7 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Adds and configures registration of services using the<see cref="IAddServiceExport"/> implementations found in the path.
-        /// This method is used with MEF : Managed Extensibility Framework.
+        /// This method uses MEF : Managed Extensibility Framework.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="configuration">The application configuration.</param>

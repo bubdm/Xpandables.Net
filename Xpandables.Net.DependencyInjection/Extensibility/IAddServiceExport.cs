@@ -23,8 +23,8 @@ namespace Xpandables.Net.Extensibility
     /// <summary>
     /// Provides with an interface that allows external libraries to register types to the services collection.
     /// This interface is used with MEF : Managed Extensibility Framework.
-    /// The implementation class must be decorated with the attribute <see langword="System.ComponentModel.Composition.ExportAttribute"/>
-    /// with the type of <see cref="IAddServiceExport"/> as contract type.
+    /// The implementation class must be decorated with the attribute <see cref="System.ComponentModel.Composition.ExportAttribute"/> attribute,
+    /// with <see cref="IAddServiceExport"/> type as contract type.
     /// </summary>
     public interface IAddServiceExport
     {

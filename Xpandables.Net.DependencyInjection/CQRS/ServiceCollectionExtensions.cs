@@ -103,8 +103,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<CorrelationContext>();
-            services.AddScoped<ICorrelationContext>(provider => provider.GetRequiredService<CorrelationContext>());
+            services.AddXCorrelationContext();
 
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandCorrelationDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandCorrelationDecorator<,>));
@@ -147,8 +146,9 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IDataContext"/> class reference implementation found from the executing assembly to the services with scoped life time.
+        /// Adds the <typeparamref name="TDataContext"/> type class reference implementation as <see cref="IDataContext"/> to the services with scoped life time.
         /// </summary>
+        /// <typeparam name="TDataContext">The type of the data context that implements <see cref="IDataContext"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXDataContext<TDataContext>(this IServiceCollection services)
