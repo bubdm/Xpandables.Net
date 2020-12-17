@@ -35,7 +35,15 @@ namespace Xpandables.Net
         ///  <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
         /// </value>
         /// <remarks>Default initialization for a <see cref="bool"/> is <c>false</c>.</remarks>
-        private bool Disposed { get; set; }
+        private bool IsDisposed { get; set; }
+
+        /// <summary>
+        /// Determines whether or not the derived class has an overridden finalizer to allow the <see cref="GC.SuppressFinalize(object)"/> call.
+        /// </summary>
+        /// <remarks>
+        /// Override a finalizer only if <see cref="Dispose(bool)"/> or <see cref="DisposeAsync(bool)"/> has code to free unmanaged resources.
+        /// </remarks>
+        protected bool IsFinalizerOverridden { get; set; }
 
         /// <summary>
         /// Public Implementation of Dispose according to .NET Framework Design Guidelines
@@ -54,8 +62,10 @@ namespace Xpandables.Net
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
+            if (IsFinalizerOverridden)
+                GC.SuppressFinalize(this);
         }
+
 
         /// <summary>
         /// Public Implementation of DisposeAsync according to .NET Framework Design Guidelines
@@ -67,18 +77,17 @@ namespace Xpandables.Net
         /// <para>
         /// This object will be cleaned up by the Dispose method.
         /// Therefore, you should call GC.SuppressFinalize to take this object off the finalization queue
-        /// and prevent finalization code for this object from executing a second time.
+        /// and prevent finalization code for this object from executing a second time only if the finalizer is overridden.
         /// </para>
         /// <para>Always use SuppressFinalize() in case a subclass of this type implements a finalizer.</para>
         /// </remarks>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "<Pending>")]
         public async ValueTask DisposeAsync()
         {
             await DisposeAsync(true).ConfigureAwait(false);
-
             Dispose(true);
-#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
-            GC.SuppressFinalize(this);
-#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
+            if (IsFinalizerOverridden)
+                GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -99,7 +108,7 @@ namespace Xpandables.Net
         /// </remarks>
         protected virtual async ValueTask DisposeAsync(bool disposing)
         {
-            if (Disposed) return;
+            if (IsDisposed) return;
 
             if (disposing)
             {
@@ -136,7 +145,7 @@ namespace Xpandables.Net
         /// </remarks>
         protected virtual void Dispose(bool disposing)
         {
-            if (Disposed)
+            if (IsDisposed)
                 return;
 
             if (disposing)
@@ -151,7 +160,7 @@ namespace Xpandables.Net
             // Set large fields to null.
 
             // Dispose has been called.
-            Disposed = true;
+            IsDisposed = true;
 
             // If it is available, make the call to the
             // base class's Dispose(boolean) method
