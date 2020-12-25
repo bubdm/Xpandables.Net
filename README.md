@@ -9,7 +9,7 @@ See [Samples](https://github.com/Francescolis/Xpandables.Net/tree/Net5.0/Samples
 ## Model definition
 
 ```cs
-// Entity is the domain object base implementation that provides an identifier and a key generator for derived class.
+// Entity is the domain object base implementation that provides with an identifier and a key generator for derived class.
 
 public sealed class ContactModel : Entity
 {
@@ -68,19 +68,16 @@ public sealed class ContactModel : Entity
 // actions because they are already included in the contracts, 
 // by implementing interfaces such as IPathStringLocationRequest, IFormUrlEncodedRequest,
 // IMultipartRequest...
-// QueryExpression{T} allows the derived class to be used for a where clause.
+// RecordExpression{T} allows the derived class to be used for a where clause.
 
  [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = true, 
     IsNullable = true, In = ParameterLocation.Path)]
- public sealed class Select :
-    QueryExpression<ContactModel>, IQuery<Contact>, IPathStringLocationRequest, IInterceptorDecorator
+ public sealed record Select([Required] string Id) :
+    RecordExpression<ContactModel>, IQuery<Contact>, IPathStringLocationRequest, IInterceptorDecorator
  {
      public override Expression<Func<ContactModel, bool>> GetExpression() 
         => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
-     public Select(string id) => Id = id;
-     public Select() => Id = null!;
-     
-     public string Id { get; set; }
+        
      public IDictionary<string, string> GetPathStringSource()
         => new Dictionary<string, string> { { nameof(Id), Id } };
  }
@@ -95,6 +92,8 @@ public sealed class ContactModel : Entity
 
 // IValidation{T} defines method contracts used to validate a type-specific argument using a decorator.
 // The validator get called during the control flow before the handdler.
+// If the validator returns a failed operation result, the execution will be interrupted
+// and the result of the validator will be returned.
 
 public sealed class ContactValidators : 
    IValidation<Select>, IValidation<Add>, IValidation<Delete>, IValidation<Edit>
@@ -107,7 +106,7 @@ public sealed class ContactValidators :
        Select argument, CancellationToken cancellationToken = default)
     {
         if (await _dataContext
-           .FindAsync(c => c.Where(argument).OrderBy(o => o.Id), cancellationToken)
+           .FindAsync(c => c. AsNoTracking().Where(argument).OrderBy(o => o.Id), cancellationToken)
            .ConfigureAwait(false) is null)
             return new FailedOperationResult(
                System.Net.HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
@@ -120,12 +119,11 @@ public sealed class ContactValidators :
     public async Task<IOperationResult> ValidateAsync(
        Edit argument, CancellationToken cancellationToken = default)
     {
-        var contact = await _dataContext
-           .FindAsync(c => c.Where(argument).OrderBy(o => o.Id), cancellationToken)
-           .ConfigureAwait(false);
-           
-        if (contact is null) return new FailedOperationResult(
-            System.Net.HttpStatusCode.NotFound, nameof(argument.Name), "Contact not found");
+        if(await _dataContext
+           .FindAsync(c => c.AsNoTracking().Where(argument).OrderBy(o => o.Id), cancellationToken)
+           .ConfigureAwait(false) is not { } contact)
+           return new FailedOperationResult(
+              System.Net.HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
         argument.Name = contact.Name;
         argument.City = contact.City;
@@ -154,7 +152,7 @@ public sealed class ContactHandlers :
        Select query, CancellationToken cancellationToken = default)
         => new SuccessOperationResult<Contact>(
                 (await _dataContext
-                 .FindAsync(c => c.Where(query).OrderBy(o => o.Id)
+                 .FindAsync(c => c.AsNoTracking().Where(query).OrderBy(o => o.Id)
                   .Select(s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country)), cancellationToken))!);
                   
    ...
@@ -295,47 +293,35 @@ Suppose you want to add logging for the Add command ...
 // The Add command definition
 
 [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
-public sealed class Add :
-  QueryExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator
+public sealed record Add([Required] string Name, [Required] string City, [Required] string Address, [Required] string Country) :
+   RecordExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator
 {
     public override Expression<Func<ContactModel, bool>> GetExpression()
       => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
-    public Add(string name, string city, string address, string country)
-    {
-        Name = name;
-        City = city;
-        Address = address;
-        Country = country;
-    }
-
-    public string Name { get; set; }
-    public string City { get; set; }
-    public string Address { get; set; }
-    public string Country { get; set; }
 }
 
 // The Add commnand handler
 
 public sealed class AddHandler : ICommandHandler<Add, string>
 {
-    public async Task<IOperationResult> HandleAsync(
+    public async Task<IOperationResult<string>> HandleAsync(
        Add command, CancellationToken cancellationToken = default)
     {
         .....
-        return new SuccessOperationResult();
+        return new SuccessOperationResult<string>(...);
     }
 }
 
 // The Add command decorator for logging
 
-public sealed class AddLoggingDecorator : ICommandHandler<Add, string>
+public sealed class AddHandlerLoggingDecorator : ICommandHandler<Add, string>
 {
     private readonly ICommandHandler<Add, string> _ decoratee;
-    private readonly ILogger<SignOnCommand> _logger;
-    public SignOnCommandLoggingDecorator(ILogger<Add> logger, ICommandHandler<Add, string> decoratee)
+    private readonly ILogger<Add> _logger;
+    public AddHandlerLoggingDecorator(ILogger<Add> logger, ICommandHandler<Add, string> decoratee)
       =>(_logger, _ decoratee) = (logger, decoratee);
 
-    public async Task<IOperationResult> HandleAsync(
+    public async Task<IOperationResult<string>> HandleAsync(
         Add command, CancellationToken cancellationToken = default)
     {
         _logger.Information(...);
@@ -347,7 +333,7 @@ public sealed class AddLoggingDecorator : ICommandHandler<Add, string>
 
 // Registration
 
-services.XtryDecorate<AddHandler, AddLoggingDecorator>();
+services.XtryDecorate<AddHandler, AddHandlerLoggingDecorator>();
 
 // or you can define the generic model, for all commands that implement ICommand interface or something else.
 
