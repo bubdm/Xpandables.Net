@@ -63,7 +63,7 @@ namespace Xpandables.Net.Api.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{id:string}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] Delete del, CancellationToken cancellationToken = default)
             => Ok(await _dispatcher.SendAsync(del, cancellationToken).ConfigureAwait(false));
 
@@ -77,7 +77,6 @@ namespace Xpandables.Net.Api.Controllers
         [HttpPost]
         [Route("{id}")]
         public async Task<IActionResult> GetLocationAsync([FromRoute] GetIp ipAddress,
-            [FromServices] IHttpIPAddressAccessor httpIPAddressAccessor,
             [FromServices] IHttpIPAddressLocationAccessor httpIPAddressLocationAccessor,
             [FromServices] IConfiguration configuration,
             CancellationToken cancellationToken = default)
@@ -104,7 +103,7 @@ namespace Xpandables.Net.Api.Controllers
         protected IOperationResult GetFailedOperationResult(ModelStateDictionary modelState)
         {
             _ = modelState ?? throw new ArgumentNullException(nameof(modelState));
-            return new FailedOperationResult(System.Net.HttpStatusCode.BadRequest, modelState
+            return new FailedOperationResult(HttpStatusCode.BadRequest, modelState
                 .Keys
                 .Where(key => modelState[key].Errors.Count > 0)
                 .Select(key => new OperationError(key, modelState[key].Errors.Select(error => error.ErrorMessage).ToArray()))

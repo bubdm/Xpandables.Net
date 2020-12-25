@@ -21,6 +21,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+
 using Xpandables.Net.Api.Models;
 using Xpandables.Net.CQRS;
 
@@ -33,10 +35,12 @@ namespace Xpandables.Net.Api.Handlers
         public ContactHandlers(IDataContext<ContactModel> dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
 
         public IAsyncEnumerable<Contact> HandleAsync(SelectAll query, CancellationToken cancellationToken = default)
-            => _dataContext.FindAllAsync(c => c.Where(query).OrderBy(o => o.Id).Select(s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country)), cancellationToken);
+            => _dataContext.FindAllAsync(c => c.AsNoTracking().Where(query).OrderBy(o => o.Id).Select(s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country)), cancellationToken);
+
         public async Task<IOperationResult<Contact>> HandleAsync(Select query, CancellationToken cancellationToken = default)
             => new SuccessOperationResult<Contact>(
-                (await _dataContext.FindAsync(c => c.Where(query).OrderBy(o => o.Id).Select(s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country)), cancellationToken))!);
+                (await _dataContext.FindAsync(c => c.AsNoTracking().Where(query).OrderBy(o => o.Id).Select(s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country)), cancellationToken))!);
+
         public async Task<IOperationResult<string>> HandleAsync(Add command, CancellationToken cancellationToken = default)
         {
             var newContact = new ContactModel(command.Name, command.City, command.Address, command.Country);

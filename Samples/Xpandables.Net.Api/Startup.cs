@@ -38,7 +38,11 @@ namespace Xpandables.Net.Api
         {
             services
                 .AddControllers()
-                .AddMvcOptions(options => options.Filters.Add<OperationResultFilter>(int.MinValue));
+                .AddMvcOptions(options =>
+                {
+                    options.Filters.Add<OperationResultFilter>(int.MinValue);
+                    options.ModelBinderProviders.Insert(0, new FromRouteModelBinderProvider());
+                });
 
             services
                 .AddDbContext<ContactContext>(options => options.UseInMemoryDatabase(nameof(ContactContext))
@@ -60,6 +64,7 @@ namespace Xpandables.Net.Api
             services.AddXHttpIPAddressLocationAccessorUsingNewtonsoft();
 
             services.AddHostedService<ContactContextInitializer>();
+            services.AddRouting(options => options.ConstraintMap.Add("string", typeof(StringConstraintMap)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

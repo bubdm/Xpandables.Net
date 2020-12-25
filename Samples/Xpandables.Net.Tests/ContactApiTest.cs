@@ -107,12 +107,12 @@ namespace Xpandables.Net.Tests
                 using var delResponse = await httpRestClientHandler.HandleAsync(delete).ConfigureAwait(false);
                 if (!delResponse.IsValid())
                 {
-                    Trace.WriteLine($"{response.StatusCode}");
+                    Trace.WriteLine($"{delResponse.StatusCode}");
                     return;
                 }
                 else
                 {
-                    Trace.WriteLine($"{response.StatusCode}");
+                    Trace.WriteLine($"{delResponse.StatusCode}");
                     Assert.IsTrue(true);
                 }
             }

@@ -20,6 +20,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+
 using Xpandables.Net.Api.Models;
 using Xpandables.Net.CQRS;
 
@@ -32,29 +34,29 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult> ValidateAsync(Select argument, CancellationToken cancellationToken = default)
         {
-            if (await _dataContext.FindAsync(c => c.Where(argument).OrderBy(o => o.Id), cancellationToken).ConfigureAwait(false) is null)
+            if (await _dataContext.FindAsync(c => c.AsNoTracking().Where(argument).OrderBy(o => o.Id), cancellationToken).ConfigureAwait(false) is null)
                 return new FailedOperationResult(System.Net.HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
             return new SuccessOperationResult();
         }
         public async Task<IOperationResult> ValidateAsync(Add argument, CancellationToken cancellationToken = default)
         {
-            if (await _dataContext.FindAsync(c => c.Where(argument).OrderBy(o => o.Id), cancellationToken).ConfigureAwait(false) is not null)
+            if (await _dataContext.FindAsync(c => c.AsNoTracking().Where(argument).OrderBy(o => o.Id), cancellationToken).ConfigureAwait(false) is not null)
                 return new FailedOperationResult(System.Net.HttpStatusCode.BadRequest, nameof(argument.Name), "Contact already exist");
 
             return new SuccessOperationResult();
         }
         public async Task<IOperationResult> ValidateAsync(Delete argument, CancellationToken cancellationToken = default)
         {
-            if (await _dataContext.FindAsync(c => c.Where(argument).OrderBy(o => o.Id), cancellationToken).ConfigureAwait(false) is null)
+            if (await _dataContext.FindAsync(c => c.AsNoTracking().Where(argument).OrderBy(o => o.Id), cancellationToken).ConfigureAwait(false) is null)
                 return new FailedOperationResult(System.Net.HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
             return new SuccessOperationResult();
         }
         public async Task<IOperationResult> ValidateAsync(Edit argument, CancellationToken cancellationToken = default)
         {
-            var contact = await _dataContext.FindAsync(c => c.Where(argument).OrderBy(o => o.Id), cancellationToken).ConfigureAwait(false);
-            if (contact is null) return new FailedOperationResult(System.Net.HttpStatusCode.NotFound, nameof(argument.Name), "Contact not found");
+            if (await _dataContext.FindAsync(c => c.AsNoTracking().Where(argument).OrderBy(o => o.Id), cancellationToken).ConfigureAwait(false) is not { } contact)
+                return new FailedOperationResult(System.Net.HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
             argument.Name = contact.Name;
             argument.City = contact.City;

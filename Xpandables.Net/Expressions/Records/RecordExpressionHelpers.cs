@@ -22,7 +22,7 @@ using System.Linq.Expressions;
 namespace Xpandables.Net.Expressions.Records
 {
     /// <summary>
-    /// Provides extensions methods for <see cref="IQueryExpression{TSource, TResult}"/>.
+    /// Provides with extensions methods for <see cref="IQueryExpression{TSource, TResult}"/>.
     /// </summary>
     public static class RecordExpressionHelpers
     {

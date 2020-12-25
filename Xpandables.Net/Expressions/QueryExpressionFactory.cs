@@ -29,7 +29,7 @@ namespace Xpandables.Net.Expressions
         /// Creates a new instance of <see cref="QueryExpression{TSource, TResult}"/> with <see cref="bool"/> result that return <see langword="true"/>.
         /// </summary>
         /// <typeparam name="TSource">The data type source.</typeparam>
-        /// <returns>an new instance of <see cref="QueryExpression{TSource, TResult}"/> with boolean result.</returns>
+        /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/> with boolean result.</returns>
         public static QueryExpression<TSource, bool> Create<TSource>() where TSource : class => new QueryExpressionBuilder<TSource, bool>(_ => true);
     }
 
@@ -44,7 +44,7 @@ namespace Xpandables.Net.Expressions
         /// </summary>
         /// <typeparam name="TSource">The data type source.</typeparam>
         /// <param name="expression">The expression to be used by the instance.</param>
-        /// <returns>an new instance of <see cref="QueryExpression{TSource, TResult}"/></returns>
+        /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/></returns>
         /// <exception cref="ArgumentNullException">The <paramref name="expression"/> is null.</exception>
         public static QueryExpression<TSource, TResult> Create<TSource>(Expression<Func<TSource, TResult>> expression)
             where TSource : class => new QueryExpressionBuilder<TSource, TResult>(expression);

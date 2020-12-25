@@ -21,7 +21,7 @@ using System.Linq.Expressions;
 namespace Xpandables.Net.Expressions.Records
 {
     /// <summary>
-    /// Provides the record expression factory that contains methods to create generic record expressions.
+    /// Provides with the record expression factory that contains methods to create generic record expressions.
     /// </summary>   
     public static class RecordExpressionFactory
     {
@@ -29,7 +29,7 @@ namespace Xpandables.Net.Expressions.Records
         /// Creates a new instance of <see cref="RecordExpression{TSource, TResult}"/> with <see cref="bool"/> result that return <see langword="true"/>.
         /// </summary>
         /// <typeparam name="TSource">The data type source.</typeparam>
-        /// <returns>an new instance of <see cref="RecordExpression{TSource, TResult}"/> with boolean result.</returns>
+        /// <returns>a new instance of <see cref="RecordExpression{TSource, TResult}"/> with boolean result.</returns>
         public static RecordExpression<TSource, bool> Create<TSource>() where TSource : class => new RecordExpressionBuilder<TSource, bool>(_ => true);
     }
 
@@ -44,7 +44,7 @@ namespace Xpandables.Net.Expressions.Records
         /// </summary>
         /// <typeparam name="TSource">The data type source.</typeparam>
         /// <param name="expression">The expression to be used by the instance.</param>
-        /// <returns>an new instance of <see cref="QueryExpression{TSource, TResult}"/></returns>
+        /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/></returns>
         /// <exception cref="ArgumentNullException">The <paramref name="expression"/> is null.</exception>
         public static RecordExpression<TSource, TResult> Create<TSource>(Expression<Func<TSource, TResult>> expression)
             where TSource : class => new RecordExpressionBuilder<TSource, TResult>(expression);

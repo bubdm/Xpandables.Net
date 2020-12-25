@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
 using Xpandables.Net.Api.Models;
@@ -36,6 +37,7 @@ namespace Xpandables.Net.Api.Handlers
         public string? City { get; set; }
         public string? Address { get; set; }
         public string? Country { get; set; }
+
         public override Expression<Func<ContactModel, bool>> GetExpression()
         {
             var queryExpression = RecordExpressionFactory.Create<ContactModel>();
@@ -49,52 +51,35 @@ namespace Xpandables.Net.Api.Handlers
         public IDictionary<string, string?>? GetQueryStringSource() => new Dictionary<string, string?>
             {
                 {nameof(Name), Name },
+                {nameof(City), City },
                 {nameof(Address), Address },
                 {nameof(Country), Country }
             };
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed record Select : RecordExpression<ContactModel>, IQuery<Contact>, IPathStringLocationRequest, IInterceptorDecorator
+    public sealed record Select([Required] string Id) : RecordExpression<ContactModel>, IQuery<Contact>, IPathStringLocationRequest, IInterceptorDecorator
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
-        public Select(string id) => Id = id;
-        public Select() => Id = null!;
-
-        public string Id { get; set; }
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
     }
 
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
-    public sealed record Add : RecordExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator
+    public sealed record Add([Required] string Name, [Required] string City, [Required] string Address, [Required] string Country)
+        : RecordExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
-        public Add(string name, string city, string address, string country)
-        {
-            Name = name;
-            City = city;
-            Address = address;
-            Country = country;
-        }
-
-        public string Name { get; set; }
-        public string City { get; set; }
-        public string Address { get; set; }
-        public string Country { get; set; }
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = "Delete", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed record Delete : RecordExpression<ContactModel>, ICommand, IValidationDecorator, IPersistenceDecorator, IPathStringLocationRequest
+    public sealed record Delete([Required] string Id) : RecordExpression<ContactModel>, ICommand, IValidationDecorator, IPersistenceDecorator, IPathStringLocationRequest
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
-        public Delete(string id) => Id = id;
-        public Delete() => Id = null!;
-        public string Id { get; set; }
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = "Post", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed record GetIp(string Id) : IQuery<GeoLocation>, IPathStringLocationRequest
+    public sealed record GetIp([Required] string Id) : IQuery<GeoLocation>, IPathStringLocationRequest
     {
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
     }
