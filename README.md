@@ -337,15 +337,15 @@ services.XtryDecorate<AddHandler, AddHandlerLoggingDecorator>();
 
 // or you can define the generic model, for all commands that implement ICommand interface or something else.
 
-public sealed class CommandLoggingDecorator<TCommand> : ICommandHandler<TCommand>
-   where TCommand : class, ICommand // you can add more constraints
+public sealed class CommandLoggingDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+   where TCommand : class, ICommand<TResult> // you can add more constraints
 {
-    private readonly ICommandHandler<TCommand> _ decoratee;
+    private readonly ICommandHandler<TCommand, TResult> _ decoratee;
     private readonly ILogger<TCommand> _logger;
-    public CommandLoggingDecorator(ILogger<TCommand> logger, ICommandHandler<TCommand> decoratee)
+    public CommandLoggingDecorator(ILogger<TCommand> logger, ICommandHandler<TCommand, TResult> decoratee)
       =>(_logger, _ decoratee) = (logger, decoratee);
 
-    public async Task<IOperationResult> HandleAsync(
+    public async Task<IOperationResult<TResult>> HandleAsync(
          TCommand command, CancellationToken cancellationToken = default)
     {
         _logger.Information(...);
@@ -358,8 +358,8 @@ public sealed class CommandLoggingDecorator<TCommand> : ICommandHandler<TCommand
 // and register
 
 // The CommandLoggingDecorator will be applied to all command handlers whose commands meet the decorator's constraints : 
-// To be a class and implement ICommand interface
+// To be a class and implement ICommand{TResult} interface
 
-services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingDecorator<>));
+services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));
 
 ```
