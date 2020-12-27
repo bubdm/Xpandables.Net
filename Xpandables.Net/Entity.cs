@@ -72,12 +72,12 @@ namespace Xpandables.Net
         public DateTime? DeletedOn { get; protected set; }
 
         /// <summary>
-        /// Deactivates the underlying instance.
+        /// Marks the underlying instance as deactivated.
         /// </summary>
         public void Deactivate() => IsActive = false;
 
         /// <summary>
-        /// Deletes the underlying instance.
+        /// Marks the underlying instance as deleted.
         /// </summary>
         public void Delete() => IsDeleted = true;
 
