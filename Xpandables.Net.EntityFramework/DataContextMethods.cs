@@ -89,9 +89,10 @@ namespace Xpandables.Net.CQRS
               {
                   if (e.NewState == EntityState.Modified && e.Entry.Entity is Entity entity)
                   {
-                      entity.SetUpdateDate(DateTime.UtcNow);
+                      var date = DateTime.UtcNow;
+                      entity.SetUpdateDate(date);
                       if (entity.IsDeleted)
-                          entity.SetDeleteDate(entity.UpdatedOn!.Value);
+                          entity.SetDeleteDate(date);
                   }
               };
         }
