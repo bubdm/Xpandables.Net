@@ -63,7 +63,7 @@ namespace Xpandables.Net.CQRS
             {
                 using var scope = transaction;
                 var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                if (resultState.IsSuccess())
+                if (resultState.IsSuccess)
                     scope.Complete();
 
                 return resultState;
@@ -117,7 +117,7 @@ namespace Xpandables.Net.CQRS
             {
                 using var scope = transaction;
                 var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                if (resultState.IsSuccess())
+                if (resultState.IsSuccess)
                     scope.Complete();
 
                 return resultState;

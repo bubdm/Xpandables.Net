@@ -60,7 +60,7 @@ namespace Xpandables.Net.CQRS
         public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             var resultState = await _validator.ValidateAsync(command, cancellationToken).ConfigureAwait(false);
-            if (resultState.IsSuccess())
+            if (resultState.IsSuccess)
                 return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
 
             return resultState;
@@ -106,10 +106,10 @@ namespace Xpandables.Net.CQRS
         public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             var resultState = await _validator.ValidateAsync(command, cancellationToken).ConfigureAwait(false);
-            if (resultState.IsSuccess())
+            if (resultState.IsSuccess)
                 return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
 
-            return new FailedOperationResult<TResult>(resultState.StatusCode, resultState.Errors.ToList());
+            return resultState.ToFailedOperationResult<TResult>();
         }
     }
 }

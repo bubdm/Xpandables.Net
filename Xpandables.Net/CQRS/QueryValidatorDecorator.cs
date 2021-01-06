@@ -60,8 +60,8 @@ namespace Xpandables.Net.CQRS
         public async Task<IOperationResult<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
             var resultState = await _validator.ValidateAsync(query, cancellationToken).ConfigureAwait(false);
-            if (resultState.IsFailed())
-                return new FailedOperationResult<TResult>(resultState.StatusCode, resultState.Errors.ToList());
+            if (resultState.IsFailure)
+                return resultState.ToFailedOperationResult<TResult>();
 
             return await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
         }

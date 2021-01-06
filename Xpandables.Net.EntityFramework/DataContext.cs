@@ -39,22 +39,24 @@ namespace Xpandables.Net.CQRS
         /// <summary>
         /// Returns an entity of the <typeparamref name="T"/> type specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
+        /// The result is not tracked.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="T"/> type or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        public virtual async Task<T?> FindAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken = default)
+        public virtual async Task<T?> TryFindAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken = default)
             where T : Entity
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return await selector(Set<T>()).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            return await selector(Set<T>()).FirstAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Returns an anonymous type of <typeparamref name="TResult"/> specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
+        /// The result is not tracked.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
@@ -62,7 +64,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        public virtual async Task<TResult?> FindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
+        public virtual async Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
             where T : Entity
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
@@ -70,8 +72,43 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
+        /// Returns an entity of the <typeparamref name="T"/> type specified by the selector.
+        /// The result is tracked.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <param name="selector">Expression used for selecting entities.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an object of <typeparamref name="T"/> type or not.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
+        public virtual async Task<T> FindAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken = default)
+            where T : Entity
+        {
+            _ = selector ?? throw new ArgumentNullException(nameof(selector));
+            return await selector(Set<T>()).AsTracking().FirstAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Returns an anonymous type of <typeparamref name="TResult"/> specified by the selector.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
+        /// <param name="selector">Expression used for selecting entities.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
+        public virtual async Task<TResult> FindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
+            where T : Entity
+        {
+            _ = selector ?? throw new ArgumentNullException(nameof(selector));
+            return await selector(Set<T>()).FirstAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Returns an asynchronous enumerable of <typeparamref name="T"/> entities specified by the selector.
         /// If no result found, returns an empty enumerable.
+        /// The result is not tracked.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
@@ -82,12 +119,13 @@ namespace Xpandables.Net.CQRS
             where T : Entity
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return selector(Set<T>()).AsAsyncEnumerable();
+            return selector(Set<T>()).AsNoTracking().AsAsyncEnumerable();
         }
 
         /// <summary>
         /// Returns an asynchronous enumerable of <typeparamref name="TResult"/> anonymous type specified by the selector.
         /// If no result found, returns an empty enumerable.
+        /// The result is not tracked.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
@@ -99,7 +137,7 @@ namespace Xpandables.Net.CQRS
             where T : Entity
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return selector(Set<T>()).AsAsyncEnumerable();
+            return selector(Set<T>().AsNoTracking()).AsAsyncEnumerable();
         }
 
         /// <summary>

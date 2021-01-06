@@ -43,9 +43,13 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="ArgumentNullException">the <paramref name="dataContext"/> is null.</exception>
         public DataContext(IDataContext dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
 
-        public async Task<T?> FindAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken)
+        public async Task<T?> TryFindAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken)
+            where T : Entity => await _dataContext.TryFindAsync<T>(selector, cancellationToken).ConfigureAwait(false);
+        public async Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken)
+            where T : Entity => await _dataContext.TryFindAsync(selector, cancellationToken).ConfigureAwait(false);
+        public async Task<T> FindAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken)
             where T : Entity => await _dataContext.FindAsync<T>(selector, cancellationToken).ConfigureAwait(false);
-        public async Task<TResult?> FindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken)
+        public async Task<TResult> FindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken)
             where T : Entity => await _dataContext.FindAsync(selector, cancellationToken).ConfigureAwait(false);
         IAsyncEnumerable<T> IDataContext.FindAllAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken)
             => _dataContext.FindAllAsync<T>(selector, cancellationToken);

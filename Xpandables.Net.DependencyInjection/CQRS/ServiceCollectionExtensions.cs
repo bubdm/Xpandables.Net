@@ -163,6 +163,20 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the default implementation of <see cref="IReadEntityAccessor{TEntity}"/> and <see cref="IWriteEntityAccessor{TEntity}"/>.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddEntityAccessor(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddScoped(typeof(IReadEntityAccessor<>), typeof(ReadEntityAccessor<>));
+            services.AddScoped(typeof(IWriteEntityAccessor<>), typeof(WriteEntityAccessor<>));
+
+            return services;
+        }
+
+        /// <summary>
         /// Adds persistence behavior to commands and queries that are decorated with the <see cref="IPersistenceDecorator"/> to the services
         /// with transient life time.
         /// </summary>

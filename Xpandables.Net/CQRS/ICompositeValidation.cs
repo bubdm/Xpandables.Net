@@ -46,7 +46,7 @@ namespace Xpandables.Net.CQRS
             {
                 if (cancellationToken.IsCancellationRequested) cancellationToken.ThrowIfCancellationRequested();
                 var result = await validator.ValidateAsync(argument, cancellationToken).ConfigureAwait(false);
-                if (result.IsFailed())
+                if (result.IsFailure)
                     return result;
             }
 

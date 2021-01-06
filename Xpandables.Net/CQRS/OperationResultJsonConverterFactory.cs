@@ -66,7 +66,7 @@ namespace Xpandables.Net.CQRS
     public sealed class OperationResultConverter<TValue> : JsonConverter<OperationResult<TValue>>
     {
         /// <summary>
-        /// 
+        /// determines whether to handler null value.
         /// </summary>
         public override bool HandleNull => false;
 

@@ -32,25 +32,25 @@ namespace Xpandables.Net.Api.Middlewares
         {
             if (context.Result is ObjectResult objectResult && objectResult.Value is IOperationResult operationResult)
             {
-                if (operationResult.IsFailed())
+                if (operationResult.IsFailure)
                 {
-                    context.Result = operationResult.GetStatusCode() switch
+                    context.Result = operationResult.StatusCode switch
                     {
-                        System.Net.HttpStatusCode.NotFound => new NotFoundObjectResult(new ValidationProblemDetails(operationResult.GetErrors().ToDictionary())
+                        System.Net.HttpStatusCode.NotFound => new NotFoundObjectResult(new ValidationProblemDetails(operationResult.Errors.ToDictionary())
                         {
                             Instance = context.HttpContext.Request.Path,
                             Status = StatusCodes.Status404NotFound,
                             Title = "Request Not Found",
                             Detail = "Please refer to the errors for additional details"
                         }),
-                        System.Net.HttpStatusCode.InternalServerError => new BadRequestObjectResult(new ValidationProblemDetails(operationResult.GetErrors().ToDictionary())
+                        System.Net.HttpStatusCode.InternalServerError => new BadRequestObjectResult(new ValidationProblemDetails(operationResult.Errors.ToDictionary())
                         {
                             Instance = context.HttpContext.Request.Path,
                             Status = StatusCodes.Status500InternalServerError,
                             Title = "Internal Server Error",
                             Detail = "Please refer to the errors for additional details"
                         }),
-                        _ => new BadRequestObjectResult(new ValidationProblemDetails(operationResult.GetErrors().ToDictionary())
+                        _ => new BadRequestObjectResult(new ValidationProblemDetails(operationResult.Errors.ToDictionary())
                         {
                             Instance = context.HttpContext.Request.Path,
                             Status = StatusCodes.Status400BadRequest,

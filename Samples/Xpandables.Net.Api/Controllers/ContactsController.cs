@@ -57,7 +57,7 @@ namespace Xpandables.Net.Api.Controllers
         public async Task<IActionResult> AddAsync([FromBody] Add add, CancellationToken cancellationToken = default)
         {
             var createdResult = await _dispatcher.SendAsync(add, cancellationToken).ConfigureAwait(false);
-            if (createdResult.IsFailed()) return Ok(createdResult);
+            if (createdResult.IsFailure) return Ok(createdResult);
 
             return CreatedAtRoute("ContactLink", new { id = createdResult.Value }, createdResult.Value);
         }
@@ -92,7 +92,7 @@ namespace Xpandables.Net.Api.Controllers
                    where TModel : class
         {
             if (jsonPatch.Operations.Any(op => op.OperationType != OperationType.Replace))
-                return new FailedOperationResult(
+                return new FailureOperationResult(
                     HttpStatusCode.Unauthorized,
                     jsonPatch.Operations.Where(op => op.OperationType != OperationType.Replace).Select(op => new OperationError($"op {op.OperationType}", "Unauthorized")).ToList());
 
@@ -103,7 +103,7 @@ namespace Xpandables.Net.Api.Controllers
         protected IOperationResult GetFailedOperationResult(ModelStateDictionary modelState)
         {
             _ = modelState ?? throw new ArgumentNullException(nameof(modelState));
-            return new FailedOperationResult(HttpStatusCode.BadRequest, modelState
+            return new FailureOperationResult(HttpStatusCode.BadRequest, modelState
                 .Keys
                 .Where(key => modelState[key].Errors.Count > 0)
                 .Select(key => new OperationError(key, modelState[key].Errors.Select(error => error.ErrorMessage).ToArray()))

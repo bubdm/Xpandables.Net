@@ -24,6 +24,8 @@ namespace Xpandables.Net.CQRS
     /// An <see cref="OperationResult"/> that will produces a <see cref="OperationStatus.Success"/> status.
     /// It is decorated with a <see cref="JsonConverterAttribute"/> with the <see cref="OperationResultJsonConverterFactory"/> type in order to automatically convert instance to nothing as it does not contain a value.
     /// </summary>
+    /// <remarks>In derived classes, be aware of the fact that <see cref="System.Text.Json"/> does not manage attribute inheritance.
+    /// So you have to apply the attribute to all your derived classes.</remarks>
     [JsonConverter(typeof(OperationResultJsonConverterFactory))]
     public class SuccessOperationResult : OperationResult
     {
@@ -44,6 +46,8 @@ namespace Xpandables.Net.CQRS
     /// It is decorated with a <see cref="JsonConverterAttribute"/> with the <see cref="OperationResultJsonConverterFactory"/> type in order to automatically convert internal <see langword="Value"/> to JSON.
     /// </summary>
     /// <typeparam name="TValue">The type of the value.</typeparam>
+    /// <remarks>In derived classes, be aware of the fact that <see cref="System.Text.Json"/> does not manage attribute inheritance.
+    /// So you have to apply the attribute to all your derived classes.</remarks>
     [JsonConverter(typeof(OperationResultJsonConverterFactory))]
     public class SuccessOperationResult<TValue> : OperationResult<TValue>
     {
@@ -58,6 +62,6 @@ namespace Xpandables.Net.CQRS
         /// </summary>
         /// <param name="statusCode">The HTTP operation status code.</param>
         /// <param name="value">The operation value.</param>
-        public SuccessOperationResult(HttpStatusCode statusCode, TValue value) : base(OperationStatus.Success, statusCode, value) { }
+        public SuccessOperationResult(HttpStatusCode statusCode, TValue value) : base(OperationStatus.Success, statusCode, value) { }    
     }
 }

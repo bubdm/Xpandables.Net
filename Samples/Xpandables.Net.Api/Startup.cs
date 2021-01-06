@@ -26,6 +26,7 @@ using Microsoft.Extensions.Hosting;
 using Xpandables.Net.Api.Database;
 using Xpandables.Net.Api.Middlewares;
 using Xpandables.Net.Api.Services;
+using Xpandables.Net.CQRS;
 using Xpandables.Net.DependencyInjection;
 
 namespace Xpandables.Net.Api
@@ -55,6 +56,8 @@ namespace Xpandables.Net.Api
                 options.UsePersistenceDecorator();
                 options.UseValidationDecorator();
             });
+
+            services.AddEntityAccessor();
 
             // uncomment to disable Interception
             services.AddTransient<ContactInterceptor>();

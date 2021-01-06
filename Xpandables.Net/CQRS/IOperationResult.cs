@@ -35,46 +35,61 @@ namespace Xpandables.Net.CQRS
         /// <summary>
         /// The result is failed.
         /// </summary>
-        Failed
+        Failure
     }
 
     /// <summary>
-    /// Represents the status of an operation. The result contains <see cref="IsSuccess"/> and <see cref="IsFailed"/> which determines operation exit state,
-    /// <see cref="GetStatusCode"/> that returns the HTTP status code and <see cref="GetErrors"/> which shows errors for failing operation execution.
+    /// Represents the status of an operation. The result contains <see cref="IsSuccess"/> and <see cref="IsFailure"/> which determines operation exit state,
+    /// <see cref="StatusCode"/> that returns the HTTP status code and <see cref="Errors"/> which shows errors for failing operation execution.
     /// </summary>
     public interface IOperationResult
     {
-        internal OperationStatus Status { get; }
-        internal IReadOnlyCollection<OperationError> Errors { get; }
-        internal HttpStatusCode StatusCode { get; }
-
         /// <summary>
-        /// Returns the operation HTTP status code.
+        /// Gets the operation result status.
         /// </summary>
-        public sealed HttpStatusCode GetStatusCode() => StatusCode;
+        OperationStatus Status { get; }
 
         /// <summary>
-        /// Returns a value that indicates whether the operation is completed successfully and returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+        /// Gets the collection of errors.
+        /// </summary>
+        IReadOnlyCollection<OperationError> Errors { get; }
+
+        /// <summary>
+        /// Gets the operation HTTP status code.
+        /// </summary>
+        HttpStatusCode StatusCode { get; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the operation is completed successfully and returns <see langword="true"/> if so, otherwise <see langword="false"/>.
         /// </summary>
         /// <returns><see langword="true"/> if the operation is completed successfully; otherwise, <see langword="false"/>.</returns>
-        public sealed bool IsSuccess() => Status == OperationStatus.Success;
+        public sealed bool IsSuccess => Status == OperationStatus.Success;
 
         /// <summary>
-        /// Returns a value that indicates whether the operation is failed and returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+        /// Gets a value that indicates whether the operation is failed and returns <see langword="true"/> if so, otherwise <see langword="false"/>.
         /// </summary>
         /// <returns><see langword="true"/> if the operation is failed; otherwise, <see langword="true"/>.</returns>
-        public sealed bool IsFailed() => Status == OperationStatus.Failed;
+        public sealed bool IsFailure => Status == OperationStatus.Failure;
 
         /// <summary>
-        /// Returns the collection of errors.
+        /// Converts the current success operation instance to the generic success operation with the specified value.
         /// </summary>
-        public sealed IReadOnlyCollection<OperationError> GetErrors() => Errors;
+        /// /// <typeparam name="TValue">The type of the value.</typeparam>
+        /// <returns>A new instance of <see cref="SuccessOperationResult{TValue}"/> with the status code of the current success operation and the specified value.</returns>
+        public virtual SuccessOperationResult<TValue> ToSuccessOperationResult<TValue>(TValue value) => new(StatusCode, value);
+
+        /// <summary>
+        /// Converts the current failed operation instance to the -generic failed operation.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the value.</typeparam>
+        /// <returns>A new instance of <see cref="FailureOperationResult{TValue}"/> with the status code and errors from the failed operation.</returns>
+        public virtual FailureOperationResult<TValue> ToFailedOperationResult<TValue>() => new(StatusCode, Errors);
     }
 
     /// <summary>
     /// Represents the status of an operation that contains a return value of <typeparamref name="TValue"/> type.
-    /// The result contains <see cref="IOperationResult.IsSuccess"/> and <see cref="IOperationResult.IsFailed"/> which determines operation exit state,
-    /// <see cref="IOperationResult.GetStatusCode"/> that returns the HTTP status code and <see cref="IOperationResult.GetErrors"/> which shows errors for failing operation execution.
+    /// The result contains <see cref="IOperationResult.IsSuccess"/> and <see cref="IOperationResult.IsFailure"/> which determines operation exit state,
+    /// <see cref="IOperationResult.StatusCode"/> that returns the HTTP status code and <see cref="IOperationResult.Errors"/> which shows errors for failing operation execution.
     /// </summary>
     /// <typeparam name="TValue">The type of the return value.</typeparam>
     public interface IOperationResult<out TValue> : IOperationResult
@@ -83,6 +98,18 @@ namespace Xpandables.Net.CQRS
         /// Gets a user-defined object that qualifies or contains information about an operation return.
         /// </summary>
         TValue Value { get; }
+
+        /// <summary>
+        /// Converts the current generic success operation instance to the non-generic success operation.
+        /// </summary>
+        /// <returns>A new instance of <see cref="SuccessOperationResult"/> with the status code of the current success operation.</returns>
+        public virtual SuccessOperationResult ToSuccessOperationResult() => new(StatusCode);
+
+        /// <summary>
+        /// Converts the current generic failed operation instance to the non-generic failed operation.
+        /// </summary>
+        /// <returns>A new instance of <see cref="FailureOperationResult"/> with the status code and errors from the generic failed operation.</returns>
+        public virtual FailureOperationResult ConvertToFailedOperationResult() => new(StatusCode, Errors);
     }
 
     /// <summary>
@@ -105,9 +132,20 @@ namespace Xpandables.Net.CQRS
         /// </summary>
         protected readonly IReadOnlyCollection<OperationError> _errors = new OperationErrorCollection();
 
-        OperationStatus IOperationResult.Status => _status;
-        IReadOnlyCollection<OperationError> IOperationResult.Errors => _errors;
-        HttpStatusCode IOperationResult.StatusCode => _statusCode;
+        /// <summary>
+        /// Gets the operation result status.
+        /// </summary>
+        public OperationStatus Status => _status;
+
+        /// <summary>
+        /// Gets the collection of errors.
+        /// </summary>
+        public IReadOnlyCollection<OperationError> Errors => _errors;
+
+        /// <summary>
+        /// Gets the operation HTTP status code.
+        /// </summary>
+        public HttpStatusCode StatusCode => _statusCode;
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult"/> with the specified status.
@@ -123,7 +161,8 @@ namespace Xpandables.Net.CQRS
         /// <param name="statusCode">The HTTP operation status code.</param>
         /// <param name="errors">The errors collection.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
-        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, IList<OperationError> errors) : this(status, statusCode) => _errors = errors.ToList() ?? throw new ArgumentNullException(nameof(errors));
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, IReadOnlyCollection<OperationError> errors)
+            : this(status, statusCode) => _errors = errors ?? throw new ArgumentNullException(nameof(errors));
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult"/> with the specified status and specified error.
@@ -132,7 +171,8 @@ namespace Xpandables.Net.CQRS
         /// <param name="statusCode">The HTTP operation status code.</param>
         /// <param name="error">The error.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="error"/> is null.</exception>
-        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, OperationError error) : this(status, statusCode, new[] { error ?? throw new ArgumentNullException(nameof(error)) }) { }
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, OperationError error)
+            : this(status, statusCode, new[] { error ?? throw new ArgumentNullException(nameof(error)) }) { }
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult"/> with the specified status, the key and specified error messages.
@@ -143,7 +183,8 @@ namespace Xpandables.Net.CQRS
         /// <param name="errorMessages">The array of error messages.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="errorMessages"/> is null.</exception>
-        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, string key, params string[] errorMessages) : this(status, statusCode, new OperationError(key, errorMessages)) { }
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, string key, params string[] errorMessages)
+            : this(status, statusCode, new OperationError(key, errorMessages)) { }
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult"/> with the specified status, the key and specified exception.
@@ -154,7 +195,8 @@ namespace Xpandables.Net.CQRS
         /// <param name="exception">The handled exception.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, string key, Exception exception) : this(status, statusCode, new OperationError(key, exception)) { }
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, string key, Exception exception)
+            : this(status, statusCode, new OperationError(key, exception)) { }
     }
 
     /// <summary>
@@ -184,7 +226,8 @@ namespace Xpandables.Net.CQRS
         /// <param name="errors">The errors collection.</param>
         /// <param name="value">The value of the specific type.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
-        protected OperationResult(OperationStatus state, HttpStatusCode statusCode, IList<OperationError> errors, TValue value) : base(state, statusCode, errors) => Value = value;
+        protected OperationResult(OperationStatus state, HttpStatusCode statusCode, IReadOnlyCollection<OperationError> errors, TValue value)
+            : base(state, statusCode, errors) => Value = value;
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult{TValue}"/> with the specified status, the specified error and the target value.
@@ -207,7 +250,8 @@ namespace Xpandables.Net.CQRS
         /// <param name="errorMessages">The array of error messages.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="errorMessages"/> is null.</exception>
-        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, TValue value, string key, params string[] errorMessages) : this(status, statusCode, new OperationError(key, errorMessages), value) { }
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, TValue value, string key, params string[] errorMessages)
+            : this(status, statusCode, new OperationError(key, errorMessages), value) { }
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult{TValue}"/> with the specified status, the value, the key and specified exception.
@@ -219,7 +263,8 @@ namespace Xpandables.Net.CQRS
         /// <param name="exception">The handled exception.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, TValue value, string key, Exception exception) : this(status, statusCode, new OperationError(key, exception), value) { }
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, TValue value, string key, Exception exception)
+            : this(status, statusCode, new OperationError(key, exception), value) { }
     }
 
     /// <summary>
