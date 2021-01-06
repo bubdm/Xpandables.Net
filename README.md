@@ -98,8 +98,8 @@ public sealed class ContactModel : Entity
 public sealed class ContactValidators : 
    IValidation<Select>, IValidation<Add>, IValidation<Delete>, IValidation<Edit>
 {
-    private readonly IReadEntityAccessor<ContactModel> _readEntityAccessor;
-    public ContactValidators(IReadEntityAccessor<ContactModel> readEntityAccessor) 
+    private readonly IEntityAccessor<ContactModel> _readEntityAccessor;
+    public ContactValidators(IEntityAccessor<ContactModel> readEntityAccessor) 
       => _readEntityAccessor = readEntityAccessor ?? throw new ArgumentNullException(nameof(readEntityAccessor));
 
     public async Task<IOperationResult> ValidateAsync(
@@ -144,16 +144,15 @@ public sealed class ContactHandlers :
    IAsyncQueryHandler<SelectAll, Contact>, IQueryHandler<Select, Contact>, ICommandHandler<Add, string>, 
    ICommandHandler<Delete>, ICommandHandler<Edit, Contact>
 {
-    private readonly IReadEntityAccessor<ContactModel> _readEntityAcessor;
-    private readonly IWriteEntityAccessor<ContactModel> _writeEntityAccessor;
+    private readonly IEntityAccessor<ContactModel> _entityAcessor;
     public ContactHandlers(
-        IReadEntityAccessor<ContactModel> readEntityAccessor, IWriteEntityAccessor<ContactModel> writeEntityAccessor) 
-       => (_readEntityAccessor, _writeEntityAccessor) = (readEntityAccessor, writeEntityAccessor);
+        IEntityAccessor<ContactModel> entityAccessor) 
+       => _entityAccessor = entityAccessor;
 
     public async Task<IOperationResult<Contact>> HandleAsync(
        Select query, CancellationToken cancellationToken = default)
         => new SuccessOperationResult<Contact>(
-                await _readEntityAccessor
+                await _entityAccessor
                  .FindAsync(query,
                   s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken));
                   
@@ -162,10 +161,10 @@ public sealed class ContactHandlers :
    public async Task<IOperationResult<Contact>> HandleAsync(
       Edit command, CancellationToken cancellationToken = default)
    {
-       var toEdit = await _readEntityAccessor.FindAsync(command, cancellationToken).ConfigureAwait(false);
+       var toEdit = await _entityAccessor.FindAsync(command, cancellationToken).ConfigureAwait(false);
        toEdit.Edit(command.Name, command.City, command.Address, command.Country);
 
-       await _writeEntityAccessor.UpdateAsync(toEdit, cancellationToken).ConfigureAwait(false);
+       await _entityAccessor.UpdateAsync(toEdit, cancellationToken).ConfigureAwait(false);
        return new SuccessOperationResult<Contact>(
           new Contact(toEdit.Id, toEdit.Name, toEdit.City, toEdit.Address, toEdit.Country));
    }
