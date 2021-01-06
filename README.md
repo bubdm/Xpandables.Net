@@ -98,17 +98,17 @@ public sealed class ContactModel : Entity
 public sealed class ContactValidators : 
    IValidation<Select>, IValidation<Add>, IValidation<Delete>, IValidation<Edit>
 {
-    private readonly IDataContext<ContactModel> _dataContext;
-    public ContactValidators(IDataContext<ContactModel> dataContext) 
-      => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+    private readonly IReadEntityAccessor<ContactModel> _readEntityAccessor;
+    public ContactValidators(IReadEntityAccessor<ContactModel> readEntityAccessor) 
+      => _readEntityAccessor = readEntityAccessor ?? throw new ArgumentNullException(nameof(readEntityAccessor));
 
     public async Task<IOperationResult> ValidateAsync(
        Select argument, CancellationToken cancellationToken = default)
     {
-        if (await _dataContext
-           .FindAsync(c => c. AsNoTracking().Where(argument).OrderBy(o => o.Id), cancellationToken)
+        if (await _readEntityAccessor
+           .TryFindAsync(argument, cancellationToken)
            .ConfigureAwait(false) is null)
-            return new FailedOperationResult(
+            return new FailureOperationResult(
                System.Net.HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
                
         return new SuccessOperationResult();
@@ -120,9 +120,9 @@ public sealed class ContactValidators :
        Edit argument, CancellationToken cancellationToken = default)
     {
         if(await _dataContext
-           .FindAsync(c => c.AsNoTracking().Where(argument).OrderBy(o => o.Id), cancellationToken)
+           .TryFindAsync(argument, cancellationToken)
            .ConfigureAwait(false) is not { } contact)
-           return new FailedOperationResult(
+           return new FailureOperationResult(
               System.Net.HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
         argument.Name = contact.Name;
@@ -144,27 +144,28 @@ public sealed class ContactHandlers :
    IAsyncQueryHandler<SelectAll, Contact>, IQueryHandler<Select, Contact>, ICommandHandler<Add, string>, 
    ICommandHandler<Delete>, ICommandHandler<Edit, Contact>
 {
-    private readonly IDataContext<ContactModel> _dataContext;
-    public ContactHandlers(IDataContext<ContactModel> dataContext) 
-       => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+    private readonly IReadEntityAccessor<ContactModel> _readEntityAcessor;
+    private readonly IWriteEntityAccessor<ContactModel> _writeEntityAccessor;
+    public ContactHandlers(
+        IReadEntityAccessor<ContactModel> readEntityAccessor, IWriteEntityAccessor<ContactModel> writeEntityAccessor) 
+       => (_readEntityAccessor, _writeEntityAccessor) = (readEntityAccessor, writeEntityAccessor);
 
     public async Task<IOperationResult<Contact>> HandleAsync(
        Select query, CancellationToken cancellationToken = default)
         => new SuccessOperationResult<Contact>(
-                (await _dataContext
-                 .FindAsync(c => c.AsNoTracking().Where(query).OrderBy(o => o.Id)
-                  .Select(s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country)), cancellationToken))!);
+                await _readEntityAccessor
+                 .FindAsync(query,
+                  s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken));
                   
    ...
    
    public async Task<IOperationResult<Contact>> HandleAsync(
       Edit command, CancellationToken cancellationToken = default)
    {
-       var toEdit = (await _dataContext.FindAsync(c => c.Where(command).OrderBy(o => o.Id), cancellationToken)
-                     .ConfigureAwait(false))!;
+       var toEdit = await _readEntityAccessor.FindAsync(command, cancellationToken).ConfigureAwait(false);
        toEdit.Edit(command.Name, command.City, command.Address, command.Country);
 
-       await _dataContext.UpdateEntityAsync(toEdit, cancellationToken).ConfigureAwait(false);
+       await _writeEntityAccessor.UpdateAsync(toEdit, cancellationToken).ConfigureAwait(false);
        return new SuccessOperationResult<Contact>(
           new Contact(toEdit.Id, toEdit.Name, toEdit.City, toEdit.Address, toEdit.Country));
    }
