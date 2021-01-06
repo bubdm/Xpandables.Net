@@ -163,15 +163,14 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the default implementation of <see cref="IReadEntityAccessor{TEntity}"/> and <see cref="IWriteEntityAccessor{TEntity}"/>.
+        /// Adds the default implementation of <see cref="IEntityAccessor{TEntity}"/>.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddEntityAccessor(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.AddScoped(typeof(IReadEntityAccessor<>), typeof(ReadEntityAccessor<>));
-            services.AddScoped(typeof(IWriteEntityAccessor<>), typeof(WriteEntityAccessor<>));
+            services.AddScoped(typeof(IEntityAccessor<>), typeof(EntityAccessor<>));
 
             return services;
         }

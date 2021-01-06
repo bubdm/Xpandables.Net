@@ -24,10 +24,10 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// Represents a set of methods to read objects from a data source when used with <see cref="IDataContext{TEntity}"/>.
+    /// Represents a set of methods to read/write objects from a data source when used with <see cref="IDataContext{TEntity}"/>.
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
-    public interface IReadEntityAccessor<TEntity> : IDisposable
+    public interface IEntityAccessor<TEntity> : IDisposable
         where TEntity : Entity
     {
         /// <summary>
@@ -90,5 +90,23 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
         IAsyncEnumerable<TResult> SelectAsync<TResult>(Expression<Func<TEntity, bool>> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
             where TResult : class;
+
+        /// <summary>
+        /// Marks the specified entity to be inserted to the data storage on persistence.
+        /// </summary>
+        /// <param name="entity">The entity to be added and persisted.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an  asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
+        Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Marks the specified entity to be updated to the data storage on persistence.
+        /// </summary>
+        /// <param name="entity">The entity to be added and persisted.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an  asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
+        Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
     }
 }

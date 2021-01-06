@@ -83,7 +83,7 @@ namespace Xpandables.Net.CQRS
         /// </summary>
         /// <typeparam name="TValue">The type of the value.</typeparam>
         /// <returns>A new instance of <see cref="FailureOperationResult{TValue}"/> with the status code and errors from the failed operation.</returns>
-        public virtual FailureOperationResult<TValue> ToFailedOperationResult<TValue>() => new(StatusCode, Errors);
+        public virtual FailureOperationResult<TValue> ToFailureOperationResult<TValue>() => new(StatusCode, Errors);
     }
 
     /// <summary>
@@ -109,7 +109,7 @@ namespace Xpandables.Net.CQRS
         /// Converts the current generic failed operation instance to the non-generic failed operation.
         /// </summary>
         /// <returns>A new instance of <see cref="FailureOperationResult"/> with the status code and errors from the generic failed operation.</returns>
-        public virtual FailureOperationResult ConvertToFailedOperationResult() => new(StatusCode, Errors);
+        public virtual FailureOperationResult ToFailureOperationResult() => new(StatusCode, Errors);
     }
 
     /// <summary>

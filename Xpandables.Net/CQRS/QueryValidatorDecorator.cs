@@ -61,7 +61,7 @@ namespace Xpandables.Net.CQRS
         {
             var resultState = await _validator.ValidateAsync(query, cancellationToken).ConfigureAwait(false);
             if (resultState.IsFailure)
-                return resultState.ToFailedOperationResult<TResult>();
+                return resultState.ToFailureOperationResult<TResult>();
 
             return await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
         }

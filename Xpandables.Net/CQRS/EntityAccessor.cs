@@ -25,22 +25,22 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// An implementation of <see cref="IReadEntityAccessor{TEntity}"/>.
+    /// An implementation of <see cref="IEntityAccessor{TEntity}"/>.
     /// You must derive from this class to customize its behaviors.
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
-    public class ReadEntityAccessor<TEntity> : IReadEntityAccessor<TEntity>
+    public class EntityAccessor<TEntity> : IEntityAccessor<TEntity>
         where TEntity : Entity
     {
         private readonly IDataContext<TEntity> _dataContext;
         private bool disposedValue;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="ReadEntityAccessor{TEntity}"/> with the context to act on.
+        /// Initializes a new instance of <see cref="EntityAccessor{TEntity}"/> with the context to act on.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public ReadEntityAccessor(IDataContext<TEntity> dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+        public EntityAccessor(IDataContext<TEntity> dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
 
         /// <summary>
         /// Provides with the query selector for the entity type.
@@ -127,6 +127,26 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         public virtual async Task<TEntity?> TryFindAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
             => await _dataContext.TryFindAsync(QueryableEntity<TEntity>(criteria), cancellationToken).ConfigureAwait(false);
+
+        /// <summary>
+        /// Marks the specified entity to be inserted to the data storage on persistence.
+        /// </summary>
+        /// <param name="entity">The entity to be added and persisted.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an  asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
+        public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+            => await _dataContext.AddEntityAsync(entity, cancellationToken).ConfigureAwait(false);
+
+        /// <summary>
+        /// Marks the specified entity to be updated to the data storage on persistence.
+        /// </summary>
+        /// <param name="entity">The entity to be added and persisted.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an  asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
+        public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+            => await _dataContext.UpdateEntityAsync(entity, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Applies dispose. Override to customize the behavior.

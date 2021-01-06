@@ -17,11 +17,11 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.2.5</Version>
-    <AssemblyVersion>5.2.5</AssemblyVersion>
-    <FileVersion>5.2.5</FileVersion>
-    <PackageVersion>5.2.5</PackageVersion>
-    <PackageReleaseNotes>Add IHttpRestClientHandler registration</PackageReleaseNotes>
+    <Version>5.2.7</Version>
+    <AssemblyVersion>5.2.7</AssemblyVersion>
+    <FileVersion>5.2.7</FileVersion>
+    <PackageVersion>5.2.7</PackageVersion>
+    <PackageReleaseNotes>Add IReadEntityAccessor, IWriteEntityAccessor</PackageReleaseNotes>
     <PackageId>Xpandables.Net.QrCodes</PackageId>
     <PackageTags>IQrCode.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>

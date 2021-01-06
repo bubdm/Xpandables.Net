@@ -109,7 +109,7 @@ namespace Xpandables.Net.CQRS
             if (resultState.IsSuccess)
                 return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
 
-            return resultState.ToFailedOperationResult<TResult>();
+            return resultState.ToFailureOperationResult<TResult>();
         }
     }
 }

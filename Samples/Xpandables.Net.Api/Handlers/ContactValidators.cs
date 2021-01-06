@@ -27,8 +27,8 @@ namespace Xpandables.Net.Api.Handlers
 {
     public sealed class ContactValidators : IValidation<Select>, IValidation<Add>, IValidation<Delete>, IValidation<Edit>
     {
-        private readonly IReadEntityAccessor<ContactModel> _dataContext;
-        public ContactValidators(IReadEntityAccessor<ContactModel> dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+        private readonly IEntityAccessor<ContactModel> _dataContext;
+        public ContactValidators(IEntityAccessor<ContactModel> dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
 
         public async Task<IOperationResult> ValidateAsync(Select argument, CancellationToken cancellationToken = default)
         {
