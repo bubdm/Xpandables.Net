@@ -20,11 +20,20 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
+using Xpandables.Net.CQRS;
+
 namespace Xpandables.Net.Api.Models
 {
-    public sealed class ContactModel : Entity
+    public sealed record ContactModelCreatedNotification(string Id) : INotification;
+    public sealed record ContactModelUpdatedNotification(string Id, string? Name):INotification;
+
+    public sealed class ContactModel : Entity, IAggregateRoot
     {
-        public ContactModel(string name, string city, string address, string country) => Update(name, city, address, country);
+        public ContactModel(string name, string city, string address, string country)
+        {
+            Update(name, city, address, country);
+            AddNotification(new ContactModelCreatedNotification(Id));
+        }
 
         [MemberNotNull(nameof(Name), nameof(City), nameof(Address), nameof(Country))]
         public void Update(string name, string city, string address, string country)
@@ -40,6 +49,7 @@ namespace Xpandables.Net.Api.Models
             if (city is not null) UpdateCity(city);
             if (address is not null) UpdateAddress(address);
             if (country is not null) UpdateCountry(country);
+            AddNotification(new ContactModelUpdatedNotification(Id, name));
         }
 
         [MemberNotNull(nameof(Name))]

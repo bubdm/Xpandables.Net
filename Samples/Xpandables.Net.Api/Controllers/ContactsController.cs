@@ -68,6 +68,7 @@ namespace Xpandables.Net.Api.Controllers
             => Ok(await _dispatcher.SendAsync(del, cancellationToken).ConfigureAwait(false));
 
         [HttpPatch]
+        [Route("{id:string}")]
         public async Task<IActionResult> EditAsync([FromRoute] string id, [FromBody] JsonPatchDocument<Edit> editPatch, CancellationToken cancellationToken = default)
         {
             var edit = new Edit { Id = id, ApplyPatch = value => ApplyJsonPatch(value, editPatch) };

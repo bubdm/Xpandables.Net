@@ -46,6 +46,11 @@ namespace Xpandables.Net.DependencyInjection
         public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
 
         /// <summary>
+        /// Enables notification behavior to commands that are decorated with the <see cref="INotificationDecorator"/> .
+        /// </summary>
+        public HandlerOptions UseNotificationDecorator() => this.With(cq => cq.IsNotificationEnabled = true);
+
+        /// <summary>
         /// Enables correlation behavior to operations that are decorated with the <see cref="ICorrelationDecorator"/>.
         /// </summary>
         public HandlerOptions UseCorrelationDecorator() => this.With(cq => cq.IsCorrelationEnabled = true);
@@ -59,6 +64,7 @@ namespace Xpandables.Net.DependencyInjection
         internal bool IsVisitorEnabled { get; private set; }
         internal bool IsTransactionEnabled { get; private set; }
         internal bool IsPersistenceEnabled { get; private set; }
+        internal bool IsNotificationEnabled { get; private set; }
         internal bool IsCorrelationEnabled { get; private set; }
     }
 
@@ -123,24 +129,28 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<IDispatcherHandlerProvider, DispatcherHandlerProvider>();
+            services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
             services.AddScoped<IDispatcher, Dispatcher>();
             return services;
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TDispatcher"/> and <typeparamref name="TDispatcherHandlerProvider"/> types to the services with scoped life time.
+        /// Adds the <typeparamref name="TDispatcher"/>, <typeparamref name="TNotificationDispatcher"/> and <typeparamref name="TDispatcherHandlerProvider"/> types to the services with scoped life time.
         /// </summary>
         /// <typeparam name="TDispatcher">The dispatcher type implementation.</typeparam>
+        /// <typeparam name="TNotificationDispatcher">The notification type implementation.</typeparam>
         /// <typeparam name="TDispatcherHandlerProvider">The dispatcher handler provider type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDispatcher<TDispatcher, TDispatcherHandlerProvider>(this IServiceCollection services)
+        public static IServiceCollection AddXDispatcher<TDispatcher, TNotificationDispatcher, TDispatcherHandlerProvider>(this IServiceCollection services)
             where TDispatcher : class, IDispatcher
+            where TNotificationDispatcher : class, INotificationDispatcher
             where TDispatcherHandlerProvider : class, IDispatcherHandlerProvider
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<IDispatcherHandlerProvider, TDispatcherHandlerProvider>();
+            services.AddScoped<INotificationDispatcher, TNotificationDispatcher>();
             services.AddScoped<IDispatcher, TDispatcher>();
             return services;
         }
@@ -191,6 +201,21 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds notification behavior to commands that are decorated with the <see cref="INotificationDecorator"/> to the services
+        /// with transient life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXNotificationDecorator(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandNotificationDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandNotificationDecorator<,>));
+            return services;
+        }
+
+        /// <summary>
         /// Adds the transaction type provider to the services.
         /// </summary>
         /// <typeparam name="TTransactionScopeProvider">The type transaction scope provider.</typeparam>
@@ -204,7 +229,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds transaction scope behavior to commands and queries that are decorated with the <see cref="ITransactionDecorator"/>
+        /// Adds transaction scope behavior to commands that are decorated with the <see cref="ITransactionDecorator"/>
         /// to the services
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -215,7 +240,6 @@ namespace Xpandables.Net.DependencyInjection
 
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandTransactionDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandTransactionDecorator<,>));
-            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(CommandTransactionDecorator<,>));
             return services;
         }
 
@@ -310,7 +334,6 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddXCommandHandlers(assemblies);
             services.AddXQueryHandlers(assemblies);
-            services.AddXNotificationHandlers(assemblies);
 
             var definedOptions = new HandlerOptions();
             configureOptions.Invoke(definedOptions);
@@ -323,6 +346,12 @@ namespace Xpandables.Net.DependencyInjection
 
             if (definedOptions.IsPersistenceEnabled)
                 services.AddXPersistenceDecorator();
+
+            if (definedOptions.IsNotificationEnabled)
+            {
+                services.AddXNotificationHandlers(assemblies);
+                services.AddXNotificationDecorator();
+            }
 
             if (definedOptions.IsVisitorEnabled)
             {

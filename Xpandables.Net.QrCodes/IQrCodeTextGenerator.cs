@@ -71,7 +71,5 @@ namespace Xpandables.Net.QrCodes
     /// Defines the delegate used to generate a text for qr-code.
     /// </summary>
     /// <param name="previous"></param>
-#pragma warning disable ET001 // Type name does not match file name
     public delegate string QrTextGeneratorDelegate(string? previous);
-#pragma warning restore ET001 // Type name does not match file name
 }

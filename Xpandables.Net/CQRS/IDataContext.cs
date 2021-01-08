@@ -45,6 +45,16 @@ namespace Xpandables.Net.CQRS
         internal object InternalDbSet<T>() where T : Entity;
 
         /// <summary>
+        /// Contains all notifications (domain events and domain event notifications) from entities being tracked.
+        /// </summary>
+        IReadOnlyCollection<INotification> Notifications { get; }
+
+        /// <summary>
+        /// Clears all notifications found in tracked entities.
+        /// </summary>
+        internal void ClearNotifications();
+
+        /// <summary>
         /// Tries to return an entity of the <typeparamref name="T"/> type specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
         /// The result is not tracked.

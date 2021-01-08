@@ -66,7 +66,7 @@ namespace Xpandables.Net.Api.Handlers
 
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
     public sealed record Add([Required] string Name, [Required] string City, [Required] string Address, [Required] string Country)
-        : RecordExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator
+        : RecordExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator, INotificationDecorator
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
     }
@@ -85,7 +85,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts", Method = "Patch", IsSecured = true, IsNullable = false, In = ParameterLocation.Body)]
-    public sealed record Edit : RecordExpression<ContactModel>, ICommand<Contact>, IValidationDecorator, IPersistenceDecorator
+    public sealed record Edit : RecordExpression<ContactModel>, ICommand<Contact>, IValidationDecorator, IPersistenceDecorator, INotificationDecorator
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         public string Id { get; set; } = null!;

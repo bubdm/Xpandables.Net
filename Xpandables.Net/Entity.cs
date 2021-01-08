@@ -16,10 +16,13 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+
+using Xpandables.Net.CQRS;
 
 [assembly: InternalsVisibleTo("Xpandables.Net.EntityFramework, PublicKey=0024000004800000940000000602000000240000525341310004000001000100410b9f6b317bb83c59c2727a39ad3e0c3aff55cbfc6f1328e2a925ab2e85d44b1815b23cea3f22924ea4226a6b3318eb90d1f28234e0116be8b70c29a41849a93e1baa680deae7f56e8d75d352d6f3b8457746223adf8cc2085a2d1d8c3f7be439bc53f1a032cc696f75afa378e0e054f3eb325fb9a7898a31c612c21e9c3cb8")]
 
@@ -71,6 +74,13 @@ namespace Xpandables.Net
         /// </summary>
         public DateTime? DeletedOn { get; protected set; }
 
+        private readonly HashSet<INotification> _notifications = new();
+
+        /// <summary>
+        /// Gets the collection of notifications occurred.
+        /// </summary>
+        public IReadOnlyCollection<INotification> Notifications => _notifications;
+
         /// <summary>
         /// Marks the underlying instance as deactivated.
         /// </summary>
@@ -103,6 +113,33 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="dateTime">the deletion date.</param>
         internal void SetDeleteDate(DateTime dateTime) => DeletedOn = dateTime;
+
+        /// <summary>
+        /// Adds the specified notification to the entity collection of notifications.
+        /// </summary>
+        /// <param name="notification">The notification to be added.</param>
+        /// <exception cref=" ArgumentNullException">The <paramref name="notification"/> is null. </exception>
+        public void AddNotification(INotification notification)
+        {
+            _ = notification ?? throw new ArgumentNullException(nameof(notification));
+            _notifications.Add(notification);
+        }
+
+        /// <summary>
+        /// Removes the specified notification from the entity collection of notifications.
+        /// </summary>
+        /// <param name="notification">The notification to be removed.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
+        public void RemoveNotification(INotification notification)
+        {
+            _ = notification ?? throw new ArgumentNullException(nameof(notification));
+            _notifications.Remove(notification);
+        }
+
+        /// <summary>
+        /// Clears all notifications.
+        /// </summary>
+        public void ClearNotifications() => _notifications.Clear();
 
         /// <summary>
         /// Returns the unique signature of string type for an instance.

@@ -95,10 +95,7 @@ namespace Xpandables.Net
                     rijndaelManaged.BlockSize = 128;
                     rijndaelManaged.Key = rfcKey.GetBytes(rijndaelManaged.KeySize / 8);
                     rijndaelManaged.IV = rfcKey.GetBytes(rijndaelManaged.BlockSize / 8);
-#pragma warning disable SCS0011 // CBC mode is weak
                     rijndaelManaged.Mode = CipherMode.CBC;
-#pragma warning restore SCS0011 // CBC mode is weak
-
                     using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateEncryptor(), CryptoStreamMode.Write))
                     {
                         await cryptoStream.WriteAsync(toBeEncrypted.AsMemory(0, toBeEncrypted.Length), CancellationToken.None).ConfigureAwait(false);
@@ -166,10 +163,7 @@ namespace Xpandables.Net
                     rijndaelManaged.BlockSize = 128;
                     rijndaelManaged.Key = rfcKey.GetBytes(rijndaelManaged.KeySize / 8);
                     rijndaelManaged.IV = rfcKey.GetBytes(rijndaelManaged.BlockSize / 8);
-#pragma warning disable SCS0011 // CBC mode is weak
                     rijndaelManaged.Mode = CipherMode.CBC;
-#pragma warning restore SCS0011 // CBC mode is weak
-
                     using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(), CryptoStreamMode.Write))
                     {
                         await cryptoStream.WriteAsync(toBeDecrypted.AsMemory(0, toBeDecrypted.Length), CancellationToken.None).ConfigureAwait(false);

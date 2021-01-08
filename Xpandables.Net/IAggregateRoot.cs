@@ -15,23 +15,10 @@
  *
 ************************************************************************************************************/
 
-using System;
-
-namespace Xpandables.Net.QrCodes.Presenter
+namespace Xpandables.Net
 {
     /// <summary>
-    /// The <see cref="QrCode"/> exception
+    /// Defines a marker interface to be used to mark an object to act as an aggregate root.
     /// </summary>
-    public class QrCodeException : Exception
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QrCodeException" /> class with a specified error message.</summary>
-        /// <param name="eccLevel">The level of the message.</param>
-        /// <param name="encodingMode"></param>
-        /// <param name="maxSizeByte"></param>
-        public QrCodeException(string eccLevel, string encodingMode, int maxSizeByte) : base(
-            $"The given payload exceeds the maximum size of the QR code standard. The maximum size allowed for the chosen parameters (ECC level={eccLevel}, EncodingMode={encodingMode}) is {maxSizeByte} byte."
-        )
-        { }
-    }
+    public interface IAggregateRoot { }
 }

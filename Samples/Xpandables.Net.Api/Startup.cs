@@ -39,6 +39,7 @@ namespace Xpandables.Net.Api
         {
             services
                 .AddControllers()
+                .AddNewtonsoftJson()
                 .AddMvcOptions(options =>
                 {
                     options.Filters.Add<OperationResultFilter>(int.MinValue);
@@ -54,6 +55,7 @@ namespace Xpandables.Net.Api
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
             {
                 options.UsePersistenceDecorator();
+                options.UseNotificationDecorator();
                 options.UseValidationDecorator();
             });
 

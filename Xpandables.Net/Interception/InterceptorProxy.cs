@@ -98,7 +98,6 @@ namespace Xpandables.Net.Interception
                 {
                     _interceptor.Intercept(invocation);
                 }
-#pragma warning disable CA1031 // Do not catch general exception types
                 catch (Exception exception)
                 {
                     invocation.AddException(
@@ -106,7 +105,6 @@ namespace Xpandables.Net.Interception
                             $"The interceptor {_interceptor.GetType().Name} throws an exception.",
                             exception));
                 }
-#pragma warning restore CA1031 // Do not catch general exception types
             }
             else
             {

@@ -36,6 +36,14 @@ namespace Xpandables.Net.CQRS
     {
         object IDataContext.InternalDbSet<T>() => Set<T>();
 
+        private readonly List<INotification> _notifications = new();
+        private readonly HashSet<Entity> _notificationEntities = new();
+
+        /// <summary>
+        /// Contains all notifications (domain events and domain event notifications) from entities being tracked.
+        /// </summary>
+        public IReadOnlyCollection<INotification> Notifications => _notifications;
+
         /// <summary>
         /// Returns an entity of the <typeparamref name="T"/> type specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
@@ -295,7 +303,7 @@ namespace Xpandables.Net.CQRS
         public virtual async Task PersistAsync(CancellationToken cancellationToken)
         {
             try
-            {
+            {                
                 await SaveChangesAsync(true, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception) when (exception is DbUpdateException)

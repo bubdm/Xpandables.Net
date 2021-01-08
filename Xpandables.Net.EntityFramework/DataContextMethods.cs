@@ -15,13 +15,13 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Linq.Expressions;
-using System.Reflection;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+using System;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Xpandables.Net.CQRS
 {
@@ -69,6 +69,8 @@ namespace Xpandables.Net.CQRS
             return new ValueConverter<T, string>(convertToStringLamda, convertToEnumerationLamda);
         }
 
+        void IDataContext.ClearNotifications() => _notificationEntities.ForEach(entity => entity.ClearNotifications());
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DataContext"/> class
         /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
@@ -82,7 +84,15 @@ namespace Xpandables.Net.CQRS
             ChangeTracker.Tracked += (sender, e) =>
               {
                   if (!e.FromQuery && e.Entry.State == EntityState.Added && e.Entry.Entity is Entity entity)
+                  {
                       entity.SetCreationDate(DateTime.UtcNow);
+
+                      if (entity.Notifications.Count > 0)
+                      {
+                          _notifications.AddRange(entity.Notifications);
+                          _notificationEntities.Add(entity);
+                      }
+                  }
               };
 
             ChangeTracker.StateChanged += (sender, e) =>
@@ -91,8 +101,15 @@ namespace Xpandables.Net.CQRS
                   {
                       var date = DateTime.UtcNow;
                       entity.SetUpdateDate(date);
+
                       if (entity.IsDeleted)
                           entity.SetDeleteDate(date);
+
+                      if (entity.Notifications.Count > 0)
+                      {
+                          _notifications.AddRange(entity.Notifications);
+                          _notificationEntities.Add(entity);
+                      }
                   }
               };
         }

@@ -15,23 +15,11 @@
  *
 ************************************************************************************************************/
 
-using System;
-
-namespace Xpandables.Net.QrCodes.Presenter
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// The <see cref="QrCode"/> exception
+    /// A marker interface that allows the command class to add notification and event notification decorator on the control flow before changes are committed.
+    /// You need to provides implementation of <see cref="INotificationHandler{TNotification}"/> and/or <see cref="IDomainEventNotificationHandler{TDomainEventNotification}"/>.
     /// </summary>
-    public class QrCodeException : Exception
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QrCodeException" /> class with a specified error message.</summary>
-        /// <param name="eccLevel">The level of the message.</param>
-        /// <param name="encodingMode"></param>
-        /// <param name="maxSizeByte"></param>
-        public QrCodeException(string eccLevel, string encodingMode, int maxSizeByte) : base(
-            $"The given payload exceeds the maximum size of the QR code standard. The maximum size allowed for the chosen parameters (ECC level={eccLevel}, EncodingMode={encodingMode}) is {maxSizeByte} byte."
-        )
-        { }
-    }
+    public interface INotificationDecorator { }
 }
