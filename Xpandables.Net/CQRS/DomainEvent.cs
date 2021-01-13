@@ -20,18 +20,18 @@ using System;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// This is the <see langword="abstract"/> class that implements <see cref="IDomainEventNotification"/> with <see cref="DateTime.UtcNow"/> as default <see cref="OccuredOn"/> value.
+    /// This is the <see langword="abstract"/> class that implements <see cref="IDomainEventNotification"/> with <see cref="DateTime.UtcNow"/> as default <see cref="OccurredOn"/> value.
     /// </summary>
     public abstract class DomainEvent : IDomainEventNotification
     {
         /// <summary>
-        /// Initializes a default instance of the <see cref="DomainEvent"/> class assigning <see cref="DateTime.UtcNow"/> to the <see cref="OccuredOn"/> property.
+        /// Initializes a default instance of the <see cref="DomainEvent"/> class assigning <see cref="DateTime.UtcNow"/> to the <see cref="OccurredOn"/> property.
         /// </summary>
-        protected DomainEvent() => OccuredOn = DateTime.UtcNow;
+        protected DomainEvent() => OccurredOn = DateTime.UtcNow;
 
         /// <summary>
         /// Gets when the event occurred.
         /// </summary>
-        public DateTime OccuredOn { get; }
+        public DateTime OccurredOn { get; }
     }
 }

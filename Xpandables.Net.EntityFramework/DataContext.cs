@@ -58,7 +58,7 @@ namespace Xpandables.Net.CQRS
             where T : Entity
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return await selector(Set<T>()).FirstAsync(cancellationToken).ConfigureAwait(false);
+            return await selector(Set<T>()).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

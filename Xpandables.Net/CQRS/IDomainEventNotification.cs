@@ -27,6 +27,6 @@ namespace Xpandables.Net.CQRS
         /// <summary>
         /// Gets when the event occurred.
         /// </summary>
-        DateTime OccuredOn { get; }
+        DateTime OccurredOn { get; }
     }
 }
