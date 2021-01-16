@@ -29,13 +29,13 @@ namespace Xpandables.Net.CQRS
         /// <summary>
         /// Initializes a new instance of the <see cref="FailureOperationResult"/> class with <see cref="OperationStatus.Failure"/> status and <see cref="HttpStatusCode.BadRequest"/> status code.
         /// </summary>
-        public FailureOperationResult() : base(OperationStatus.Failure, HttpStatusCode.BadRequest) { }
+        public FailureOperationResult() : base(OperationStatus.Failure, HttpStatusCode.BadRequest, default!) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FailureOperationResult"/> class with <see cref="OperationStatus.Failure"/> status and the specified status code.
         /// </summary>
         /// <param name="statusCode">The HTTP operation status code.</param>
-        public FailureOperationResult(HttpStatusCode statusCode) : base(OperationStatus.Failure, statusCode) { }
+        public FailureOperationResult(HttpStatusCode statusCode) : base(OperationStatus.Failure, statusCode, default!) { }
 
         /// <summary>
         /// Initializes a new instance of th <see cref="FailureOperationResult"/> class with <see cref="OperationStatus.Failure"/> status and the errors collection.
@@ -75,7 +75,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="errorMessages">The array of error messages.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="errorMessages"/> is null.</exception>
-        public FailureOperationResult(HttpStatusCode statusCode, string key, params string[] errorMessages) : base(OperationStatus.Failure, statusCode, key, errorMessages) { }
+        public FailureOperationResult(HttpStatusCode statusCode, string key, params string[] errorMessages) : base(OperationStatus.Failure, statusCode, default!, key, errorMessages) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FailureOperationResult"/> class with <see cref="OperationStatus.Failure"/> status, the specified key and error messages and <see cref="HttpStatusCode.BadRequest"/> status code.
@@ -84,7 +84,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="errorMessages">The array of error messages.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="errorMessages"/> is null.</exception>
-        public FailureOperationResult(string key, params string[] errorMessages) : base(OperationStatus.Failure, HttpStatusCode.BadRequest, key, errorMessages) { }
+        public FailureOperationResult(string key, params string[] errorMessages) : base(OperationStatus.Failure, HttpStatusCode.BadRequest, default!, key, errorMessages) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FailureOperationResult"/> class with <see cref="OperationStatus.Failure"/> status, the specified key and exception.
@@ -94,7 +94,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="exception">The handled exception.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-        public FailureOperationResult(HttpStatusCode statusCode, string key, Exception exception) : base(OperationStatus.Failure, statusCode, key, exception) { }
+        public FailureOperationResult(HttpStatusCode statusCode, string key, Exception exception) : base(OperationStatus.Failure, statusCode, default!, key, exception) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FailureOperationResult"/> class with <see cref="OperationStatus.Failure"/> status, the specified key and exception and <see cref="HttpStatusCode.BadRequest"/> status code.
@@ -103,7 +103,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="exception">The handled exception.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-        public FailureOperationResult(string key, Exception exception) : base(OperationStatus.Failure, HttpStatusCode.BadRequest, key, exception) { }
+        public FailureOperationResult(string key, Exception exception) : base(OperationStatus.Failure, HttpStatusCode.BadRequest, default!, key, exception) { }
     }
 
     /// <summary>

@@ -55,10 +55,12 @@ namespace Xpandables.Net.Api
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
             {
                 options.UsePersistenceDecorator();
+                options.UseLoggingDecorator();
                 options.UseNotificationDecorator();
                 options.UseValidationDecorator();
             });
 
+            services.AddXLoggingProvider<LoggingService>();
             services.AddEntityAccessor();
 
             // uncomment to disable Interception

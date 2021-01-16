@@ -32,13 +32,13 @@ namespace Xpandables.Net.CQRS
         /// <summary>
         /// Initializes a new instance of the <see cref="SuccessOperationResult"/> class with <see cref="OperationStatus.Success"/> status and <see cref="HttpStatusCode.OK"/> status code.
         /// </summary>
-        public SuccessOperationResult() : base(OperationStatus.Success, HttpStatusCode.OK) { }
+        public SuccessOperationResult() : base(OperationStatus.Success, HttpStatusCode.OK, default!) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuccessOperationResult"/> class with <see cref="OperationStatus.Success"/> status.
         /// </summary>
         /// <param name="statusCode">The HTTP operation status code.</param>
-        public SuccessOperationResult(HttpStatusCode statusCode) : base(OperationStatus.Success, statusCode) { }
+        public SuccessOperationResult(HttpStatusCode statusCode) : base(OperationStatus.Success, statusCode, default!) { }
     }
 
     /// <summary>
@@ -62,6 +62,6 @@ namespace Xpandables.Net.CQRS
         /// </summary>
         /// <param name="statusCode">The HTTP operation status code.</param>
         /// <param name="value">The operation value.</param>
-        public SuccessOperationResult(HttpStatusCode statusCode, TValue value) : base(OperationStatus.Success, statusCode, value) { }    
+        public SuccessOperationResult(HttpStatusCode statusCode, TValue value) : base(OperationStatus.Success, statusCode, value) { }
     }
 }

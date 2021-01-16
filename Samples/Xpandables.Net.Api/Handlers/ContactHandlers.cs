@@ -35,8 +35,10 @@ namespace Xpandables.Net.Api.Handlers
             => _entityAccessor.SelectAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken);
 
         public async Task<IOperationResult<Contact>> HandleAsync(Select query, CancellationToken cancellationToken = default)
-            => new SuccessOperationResult<Contact>(
-                await _entityAccessor.FindAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken));
+        {
+            var found = await _entityAccessor.TryFindAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken).ConfigureAwait(false);
+            return found is not null ? new SuccessOperationResult<Contact>(found) : new FailureOperationResult<Contact>(System.Net.HttpStatusCode.NotFound);
+        }
 
         public async Task<IOperationResult<string>> HandleAsync(Add command, CancellationToken cancellationToken = default)
         {

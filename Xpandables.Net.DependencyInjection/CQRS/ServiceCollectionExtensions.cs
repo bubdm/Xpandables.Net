@@ -46,9 +46,15 @@ namespace Xpandables.Net.DependencyInjection
         public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
 
         /// <summary>
-        /// Enables notification behavior to commands that are decorated with the <see cref="INotificationDecorator"/> .
+        /// Enables notification behavior to commands that are decorated with the <see cref="INotificationDecorator"/>.
         /// </summary>
         public HandlerOptions UseNotificationDecorator() => this.With(cq => cq.IsNotificationEnabled = true);
+
+        /// <summary>
+        /// Enables logging behavior to commands/queries that are decorated with the <see cref="ILoggingDecorator"/> .
+        /// You must provide with an implementation of <see cref="ILoggingHandler"/>.
+        /// </summary>
+        public HandlerOptions UseLoggingDecorator() => this.With(cq => cq.IsLoggingEnabled = true);
 
         /// <summary>
         /// Enables correlation behavior to operations that are decorated with the <see cref="ICorrelationDecorator"/>.
@@ -57,6 +63,7 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Enables transaction behavior to commands that are decorated with the <see cref="ITransactionDecorator"/>.
+        /// You must provide with an implementation of <see cref="ITransactionScopeProvider"/>.
         /// </summary>
         public HandlerOptions UseTransactionDecorator() => this.With(cq => cq.IsTransactionEnabled = true);
 
@@ -66,6 +73,7 @@ namespace Xpandables.Net.DependencyInjection
         internal bool IsPersistenceEnabled { get; private set; }
         internal bool IsNotificationEnabled { get; private set; }
         internal bool IsCorrelationEnabled { get; private set; }
+        internal bool IsLoggingEnabled { get; private set; }
     }
 
     /// <summary>
@@ -115,6 +123,36 @@ namespace Xpandables.Net.DependencyInjection
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandCorrelationDecorator<,>));
             services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryCorrelationDecorator<,>));
             services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryCorrelationDecorator<,>));
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the logging type to the services.
+        /// </summary>
+        /// <typeparam name="THandlerLogger">The type handler logger.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXLoggingProvider<THandlerLogger>(this IServiceCollection services)
+            where THandlerLogger : class, ILoggingHandler
+        {
+            if (services is null) throw new ArgumentNullException(nameof(services));
+            return services.AddScoped<ILoggingHandler, THandlerLogger>();
+        }
+
+        /// <summary>
+        /// Adds logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/> to the services
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXLoggingDecorator(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryLoggingDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryLoggingDecorator<,>));
 
             return services;
         }
@@ -337,6 +375,9 @@ namespace Xpandables.Net.DependencyInjection
 
             var definedOptions = new HandlerOptions();
             configureOptions.Invoke(definedOptions);
+
+            if (definedOptions.IsLoggingEnabled)
+                services.AddXLoggingDecorator();
 
             if (definedOptions.IsCorrelationEnabled)
                 services.AddXCorrelationDecorator();
