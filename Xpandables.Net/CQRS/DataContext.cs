@@ -79,7 +79,7 @@ namespace Xpandables.Net.CQRS
         void IDisposable.Dispose() => _dataContext.Dispose();
         ValueTask IAsyncDisposable.DisposeAsync() => _dataContext.DisposeAsync();
         object IDataContext.InternalDbSet<T>() => _dataContext.InternalDbSet<T>();
-        void IDataContext.ClearNotifications() => _dataContext.ClearNotifications();
+        void IDataContext.ClearNotifications<TNotification>() => _dataContext.ClearNotifications<TNotification>();
         IReadOnlyCollection<INotification> IDataContext.Notifications => _dataContext.Notifications;
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

@@ -50,9 +50,10 @@ namespace Xpandables.Net.CQRS
         IReadOnlyCollection<INotification> Notifications { get; }
 
         /// <summary>
-        /// Clears all notifications found in tracked entities.
+        /// Clears all notifications found in tracked entities that match the type.
         /// </summary>
-        internal void ClearNotifications();
+        /// <typeparam name="TNotification">The type of notification to clear.</typeparam>
+        internal void ClearNotifications<TNotification>() where TNotification : INotification;
 
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="T"/> type specified by the selector.

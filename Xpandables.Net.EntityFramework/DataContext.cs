@@ -37,7 +37,6 @@ namespace Xpandables.Net.CQRS
         object IDataContext.InternalDbSet<T>() => Set<T>();
 
         private readonly List<INotification> _notifications = new();
-        private readonly HashSet<Entity> _notificationEntities = new();
 
         /// <summary>
         /// Contains all notifications (domain events and domain event notifications) from entities being tracked.

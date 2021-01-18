@@ -23,18 +23,18 @@ namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// This class allows the application author to add domain event handler support to command control flow.
-    /// The target command should implement the <see cref="IDomainEventDecorator"/> interface in order to activate the behavior.
+    /// The target command should implement the <see cref="IIntegrationEventDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/>, <see cref="INotificationDispatcher"/> and publishes all
-    /// the <see cref="IDomainEvent"/> before persistence and after decorated handler execution only
+    /// the <see cref="IIntegrationEvent"/> after persistence and after decorated handler execution only
     /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
     /// delegate command, in order to manage the exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
-    public sealed class CommandDomainEventDecorator<TCommand> : ICommandHandler<TCommand>
-        where TCommand : class, ICommand, IDomainEventDecorator
+    public sealed class CommandIntegrationEventDecorator<TCommand> : ICommandHandler<TCommand>
+        where TCommand : class, ICommand, IIntegrationEventDecorator
     {
         private readonly ICommandHandler<TCommand> _decoratee;
-        private readonly IDataContextEventPublisher<IDomainEvent> _dataContextEventPublisher;
+        private readonly IDataContextEventPublisher<IIntegrationEvent> _dataContextEventPublisher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandDomainEventDecorator{TCommand}"/> class with 
@@ -44,7 +44,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="dataContextEventPublisher">The notification dispatcher.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContextEventPublisher"/> is null.</exception>
-        public CommandDomainEventDecorator(ICommandHandler<TCommand> decoratee, IDataContextEventPublisher<IDomainEvent> dataContextEventPublisher)
+        public CommandIntegrationEventDecorator(ICommandHandler<TCommand> decoratee, IDataContextEventPublisher<IIntegrationEvent> dataContextEventPublisher)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _dataContextEventPublisher = dataContextEventPublisher ?? throw new ArgumentNullException(nameof(dataContextEventPublisher));
@@ -70,19 +70,19 @@ namespace Xpandables.Net.CQRS
 
     /// <summary>
     /// This class allows the application author to add domain event handler support to command control flow.
-    /// The target command should implement the <see cref="IDomainEventDecorator"/> interface in order to activate the behavior.
+    /// The target command should implement the <see cref="IIntegrationEventDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/>, <see cref="INotificationDispatcher"/> and publishes all
-    /// the <see cref="IDomainEvent"/> before persistence and after decorated handler execution only
+    /// the <see cref="IIntegrationEvent"/> after persistence and after decorated handler execution only
     /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
     /// delegate command, in order to manage the exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public sealed class CommandDomainEventDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
-        where TCommand : class, ICommand<TResult>, IDomainEventDecorator
+    public sealed class CommandIntegrationEventDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+        where TCommand : class, ICommand<TResult>, IIntegrationEventDecorator
     {
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
-        private readonly IDataContextEventPublisher<IDomainEvent> _dataContextEventPublisher;
+        private readonly IDataContextEventPublisher<IIntegrationEvent> _dataContextEventPublisher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandDomainEventDecorator{TCommand, TResult}"/> class with 
@@ -92,7 +92,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="dataContextEventPublisher">The notification dispatcher.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContextEventPublisher"/> is null.</exception>
-        public CommandDomainEventDecorator(ICommandHandler<TCommand, TResult> decoratee, IDataContextEventPublisher<IDomainEvent> dataContextEventPublisher)
+        public CommandIntegrationEventDecorator(ICommandHandler<TCommand, TResult> decoratee, IDataContextEventPublisher<IIntegrationEvent> dataContextEventPublisher)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _dataContextEventPublisher = dataContextEventPublisher ?? throw new ArgumentNullException(nameof(dataContextEventPublisher));

@@ -33,6 +33,15 @@ namespace Xpandables.Net.Api.Handlers
         }
     }
 
+    public sealed class ContactModelCreatedIntegrationHandler : INotificationHandler<ContactModelCreatedIntegration>
+    {
+        public Task HandleAsync(ContactModelCreatedIntegration notification, CancellationToken cancellationToken = default)
+        {
+            Trace.WriteLine($"A newly contact has been created with id : {notification.Id}");
+            return Task.CompletedTask;
+        }
+    }
+
     public sealed class ContactModelUpdatedNotificationHandler : INotificationHandler<ContactModelUpdatedNotification>
     {
         public Task HandleAsync(ContactModelUpdatedNotification notification, CancellationToken cancellationToken = default)

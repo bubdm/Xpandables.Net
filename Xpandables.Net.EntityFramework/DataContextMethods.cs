@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -69,7 +70,7 @@ namespace Xpandables.Net.CQRS
             return new ValueConverter<T, string>(convertToStringLamda, convertToEnumerationLamda);
         }
 
-        void IDataContext.ClearNotifications() => _notificationEntities.ForEach(entity => entity.ClearNotifications());
+        void IDataContext.ClearNotifications<TNotification>() => _notifications.RemoveAll(notif => typeof(TNotification).IsAssignableFrom(notif.GetType()));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataContext"/> class
@@ -90,7 +91,7 @@ namespace Xpandables.Net.CQRS
                       if (entity.Notifications.Count > 0)
                       {
                           _notifications.AddRange(entity.Notifications);
-                          _notificationEntities.Add(entity);
+                          entity.ClearNotifications();
                       }
                   }
               };
@@ -108,7 +109,7 @@ namespace Xpandables.Net.CQRS
                       if (entity.Notifications.Count > 0)
                       {
                           _notifications.AddRange(entity.Notifications);
-                          _notificationEntities.Add(entity);
+                          entity.ClearNotifications();
                       }
                   }
               };

@@ -55,8 +55,9 @@ namespace Xpandables.Net.Api
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
             {
                 options.UsePersistenceDecorator();
+                options.UseIntegrationEventDecorator();
                 options.UseLoggingDecorator();
-                options.UseNotificationDecorator();
+                options.UseDomainEventDecorator();
                 options.UseValidationDecorator();
             });
 

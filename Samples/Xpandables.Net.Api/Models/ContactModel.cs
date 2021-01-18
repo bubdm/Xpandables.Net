@@ -25,6 +25,7 @@ using Xpandables.Net.CQRS;
 namespace Xpandables.Net.Api.Models
 {
     public sealed record ContactModelCreatedNotification(string Id) : IDomainEvent { public DateTime OccurredOn => DateTime.UtcNow; }
+    public sealed record ContactModelCreatedIntegration(string Id) : IIntegrationEvent { public DateTime OccurredOn => DateTime.UtcNow; }
     public sealed record ContactModelUpdatedNotification(string Id, string? Name) : IDomainEvent { public DateTime OccurredOn => DateTime.UtcNow; };
 
     public sealed class ContactModel : Entity, IAggregateRoot
@@ -33,6 +34,7 @@ namespace Xpandables.Net.Api.Models
         {
             Update(name, city, address, country);
             AddNotification(new ContactModelCreatedNotification(Id));
+            AddNotification(new ContactModelCreatedIntegration(Id));
         }
 
         [MemberNotNull(nameof(Name), nameof(City), nameof(Address), nameof(Country))]

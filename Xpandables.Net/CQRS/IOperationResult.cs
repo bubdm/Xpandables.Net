@@ -243,7 +243,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="value">The value of the specific type.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
         protected OperationResult(OperationStatus state, HttpStatusCode statusCode, IReadOnlyCollection<OperationError> errors, TValue value)
-            : base(state, statusCode, errors) => Value = value;
+            : base(state, statusCode, errors, value!) => Value = value;
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult{TValue}"/> with the specified status, the specified error and the target value.

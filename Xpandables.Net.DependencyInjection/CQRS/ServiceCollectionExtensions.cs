@@ -46,9 +46,14 @@ namespace Xpandables.Net.DependencyInjection
         public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
 
         /// <summary>
-        /// Enables notification behavior to commands that are decorated with the <see cref="INotificationDecorator"/>.
+        /// Enables domain event behavior to commands that are decorated with the <see cref="IDomainEventDecorator"/>.
         /// </summary>
-        public HandlerOptions UseNotificationDecorator() => this.With(cq => cq.IsNotificationEnabled = true);
+        public HandlerOptions UseDomainEventDecorator() => this.With(cq => cq.IsDomainEventEnabled = true);
+
+        /// <summary>
+        /// Enables integration event behavior to commands that are decorated with the <see cref="IIntegrationEventDecorator"/>.
+        /// </summary>
+        public HandlerOptions UseIntegrationEventDecorator() => this.With(cq => cq.IsIntegrationEventEnabled = true);
 
         /// <summary>
         /// Enables logging behavior to commands/queries that are decorated with the <see cref="ILoggingDecorator"/> .
@@ -71,7 +76,8 @@ namespace Xpandables.Net.DependencyInjection
         internal bool IsVisitorEnabled { get; private set; }
         internal bool IsTransactionEnabled { get; private set; }
         internal bool IsPersistenceEnabled { get; private set; }
-        internal bool IsNotificationEnabled { get; private set; }
+        internal bool IsDomainEventEnabled { get; private set; }
+        internal bool IsIntegrationEventEnabled { get; private set; }
         internal bool IsCorrelationEnabled { get; private set; }
         internal bool IsLoggingEnabled { get; private set; }
     }
@@ -168,6 +174,7 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddScoped<IDispatcherHandlerProvider, DispatcherHandlerProvider>();
             services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
+            services.AddScoped(typeof(IDataContextEventPublisher<>), typeof(DataContextEventPublisher<>));
             services.AddScoped<IDispatcher, Dispatcher>();
             return services;
         }
@@ -189,6 +196,7 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddScoped<IDispatcherHandlerProvider, TDispatcherHandlerProvider>();
             services.AddScoped<INotificationDispatcher, TNotificationDispatcher>();
+            services.AddScoped(typeof(IDataContextEventPublisher<>), typeof(DataContextEventPublisher<>));
             services.AddScoped<IDispatcher, TDispatcher>();
             return services;
         }
@@ -239,17 +247,32 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds notification behavior to commands that are decorated with the <see cref="INotificationDecorator"/> to the services
+        /// Adds notification behavior to commands that are decorated with the <see cref="IDomainEventDecorator"/> to the services
         /// with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXNotificationDecorator(this IServiceCollection services)
+        public static IServiceCollection AddXDomainEventDecorator(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandDomainEventDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandDomainEventDecorator<,>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds notification behavior to commands that are decorated with the <see cref="IIntegrationEventDecorator"/> to the services
+        /// with transient life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXIntegrationEventDecorator(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandIntegrationEventDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandIntegrationEventDecorator<,>));
             return services;
         }
 
@@ -372,6 +395,7 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddXCommandHandlers(assemblies);
             services.AddXQueryHandlers(assemblies);
+            services.AddXNotificationHandlers(assemblies);
 
             var definedOptions = new HandlerOptions();
             configureOptions.Invoke(definedOptions);
@@ -388,11 +412,11 @@ namespace Xpandables.Net.DependencyInjection
             if (definedOptions.IsPersistenceEnabled)
                 services.AddXPersistenceDecorator();
 
-            if (definedOptions.IsNotificationEnabled)
-            {
-                services.AddXNotificationHandlers(assemblies);
-                services.AddXNotificationDecorator();
-            }
+            if (definedOptions.IsDomainEventEnabled)
+                services.AddXDomainEventDecorator();
+
+            if (definedOptions.IsIntegrationEventEnabled)
+                services.AddXIntegrationEventDecorator();
 
             if (definedOptions.IsVisitorEnabled)
             {

@@ -18,8 +18,14 @@
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// A marker interface that allows the command class to add notification and event notification decorator on the control flow before changes are committed.
-    /// You need to provides implementation of <see cref="INotificationHandler{TNotification}"/> and/or <see cref="IDomainEventNotificationHandler{TDomainEventNotification}"/>.
+    /// A marker interface that allows the command class to add domain event decorator on the control flow before changes are committed.
+    /// You need to provides implementation of <see cref="INotificationHandler{TNotification}"/>.
     /// </summary>
-    public interface INotificationDecorator { }
+    public interface IDomainEventDecorator { }
+
+    /// <summary>
+    /// A marker interface that allows the command class to add integration event decorator on the control flow after changes are committed.
+    /// You need to provides implementation of <see cref="INotificationHandler{TNotification}"/>.
+    /// </summary>
+    public interface IIntegrationEventDecorator { }
 }

@@ -74,7 +74,7 @@ namespace Xpandables.Net
         /// </summary>
         public DateTime? DeletedOn { get; protected set; }
 
-        private readonly HashSet<INotification> _notifications = new();
+        internal readonly HashSet<INotification> _notifications = new();
 
         /// <summary>
         /// Gets the collection of notifications occurred.
