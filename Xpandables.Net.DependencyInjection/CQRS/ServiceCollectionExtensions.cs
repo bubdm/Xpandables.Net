@@ -248,8 +248,8 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandNotificationDecorator<>));
-            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandNotificationDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandDomainEventDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandDomainEventDecorator<,>));
             return services;
         }
 
@@ -491,7 +491,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IValidation{TArgument}"/> to the services with transient life time.
+        /// Adds the <see cref="IValidator{TArgument}"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -504,8 +504,8 @@ namespace Xpandables.Net.DependencyInjection
 
             var genericValidators = assemblies.SelectMany(ass => ass.GetExportedTypes())
                 .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidation<>)))
-                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidation<>)) })
+                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidator<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidator<>)) })
                 .ToList();
 
             foreach (var validator in genericValidators)

@@ -15,6 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,29 +27,21 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// Defines method contracts used to validate a type-specific argument using a decorator.
-    /// The implementation must be thread-safe when working in a multi-threaded environment.
-    /// <para>Contains default implementation. You just need to override the method.</para>
+    /// Represents a helper class that allows implementation of the <see cref="IValidator{TArgument}"/>.
+    /// The default behavior uses <see cref="Validator.TryValidateObject(object, ValidationContext, ICollection{ValidationResult}?, bool)"/>.
     /// </summary>
-    /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
-    public interface IValidation<in TArgument>
+    /// <typeparam name="TArgument">Type of the argument.</typeparam>
+    public abstract class Validator<TArgument> : IValidator<TArgument>
         where TArgument : class
-    {
-        /// <summary>
-        /// Gets the zero-base order in which the validator will be executed.
-        /// The default value is zero.
-        /// </summary>
-        public virtual int Order => 0;
-
+    {     
         /// <summary>
         /// Asynchronously validates the argument and returns validation state with errors if necessary.
-        /// The default behavior uses <see cref="Validator.TryValidateObject(object, ValidationContext, ICollection{ValidationResult}?, bool)"/>.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
         /// <returns>Returns a result state that contains validation informations.</returns>
-        public virtual async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
+        public virtual async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken)
         {
             var validationResults = new List<ValidationResult>();
             if (!Validator.TryValidateObject(argument, new ValidationContext(argument, null, null), validationResults, true))

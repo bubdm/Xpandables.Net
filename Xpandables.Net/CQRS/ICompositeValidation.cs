@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +14,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
 {
@@ -28,29 +22,7 @@ namespace Xpandables.Net.CQRS
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
-    public interface ICompositeValidation<in TArgument> : IValidation<TArgument>
+    public interface ICompositeValidation<in TArgument> : IValidator<TArgument>
         where TArgument : class
-    {
-        internal IEnumerable<IValidation<TArgument>> ValidationInstances { get; }
-
-        /// <summary>
-        /// Asynchronously validates the argument and returns validation state with errors if necessary.
-        /// </summary>
-        /// <param name="argument">The target argument to be validated.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <returns>Returns a result state that contains validation informations.</returns>
-        public new virtual async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
-        {
-            foreach (var validator in ValidationInstances.OrderBy(o => o.Order))
-            {
-                if (cancellationToken.IsCancellationRequested) cancellationToken.ThrowIfCancellationRequested();
-                var result = await validator.ValidateAsync(argument, cancellationToken).ConfigureAwait(false);
-                if (result.IsFailure)
-                    return result;
-            }
-
-            return new SuccessOperationResult();
-        }
-    }
+    { }
 }

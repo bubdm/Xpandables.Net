@@ -20,9 +20,9 @@ using System;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as a event domain notification.
+    /// Defines a marker interface to be used to mark an object to act as a event domain.
     /// </summary>
-    public interface IDomainEventNotification : INotification
+    public interface IIntegrationEvent : INotification
     {
         /// <summary>
         /// Gets when the event occurred.

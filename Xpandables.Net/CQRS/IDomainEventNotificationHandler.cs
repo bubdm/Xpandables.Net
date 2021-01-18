@@ -23,7 +23,7 @@ namespace Xpandables.Net.CQRS
 {
     /// <summary>
     /// Allows an application author to define a handler for a domain event notification.
-    /// The event must implement <see cref="IDomainEventNotification"/> interface.
+    /// The event must implement <see cref="IDomainEvent"/> interface.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     public interface IDomainEventNotificationHandler : ICanHandle
@@ -39,12 +39,12 @@ namespace Xpandables.Net.CQRS
 
     /// <summary>
     /// Allows an application author to define a handler for specific type domain event notification.
-    /// The event must implement <see cref="IDomainEventNotification"/> interface.
+    /// The event must implement <see cref="IDomainEvent"/> interface.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     /// <typeparam name="TDomainEventNotification">The domain event notification type to be handled.</typeparam>
     public interface IDomainEventNotificationHandler<in TDomainEventNotification> : IDomainEventNotificationHandler, ICanHandle<TDomainEventNotification>
-        where TDomainEventNotification : class, IDomainEventNotification
+        where TDomainEventNotification : class, IDomainEvent
     {
         /// <summary>
         /// Asynchronously handles the domain event notification.

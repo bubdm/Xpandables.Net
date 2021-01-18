@@ -15,6 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
@@ -23,12 +24,14 @@ namespace Xpandables.Net.CQRS
     /// Validator when no explicit registration exist for a given type.
     /// </summary>
     /// <typeparam name="TArgument">Type of argument to be validated.</typeparam>
-    public sealed class NullValidation<TArgument> : IValidation<TArgument>
+    public sealed class NullValidation<TArgument> : IValidator<TArgument>
         where TArgument : class
     {
         /// <summary>
         /// Does nothing.
         /// </summary>
-        public async Task<IOperationResult> ValidateAsync(TArgument _) => await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
+        public async Task<IOperationResult> ValidateAsync(TArgument _, CancellationToken cancellationToken = default)
+            => await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
+
     }
 }

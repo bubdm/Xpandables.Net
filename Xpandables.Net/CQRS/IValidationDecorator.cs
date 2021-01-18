@@ -22,7 +22,7 @@ namespace Xpandables.Net.CQRS
     /// <see cref="IAsyncQuery{TResult}"/> class implementation will be decorated with <see cref="AsyncQueryValidatorDecorator{TQuery, TResult}"/> while
     /// <see cref="ICommand"/> class implementation will be decorated with <see cref="CommandValidatorDecorator{TCommand}"/>.
     /// The default validation behavior uses the data annotations validator on validation attributes. You can implement the interface
-    /// <see cref="IValidation{TArgument}"/> to customize a validation behavior.
+    /// <see cref="IValidator{TArgument}"/> to customize a validation behavior.
     /// </summary>
     public interface IValidationDecorator { }
 }

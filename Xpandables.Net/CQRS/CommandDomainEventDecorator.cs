@@ -23,15 +23,15 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// This class allows the application author to add notification handler support to command control flow.
+    /// This class allows the application author to add domain event handler support to command control flow.
     /// The target command should implement the <see cref="INotificationDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/>, <see cref="INotificationDispatcher"/> and publishes all
-    /// the <see cref="INotification"/> before persistence and after decorated handler execution only
+    /// the <see cref="IDomainEvent"/> before persistence and after decorated handler execution only
     /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
     /// delegate command, in order to manage the exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
-    public sealed class CommandNotificationDecorator<TCommand> : ICommandHandler<TCommand>
+    public sealed class CommandDomainEventDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : class, ICommand, INotificationDecorator
     {
         private readonly IDataContext _dataContext;
@@ -39,7 +39,7 @@ namespace Xpandables.Net.CQRS
         private readonly INotificationDispatcher _notificationDispatcher;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandNotificationDecorator{TCommand}"/> class with 
+        /// Initializes a new instance of the <see cref="CommandDomainEventDecorator{TCommand}"/> class with 
         /// the decorated handler, the notification dispatcher and the db context to act on.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
@@ -48,7 +48,7 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="notificationDispatcher"/> is null.</exception>
-        public CommandNotificationDecorator(IDataContext dataContext, ICommandHandler<TCommand> decoratee, INotificationDispatcher notificationDispatcher)
+        public CommandDomainEventDecorator(IDataContext dataContext, ICommandHandler<TCommand> decoratee, INotificationDispatcher notificationDispatcher)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
@@ -56,7 +56,7 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously handles the specified command and publishes notifications if there is no exception or error.
+        /// Asynchronously handles the specified command and publishes domain events if there is no exception or error.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -68,26 +68,27 @@ namespace Xpandables.Net.CQRS
             if (resultState.IsFailure)
                 return resultState;
 
-            var notificationTasks = _dataContext.Notifications
-                .Select(async notification => await _notificationDispatcher.PublishAsync(notification, cancellationToken).ConfigureAwait(false));
+            var domainEventTasks = _dataContext.Notifications
+                .OfType<IDomainEvent>()
+                .Select(async domainEvent => await _notificationDispatcher.PublishAsync(domainEvent, cancellationToken).ConfigureAwait(false));
 
             _dataContext.ClearNotifications();
-            await Task.WhenAll(notificationTasks).ConfigureAwait(false);
+            await Task.WhenAll(domainEventTasks).ConfigureAwait(false);
             return new SuccessOperationResult();
         }
     }
 
     /// <summary>
-    /// This class allows the application author to add notification handler support to command control flow.
+    /// This class allows the application author to add domain event handler support to command control flow.
     /// The target command should implement the <see cref="INotificationDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/>, <see cref="INotificationDispatcher"/> and publishes all
-    /// the <see cref="INotification"/> before persistence and after decorated handler execution only
+    /// the <see cref="IDomainEvent"/> before persistence and after decorated handler execution only
     /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
     /// delegate command, in order to manage the exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public sealed class CommandNotificationDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+    public sealed class CommandDomainEventDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
         where TCommand : class, ICommand<TResult>, INotificationDecorator
     {
         private readonly IDataContext _dataContext;
@@ -95,7 +96,7 @@ namespace Xpandables.Net.CQRS
         private readonly INotificationDispatcher _notificationDispatcher;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandNotificationDecorator{TCommand, TResult}"/> class with 
+        /// Initializes a new instance of the <see cref="CommandDomainEventDecorator{TCommand, TResult}"/> class with 
         /// the decorated handler, the notification dispatcher and the db context to act on.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
@@ -104,7 +105,7 @@ namespace Xpandables.Net.CQRS
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="notificationDispatcher"/> is null.</exception>
-        public CommandNotificationDecorator(IDataContext dataContext, ICommandHandler<TCommand, TResult> decoratee, INotificationDispatcher notificationDispatcher)
+        public CommandDomainEventDecorator(IDataContext dataContext, ICommandHandler<TCommand, TResult> decoratee, INotificationDispatcher notificationDispatcher)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
@@ -112,7 +113,7 @@ namespace Xpandables.Net.CQRS
         }
 
         /// <summary>
-        /// Asynchronously handles the specified command and publishes notifications if there is no exception or error.
+        /// Asynchronously handles the specified command and publishes domain events if there is no exception or error.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -124,11 +125,12 @@ namespace Xpandables.Net.CQRS
             if (resultState.IsFailure)
                 return resultState;
 
-            var notificationTasks = _dataContext.Notifications
-                .Select(async notification => await _notificationDispatcher.PublishAsync(notification, cancellationToken).ConfigureAwait(false));
+            var domainEventTasks = _dataContext.Notifications
+                .OfType<IDomainEvent>()
+                .Select(async domainEvent => await _notificationDispatcher.PublishAsync(domainEvent, cancellationToken).ConfigureAwait(false));
 
             _dataContext.ClearNotifications();
-            await Task.WhenAll(notificationTasks).ConfigureAwait(false);
+            await Task.WhenAll(domainEventTasks).ConfigureAwait(false);
             return resultState;
         }
     }

@@ -18,6 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
 {
@@ -26,17 +28,36 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated</typeparam>
     [Serializable]
-    public sealed class CompositeValidation<TArgument> : ICompositeValidation<TArgument>
+    public sealed class CompositeValidation<TArgument> : Validator<TArgument>, ICompositeValidation<TArgument>
         where TArgument : class
     {
-        private readonly IEnumerable<IValidation<TArgument>> _validationInstances;
-        IEnumerable<IValidation<TArgument>> ICompositeValidation<TArgument>.ValidationInstances => _validationInstances;
+        private readonly IEnumerable<IValidator<TArgument>> _validationInstances;
 
         /// <summary>
         /// Initializes the composite validation with all validation instances for the argument.
         /// </summary>
         /// <param name="validationInstances">The collection of validators to act with.</param>
-        public CompositeValidation(IEnumerable<IValidation<TArgument>> validationInstances)
-            => _validationInstances = validationInstances ?? Enumerable.Empty<IValidation<TArgument>>();
+        public CompositeValidation(IEnumerable<IValidator<TArgument>> validationInstances)
+            => _validationInstances = validationInstances ?? Enumerable.Empty<IValidator<TArgument>>();
+
+        /// <summary>
+        /// Asynchronously validates the argument and returns validation state with errors if necessary.
+        /// </summary>
+        /// <param name="argument">The target argument to be validated.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
+        /// <returns>Returns a result state that contains validation informations.</returns>
+        public override async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
+        {
+            foreach (var validator in _validationInstances.OrderBy(o => o.Order))
+            {
+                if (cancellationToken.IsCancellationRequested) cancellationToken.ThrowIfCancellationRequested();
+                var result = await validator.ValidateAsync(argument, cancellationToken).ConfigureAwait(false);
+                if (result.IsFailure)
+                    return result;
+            }
+
+            return new SuccessOperationResult();
+        }
     }
 }

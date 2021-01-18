@@ -28,7 +28,7 @@ namespace Xpandables.Net.CQRS
     /// The target query should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target query handler with an implementation of <see cref="ICompositeValidation{TArgument}"/>
     /// and applies all validators found for the target query before the command get handled. If a validator is failed, returns an empty enumerable.
-    /// You should provide with implementation of <see cref="IValidation{TArgument}"/> for validation.
+    /// You should provide with implementation of <see cref="IValidator{TArgument}"/> for validation.
     /// </summary>
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>

@@ -25,7 +25,7 @@ using Xpandables.Net.CQRS;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class ContactValidators : IValidation<Select>, IValidation<Add>, IValidation<Delete>, IValidation<Edit>
+    public sealed class ContactValidators : IValidator<Select>, IValidator<Add>, IValidator<Delete>, IValidator<Edit>
     {
         private readonly IEntityAccessor<ContactModel> _dataContext;
         public ContactValidators(IEntityAccessor<ContactModel> dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));

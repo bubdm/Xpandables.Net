@@ -27,7 +27,7 @@ namespace Xpandables.Net.CQRS
     /// The target command should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ICompositeValidation{TArgument}"/>
     /// and applies all validators found to the target command before the command get handled if there is no error. You should provide with implementation
-    /// of <see cref="IValidation{TArgument}"/> for validation.
+    /// of <see cref="IValidator{TArgument}"/> for validation.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
     public sealed class CommandValidatorDecorator<TCommand> : ICommandHandler<TCommand>
@@ -72,7 +72,7 @@ namespace Xpandables.Net.CQRS
     /// The target command should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ICompositeValidation{TArgument}"/>
     /// and applies all validators found to the target command before the command get handled if there is no error. You should provide with implementation
-    /// of <see cref="IValidation{TArgument}"/> for validation.
+    /// of <see cref="IValidator{TArgument}"/> for validation.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
