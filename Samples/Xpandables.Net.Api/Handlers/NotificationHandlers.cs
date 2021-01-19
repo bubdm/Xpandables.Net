@@ -15,6 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace Xpandables.Net.Api.Handlers
     {
         public Task HandleAsync(ContactModelCreatedNotification notification, CancellationToken cancellationToken = default)
         {
-            Trace.WriteLine($"A newly created contact with id : {notification.Id}");
+            Trace.WriteLine($"A newly created contact with id : {notification.Id} : {DateTime.Now.Ticks}");
             return Task.CompletedTask;
         }
     }
@@ -37,7 +38,7 @@ namespace Xpandables.Net.Api.Handlers
     {
         public Task HandleAsync(ContactModelCreatedIntegration notification, CancellationToken cancellationToken = default)
         {
-            Trace.WriteLine($"A newly contact has been created with id : {notification.Id}");
+            Trace.WriteLine($"A newly contact has been created with id : {notification.Id} {DateTime.Now.Ticks}");
             return Task.CompletedTask;
         }
     }
@@ -46,7 +47,7 @@ namespace Xpandables.Net.Api.Handlers
     {
         public Task HandleAsync(ContactModelUpdatedNotification notification, CancellationToken cancellationToken = default)
         {
-            Trace.WriteLine($"The contact with id '{notification.Id}' has changed name to : {notification.Name}");
+            Trace.WriteLine($"The contact with id '{notification.Id}' has changed name to : {notification.Name} {DateTime.Now}");
             return Task.CompletedTask;
         }
     }

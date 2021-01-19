@@ -396,39 +396,35 @@ namespace Xpandables.Net.DependencyInjection
             services.AddXCommandHandlers(assemblies);
             services.AddXQueryHandlers(assemblies);
             services.AddXNotificationHandlers(assemblies);
+            services.AddXValidations(assemblies);
+            services.AddXVisitors(assemblies);
 
             var definedOptions = new HandlerOptions();
             configureOptions.Invoke(definedOptions);
 
-            if (definedOptions.IsLoggingEnabled)
-                services.AddXLoggingDecorator();
-
-            if (definedOptions.IsCorrelationEnabled)
-                services.AddXCorrelationDecorator();
-
-            if (definedOptions.IsTransactionEnabled)
-                services.AddXTransactionDecorator();
+            if (definedOptions.IsDomainEventEnabled)
+                services.AddXDomainEventDecorator();
 
             if (definedOptions.IsPersistenceEnabled)
                 services.AddXPersistenceDecorator();
 
-            if (definedOptions.IsDomainEventEnabled)
-                services.AddXDomainEventDecorator();
-
             if (definedOptions.IsIntegrationEventEnabled)
                 services.AddXIntegrationEventDecorator();
 
-            if (definedOptions.IsVisitorEnabled)
-            {
-                services.AddXVisitors(assemblies);
-                services.AddXVisitorDecorator();
-            }
+            if (definedOptions.IsTransactionEnabled)
+                services.AddXTransactionDecorator();
 
             if (definedOptions.IsValidatorEnabled)
-            {
-                services.AddXValidations(assemblies);
                 services.AddXValidationDecorator();
-            }
+
+            if (definedOptions.IsVisitorEnabled)
+                services.AddXVisitorDecorator();
+
+            if (definedOptions.IsCorrelationEnabled)
+                services.AddXCorrelationDecorator();
+
+            if (definedOptions.IsLoggingEnabled)
+                services.AddXLoggingDecorator();
 
             return services;
         }
