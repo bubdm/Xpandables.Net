@@ -17,11 +17,11 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.2.11</Version>
-    <AssemblyVersion>5.2.11</AssemblyVersion>
-    <FileVersion>5.2.11</FileVersion>
-    <PackageVersion>5.2.11</PackageVersion>
-    <PackageReleaseNotes>Fix decorator registration</PackageReleaseNotes>
+    <Version>5.2.12</Version>
+    <AssemblyVersion>5.2.12</AssemblyVersion>
+    <FileVersion>5.2.12</FileVersion>
+    <PackageVersion>5.2.12</PackageVersion>
+    <PackageReleaseNotes>Fix operation result converter</PackageReleaseNotes>
     <PackageId>Xpandables.Net.DependencyInjection</PackageId>
     <PackageTags>XTryDecorate, XRegister.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
