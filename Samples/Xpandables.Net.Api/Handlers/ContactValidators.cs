@@ -32,28 +32,32 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult> ValidateAsync(Select argument, CancellationToken cancellationToken = default)
         {
-            if (await _dataContext.TryFindAsync(argument, cancellationToken).ConfigureAwait(false) is null)
+            var contact = await _dataContext.TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
+            if (contact is null)
                 return new FailureOperationResult(HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
             return new SuccessOperationResult();
         }
         public async Task<IOperationResult> ValidateAsync(Add argument, CancellationToken cancellationToken = default)
         {
-            if (await _dataContext.TryFindAsync(argument, cancellationToken).ConfigureAwait(false) is not null)
+            var contact = await _dataContext.TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
+            if (contact is not null)
                 return new FailureOperationResult(HttpStatusCode.BadRequest, nameof(argument.Name), "Contact already exist");
 
             return new SuccessOperationResult();
         }
         public async Task<IOperationResult> ValidateAsync(Delete argument, CancellationToken cancellationToken = default)
         {
-            if (await _dataContext.TryFindAsync(argument, cancellationToken).ConfigureAwait(false) is null)
+            var contact = await _dataContext.TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
+            if (contact is null)
                 return new FailureOperationResult(HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
             return new SuccessOperationResult();
         }
         public async Task<IOperationResult> ValidateAsync(Edit argument, CancellationToken cancellationToken = default)
         {
-            if (await _dataContext.TryFindAsync(argument, cancellationToken).ConfigureAwait(false) is not { } contact)
+            var contact = await _dataContext.TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
+            if (contact is null)
                 return new FailureOperationResult(HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
             argument.Name = contact.Name;

@@ -15,14 +15,13 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Linq;
-using System.Reflection;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Xpandables.Net.CQRS;
+
+using System;
+using System.Linq;
+using System.Reflection;
 
 namespace Xpandables.Net.CQRS
 {

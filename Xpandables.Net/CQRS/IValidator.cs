@@ -27,7 +27,7 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
     public interface IValidator<in TArgument>
-        where TArgument : class
+        where TArgument : notnull
     {
         /// <summary>
         /// Gets the zero-base order in which the validator will be executed.

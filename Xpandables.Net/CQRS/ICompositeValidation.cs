@@ -23,6 +23,6 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
     public interface ICompositeValidation<in TArgument> : IValidator<TArgument>
-        where TArgument : class
+        where TArgument : notnull
     { }
 }

@@ -62,7 +62,7 @@ namespace Xpandables.Net
         {
             _ = value ?? throw GetConvertFromException(value);
 
-            if (!(value is string source))
+            if (value is not string source)
             {
                 return base.ConvertFrom(context, culture, value)!;
             }
