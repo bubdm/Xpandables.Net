@@ -314,7 +314,7 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXCommandHandlers(this IServiceCollection services, Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             services.AddXCommandHandlerWrapper();
 
@@ -364,7 +364,7 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXNotificationHandlers(this IServiceCollection services, Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
                 .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
@@ -390,7 +390,7 @@ namespace Xpandables.Net.DependencyInjection
             this IServiceCollection services, Assembly[] assemblies, Action<HandlerOptions> configureOptions)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
-            if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
             if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
 
             services.AddXCommandHandlers(assemblies);
@@ -439,7 +439,7 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXQueryHandlers(this IServiceCollection services, Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             services.AddXQueryHandlerWrapper();
 
@@ -520,7 +520,7 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXValidations(this IServiceCollection services, Assembly[] assemblies)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
-            if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             var genericValidators = assemblies.SelectMany(ass => ass.GetExportedTypes())
                 .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
@@ -563,7 +563,7 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXVisitors(this IServiceCollection services, Assembly[] assemblies)
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
-            if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             var genericVisitors = assemblies.SelectMany(ass => ass.GetExportedTypes())
                 .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)

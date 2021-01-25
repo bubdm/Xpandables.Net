@@ -49,7 +49,7 @@ namespace Xpandables.Net.Http
                 return;
 
             if (disposing)
-                _httpRestClientHandler?.Dispose();
+                _httpRestClientHandler.Dispose();
 
             _isDisposed = true;
             base.Dispose(disposing);

@@ -115,7 +115,7 @@ namespace Xpandables.Net.DependencyInjection
             _ = interceptorType ?? throw new ArgumentNullException(nameof(interceptorType));
             if (!typeof(IInterceptor).IsAssignableFrom(interceptorType))
                 throw new ArgumentException($"{nameof(interceptorType)} must implement {nameof(IInterceptor)}.");
-            if (assemblies?.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
 
             var genericInterfaceTypes = new[] { typeof(IQueryHandler<,>), typeof(ICommandHandler<>), typeof(ICommandHandler<,>), typeof(INotificationHandler<>) };
             foreach (var genericInterfaceType in genericInterfaceTypes)

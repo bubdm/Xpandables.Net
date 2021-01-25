@@ -67,11 +67,11 @@ namespace Xpandables.Net.Http
 
         protected override async Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source, CancellationToken cancellationToken)
         {
-            ValidateInterfaceImplementation<IStreamRequest>(source, false);
+            ValidateInterfaceImplementation<IStreamRequest>(source);
             object streamContent = source is IStreamRequest streamRequest ? streamRequest.GetStreamContent() : source;
 
             var memoryStream = new MemoryStream();
-            using var streamWriter = new StreamWriter(memoryStream, new UTF8Encoding(false), 1028, true);
+            await using var streamWriter = new StreamWriter(memoryStream, new UTF8Encoding(false), 1028, true);
             using var jsonTextWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.None };
             Newtonsoft.Json.JsonSerializer.CreateDefault().Serialize(jsonTextWriter, streamContent);
             await jsonTextWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
@@ -88,9 +88,9 @@ namespace Xpandables.Net.Http
             using var jsonTextReader = new JsonTextReader(streamReader);
             while (await jsonTextReader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                if (jsonTextReader.TokenType == JsonToken.StartObject)
-                    if (jsonSerializer.Deserialize<TResult>(jsonTextReader) is TResult result)
-                        yield return result;
+                if (jsonTextReader.TokenType != JsonToken.StartObject) continue;
+                if (jsonSerializer.Deserialize<TResult>(jsonTextReader) is { } result)
+                    yield return result;
             }
         }
     }

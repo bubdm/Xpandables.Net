@@ -20,7 +20,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -28,10 +27,10 @@ namespace Xpandables.Net.CQRS
 {
     public abstract partial class DataContext : DbContext
     {
-        private static readonly MethodInfo convertToStringMethodInfo =
+        private static readonly MethodInfo ConvertToStringMethodInfo =
         typeof(DataContext).GetMethod(nameof(ConvertEnumerationToString), BindingFlags.NonPublic | BindingFlags.Static)!;
 
-        private static readonly MethodInfo convertToEnumerationMethodInfo =
+        private static readonly MethodInfo ConvertToEnumerationMethodInfo =
             typeof(DataContext).GetMethod(nameof(ConvertStringToEnumeration), BindingFlags.NonPublic | BindingFlags.Static)!;
 
         private static string ConvertEnumerationToString<T>(T enumeration)
@@ -40,14 +39,14 @@ namespace Xpandables.Net.CQRS
         private static T ConvertStringToEnumeration<T>(string displayName)
             where T : EnumerationType => EnumerationType.FromName<T>(displayName)!;
 
-        private static Expression<Func<T, U>> ConverterMethodToLambdaExpression<T, U>(
+        private static Expression<Func<T, TU>> ConverterMethodToLambdaExpression<T, TU>(
             MethodInfo methodInfo,
             string argumentName)
         {
-            methodInfo = methodInfo.MakeGenericMethod(new Type[] { typeof(T) == typeof(string) ? typeof(U) : typeof(T) });
+            methodInfo = methodInfo.MakeGenericMethod(typeof(T) == typeof(string) ? typeof(TU) : typeof(T));
             var param = Expression.Parameter(typeof(T), argumentName);
-            var methodCall = Expression.Call(null, methodInfo, new Expression[] { param });
-            return Expression.Lambda<Func<T, U>>(methodCall, new ParameterExpression[] { param });
+            var methodCall = Expression.Call(null, methodInfo, param);
+            return Expression.Lambda<Func<T, TU>>(methodCall, new[] { param });
         }
 
         /// <summary>
@@ -60,14 +59,14 @@ namespace Xpandables.Net.CQRS
         protected static ValueConverter<T, string> EnumerationConverter<T>()
             where T : EnumerationType
         {
-            var convertToStringLamda = ConverterMethodToLambdaExpression<T, string>(
-                convertToStringMethodInfo,
+            var convertToStringLambda = ConverterMethodToLambdaExpression<T, string>(
+                ConvertToStringMethodInfo,
                 "enumeration");
-            var convertToEnumerationLamda = ConverterMethodToLambdaExpression<string, T>(
-                convertToEnumerationMethodInfo,
+            var convertToEnumerationLambda = ConverterMethodToLambdaExpression<string, T>(
+                ConvertToEnumerationMethodInfo,
                 "displayName");
 
-            return new ValueConverter<T, string>(convertToStringLamda, convertToEnumerationLamda);
+            return new ValueConverter<T, string>(convertToStringLambda, convertToEnumerationLambda);
         }
 
         void IDataContext.ClearNotifications<TNotification>() => _notifications.RemoveAll(notif => typeof(TNotification).IsAssignableFrom(notif.GetType()));
@@ -83,36 +82,32 @@ namespace Xpandables.Net.CQRS
             : base(contextOptions)
         {
             ChangeTracker.Tracked += (sender, e) =>
-              {
-                  if (!e.FromQuery && e.Entry.State == EntityState.Added && e.Entry.Entity is Entity entity)
-                  {
-                      entity.SetCreationDate(DateTime.UtcNow);
+            {
+                if (e.FromQuery || e.Entry.State != EntityState.Added || e.Entry.Entity is not Entity entity) return;
 
-                      if (entity.Notifications.Count > 0)
-                      {
-                          _notifications.AddRange(entity.Notifications);
-                          entity.ClearNotifications();
-                      }
-                  }
-              };
+                entity.SetCreationDate(DateTime.UtcNow);
+
+                if (entity.Notifications.Count <= 0) return;
+
+                _notifications.AddRange(entity.Notifications);
+                entity.ClearNotifications();
+            };
 
             ChangeTracker.StateChanged += (sender, e) =>
-              {
-                  if (e.NewState == EntityState.Modified && e.Entry.Entity is Entity entity)
-                  {
-                      var date = DateTime.UtcNow;
-                      entity.SetUpdateDate(date);
+            {
+                if (e.NewState != EntityState.Modified || e.Entry.Entity is not Entity entity) return;
 
-                      if (entity.IsDeleted)
-                          entity.SetDeleteDate(date);
+                var date = DateTime.UtcNow;
+                entity.SetUpdateDate(date);
 
-                      if (entity.Notifications.Count > 0)
-                      {
-                          _notifications.AddRange(entity.Notifications);
-                          entity.ClearNotifications();
-                      }
-                  }
-              };
+                if (entity.IsDeleted)
+                    entity.SetDeleteDate(date);
+
+                if (entity.Notifications.Count <= 0) return;
+
+                _notifications.AddRange(entity.Notifications);
+                entity.ClearNotifications();
+            };
         }
     }
 }

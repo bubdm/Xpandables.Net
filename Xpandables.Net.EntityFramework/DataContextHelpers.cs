@@ -22,6 +22,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Xpandables.Net.CQRS;
 
 namespace Xpandables.Net.CQRS
 {

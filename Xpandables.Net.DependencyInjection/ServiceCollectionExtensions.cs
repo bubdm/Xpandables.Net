@@ -514,7 +514,7 @@ namespace Xpandables.Net.DependencyInjection
             this ServiceDescriptor descriptor,
             Type decoratorType)
             => descriptor.WithFactory(
-                provider => ActivatorUtilities.CreateInstance(provider, decoratorType, new object[] { provider.GetInstance(descriptor) }));
+                provider => ActivatorUtilities.CreateInstance(provider, decoratorType, provider.GetInstance(descriptor)));
 
         private static ServiceDescriptor DecorateDescriptor<TService>(
             this ServiceDescriptor descriptor,
@@ -550,7 +550,7 @@ namespace Xpandables.Net.DependencyInjection
             if (descriptor.ImplementationFactory is { })
                 return descriptor.ImplementationFactory(serviceProvider);
 
-            throw new InvalidOperationException($"Unable to get instance from descriptor.");
+            throw new InvalidOperationException("Unable to get instance from descriptor.");
         }
     }
 }

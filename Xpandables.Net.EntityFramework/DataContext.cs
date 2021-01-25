@@ -26,6 +26,8 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
+using Xpandables.Net.CQRS;
+
 namespace Xpandables.Net.CQRS
 {
     /// <summary>
@@ -169,10 +171,11 @@ namespace Xpandables.Net.CQRS
         public virtual async Task AddEntityRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
             where T : Entity
         {
-            if (entities?.Any() != true)
+            var enumerable = entities as T[] ?? entities.ToArray();
+            if (enumerable.Any() != true)
                 throw new ArgumentNullException(nameof(entities));
 
-            await AddRangeAsync(entities, cancellationToken).ConfigureAwait(false);
+            await AddRangeAsync(enumerable, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -245,18 +248,17 @@ namespace Xpandables.Net.CQRS
             where T : Entity
             where TUpdated : Entity
         {
-            if (updatedEntities?.Any() != true)
+            var enumerable = updatedEntities as TUpdated[] ?? updatedEntities.ToArray();
+            if (enumerable.Any() != true)
                 throw new ArgumentNullException(nameof(updatedEntities));
 
-            foreach (var updatedEntity in updatedEntities)
+            foreach (var updatedEntity in enumerable)
             {
-                if (await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(Set<T>(),
-                    entity => entity.Id == updatedEntity.Id, cancellationToken)
-                    .ConfigureAwait(false) is T entity)
-                {
-                    Entry(entity).CurrentValues.SetValues(updatedEntity);
-                    Entry(entity).State = EntityState.Modified;
-                }
+                if (await Set<T>().FirstOrDefaultAsync(e => e.Id == updatedEntity.Id, cancellationToken)
+                    .ConfigureAwait(false) is not { } entity) continue;
+
+                Entry(entity).CurrentValues.SetValues(updatedEntity);
+                Entry(entity).State = EntityState.Modified;
             }
         }
 
