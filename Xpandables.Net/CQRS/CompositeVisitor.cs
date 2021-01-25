@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Xpandables.Net.CQRS
 {
@@ -38,6 +37,6 @@ namespace Xpandables.Net.CQRS
         /// </summary>
         /// <param name="visitors">The collection of visitors for a specific type.</param>
         public CompositeVisitor(IEnumerable<IVisitor<TElement>> visitors)
-            => _visitorInstances = visitors ?? Enumerable.Empty<IVisitor<TElement>>();
+            => _visitorInstances = visitors;
     }
 }

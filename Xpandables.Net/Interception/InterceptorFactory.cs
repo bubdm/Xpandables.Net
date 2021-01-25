@@ -54,10 +54,10 @@ namespace Xpandables.Net.Interception
             _ = instance ?? throw new ArgumentNullException(nameof(instance));
 
             var proxyType = typeof(InterceptorProxy<>)
-                .MakeGenericType(new Type[] { interfaceType })
+                .MakeGenericType(interfaceType)
                 .GetMethod("Create", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)!;
 
-            return proxyType.Invoke(null, new object[] { instance, interceptor })!;
+            return proxyType.Invoke(null, new[] { instance, interceptor })!;
         }
     }
 }

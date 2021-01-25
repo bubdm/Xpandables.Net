@@ -44,7 +44,7 @@ namespace Xpandables.Net.CQRS
     /// <summary>
     /// Provides with extension methods to access <see cref="ICommandQueryNotification"/> members.
     /// </summary>
-    public static class ICommandQueryNotificationExtensions
+    public static class CommandQueryNotificationExtensions
     {
         /// <summary>
         /// Returns the <see cref="System.Guid"/> of the current object.

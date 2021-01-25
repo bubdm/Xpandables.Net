@@ -27,7 +27,7 @@ namespace Xpandables.Net.Expressions
     /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
     /// <typeparam name="TResult">The type of the result of expression.</typeparam>
     public abstract class QueryExpression<TSource, TResult> : IQueryExpression<TSource, TResult>
-        where TSource : class
+        where TSource : notnull
     {
         /// <summary>
         /// Gets the expression tree for the underlying instance.
@@ -41,7 +41,7 @@ namespace Xpandables.Net.Expressions
         /// <returns><see cref="int"/> value.</returns>
         public override int GetHashCode()
         {
-            int hash = GetExpression().GetHashCode();
+            var hash = GetExpression().GetHashCode();
             hash = hash * 17 + GetExpression().Parameters.Count;
             foreach (var param in GetExpression().Parameters)
             {
@@ -60,10 +60,7 @@ namespace Xpandables.Net.Expressions
         public override bool Equals(object? obj)
         {
             if (obj is not QueryExpression<TSource, TResult> objVal) return false;
-            if (ReferenceEquals(this, objVal)) return true;
-
-            return
-                ExpressionComparer.AreEqual(GetExpression(), objVal.GetExpression());
+            return ReferenceEquals(this, objVal) || ExpressionComparer.AreEqual(GetExpression(), objVal.GetExpression());
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -131,7 +128,7 @@ namespace Xpandables.Net.Expressions
     /// </summary>
     /// <typeparam name="TSource">The data source type.</typeparam>
     public class QueryExpression<TSource> : QueryExpression<TSource, bool>, IQueryExpression<TSource>
-        where TSource : class
+        where TSource : notnull
     {
         /// <summary>
         /// When implemented in derived class, this method will return the expression

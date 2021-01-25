@@ -18,20 +18,18 @@
 using System;
 using System.Net.Http;
 
-using Xpandables.Net.Http.Network;
-
 namespace Xpandables.Net.Http
 {
     /// <summary>
-    /// Default implementation for <see cref="IHttpIPAddressLocationAccessor"/> using <see cref="Newtonsoft"/>.
+    /// Default implementation for <see cref="IHttpIpAddressLocationAccessor"/> using <see cref="Newtonsoft"/>.
     /// </summary>
-    public sealed class HttpIPAddressLocationAccessorUsingNewtonsoft : Disposable, IHttpIPAddressLocationAccessor
+    public sealed class HttpIPAddressLocationAccessorUsingNewtonsoft : Disposable, IHttpIpAddressLocationAccessor
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
-        IHttpRestClientHandler IHttpIPAddressLocationAccessor.HttpRestClientHandler => _httpRestClientHandler;
+        IHttpRestClientHandler IHttpIpAddressLocationAccessor.HttpRestClientHandler => _httpRestClientHandler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpIPAddressLocationAccessor"/> class that uses the http://api.ipstack.com to retrieve the user location.
+        /// Initializes a new instance of the <see cref="HttpIpAddressLocationAccessor"/> class that uses the http://api.ipstack.com to retrieve the user location.
         /// </summary>
         public HttpIPAddressLocationAccessorUsingNewtonsoft(HttpClient httpClient)
         {

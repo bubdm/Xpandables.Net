@@ -22,15 +22,15 @@ using System.Globalization;
 
 using Xpandables.Net.CQRS;
 
-namespace Xpandables.Net.Http.Network
+namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Represents a query to request IP Address Geo-location.
     /// </summary>
-    public class IPAddressLocationRequest : IQuery<GeoLocation>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
+    public class IpAddressLocationRequest : IQuery<GeoLocation>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="IPAddressLocationRequest"/> class with IP address to locate.
+        /// Initializes a new instance of the <see cref="IpAddressLocationRequest"/> class with IP address to locate.
         /// </summary>
         /// <param name="ipAddress">The target IP address.</param>
         /// <param name="accessKey">Your security access key for the http://api.ipstack.com .</param>
@@ -40,7 +40,7 @@ namespace Xpandables.Net.Http.Network
         /// <param name="language">The output language, the default is <see cref="LocationLanguage.EnglishUS"/></param>
         /// <exception cref="ArgumentNullException">The <paramref name="ipAddress"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="accessKey"/> is null.</exception>
-        public IPAddressLocationRequest(
+        public IpAddressLocationRequest(
             string ipAddress,
             string accessKey,
             int enableSecurity = 0,
@@ -79,12 +79,12 @@ namespace Xpandables.Net.Http.Network
         /// <summary>
         /// Gets the request output format.
         /// </summary>
-        public LocationOutput Output { get; } = LocationOutput.Json;
+        public LocationOutput Output { get; }
 
         /// <summary>
         /// Gets the request language.
         /// </summary>
-        public LocationLanguage Language { get; } = LocationLanguage.EnglishUS;
+        public LocationLanguage Language { get; }
 
         /// <summary>
         /// Returns the <see cref="HttpRestClientAttribute" /> to be applied on the current instance.

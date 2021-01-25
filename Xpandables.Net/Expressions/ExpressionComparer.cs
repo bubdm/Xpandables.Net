@@ -29,13 +29,13 @@ namespace Xpandables.Net.Expressions
     public class ScopedDictionary<TKey, TValue>
         where TKey : notnull
     {
-        readonly ScopedDictionary<TKey, TValue> previous;
-        readonly Dictionary<TKey, TValue> map;
+        readonly ScopedDictionary<TKey, TValue> _previous;
+        readonly Dictionary<TKey, TValue> _map;
 
         public ScopedDictionary(ScopedDictionary<TKey, TValue> previous)
         {
-            this.previous = previous;
-            map = new Dictionary<TKey, TValue>();
+            this._previous = previous;
+            _map = new Dictionary<TKey, TValue>();
         }
 
         public ScopedDictionary(ScopedDictionary<TKey, TValue> previous, IEnumerable<KeyValuePair<TKey, TValue>> pairs)
@@ -45,17 +45,17 @@ namespace Xpandables.Net.Expressions
 
             foreach (var p in pairs)
             {
-                map.Add(p.Key, p.Value);
+                _map.Add(p.Key, p.Value);
             }
         }
 
-        public void Add(TKey key, TValue value) => map.Add(key, value);
+        public void Add(TKey key, TValue value) => _map.Add(key, value);
 
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
-            for (ScopedDictionary<TKey, TValue> scope = this; scope != null; scope = scope.previous)
+            for (ScopedDictionary<TKey, TValue> scope = this; scope != null; scope = scope._previous)
             {
-                if (scope.map.TryGetValue(key, out value))
+                if (scope._map.TryGetValue(key, out value))
                     return true;
             }
             value = default;
@@ -64,9 +64,9 @@ namespace Xpandables.Net.Expressions
 
         public bool ContainsKey(TKey key)
         {
-            for (ScopedDictionary<TKey, TValue> scope = this; scope != null; scope = scope.previous)
+            for (ScopedDictionary<TKey, TValue> scope = this; scope != null; scope = scope._previous)
             {
-                if (scope.map.ContainsKey(key))
+                if (scope._map.ContainsKey(key))
                     return true;
             }
             return false;
@@ -106,73 +106,24 @@ namespace Xpandables.Net.Expressions
                 return false;
             if (a.Type != b.Type)
                 return false;
-            switch (a.NodeType)
+            return a.NodeType switch
             {
-                case ExpressionType.Negate:
-                case ExpressionType.NegateChecked:
-                case ExpressionType.Not:
-                case ExpressionType.Convert:
-                case ExpressionType.ConvertChecked:
-                case ExpressionType.ArrayLength:
-                case ExpressionType.Quote:
-                case ExpressionType.TypeAs:
-                case ExpressionType.UnaryPlus:
-                    return CompareUnary((UnaryExpression)a, (UnaryExpression)b);
-                case ExpressionType.Add:
-                case ExpressionType.AddChecked:
-                case ExpressionType.Subtract:
-                case ExpressionType.SubtractChecked:
-                case ExpressionType.Multiply:
-                case ExpressionType.MultiplyChecked:
-                case ExpressionType.Divide:
-                case ExpressionType.Modulo:
-                case ExpressionType.And:
-                case ExpressionType.AndAlso:
-                case ExpressionType.Or:
-                case ExpressionType.OrElse:
-                case ExpressionType.LessThan:
-                case ExpressionType.LessThanOrEqual:
-                case ExpressionType.GreaterThan:
-                case ExpressionType.GreaterThanOrEqual:
-                case ExpressionType.Equal:
-                case ExpressionType.NotEqual:
-                case ExpressionType.Coalesce:
-                case ExpressionType.ArrayIndex:
-                case ExpressionType.RightShift:
-                case ExpressionType.LeftShift:
-                case ExpressionType.ExclusiveOr:
-                case ExpressionType.Power:
-                    return CompareBinary((BinaryExpression)a, (BinaryExpression)b);
-                case ExpressionType.TypeIs:
-                    return CompareTypeIs((TypeBinaryExpression)a, (TypeBinaryExpression)b);
-                case ExpressionType.Conditional:
-                    return CompareConditional((ConditionalExpression)a, (ConditionalExpression)b);
-                case ExpressionType.Constant:
-                    return CompareConstant((ConstantExpression)a, (ConstantExpression)b);
-                case ExpressionType.Parameter:
-                    return CompareParameter((ParameterExpression)a, (ParameterExpression)b);
-                case ExpressionType.MemberAccess:
-                    return CompareMemberAccess((MemberExpression)a, (MemberExpression)b);
-                case ExpressionType.Call:
-                    return CompareMethodCall((MethodCallExpression)a, (MethodCallExpression)b);
-                case ExpressionType.Lambda:
-                    return CompareLambda((LambdaExpression)a, (LambdaExpression)b);
-                case ExpressionType.New:
-                    return CompareNew((NewExpression)a, (NewExpression)b);
-                case ExpressionType.NewArrayInit:
-                case ExpressionType.NewArrayBounds:
-                    return CompareNewArray((NewArrayExpression)a, (NewArrayExpression)b);
-                case ExpressionType.Invoke:
-                    return CompareInvocation((InvocationExpression)a, (InvocationExpression)b);
-                case ExpressionType.MemberInit:
-                    return CompareMemberInit((MemberInitExpression)a, (MemberInitExpression)b);
-                case ExpressionType.ListInit:
-                    return CompareListInit((ListInitExpression)a, (ListInitExpression)b);
-                default:
-#pragma warning disable CA1305 // Specify IFormatProvider
-                    throw new ArgumentException(string.Format("Unhandled expression type: '{0}'", a.NodeType));
-#pragma warning restore CA1305 // Specify IFormatProvider
-            }
+                ExpressionType.Negate or ExpressionType.NegateChecked or ExpressionType.Not or ExpressionType.Convert or ExpressionType.ConvertChecked or ExpressionType.ArrayLength or ExpressionType.Quote or ExpressionType.TypeAs or ExpressionType.UnaryPlus => CompareUnary((UnaryExpression)a, (UnaryExpression)b),
+                ExpressionType.Add or ExpressionType.AddChecked or ExpressionType.Subtract or ExpressionType.SubtractChecked or ExpressionType.Multiply or ExpressionType.MultiplyChecked or ExpressionType.Divide or ExpressionType.Modulo or ExpressionType.And or ExpressionType.AndAlso or ExpressionType.Or or ExpressionType.OrElse or ExpressionType.LessThan or ExpressionType.LessThanOrEqual or ExpressionType.GreaterThan or ExpressionType.GreaterThanOrEqual or ExpressionType.Equal or ExpressionType.NotEqual or ExpressionType.Coalesce or ExpressionType.ArrayIndex or ExpressionType.RightShift or ExpressionType.LeftShift or ExpressionType.ExclusiveOr or ExpressionType.Power => CompareBinary((BinaryExpression)a, (BinaryExpression)b),
+                ExpressionType.TypeIs => CompareTypeIs((TypeBinaryExpression)a, (TypeBinaryExpression)b),
+                ExpressionType.Conditional => CompareConditional((ConditionalExpression)a, (ConditionalExpression)b),
+                ExpressionType.Constant => CompareConstant((ConstantExpression)a, (ConstantExpression)b),
+                ExpressionType.Parameter => CompareParameter((ParameterExpression)a, (ParameterExpression)b),
+                ExpressionType.MemberAccess => CompareMemberAccess((MemberExpression)a, (MemberExpression)b),
+                ExpressionType.Call => CompareMethodCall((MethodCallExpression)a, (MethodCallExpression)b),
+                ExpressionType.Lambda => CompareLambda((LambdaExpression)a, (LambdaExpression)b),
+                ExpressionType.New => CompareNew((NewExpression)a, (NewExpression)b),
+                ExpressionType.NewArrayInit or ExpressionType.NewArrayBounds => CompareNewArray((NewArrayExpression)a, (NewArrayExpression)b),
+                ExpressionType.Invoke => CompareInvocation((InvocationExpression)a, (InvocationExpression)b),
+                ExpressionType.MemberInit => CompareMemberInit((MemberInitExpression)a, (MemberInitExpression)b),
+                ExpressionType.ListInit => CompareListInit((ListInitExpression)a, (ListInitExpression)b),
+                _ => throw new ArgumentException($"Unhandled expression type: '{a.NodeType}'"),
+            };
         }
 
         protected virtual bool CompareUnary(UnaryExpression a, UnaryExpression b) => a.NodeType == b.NodeType
@@ -195,7 +146,7 @@ namespace Xpandables.Net.Expressions
         protected virtual bool CompareConditional(ConditionalExpression a, ConditionalExpression b)
             => Compare(a.Test, b.Test) && Compare(a.IfTrue, b.IfTrue) && Compare(a.IfFalse, b.IfFalse);
 
-        protected virtual bool CompareConstant(ConstantExpression a, ConstantExpression b) => (_fnCompare != null) ? _fnCompare(a.Value, b.Value) : Equals(a.Value, b.Value);
+        protected virtual bool CompareConstant(ConstantExpression a, ConstantExpression b) => _fnCompare?.Invoke(a.Value, b.Value) ?? Equals(a.Value, b.Value);
 
         protected virtual bool CompareParameter(ParameterExpression a, ParameterExpression b)
         {

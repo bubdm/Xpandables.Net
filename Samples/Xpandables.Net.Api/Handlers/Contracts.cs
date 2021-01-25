@@ -24,7 +24,7 @@ using Xpandables.Net.Api.Models;
 using Xpandables.Net.CQRS;
 using Xpandables.Net.Expressions.Records;
 using Xpandables.Net.Http;
-using Xpandables.Net.Http.Network;
+using Xpandables.Net.Interception;
 
 namespace Xpandables.Net.Api.Handlers
 {

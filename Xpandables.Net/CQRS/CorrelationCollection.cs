@@ -35,7 +35,7 @@ namespace Xpandables.Net.CQRS
         /// class that is empty, has the default concurrency level, has the default initial
         /// capacity, and uses the default comparer for the key type.
         /// </summary>
-        public CorrelationCollection() : base() { }
+        public CorrelationCollection() { }
 
         /// <summary>
         /// Returns an enumerator that iterates asynchronously through the current collection.

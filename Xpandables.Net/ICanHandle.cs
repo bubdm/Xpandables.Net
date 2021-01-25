@@ -37,7 +37,7 @@ namespace Xpandables.Net
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to handle.</typeparam>
     public interface ICanHandle<in TArgument> : ICanHandle
-        where TArgument : class
+        where TArgument : notnull
     {
         /// <summary>
         /// Determines whether or not a type specific argument can be handled by the underlying context.

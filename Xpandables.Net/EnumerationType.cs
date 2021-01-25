@@ -75,12 +75,19 @@ namespace Xpandables.Net
         {
             _ = enumerationType ?? throw new ArgumentNullException(nameof(enumerationType));
             if (enumerationType.IsSubclassOf(typeof(EnumerationType)) is false)
-                throw new ArgumentException($"The type is not a subclass of {typeof(EnumerationType)}", nameof(enumerationType));
+                throw new ArgumentException($@"The type is not a subclass of {typeof(EnumerationType)}", nameof(enumerationType));
 
-            return from info in enumerationType
-                .GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Instance)
-                   where info.PropertyType.IsSubclassOf(typeof(EnumerationType)) && info.GetGetMethod() is not null
-                   select info.GetValue(null);
+            var properties = enumerationType
+                .GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy |
+                               BindingFlags.Instance)
+                .Where(property => property.PropertyType.IsSubclassOf(typeof(EnumerationType)) &&
+                                   property.GetGetMethod() is not null);
+
+            foreach (var property in properties)
+            {
+                if (property.GetValue(null) is { } value)
+                    yield return value;
+            }
         }
 
         /// <summary>
@@ -212,7 +219,7 @@ namespace Xpandables.Net
 
         public bool Equals(EnumerationType? x, EnumerationType? y) => x?.Equals(y) ?? false;
 
-        public int GetHashCode(EnumerationType obj) => obj?.GetHashCode() ?? 0;
+        public int GetHashCode(EnumerationType obj) => obj.GetHashCode();
 
         public static bool operator ==(EnumerationType? left, EnumerationType? right) => left?.Equals(right) ?? right is null;
 

@@ -26,7 +26,7 @@ namespace Xpandables.Net
     /// When the <see cref="IsOptional"/> is <see langword="true"/>, the data field is only checked if there is a value.
     /// This is an <see langword="abstract"/> class.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property)]
     public sealed class PatternRequiredOptionalAttribute : RequiredAttribute
     {
         /// <summary>
@@ -48,7 +48,11 @@ namespace Xpandables.Net
             _ = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
 
             var isValid = value is null && IsOptional;
-            var memberName = validationContext.MemberName switch { string => new[] { validationContext.MemberName }, _ => default };
+            var memberName = validationContext.MemberName switch
+            {
+                { } => new[] { validationContext.MemberName },
+                _ => Array.Empty<string>()
+            };
 
             if (isValid)
                 return ValidationResult.Success!;

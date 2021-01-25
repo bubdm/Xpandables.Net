@@ -376,7 +376,7 @@ namespace Xpandables.Net
             this ConstructorInfo constructorInfo,
             [MaybeNullWhen(returnValue: false)] out Expression constructorExpression,
             [MaybeNullWhen(returnValue: true)] out Exception constructorException,
-            params ParameterExpression[] parameterExpressions)
+            params Expression[] parameterExpressions)
         {
             _ = constructorInfo ?? throw new ArgumentNullException(nameof(constructorInfo));
             _ = parameterExpressions ?? throw new ArgumentNullException(nameof(parameterExpressions));

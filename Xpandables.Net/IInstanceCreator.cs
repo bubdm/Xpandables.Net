@@ -82,7 +82,7 @@ namespace Xpandables.Net
 
             try
             {
-                var lambdaConstructor = GetConstructorDelegate<Func<TParam, object>>(type, new[] { typeof(TParam) });
+                var lambdaConstructor = GetConstructorDelegate<Func<TParam, object>>(type, typeof(TParam));
                 return lambdaConstructor.Invoke(param);
             }
             catch (Exception exception)
@@ -111,7 +111,7 @@ namespace Xpandables.Net
             try
             {
                 var lambdaConstructor = GetConstructorDelegate<Func<TParam1, TParam2, object>>(
-                    type, new[] { typeof(TParam1), typeof(TParam2) });
+                    type, typeof(TParam1), typeof(TParam2));
 
                 return lambdaConstructor.Invoke(param1, param2);
             }
@@ -143,7 +143,7 @@ namespace Xpandables.Net
             try
             {
                 var lambdaConstructor = GetConstructorDelegate<Func<TParam1, TParam2, TParam3, object>>(
-                    type, new[] { typeof(TParam1), typeof(TParam2), typeof(TParam3) });
+                    type, typeof(TParam1), typeof(TParam2), typeof(TParam3));
 
                 return lambdaConstructor.Invoke(param1, param2, param3);
             }
@@ -176,14 +176,14 @@ namespace Xpandables.Net
         }
 
         // Build a key for a type
-        internal const string key = "b14ca5898a4e4133bbce2ea2315a1916";
+        internal const string Key = "b14ca5898a4e4133bbce2ea2315a1916";
 
         [SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "<Pending>")]
         internal static string KeyBuilder(Type type, params Type[] parameterTypes)
         {
             using (var aes = Aes.Create())
             {
-                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.Key = Encoding.UTF8.GetBytes(Key);
                 aes.IV = new byte[16];
 
                 using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))

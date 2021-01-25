@@ -41,7 +41,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="argument">The target argument to be validated.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <returns>Returns a result state that contains validation informations.</returns>
+        /// <returns>Returns a result state that contains validation information.</returns>
         Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default);
     }
 }

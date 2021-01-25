@@ -92,7 +92,7 @@ namespace Xpandables.Net.CQRS
             _ = errors ?? throw new ArgumentNullException(nameof(errors));
             foreach (var error in errors)
             {
-                if (this[error.Key] is OperationError resultError)
+                if (this[error.Key] is { } resultError)
                 {
                     resultError.ErrorMessages = resultError.ErrorMessages.Union(error.ErrorMessages).ToArray();
                     resultError.Exception = error.Exception is not null && resultError.Exception is not null

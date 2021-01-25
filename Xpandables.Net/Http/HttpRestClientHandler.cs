@@ -204,7 +204,7 @@ namespace Xpandables.Net.Http
                 return;
 
             if (disposing)
-                HttpClient?.Dispose();
+                HttpClient.Dispose();
 
             _isDisposed = true;
             base.Dispose(disposing);

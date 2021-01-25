@@ -16,7 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Xpandables.Net.Expressions
@@ -41,7 +40,7 @@ namespace Xpandables.Net.Expressions
             _ = left ?? throw new ArgumentNullException(nameof(left));
             _ = right ?? throw new ArgumentNullException(nameof(right));
 
-            var invokedExpr = Expression.Invoke(right, left.Parameters.Cast<Expression>()!);
+            var invokedExpr = Expression.Invoke(right, left.Parameters!);
             return Expression.Lambda<Func<TSource, TResult>>(Expression.AndAlso(left.Body, invokedExpr), left.Parameters);
         }
 
@@ -59,7 +58,7 @@ namespace Xpandables.Net.Expressions
             _ = left ?? throw new ArgumentNullException(nameof(left));
             _ = right ?? throw new ArgumentNullException(nameof(right));
 
-            var invokedExpr = Expression.Invoke(right, left.Parameters.Cast<Expression>()!);
+            var invokedExpr = Expression.Invoke(right, left.Parameters!);
             return Expression.Lambda<Func<TSource, TResult>>(Expression.OrElse(left.Body, invokedExpr), left.Parameters);
         }
 
@@ -72,8 +71,8 @@ namespace Xpandables.Net.Expressions
         /// <exception cref="ArgumentNullException">The <paramref name="expression"/>is null.</exception>
         public static Expression<Func<TSource, TResult>> Not<TSource>(Expression<Func<TSource, TResult>> expression)
         {
-            var _left = expression ?? throw new ArgumentNullException(nameof(expression));
-            return Expression.Lambda<Func<TSource, TResult>>(Expression.Not(_left.Body), _left.Parameters);
+            var left = expression ?? throw new ArgumentNullException(nameof(expression));
+            return Expression.Lambda<Func<TSource, TResult>>(Expression.Not(left.Body), left.Parameters);
         }
     }
 }

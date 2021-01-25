@@ -27,7 +27,7 @@ namespace Xpandables.Net
     public static partial class AsyncEnumerableExtensions
     {
         // Defines the static task factory.
-        internal static readonly TaskFactory _taskFactory = new(
+        internal static readonly TaskFactory TaskFactory = new(
             CancellationToken.None,
             TaskCreationOptions.None,
             TaskContinuationOptions.None,
@@ -43,7 +43,7 @@ namespace Xpandables.Net
         public static TResult RunSync<TResult>(this Func<Task<TResult>> func)
         {
             _ = func ?? throw new ArgumentNullException(nameof(func));
-            return _taskFactory.StartNew(func).Unwrap().GetAwaiter().GetResult();
+            return TaskFactory.StartNew(func).Unwrap().GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Xpandables.Net
         public static TResult RunSync<TResult>(this Task<TResult> task)
         {
             _ = task ?? throw new ArgumentNullException(nameof(task));
-            return _taskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
+            return TaskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Xpandables.Net
         public static void RunSync(this Task task)
         {
             _ = task ?? throw new ArgumentNullException(nameof(task));
-            _taskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
+            TaskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
         }
     }
 }

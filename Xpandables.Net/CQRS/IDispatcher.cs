@@ -48,7 +48,7 @@ namespace Xpandables.Net.CQRS
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            if (!typeof(AsyncQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new[] { query.GetType(), typeof(TResult) }))
+            if (!typeof(AsyncQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, query.GetType(), typeof(TResult)))
             {
                 WriteLineException(new InvalidOperationException("Building Query wrapper failed.", typeException));
                 return AsyncEnumerableExtensions.Empty<TResult>();
@@ -84,7 +84,7 @@ namespace Xpandables.Net.CQRS
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
-            if (!typeof(ICommandHandler<>).TryMakeGenericType(out var handlerType, out var typeException, new[] { command.GetType() }))
+            if (!typeof(ICommandHandler<>).TryMakeGenericType(out var handlerType, out var typeException, command.GetType()))
             {
                 var exception = new InvalidOperationException("Building command handler failed.", typeException);
                 WriteLineException(exception);
@@ -121,7 +121,7 @@ namespace Xpandables.Net.CQRS
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
-            if (!typeof(CommandHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { command.GetType(), typeof(TResult) }))
+            if (!typeof(CommandHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, command.GetType(), typeof(TResult)))
             {
                 var exception = new InvalidOperationException("Building Command wrapper failed.", typeException);
                 WriteLineException(exception);
@@ -160,7 +160,7 @@ namespace Xpandables.Net.CQRS
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            if (!typeof(QueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, new Type[] { query.GetType(), typeof(TResult) }))
+            if (!typeof(QueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, query.GetType(), typeof(TResult)))
             {
                 var exception = new InvalidOperationException("Building Query wrapper failed.", typeException);
                 WriteLineException(exception);

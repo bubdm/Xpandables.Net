@@ -18,7 +18,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Xpandables.Net.CQRS
 {
@@ -59,7 +58,7 @@ namespace Xpandables.Net.CQRS
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
-            if (_transactionScopeProvider.GetTransactionScope(command) is TransactionScope transaction)
+            if (_transactionScopeProvider.GetTransactionScope(command) is { } transaction)
             {
                 using var scope = transaction;
                 var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
@@ -113,7 +112,7 @@ namespace Xpandables.Net.CQRS
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
         public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
-            if (_transactionScopeProvider.GetTransactionScope(command) is TransactionScope transaction)
+            if (_transactionScopeProvider.GetTransactionScope(command) is { } transaction)
             {
                 using var scope = transaction;
                 var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);

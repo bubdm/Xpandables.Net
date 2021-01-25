@@ -42,7 +42,7 @@ namespace Xpandables.Net
             _ = source ?? throw new ArgumentNullException(nameof(source));
             _ = action ?? throw new ArgumentNullException(nameof(action));
 
-            var enumerator = source.GetEnumerator();
+            using var enumerator = source.GetEnumerator();
             while (enumerator.MoveNext())
                 action(enumerator.Current);
         }

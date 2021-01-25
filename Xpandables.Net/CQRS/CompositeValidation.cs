@@ -38,7 +38,7 @@ namespace Xpandables.Net.CQRS
         /// </summary>
         /// <param name="validationInstances">The collection of validators to act with.</param>
         public CompositeValidation(IEnumerable<IValidator<TArgument>> validationInstances)
-            => _validationInstances = validationInstances ?? Enumerable.Empty<IValidator<TArgument>>();
+            => _validationInstances = validationInstances;
 
         /// <summary>
         /// Asynchronously validates the argument and returns validation state with errors if necessary.
@@ -46,8 +46,8 @@ namespace Xpandables.Net.CQRS
         /// <param name="argument">The target argument to be validated.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <returns>Returns a result state that contains validation informations.</returns>
-        public override async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
+        /// <returns>Returns a result state that contains validation information.</returns>
+        public override async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken)
         {
             foreach (var validator in _validationInstances.OrderBy(o => o.Order))
             {

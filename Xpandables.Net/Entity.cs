@@ -32,7 +32,7 @@ namespace Xpandables.Net
     /// The domain object base implementation that provides an identifier and a key generator for derived class.
     /// This is an <see langword="abstract"/>class.
     /// </summary>
-    [DebuggerDisplay("Id = {Id}")]
+    [DebuggerDisplay("Id = {" + nameof(Id) + "}")]
     public abstract class Entity
     {
         /// <summary>
@@ -74,12 +74,12 @@ namespace Xpandables.Net
         /// </summary>
         public DateTime? DeletedOn { get; protected set; }
 
-        internal readonly HashSet<INotification> _notifications = new();
+        internal readonly HashSet<INotification> InternalNotifications = new();
 
         /// <summary>
         /// Gets the collection of notifications occurred.
         /// </summary>
-        public IReadOnlyCollection<INotification> Notifications => _notifications;
+        public IReadOnlyCollection<INotification> Notifications => InternalNotifications;
 
         /// <summary>
         /// Marks the underlying instance as deactivated.
@@ -122,7 +122,7 @@ namespace Xpandables.Net
         public void AddNotification(INotification notification)
         {
             _ = notification ?? throw new ArgumentNullException(nameof(notification));
-            _notifications.Add(notification);
+            InternalNotifications.Add(notification);
         }
 
         /// <summary>
@@ -133,13 +133,13 @@ namespace Xpandables.Net
         public void RemoveNotification(INotification notification)
         {
             _ = notification ?? throw new ArgumentNullException(nameof(notification));
-            _notifications.Remove(notification);
+            InternalNotifications.Remove(notification);
         }
 
         /// <summary>
         /// Clears all notifications.
         /// </summary>
-        public void ClearNotifications() => _notifications.Clear();
+        public void ClearNotifications() => InternalNotifications.Clear();
 
         /// <summary>
         /// Returns the unique signature of string type for an instance.

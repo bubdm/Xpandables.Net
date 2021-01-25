@@ -25,12 +25,12 @@ using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("Xpandables.Net.DependencyInjection, PublicKey=0024000004800000940000000602000000240000525341310004000001000100410b9f6b317bb83c59c2727a39ad3e0c3aff55cbfc6f1328e2a925ab2e85d44b1815b23cea3f22924ea4226a6b3318eb90d1f28234e0116be8b70c29a41849a93e1baa680deae7f56e8d75d352d6f3b8457746223adf8cc2085a2d1d8c3f7be439bc53f1a032cc696f75afa378e0e054f3eb325fb9a7898a31c612c21e9c3cb8")]
 
-namespace Xpandables.Net.Http.Network
+namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Provides with a handler that is used with <see cref="HttpClient"/> to format IpLocation result before returning response.
     /// </summary>
-    internal sealed class HttpIPAddressDelegateHandler : HttpClientHandler
+    internal sealed class HttpIpAddressDelegateHandler : HttpClientHandler
     {
         /// <summary>
         /// Creates an instance of System.Net.Http.HttpResponseMessage based on the information
@@ -43,29 +43,28 @@ namespace Xpandables.Net.Http.Network
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-                content = $"'{ content.Replace("\n", "", StringComparison.InvariantCulture)}'";
-                response.Content = new StringContent(content, Encoding.UTF8);
-            }
+            if (response.StatusCode != HttpStatusCode.OK) return response;
+
+            var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            content = $"'{ content.Replace("\n", "", StringComparison.InvariantCulture)}'";
+            response.Content = new StringContent(content, Encoding.UTF8);
 
             return response;
         }
     }
 
     /// <summary>
-    /// Default implementation for <see cref="IHttpIPAddressAccessor"/>.
+    /// Default implementation for <see cref="IHttpIpAddressAccessor"/>.
     /// </summary>
-    public sealed class HttpIPAddressAccessor : Disposable, IHttpIPAddressAccessor
+    public sealed class HttpIpAddressAccessor : Disposable, IHttpIpAddressAccessor
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
-        IHttpRestClientHandler IHttpIPAddressAccessor.HttpRestClientHandler => _httpRestClientHandler;
+        IHttpRestClientHandler IHttpIpAddressAccessor.HttpRestClientHandler => _httpRestClientHandler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpIPAddressAccessor"/> class that uses the https://ipinfo.io/ip to retrieve the user ip address.
+        /// Initializes a new instance of the <see cref="HttpIpAddressAccessor"/> class that uses the https://ipinfo.io/ip to retrieve the user ip address.
         /// </summary>
-        public HttpIPAddressAccessor(HttpClient httpClient)
+        public HttpIpAddressAccessor(HttpClient httpClient)
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             _httpRestClientHandler = new HttpRestClientHandler(httpClient);
@@ -83,7 +82,7 @@ namespace Xpandables.Net.Http.Network
                 return;
 
             if (disposing)
-                _httpRestClientHandler?.Dispose();
+                _httpRestClientHandler.Dispose();
 
             _isDisposed = true;
             base.Dispose(disposing);

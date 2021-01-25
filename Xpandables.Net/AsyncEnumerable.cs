@@ -34,9 +34,8 @@ namespace Xpandables.Net
         /// Initializes a new instance of the <see cref="AsyncEnumerable{T}"/> class with the collection to be asynchronously enumerated.
         /// </summary>
         /// <param name="collection">The collection to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
         public AsyncEnumerable(IEnumerable<T> collection)
-            => _asyncEnumerator = _ => new AsyncEnumerator<T>(collection?.GetEnumerator() ?? throw new ArgumentNullException(nameof(collection)));
+            => _asyncEnumerator = _ => new AsyncEnumerator<T>(collection.GetEnumerator());
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncEnumerable{T}"/> class with the enumerator to be asynchronously enumerated.

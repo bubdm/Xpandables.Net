@@ -84,7 +84,7 @@ namespace Xpandables.Net
             if (value is int valueInt)
                 return EnumerationType.FromValue(EnumType, valueInt);
 
-            if (value?.GetType().IsSubclassOf(typeof(EnumerationType)) == true)
+            if (value.GetType().IsSubclassOf(typeof(EnumerationType)))
                 return (EnumerationType)value;
 
             return base.ConvertFrom(context, culture, value);
@@ -105,25 +105,28 @@ namespace Xpandables.Net
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            if (value is null)
-                return base.ConvertTo(context, culture, value, destinationType);
+            if (!value.GetType().IsSubclassOf(typeof(EnumerationType)))
+                return value switch
+                {
+                    string valueString when destinationType == typeof(string) => (EnumerationType.FromName(EnumType,
+                        valueString) as EnumerationType)!.Name,
+                    int valueInt when destinationType == typeof(int) =>
+                        (EnumerationType.FromValue(EnumType, valueInt) as EnumerationType)!.Value,
+                    _ => base.ConvertTo(context, culture, value, destinationType)!
+                };
 
-            if (value.GetType().IsSubclassOf(typeof(EnumerationType)))
+            if (destinationType == typeof(string))
+                return ((EnumerationType)value).Name;
+
+            if (destinationType == typeof(int))
+                return ((EnumerationType)value).Value;
+
+            return value switch
             {
-                if (destinationType == typeof(string))
-                    return ((EnumerationType)value).Name;
-
-                if (destinationType == typeof(int))
-                    return ((EnumerationType)value).Value;
-            }
-
-            if (value is string valueString && destinationType == typeof(string))
-                return (EnumerationType.FromName(EnumType, valueString) as EnumerationType)!.Name;
-
-            if (value is int valueInt && destinationType == typeof(int))
-                return (EnumerationType.FromValue(EnumType, valueInt) as EnumerationType)!.Value;
-
-            return base.ConvertTo(context, culture, value, destinationType);
+                string valueString when destinationType == typeof(string) => (EnumerationType.FromName(EnumType, valueString) as EnumerationType)!.Name,
+                int valueInt when destinationType == typeof(int) => (EnumerationType.FromValue(EnumType, valueInt) as EnumerationType)!.Value,
+                _ => base.ConvertTo(context, culture, value, destinationType)!
+            };
         }
     }
 }

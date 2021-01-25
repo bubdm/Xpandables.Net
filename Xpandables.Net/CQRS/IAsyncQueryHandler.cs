@@ -28,7 +28,7 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TQuery">Type of the query that will be used as argument.</typeparam>
     /// <typeparam name="TResult">Type of the result of the query.</typeparam>
-    public interface IAsyncQueryHandler<in TQuery, TResult> : ICanHandle<TQuery>
+    public interface IAsyncQueryHandler<in TQuery, out TResult> : ICanHandle<TQuery>
         where TQuery : class, IAsyncQuery<TResult>
     {
         /// <summary>

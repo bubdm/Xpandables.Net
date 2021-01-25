@@ -64,8 +64,8 @@ namespace Xpandables.Net.Interception
                                     InvocationInstance,
                                     Arguments.Select(arg => arg.Value).ToArray());
 
-                if (ReturnValue is Task task && task.Exception != null)
-                    Exception = task.Exception.GetBaseException();
+                if (ReturnValue is Task {Exception: { }} task)
+                    Exception = task.Exception!.GetBaseException();
             }
             catch (Exception exception) when (exception is TargetException
                                           || exception is ArgumentNullException

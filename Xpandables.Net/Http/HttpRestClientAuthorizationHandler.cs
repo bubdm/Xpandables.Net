@@ -51,11 +51,11 @@ namespace Xpandables.Net.Http
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
-            if (request.Headers.Authorization is AuthenticationHeaderValue authorization && authorization.Parameter is null)
-            {
-                var token = _httpHeaderAccessor.ReadValue("Authorization") ?? throw new InvalidOperationException("Expected authorization not found.");
-                request.Headers.Authorization = new AuthenticationHeaderValue(authorization.Scheme, token);
-            }
+            if (request.Headers.Authorization is not {Parameter: null} authorization)
+                return base.SendAsync(request, cancellationToken);
+
+            var token = _httpHeaderAccessor.ReadValue("Authorization") ?? throw new InvalidOperationException("Expected authorization not found.");
+            request.Headers.Authorization = new AuthenticationHeaderValue(authorization.Scheme, token);
 
             return base.SendAsync(request, cancellationToken);
         }

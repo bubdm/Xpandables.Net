@@ -129,34 +129,19 @@ namespace Xpandables.Net.CQRS
         public object Value { get; }
 
         /// <summary>
-        /// Contains the state of the result.
-        /// </summary>
-        protected readonly OperationStatus _status;
-
-        /// <summary>
-        /// Contains the HTTP status code.
-        /// </summary>
-        protected readonly HttpStatusCode _statusCode = HttpStatusCode.OK;
-
-        /// <summary>
-        /// Contains the errors collection.
-        /// </summary>
-        protected readonly IReadOnlyCollection<OperationError> _errors = new OperationErrorCollection();
-
-        /// <summary>
         /// Gets the operation result status.
         /// </summary>
-        public OperationStatus Status => _status;
+        public OperationStatus Status { get; }
 
         /// <summary>
         /// Gets the collection of errors.
         /// </summary>
-        public IReadOnlyCollection<OperationError> Errors => _errors;
+        public IReadOnlyCollection<OperationError> Errors { get; }
 
         /// <summary>
         /// Gets the operation HTTP status code.
         /// </summary>
-        public HttpStatusCode StatusCode => _statusCode;
+        public HttpStatusCode StatusCode { get; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult"/> with the specified status and specified errors collection.
@@ -167,7 +152,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="value">The value of the result.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
         protected OperationResult(OperationStatus status, HttpStatusCode statusCode, IReadOnlyCollection<OperationError> errors, object value)
-            => (_status, _statusCode, Value, _errors) = (status, statusCode, value, errors ?? throw new ArgumentNullException(nameof(errors)));
+            => (Status, StatusCode, Value, Errors) = (status, statusCode, value, errors ?? throw new ArgumentNullException(nameof(errors)));
     }
 
     /// <summary>

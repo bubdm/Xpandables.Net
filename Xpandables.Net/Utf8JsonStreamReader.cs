@@ -244,7 +244,7 @@ namespace Xpandables.Net
         private sealed class SequenceSegment : ReadOnlySequenceSegment<byte>, IDisposable
         {
             internal IMemoryOwner<byte> Buffer { get; }
-            internal SequenceSegment? Previous { get; set; }
+            private SequenceSegment? Previous { get; }
             private bool _disposed;
 
             public SequenceSegment(int size, SequenceSegment? previous)
@@ -260,12 +260,10 @@ namespace Xpandables.Net
 
             public void Dispose()
             {
-                if (!_disposed)
-                {
-                    _disposed = true;
-                    Buffer.Dispose();
-                    Previous?.Dispose();
-                }
+                if (_disposed) return;
+                _disposed = true;
+                Buffer.Dispose();
+                Previous?.Dispose();
             }
         }
     }

@@ -156,7 +156,7 @@ namespace Xpandables.Net.CQRS
 
             return assemblies
                 .SelectMany(assembly => assembly.GetExportedTypes())
-                ?.FirstOrDefault(type => type.Name == metadataDescriptionTypeName);
+                .FirstOrDefault(type => type.Name == metadataDescriptionTypeName);
         }
 
         /// <summary>
@@ -171,10 +171,10 @@ namespace Xpandables.Net.CQRS
         {
             _ = instance ?? throw new ArgumentNullException(nameof(instance));
 
-            if (descriptionType is { })
-                TypeDescriptor.AddProviderTransparent(new AssociatedMetadataTypeTypeDescriptionProvider(instance.GetType(), descriptionType), instance.GetType());
-            else
-                TypeDescriptor.AddProviderTransparent(new AssociatedMetadataTypeTypeDescriptionProvider(instance.GetType()), instance.GetType());
+            TypeDescriptor.AddProviderTransparent(
+                descriptionType is { }
+                    ? new AssociatedMetadataTypeTypeDescriptionProvider(instance.GetType(), descriptionType)
+                    : new AssociatedMetadataTypeTypeDescriptionProvider(instance.GetType()), instance.GetType());
         }
     }
 }

@@ -25,5 +25,5 @@ namespace Xpandables.Net.CQRS
     /// "TQuery" is a class that implements the <see cref="IAsyncQuery{TResult}"/> interface. This can also be enhanced with some useful decorators.
     /// </summary>
     /// <typeparam name="TResult">Type of the result of the query.</typeparam>
-    public interface IAsyncQuery<TResult> { }
+    public interface IAsyncQuery<out TResult> { }
 }

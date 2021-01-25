@@ -88,19 +88,19 @@ namespace Xpandables.Net
             if (nameOfExpression.Body is not ConstantExpression constantExpression)
                 throw new ArgumentNullException($"Constant Expression expected. {nameof(nameOfExpression)}");
 
-            if (constantExpression.Value is null || constantExpression.Value.ToString() is not string propertyName)
+            if (constantExpression.Value?.ToString() is not { } propertyName)
                 throw new ArgumentException($"Constant Expression Value is null. {nameof(nameOfExpression)}");
 
-            if (source.GetType().GetProperty(propertyName) is not PropertyInfo propertyInfo)
+            if (source.GetType().GetProperty(propertyName) is not { } propertyInfo)
                 throw new ArgumentException($"Property {propertyName} does not exist in the {source.GetType().Name}.");
 
-            if (propertyInfo.GetSetMethod() is not MethodInfo)
+            if (propertyInfo.GetSetMethod() is not { })
                 throw new ArgumentException($"Property {propertyInfo.Name} is not settable.");
 
-            if (value is not null && !propertyInfo.PropertyType.IsAssignableFrom(value.GetType()))
+            if (value is not null && !propertyInfo.PropertyType.IsInstanceOfType(value))
                 throw new ArgumentException($"Property type '{propertyInfo.PropertyType.Name}' of {propertyName} and type of the value '{value.GetType().Name}' does not match.");
 
-            if (value is null && Nullable.GetUnderlyingType(propertyInfo.PropertyType) is not Type)
+            if (value is null && Nullable.GetUnderlyingType(propertyInfo.PropertyType) is not { })
                 throw new ArgumentException($"Unable to assign null to a property type '{propertyInfo.PropertyType.Name}' of {propertyName} that is not nullable.");
 
             try

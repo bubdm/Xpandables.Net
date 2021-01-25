@@ -40,7 +40,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="argument">The target argument to be validated.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <returns>Returns a result state that contains validation informations.</returns>
+        /// <returns>Returns a result state that contains validation information.</returns>
         public virtual async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken)
         {
             var validationResults = new List<ValidationResult>();
@@ -54,7 +54,7 @@ namespace Xpandables.Net.CQRS
                     foreach (var member in validationResult.MemberNames)
                         if (validationResult.ErrorMessage is not null)
                         {
-                            if (errors[member] is OperationError error)
+                            if (errors[member] is { } error)
                                 errors[member]!.ErrorMessages = error.ErrorMessages.Union(new[] { validationResult.ErrorMessage }).ToArray();
                             else
                                 errors.Add(member, validationResult.ErrorMessage);

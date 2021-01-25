@@ -18,17 +18,15 @@
 using System;
 using System.Net.Http;
 
-using Xpandables.Net.Http.Network;
-
 namespace Xpandables.Net.Http
 {
     /// <summary>
-    /// Default implementation for <see cref="IHttpIPAddressAccessor"/> using <see cref="Newtonsoft"/>.
+    /// Default implementation for <see cref="IHttpIpAddressAccessor"/> using <see cref="Newtonsoft"/>.
     /// </summary>
-    public sealed class HttpIPAddressAccessorUsingNewtonsoft : Disposable, IHttpIPAddressAccessor
+    public sealed class HttpIPAddressAccessorUsingNewtonsoft : Disposable, IHttpIpAddressAccessor
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
-        IHttpRestClientHandler IHttpIPAddressAccessor.HttpRestClientHandler => _httpRestClientHandler;
+        IHttpRestClientHandler IHttpIpAddressAccessor.HttpRestClientHandler => _httpRestClientHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpIPAddressAccessorUsingNewtonsoft"/> class that uses the https://ipinfo.io/ip to retrieve the user ip address.

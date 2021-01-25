@@ -26,7 +26,7 @@ namespace Xpandables.Net.Expressions
     /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
     /// <typeparam name="TResult">The type of the result of expression.</typeparam>
     public sealed class QueryExpressionNot<TSource, TResult> : QueryExpression<TSource, TResult>
-        where TSource : class
+        where TSource : notnull
     {
         private readonly IQueryExpression<TSource, TResult> _expression;
         private Expression<Func<TSource, TResult>>? _cache;
@@ -38,7 +38,6 @@ namespace Xpandables.Net.Expressions
         /// <exception cref="ArgumentNullException">The <paramref name="expression"/> is null.</exception>
         public QueryExpressionNot(IQueryExpression<TSource, TResult> expression)
             => _expression = expression ?? throw new ArgumentNullException(nameof(expression));
-
 
         /// <summary>
         /// Returns a new instance of <see cref="QueryExpressionNot{TSource, TResult}"/> class with the expression.

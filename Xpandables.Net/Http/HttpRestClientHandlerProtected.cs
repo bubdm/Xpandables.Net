@@ -50,22 +50,17 @@ namespace Xpandables.Net.Http
         {
             try
             {
-                if (httpResponse.Content is { })
-                {
-                    var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                    if (stream is { })
-                    {
-                        var results = streamToResponseConverter(stream);
-                        return HttpRestClientResponse<TResult>
-                            .Success(results, httpResponse.StatusCode)
-                            .AddHeaders(ReadHttpResponseHeaders(httpResponse))
-                            .AddVersion(httpResponse.Version)
-                            .AddReasonPhrase(httpResponse.ReasonPhrase);
-                    }
-                }
+                var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                if (stream is null)
+                    return HttpRestClientResponse<TResult>
+                        .Success(httpResponse.StatusCode)
+                        .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                        .AddVersion(httpResponse.Version)
+                        .AddReasonPhrase(httpResponse.ReasonPhrase);
 
+                var results = streamToResponseConverter(stream);
                 return HttpRestClientResponse<TResult>
-                    .Success(httpResponse.StatusCode)
+                    .Success(results, httpResponse.StatusCode)
                     .AddHeaders(ReadHttpResponseHeaders(httpResponse))
                     .AddVersion(httpResponse.Version)
                     .AddReasonPhrase(httpResponse.ReasonPhrase);
@@ -73,7 +68,7 @@ namespace Xpandables.Net.Http
             catch (Exception exception)
             {
                 return HttpRestClientResponse<TResult>
-                    .Failure(exception, HttpStatusCode.BadRequest)
+                    .Failure(exception)
                     .AddHeaders(ReadHttpResponseHeaders(httpResponse))
                     .AddVersion(httpResponse.Version)
                     .AddReasonPhrase(httpResponse.ReasonPhrase);
@@ -91,30 +86,26 @@ namespace Xpandables.Net.Http
         {
             try
             {
-                if (httpResponse.Content is { })
-                {
-                    var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                    if (stream is { })
-                    {
-                        var results = await streamToResponseConverter(stream).ConfigureAwait(false);
-                        return HttpRestClientResponse<TResult>
-                            .Success(results, httpResponse.StatusCode)
-                            .AddHeaders(ReadHttpResponseHeaders(httpResponse))
-                            .AddVersion(httpResponse.Version)
-                            .AddReasonPhrase(httpResponse.ReasonPhrase);
-                    }
-                }
+                var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                if (stream is null)
+                    return HttpRestClientResponse<TResult>
+                        .Success(httpResponse.StatusCode)
+                        .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                        .AddVersion(httpResponse.Version)
+                        .AddReasonPhrase(httpResponse.ReasonPhrase);
 
+                var results = await streamToResponseConverter(stream).ConfigureAwait(false);
                 return HttpRestClientResponse<TResult>
-                    .Success(httpResponse.StatusCode)
+                    .Success(results, httpResponse.StatusCode)
                     .AddHeaders(ReadHttpResponseHeaders(httpResponse))
                     .AddVersion(httpResponse.Version)
                     .AddReasonPhrase(httpResponse.ReasonPhrase);
+
             }
             catch (Exception exception)
             {
                 return HttpRestClientResponse<TResult>
-                    .Failure(exception, HttpStatusCode.BadRequest)
+                    .Failure(exception)
                     .AddHeaders(ReadHttpResponseHeaders(httpResponse))
                     .AddVersion(httpResponse.Version)
                     .AddReasonPhrase(httpResponse.ReasonPhrase);
@@ -162,14 +153,16 @@ namespace Xpandables.Net.Http
                             )
                         )
                 .Concat(
-                    httpResponse.Content?.Headers
+                    httpResponse.Content.Headers
                         .SelectMany(kvp => kvp.Value
                             .Select(v => (Name: kvp.Key, Value: v))
-                            ) ?? Enumerable.Empty<(string, string)>()
+                        )
                         )
                 .Aggregate(
                     seed: new NameValueCollection(),
-                    func: (nvc, pair) => { nvc.Add(pair.Name, pair.Value); return nvc; },
+                    func: (nvc, pair) => {
+                        var (name, value) = pair;
+                        nvc.Add(name, value); return nvc; },
                     resultSelector: nvc => nvc
                     );
 
@@ -244,9 +237,7 @@ namespace Xpandables.Net.Http
             }
 
             if (attribute.IsSecured)
-                httpRequestMessage.Headers.Authorization = httpClient.DefaultRequestHeaders.Authorization is not null
-                    ? httpClient.DefaultRequestHeaders.Authorization
-                    : new AuthenticationHeaderValue(attribute.Scheme);
+                httpRequestMessage.Headers.Authorization = httpClient.DefaultRequestHeaders.Authorization ?? new AuthenticationHeaderValue(attribute.Scheme);
 
             return httpRequestMessage;
         }
@@ -279,7 +270,7 @@ namespace Xpandables.Net.Http
         /// <exception cref="ArgumentException">The <paramref name="source"/> must implement <typeparamref name="TInterface"/> interface.</exception>
         protected virtual void ValidateInterfaceImplementation<TInterface>(object source, bool implementationIsOptional = false)
         {
-            if (!typeof(TInterface).IsAssignableFrom(source.GetType()) && !implementationIsOptional)
+            if (!(source is TInterface) && !implementationIsOptional)
                 throw new ArgumentException($"{source.GetType().Name} must implement {typeof(TInterface).Name} interface");
         }
 
@@ -359,7 +350,7 @@ namespace Xpandables.Net.Http
         {
             if (!attribute.In.HasFlag(ParameterLocation.Path)) return;
 
-            ValidateInterfaceImplementation<IPathStringLocationRequest>(source, false);
+            ValidateInterfaceImplementation<IPathStringLocationRequest>(source);
             if (source is not IPathStringLocationRequest pathStringRequest) return;
 
             var pathString = pathStringRequest.GetPathStringSource();
@@ -376,7 +367,7 @@ namespace Xpandables.Net.Http
             where TSource : notnull
         {
             if (!attribute.In.HasFlag(ParameterLocation.Query)) return;
-            ValidateInterfaceImplementation<IQueryStringLocationRequest>(source, false);
+            ValidateInterfaceImplementation<IQueryStringLocationRequest>(source);
             if (source is not IQueryStringLocationRequest queryStringRequest) return;
 
             var queryString = queryStringRequest.GetQueryStringSource();
@@ -394,7 +385,7 @@ namespace Xpandables.Net.Http
               where TSource : notnull
         {
             if (!attribute.In.HasFlag(ParameterLocation.Cookie)) return;
-            ValidateInterfaceImplementation<ICookieLocationRequest>(source, false);
+            ValidateInterfaceImplementation<ICookieLocationRequest>(source);
             if (source is not ICookieLocationRequest cookieLocationRequest) return;
 
             var cookieSource = cookieLocationRequest.GetCookieSource();
@@ -414,7 +405,7 @@ namespace Xpandables.Net.Http
         {
             if (!attribute.In.HasFlag(ParameterLocation.Header)) return;
 
-            ValidateInterfaceImplementation<IHeaderLocationRequest>(source, false);
+            ValidateInterfaceImplementation<IHeaderLocationRequest>(source);
             if (source is not IHeaderLocationRequest headerLocationRequest) return;
 
             var headerSource = headerLocationRequest.GetHeadersSource();
@@ -439,7 +430,7 @@ namespace Xpandables.Net.Http
         protected virtual HttpContent ReadByteArrayContent<TSource>(TSource source)
                where TSource : notnull
         {
-            ValidateInterfaceImplementation<IByteArrayRequest>(source, false);
+            ValidateInterfaceImplementation<IByteArrayRequest>(source);
             if (source is IByteArrayRequest byteArrayRequest)
                 if (byteArrayRequest.GetByteContent() is { } byteContent)
                     return new ByteArrayContent(byteContent);
@@ -457,7 +448,7 @@ namespace Xpandables.Net.Http
         protected virtual HttpContent ReadFormUrlEncodedContent<TSource>(TSource source)
             where TSource : notnull
         {
-            ValidateInterfaceImplementation<IFormUrlEncodedRequest>(source, false);
+            ValidateInterfaceImplementation<IFormUrlEncodedRequest>(source);
             if (source is IFormUrlEncodedRequest formUrlEncodedRequest)
                 if (formUrlEncodedRequest.GetFormContent() is { } formContent)
                     return new FormUrlEncodedContent(formContent);
@@ -494,7 +485,7 @@ namespace Xpandables.Net.Http
         protected virtual async Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source, CancellationToken cancellationToken)
           where TSource : notnull
         {
-            ValidateInterfaceImplementation<IStreamRequest>(source, false);
+            ValidateInterfaceImplementation<IStreamRequest>(source);
             object streamContent = source is IStreamRequest streamRequest ? streamRequest.GetStreamContent() : source;
 
             var memoryStream = new MemoryStream();
@@ -515,7 +506,7 @@ namespace Xpandables.Net.Http
         protected virtual HttpContent ReadMultipartContent<TSource>(TSource source, HttpRestClientAttribute attribute)
             where TSource : notnull
         {
-            ValidateInterfaceImplementation<IMultipartRequest>(source, false);
+            ValidateInterfaceImplementation<IMultipartRequest>(source);
             if (source is not IMultipartRequest multipartRequest) return default;
 
             var multipartContent = new MultipartFormDataContent();
@@ -546,8 +537,8 @@ namespace Xpandables.Net.Http
             using var blockingCollection = new BlockingCollection<TResult>();
             await using var iterator = new AsyncEnumerable<TResult>(blockingCollection.GetConsumingEnumerable(cancellationToken)).GetAsyncEnumerator(cancellationToken);
 
-            var EnumerateStreamElementToBlockingCollectionThread = new Thread(() => EnumerateStreamElementToBlockingCollection(stream, blockingCollection, cancellationToken, options));
-            EnumerateStreamElementToBlockingCollectionThread.Start();
+            var enumerateStreamElementToBlockingCollectionThread = new Thread(() => EnumerateStreamElementToBlockingCollection(stream, blockingCollection, cancellationToken, options));
+            enumerateStreamElementToBlockingCollectionThread.Start();
 
             while (await iterator.MoveNextAsync())
                 yield return iterator.Current;
@@ -572,9 +563,10 @@ namespace Xpandables.Net.Http
             while (jsonStreamReader.Read())
             {
                 if (cancellationToken.IsCancellationRequested) break;
-                if (jsonStreamReader.TokenType == JsonTokenType.StartObject)
-                    if (jsonStreamReader.Deserialise<TResult>(options ?? new JsonSerializerOptions { AllowTrailingCommas = false, WriteIndented = false, PropertyNameCaseInsensitive = true }) is TResult result)
-                        resultCollection.Add(result, cancellationToken);
+                if (jsonStreamReader.TokenType != JsonTokenType.StartObject)
+                    continue;
+                if (jsonStreamReader.Deserialise<TResult>(options ?? new JsonSerializerOptions { AllowTrailingCommas = false, WriteIndented = false, PropertyNameCaseInsensitive = true }) is { } result)
+                    resultCollection.Add(result, cancellationToken);
             }
 
             resultCollection.CompleteAdding();

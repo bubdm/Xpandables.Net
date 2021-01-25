@@ -91,7 +91,7 @@ namespace Xpandables.Net.Interception
         private int IndexForParameterName(string paramName)
             => _parameters.FindIndex(parameter => parameter.Name.Equals(paramName, StringComparison.OrdinalIgnoreCase)) switch
             {
-                int foundIndex when foundIndex >= 0 => foundIndex,
+                { } foundIndex when foundIndex >= 0 => foundIndex,
                 _ => throw new ArgumentOutOfRangeException($"Invalid parameter name : {paramName}")
             };
 

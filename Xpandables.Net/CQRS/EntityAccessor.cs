@@ -33,7 +33,7 @@ namespace Xpandables.Net.CQRS
         where TEntity : Entity
     {
         private readonly IDataContext<TEntity> _dataContext;
-        private bool disposedValue;
+        private bool _disposedValue;
 
         /// <summary>
         /// Initializes a new instance of <see cref="EntityAccessor{TEntity}"/> with the context to act on.
@@ -44,7 +44,7 @@ namespace Xpandables.Net.CQRS
 
         /// <summary>
         /// Provides with the query selector for the entity type.
-        /// The <paramref name="selectConverter"/> is used for the <see cref="SelectAsync{TResult}(Expression{Func{TEntity, bool}}, Expression{Func{TEntity, TResult}}, CancellationToken)"/> method.
+        /// The <paramref name="selectConverter"/> is used for the <see langword="SelectAsync{TResult}(Expression{Func{TEntity, bool}}, Expression{Func{TEntity, TResult}}, CancellationToken)"/> method.
         /// You must override this method to customize its behavior.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
@@ -155,7 +155,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="disposing">the disposing state.</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
@@ -165,7 +165,7 @@ namespace Xpandables.Net.CQRS
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer
                 // TODO: set large fields to null
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 

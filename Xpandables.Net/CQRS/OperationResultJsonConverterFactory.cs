@@ -52,7 +52,7 @@ namespace Xpandables.Net.CQRS
             else
             {
                 Type elementType = typeToConvert.GetGenericArguments()[0];
-                converter = (JsonConverter)_instanceCreator.Create(typeof(OperationResultConverter<>).MakeGenericType(new Type[] { elementType }))!;
+                converter = (JsonConverter)_instanceCreator.Create(typeof(OperationResultConverter<>).MakeGenericType(elementType))!;
             }
 
             return converter;

@@ -15,13 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
@@ -29,9 +22,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+
 using Xpandables.Net.Api.Handlers;
 using Xpandables.Net.CQRS;
-using Xpandables.Net.Http.Network;
+using Xpandables.Net.Http;
 
 namespace Xpandables.Net.Api.Controllers
 {
@@ -78,13 +78,13 @@ namespace Xpandables.Net.Api.Controllers
         [HttpPost]
         [Route("{id}")]
         public async Task<IActionResult> GetLocationAsync([FromRoute] GetIp ipAddress,
-            [FromServices] IHttpIPAddressLocationAccessor httpIPAddressLocationAccessor,
+            [FromServices] IHttpIpAddressLocationAccessor httpIpAddressLocationAccessor,
             [FromServices] IConfiguration configuration,
             CancellationToken cancellationToken = default)
         {
             var key = configuration["IPAddressStackKey"]!;
-            var request = new IPAddressLocationRequest(ipAddress.Id, key);
-            var location = await httpIPAddressLocationAccessor.ReadLocationAsync(request, cancellationToken).ConfigureAwait(false);
+            var request = new IpAddressLocationRequest(ipAddress.Id, key);
+            var location = await httpIpAddressLocationAccessor.ReadLocationAsync(request, cancellationToken).ConfigureAwait(false);
 
             return Ok(location.Result);
         }

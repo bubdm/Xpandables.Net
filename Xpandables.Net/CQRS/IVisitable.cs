@@ -26,7 +26,7 @@ namespace Xpandables.Net.CQRS
     /// Visitor design pattern allows you to add new behaviors to an existing object without changing the object structure.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
-    public interface IVisitable<TVisitable>
+    public interface IVisitable<out TVisitable>
         where TVisitable : class, IVisitable<TVisitable>
     {
         /// <summary>

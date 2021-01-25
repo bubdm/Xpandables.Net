@@ -26,7 +26,7 @@ namespace Xpandables.Net.Expressions
     /// <typeparam name="TSource">the target instance type.</typeparam>
     /// <typeparam name="TResult">The property type to be used for result.</typeparam>
     public sealed class QueryExpressionBuilder<TSource, TResult> : QueryExpression<TSource, TResult>
-        where TSource : class
+        where TSource : notnull
     {
         private readonly Expression<Func<TSource, TResult>> _expression;
 

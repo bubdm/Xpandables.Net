@@ -15,15 +15,19 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Net;
+using System;
+using System.Linq.Expressions;
 
-using Xpandables.Net.CQRS;
-
-namespace Xpandables.Net.Http
+namespace Xpandables.Net.Expressions.Specifications
 {
-    /// <summary>
-    /// Represents a query to request an <see cref="IPAddress"/>.
-    /// </summary>
-    [HttpRestClient(Path = "", IsNullable = true, IsSecured = false, Method = "Get")]
-    public sealed class IpAddressRequest : IQuery<string> { }
+    internal class SpecificationExpression<TSource> : Specification<TSource>
+        where TSource : notnull
+    {
+        private readonly Expression<Func<TSource, bool>> _expression;
+
+        public SpecificationExpression(Expression<Func<TSource, bool>> expression) =>
+            _expression = expression ?? throw new ArgumentNullException(nameof(expression));
+
+        public override Expression<Func<TSource, bool>> GetExpression() => _expression;
+    }
 }

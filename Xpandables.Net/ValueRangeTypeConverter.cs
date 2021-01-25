@@ -62,34 +62,36 @@ namespace Xpandables.Net
         {
             _ = value ?? throw GetConvertFromException(value);
 
-            if (value is string source)
+            if (!(value is string source))
             {
-                var parts = source.Split(':');
-                if (parts.Length != 2) throw GetConvertFromException(value);
-
-                var minStr = parts[0];
-                var maxStr = parts[1];
-
-                if (int.TryParse(minStr, NumberStyles.Integer, culture, out var minInt)
-                    && int.TryParse(maxStr, NumberStyles.Integer, culture, out var maxInt))
-                {
-                    return new ValueRange<int>(minInt, maxInt);
-                }
-
-                if (double.TryParse(minStr, NumberStyles.Float, culture, out var minDouble)
-                    && int.TryParse(maxStr, NumberStyles.Float, culture, out var maxDouble))
-                {
-                    return new ValueRange<double>(minDouble, maxDouble);
-                }
-
-                if (DateTime.TryParse(minStr, culture, DateTimeStyles.None, out var minDateTime)
-                    && DateTime.TryParse(maxStr, culture, DateTimeStyles.None, out var maxDateTime))
-                {
-                    return new ValueRange<DateTime>(minDateTime, maxDateTime);
-                }
+                return base.ConvertFrom(context, culture, value)!;
             }
 
-            return base.ConvertFrom(context, culture, value);
+            var parts = source.Split(':');
+            if (parts.Length != 2) throw GetConvertFromException(value);
+
+            var minStr = parts[0];
+            var maxStr = parts[1];
+
+            if (int.TryParse(minStr, NumberStyles.Integer, culture, out var minInt)
+                && int.TryParse(maxStr, NumberStyles.Integer, culture, out var maxInt))
+            {
+                return new ValueRange<int>(minInt, maxInt);
+            }
+
+            if (double.TryParse(minStr, NumberStyles.Float, culture, out var minDouble)
+                && int.TryParse(maxStr, NumberStyles.Float, culture, out var maxDouble))
+            {
+                return new ValueRange<double>(minDouble, maxDouble);
+            }
+
+            if (DateTime.TryParse(minStr, culture, DateTimeStyles.None, out var minDateTime)
+                && DateTime.TryParse(maxStr, culture, DateTimeStyles.None, out var maxDateTime))
+            {
+                return new ValueRange<DateTime>(minDateTime, maxDateTime);
+            }
+
+            return base.ConvertFrom(context, culture, value)!;
         }
 
         /// <summary>
@@ -109,10 +111,10 @@ namespace Xpandables.Net
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            if (value is { } && value.GetType().IsSubclassOf(typeof(ValueRange<>)) == true && destinationType == typeof(string))
+            if (value.GetType().IsSubclassOf(typeof(ValueRange<>)) && destinationType == typeof(string))
                 return value.ToString()!;
 
-            return base.ConvertTo(context, culture, value, destinationType);
+            return base.ConvertTo(context, culture, value, destinationType)!;
         }
     }
 }

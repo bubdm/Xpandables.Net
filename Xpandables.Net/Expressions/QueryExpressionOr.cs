@@ -26,7 +26,7 @@ namespace Xpandables.Net.Expressions
     /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
     /// <typeparam name="TResult">The type of the result of expression.</typeparam>
     public sealed class QueryExpressionOr<TSource, TResult> : QueryExpression<TSource, TResult>
-        where TSource : class
+        where TSource : notnull
     {
         private readonly IQueryExpression<TSource, TResult> _left;
         private readonly IQueryExpression<TSource, TResult> _right;

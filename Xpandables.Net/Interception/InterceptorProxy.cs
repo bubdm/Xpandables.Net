@@ -111,7 +111,7 @@ namespace Xpandables.Net.Interception
                 invocation.Proceed();
             }
 
-            if (invocation.Exception is Exception ex)
+            if (invocation.Exception is { } ex)
                 ExceptionDispatchInfo.Capture(ex).Throw();
 
             return invocation.ReturnValue;

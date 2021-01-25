@@ -18,20 +18,20 @@
 using System;
 using System.Net.Http;
 
-namespace Xpandables.Net.Http.Network
+namespace Xpandables.Net.Http
 {
     /// <summary>
-    /// Default implementation for <see cref="IHttpIPAddressLocationAccessor"/>.
+    /// Default implementation for <see cref="IHttpIpAddressLocationAccessor"/>.
     /// </summary>
-    public sealed class HttpIPAddressLocationAccessor : Disposable, IHttpIPAddressLocationAccessor
+    public sealed class HttpIpAddressLocationAccessor : Disposable, IHttpIpAddressLocationAccessor
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
-        IHttpRestClientHandler IHttpIPAddressLocationAccessor.HttpRestClientHandler => _httpRestClientHandler;
+        IHttpRestClientHandler IHttpIpAddressLocationAccessor.HttpRestClientHandler => _httpRestClientHandler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpIPAddressLocationAccessor"/> class that uses the http://api.ipstack.com to retrieve the user location.
+        /// Initializes a new instance of the <see cref="HttpIpAddressLocationAccessor"/> class that uses the http://api.ipstack.com to retrieve the user location.
         /// </summary>
-        public HttpIPAddressLocationAccessor(HttpClient httpClient)
+        public HttpIpAddressLocationAccessor(HttpClient httpClient)
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             _httpRestClientHandler = new HttpRestClientHandler(httpClient);
@@ -49,7 +49,7 @@ namespace Xpandables.Net.Http.Network
                 return;
 
             if (disposing)
-                _httpRestClientHandler?.Dispose();
+                _httpRestClientHandler.Dispose();
 
             _isDisposed = true;
             base.Dispose(disposing);

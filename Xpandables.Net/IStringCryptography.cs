@@ -85,7 +85,7 @@ namespace Xpandables.Net
                 keyBytes = sha256.ComputeHash(keyBytes);
                 string encryptedString;
 
-                using (var memoryStream = new MemoryStream())
+                await using (var memoryStream = new MemoryStream())
                 {
                     using var rijndaelManaged = new RijndaelManaged();
                     using var rfcKey = new Rfc2898DeriveBytes(keyBytes, saltBytes, 1000, HashAlgorithmName.SHA256);
@@ -96,7 +96,7 @@ namespace Xpandables.Net
                     rijndaelManaged.Key = rfcKey.GetBytes(rijndaelManaged.KeySize / 8);
                     rijndaelManaged.IV = rfcKey.GetBytes(rijndaelManaged.BlockSize / 8);
                     rijndaelManaged.Mode = CipherMode.CBC;
-                    using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateEncryptor(), CryptoStreamMode.Write))
+                    await using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateEncryptor(), CryptoStreamMode.Write))
                     {
                         await cryptoStream.WriteAsync(toBeEncrypted.AsMemory(0, toBeEncrypted.Length), CancellationToken.None).ConfigureAwait(false);
                     }
@@ -154,7 +154,7 @@ namespace Xpandables.Net
                 keyBytes = sha256.ComputeHash(keyBytes);
                 string decryptedString;
 
-                using (var memoryStream = new MemoryStream())
+                await using (var memoryStream = new MemoryStream())
                 {
                     using var rijndaelManaged = new RijndaelManaged();
                     using var rfcKey = new Rfc2898DeriveBytes(keyBytes, saltBytes, 1000, HashAlgorithmName.SHA256);
@@ -164,7 +164,7 @@ namespace Xpandables.Net
                     rijndaelManaged.Key = rfcKey.GetBytes(rijndaelManaged.KeySize / 8);
                     rijndaelManaged.IV = rfcKey.GetBytes(rijndaelManaged.BlockSize / 8);
                     rijndaelManaged.Mode = CipherMode.CBC;
-                    using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(), CryptoStreamMode.Write))
+                    await using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(), CryptoStreamMode.Write))
                     {
                         await cryptoStream.WriteAsync(toBeDecrypted.AsMemory(0, toBeDecrypted.Length), CancellationToken.None).ConfigureAwait(false);
                     }

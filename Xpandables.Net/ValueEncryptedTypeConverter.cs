@@ -65,7 +65,7 @@ namespace Xpandables.Net
                 string source => source.Split(':').Length == 3
                     ? new ValueEncrypted(source.Split(':')[0], source.Split(':')[1], source.Split(':')[2])
                     : throw GetConvertFromException(value),
-                _ => base.ConvertFrom(context, culture, value),
+                _ => base.ConvertFrom(context, culture, value)!,
             };
 
         /// <summary>
@@ -84,8 +84,8 @@ namespace Xpandables.Net
         /// for the enumeration.</exception>
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-            => value?.GetType() == typeof(ValueEncrypted) && destinationType == typeof(string)
-                ? ((ValueEncrypted)value).ToString("{0}:{1}:{2}", culture)
-                : base.ConvertTo(context, culture, value, destinationType);
+            => value is ValueEncrypted encrypted && destinationType == typeof(string)
+                ? encrypted.ToString("{0}:{1}:{2}", culture)
+                : base.ConvertTo(context, culture, value, destinationType)!;
     }
 }

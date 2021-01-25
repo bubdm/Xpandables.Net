@@ -104,7 +104,7 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// Gets the response status code.
         /// </summary>
-        public HttpStatusCode StatusCode { get; protected set; } = HttpStatusCode.OK;
+        public HttpStatusCode StatusCode { get; protected set; }
 
         /// <summary>
         /// Determines whether or not the response status is valid.
@@ -148,9 +148,9 @@ namespace Xpandables.Net.Http
         {
             var response = (Exception, target) switch
             {
-                (null, TTarget value) => new HttpRestClientResponse<TTarget>(value, StatusCode),
+                (null, { } value) => new HttpRestClientResponse<TTarget>(value, StatusCode),
                 (Exception exception, null) => new HttpRestClientResponse<TTarget>(exception, StatusCode),
-                (Exception exception, TTarget) => new HttpRestClientResponse<TTarget>(exception, StatusCode),
+                (Exception exception, { }) => new HttpRestClientResponse<TTarget>(exception, StatusCode),
                 (_, _) => new HttpRestClientResponse<TTarget>(StatusCode),
             };
 
@@ -174,7 +174,7 @@ namespace Xpandables.Net.Http
         ///  Returns a success HTTP status response.
         /// </summary>
         /// <param name="statusCode">The status response code.</param>
-        internal static new HttpRestClientResponse<TResult> Success(HttpStatusCode statusCode = HttpStatusCode.OK)
+        internal new static HttpRestClientResponse<TResult> Success(HttpStatusCode statusCode = HttpStatusCode.OK)
             => new(statusCode);
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace Xpandables.Net.Http
         /// <param name="exception">The handled exception of the response.</param>
         /// <param name="statusCode">The status code of the response.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
-        internal static new HttpRestClientResponse<TResult> Failure(
+        internal new static HttpRestClientResponse<TResult> Failure(
             Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new(exception, statusCode);
 
@@ -191,7 +191,7 @@ namespace Xpandables.Net.Http
         /// Returns a failure HTTP status response.
         /// </summary>
         /// <param name="statusCode">The status code of the response.</param>
-        internal static new HttpRestClientResponse<TResult> Failure(HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+        internal new static HttpRestClientResponse<TResult> Failure(HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new(statusCode);
 
         /// <summary>

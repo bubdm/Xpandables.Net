@@ -47,6 +47,6 @@ namespace Xpandables.Net.Expressions
         /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/></returns>
         /// <exception cref="ArgumentNullException">The <paramref name="expression"/> is null.</exception>
         public static QueryExpression<TSource, TResult> Create<TSource>(Expression<Func<TSource, TResult>> expression)
-            where TSource : class => new QueryExpressionBuilder<TSource, TResult>(expression);
+            where TSource : notnull => new QueryExpressionBuilder<TSource, TResult>(expression);
     }
 }

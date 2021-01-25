@@ -104,13 +104,11 @@ namespace Xpandables.Net.CQRS
             try
             {
                 handlers = GetHandlers(handlerType);
-                if (handlers?.Any() != true)
-                {
-                    exception = new NotImplementedException($"Unable to find handlers of type '{handlerType.FullName}'.");
-                    return false;
-                }
+                if (handlers.Any())
+                    return true;
 
-                return true;
+                exception = new NotImplementedException($"Unable to find handlers of type '{handlerType.FullName}'.");
+                return false;
             }
             catch (Exception ex)
             {

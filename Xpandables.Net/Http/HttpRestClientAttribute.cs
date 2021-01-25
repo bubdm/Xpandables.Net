@@ -30,7 +30,7 @@ namespace Xpandables.Net.Http
     /// in order to be used with <see cref="IHttpRestClientHandler"/>.
     /// Your class can implement the <see cref="IHttpRestClientAttributeProvider"/> to dynamically return a <see cref="HttpRestClientAttribute"/>.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public sealed class HttpRestClientAttribute : Attribute
     {
         /// <summary>
@@ -236,7 +236,7 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// Returns the json accept header.
         /// </summary>
-        public static readonly string[] JsonAccept = new string[5]
+        public static readonly string[] JsonAccept = new string[]
         {
             "application/json",
             "text/json",
@@ -248,7 +248,7 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// Returns the XML accept header.
         /// </summary>
-        public static readonly string[] XmlAccept = new string[4]
+        public static readonly string[] XmlAccept = new string[]
         {
             "application/xml",
             "text/xml",
