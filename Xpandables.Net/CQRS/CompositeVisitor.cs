@@ -17,6 +17,9 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.CQRS
 {
@@ -25,18 +28,28 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TElement">Type of the element to be visited</typeparam>
     [Serializable]
-    public sealed class CompositeVisitor<TElement> : ICompositeVisitor<TElement>
+    public class CompositeVisitor<TElement> : ICompositeVisitor<TElement>
         where TElement : class, IVisitable<TElement>
     {
         private readonly IEnumerable<IVisitor<TElement>> _visitorInstances;
-
-        IEnumerable<IVisitor<TElement>> ICompositeVisitor<TElement>.VisitorInstances => _visitorInstances;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompositeVisitor{TElement}"/> class with a collection of visitors.
         /// </summary>
         /// <param name="visitors">The collection of visitors for a specific type.</param>
-        public CompositeVisitor(IEnumerable<IVisitor<TElement>> visitors)
-            => _visitorInstances = visitors;
+        public CompositeVisitor(IEnumerable<IVisitor<TElement>> visitors) => _visitorInstances = visitors;
+
+        /// <summary>
+        /// Asynchronously applies all found visitors to the element according to the visitor order.
+        /// </summary>
+        /// <param name="element">The element to be visited.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
+        public virtual async Task VisitAsync(TElement element, CancellationToken cancellationToken = default)
+        {
+            _ = element ?? throw new ArgumentNullException(nameof(element));
+            foreach (var visitor in _visitorInstances.OrderBy(o => o.Order))
+                await visitor.VisitAsync(element, cancellationToken).ConfigureAwait(false);
+        }
     }
 }

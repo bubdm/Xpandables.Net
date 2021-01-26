@@ -28,7 +28,7 @@ namespace Xpandables.Net.CQRS
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated</typeparam>
     [Serializable]
-    public sealed class CompositeValidation<TArgument> : Validator<TArgument>, ICompositeValidation<TArgument>
+    public class CompositeValidator<TArgument> : Validator<TArgument>, ICompositeValidator<TArgument>
         where TArgument : class
     {
         private readonly IEnumerable<IValidator<TArgument>> _validationInstances;
@@ -37,7 +37,7 @@ namespace Xpandables.Net.CQRS
         /// Initializes the composite validation with all validation instances for the argument.
         /// </summary>
         /// <param name="validationInstances">The collection of validators to act with.</param>
-        public CompositeValidation(IEnumerable<IValidator<TArgument>> validationInstances)
+        public CompositeValidator(IEnumerable<IValidator<TArgument>> validationInstances)
             => _validationInstances = validationInstances;
 
         /// <summary>

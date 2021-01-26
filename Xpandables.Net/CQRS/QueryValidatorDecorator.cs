@@ -23,7 +23,7 @@ namespace Xpandables.Net.CQRS
     /// <summary>
     /// This class allows the application author to add validation support to query control flow.
     /// The target query should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
-    /// The class decorates the target query handler with an implementation of <see cref="ICompositeValidation{TArgument}"/>
+    /// The class decorates the target query handler with an implementation of <see cref="ICompositeValidator{TArgument}"/>
     /// and applies all validators found to the target query before the command get handled. You should provide with implementation
     /// of <see cref="IValidator{TArgument}"/>for validation.
     /// </summary>
@@ -33,7 +33,7 @@ namespace Xpandables.Net.CQRS
         where TQuery : class, IQuery<TResult>, IValidationDecorator
     {
         private readonly IQueryHandler<TQuery, TResult> _decoratee;
-        private readonly ICompositeValidation<TQuery> _validator;
+        private readonly ICompositeValidator<TQuery> _validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryValidatorDecorator{TQuery, TResult}"/> class with
@@ -43,7 +43,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="validator">The validator instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
-        public QueryValidatorDecorator(IQueryHandler<TQuery, TResult> decoratee, ICompositeValidation<TQuery> validator)
+        public QueryValidatorDecorator(IQueryHandler<TQuery, TResult> decoratee, ICompositeValidator<TQuery> validator)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));

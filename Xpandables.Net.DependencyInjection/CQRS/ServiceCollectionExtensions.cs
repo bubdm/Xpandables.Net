@@ -502,7 +502,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient(typeof(ICompositeValidation<>), typeof(CompositeValidation<>));
+            services.AddTransient(typeof(ICompositeValidator<>), typeof(CompositeValidator<>));
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandValidatorDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandValidatorDecorator<,>));
             services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryValidatorDecorator<,>));

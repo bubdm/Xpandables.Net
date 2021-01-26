@@ -22,7 +22,7 @@ namespace Xpandables.Net.CQRS
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
-    public interface ICompositeValidation<in TArgument> : IValidator<TArgument>
+    public interface ICompositeValidator<in TArgument> : IValidator<TArgument>
         where TArgument : notnull
     { }
 }

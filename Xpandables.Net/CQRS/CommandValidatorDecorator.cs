@@ -24,7 +24,7 @@ namespace Xpandables.Net.CQRS
     /// <summary>
     /// This class allows the application author to add validation support to command control flow.
     /// The target command should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="ICompositeValidation{TArgument}"/>
+    /// The class decorates the target command handler with an implementation of <see cref="ICompositeValidator{TArgument}"/>
     /// and applies all validators found to the target command before the command get handled if there is no error. You should provide with implementation
     /// of <see cref="IValidator{TArgument}"/> for validation.
     /// </summary>
@@ -33,7 +33,7 @@ namespace Xpandables.Net.CQRS
         where TCommand : class, ICommand, IValidationDecorator
     {
         private readonly ICommandHandler<TCommand> _decoratee;
-        private readonly ICompositeValidation<TCommand> _validator;
+        private readonly ICompositeValidator<TCommand> _validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandValidatorDecorator{TCommand}"/> class 
@@ -43,7 +43,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="validator">The validator instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
-        public CommandValidatorDecorator(ICommandHandler<TCommand> decoratee, ICompositeValidation<TCommand> validator)
+        public CommandValidatorDecorator(ICommandHandler<TCommand> decoratee, ICompositeValidator<TCommand> validator)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
@@ -69,7 +69,7 @@ namespace Xpandables.Net.CQRS
     /// <summary>
     /// This class allows the application author to add validation support to command control flow.
     /// The target command should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="ICompositeValidation{TArgument}"/>
+    /// The class decorates the target command handler with an implementation of <see cref="ICompositeValidator{TArgument}"/>
     /// and applies all validators found to the target command before the command get handled if there is no error. You should provide with implementation
     /// of <see cref="IValidator{TArgument}"/> for validation.
     /// </summary>
@@ -79,7 +79,7 @@ namespace Xpandables.Net.CQRS
         where TCommand : class, ICommand<TResult>, IValidationDecorator
     {
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
-        private readonly ICompositeValidation<TCommand> _validator;
+        private readonly ICompositeValidator<TCommand> _validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandValidatorDecorator{TCommand, TResult}"/> class 
@@ -89,7 +89,7 @@ namespace Xpandables.Net.CQRS
         /// <param name="validator">The validator instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="validator"/> is null.</exception>
-        public CommandValidatorDecorator(ICommandHandler<TCommand, TResult> decoratee, ICompositeValidation<TCommand> validator)
+        public CommandValidatorDecorator(ICommandHandler<TCommand, TResult> decoratee, ICompositeValidator<TCommand> validator)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
