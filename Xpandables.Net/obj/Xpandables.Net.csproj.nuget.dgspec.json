@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj": {
-      "version": "5.2.13",
+      "version": "5.2.14",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\Xpandables.Net.csproj",
         "projectName": "Xpandables.Net",
@@ -14,7 +14,7 @@
         "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -57,7 +57,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.200-preview.20614.14\\RuntimeIdentifierGraph.json"
         }
       }
     }

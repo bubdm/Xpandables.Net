@@ -15,23 +15,26 @@
  *
 ************************************************************************************************************/
 
-using System;
-
-namespace Xpandables.Net.QrCodes.Presenter
+namespace Xpandables.Net.CQRS
 {
     /// <summary>
-    /// The <see cref="QrCode"/> exception
+    /// Provides with user information across operation execution flow.
     /// </summary>
-    public class QrCodeException : Exception
+    public interface IOperationContextAccessor
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="QrCodeException" /> class with a specified error message.</summary>
-        /// <param name="eccLevel">The level of the message.</param>
-        /// <param name="encodingMode"></param>
-        /// <param name="maxSizeByte"></param>
-        public QrCodeException(string eccLevel, string encodingMode, int maxSizeByte) : base(
-            $"The given payload exceeds the maximum size of the QR code standard. The maximum size allowed for the chosen parameters (ECC level={eccLevel}, EncodingMode={encodingMode}) is {maxSizeByte} byte."
-        )
-        { }
+        /// Gets the current authenticated user id for an execution flow.
+        /// </summary>
+        string UserId { get; }
+
+        /// <summary>
+        /// Gets the current correlation identifier for an execution flow.
+        /// </summary>
+        string CorrelationId { get; }
+
+        /// <summary>
+        /// Determines whether or not context is available.
+        /// </summary>
+        bool IsAvailable { get; }
     }
 }
