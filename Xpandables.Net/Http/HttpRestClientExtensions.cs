@@ -67,7 +67,6 @@ namespace Xpandables.Net.Http
                 }
 
                 return true;
-
             }
             catch (Exception ex)
             {

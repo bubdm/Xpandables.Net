@@ -75,7 +75,7 @@ namespace Xpandables.Net
         {
             _ = enumerationType ?? throw new ArgumentNullException(nameof(enumerationType));
             if (enumerationType.IsSubclassOf(typeof(EnumerationType)) is false)
-                throw new ArgumentException($@"The type is not a subclass of {typeof(EnumerationType)}", nameof(enumerationType));
+                throw new ArgumentException($"The type is not a subclass of {typeof(EnumerationType)}", nameof(enumerationType));
 
             var properties = enumerationType
                 .GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy |

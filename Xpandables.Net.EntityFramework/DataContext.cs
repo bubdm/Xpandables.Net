@@ -172,7 +172,7 @@ namespace Xpandables.Net.CQRS
             where T : Entity
         {
             var enumerable = entities as T[] ?? entities.ToArray();
-            if (enumerable.Any() != true)
+            if (enumerable.Length == 0)
                 throw new ArgumentNullException(nameof(entities));
 
             await AddRangeAsync(enumerable, cancellationToken).ConfigureAwait(false);
@@ -249,13 +249,16 @@ namespace Xpandables.Net.CQRS
             where TUpdated : Entity
         {
             var enumerable = updatedEntities as TUpdated[] ?? updatedEntities.ToArray();
-            if (enumerable.Any() != true)
+            if (enumerable.Length == 0)
                 throw new ArgumentNullException(nameof(updatedEntities));
 
             foreach (var updatedEntity in enumerable)
             {
                 if (await Set<T>().FirstOrDefaultAsync(e => e.Id == updatedEntity.Id, cancellationToken)
-                    .ConfigureAwait(false) is not { } entity) continue;
+                    .ConfigureAwait(false) is not { } entity)
+                {
+                    continue;
+                }
 
                 Entry(entity).CurrentValues.SetValues(updatedEntity);
                 Entry(entity).State = EntityState.Modified;
@@ -304,7 +307,7 @@ namespace Xpandables.Net.CQRS
         public virtual async Task PersistAsync(CancellationToken cancellationToken)
         {
             try
-            {                
+            {
                 await SaveChangesAsync(true, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception) when (exception is DbUpdateException)

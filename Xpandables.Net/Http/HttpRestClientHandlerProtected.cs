@@ -52,11 +52,13 @@ namespace Xpandables.Net.Http
             {
                 var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
                 if (stream is null)
+                {
                     return HttpRestClientResponse<TResult>
                         .Success(httpResponse.StatusCode)
                         .AddHeaders(ReadHttpResponseHeaders(httpResponse))
                         .AddVersion(httpResponse.Version)
                         .AddReasonPhrase(httpResponse.ReasonPhrase);
+                }
 
                 var results = streamToResponseConverter(stream);
                 return HttpRestClientResponse<TResult>
@@ -88,11 +90,13 @@ namespace Xpandables.Net.Http
             {
                 var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
                 if (stream is null)
+                {
                     return HttpRestClientResponse<TResult>
                         .Success(httpResponse.StatusCode)
                         .AddHeaders(ReadHttpResponseHeaders(httpResponse))
                         .AddVersion(httpResponse.Version)
                         .AddReasonPhrase(httpResponse.ReasonPhrase);
+                }
 
                 var results = await streamToResponseConverter(stream).ConfigureAwait(false);
                 return HttpRestClientResponse<TResult>
@@ -100,7 +104,6 @@ namespace Xpandables.Net.Http
                     .AddHeaders(ReadHttpResponseHeaders(httpResponse))
                     .AddVersion(httpResponse.Version)
                     .AddReasonPhrase(httpResponse.ReasonPhrase);
-
             }
             catch (Exception exception)
             {
@@ -287,7 +290,7 @@ namespace Xpandables.Net.Http
             _ = path ?? throw new ArgumentNullException(nameof(path));
             _ = pathString ?? throw new ArgumentNullException(nameof(pathString));
 
-            if (pathString.Count <= 0)
+            if (pathString.Count == 0)
                 return path;
 
             foreach (var parameter in pathString)
@@ -348,7 +351,7 @@ namespace Xpandables.Net.Http
         protected virtual void WriteLocationPath<TSource>(TSource source, HttpRestClientAttribute attribute)
             where TSource : notnull
         {
-            if (!attribute.In.HasFlag(ParameterLocation.Path)) return;
+            if ((attribute.In & ParameterLocation.Path) == 0) return;
 
             ValidateInterfaceImplementation<IPathStringLocationRequest>(source);
             if (source is not IPathStringLocationRequest pathStringRequest) return;
@@ -366,7 +369,7 @@ namespace Xpandables.Net.Http
         protected virtual void WriteLocationQuery<TSource>(TSource source, HttpRestClientAttribute attribute)
             where TSource : notnull
         {
-            if (!attribute.In.HasFlag(ParameterLocation.Query)) return;
+            if ((attribute.In & ParameterLocation.Query) == 0) return;
             ValidateInterfaceImplementation<IQueryStringLocationRequest>(source);
             if (source is not IQueryStringLocationRequest queryStringRequest) return;
 
@@ -384,7 +387,7 @@ namespace Xpandables.Net.Http
         protected virtual void WriteLocationCookie<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage)
               where TSource : notnull
         {
-            if (!attribute.In.HasFlag(ParameterLocation.Cookie)) return;
+            if ((attribute.In & ParameterLocation.Cookie) == 0) return;
             ValidateInterfaceImplementation<ICookieLocationRequest>(source);
             if (source is not ICookieLocationRequest cookieLocationRequest) return;
 
@@ -403,7 +406,7 @@ namespace Xpandables.Net.Http
         protected virtual void WriteLocationHeader<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage)
                 where TSource : notnull
         {
-            if (!attribute.In.HasFlag(ParameterLocation.Header)) return;
+            if ((attribute.In & ParameterLocation.Header) == 0) return;
 
             ValidateInterfaceImplementation<IHeaderLocationRequest>(source);
             if (source is not IHeaderLocationRequest headerLocationRequest) return;
@@ -432,8 +435,10 @@ namespace Xpandables.Net.Http
         {
             ValidateInterfaceImplementation<IByteArrayRequest>(source);
             if (source is IByteArrayRequest byteArrayRequest)
+            {
                 if (byteArrayRequest.GetByteContent() is { } byteContent)
                     return new ByteArrayContent(byteContent);
+            }
 
             return default;
         }
@@ -450,8 +455,10 @@ namespace Xpandables.Net.Http
         {
             ValidateInterfaceImplementation<IFormUrlEncodedRequest>(source);
             if (source is IFormUrlEncodedRequest formUrlEncodedRequest)
+            {
                 if (formUrlEncodedRequest.GetFormContent() is { } formContent)
                     return new FormUrlEncodedContent(formContent);
+            }
 
             return default;
         }
@@ -540,7 +547,7 @@ namespace Xpandables.Net.Http
             var enumerateStreamElementToBlockingCollectionThread = new Thread(() => EnumerateStreamElementToBlockingCollection(stream, blockingCollection, cancellationToken, options));
             enumerateStreamElementToBlockingCollectionThread.Start();
 
-            while (await iterator.MoveNextAsync())
+            while (await iterator.MoveNextAsync().ConfigureAwait(false))
                 yield return iterator.Current;
         }
 
@@ -584,7 +591,7 @@ namespace Xpandables.Net.Http
         /// <param name="options">The JSON serializer options.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="stream"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception> 
+        /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception>
         protected virtual async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream, JsonSerializerOptions? options = default)
         {
             _ = stream ?? throw new ArgumentNullException(nameof(stream));

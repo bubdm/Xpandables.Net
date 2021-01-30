@@ -87,7 +87,7 @@ namespace Xpandables.Net.CQRS
 
                 entity.SetCreationDate(DateTime.UtcNow);
 
-                if (entity.Notifications.Count <= 0) return;
+                if (entity.Notifications.Count == 0) return;
 
                 _notifications.AddRange(entity.Notifications);
                 entity.ClearNotifications();
@@ -103,7 +103,7 @@ namespace Xpandables.Net.CQRS
                 if (entity.IsDeleted)
                     entity.SetDeleteDate(date);
 
-                if (entity.Notifications.Count <= 0) return;
+                if (entity.Notifications.Count == 0) return;
 
                 _notifications.AddRange(entity.Notifications);
                 entity.ClearNotifications();

@@ -118,14 +118,14 @@ namespace Xpandables.Net.Http
     public enum ParameterLocation
     {
         /// <summary>
+        /// Used in the content of the request.
+        /// </summary>
+        Body = 0x0,
+
+        /// <summary>
         /// Parameters that are appended to the URL. You must implement <see cref="IQueryStringLocationRequest"/> to provide with content.
         /// </summary>
         Query = 0x1,
-
-        /// <summary>
-        /// Custom headers that are expected as part of the request. You must implement <see cref="IHeaderLocationRequest"/> to provide with content.
-        /// </summary>
-        Header = 0x4,
 
         /// <summary>
         /// Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="IPathStringLocationRequest"/> to provide with content.
@@ -133,14 +133,14 @@ namespace Xpandables.Net.Http
         Path = 0x2,
 
         /// <summary>
-        /// Used to pass a specific cookie value to the API. You must <see cref="ICookieLocationRequest"/> to provide with content.
+        /// Custom headers that are expected as part of the request. You must implement <see cref="IHeaderLocationRequest"/> to provide with content.
         /// </summary>
-        Cookie = 0x8,
+        Header = 0x4,
 
         /// <summary>
-        /// Used in the content of the request.
+        /// Used to pass a specific cookie value to the API. You must <see cref="ICookieLocationRequest"/> to provide with content.
         /// </summary>
-        Body = 0x0
+        Cookie = 0x8
     }
 
     /// <summary>

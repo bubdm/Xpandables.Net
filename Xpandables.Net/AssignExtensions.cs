@@ -86,7 +86,7 @@ namespace Xpandables.Net
             _ = nameOfExpression ?? throw new ArgumentNullException(nameof(nameOfExpression));
 
             if (nameOfExpression.Body is not ConstantExpression constantExpression)
-                throw new ArgumentNullException($"Constant Expression expected. {nameof(nameOfExpression)}");
+                throw new ArgumentNullException(nameof(nameOfExpression), "Constant Expression expected.");
 
             if (constantExpression.Value?.ToString() is not { } propertyName)
                 throw new ArgumentException($"Constant Expression Value is null. {nameof(nameOfExpression)}");

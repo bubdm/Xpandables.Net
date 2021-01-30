@@ -61,7 +61,7 @@ namespace Xpandables.Net.Http
 
             var result = Newtonsoft.Json.JsonSerializer.CreateDefault().Deserialize<TResult>(jsonTextReader);
 #nullable disable
-            return await Task.FromResult(result);
+            return await Task.FromResult(result).ConfigureAwait(false);
 #nullable enable
         }
 

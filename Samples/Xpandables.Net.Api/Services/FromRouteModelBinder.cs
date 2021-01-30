@@ -31,7 +31,6 @@ namespace Xpandables.Net.Api.Services
 {
     public sealed class FromRouteModelBinderProvider : IModelBinderProvider
     {
-
         public IModelBinder? GetBinder(ModelBinderProviderContext context)
         {
             _ = context ?? throw new ArgumentNullException(nameof(context));

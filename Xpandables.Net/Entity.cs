@@ -183,7 +183,7 @@ namespace Xpandables.Net
         /// <param name="b"></param>
         /// <returns></returns>
         public static bool operator ==(Entity a, Entity b)
-            => a is null && b is null || !(a is null) && !(b is null) && a.Equals(b);
+            => (a is null && b is null) || (!(a is null) && !(b is null) && a.Equals(b));
 
         /// <summary>
         /// Applies non equal operator.

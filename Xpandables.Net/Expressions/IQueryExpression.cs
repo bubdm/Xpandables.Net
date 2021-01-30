@@ -20,7 +20,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace Xpandables.Net.Expressions
-{  
+{
     /// <summary>
     /// Defines a methods that returns an <see cref="Expression{TDelegate}"/> that can be used to query
     /// the <typeparamref name="TSource"/> instance and inherits from <see cref="ICanHandle{TArgument}"/>.

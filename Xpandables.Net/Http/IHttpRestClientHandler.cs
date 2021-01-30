@@ -32,8 +32,8 @@ namespace Xpandables.Net.Http
     /// <see cref="IStringRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, <see cref="IFormUrlEncodedRequest"/>,
     /// <see cref="IMultipartRequest"/>, <see cref="IQueryStringLocationRequest"/>, <see cref="ICookieLocationRequest"/>, <see cref="IHeaderLocationRequest"/> or <see cref="IPathStringLocationRequest"/>.
     /// <para>When used with dependency injection, you should register the handler using one of the extension methods
-    /// <see langword="AddHttpClient{TClient, TImplementation}(Action{IserviceProvider, HttpClient})"/> and you may add 
-    /// <see langword="HttpClientBuilderExtensions.ConfigureHttpClient(IHttpClientBuilder, Action{HttpClient})"/> or other 
+    /// <see langword="AddHttpClient{TClient, TImplementation}(Action{IserviceProvider, HttpClient})"/> and you may add
+    /// <see langword="HttpClientBuilderExtensions.ConfigureHttpClient(IHttpClientBuilder, Action{HttpClient})"/> or other
     /// to customize the client behaviors.</para>
     /// </summary>
     public interface IHttpRestClientHandler : IDisposable
@@ -49,8 +49,8 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
-        /// <param name="options">The JSON serializer options used to customize deserialization.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="options">The JSON serializer options used to customize deserialization.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "<Pending>")]

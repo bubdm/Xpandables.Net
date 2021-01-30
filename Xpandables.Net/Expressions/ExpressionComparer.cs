@@ -29,8 +29,8 @@ namespace Xpandables.Net.Expressions
     public class ScopedDictionary<TKey, TValue>
         where TKey : notnull
     {
-        readonly ScopedDictionary<TKey, TValue> _previous;
-        readonly Dictionary<TKey, TValue> _map;
+        private readonly ScopedDictionary<TKey, TValue> _previous;
+        private readonly Dictionary<TKey, TValue> _map;
 
         public ScopedDictionary(ScopedDictionary<TKey, TValue> previous)
         {

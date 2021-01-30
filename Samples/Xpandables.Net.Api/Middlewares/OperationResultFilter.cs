@@ -31,8 +31,10 @@ namespace Xpandables.Net.Api.Middlewares
         public Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
             if (context.Result is not ObjectResult objectResult ||
-                objectResult.Value is not IOperationResult operationResult) 
+                objectResult.Value is not IOperationResult operationResult)
+            {
                 return next();
+            }
 
             if (operationResult.IsFailure)
             {

@@ -86,8 +86,8 @@ namespace Xpandables.Net.CQRS
         Task<TResult> FindAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
             Expression<Func<TParam, bool>> criteria, Expression<Func<TEntity, TResult>> converter,
             CancellationToken cancellationToken = default)
-            where TResult : notnull
-            where TParam : notnull;
+            where TParam : notnull
+            where TResult : notnull;
 
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria.

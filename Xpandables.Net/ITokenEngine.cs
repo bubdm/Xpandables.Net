@@ -43,6 +43,7 @@ namespace Xpandables.Net
         /// <returns>An instance of string token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to write token from source. See inner exception.</exception>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("General", "RCS1079:Throwing of new NotImplementedException.", Justification = "<Pending>")]
         public virtual ValueToken WriteToken(object source) => throw new NotImplementedException();
 
         /// <summary>

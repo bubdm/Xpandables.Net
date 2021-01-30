@@ -33,7 +33,7 @@ namespace Xpandables.Net.CQRS
     /// <typeparam name="TArgument">Type of the argument.</typeparam>
     public abstract class Validator<TArgument> : IValidator<TArgument>
         where TArgument : class
-    {     
+    {
         /// <summary>
         /// Asynchronously validates the argument and returns validation state with errors if necessary.
         /// </summary>
@@ -47,18 +47,28 @@ namespace Xpandables.Net.CQRS
             if (!Validator.TryValidateObject(argument, new ValidationContext(argument, null, null), validationResults, true))
             {
                 if (cancellationToken.IsCancellationRequested)
+                {
                     cancellationToken.ThrowIfCancellationRequested();
+                }
 
                 var errors = new OperationErrorCollection();
                 foreach (var validationResult in validationResults)
+                {
                     foreach (var member in validationResult.MemberNames)
+                    {
                         if (validationResult.ErrorMessage is not null)
                         {
                             if (errors[member] is { } error)
+                            {
                                 errors[member]!.ErrorMessages = error.ErrorMessages.Union(new[] { validationResult.ErrorMessage }).ToArray();
+                            }
                             else
+                            {
                                 errors.Add(member, validationResult.ErrorMessage);
+                            }
                         }
+                    }
+                }
 
                 return new FailureOperationResult(HttpStatusCode.BadRequest, errors);
             }

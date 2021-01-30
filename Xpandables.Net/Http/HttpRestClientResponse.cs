@@ -47,7 +47,7 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// Returns a failure HTTP status response.
         /// </summary>
-        /// <param name="statusCode">The status code of the response.</param>        
+        /// <param name="statusCode">The status code of the response.</param>
         internal static HttpRestClientResponse Failure(HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new(statusCode);
 
@@ -159,7 +159,6 @@ namespace Xpandables.Net.Http
             if (Version is not null) response.AddVersion(Version);
 
             return response;
-
         }
 
         /// <summary>

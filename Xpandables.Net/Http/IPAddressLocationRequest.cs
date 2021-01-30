@@ -208,7 +208,7 @@ namespace Xpandables.Net.Http
     {
         /// <summary>
         /// Returns the requested IP address.
-        /// </summary>        
+        /// </summary>
         public string? Ip { get; set; }
 
         /// <summary>

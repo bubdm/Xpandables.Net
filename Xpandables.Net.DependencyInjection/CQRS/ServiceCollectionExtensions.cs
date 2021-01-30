@@ -142,7 +142,11 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXLoggingProvider<THandlerLogger>(this IServiceCollection services)
             where THandlerLogger : class, ILoggingHandler
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
             return services.AddScoped<ILoggingHandler, THandlerLogger>();
         }
 
@@ -285,7 +289,11 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXTransactionScopeProvider<TTransactionScopeProvider>(this IServiceCollection services)
             where TTransactionScopeProvider : class, ITransactionScopeProvider
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
             return services.AddScoped<ITransactionScopeProvider, TTransactionScopeProvider>();
         }
 
@@ -297,7 +305,10 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXTransactionDecorator(this IServiceCollection services)
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
 
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandTransactionDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandTransactionDecorator<,>));
@@ -314,29 +325,38 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXCommandHandlers(this IServiceCollection services, Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
 
             services.AddXCommandHandlerWrapper();
 
             var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(ICommandHandler<>)))
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(ICommandHandler<>)))
                 .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(ICommandHandler<>)) })
                 .ToList();
 
             foreach (var handler in genericHandlers)
+            {
                 foreach (var interf in handler.Interfaces)
+                {
                     services.AddScoped(interf, handler.Type);
+                }
+            }
 
             var genericResultHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(ICommandHandler<,>)))
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(ICommandHandler<,>)))
                 .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(ICommandHandler<,>)) })
                 .ToList();
 
             foreach (var handler in genericResultHandlers)
+            {
                 foreach (var interf in handler.Interfaces)
+                {
                     services.AddScoped(interf, handler.Type);
+                }
+            }
 
             return services;
         }
@@ -364,17 +384,23 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXNotificationHandlers(this IServiceCollection services, Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
 
             var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<>)))
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<>)))
                 .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<>)) })
                 .ToList();
 
             foreach (var handler in genericHandlers)
+            {
                 foreach (var interf in handler.Interfaces)
+                {
                     services.AddScoped(interf, handler.Type);
+                }
+            }
 
             return services;
         }
@@ -389,9 +415,20 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXHandlers(
             this IServiceCollection services, Assembly[] assemblies, Action<HandlerOptions> configureOptions)
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
-            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
-            if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (assemblies.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
+
+            if (configureOptions == null)
+            {
+                throw new ArgumentNullException(nameof(configureOptions));
+            }
 
             services.AddXCommandHandlers(assemblies);
             services.AddXQueryHandlers(assemblies);
@@ -403,28 +440,44 @@ namespace Xpandables.Net.DependencyInjection
             configureOptions.Invoke(definedOptions);
 
             if (definedOptions.IsDomainEventEnabled)
+            {
                 services.AddXDomainEventDecorator();
+            }
 
             if (definedOptions.IsPersistenceEnabled)
+            {
                 services.AddXPersistenceDecorator();
+            }
 
             if (definedOptions.IsIntegrationEventEnabled)
+            {
                 services.AddXIntegrationEventDecorator();
+            }
 
             if (definedOptions.IsTransactionEnabled)
+            {
                 services.AddXTransactionDecorator();
+            }
 
             if (definedOptions.IsValidatorEnabled)
+            {
                 services.AddXValidationDecorator();
+            }
 
             if (definedOptions.IsVisitorEnabled)
+            {
                 services.AddXVisitorDecorator();
+            }
 
             if (definedOptions.IsCorrelationEnabled)
+            {
                 services.AddXCorrelationDecorator();
+            }
 
             if (definedOptions.IsLoggingEnabled)
+            {
                 services.AddXLoggingDecorator();
+            }
 
             return services;
         }
@@ -439,29 +492,38 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXQueryHandlers(this IServiceCollection services, Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
 
             services.AddXQueryHandlerWrapper();
 
             var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IQueryHandler<,>)))
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IQueryHandler<,>)))
                 .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IQueryHandler<,>)) })
                 .ToList();
 
             foreach (var handler in genericHandlers)
+            {
                 foreach (var interf in handler.Interfaces)
+                {
                     services.AddScoped(interf, handler.Type);
+                }
+            }
 
             var genericResultHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncQueryHandler<,>)))
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncQueryHandler<,>)))
                 .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IAsyncQueryHandler<,>)) })
                 .ToList();
 
             foreach (var handler in genericResultHandlers)
+            {
                 foreach (var interf in handler.Interfaces)
+                {
                     services.AddScoped(interf, handler.Type);
+                }
+            }
 
             return services;
         }
@@ -519,18 +581,28 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
         public static IServiceCollection AddXValidations(this IServiceCollection services, Assembly[] assemblies)
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
-            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (assemblies.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
 
             var genericValidators = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidator<>)))
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidator<>)))
                 .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidator<>)) })
                 .ToList();
 
             foreach (var validator in genericValidators)
+            {
                 foreach (var interf in validator.Interfaces)
+                {
                     services.AddScoped(interf, validator.Type);
+                }
+            }
 
             return services;
         }
@@ -543,7 +615,10 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXVisitorDecorator(this IServiceCollection services)
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
 
             services.AddTransient(typeof(ICompositeVisitor<>), typeof(CompositeVisitor<>));
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandVisitorDecorator<>));
@@ -562,18 +637,28 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
         public static IServiceCollection AddXVisitors(this IServiceCollection services, Assembly[] assemblies)
         {
-            if (services is null) throw new ArgumentNullException(nameof(services));
-            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (assemblies.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
 
             var genericVisitors = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                .Where(type => type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IVisitor<>)))
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IVisitor<>)))
                 .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IVisitor<>)) })
                 .ToList();
 
             foreach (var handler in genericVisitors)
+            {
                 foreach (var interf in handler.Interfaces)
+                {
                     services.AddScoped(interf, handler.Type);
+                }
+            }
 
             return services;
         }

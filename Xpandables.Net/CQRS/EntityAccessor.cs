@@ -85,8 +85,8 @@ namespace Xpandables.Net.CQRS
         public async Task<TResult> FindAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
             Expression<Func<TParam, bool>> criteria, Expression<Func<TEntity, TResult>> converter,
             CancellationToken cancellationToken = default)
-            where TResult : notnull
             where TParam : notnull
+            where TResult : notnull
             => await _dataContext
                 .FindAsync(_ => QueryableEntity().Where(propertyExpression, criteria).Select(converter),
                     cancellationToken).ConfigureAwait(false);

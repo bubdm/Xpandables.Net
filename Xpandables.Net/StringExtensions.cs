@@ -199,7 +199,6 @@ namespace Xpandables.Net
                 }
 
                 return true;
-
             }
             catch (Exception exception) when (exception is JsonException || exception is NotSupportedException)
             {

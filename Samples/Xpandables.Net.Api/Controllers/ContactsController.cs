@@ -93,9 +93,11 @@ namespace Xpandables.Net.Api.Controllers
                    where TModel : class
         {
             if (jsonPatch.Operations.Any(op => op.OperationType != OperationType.Replace))
+            {
                 return new FailureOperationResult(
                     HttpStatusCode.Unauthorized,
                     jsonPatch.Operations.Where(op => op.OperationType != OperationType.Replace).Select(op => new OperationError($"op {op.OperationType}", "Unauthorized")).ToList());
+            }
 
             jsonPatch.ApplyTo(model, ModelState);
             return !ModelState.IsValid || !TryValidateModel(model) ? GetFailedOperationResult(ModelState) : new SuccessOperationResult();

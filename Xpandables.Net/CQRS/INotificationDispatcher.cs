@@ -32,7 +32,6 @@ namespace Xpandables.Net.CQRS
     public interface INotificationDispatcher
     {
         internal IDispatcherHandlerProvider DispatcherHandlerProvider { get; }
-        
         /// <summary>
         /// Asynchronously publishes the notification across all <see cref="INotificationHandler{TNotification}"/>.
         /// </summary>

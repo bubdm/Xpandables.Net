@@ -106,6 +106,7 @@ namespace Xpandables.Net
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             if (!value.GetType().IsSubclassOf(typeof(EnumerationType)))
+            {
                 return value switch
                 {
                     string valueString when destinationType == typeof(string) => (EnumerationType.FromName(EnumType,
@@ -114,6 +115,7 @@ namespace Xpandables.Net
                         (EnumerationType.FromValue(EnumType, valueInt) as EnumerationType)!.Value,
                     _ => base.ConvertTo(context, culture, value, destinationType)!
                 };
+            }
 
             if (destinationType == typeof(string))
                 return ((EnumerationType)value).Name;

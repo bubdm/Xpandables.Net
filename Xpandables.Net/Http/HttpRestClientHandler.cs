@@ -50,8 +50,8 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
-        /// <param name="options">The JSON serializer options used to customize deserialization.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="options">The JSON serializer options used to customize deserialization.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         public virtual async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(
@@ -65,7 +65,7 @@ namespace Xpandables.Net.Http
                 var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
-                    return await WriteEnumerableResultSuccessResponseAsync(response, stream => AsyncEnumerableBuilderFromStreamAsync<TResult>(stream, cancellationToken, options));
+                    return await WriteEnumerableResultSuccessResponseAsync(response, stream => AsyncEnumerableBuilderFromStreamAsync<TResult>(stream, cancellationToken, options)).ConfigureAwait(false);
 
                 return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)await WriteBadResponseAsync(
                     HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure, response)

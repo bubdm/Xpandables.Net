@@ -32,6 +32,5 @@ namespace Xpandables.Net.CQRS
         /// </summary>
         public async Task<IOperationResult> ValidateAsync(TArgument _, CancellationToken cancellationToken = default)
             => await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
-
     }
 }

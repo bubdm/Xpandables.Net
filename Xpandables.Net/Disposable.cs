@@ -66,7 +66,6 @@ namespace Xpandables.Net
                 GC.SuppressFinalize(this);
         }
 
-
         /// <summary>
         /// Public Implementation of DisposeAsync according to .NET Framework Design Guidelines
         /// callable by consumers.

@@ -16,7 +16,7 @@ namespace Xpandables.Net.Tests
     [TestClass]
     public class ContactApiTest
     {
-        IHttpRestClientHandler httpRestClientHandler = null!;
+        private IHttpRestClientHandler httpRestClientHandler = null!;
         [TestInitialize]
         public void Initialize()
         {
@@ -44,10 +44,11 @@ namespace Xpandables.Net.Tests
                 return;
             }
             else
+            {
                 await foreach (var contact in response.Result)
                     Trace.WriteLine($"{contact.Id} {contact.Name} {contact.City} {contact.Address} {contact.Country}");
+            }
         }
-
 
         [TestMethod]
         public async Task AddTest()

@@ -194,7 +194,7 @@ namespace Xpandables.Net
 
                     {
                         var plainText = type.FullName!;
-                        if (parameterTypes.Any()) plainText += string.Concat(parameterTypes.Select(t => t.Name));
+                        if (parameterTypes.Length > 0) plainText += string.Concat(parameterTypes.Select(t => t.Name));
                         if (type.IsGenericType) plainText += "'1";
 
                         streamWriter.Write(plainText);

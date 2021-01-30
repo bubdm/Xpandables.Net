@@ -34,7 +34,8 @@ namespace Xpandables.Net.CQRS
         /// <param name="typeToConvert">The type of the object to check whether it can be converted by this converter instance.</param>
         /// <returns>true if the instance can convert the specified object type; otherwise, false.</returns>
         public override bool CanConvert(Type typeToConvert)
-            => typeToConvert.IsSubclassOf(typeof(OperationResult)) || typeToConvert.IsGenericType && typeToConvert.GetGenericTypeDefinition().IsSubclassOf(typeof(OperationResult<>));
+            => typeToConvert.IsSubclassOf(typeof(OperationResult)) || (typeToConvert.IsGenericType
+            && typeToConvert.GetGenericTypeDefinition().IsSubclassOf(typeof(OperationResult<>)));
 
         /// <summary>
         /// Creates a converter for a specified type.
@@ -44,18 +45,15 @@ namespace Xpandables.Net.CQRS
         /// <returns> A converter for which <see cref="OperationResult"/> or <see cref="OperationResult{TValue}"/> is compatible with typeToConvert.</returns>
         public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
         {
-            JsonConverter converter;
             if (!typeToConvert.IsGenericType)
             {
-                converter = (OperationResultConverter)_instanceCreator.Create(typeof(OperationResultConverter))!;
+                return (OperationResultConverter)_instanceCreator.Create(typeof(OperationResultConverter))!;
             }
             else
             {
                 Type elementType = typeToConvert.GetGenericArguments()[0];
-                converter = (JsonConverter)_instanceCreator.Create(typeof(OperationResultConverter<>).MakeGenericType(elementType))!;
+                return (JsonConverter)_instanceCreator.Create(typeof(OperationResultConverter<>).MakeGenericType(elementType))!;
             }
-
-            return converter;
         }
     }
 
@@ -72,7 +70,7 @@ namespace Xpandables.Net.CQRS
 
         /// <summary>
         /// Reads and converts the JSON to type T.
-        /// Throws exception.
+        /// Not concerned, use with caution.
         /// </summary>
         /// <param name="reader">The reader.</param>
         /// <param name="typeToConvert">The type to convert.</param>
@@ -80,8 +78,10 @@ namespace Xpandables.Net.CQRS
         /// <returns>The converted value.</returns>
         public override OperationResult<TValue>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            // not concerned.
-            throw new NotImplementedException();
+            var result = JsonSerializer.Deserialize(ref reader, typeToConvert, options);
+            return result is null
+                ? new FailureOperationResult<TValue>()
+                : new SuccessOperationResult<TValue>((TValue)result);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Xpandables.Net.CQRS
     {
         /// <summary>
         /// Reads and converts the JSON to type T.
-        /// Throws exception.
+        /// Not concerned, use with caution.
         /// </summary>
         /// <param name="reader">The reader.</param>
         /// <param name="typeToConvert">The type to convert.</param>
@@ -111,8 +111,10 @@ namespace Xpandables.Net.CQRS
         /// <returns>The converted value.</returns>
         public override OperationResult? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            // not concerned.
-            throw new NotImplementedException();
+            var result = JsonSerializer.Deserialize(ref reader, typeToConvert, options);
+            return result is null
+                ? new FailureOperationResult()
+                : new SuccessOperationResult();
         }
         /// <summary>
         /// Writes a <see cref="OperationResult"/> value as JSON : does nothing.

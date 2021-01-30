@@ -81,7 +81,7 @@ namespace Xpandables.Net.Interception
         /// <exception cref="ArgumentNullException">The <paramref name="targetMethod" /> is null.</exception>
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
-            _ = targetMethod ?? throw new ArgumentNullException($"The parameter {nameof(targetMethod)} is missing.");
+            _ = targetMethod ?? throw new ArgumentNullException(nameof(targetMethod), "The parameter is missing.");
 
             return ReferenceEquals(targetMethod, MethodBaseType)
                 ? Bypass(targetMethod, args)

@@ -42,7 +42,7 @@ namespace Xpandables.Net.Expressions
         public override int GetHashCode()
         {
             var hash = GetExpression().GetHashCode();
-            hash = hash * 17 + GetExpression().Parameters.Count;
+            hash = (hash * 17) + GetExpression().Parameters.Count;
             foreach (var param in GetExpression().Parameters)
             {
                 hash *= 17;

@@ -27,7 +27,6 @@ namespace Xpandables.Net.CQRS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "ET001:Type name does not match file name", Justification = "<Pending>")]
     public delegate Task CorrelationPostEvent(object? returnValue = default);
 
-
     /// <summary>
     /// Represents a method signature to be used to handler rollback event in correlation context <see cref="ICorrelationContext"/>.
     /// </summary>
@@ -38,7 +37,7 @@ namespace Xpandables.Net.CQRS
     /// <summary>
     /// Defines two tasks that can be used to follow process after a control flow with <see cref="PostEvent"/>
     /// and on exception during the control flow with <see cref="RollbackEvent"/>.
-    /// In order to be activated, the target class should implement the <see cref="ICorrelationDecorator"/> interface, 
+    /// In order to be activated, the target class should implement the <see cref="ICorrelationDecorator"/> interface,
     /// the target handling class should reference the current interface (to set the action).
     /// </summary>
     public interface ICorrelationContext

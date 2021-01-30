@@ -115,20 +115,25 @@ namespace Xpandables.Net.DependencyInjection
             _ = interceptorType ?? throw new ArgumentNullException(nameof(interceptorType));
             if (!typeof(IInterceptor).IsAssignableFrom(interceptorType))
                 throw new ArgumentException($"{nameof(interceptorType)} must implement {nameof(IInterceptor)}.");
-            if (assemblies.Any() != true) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Length == 0) throw new ArgumentNullException(nameof(assemblies));
 
             var genericInterfaceTypes = new[] { typeof(IQueryHandler<,>), typeof(ICommandHandler<>), typeof(ICommandHandler<,>), typeof(INotificationHandler<>) };
             foreach (var genericInterfaceType in genericInterfaceTypes)
+            {
                 foreach (var handler in assemblies.SelectMany(ass => ass.GetExportedTypes())
-                    .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType)
-                    .Where(type => type.GetInterfaces().Any(inter => InterfaceCriteria(inter, genericInterfaceType)))
+                    .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => InterfaceCriteria(inter, genericInterfaceType)))
                     .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => InterfaceCriteria(inter, genericInterfaceType)) }))
+                {
                     foreach (var handlerInterface in handler.Interfaces)
+                    {
                         services.XTryDecorate(handlerInterface, (instance, provider) =>
                          {
                              var interceptor = (IInterceptor)provider.GetRequiredService(interceptorType);
                              return InterceptorFactory.CreateProxy(handlerInterface, interceptor, instance);
                          });
+                    }
+                }
+            }
 
             return services;
 

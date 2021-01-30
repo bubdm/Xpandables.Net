@@ -31,7 +31,7 @@ namespace Xpandables.Net.Api.Services
     public sealed class ContactContextInitializer : IHostedService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        public ContactContextInitializer(IServiceScopeFactory serviceScopeFactory) 
+        public ContactContextInitializer(IServiceScopeFactory serviceScopeFactory)
             => _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
 
         public async Task StartAsync(CancellationToken cancellationToken)

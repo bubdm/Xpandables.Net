@@ -37,7 +37,7 @@ namespace Xpandables.Net.Expressions.Specifications
         public virtual bool IsSatisfiedBy(TSource source)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
-            return GetExpression().Compile().Invoke((source));
+            return GetExpression().Compile().Invoke(source);
         }
     }
 }
