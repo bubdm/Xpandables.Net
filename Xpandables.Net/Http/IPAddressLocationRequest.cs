@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Http
 {

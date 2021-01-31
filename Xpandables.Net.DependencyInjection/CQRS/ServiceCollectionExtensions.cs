@@ -15,13 +15,32 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using Microsoft.Extensions.DependencyInjection;
+
 using System;
 using System.Linq;
 using System.Reflection;
 
-using Microsoft.Extensions.DependencyInjection;
-
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Commands;
+using Xpandables.Net.Correlations;
+using Xpandables.Net.Database;
+using Xpandables.Net.Decorators;
+using Xpandables.Net.Decorators.Correlations;
+using Xpandables.Net.Decorators.DomainEvents;
+using Xpandables.Net.Decorators.IntegrationEvents;
+using Xpandables.Net.Decorators.Logging;
+using Xpandables.Net.Decorators.Persistences;
+using Xpandables.Net.Decorators.Transactions;
+using Xpandables.Net.Decorators.Validators;
+using Xpandables.Net.Decorators.Visitors;
+using Xpandables.Net.Dispatchers;
+using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.Events.IntegrationEvents;
+using Xpandables.Net.Logging;
+using Xpandables.Net.Queries;
+using Xpandables.Net.Transactions;
+using Xpandables.Net.Validators;
+using Xpandables.Net.Visitors;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -46,12 +65,12 @@ namespace Xpandables.Net.DependencyInjection
         public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
 
         /// <summary>
-        /// Enables domain event behavior to commands that are decorated with the <see cref="IDomainEventDecorator"/>.
+        /// Enables domain event behavior to commands that are decorated with the <see cref="IEventDecorator"/>.
         /// </summary>
         public HandlerOptions UseDomainEventDecorator() => this.With(cq => cq.IsDomainEventEnabled = true);
 
         /// <summary>
-        /// Enables integration event behavior to commands that are decorated with the <see cref="IIntegrationEventDecorator"/>.
+        /// Enables integration event behavior to commands that are decorated with the <see cref="IEventDecorator"/>.
         /// </summary>
         public HandlerOptions UseIntegrationEventDecorator() => this.With(cq => cq.IsIntegrationEventEnabled = true);
 
@@ -168,7 +187,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the default <see cref="IDispatcher"/> and <see cref="IDispatcherHandlerProvider"/> implementations to the services with scoped life time.
+        /// Adds the default <see cref="IDispatcher"/> and <see cref="IHandlerAcessor"/> implementations to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -176,31 +195,33 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IDispatcherHandlerProvider, DispatcherHandlerProvider>();
-            services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
-            services.AddScoped(typeof(IDataContextEventPublisher<>), typeof(DataContextEventPublisher<>));
+            services.AddScoped<IHandlerAcessor, HandlerAccessor>();
+            services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
+            services.AddScoped<IIntegrationtEventPublisher, IntegrationEventPublisher>();
             services.AddScoped<IDispatcher, Dispatcher>();
             return services;
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TDispatcher"/>, <typeparamref name="TNotificationDispatcher"/> and <typeparamref name="TDispatcherHandlerProvider"/> types to the services with scoped life time.
+        /// Adds the <typeparamref name="TDispatcher"/>, <typeparamref name="TDomainEventPublsher"/> and <typeparamref name="TIntegrationEventPublisher"/> types to the services with scoped life time.
         /// </summary>
         /// <typeparam name="TDispatcher">The dispatcher type implementation.</typeparam>
-        /// <typeparam name="TNotificationDispatcher">The notification type implementation.</typeparam>
-        /// <typeparam name="TDispatcherHandlerProvider">The dispatcher handler provider type implementation.</typeparam>
+        /// <typeparam name="TDomainEventPublsher">The domain event publisher.</typeparam>
+        /// <typeparam name="TIntegrationEventPublisher">The integration event publisher.</typeparam>
+        /// <typeparam name="THandlerAccessor">The handler provider.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDispatcher<TDispatcher, TNotificationDispatcher, TDispatcherHandlerProvider>(this IServiceCollection services)
+        public static IServiceCollection AddXDispatcher<TDispatcher, TDomainEventPublsher, TIntegrationEventPublisher, THandlerAccessor>(this IServiceCollection services)
             where TDispatcher : class, IDispatcher
-            where TNotificationDispatcher : class, INotificationDispatcher
-            where TDispatcherHandlerProvider : class, IDispatcherHandlerProvider
+            where TDomainEventPublsher : class, IDomainEventPublisher
+            where TIntegrationEventPublisher : class, IIntegrationtEventPublisher
+            where THandlerAccessor : class, IHandlerAcessor
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IDispatcherHandlerProvider, TDispatcherHandlerProvider>();
-            services.AddScoped<INotificationDispatcher, TNotificationDispatcher>();
-            services.AddScoped(typeof(IDataContextEventPublisher<>), typeof(DataContextEventPublisher<>));
+            services.AddScoped<IHandlerAcessor, THandlerAccessor>();
+            services.AddScoped<IDomainEventPublisher, TDomainEventPublsher>();
+            services.AddScoped<IIntegrationtEventPublisher, TIntegrationEventPublisher>();
             services.AddScoped<IDispatcher, TDispatcher>();
             return services;
         }
@@ -251,7 +272,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds notification behavior to commands that are decorated with the <see cref="IDomainEventDecorator"/> to the services
+        /// Adds domain event behavior to commands that are decorated with the <see cref="IEventDecorator"/> to the services
         /// with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -266,7 +287,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds notification behavior to commands that are decorated with the <see cref="IIntegrationEventDecorator"/> to the services
+        /// Adds integration event behavior to commands that are decorated with the <see cref="IEventDecorator"/> to the services
         /// with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -375,13 +396,13 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="INotificationHandler{TNotification}"/> implementations to the services with scope life time.
+        /// Adds the <see cref="IDomainEventHandler{TEvent}"/> implementations to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IServiceCollection AddXNotificationHandlers(this IServiceCollection services, Assembly[] assemblies)
+        public static IServiceCollection AddXDomainEventHandlers(this IServiceCollection services, Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies.Length == 0)
@@ -390,8 +411,8 @@ namespace Xpandables.Net.DependencyInjection
             }
 
             var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<>)))
-                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<>)) })
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)) })
                 .ToList();
 
             foreach (var handler in genericHandlers)
@@ -406,7 +427,39 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds and configures the <see cref="ICommandHandler{TCommand}"/>, <see cref="INotificationHandler{TNotification}"/>, <see cref="IQueryHandler{TQuery, TResult}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
+        /// Adds the <see cref="IIntegrationEventHandler{TEvent}"/> implementations to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
+        public static IServiceCollection AddXIntegrationEventHandlers(this IServiceCollection services, Assembly[] assemblies)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            if (assemblies.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
+
+            var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)) })
+                .ToList();
+
+            foreach (var handler in genericHandlers)
+            {
+                foreach (var interf in handler.Interfaces)
+                {
+                    services.AddScoped(interf, handler.Type);
+                }
+            }
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds and configures the <see cref="ICommandHandler{TCommand}"/>, <see cref="IDomainEventHandler{TEvent}"/>, <see cref="IIntegrationEventHandler{TEvent}"/>,
+        /// <see cref="IQueryHandler{TQuery, TResult}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -432,7 +485,8 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddXCommandHandlers(assemblies);
             services.AddXQueryHandlers(assemblies);
-            services.AddXNotificationHandlers(assemblies);
+            services.AddXDomainEventHandlers(assemblies);
+            services.AddXIntegrationEventHandlers(assemblies);
             services.AddXValidations(assemblies);
             services.AddXVisitors(assemblies);
 

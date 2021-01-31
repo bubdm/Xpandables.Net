@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.Diagnostics;
 
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Logging;
 
 namespace Xpandables.Net.Api.Services
 {

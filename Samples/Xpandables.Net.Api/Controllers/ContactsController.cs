@@ -30,7 +30,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Handlers;
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Dispatchers;
 using Xpandables.Net.Http;
 
 namespace Xpandables.Net.Api.Controllers

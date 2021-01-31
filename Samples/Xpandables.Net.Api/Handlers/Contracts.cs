@@ -21,10 +21,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
 using Xpandables.Net.Api.Models;
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Commands;
+using Xpandables.Net.Decorators;
 using Xpandables.Net.Expressions.Records;
 using Xpandables.Net.Http;
 using Xpandables.Net.Interception;
+using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api.Handlers
 {
@@ -66,7 +68,7 @@ namespace Xpandables.Net.Api.Handlers
 
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
     public sealed record Add([Required] string Name, [Required] string City, [Required] string Address, [Required] string Country)
-        : RecordExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator, IDomainEventDecorator, IIntegrationEventDecorator, ILoggingDecorator
+        : RecordExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator, IEventDecorator, ILoggingDecorator
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
     }
@@ -85,7 +87,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts", Method = "Patch", IsSecured = true, IsNullable = false, In = ParameterLocation.Body)]
-    public sealed record Edit : RecordExpression<ContactModel>, ICommand<Contact>, IValidationDecorator, IPersistenceDecorator, IDomainEventDecorator, ILoggingDecorator
+    public sealed record Edit : RecordExpression<ContactModel>, ICommand<Contact>, IValidationDecorator, IPersistenceDecorator, IEventDecorator, ILoggingDecorator
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         public string Id { get; set; } = null!;

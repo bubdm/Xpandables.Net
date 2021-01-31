@@ -64,7 +64,7 @@ namespace Xpandables.Net.Api
             services.AddXLoggingProvider<LoggingService>();
             services.AddEntityAccessor();
 
-            // uncomment to disable Interception
+            // comment to disable Interception
             services.AddTransient<ContactInterceptor>();
             services.AddXInterceptorHandlers<ContactInterceptor>(new[] { Assembly.GetExecutingAssembly() });
 

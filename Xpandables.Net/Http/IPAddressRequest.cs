@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.Net;
 
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Http
 {

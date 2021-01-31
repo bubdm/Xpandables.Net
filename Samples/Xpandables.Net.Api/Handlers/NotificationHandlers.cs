@@ -21,31 +21,32 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Models;
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class ContactModelCreatedNotificationHandler : INotificationHandler<ContactModelCreatedNotification>
+    public sealed class ContactModelCreatedDomainEventHandler : IDomainEventHandler<ContactModelCreatedDomainEvent>
     {
-        public Task HandleAsync(ContactModelCreatedNotification notification, CancellationToken cancellationToken = default)
+        public Task HandleAsync(ContactModelCreatedDomainEvent notification, CancellationToken cancellationToken = default)
         {
             Trace.WriteLine($"A newly created contact with id : {notification.Id} : {DateTime.Now.Ticks}");
             return Task.CompletedTask;
         }
     }
 
-    public sealed class ContactModelCreatedIntegrationHandler : INotificationHandler<ContactModelCreatedIntegration>
+    public sealed class ContactModelCreatedIntegrationEventHandler : IIntegrationEventHandler<ContactModelCreatedIntegrationEvent>
     {
-        public Task HandleAsync(ContactModelCreatedIntegration notification, CancellationToken cancellationToken = default)
+        public Task HandleAsync(ContactModelCreatedIntegrationEvent notification, CancellationToken cancellationToken = default)
         {
             Trace.WriteLine($"A newly contact has been created with id : {notification.Id} {DateTime.Now.Ticks}");
             return Task.CompletedTask;
         }
     }
 
-    public sealed class ContactModelUpdatedNotificationHandler : INotificationHandler<ContactModelUpdatedNotification>
+    public sealed class ContactModelUpdatedDomainEventHandler : IDomainEventHandler<ContactModelUpdatedDomainEvent>
     {
-        public Task HandleAsync(ContactModelUpdatedNotification notification, CancellationToken cancellationToken = default)
+        public Task HandleAsync(ContactModelUpdatedDomainEvent notification, CancellationToken cancellationToken = default)
         {
             Trace.WriteLine($"The contact with id '{notification.Id}' has changed name to : {notification.Name} {DateTime.Now}");
             return Task.CompletedTask;

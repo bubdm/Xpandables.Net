@@ -22,8 +22,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-using Xpandables.Net.CQRS;
-
 namespace Xpandables.Net.Api.Middlewares
 {
     public sealed class OperationResultFilter : IAsyncAlwaysRunResultFilter

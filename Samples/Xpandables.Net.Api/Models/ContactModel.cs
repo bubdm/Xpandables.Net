@@ -20,21 +20,22 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Api.Models
 {
-    public sealed record ContactModelCreatedNotification(string Id) : IDomainEvent { public DateTime OccurredOn => DateTime.UtcNow; }
-    public sealed record ContactModelCreatedIntegration(string Id) : IIntegrationEvent { public DateTime OccurredOn => DateTime.UtcNow; }
-    public sealed record ContactModelUpdatedNotification(string Id, string? Name) : IDomainEvent { public DateTime OccurredOn => DateTime.UtcNow; };
+    public sealed record ContactModelCreatedDomainEvent(string Id) : IDomainEvent { public DateTime OccurredOn => DateTime.UtcNow; }
+    public sealed record ContactModelCreatedIntegrationEvent(string Id) : IIntegrationEvent { public DateTime OccurredOn => DateTime.UtcNow; }
+    public sealed record ContactModelUpdatedDomainEvent(string Id, string? Name) : IDomainEvent { public DateTime OccurredOn => DateTime.UtcNow; };
 
     public sealed class ContactModel : Entity, IAggregateRoot
     {
         public ContactModel(string name, string city, string address, string country)
         {
             Update(name, city, address, country);
-            AddNotification(new ContactModelCreatedNotification(Id));
-            AddNotification(new ContactModelCreatedIntegration(Id));
+            AddNotification(new ContactModelCreatedDomainEvent(Id));
+            AddNotification(new ContactModelCreatedIntegrationEvent(Id));
         }
 
         [MemberNotNull(nameof(Name), nameof(City), nameof(Address), nameof(Country))]
@@ -51,7 +52,7 @@ namespace Xpandables.Net.Api.Models
             if (city is not null) UpdateCity(city);
             if (address is not null) UpdateAddress(address);
             if (country is not null) UpdateCountry(country);
-            AddNotification(new ContactModelUpdatedNotification(Id, name));
+            AddNotification(new ContactModelUpdatedDomainEvent(Id, name));
         }
 
         [MemberNotNull(nameof(Name))]

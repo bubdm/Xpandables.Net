@@ -22,7 +22,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Commands;
+using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Http
 {

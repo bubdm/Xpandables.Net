@@ -22,7 +22,7 @@ namespace Xpandables.Net.Expressions
 {
     /// <summary>
     /// Provides the query expression factory that contains methods to create generic query expressions.
-    /// </summary>   
+    /// </summary>
     public static class QueryExpressionFactory
     {
         /// <summary>

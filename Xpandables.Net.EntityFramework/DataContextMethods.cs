@@ -23,6 +23,8 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Xpandables.Net.Database;
+
 namespace Xpandables.Net.CQRS
 {
     public abstract partial class DataContext : DbContext

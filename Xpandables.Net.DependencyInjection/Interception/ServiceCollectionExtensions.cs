@@ -15,14 +15,17 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using Microsoft.Extensions.DependencyInjection;
+
 using System;
 using System.Linq;
 using System.Reflection;
 
-using Microsoft.Extensions.DependencyInjection;
-
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Commands;
+using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.Events.IntegrationEvents;
 using Xpandables.Net.Interception;
+using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -117,7 +120,7 @@ namespace Xpandables.Net.DependencyInjection
                 throw new ArgumentException($"{nameof(interceptorType)} must implement {nameof(IInterceptor)}.");
             if (assemblies.Length == 0) throw new ArgumentNullException(nameof(assemblies));
 
-            var genericInterfaceTypes = new[] { typeof(IQueryHandler<,>), typeof(ICommandHandler<>), typeof(ICommandHandler<,>), typeof(INotificationHandler<>) };
+            var genericInterfaceTypes = new[] { typeof(IQueryHandler<,>), typeof(ICommandHandler<>), typeof(ICommandHandler<,>), typeof(IDomainEventHandler<>), typeof(IIntegrationEventHandler<>) };
             foreach (var genericInterfaceType in genericInterfaceTypes)
             {
                 foreach (var handler in assemblies.SelectMany(ass => ass.GetExportedTypes())

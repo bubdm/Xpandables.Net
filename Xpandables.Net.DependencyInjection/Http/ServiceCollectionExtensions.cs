@@ -30,7 +30,7 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type 
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/>.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -46,7 +46,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type 
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> that uses <see cref="Newtonsoft"/>.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -65,7 +65,7 @@ namespace Xpandables.Net.DependencyInjection
             where THttpRestClientHandler : class, IHttpRestClientHandler => services.AddHttpClient<IHttpRestClientHandler, THttpRestClientHandler>(configureClient);
 
         /// <summary>
-        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type 
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/>.
         /// </summary>
         /// <typeparam name="THttpRestClientHandler"> The implementation type of the typed client (<see cref="IHttpRestClientHandler"/>). They type specified will be instantiated by the ITypedHttpClientFactory.</typeparam>
@@ -83,7 +83,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type 
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
         ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpHeaderAccessor"/> using
         ///  the <see cref="AddXHttpHeaderAccessor{THttpHeaderAccessor}(IServiceCollection)"/> method.
@@ -101,9 +101,9 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type 
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
-        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> that use <see cref="Newtonsoft"/> and you need to register an implementation 
+        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> that use <see cref="Newtonsoft"/> and you need to register an implementation
         ///  of <see cref="IHttpHeaderAccessor"/> using the <see cref="AddXHttpHeaderAccessor{THttpHeaderAccessor}(IServiceCollection)"/> method.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -119,7 +119,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type 
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
         ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpHeaderAccessor"/> using
         ///  the <see cref="AddXHttpHeaderAccessor{THttpHeaderAccessor}(IServiceCollection)"/> method.

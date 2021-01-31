@@ -21,7 +21,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Models;
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Database;
+using Xpandables.Net.Validators;
 
 namespace Xpandables.Net.Api.Handlers
 {

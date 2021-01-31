@@ -23,6 +23,8 @@ using System;
 using System.Linq;
 using System.Reflection;
 
+using Xpandables.Net.Database;
+
 namespace Xpandables.Net.CQRS
 {
     /// <summary>

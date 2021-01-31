@@ -178,7 +178,6 @@ namespace Xpandables.Net
         // Build a key for a type
         internal const string Key = "b14ca5898a4e4133bbce2ea2315a1916";
 
-        [SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "<Pending>")]
         internal static string KeyBuilder(Type type, params Type[] parameterTypes)
         {
             using (var aes = Aes.Create())

@@ -26,7 +26,8 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Database;
+using Xpandables.Net.Events;
 
 namespace Xpandables.Net.CQRS
 {
@@ -38,12 +39,12 @@ namespace Xpandables.Net.CQRS
     {
         object IDataContext.InternalDbSet<T>() => Set<T>();
 
-        private readonly List<INotification> _notifications = new();
+        private readonly List<IEvent> _notifications = new();
 
         /// <summary>
         /// Contains all notifications (domain events and domain event notifications) from entities being tracked.
         /// </summary>
-        public IReadOnlyCollection<INotification> Notifications => _notifications;
+        public IReadOnlyCollection<IEvent> Notifications => _notifications;
 
         /// <summary>
         /// Returns an entity of the <typeparamref name="T"/> type specified by the selector.
