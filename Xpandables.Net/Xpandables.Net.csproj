@@ -17,10 +17,10 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.3.0</Version>
-    <AssemblyVersion>5.3.0</AssemblyVersion>
-    <FileVersion>5.3.0</FileVersion>
-    <PackageVersion>5.3.0</PackageVersion>
+    <Version>5.3.1</Version>
+    <AssemblyVersion>5.3.1</AssemblyVersion>
+    <FileVersion>5.3.1</FileVersion>
+    <PackageVersion>5.3.1</PackageVersion>
     <PackageReleaseNotes>redefine folders with breaking changes</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>
