@@ -50,7 +50,7 @@ namespace Xpandables.Net.DependencyInjection
     public sealed class HandlerOptions
     {
         /// <summary>
-        /// Enables validation behavior to operations that are decorated with the <see cref="IValidationDecorator"/>.
+        /// Enables validation behavior to operations that are decorated with the <see cref="IValidatorDecorator"/>.
         /// </summary>
         public HandlerOptions UseValidationDecorator() => this.With(cq => cq.IsValidatorEnabled = true);
 
@@ -609,7 +609,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds validation behavior to commands and queries that are decorated with the <see cref="IValidationDecorator"/> to the services
+        /// Adds validation behavior to commands and queries that are decorated with the <see cref="IValidatorDecorator"/> to the services
         /// with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>

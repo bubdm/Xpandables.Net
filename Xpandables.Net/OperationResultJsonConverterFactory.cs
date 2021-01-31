@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -43,7 +44,7 @@ namespace Xpandables.Net
         /// <returns> A converter for which <see cref="OperationResult"/> or <see cref="OperationResult{TValue}"/> is compatible with typeToConvert.</returns>
         public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
         {
-            if (!typeof(IOperationResult<>).IsAssignableFrom(typeToConvert))
+            if (!typeToConvert.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IOperationResult<>)))
             {
                 return (OperationResultConverter)_instanceCreator.Create(typeof(OperationResultConverter))!;
             }

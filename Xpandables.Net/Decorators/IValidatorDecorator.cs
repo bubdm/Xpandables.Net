@@ -29,5 +29,5 @@ namespace Xpandables.Net.Decorators
     /// The default validation behavior uses the data annotations validator on validation attributes. You can implement the interface
     /// <see cref="IValidator{TArgument}"/> to customize a validation behavior.
     /// </summary>
-    public interface IValidationDecorator { }
+    public interface IValidatorDecorator { }
 }

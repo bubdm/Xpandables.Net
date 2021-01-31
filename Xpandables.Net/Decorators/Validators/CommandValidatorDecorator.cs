@@ -27,14 +27,14 @@ namespace Xpandables.Net.Decorators.Validators
 {
     /// <summary>
     /// This class allows the application author to add validation support to command control flow.
-    /// The target command should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
+    /// The target command should implement the <see cref="IValidatorDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ICompositeValidator{TArgument}"/>
     /// and applies all validators found to the target command before the command get handled if there is no error. You should provide with implementation
     /// of <see cref="IValidator{TArgument}"/> for validation.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
     public sealed class CommandValidatorDecorator<TCommand> : ICommandHandler<TCommand>
-        where TCommand : class, ICommand, IValidationDecorator
+        where TCommand : class, ICommand, IValidatorDecorator
     {
         private readonly ICommandHandler<TCommand> _decoratee;
         private readonly ICompositeValidator<TCommand> _validator;
@@ -72,7 +72,7 @@ namespace Xpandables.Net.Decorators.Validators
 
     /// <summary>
     /// This class allows the application author to add validation support to command control flow.
-    /// The target command should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
+    /// The target command should implement the <see cref="IValidatorDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="ICompositeValidator{TArgument}"/>
     /// and applies all validators found to the target command before the command get handled if there is no error. You should provide with implementation
     /// of <see cref="IValidator{TArgument}"/> for validation.
@@ -80,7 +80,7 @@ namespace Xpandables.Net.Decorators.Validators
     /// <typeparam name="TCommand">Type of the command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
     public sealed class CommandValidatorDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
-        where TCommand : class, ICommand<TResult>, IValidationDecorator
+        where TCommand : class, ICommand<TResult>, IValidatorDecorator
     {
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
         private readonly ICompositeValidator<TCommand> _validator;

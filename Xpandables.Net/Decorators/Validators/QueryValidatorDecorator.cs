@@ -26,7 +26,7 @@ namespace Xpandables.Net.Decorators.Validators
 {
     /// <summary>
     /// This class allows the application author to add validation support to query control flow.
-    /// The target query should implement the <see cref="IValidationDecorator"/> interface in order to activate the behavior.
+    /// The target query should implement the <see cref="IValidatorDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target query handler with an implementation of <see cref="ICompositeValidator{TArgument}"/>
     /// and applies all validators found to the target query before the command get handled. You should provide with implementation
     /// of <see cref="IValidator{TArgument}"/>for validation.
@@ -34,7 +34,7 @@ namespace Xpandables.Net.Decorators.Validators
     /// <typeparam name="TQuery">Type of query.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
     public sealed class QueryValidatorDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
-        where TQuery : class, IQuery<TResult>, IValidationDecorator
+        where TQuery : class, IQuery<TResult>, IValidatorDecorator
     {
         private readonly IQueryHandler<TQuery, TResult> _decoratee;
         private readonly ICompositeValidator<TQuery> _validator;

@@ -18,6 +18,7 @@
 using Newtonsoft.Json;
 
 using System;
+using System.Linq;
 
 namespace Xpandables.Net
 {
@@ -58,7 +59,7 @@ namespace Xpandables.Net
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             if (value is null) return;
-            if (!typeof(IOperationResult<>).IsAssignableFrom(value.GetType())) return;
+            if (!value.GetType().GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IOperationResult<>))) return;
 
             serializer.Serialize(writer, ((IOperationResult)value).Value);
         }
