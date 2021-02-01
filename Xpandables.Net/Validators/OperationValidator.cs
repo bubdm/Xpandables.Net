@@ -28,7 +28,7 @@ namespace Xpandables.Net.Validators
     /// The default behavior acts like the <see cref="ICompositeValidator{TArgument}"/>.
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
-    public abstract class OperationValidator<TArgument> : IOperationValidator<TArgument>
+    public class OperationValidator<TArgument> : IOperationValidator<TArgument>
          where TArgument : notnull
     {
         private readonly IEnumerable<IValidator<TArgument>> _validators;
@@ -38,7 +38,7 @@ namespace Xpandables.Net.Validators
         /// <see cref="IValidator{TArgument}"/> implementations.
         /// </summary>
         /// <param name="validators">The validator collection.</param>
-        protected OperationValidator(IEnumerable<IValidator<TArgument>> validators)
+        public OperationValidator(IEnumerable<IValidator<TArgument>> validators)
             => _validators = validators;
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Xpandables.Net.Validators
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument" /> is null.</exception>
         /// <returns>Returns a result state that contains validation information.</returns>
-        public async Task<IOperationResult> IsSatisfiedBy(TArgument argument, CancellationToken cancellationToken = default)
+        public virtual async Task<IOperationResult> IsSatisfiedBy(TArgument argument, CancellationToken cancellationToken = default)
         {
             foreach (var validator in _validators.OrderBy(o => o.Order))
             {
