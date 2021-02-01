@@ -40,7 +40,7 @@ namespace Xpandables.Net.Http
     public interface IHttpRestClientHandler : IDisposable
     {
         /// <summary>
-        /// Contains the <see cref="HttpContent"/> instance for the current handler.
+        /// Contains the <see cref="System.Net.Http.HttpClient"/> instance for the current handler.
         /// </summary>
         HttpClient HttpClient { get; }
 
