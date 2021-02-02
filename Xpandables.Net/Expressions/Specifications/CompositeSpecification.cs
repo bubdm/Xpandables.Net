@@ -16,32 +16,27 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Linq.Expressions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Xpandables.Net.Expressions.Specifications
 {
     /// <summary>
-    /// Provides the <see cref="Specification{TSource}"/> "And" profile.
+    /// The composite specification class used to wrap all specifications for a specific type.
     /// </summary>
     /// <typeparam name="TSource">The type of the object to check for.</typeparam>
-    public sealed class SpecificationAnd<TSource> : Specification<TSource>
+    [Serializable]
+    public class CompositeSpecification<TSource> : Specification<TSource>, ICompositeSpecification<TSource>
         where TSource : notnull
     {
-        private readonly ISpecification<TSource> _left;
-        private readonly ISpecification<TSource> _right;
+        private readonly IEnumerable<ISpecification<TSource>> _specificationInstances;
 
         /// <summary>
-        /// Returns a new instance of <see cref="SpecificationAnd{TSource}"/> class with the specifications for composition.
+        /// Initializes the composite specification with all specification instances for the argument.
         /// </summary>
-        /// <param name="left">The specification for the left side.</param>
-        /// <param name="right">The specification for the right side.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
-        public SpecificationAnd(ISpecification<TSource> left, ISpecification<TSource> right)
-        {
-            _left = left ?? throw new ArgumentNullException(nameof(left));
-            _right = right ?? throw new ArgumentNullException(nameof(right));
-        }
+        /// <param name="specificationInstances">The collection of specifications to act with.</param>
+        public CompositeSpecification(IEnumerable<ISpecification<TSource>> specificationInstances)
+            => _specificationInstances = specificationInstances;
 
         /// <summary>
         /// Returns a value that determines whether or not the specification is satisfied by the source object.
@@ -49,12 +44,6 @@ namespace Xpandables.Net.Expressions.Specifications
         /// <param name="source">The target source to check specification on.</param>
         /// <returns><see langword="true" /> if the specification is satisfied, otherwise <see langword="false" /></returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source" /> is null.</exception>
-        public override bool IsSatisfiedBy(TSource source) => _left.IsSatisfiedBy(source) && _right.IsSatisfiedBy(source);
-
-        /// <summary>
-        /// Returns the expression to be used for the clause <see langword="Where"/> in a query.
-        /// </summary>
-        public override Expression<Func<TSource, bool>> GetExpression()
-            => ExpressionFactory<bool>.And(_left.GetExpression(), _right.GetExpression());
+        public override bool IsSatisfiedBy(TSource source) => _specificationInstances.All(spec => spec.IsSatisfiedBy(source));
     }
 }

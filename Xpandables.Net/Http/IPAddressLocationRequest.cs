@@ -27,10 +27,10 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// Represents a query to request IP Address Geo-location.
     /// </summary>
-    public class IpAddressLocationRequest : IQuery<GeoLocation>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
+    public class IPAddressLocationRequest : IQuery<IPAddressLocation>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="IpAddressLocationRequest"/> class with IP address to locate.
+        /// Initializes a new instance of the <see cref="IPAddressLocationRequest"/> class with IP address to locate.
         /// </summary>
         /// <param name="ipAddress">The target IP address.</param>
         /// <param name="accessKey">Your security access key for the http://api.ipstack.com .</param>
@@ -40,7 +40,7 @@ namespace Xpandables.Net.Http
         /// <param name="language">The output language, the default is <see cref="LocationLanguage.EnglishUS"/></param>
         /// <exception cref="ArgumentNullException">The <paramref name="ipAddress"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="accessKey"/> is null.</exception>
-        public IpAddressLocationRequest(
+        public IPAddressLocationRequest(
             string ipAddress,
             string accessKey,
             int enableSecurity = 0,
@@ -202,9 +202,9 @@ namespace Xpandables.Net.Http
     }
 
     /// <summary>
-    /// Defines the IP Geo-location response.
+    /// Defines the IP Address Geo-location response.
     /// </summary>
-    public sealed class GeoLocation
+    public sealed class IPAddressLocation
     {
         /// <summary>
         /// Returns the requested IP address.

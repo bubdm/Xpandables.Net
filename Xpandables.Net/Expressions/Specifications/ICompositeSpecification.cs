@@ -15,11 +15,14 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Interception
+namespace Xpandables.Net.Expressions.Specifications
 {
     /// <summary>
-    /// A marker interface that allows the class implementation to be intercepted.
-    /// You need to register the expected behavior using the appropriate interceptor extension method and provide an implementation for <see cref="IInterceptor"/>.
+    /// Defines one method which returns boolean to assert that a collection of specifications is satisfied or not.
+    /// method used to check whether or not the specification is satisfied by the <typeparamref name="TSource"/> object.
     /// </summary>
-    public interface IInterceptorDecorator { }
+    /// <typeparam name="TSource">Type of the argument to be validated.</typeparam>
+    public interface ICompositeSpecification<TSource> : ISpecification<TSource>
+        where TSource : notnull
+    { }
 }

@@ -38,7 +38,7 @@ namespace Xpandables.Net.Expressions
         public static QueryExpression<TSource, TResult> And<TSource, TResult>(
              this IQueryExpression<TSource, TResult> left,
              IQueryExpression<TSource, TResult> right)
-            where TSource : class
+            where TSource : notnull
             => new QueryExpressionAnd<TSource, TResult>(left, right);
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Xpandables.Net.Expressions
         public static QueryExpression<TSource, TResult> And<TSource, TResult>(
              this IQueryExpression<TSource, TResult> left,
              Expression<Func<TSource, TResult>> right)
-            where TSource : class
+            where TSource : notnull
             => new QueryExpressionAnd<TSource, TResult>(left, right);
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Xpandables.Net.Expressions
         public static QueryExpression<TSource, TResult> Or<TSource, TResult>(
              this IQueryExpression<TSource, TResult> left,
              IQueryExpression<TSource, TResult> right)
-            where TSource : class => new QueryExpressionOr<TSource, TResult>(left, right);
+            where TSource : notnull => new QueryExpressionOr<TSource, TResult>(left, right);
 
         /// <summary>
         /// Applies the OR operator to both query expressions and returns a new one.
@@ -82,7 +82,7 @@ namespace Xpandables.Net.Expressions
         public static QueryExpression<TSource, TResult> Or<TSource, TResult>(
              this IQueryExpression<TSource, TResult> left,
              Expression<Func<TSource, TResult>> right)
-            where TSource : class => new QueryExpressionOr<TSource, TResult>(left, right);
+            where TSource : notnull => new QueryExpressionOr<TSource, TResult>(left, right);
 
         /// <summary>
         /// Applies the NOT operator to the query expression and returns a new one.
@@ -93,7 +93,7 @@ namespace Xpandables.Net.Expressions
         [return: NotNull]
         public static QueryExpression<TSource, TResult> Not<TSource, TResult>(
              this IQueryExpression<TSource, TResult> queryExpression)
-            where TSource : class => new QueryExpressionNot<TSource, TResult>(queryExpression);
+            where TSource : notnull => new QueryExpressionNot<TSource, TResult>(queryExpression);
 
         /// <summary>
         /// Applies the NOT operator to the query expression and returns a new one.
@@ -104,6 +104,6 @@ namespace Xpandables.Net.Expressions
         [return: NotNull]
         public static QueryExpression<TSource, TResult> Not<TSource, TResult>(
              this Expression<Func<TSource, TResult>> queryExpression)
-            where TSource : class => new QueryExpressionNot<TSource, TResult>(queryExpression);
+            where TSource : notnull => new QueryExpressionNot<TSource, TResult>(queryExpression);
     }
 }

@@ -57,7 +57,6 @@ namespace Xpandables.Net
             _isFinalBlock = false;
         }
 
-
         public bool Read()
         {
             // read could be unsuccessful due to insufficient buffer size, retrying in loop with additional buffer segments
@@ -114,7 +113,6 @@ namespace Xpandables.Net
             _jsonReader =
                 new Utf8JsonReader(data, _isFinalBlock, _jsonReader.CurrentState);
         }
-
 
         private void DeserialisePost()
         {
@@ -191,7 +189,6 @@ namespace Xpandables.Net
             var newJsonReader =
                 new Utf8JsonReader(new ReadOnlySequence<byte>(firstSegment!, firstSegmentStartIndex, _lastSegment!,
                     _lastSegmentEndIndex).Slice(tokenStartIndex, _jsonReader.Position), true, default);
-
 
             // deserialize value
             var result = JsonDocument.ParseValue(ref newJsonReader);

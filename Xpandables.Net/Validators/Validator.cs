@@ -32,7 +32,7 @@ namespace Xpandables.Net.Validators
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument.</typeparam>
     public abstract class Validator<TArgument> : IValidator<TArgument>
-        where TArgument : class
+        where TArgument : notnull
     {
         /// <summary>
         /// Asynchronously validates the argument and returns validation state with errors if necessary.

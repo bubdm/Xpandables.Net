@@ -78,12 +78,12 @@ namespace Xpandables.Net.Api.Controllers
         [HttpPost]
         [Route("{id}")]
         public async Task<IActionResult> GetLocationAsync([FromRoute] GetIp ipAddress,
-            [FromServices] IHttpIpAddressLocationAccessor httpIpAddressLocationAccessor,
+            [FromServices] IHttpIPAddressLocationAccessor httpIpAddressLocationAccessor,
             [FromServices] IConfiguration configuration,
             CancellationToken cancellationToken = default)
         {
             var key = configuration["IPAddressStackKey"]!;
-            var request = new IpAddressLocationRequest(ipAddress.Id, key);
+            var request = new IPAddressLocationRequest(ipAddress.Id, key);
             var location = await httpIpAddressLocationAccessor.ReadLocationAsync(request, cancellationToken).ConfigureAwait(false);
 
             return Ok(location.Result);

@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 
 using Xpandables.Net.Commands;
+using Xpandables.Net.Decorators;
 using Xpandables.Net.Events.DomainEvents;
 using Xpandables.Net.Events.IntegrationEvents;
 using Xpandables.Net.Interception;

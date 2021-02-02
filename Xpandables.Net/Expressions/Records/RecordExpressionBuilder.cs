@@ -31,7 +31,7 @@ namespace Xpandables.Net.Expressions.Records
     /// <typeparam name="TSource">the target instance type.</typeparam>
     /// <typeparam name="TResult">The property type to be used for result.</typeparam>
     public sealed record RecordExpressionBuilder<TSource, TResult>(Expression<Func<TSource, TResult>> Expression) : RecordExpression<TSource, TResult>
-        where TSource : class
+        where TSource : notnull
     {
         /// <summary>
         /// Returns the expression to be used for the clause <see langword="Where"/> in a query.

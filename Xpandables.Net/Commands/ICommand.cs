@@ -15,8 +15,6 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Events;
-
 namespace Xpandables.Net.Commands
 {
     /// <summary>

@@ -182,7 +182,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds an <see cref="IHttpIpAddressAccessor"/> implementation to retrieve the IPAddress of caller from https://ipinfo.io/ip.
+        /// Adds an <see cref="IHttpIPAddressAccessor"/> implementation to retrieve the IPAddress of caller from https://ipinfo.io/ip.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -190,12 +190,12 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.DoAddXHttpIPAddressAccessor<HttpIpAddressAccessor>();
+            services.DoAddXHttpIPAddressAccessor<HttpIPAddressAccessor>();
             return services;
         }
 
         /// <summary>
-        /// Adds an <see cref="IHttpIpAddressAccessor"/> implementation to retrieve the IPAddress of caller that uses <see cref="Newtonsoft"/> from https://ipinfo.io/ip.
+        /// Adds an <see cref="IHttpIPAddressAccessor"/> implementation to retrieve the IPAddress of caller that uses <see cref="Newtonsoft"/> from https://ipinfo.io/ip.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -208,19 +208,19 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         private static void DoAddXHttpIPAddressAccessor<THttpIPAddressAccessor>(this IServiceCollection services)
-            where THttpIPAddressAccessor : class, IHttpIpAddressAccessor
+            where THttpIPAddressAccessor : class, IHttpIPAddressAccessor
         {
-            services.AddHttpClient<IHttpIpAddressAccessor, THttpIPAddressAccessor>(httpClient =>
+            services.AddHttpClient<IHttpIPAddressAccessor, THttpIPAddressAccessor>(httpClient =>
             {
                 httpClient.BaseAddress = new Uri("https://ipinfo.io/ip");
                 httpClient.DefaultRequestHeaders.Clear();
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
             })
-             .ConfigurePrimaryHttpMessageHandler(() => new HttpIpAddressDelegateHandler());
+             .ConfigurePrimaryHttpMessageHandler(() => new HttpIPAddressDelegateHandler());
         }
 
         /// <summary>
-        /// Adds an <see cref="IHttpIpAddressLocationAccessor"/> implementation to retrieve the IP Address location from http://api.ipstack.com.
+        /// Adds an <see cref="IHttpIPAddressLocationAccessor"/> implementation to retrieve the IP Address location from http://api.ipstack.com.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -228,12 +228,12 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.DoAddXHttpIPAddressLocationAccessor<HttpIpAddressLocationAccessor>();
+            services.DoAddXHttpIPAddressLocationAccessor<HttpIPAddressLocationAccessor>();
             return services;
         }
 
         /// <summary>
-        /// Adds an <see cref="IHttpIpAddressLocationAccessor"/> implementation to retrieve the IP Address location that uses <see cref="Newtonsoft"/> from http://api.ipstack.com.
+        /// Adds an <see cref="IHttpIPAddressLocationAccessor"/> implementation to retrieve the IP Address location that uses <see cref="Newtonsoft"/> from http://api.ipstack.com.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -246,9 +246,9 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         private static void DoAddXHttpIPAddressLocationAccessor<THttpIPAddressLocationAccessor>(this IServiceCollection services)
-            where THttpIPAddressLocationAccessor : class, IHttpIpAddressLocationAccessor
+            where THttpIPAddressLocationAccessor : class, IHttpIPAddressLocationAccessor
         {
-            services.AddHttpClient<IHttpIpAddressLocationAccessor, THttpIPAddressLocationAccessor>(httpClient =>
+            services.AddHttpClient<IHttpIPAddressLocationAccessor, THttpIPAddressLocationAccessor>(httpClient =>
             {
                 httpClient.BaseAddress = new Uri("http://api.ipstack.com");
                 httpClient.DefaultRequestHeaders.Clear();

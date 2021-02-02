@@ -36,6 +36,7 @@ using Xpandables.Net.Decorators.Visitors;
 using Xpandables.Net.Dispatchers;
 using Xpandables.Net.Events.DomainEvents;
 using Xpandables.Net.Events.IntegrationEvents;
+using Xpandables.Net.Expressions.Specifications;
 using Xpandables.Net.Logging;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
@@ -316,6 +317,21 @@ namespace Xpandables.Net.DependencyInjection
             }
 
             return services.AddScoped<ITransactionScopeProvider, TTransactionScopeProvider>();
+        }
+
+        /// <summary>
+        /// Adds default transaction type provider to the services.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXTransactionScopeProvider(this IServiceCollection services)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            return services.AddScoped<ITransactionScopeProvider, TransactionScopeProvider>();
         }
 
         /// <summary>

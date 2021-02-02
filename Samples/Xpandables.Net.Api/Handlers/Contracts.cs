@@ -25,7 +25,6 @@ using Xpandables.Net.Commands;
 using Xpandables.Net.Decorators;
 using Xpandables.Net.Expressions.Records;
 using Xpandables.Net.Http;
-using Xpandables.Net.Interception;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api.Handlers
@@ -81,7 +80,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = "Post", IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed record GetIp([Required] string Id) : IQuery<GeoLocation>, IPathStringLocationRequest, ILoggingDecorator
+    public sealed record GetIp([Required] string Id) : IQuery<IPAddressLocation>, IPathStringLocationRequest, ILoggingDecorator
     {
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
     }

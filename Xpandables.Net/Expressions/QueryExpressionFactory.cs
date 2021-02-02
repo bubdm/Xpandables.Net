@@ -30,7 +30,7 @@ namespace Xpandables.Net.Expressions
         /// </summary>
         /// <typeparam name="TSource">The data type source.</typeparam>
         /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/> with boolean result.</returns>
-        public static QueryExpression<TSource, bool> Create<TSource>() where TSource : class => new QueryExpressionBuilder<TSource, bool>(_ => true);
+        public static QueryExpression<TSource, bool> Create<TSource>() where TSource : notnull => new QueryExpressionBuilder<TSource, bool>(_ => true);
     }
 
     /// <summary>

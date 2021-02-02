@@ -75,6 +75,6 @@ namespace Xpandables.Net
         /// Returns the UTF8 encoded string of the image.
         /// </summary>
         /// <returns>An UTF8 string.</returns>
-        public override string ToString() => System.Text.Encoding.UTF8.GetString(Content, 0, Content.Length);       
+        public override string ToString() => System.Text.Encoding.UTF8.GetString(Content, 0, Content.Length);
     }
 }

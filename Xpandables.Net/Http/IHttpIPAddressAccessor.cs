@@ -25,7 +25,7 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// Provides with a method to request IP address of the caller.
     /// </summary>
-    public interface IHttpIpAddressAccessor : IDisposable
+    public interface IHttpIPAddressAccessor : IDisposable
     {
         internal IHttpRestClientHandler HttpRestClientHandler { get; }
 
@@ -33,9 +33,9 @@ namespace Xpandables.Net.Http
         /// Asynchronously gets the IPAddress of the current caller.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        public virtual async Task<HttpRestClientResponse<IPAddress>> ReadIpAddressAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(CancellationToken cancellationToken = default)
         {
-            var response = await HttpRestClientHandler.HandleAsync(new IpAddressRequest(), cancellationToken).ConfigureAwait(false);
+            var response = await HttpRestClientHandler.HandleAsync(new IPAddressRequest(), default, cancellationToken).ConfigureAwait(false);
             return response.ConvertTo(IPAddress.TryParse(response.Result, out var ipAddress) ? ipAddress : IPAddress.None);
         }
     }

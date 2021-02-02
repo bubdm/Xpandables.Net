@@ -22,6 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Decorators;
+using Xpandables.Net.Expressions.Specifications;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Validators;
 

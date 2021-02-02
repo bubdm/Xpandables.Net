@@ -29,11 +29,16 @@ namespace Xpandables.Net.Expressions.Specifications
         where TSource : notnull
     {
         /// <summary>
-        /// When implemented in derived class, this method will return the expression
-        /// to be used for the clause <see langword="Where"/> in a query.
+        /// Returns a value that determines whether or not the specification is satisfied by the source object.
         /// </summary>
-        [return: NotNull]
-        public new abstract Expression<Func<TSource, bool>> GetExpression();
+        /// <param name="source">The target source to check specification on.</param>
+        /// <returns><see langword="true"/> if the specification is satisfied, otherwise <see langword="false"/></returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public virtual bool IsSatisfiedBy(TSource source)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            return GetExpression().Compile()(source);
+        }
 
         /// <summary>
         /// Returns the unique hash code for the current instance.
@@ -63,48 +68,85 @@ namespace Xpandables.Net.Expressions.Specifications
             return ReferenceEquals(this, objVal) || ExpressionComparer.AreEqual(GetExpression(), objVal.GetExpression());
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+        /// <summary>
+        /// Returns a composite specification from the two specifications using the And operator.
+        /// </summary>
+        /// <param name="left">The left specification.</param>
+        /// <param name="right">The right specification</param>
+        /// <returns>A new specification.</returns>
         [return: NotNull]
-        public static Specification<TSource> operator &(
-             Specification<TSource> left,
-             Specification<TSource> right)
+        public static Specification<TSource> operator &(Specification<TSource> left, Specification<TSource> right)
           => new SpecificationAnd<TSource>(left, right: right);
 
+        /// <summary>
+        /// Returns a composite specification from the two specifications using the Or operator.
+        /// </summary>
+        /// <param name="left">The left specification.</param>
+        /// <param name="right">The right specification</param>
+        /// <returns>A new specification.</returns>
         [return: NotNull]
-        public static Specification<TSource> operator |(
-             Specification<TSource> left,
-             Specification<TSource> right)
+        public static Specification<TSource> operator |(Specification<TSource> left, Specification<TSource> right)
             => new SpecificationOr<TSource>(left, right: right);
 
-        public static Specification<TSource> operator ==(
-            bool value,
-             Specification<TSource> right)
+        /// <summary>
+        /// Returns a new specification that is the opposite of the specified one.
+        /// </summary>
+        /// <param name="other">The specification to act on.</param>
+        /// <returns>An opposite specification.</returns>
+        [return: NotNull]
+        public static SpecificationNot<TSource> operator !(Specification<TSource> other)
+            => new SpecificationNot<TSource>(other);
+
+        /// <summary>
+        /// Returns a specification that will be true only if the boolean is true.
+        /// </summary>
+        /// <param name="value">The boolean value to compare with.</param>
+        /// <param name="right">The target specification.</param>
+        /// <returns>A new specification.</returns>
+        [return: NotNull]
+        public static Specification<TSource> operator ==(bool value, Specification<TSource> right)
             => value ? right : !right;
 
+        /// <summary>
+        /// Returns a specification that will be true only if the boolean is true.
+        /// </summary>
+        /// <param name="left">The target specification.</param>
+        /// <param name="value">The boolean value to compare with.</param>
+        /// <returns>A new specification.</returns>
         [return: NotNull]
-        public static Specification<TSource> operator ==(
-             Specification<TSource> left,
-            bool value)
+        public static Specification<TSource> operator ==(Specification<TSource> left, bool value)
             => value ? left : !left;
 
+        /// <summary>
+        /// Returns a specification that will be true only if the boolean is false.
+        /// </summary>
+        /// <param name="value">The boolean value to compare with.</param>
+        /// <param name="right">The target specification.</param>
+        /// <returns>A new specification.</returns>
         [return: NotNull]
-        public static Specification<TSource> operator !=(
-            bool value,
-             Specification<TSource> right)
+        public static Specification<TSource> operator !=(bool value, Specification<TSource> right)
             => value ? !right : right;
 
+        /// <summary>
+        /// Returns a specification that will be true only if the boolean is false.
+        /// </summary>
+        /// <param name="left">The target specification.</param>
+        /// <param name="value">The boolean value to compare with.</param>
+        /// <returns>A new specification.</returns>
         [return: NotNull]
-        public static Specification<TSource> operator !=(
-             Specification<TSource> left,
-            bool value)
+        public static Specification<TSource> operator !=(Specification<TSource> left, bool value)
             => value ? !left : left;
 
-        [return: NotNull]
-        public static Specification<TSource> operator !(
-             Specification<TSource> left)
-            => new SpecificationNot<TSource>(expression: left);
+        /// <summary>
+        /// Returns the current specification as <see cref="Func{T, TResult}"/>.
+        /// </summary>
+        /// <param name="other">the target specification.</param>
+        [return:NotNull]
+        public static implicit operator Func<TSource, bool>(Specification<TSource> other)
+            =>other.IsSatisfiedBy;
 
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        /// <summary>Returns a string that represents the current expression.</summary>
+        /// <returns>A string that represents the current expression.</returns>
+        public override string ToString() => GetExpression().ToString();
     }
 }

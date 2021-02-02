@@ -57,7 +57,6 @@ namespace Xpandables.Net
             return await EncryptAsync(value, key, salt).ConfigureAwait(false);
         }
 
-
         /// <summary>
         /// Returns an encrypted string from the value string using the specified key and the salt value.
         /// If <paramref name="key"/> or <paramref name="salt"/> is not provided, a default value will be used.
@@ -131,7 +130,6 @@ namespace Xpandables.Net
         /// <exception cref="ArgumentNullException">The <paramref name="salt"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The decryption failed. See inner exception.</exception>
         public virtual async Task<string> DecryptAsync(string key, string value, string salt) => await DecryptAsync(new ValueEncrypted(key, value, salt)).ConfigureAwait(false);
-
 
         /// <summary>
         /// Returns an decrypted string from the encrypted object.

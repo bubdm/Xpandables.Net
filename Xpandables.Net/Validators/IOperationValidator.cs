@@ -26,7 +26,7 @@ namespace Xpandables.Net.Validators
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
     public interface IOperationValidator<TArgument>
-        where TArgument :notnull
+        where TArgument : notnull
     {
         /// <summary>
         /// Asynchronously validates the argument and returns validation state with errors if necessary.

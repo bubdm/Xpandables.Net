@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.Decorators;
+using Xpandables.Net.Expressions.Specifications;
 using Xpandables.Net.Validators;
 
 namespace Xpandables.Net.Decorators.Validators

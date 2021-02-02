@@ -31,8 +31,9 @@ namespace Xpandables.Net.Expressions.Records
     /// <param name="Right">The query expression for the right side.</param>
     /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
     /// <typeparam name="TResult">The type of the result of expression.</typeparam>
-    public sealed record RecordExpressionOr<TSource, TResult>(IQueryExpression<TSource, TResult> Left, IQueryExpression<TSource, TResult> Right) : RecordExpression<TSource, TResult>
-        where TSource : class
+    public sealed record RecordExpressionOr<TSource, TResult>(IQueryExpression<TSource, TResult> Left, IQueryExpression<TSource, TResult> Right)
+        : RecordExpression<TSource, TResult>
+        where TSource : notnull
     {
         private Expression<Func<TSource, TResult>>? _cache;
 

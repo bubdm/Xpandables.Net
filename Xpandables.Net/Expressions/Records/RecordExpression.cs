@@ -27,7 +27,7 @@ namespace Xpandables.Net.Expressions.Records
     /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
     /// <typeparam name="TResult">The type of the result of expression.</typeparam>
     public abstract record RecordExpression<TSource, TResult> : IQueryExpression<TSource, TResult>
-        where TSource : class
+        where TSource : notnull
     {
         /// <summary>
         /// Gets the expression tree for the underlying instance.

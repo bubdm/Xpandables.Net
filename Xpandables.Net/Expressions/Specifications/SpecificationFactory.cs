@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,29 +14,19 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.Expressions.Specifications
 {
     /// <summary>
-    /// Provides with shared member for commands, queries and events.
+    /// Provides the specification factory that contains methods to create generic specifications.
     /// </summary>
-    public interface ICommandQueryEvent
+    public static class SpecificationFactory
     {
         /// <summary>
-        /// Gets the unique identifier for the command.
+        /// Creates a new instance of <see cref="Specification{TSource}"/> with <see cref="bool"/> result that return <see langword="true"/>.
         /// </summary>
-        public Guid Guid => Guid.NewGuid();
-
-        /// <summary>
-        /// Gets the created date of the command.
-        /// </summary>
-        public DateTimeOffset CreatedOn => DateTimeOffset.Now;
-
-        /// <summary>
-        /// Gets the name of the user running associated with the current command.
-        /// The default value is associated with the current thread.
-        /// </summary>
-        public string CreatedBy => Environment.UserName;
+        /// <typeparam name="TSource">The data type source.</typeparam>
+        /// <returns>a new instance of <see cref="Specification{TSource}"/> with boolean result.</returns>
+        public static Specification<TSource> Create<TSource>() where TSource : notnull => new SpecificationBuilder<TSource>(_ => true);
     }
 }

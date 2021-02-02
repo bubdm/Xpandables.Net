@@ -15,13 +15,13 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Queries
+using Xpandables.Net.Interception;
+
+namespace Xpandables.Net.Decorators
 {
     /// <summary>
-    /// This interface is used as a marker for queries when using the synchronous query pattern that contains a specific-type result.
-    /// Class implementation is used with the <see cref="IQueryHandler{TQuery, TResult}"/> where
-    /// "TQuery" is a class that implements the <see cref="IQuery{TResult}"/> interface. This can also be enhanced with some useful decorators.
+    /// A marker interface that allows the class implementation to be intercepted.
+    /// You need to register the expected behavior using the appropriate interceptor extension method and provide an implementation for <see cref="IInterceptor"/>.
     /// </summary>
-    /// <typeparam name="TResult">Type of the result of the query.</typeparam>
-    public interface IQuery<out TResult> : ICommandQueryEvent { }
+    public interface IInterceptorDecorator { }
 }

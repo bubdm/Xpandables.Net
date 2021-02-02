@@ -21,26 +21,13 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Queries
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of the <see cref="IQueryHandler{TQuery, TResult}"/> interface without dedicated class.
+    /// Represents a helper class that allows implementation of the <see cref="IQueryHandler{TQuery, TResult}"/> interface.
     /// </summary>
     /// <typeparam name="TQuery">Type of argument to act on.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public sealed class QueryHandler<TQuery, TResult> : IQueryHandler<TQuery, TResult>
+    public abstract class QueryHandler<TQuery, TResult> : IQueryHandler<TQuery, TResult>
         where TQuery : class, IQuery<TResult>
     {
-        private readonly Func<TQuery, CancellationToken, Task<IOperationResult<TResult>>> _handler;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QueryHandler{TQuery, TResult}"/> class with the delegate to be used
-        /// as <see cref="IQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/> implementation.
-        /// </summary>
-        /// <param name="handler">The delegate to be used when the handler will be invoked.
-        /// <para>The delegate should match all the behaviors expected in
-        /// the <see cref="IQueryHandler{TQuery, TResult}.HandleAsync(TQuery, CancellationToken)"/>
-        /// method such as thrown exceptions.</para></param>
-        /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
-        public QueryHandler(Func<TQuery, CancellationToken, Task<IOperationResult<TResult>>> handler) => _handler = handler ?? throw new ArgumentNullException(nameof(handler));
-
         /// <summary>
         /// Asynchronously handles the specified query using the delegate from the constructor and returns the task result.
         /// </summary>
@@ -48,6 +35,40 @@ namespace Xpandables.Net.Queries
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        public async Task<IOperationResult<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default) => await _handler(query, cancellationToken).ConfigureAwait(false);
+        public abstract Task<IOperationResult<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Returns a <see cref="SuccessOperationResult{TValue}"/> with <see cref="System.Net.HttpStatusCode.OK"/> and result.
+        /// </summary>
+        /// <param name="result">The command result.</param>
+        /// <returns>A <see cref="SuccessOperationResult{TValue}"/>.</returns>
+        protected IOperationResult<TResult> ReturnSuccessOperationResult(TResult result) => new SuccessOperationResult<TResult>(result);
+
+        /// <summary>
+        /// Returns a <see cref="SuccessOperationResult"/> with the specified status code and result.
+        /// </summary>
+        /// <param name="statusCode">The status code.</param>
+        /// <param name="result">The command result.</param>
+        /// <returns>A <see cref="SuccessOperationResult{TValue}"/>.</returns>
+        protected IOperationResult<TResult> ReturnSuccessOperationResult(
+            System.Net.HttpStatusCode statusCode, TResult result)
+            => new SuccessOperationResult<TResult>(statusCode, result);
+
+        /// <summary>
+        /// Returns a <see cref="FailureOperationResult{TValue}"/> with <see cref="System.Net.HttpStatusCode.BadRequest"/> and errors.
+        /// </summary>
+        /// <param name="errors">The collection of errors.</param>
+        /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
+        protected IOperationResult<TResult> ReturnFailedOperationResult(params OperationError[] errors)
+            => new FailureOperationResult<TResult>(errors);
+
+        /// <summary>
+        /// Returns a <see cref="FailureOperationResult{TValue}"/> with the specified status code and errors.
+        /// </summary>
+        /// <param name="statusCode">The status code.</param>
+        /// <param name="errors">The collection of errors.</param>
+        /// <returns>A <see cref="FailureOperationResult"/>.</returns>
+        protected IOperationResult<TResult> ReturnFailedOperationResult(System.Net.HttpStatusCode statusCode, params OperationError[] errors)
+            => new FailureOperationResult<TResult>(statusCode, errors);
     }
 }

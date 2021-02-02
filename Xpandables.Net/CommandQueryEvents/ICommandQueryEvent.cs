@@ -15,20 +15,29 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Collections.Generic;
-using System.Linq;
+using System;
 
 namespace Xpandables.Net
 {
     /// <summary>
-    /// <see cref="IOperationResult"/> extensions.
+    /// Provides with shared member for commands, queries and events.
     /// </summary>
-    public static class OperationResultExtensions
+    public interface ICommandQueryEvent
     {
         /// <summary>
-        /// Converts the error collection as a <see cref="Dictionary{TKey, TValue}"/>.
+        /// Gets the unique identifier for the command.
         /// </summary>
-        /// <returns>A <see cref="Dictionary{TKey, TValue}"/> that contains values of <see cref="OperationError"/> selected from the collection.</returns>
-        public static IDictionary<string, string[]> ToDictionary(this IReadOnlyCollection<OperationError> @this) => @this.ToDictionary(d => d.Key, d => d.ErrorMessages);
+        public Guid Guid => Guid.NewGuid();
+
+        /// <summary>
+        /// Gets the created date of the command.
+        /// </summary>
+        public DateTimeOffset CreatedOn => DateTimeOffset.Now;
+
+        /// <summary>
+        /// Gets the name of the user running associated with the current command.
+        /// The default value is associated with the current thread.
+        /// </summary>
+        public string CreatedBy => Environment.UserName;
     }
 }

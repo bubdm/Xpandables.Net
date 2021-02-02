@@ -25,7 +25,7 @@ namespace Xpandables.Net.Validators
     /// </summary>
     /// <typeparam name="TArgument">Type of argument to be validated.</typeparam>
     public sealed class NullValidation<TArgument> : IValidator<TArgument>
-        where TArgument : class
+        where TArgument : notnull
     {
         /// <summary>
         /// Does nothing.

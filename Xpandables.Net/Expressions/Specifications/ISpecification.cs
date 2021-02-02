@@ -34,10 +34,6 @@ namespace Xpandables.Net.Expressions.Specifications
         /// <param name="source">The target source to check specification on.</param>
         /// <returns><see langword="true"/> if the specification is satisfied, otherwise <see langword="false"/></returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public virtual bool IsSatisfiedBy(TSource source)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            return GetExpression().Compile().Invoke(source);
-        }
+        bool IsSatisfiedBy(TSource source);
     }
 }

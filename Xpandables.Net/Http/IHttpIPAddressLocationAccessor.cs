@@ -24,7 +24,7 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// Provides with a method to request IP Address Geo-location using a typed client HTTP Client.
     /// </summary>
-    public interface IHttpIpAddressLocationAccessor : IDisposable
+    public interface IHttpIPAddressLocationAccessor : IDisposable
     {
         internal IHttpRestClientHandler HttpRestClientHandler { get; }
 
@@ -34,10 +34,10 @@ namespace Xpandables.Net.Http
         /// <param name="request">The request to act with.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        public virtual async Task<HttpRestClientResponse<GeoLocation>> ReadLocationAsync(IpAddressLocationRequest request, CancellationToken cancellationToken = default)
+        public virtual async Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(IPAddressLocationRequest request, CancellationToken cancellationToken = default)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
-            return await HttpRestClientHandler.HandleAsync(request, cancellationToken).ConfigureAwait(false);
+            return await HttpRestClientHandler.HandleAsync(request, default, cancellationToken).ConfigureAwait(false);
         }
     }
 }

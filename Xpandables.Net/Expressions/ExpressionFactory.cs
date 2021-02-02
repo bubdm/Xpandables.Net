@@ -36,6 +36,7 @@ namespace Xpandables.Net.Expressions
         /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
         public static Expression<Func<TSource, TResult>> And<TSource>(Expression<Func<TSource, TResult>> left, Expression<Func<TSource, TResult>> right)
+            where TSource : notnull
         {
             _ = left ?? throw new ArgumentNullException(nameof(left));
             _ = right ?? throw new ArgumentNullException(nameof(right));
@@ -54,6 +55,7 @@ namespace Xpandables.Net.Expressions
         /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
         public static Expression<Func<TSource, TResult>> Or<TSource>(Expression<Func<TSource, TResult>> left, Expression<Func<TSource, TResult>> right)
+            where TSource : notnull
         {
             _ = left ?? throw new ArgumentNullException(nameof(left));
             _ = right ?? throw new ArgumentNullException(nameof(right));
@@ -70,6 +72,7 @@ namespace Xpandables.Net.Expressions
         /// <returns><see cref="Expression{TDelegate}"/> result</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="expression"/>is null.</exception>
         public static Expression<Func<TSource, TResult>> Not<TSource>(Expression<Func<TSource, TResult>> expression)
+            where TSource : notnull
         {
             var left = expression ?? throw new ArgumentNullException(nameof(expression));
             return Expression.Lambda<Func<TSource, TResult>>(Expression.Not(left.Body), left.Parameters);

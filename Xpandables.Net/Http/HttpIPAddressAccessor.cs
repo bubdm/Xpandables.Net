@@ -30,7 +30,7 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// Provides with a handler that is used with <see cref="HttpClient"/> to format IpLocation result before returning response.
     /// </summary>
-    internal sealed class HttpIpAddressDelegateHandler : HttpClientHandler
+    internal sealed class HttpIPAddressDelegateHandler : HttpClientHandler
     {
         /// <summary>
         /// Creates an instance of System.Net.Http.HttpResponseMessage based on the information
@@ -54,17 +54,17 @@ namespace Xpandables.Net.Http
     }
 
     /// <summary>
-    /// Default implementation for <see cref="IHttpIpAddressAccessor"/>.
+    /// Default implementation for <see cref="IHttpIPAddressAccessor"/>.
     /// </summary>
-    public sealed class HttpIpAddressAccessor : Disposable, IHttpIpAddressAccessor
+    public sealed class HttpIPAddressAccessor : Disposable, IHttpIPAddressAccessor
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
-        IHttpRestClientHandler IHttpIpAddressAccessor.HttpRestClientHandler => _httpRestClientHandler;
+        IHttpRestClientHandler IHttpIPAddressAccessor.HttpRestClientHandler => _httpRestClientHandler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpIpAddressAccessor"/> class that uses the https://ipinfo.io/ip to retrieve the user ip address.
+        /// Initializes a new instance of the <see cref="HttpIPAddressAccessor"/> class that uses the https://ipinfo.io/ip to retrieve the user ip address.
         /// </summary>
-        public HttpIpAddressAccessor(HttpClient httpClient)
+        public HttpIPAddressAccessor(HttpClient httpClient)
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             _httpRestClientHandler = new HttpRestClientHandler(httpClient);

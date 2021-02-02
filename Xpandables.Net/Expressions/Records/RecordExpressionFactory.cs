@@ -22,7 +22,7 @@ namespace Xpandables.Net.Expressions.Records
 {
     /// <summary>
     /// Provides with the record expression factory that contains methods to create generic record expressions.
-    /// </summary>   
+    /// </summary>
     public static class RecordExpressionFactory
     {
         /// <summary>

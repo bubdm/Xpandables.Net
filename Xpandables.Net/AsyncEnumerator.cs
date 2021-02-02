@@ -55,7 +55,7 @@ namespace Xpandables.Net
         /// <summary>
         ///  Advances the enumerator asynchronously to the next element of the collection.
         /// </summary>
-        /// <returns> A <see cref="ValueTask{TResult}"/>  that will complete with a result of <see langword="true"/> if the enumerator was successfully 
+        /// <returns> A <see cref="ValueTask{TResult}"/>  that will complete with a result of <see langword="true"/> if the enumerator was successfully
         /// advanced to the next element, or <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
         public ValueTask<bool> MoveNextAsync() => new(_inner.MoveNext());
     }

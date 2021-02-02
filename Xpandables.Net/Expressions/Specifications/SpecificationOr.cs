@@ -44,17 +44,12 @@ namespace Xpandables.Net.Expressions.Specifications
         }
 
         /// <summary>
-        /// Returns a new instance of <see cref="SpecificationAnd{TSource}"/> class with the specification and expression for composition.
+        /// Returns a value that determines whether or not the specification is satisfied by the source object.
         /// </summary>
-        /// <param name="left">The specification for the left side.</param>
-        /// <param name="rightExpression">The expression for the right side.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="rightExpression"/> is null.</exception>
-        public SpecificationOr(ISpecification<TSource> left, Expression<Func<TSource, bool>> rightExpression)
-        {
-            _left = left ?? throw new ArgumentNullException(nameof(left));
-            _right = new SpecificationExpression<TSource>(rightExpression ?? throw new ArgumentNullException(nameof(rightExpression)));
-        }
+        /// <param name="source">The target source to check specification on.</param>
+        /// <returns><see langword="true" /> if the specification is satisfied, otherwise <see langword="false" /></returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source" /> is null.</exception>
+        public override bool IsSatisfiedBy(TSource source) => _left.IsSatisfiedBy(source) || _right.IsSatisfiedBy(source);
 
         /// <summary>
         /// Returns the expression to be used for the clause <see langword="Where"/> in a query.

@@ -61,7 +61,7 @@ namespace Xpandables.Net.Database
         /// </summary>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="converter">Defines the expression to convert n entity to the expected result.</param>
+        /// <param name="converter">Defines the expression to convert an entity to the expected result.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TEntity"/> type that meets the criteria.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>

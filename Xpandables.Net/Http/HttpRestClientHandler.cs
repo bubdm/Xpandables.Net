@@ -50,13 +50,16 @@ namespace Xpandables.Net.Http
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/>
+        /// or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="options">The JSON serializer options used to customize deserialization.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         public virtual async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(
-            IAsyncQuery<TResult> query, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default)
+            IAsyncQuery<TResult> query,
+            JsonSerializerOptions? options = default,
+            CancellationToken cancellationToken = default)
         {
             try
             {
@@ -66,7 +69,11 @@ namespace Xpandables.Net.Http
                 var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
-                    return await WriteEnumerableResultSuccessResponseAsync(response, stream => AsyncEnumerableBuilderFromStreamAsync<TResult>(stream, cancellationToken, options)).ConfigureAwait(false);
+                {
+                    return await WriteEnumerableResultSuccessResponseAsync(
+                        response,
+                        stream => AsyncEnumerableBuilderFromStreamAsync<TResult>(stream, cancellationToken, options)).ConfigureAwait(false);
+                }
 
                 return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)await WriteBadResponseAsync(
                     HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure, response)
@@ -86,7 +93,8 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// Handles the command as asynchronous operation.
         /// </summary>
-        /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/>
+        /// or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
@@ -123,12 +131,16 @@ namespace Xpandables.Net.Http
         /// Handles the command as asynchronous operation.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/>
+        /// or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="options">The JSON serializer options used to customize deserialization.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        public virtual async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default)
+        public virtual async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(
+            ICommand<TResult> command,
+            JsonSerializerOptions? options = default,
+            CancellationToken cancellationToken = default)
         {
             try
             {
@@ -140,7 +152,11 @@ namespace Xpandables.Net.Http
                     .ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
-                    return await WriteResultSuccessResponseAsync(response, stream => DeserializeJsonFromStreamAsync<TResult>(stream, options)).ConfigureAwait(false);
+                {
+                    return await WriteResultSuccessResponseAsync(
+                        response,
+                        stream => DeserializeJsonFromStreamAsync<TResult>(stream, options)).ConfigureAwait(false);
+                }
 
                 return (HttpRestClientResponse<TResult>)await WriteBadResponseAsync(
                     HttpRestClientResponse<TResult>.Failure, response)
@@ -160,12 +176,16 @@ namespace Xpandables.Net.Http
         /// Handles the query as asynchronous operation.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/>
+        /// or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="options">The JSON serializer options used to customize deserialization.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        public virtual async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default, JsonSerializerOptions? options = default)
+        public virtual async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(
+            IQuery<TResult> query,
+            JsonSerializerOptions? options = default,
+            CancellationToken cancellationToken = default)
         {
             try
             {
@@ -177,7 +197,11 @@ namespace Xpandables.Net.Http
                     .ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
-                    return await WriteResultSuccessResponseAsync(response, stream => DeserializeJsonFromStreamAsync<TResult>(stream, options)).ConfigureAwait(false);
+                {
+                    return await WriteResultSuccessResponseAsync(
+                        response,
+                        stream => DeserializeJsonFromStreamAsync<TResult>(stream, options)).ConfigureAwait(false);
+                }
 
                 return (HttpRestClientResponse<TResult>)await WriteBadResponseAsync(
                     HttpRestClientResponse<TResult>.Failure, response)

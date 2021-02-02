@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System;
 
-namespace Xpandables.Net.Events
+namespace Xpandables.Net
 {
     /// <summary>
     /// Provides with extension methods to access <see cref="ICommandQueryEvent"/> members.

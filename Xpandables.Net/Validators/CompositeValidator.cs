@@ -29,7 +29,7 @@ namespace Xpandables.Net.Validators
     /// <typeparam name="TArgument">Type of the argument to be validated</typeparam>
     [Serializable]
     public class CompositeValidator<TArgument> : Validator<TArgument>, ICompositeValidator<TArgument>
-        where TArgument : class
+        where TArgument : notnull
     {
         private readonly IEnumerable<IValidator<TArgument>> _validationInstances;
 

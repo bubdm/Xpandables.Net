@@ -132,7 +132,7 @@ namespace Xpandables.Net.Expressions
     {
         /// <summary>
         /// When implemented in derived class, this method will return the expression
-        /// to be used for the clause <see langword="Where"/> in a query.
+        /// to be used for the <see langword="Where"/> clause in a query.
         /// </summary>
         [return: NotNull]
         public override Expression<Func<TSource, bool>> GetExpression() => _ => true;
