@@ -39,7 +39,7 @@ namespace Xpandables.Net.Api
         {
             services
                 .AddControllers()
-                .AddNewtonsoftJson()
+                //.AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new OperationResultNewtonsoftConverter())) uncomment to use the Newtonsoft
                 .AddMvcOptions(options =>
                 {
                     options.Filters.Add<OperationResultFilter>(int.MinValue);

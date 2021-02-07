@@ -205,27 +205,27 @@ namespace Xpandables.Net
         /// Returns a <see cref="SuccessOperationResult"/> with <see cref="HttpStatusCode.OK"/>.
         /// </summary>
         /// <returns>A <see cref="SuccessOperationResult"/>.</returns>
-        protected static IOperationResult ReturnSuccessOperationResult() => new SuccessOperationResult();
+        protected static IOperationResult SuccessOperation() => new SuccessOperationResult();
 
         /// <summary>
         /// Returns a <see cref="SuccessOperationResult"/> with <see cref="HttpStatusCode.OK"/>.
         /// </summary>
         /// <returns>A task that represents an object of <see cref="SuccessOperationResult"/>.</returns>
-        protected static Task<IOperationResult> ReturnSuccessOperationResultAsync() => Task.FromResult<IOperationResult>(new SuccessOperationResult());
+        protected static Task<IOperationResult> SuccessOperationAsync() => Task.FromResult<IOperationResult>(new SuccessOperationResult());
 
         /// <summary>
         /// Returns a <see cref="SuccessOperationResult"/> with the specified status code.
         /// </summary>
         /// <param name="statusCode">The status code.</param>
         /// <returns>A <see cref="SuccessOperationResult"/>.</returns>
-        protected static IOperationResult ReturnSuccessOperationResult(HttpStatusCode statusCode) => new SuccessOperationResult(statusCode);
+        protected static IOperationResult SuccessOperation(HttpStatusCode statusCode) => new SuccessOperationResult(statusCode);
 
         /// <summary>
         /// Returns a <see cref="SuccessOperationResult"/> with the specified status code.
         /// </summary>
         /// <param name="statusCode">The status code.</param>
         /// <returns>A task that represents an object of <see cref="SuccessOperationResult"/>.</returns>
-        protected static Task<IOperationResult> ReturnSuccessOperationResultAsync(HttpStatusCode statusCode)
+        protected static Task<IOperationResult> SuccessOperationAsync(HttpStatusCode statusCode)
             => Task.FromResult<IOperationResult>(new SuccessOperationResult(statusCode));
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="errors">The collection of errors.</param>
         /// <returns>A <see cref="FailureOperationResult"/>.</returns>
-        protected static IOperationResult ReturnFailedOperationResult(params OperationError[] errors)
+        protected static IOperationResult FailedOperation(params OperationError[] errors)
             => new FailureOperationResult(errors);
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="errors">The collection of errors.</param>
         /// <returns>A task that represents an object of <see cref="FailureOperationResult"/>.</returns>
-        protected static Task<IOperationResult> ReturnFailedOperationResultAsync(params OperationError[] errors)
+        protected static Task<IOperationResult> FailedOperationAsync(params OperationError[] errors)
             => Task.FromResult<IOperationResult>(new FailureOperationResult(errors));
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace Xpandables.Net
         /// <param name="statusCode">The status code.</param>
         /// <param name="errors">The collection of errors.</param>
         /// <returns>A <see cref="FailureOperationResult"/>.</returns>
-        protected static IOperationResult ReturnFailedOperationResult(HttpStatusCode statusCode, params OperationError[] errors)
+        protected static IOperationResult FailedOperation(HttpStatusCode statusCode, params OperationError[] errors)
             => new FailureOperationResult(statusCode, errors);
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace Xpandables.Net
         /// <param name="statusCode">The status code.</param>
         /// <param name="errors">The collection of errors.</param>
         /// <returns>A task that represents an object of <see cref="FailureOperationResult"/>.</returns>
-        protected static Task<IOperationResult> ReturnFailedOperationResultAsync(HttpStatusCode statusCode, params OperationError[] errors)
+        protected static Task<IOperationResult> FailedOperationAsync(HttpStatusCode statusCode, params OperationError[] errors)
             => Task.FromResult<IOperationResult>(new FailureOperationResult(statusCode, errors));
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace Xpandables.Net
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="result">The command result.</param>
         /// <returns>A <see cref="SuccessOperationResult{TValue}"/>.</returns>
-        protected static IOperationResult<TResult> ReturnSuccessOperationResult<TResult>(TResult result) => new SuccessOperationResult<TResult>(result);
+        protected static IOperationResult<TResult> SuccessOperation<TResult>(TResult result) => new SuccessOperationResult<TResult>(result);
 
         /// <summary>
         /// Returns a <see cref="SuccessOperationResult{TValue}"/> with <see cref="HttpStatusCode.OK"/> and result.
@@ -276,7 +276,7 @@ namespace Xpandables.Net
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="result">The command result.</param>
         /// <returns>A task that represents an object of <see cref="SuccessOperationResult{TResult}"/>.</returns>
-        protected static Task<IOperationResult<TResult>> ReturnSuccessOperationResultAsync<TResult>(TResult result)
+        protected static Task<IOperationResult<TResult>> SuccessOperationAsync<TResult>(TResult result)
             => Task.FromResult<IOperationResult<TResult>>(new SuccessOperationResult<TResult>(result));
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace Xpandables.Net
         /// <param name="statusCode">The status code.</param>
         /// <param name="result">The command result.</param>
         /// <returns>A <see cref="SuccessOperationResult{TValue}"/>.</returns>
-        protected static IOperationResult<TResult> ReturnSuccessOperationResult<TResult>(
+        protected static IOperationResult<TResult> SuccessOperation<TResult>(
             HttpStatusCode statusCode, TResult result)
             => new SuccessOperationResult<TResult>(statusCode, result);
 
@@ -297,7 +297,7 @@ namespace Xpandables.Net
         /// <param name="statusCode">The status code.</param>
         /// <param name="result">The command result.</param>
         /// <returns>A task that represents an object of <see cref="SuccessOperationResult{TValue}"/>.</returns>
-        protected static Task<IOperationResult<TResult>> ReturnSuccessOperationResultAsync<TResult>(
+        protected static Task<IOperationResult<TResult>> SuccessOperationAsync<TResult>(
             HttpStatusCode statusCode, TResult result)
             => Task.FromResult<IOperationResult<TResult>>(new SuccessOperationResult<TResult>(statusCode, result));
 
@@ -307,7 +307,7 @@ namespace Xpandables.Net
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="errors">The collection of errors.</param>
         /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
-        protected static IOperationResult<TResult> ReturnFailedOperationResult<TResult>(params OperationError[] errors)
+        protected static IOperationResult<TResult> FailedOperation<TResult>(params OperationError[] errors)
             => new FailureOperationResult<TResult>(errors);
 
         /// <summary>
@@ -316,7 +316,7 @@ namespace Xpandables.Net
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="errors">The collection of errors.</param>
         /// <returns>A task that represents an object of <see cref="FailureOperationResult{TValue}"/>.</returns>
-        protected static Task<IOperationResult<TResult>> ReturnFailedOperationResultAsync<TResult>(params OperationError[] errors)
+        protected static Task<IOperationResult<TResult>> FailedOperationAsync<TResult>(params OperationError[] errors)
             => Task.FromResult<IOperationResult<TResult>>(new FailureOperationResult<TResult>(errors));
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace Xpandables.Net
         /// <param name="statusCode">The status code.</param>
         /// <param name="errors">The collection of errors.</param>
         /// <returns>A <see cref="FailureOperationResult"/>.</returns>
-        protected static IOperationResult<TResult> ReturnFailedOperationResult<TResult>(HttpStatusCode statusCode, params OperationError[] errors)
+        protected static IOperationResult<TResult> FailedOperation<TResult>(HttpStatusCode statusCode, params OperationError[] errors)
             => new FailureOperationResult<TResult>(statusCode, errors);
 
         /// <summary>
@@ -336,7 +336,7 @@ namespace Xpandables.Net
         /// <param name="statusCode">The status code.</param>
         /// <param name="errors">The collection of errors.</param>
         /// <returns>A task that represents an object of <see cref="FailureOperationResult{TValue}"/>.</returns>
-        protected static Task<IOperationResult<TResult>> ReturnFailedOperationResultAsync<TResult>(HttpStatusCode statusCode, params OperationError[] errors)
+        protected static Task<IOperationResult<TResult>> FailedOperationAsync<TResult>(HttpStatusCode statusCode, params OperationError[] errors)
             => Task.FromResult<IOperationResult<TResult>>(new FailureOperationResult<TResult>(statusCode, errors));
     }
 }

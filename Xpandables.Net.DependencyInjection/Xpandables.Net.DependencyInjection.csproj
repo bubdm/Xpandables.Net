@@ -17,10 +17,10 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.3.4</Version>
-    <AssemblyVersion>5.3.4</AssemblyVersion>
-    <FileVersion>5.3.4</FileVersion>
-    <PackageVersion>5.3.4</PackageVersion>
+    <Version>5.3.5</Version>
+    <AssemblyVersion>5.3.5</AssemblyVersion>
+    <FileVersion>5.3.5</FileVersion>
+    <PackageVersion>5.3.5</PackageVersion>
     <PackageReleaseNotes>Add IDataContextFactory</PackageReleaseNotes>
     <PackageId>Xpandables.Net.DependencyInjection</PackageId>
     <PackageTags>XTryDecorate, XRegister.</PackageTags>
