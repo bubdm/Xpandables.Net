@@ -19,10 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Net;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 
 using Xpandables.Net.Events;
 
@@ -35,7 +33,7 @@ namespace Xpandables.Net
     /// This is an <see langword="abstract"/>class.
     /// </summary>
     [DebuggerDisplay("Id = {" + nameof(Id) + "}")]
-    public abstract class Entity
+    public abstract class Entity : OperationExtended
     {
         /// <summary>
         /// Initializes the Id key.
@@ -200,143 +198,5 @@ namespace Xpandables.Net
         /// </summary>
         /// <returns>A hash code for the current entity.</returns>
         public override int GetHashCode() => (GetType().ToString() + Id).GetHashCode(StringComparison.OrdinalIgnoreCase);
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult"/> with <see cref="HttpStatusCode.OK"/>.
-        /// </summary>
-        /// <returns>A <see cref="SuccessOperationResult"/>.</returns>
-        protected static IOperationResult SuccessOperation() => new SuccessOperationResult();
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult"/> with <see cref="HttpStatusCode.OK"/>.
-        /// </summary>
-        /// <returns>A task that represents an object of <see cref="SuccessOperationResult"/>.</returns>
-        protected static Task<IOperationResult> SuccessOperationAsync() => Task.FromResult<IOperationResult>(new SuccessOperationResult());
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult"/> with the specified status code.
-        /// </summary>
-        /// <param name="statusCode">The status code.</param>
-        /// <returns>A <see cref="SuccessOperationResult"/>.</returns>
-        protected static IOperationResult SuccessOperation(HttpStatusCode statusCode) => new SuccessOperationResult(statusCode);
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult"/> with the specified status code.
-        /// </summary>
-        /// <param name="statusCode">The status code.</param>
-        /// <returns>A task that represents an object of <see cref="SuccessOperationResult"/>.</returns>
-        protected static Task<IOperationResult> SuccessOperationAsync(HttpStatusCode statusCode)
-            => Task.FromResult<IOperationResult>(new SuccessOperationResult(statusCode));
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult"/> with <see cref="HttpStatusCode.BadRequest"/>.
-        /// </summary>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A <see cref="FailureOperationResult"/>.</returns>
-        protected static IOperationResult FailedOperation(params OperationError[] errors)
-            => new FailureOperationResult(errors);
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult"/> with <see cref="HttpStatusCode.BadRequest"/>.
-        /// </summary>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A task that represents an object of <see cref="FailureOperationResult"/>.</returns>
-        protected static Task<IOperationResult> FailedOperationAsync(params OperationError[] errors)
-            => Task.FromResult<IOperationResult>(new FailureOperationResult(errors));
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult"/> with the specified status code.
-        /// </summary>
-        /// <param name="statusCode">The status code.</param>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A <see cref="FailureOperationResult"/>.</returns>
-        protected static IOperationResult FailedOperation(HttpStatusCode statusCode, params OperationError[] errors)
-            => new FailureOperationResult(statusCode, errors);
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult"/> with the specified status code.
-        /// </summary>
-        /// <param name="statusCode">The status code.</param>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A task that represents an object of <see cref="FailureOperationResult"/>.</returns>
-        protected static Task<IOperationResult> FailedOperationAsync(HttpStatusCode statusCode, params OperationError[] errors)
-            => Task.FromResult<IOperationResult>(new FailureOperationResult(statusCode, errors));
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult{TValue}"/> with <see cref="HttpStatusCode.OK"/> and result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="result">The command result.</param>
-        /// <returns>A <see cref="SuccessOperationResult{TValue}"/>.</returns>
-        protected static IOperationResult<TResult> SuccessOperation<TResult>(TResult result) => new SuccessOperationResult<TResult>(result);
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult{TValue}"/> with <see cref="HttpStatusCode.OK"/> and result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="result">The command result.</param>
-        /// <returns>A task that represents an object of <see cref="SuccessOperationResult{TResult}"/>.</returns>
-        protected static Task<IOperationResult<TResult>> SuccessOperationAsync<TResult>(TResult result)
-            => Task.FromResult<IOperationResult<TResult>>(new SuccessOperationResult<TResult>(result));
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult"/> with the specified status code and result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="statusCode">The status code.</param>
-        /// <param name="result">The command result.</param>
-        /// <returns>A <see cref="SuccessOperationResult{TValue}"/>.</returns>
-        protected static IOperationResult<TResult> SuccessOperation<TResult>(
-            HttpStatusCode statusCode, TResult result)
-            => new SuccessOperationResult<TResult>(statusCode, result);
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult"/> with the specified status code and result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="statusCode">The status code.</param>
-        /// <param name="result">The command result.</param>
-        /// <returns>A task that represents an object of <see cref="SuccessOperationResult{TValue}"/>.</returns>
-        protected static Task<IOperationResult<TResult>> SuccessOperationAsync<TResult>(
-            HttpStatusCode statusCode, TResult result)
-            => Task.FromResult<IOperationResult<TResult>>(new SuccessOperationResult<TResult>(statusCode, result));
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult{TValue}"/> with <see cref="HttpStatusCode.BadRequest"/> and errors.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
-        protected static IOperationResult<TResult> FailedOperation<TResult>(params OperationError[] errors)
-            => new FailureOperationResult<TResult>(errors);
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult{TValue}"/> with <see cref="HttpStatusCode.BadRequest"/> and errors.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A task that represents an object of <see cref="FailureOperationResult{TValue}"/>.</returns>
-        protected static Task<IOperationResult<TResult>> FailedOperationAsync<TResult>(params OperationError[] errors)
-            => Task.FromResult<IOperationResult<TResult>>(new FailureOperationResult<TResult>(errors));
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult{TValue}"/> with the specified status code and errors.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="statusCode">The status code.</param>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A <see cref="FailureOperationResult"/>.</returns>
-        protected static IOperationResult<TResult> FailedOperation<TResult>(HttpStatusCode statusCode, params OperationError[] errors)
-            => new FailureOperationResult<TResult>(statusCode, errors);
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult{TValue}"/> with the specified status code and errors.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="statusCode">The status code.</param>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A task that represents an object of <see cref="FailureOperationResult{TValue}"/>.</returns>
-        protected static Task<IOperationResult<TResult>> FailedOperationAsync<TResult>(HttpStatusCode statusCode, params OperationError[] errors)
-            => Task.FromResult<IOperationResult<TResult>>(new FailureOperationResult<TResult>(statusCode, errors));
     }
 }

@@ -17,16 +17,15 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.3.6</Version>
-    <AssemblyVersion>5.3.6</AssemblyVersion>
-    <FileVersion>5.3.6</FileVersion>
-    <PackageVersion>5.3.6</PackageVersion>
+    <Version>5.3.7</Version>
+    <AssemblyVersion>5.3.7</AssemblyVersion>
+    <FileVersion>5.3.7</FileVersion>
+    <PackageVersion>5.3.7</PackageVersion>
     <PackageReleaseNotes>Add IDataContextFactory</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-     <!--<AdditionalFileItemNames>$(AdditionalFileItemNames);Content</AdditionalFileItemNames>-->
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AssemblyName>Xpandables.Net</AssemblyName>
     <RootNamespace>Xpandables.Net</RootNamespace>

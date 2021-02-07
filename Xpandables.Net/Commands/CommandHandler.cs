@@ -43,7 +43,7 @@ namespace Xpandables.Net.Commands
     /// </summary>
     /// <typeparam name="TCommand">Type of command to act on.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public abstract class CommandHandler<TCommand, TResult> : OperationExtended<TResult>, ICommandHandler<TCommand, TResult>
+    public abstract class CommandHandler<TCommand, TResult> : OperationExtended, ICommandHandler<TCommand, TResult>
         where TCommand : class, ICommand<TResult>
     {
         /// <summary>

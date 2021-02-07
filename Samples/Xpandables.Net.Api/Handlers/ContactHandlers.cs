@@ -35,7 +35,7 @@ namespace Xpandables.Net.Api.Handlers
         }
     }
 
-    public sealed class ContactHandlers : OperationExtended<Contact>,
+    public sealed class ContactHandlers : OperationExtended,
         IAsyncQueryHandler<SelectAll, Contact>, IQueryHandler<Select, Contact>, ICommandHandler<Add, string>, ICommandHandler<Delete>, ICommandHandler<Edit, Contact>
     {
         private readonly IContactEntityAccessor _entityAccessor;
@@ -47,7 +47,7 @@ namespace Xpandables.Net.Api.Handlers
         public async Task<IOperationResult<Contact>> HandleAsync(Select query, CancellationToken cancellationToken = default)
         {
             var found = await _entityAccessor.TryFindAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken).ConfigureAwait(false);
-            return found is not null ? OkOperation(found) : NotFoundOperation();
+            return found is not null ? OkOperation(found) : NotFoundOperation<Contact>();
         }
 
         public async Task<IOperationResult<string>> HandleAsync(Add command, CancellationToken cancellationToken = default)
