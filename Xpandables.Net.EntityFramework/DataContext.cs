@@ -15,6 +15,8 @@
  *
 ************************************************************************************************************/
 
+using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,12 +26,9 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Microsoft.EntityFrameworkCore;
-
-using Xpandables.Net.Database;
 using Xpandables.Net.Events;
 
-namespace Xpandables.Net.CQRS
+namespace Xpandables.Net.Database
 {
     /// <summary>
     /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/>

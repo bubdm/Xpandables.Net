@@ -31,6 +31,15 @@ namespace Xpandables.Net.Expressions.Records
         /// <typeparam name="TSource">The data type source.</typeparam>
         /// <returns>a new instance of <see cref="RecordExpression{TSource, TResult}"/> with boolean result.</returns>
         public static RecordExpression<TSource, bool> Create<TSource>() where TSource : class => new RecordExpressionBuilder<TSource, bool>(_ => true);
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RecordExpression{TSource, TResult}"/> from the specified expression.
+        /// </summary>
+        /// <typeparam name="TSource">The data type source.</typeparam>
+        /// <param name="expression">The expression to be wrapped.</param>
+        /// <returns>a new instance of <see cref="RecordExpression{TSource, TResult}"/> with boolean result.</returns>
+        public static RecordExpression<TSource, bool> Create<TSource>(Expression<Func<TSource, bool>> expression)
+            where TSource : class => new RecordExpressionBuilder<TSource, bool>(expression);
     }
 
     /// <summary>

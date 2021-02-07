@@ -18,13 +18,24 @@
 using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Api.Models;
-using Xpandables.Net.CQRS;
+using Xpandables.Net.Database;
 
 namespace Xpandables.Net.Api.Database
 {
     public sealed class ContactContext : DataContext
     {
         public ContactContext(DbContextOptions<ContactContext> contextOptions) : base(contextOptions) { }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ContactModel>().HasKey(new string[] { nameof(ContactModel.Id) });
+            modelBuilder.Entity<ContactModel>().HasIndex(new string[] { nameof(ContactModel.Id) }).IsUnique();
+        }
+        public DbSet<ContactModel> Contacts { get; set; } = default!;
+    }
+
+    public sealed class ContactContextSecond : DataContext
+    {
+        public ContactContextSecond(DbContextOptions<ContactContextSecond> contextOptions) : base(contextOptions) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ContactModel>().HasKey(new string[] { nameof(ContactModel.Id) });

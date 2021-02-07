@@ -29,7 +29,7 @@ namespace Xpandables.Net.Decorators.IntegrationEvents
     /// <summary>
     /// This class allows the application author to add domain event handler support to command control flow.
     /// The target command should implement the <see cref="IEventDecorator"/> interface in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="IIntegrationtEventPublisher"/> and publishes all
+    /// The class decorates the target command handler with an implementation of <see cref="IIntegrationEventPublisher"/> and publishes all
     /// the <see cref="IIntegrationEvent"/> after persistence and after decorated handler execution only
     /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
     /// delegate command, in order to manage the data context exception.
@@ -39,7 +39,7 @@ namespace Xpandables.Net.Decorators.IntegrationEvents
         where TCommand : class, ICommand, IEventDecorator
     {
         private readonly ICommandHandler<TCommand> _decoratee;
-        private readonly IIntegrationtEventPublisher _integrationEventPublisher;
+        private readonly IIntegrationEventPublisher _integrationEventPublisher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandDomainEventDecorator{TCommand}"/> class with
@@ -49,7 +49,7 @@ namespace Xpandables.Net.Decorators.IntegrationEvents
         /// <param name="integrationEventPublisher">The integration event publisher.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="integrationEventPublisher"/> is null.</exception>
-        public CommandIntegrationEventDecorator(ICommandHandler<TCommand> decoratee, IIntegrationtEventPublisher integrationEventPublisher)
+        public CommandIntegrationEventDecorator(ICommandHandler<TCommand> decoratee, IIntegrationEventPublisher integrationEventPublisher)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _integrationEventPublisher = integrationEventPublisher ?? throw new ArgumentNullException(nameof(integrationEventPublisher));
@@ -76,7 +76,7 @@ namespace Xpandables.Net.Decorators.IntegrationEvents
     /// <summary>
     /// This class allows the application author to add domain event handler support to command control flow.
     /// The target command should implement the <see cref="IEventDecorator"/> interface in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="IIntegrationtEventPublisher"/> and publishes all
+    /// The class decorates the target command handler with an implementation of <see cref="IIntegrationEventPublisher"/> and publishes all
     /// the <see cref="IIntegrationEvent"/> after persistence and after decorated handler execution only
     /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
     /// delegate command, in order to manage the data context exception.
@@ -87,7 +87,7 @@ namespace Xpandables.Net.Decorators.IntegrationEvents
         where TCommand : class, ICommand<TResult>, IEventDecorator
     {
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
-        private readonly IIntegrationtEventPublisher _integrationEventPublisher;
+        private readonly IIntegrationEventPublisher _integrationEventPublisher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandDomainEventDecorator{TCommand, TResult}"/> class with
@@ -97,7 +97,7 @@ namespace Xpandables.Net.Decorators.IntegrationEvents
         /// <param name="integrationEventPublisher">The integration event publisher.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="integrationEventPublisher"/> is null.</exception>
-        public CommandIntegrationEventDecorator(ICommandHandler<TCommand, TResult> decoratee, IIntegrationtEventPublisher integrationEventPublisher)
+        public CommandIntegrationEventDecorator(ICommandHandler<TCommand, TResult> decoratee, IIntegrationEventPublisher integrationEventPublisher)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _integrationEventPublisher = integrationEventPublisher ?? throw new ArgumentNullException(nameof(integrationEventPublisher));

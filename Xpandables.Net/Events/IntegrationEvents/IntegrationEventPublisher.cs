@@ -28,7 +28,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
     /// <summary>
     /// The domain event publisher.
     /// </summary>
-    public sealed class IntegrationEventPublisher : IIntegrationtEventPublisher
+    public sealed class IntegrationEventPublisher : IIntegrationEventPublisher
     {
         private readonly IDataContext _dataContext;
         private readonly IDispatcher _dispatcher;

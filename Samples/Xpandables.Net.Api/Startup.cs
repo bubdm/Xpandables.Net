@@ -15,18 +15,18 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Reflection;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using System.Reflection;
+
 using Xpandables.Net.Api.Database;
+using Xpandables.Net.Api.Handlers;
 using Xpandables.Net.Api.Middlewares;
 using Xpandables.Net.Api.Services;
-using Xpandables.Net.CQRS;
 using Xpandables.Net.DependencyInjection;
 
 namespace Xpandables.Net.Api
@@ -49,7 +49,13 @@ namespace Xpandables.Net.Api
             services
                 .AddDbContext<ContactContext>(options => options.UseInMemoryDatabase(nameof(ContactContext))
                 .EnableServiceProviderCaching())
-                .AddXDataContext<ContactContext>();
+                .AddDbContext<ContactContextSecond>(options => options.UseInMemoryDatabase(nameof(ContactContextSecond))
+                .EnableServiceProviderCaching())
+                .AddXDataContextFactory((provider, context) => context["Context"] switch
+                    {
+                        "Second" => provider.GetRequiredService<ContactContextSecond>(),
+                        _ => provider.GetRequiredService<ContactContext>()
+                    });
 
             services.AddXDispatcher();
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
@@ -63,6 +69,7 @@ namespace Xpandables.Net.Api
 
             services.AddXLoggingProvider<LoggingService>();
             services.AddEntityAccessor();
+            services.AddScoped<IContactEntityAccessor, ContactEntityAccessor>();
 
             // comment to disable Interception
             services.AddTransient<ContactInterceptor>();

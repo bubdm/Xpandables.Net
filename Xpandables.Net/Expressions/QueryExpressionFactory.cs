@@ -31,6 +31,15 @@ namespace Xpandables.Net.Expressions
         /// <typeparam name="TSource">The data type source.</typeparam>
         /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/> with boolean result.</returns>
         public static QueryExpression<TSource, bool> Create<TSource>() where TSource : notnull => new QueryExpressionBuilder<TSource, bool>(_ => true);
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryExpression{TSource, TResult}"/> from the specified expression.
+        /// </summary>
+        /// <typeparam name="TSource">The data type source.</typeparam>
+        /// <param name="expression">The expression to be wrapped.</param>
+        /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/> with boolean result.</returns>
+        public static QueryExpression<TSource, bool> Create<TSource>(Expression<Func<TSource, bool>> expression)
+            where TSource : notnull => new QueryExpressionBuilder<TSource, bool>(expression);
     }
 
     /// <summary>

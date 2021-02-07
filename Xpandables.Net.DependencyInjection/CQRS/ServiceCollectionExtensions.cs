@@ -36,7 +36,6 @@ using Xpandables.Net.Decorators.Visitors;
 using Xpandables.Net.Dispatchers;
 using Xpandables.Net.Events.DomainEvents;
 using Xpandables.Net.Events.IntegrationEvents;
-using Xpandables.Net.Expressions.Specifications;
 using Xpandables.Net.Logging;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
@@ -198,7 +197,7 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddScoped<IHandlerAcessor, HandlerAccessor>();
             services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
-            services.AddScoped<IIntegrationtEventPublisher, IntegrationEventPublisher>();
+            services.AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
             services.AddScoped<IDispatcher, Dispatcher>();
             return services;
         }
@@ -215,20 +214,21 @@ namespace Xpandables.Net.DependencyInjection
         public static IServiceCollection AddXDispatcher<TDispatcher, TDomainEventPublsher, TIntegrationEventPublisher, THandlerAccessor>(this IServiceCollection services)
             where TDispatcher : class, IDispatcher
             where TDomainEventPublsher : class, IDomainEventPublisher
-            where TIntegrationEventPublisher : class, IIntegrationtEventPublisher
+            where TIntegrationEventPublisher : class, IIntegrationEventPublisher
             where THandlerAccessor : class, IHandlerAcessor
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<IHandlerAcessor, THandlerAccessor>();
             services.AddScoped<IDomainEventPublisher, TDomainEventPublsher>();
-            services.AddScoped<IIntegrationtEventPublisher, TIntegrationEventPublisher>();
+            services.AddScoped<IIntegrationEventPublisher, TIntegrationEventPublisher>();
             services.AddScoped<IDispatcher, TDispatcher>();
             return services;
         }
 
         /// <summary>
         /// Adds the <typeparamref name="TDataContext"/> type class reference implementation as <see cref="IDataContext"/> to the services with scoped life time.
+        /// Caution : Do not use with other factory.
         /// </summary>
         /// <typeparam name="TDataContext">The type of the data context that implements <see cref="IDataContext"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
@@ -237,9 +237,63 @@ namespace Xpandables.Net.DependencyInjection
             where TDataContext : class, IDataContext
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped(typeof(IDataContext<>), typeof(DataContext<>));
             var serviceDescriptor = new ServiceDescriptor(typeof(IDataContext), provider => provider.GetRequiredService<TDataContext>(), ServiceLifetime.Scoped);
             services.Add(serviceDescriptor);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <typeparamref name="TDataContextFactory"/> type class reference implementation that get called to resolve <see cref="IDataContext"/>.
+        /// The type is registered with scoped life time. Caution : Do not use with other factory.
+        /// </summary>
+        /// <typeparam name="TDataContextFactory">The type of the data context factory that implements <see cref="IDataContextFactory"/>.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXDataContextFactory<TDataContextFactory>(this IServiceCollection services)
+            where TDataContextFactory : class, IDataContextFactory
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<IDataContextFactory, TDataContextFactory>();
             services.AddScoped(typeof(IDataContext<>), typeof(DataContext<>));
+
+            var serviceDescriptor = new ServiceDescriptor(
+                typeof(IDataContext),
+                provider => provider.GetRequiredService<IDataContextFactory>().GetDataContext(),
+                ServiceLifetime.Scoped);
+
+            services.Add(serviceDescriptor);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="DataContextFactory"/> delegate implementation that get called to resolve <see cref="IDataContext"/>.
+        /// The type is registered with scoped life time. Caution : Do not use with other factory.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="dataContextFactory">The data context factory delegate.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXDataContextFactory(this IServiceCollection services, DataContextFactory dataContextFactory)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped(typeof(IDataContext<>), typeof(DataContext<>));
+            services.AddXCorrelationCollection();
+
+            var serviceDescriptor = new ServiceDescriptor(
+                typeof(IDataContext),
+                provider =>
+                {
+                    var correlationContext = provider.GetRequiredService<CorrelationCollection<string, string>>();
+                    return dataContextFactory(provider, correlationContext);
+                },
+                ServiceLifetime.Scoped);
+
+            services.Add(serviceDescriptor);
 
             return services;
         }
@@ -501,16 +555,13 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddXCommandHandlers(assemblies);
             services.AddXQueryHandlers(assemblies);
-            services.AddXDomainEventHandlers(assemblies);
-            services.AddXIntegrationEventHandlers(assemblies);
-            services.AddXValidations(assemblies);
-            services.AddXVisitors(assemblies);
 
             var definedOptions = new HandlerOptions();
             configureOptions.Invoke(definedOptions);
 
             if (definedOptions.IsDomainEventEnabled)
             {
+                services.AddXDomainEventHandlers(assemblies);
                 services.AddXDomainEventDecorator();
             }
 
@@ -521,6 +572,7 @@ namespace Xpandables.Net.DependencyInjection
 
             if (definedOptions.IsIntegrationEventEnabled)
             {
+                services.AddXIntegrationEventHandlers(assemblies);
                 services.AddXIntegrationEventDecorator();
             }
 
@@ -531,11 +583,13 @@ namespace Xpandables.Net.DependencyInjection
 
             if (definedOptions.IsValidatorEnabled)
             {
+                services.AddXValidations(assemblies);
                 services.AddXValidationDecorator();
             }
 
             if (definedOptions.IsVisitorEnabled)
             {
+                services.AddXVisitors(assemblies);
                 services.AddXVisitorDecorator();
             }
 

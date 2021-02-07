@@ -30,6 +30,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Handlers;
+using Xpandables.Net.Correlations;
 using Xpandables.Net.Dispatchers;
 using Xpandables.Net.Http;
 
@@ -41,12 +42,20 @@ namespace Xpandables.Net.Api.Controllers
     public class ContactsController : ControllerBase
     {
         private readonly IDispatcher _dispatcher;
-        public ContactsController(IDispatcher dispatcher) => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+
+        public ContactsController(IDispatcher dispatcher, CorrelationCollection<string, string> correlationCollection)
+        {
+            _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+            correlationCollection["Context"] = "Second";
+        }
 
         [Route("")]
         [HttpGet]
-        public IAsyncEnumerable<Contact> SelectAllAsync([FromQuery] SelectAll selectAll, CancellationToken cancellationToken = default)
-            => _dispatcher.FetchAsync(selectAll, cancellationToken);
+        public IAsyncEnumerable<Contact> SelectAllAsync([FromQuery] SelectAll selectAll, [FromServices] CorrelationCollection<string, string> correlation, CancellationToken cancellationToken = default)
+        {
+            correlation["Context"] = "First";
+            return _dispatcher.FetchAsync(selectAll, cancellationToken);
+        }
 
         [Route("{id}", Name = "ContactLink")]
         [HttpGet]

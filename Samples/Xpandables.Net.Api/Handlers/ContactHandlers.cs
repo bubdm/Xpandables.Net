@@ -27,11 +27,19 @@ using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api.Handlers
 {
+    public interface IContactEntityAccessor : IEntityAccessor<ContactModel> { }
+    public class ContactEntityAccessor : EntityAccessor<ContactModel>, IContactEntityAccessor
+    {
+        public ContactEntityAccessor(IDataContext<ContactModel> dataContext) : base(dataContext)
+        {
+        }
+    }
+
     public sealed class ContactHandlers :
         IAsyncQueryHandler<SelectAll, Contact>, IQueryHandler<Select, Contact>, ICommandHandler<Add, string>, ICommandHandler<Delete>, ICommandHandler<Edit, Contact>
     {
-        private readonly IEntityAccessor<ContactModel> _entityAccessor;
-        public ContactHandlers(IEntityAccessor<ContactModel> entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
+        private readonly IContactEntityAccessor _entityAccessor;
+        public ContactHandlers(IContactEntityAccessor entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
 
         public IAsyncEnumerable<Contact> HandleAsync(SelectAll query, CancellationToken cancellationToken = default)
             => _entityAccessor.SelectAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken);

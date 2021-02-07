@@ -23,9 +23,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-using Xpandables.Net.Database;
-
-namespace Xpandables.Net.CQRS
+namespace Xpandables.Net.Database
 {
     /// <summary>
     ///  Provides with methods used to extend <see cref="IDataContext"/>.

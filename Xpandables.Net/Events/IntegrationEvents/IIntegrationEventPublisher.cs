@@ -24,7 +24,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
     /// Defines a method to automatically dispatch <see cref="IIntegrationEvent"/>.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
-    public interface IIntegrationtEventPublisher
+    public interface IIntegrationEventPublisher
     {
         /// <summary>
         /// Publishes integration events from the data context.

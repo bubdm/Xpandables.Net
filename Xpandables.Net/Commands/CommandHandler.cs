@@ -19,13 +19,15 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.CommandQueryEvents;
+
 namespace Xpandables.Net.Commands
 {
     /// <summary>
     /// Represents a helper class that allows implementation of <see cref="ICommandHandler{TCommand}"/> interface.
     /// </summary>
     /// <typeparam name="TCommand">Type of command to act on.</typeparam>
-    public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand>
+    public abstract class CommandHandler<TCommand> : CommandQueryEvent, ICommandHandler<TCommand>
         where TCommand : class, ICommand
     {
         /// <summary>
@@ -36,36 +38,6 @@ namespace Xpandables.Net.Commands
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         public abstract Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult"/> with <see cref="System.Net.HttpStatusCode.OK"/>.
-        /// </summary>
-        /// <returns>A <see cref="SuccessOperationResult"/>.</returns>
-        protected IOperationResult ReturnSuccessOperationResult() => new SuccessOperationResult();
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult"/> with the specified status code.
-        /// </summary>
-        /// <param name="statusCode">The status code.</param>
-        /// <returns>A <see cref="SuccessOperationResult"/>.</returns>
-        protected IOperationResult ReturnSuccessOperationResult(System.Net.HttpStatusCode statusCode) => new SuccessOperationResult(statusCode);
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult"/> with <see cref="System.Net.HttpStatusCode.BadRequest"/>.
-        /// </summary>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A <see cref="FailureOperationResult"/>.</returns>
-        protected IOperationResult ReturnFailedOperationResult(params OperationError[] errors)
-            => new FailureOperationResult(errors);
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult"/> with the specified status code.
-        /// </summary>
-        /// <param name="statusCode">The status code.</param>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A <see cref="FailureOperationResult"/>.</returns>
-        protected IOperationResult ReturnFailedOperationResult(System.Net.HttpStatusCode statusCode, params OperationError[] errors)
-            => new FailureOperationResult(statusCode, errors);
     }
 
     /// <summary>
@@ -73,7 +45,7 @@ namespace Xpandables.Net.Commands
     /// </summary>
     /// <typeparam name="TCommand">Type of command to act on.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+    public abstract class CommandHandler<TCommand, TResult> : CommandQueryEvent<TResult>, ICommandHandler<TCommand, TResult>
         where TCommand : class, ICommand<TResult>
     {
         /// <summary>
@@ -84,39 +56,5 @@ namespace Xpandables.Net.Commands
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         public abstract Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult{TValue}"/> with <see cref="System.Net.HttpStatusCode.OK"/> and result.
-        /// </summary>
-        /// <param name="result">The command result.</param>
-        /// <returns>A <see cref="SuccessOperationResult{TValue}"/>.</returns>
-        protected IOperationResult<TResult> ReturnSuccessOperationResult(TResult result) => new SuccessOperationResult<TResult>(result);
-
-        /// <summary>
-        /// Returns a <see cref="SuccessOperationResult"/> with the specified status code and result.
-        /// </summary>
-        /// <param name="statusCode">The status code.</param>
-        /// <param name="result">The command result.</param>
-        /// <returns>A <see cref="SuccessOperationResult{TValue}"/>.</returns>
-        protected IOperationResult<TResult> ReturnSuccessOperationResult(
-            System.Net.HttpStatusCode statusCode, TResult result)
-            => new SuccessOperationResult<TResult>(statusCode, result);
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult{TValue}"/> with <see cref="System.Net.HttpStatusCode.BadRequest"/> and errors.
-        /// </summary>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
-        protected IOperationResult<TResult> ReturnFailedOperationResult(params OperationError[] errors)
-            => new FailureOperationResult<TResult>(errors);
-
-        /// <summary>
-        /// Returns a <see cref="FailureOperationResult{TValue}"/> with the specified status code and errors.
-        /// </summary>
-        /// <param name="statusCode">The status code.</param>
-        /// <param name="errors">The collection of errors.</param>
-        /// <returns>A <see cref="FailureOperationResult"/>.</returns>
-        protected IOperationResult<TResult> ReturnFailedOperationResult(System.Net.HttpStatusCode statusCode, params OperationError[] errors)
-            => new FailureOperationResult<TResult>(statusCode, errors);
     }
 }
