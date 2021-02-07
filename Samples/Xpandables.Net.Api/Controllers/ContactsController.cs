@@ -46,7 +46,7 @@ namespace Xpandables.Net.Api.Controllers
         public ContactsController(IDispatcher dispatcher, CorrelationCollection<string, string> correlationCollection)
         {
             _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
-            correlationCollection["Context"] = "Second";
+            correlationCollection["Context"] = "First";
         }
 
         [Route("")]
