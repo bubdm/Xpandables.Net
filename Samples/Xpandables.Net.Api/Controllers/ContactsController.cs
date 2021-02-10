@@ -48,7 +48,7 @@ namespace Xpandables.Net.Api.Controllers
         public ContactsController(IDispatcher dispatcher, IDataContextCorrelation correlationCollection)
         {
             _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
-            //correlationCollection.SetCurrentDataContextName<ContactContext>();
+            correlationCollection.SetCurrentDataContextName<ContactContext>();
         }
 
         [Route("")]
