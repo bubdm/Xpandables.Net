@@ -17,27 +17,34 @@
 
 using System;
 
-using Xpandables.Net.Correlations;
-
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Represents a method signature to be used to handle data context factory using <see cref="CorrelationCollection{TKey, TValue}"/>.
-    /// </summary>
-    /// <param name="serviceProvider">The active service provider.</param>
-    /// <param name="correlationCollection">The target correlation context that contains data context information.</param>
-    /// <returns>An implementation derived type from <see cref="IDataContext"/>.</returns>
-    public delegate IDataContext DataContextFactory(IServiceProvider serviceProvider, CorrelationCollection<string, string> correlationCollection);
-
-    /// <summary>
     /// Provides with method for creating derived <see cref="IDataContext"/> instances.
     /// </summary>
-    public interface IDataContextFactory
+    internal interface IDataContextFactory
     {
         /// <summary>
-        /// Returns the ambient instance of a derived <see cref="IDataContext"/>.
+        /// The factory used to retrieve an implementation of <see cref="IDataContext"/>.
         /// </summary>
-        /// <returns>An new derived of <see cref="IDataContext"/> instance.</returns>
-        IDataContext GetDataContext();
+        Func<IDataContext> Factory { get; }
+
+        /// <summary>
+        /// Gets the name of the data context.
+        /// </summary>
+        string Name { get; }
+    }
+
+    /// <summary>
+    /// Provides with method for creating <typeparamref name="TDataContext"/> instances.
+    /// </summary>
+    /// <typeparam name="TDataContext">The type of the data context.</typeparam>
+    internal interface IDataContextFactory<TDataContext> : IDataContextFactory
+        where TDataContext : class, IDataContext
+    {
+        /// <summary>
+        /// The factory used to retrieve an instance of <typeparamref name="TDataContext"/>.
+        /// </summary>
+        new Func<TDataContext> Factory { get; }
     }
 }

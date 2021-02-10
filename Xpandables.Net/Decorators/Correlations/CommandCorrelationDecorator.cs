@@ -28,17 +28,17 @@ namespace Xpandables.Net.Decorators.Correlations
     /// <summary>
     /// This class allows the application author to add post/rollback event support to command handler control flow.
     /// The target command should implement the <see cref="ICorrelationDecorator"/> interface in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="ICorrelationContext"/> that
+    /// The class decorates the target command handler with an implementation of <see cref="ICorrelationEvent"/> that
     /// adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
     /// and an event (roll back event) to be raised when exception. The target command handler class implementation should reference the
-    /// <see cref="ICorrelationContext"/> interface in order to set the expected actions.
+    /// <see cref="ICorrelationEvent"/> interface in order to set the expected actions.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to be handled.</typeparam>
     public sealed class CommandCorrelationDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : class, ICommand, ICorrelationDecorator
     {
         private readonly ICommandHandler<TCommand> _decoratee;
-        private readonly CorrelationContext _correlationContext;
+        private readonly CorrelationEvent _correlationContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandCorrelationDecorator{TCommand}"/> class with the correlation context and the command handler to be decorated.
@@ -47,7 +47,7 @@ namespace Xpandables.Net.Decorators.Correlations
         /// <param name="decoratee">The command handler to be decorated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
-        public CommandCorrelationDecorator(CorrelationContext correlationContext, ICommandHandler<TCommand> decoratee)
+        public CommandCorrelationDecorator(CorrelationEvent correlationContext, ICommandHandler<TCommand> decoratee)
         {
             _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
@@ -80,10 +80,10 @@ namespace Xpandables.Net.Decorators.Correlations
     /// <summary>
     /// This class allows the application author to add post/rollback event support to command handler control flow.
     /// The target command should implement the <see cref="ICorrelationDecorator"/> interface in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="ICorrelationContext"/> that
+    /// The class decorates the target command handler with an implementation of <see cref="ICorrelationEvent"/> that
     /// adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
     /// and an event (roll back event) to be raised when exception. The target command handler class implementation should reference the
-    /// <see cref="ICorrelationContext"/> interface in order to set the expected actions.
+    /// <see cref="ICorrelationEvent"/> interface in order to set the expected actions.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to be handled.</typeparam>
     /// <typeparam name="TResult">Type of the result of the command.</typeparam>
@@ -91,7 +91,7 @@ namespace Xpandables.Net.Decorators.Correlations
         where TCommand : class, ICommand<TResult>, ICorrelationDecorator
     {
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
-        private readonly CorrelationContext _correlationContext;
+        private readonly CorrelationEvent _correlationContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandCorrelationDecorator{TCommand}"/> class with the correlation context and the command handler to be decorated.
@@ -100,7 +100,7 @@ namespace Xpandables.Net.Decorators.Correlations
         /// <param name="decoratee">The command handler to be decorated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
-        public CommandCorrelationDecorator(CorrelationContext correlationContext, ICommandHandler<TCommand, TResult> decoratee)
+        public CommandCorrelationDecorator(CorrelationEvent correlationContext, ICommandHandler<TCommand, TResult> decoratee)
         {
             _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));

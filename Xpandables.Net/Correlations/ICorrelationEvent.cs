@@ -23,14 +23,14 @@ using Xpandables.Net.Decorators;
 namespace Xpandables.Net.Correlations
 {
     /// <summary>
-    /// Represents a method signature to be used to handle post event in correlation context <see cref="ICorrelationContext"/>.
+    /// Represents a method signature to be used to handle post event in correlation context <see cref="ICorrelationEvent"/>.
     /// </summary>
     /// <param name="returnValue">The control flow return value only for non-void method.</param>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "ET001:Type name does not match file name", Justification = "<Pending>")]
     public delegate Task CorrelationPostEvent(object? returnValue = default);
 
     /// <summary>
-    /// Represents a method signature to be used to handler rollback event in correlation context <see cref="ICorrelationContext"/>.
+    /// Represents a method signature to be used to handler rollback event in correlation context <see cref="ICorrelationEvent"/>.
     /// </summary>
     /// <param name="exception">The control flow handled exception.</param>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "ET001:Type name does not match file name", Justification = "<Pending>")]
@@ -42,7 +42,7 @@ namespace Xpandables.Net.Correlations
     /// In order to be activated, the target class should implement the <see cref="ICorrelationDecorator"/> interface,
     /// the target handling class should reference the current interface (to set the action).
     /// </summary>
-    public interface ICorrelationContext
+    public interface ICorrelationEvent
     {
         /// <summary>
         /// The event that will be asynchronously raised after the main one in the same control flow only if there is no exception.

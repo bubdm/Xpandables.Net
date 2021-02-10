@@ -21,16 +21,16 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Correlations
 {
     /// <summary>
-    /// The implementation of <see cref="ICorrelationContext"/>.
+    /// The implementation of <see cref="ICorrelationEvent"/>.
     /// Defines two tasks that can be used to follow process after a control flow with <see cref="PostEvent"/>
     /// and on exception during the control flow with <see cref="RollbackEvent"/>.
     /// </summary>
-    public sealed class CorrelationContext : ICorrelationContext
+    public sealed class CorrelationEvent : ICorrelationEvent
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CorrelationContext"/> class using default initialization for event.
+        /// Initializes a new instance of the <see cref="CorrelationEvent"/> class using default initialization for event.
         /// </summary>
-        public CorrelationContext() { }
+        public CorrelationEvent() { }
 
         /// <summary>
         /// The event that will be asynchronously raised after the main one in the same control flow only if there is no exception.

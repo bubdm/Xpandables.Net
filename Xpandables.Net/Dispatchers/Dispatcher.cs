@@ -64,15 +64,13 @@ namespace Xpandables.Net.Dispatchers
 
             if (!typeof(AsyncQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, query.GetType(), typeof(TResult)))
             {
-                WriteLineException(new InvalidOperationException("Building Query wrapper failed.", typeException));
-                return AsyncEnumerableExtensions.Empty<TResult>();
+                throw new InvalidOperationException("Building Query wrapper failed.", typeException);
             }
 
             if (!_handlerAccessor.TryGetHandler(wrapperType, out var foundHandler, out var exception))
             {
-                WriteLineException(new InvalidOperationException(
-                      $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerWrapper<,>).Name} and handler are registered.", exception));
-                return AsyncEnumerableExtensions.Empty<TResult>();
+                throw new InvalidOperationException(
+                      $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerWrapper<,>).Name} and handler are registered.", exception);
             }
 
             var handler = (IAsyncQueryHandlerWrapper<TResult>)foundHandler;
@@ -100,23 +98,19 @@ namespace Xpandables.Net.Dispatchers
 
             if (!typeof(ICommandHandler<>).TryMakeGenericType(out var handlerType, out var typeException, command.GetType()))
             {
-                var exception = new InvalidOperationException("Building command handler failed.", typeException);
-                WriteLineException(exception);
-                return new FailureOperationResult(HttpStatusCode.InternalServerError, nameof(command), exception);
+                throw new InvalidOperationException("Building command handler failed.", typeException);
             }
 
             if (!_handlerAccessor.TryGetHandler(handlerType, out dynamic? handler, out var ex))
             {
-                var exception = new InvalidOperationException($"The matching command handler for {command.GetType().Name} is missing.", ex);
-                WriteLineException(exception);
-                return new FailureOperationResult(HttpStatusCode.InternalServerError, nameof(command), exception);
+                throw new InvalidOperationException($"The matching command handler for {command.GetType().Name} is missing.", ex);
             }
 
             if (!((ICanHandle)handler).CanHandle(command))
             {
                 var exception = new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
                 WriteLineException(exception);
-                return new FailureOperationResult(HttpStatusCode.InternalServerError, nameof(command), exception);
+                return new FailureOperationResult(HttpStatusCode.BadRequest, nameof(command), exception);
             }
 
             return await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
@@ -137,16 +131,13 @@ namespace Xpandables.Net.Dispatchers
 
             if (!typeof(CommandHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, command.GetType(), typeof(TResult)))
             {
-                var exception = new InvalidOperationException("Building Command wrapper failed.", typeException);
-                WriteLineException(exception);
-                return new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(command), exception);
+                throw new InvalidOperationException("Building Command wrapper failed.", typeException);
             }
 
             if (!_handlerAccessor.TryGetHandler(wrapperType, out var foundHandler, out var ex))
             {
-                var exception = new InvalidOperationException($"The matching command handler for {command.GetType().Name} is missing. Be sure the {typeof(CommandHandlerWrapper<,>).Name} and handler are registered.", ex);
-                WriteLineException(exception);
-                return new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(command), exception);
+                throw new InvalidOperationException(
+                    $"The matching command handler for {command.GetType().Name} is missing. Be sure the {typeof(CommandHandlerWrapper<,>).Name} and handler are registered.", ex);
             }
 
             var handler = (ICommandHandlerWrapper<TResult>)foundHandler;
@@ -176,16 +167,13 @@ namespace Xpandables.Net.Dispatchers
 
             if (!typeof(QueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, query.GetType(), typeof(TResult)))
             {
-                var exception = new InvalidOperationException("Building Query wrapper failed.", typeException);
-                WriteLineException(exception);
-                return new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(query), exception);
+                throw new InvalidOperationException("Building Query wrapper failed.", typeException);
             }
 
             if (!_handlerAccessor.TryGetHandler(wrapperType, out var foundHandler, out var ex))
             {
-                var exception = new InvalidOperationException($"The matching command handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} and handler are registered.", ex);
-                WriteLineException(exception);
-                return new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(query), exception);
+                throw new InvalidOperationException(
+                    $"The matching command handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} and handler are registered.", ex);
             }
 
             var handler = (IQueryHandlerWrapper<TResult>)foundHandler;

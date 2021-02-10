@@ -25,8 +25,8 @@ namespace Xpandables.Net.Decorators
     /// The behavior makes use of an implementation of <see cref="IDataContext"/> in the handler class implementation
     /// to persist data at the end of the control flow only if there is no exception.
     /// In order to control the behavior, you can add the <see cref="ICorrelationDecorator"/> to the command/query class and reference
-    /// the <see cref="ICorrelationContext"/> in the handler class implementation, to defines actions to be applied after the control flow with
-    /// <see cref="ICorrelationContext.PostEvent"/> on success and <see cref="ICorrelationContext.RollbackEvent"/> on exception.
+    /// the <see cref="ICorrelationEvent"/> in the handler class implementation, to defines actions to be applied after the control flow with
+    /// <see cref="ICorrelationEvent.PostEvent"/> on success and <see cref="ICorrelationEvent.RollbackEvent"/> on exception.
     /// </summary>
     public interface IPersistenceDecorator { }
 }

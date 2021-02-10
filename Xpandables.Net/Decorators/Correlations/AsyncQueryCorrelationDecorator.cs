@@ -29,10 +29,10 @@ namespace Xpandables.Net.Decorators.Correlations
     /// <summary>
     /// This class allows the application author to add post/rollback event support to query control flow.
     /// The target query should implement the <see cref="ICorrelationDecorator"/> interface in order to activate the behavior.
-    /// The class decorates the target query handler with an implementation of <see cref="ICorrelationContext"/> that
+    /// The class decorates the target query handler with an implementation of <see cref="ICorrelationEvent"/> that
     /// adds an event (post event) to be raised after the main one in the same control flow only if there is no exception,
     /// and an event (roll back event) to be raised when exception. The target query handler class should reference the
-    /// <see cref="ICorrelationContext"/> interface in order to set the expected actions.
+    /// <see cref="ICorrelationEvent"/> interface in order to set the expected actions.
     /// </summary>
     /// <typeparam name="TQuery">Type of the query.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
@@ -40,7 +40,7 @@ namespace Xpandables.Net.Decorators.Correlations
         where TQuery : class, IAsyncQuery<TResult>, ICorrelationDecorator
     {
         private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
-        private readonly CorrelationContext _correlationContext;
+        private readonly CorrelationEvent _correlationContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncQueryCorrelationDecorator{TQuery, TResult}"/> class
@@ -50,7 +50,7 @@ namespace Xpandables.Net.Decorators.Correlations
         /// <param name="decoratee">The decorated query handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
-        public AsyncQueryCorrelationDecorator(CorrelationContext correlationContext, IAsyncQueryHandler<TQuery, TResult> decoratee)
+        public AsyncQueryCorrelationDecorator(CorrelationEvent correlationContext, IAsyncQueryHandler<TQuery, TResult> decoratee)
         {
             _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
