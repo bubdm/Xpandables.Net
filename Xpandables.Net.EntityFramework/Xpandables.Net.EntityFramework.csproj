@@ -17,10 +17,10 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.3.7</Version>
-    <AssemblyVersion>5.3.7</AssemblyVersion>
-    <FileVersion>5.3.7</FileVersion>
-    <PackageVersion>5.3.7</PackageVersion>
+    <Version>5.3.8</Version>
+    <AssemblyVersion>5.3.8</AssemblyVersion>
+    <FileVersion>5.3.8</FileVersion>
+    <PackageVersion>5.3.8</PackageVersion>
     <PackageReleaseNotes>Add IDataContextFactory</PackageReleaseNotes>
     <PackageId>Xpandables.Net.EntityFramework</PackageId>
     <PackageTags>IDataContext DataContextFactory IEntityAcessor.</PackageTags>
