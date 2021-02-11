@@ -19,17 +19,32 @@ using System;
 
 namespace Xpandables.Net.Database
 {
-    internal sealed class DataContextFactory<TDataContext> : IDataContextFactory<TDataContext>
+    /// <summary>
+    /// Implementation of <see cref="IDataContextFactory{TDataContext}"/>.
+    /// </summary>
+    /// <typeparam name="TDataContext">The type of data context.</typeparam>
+    public sealed class DataContextFactory<TDataContext> : IDataContextFactory<TDataContext>
         where TDataContext : class, IDataContext
     {
+        /// <summary>
+        /// The factory used to retrieve an instance of <typeparamref name="TDataContext" />.
+        /// </summary>
         public Func<TDataContext> Factory { get; }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="DataContextFactory{TDataContext}"/> class with the factory of the target type.
+        /// </summary>
+        /// <param name="factory">The factory for <typeparamref name="TDataContext"/>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="factory"/> is null.</exception>
         public DataContextFactory(Func<TDataContext> factory)
         {
             Factory = factory ?? throw new ArgumentNullException(nameof(factory));
             Name = typeof(TDataContext).Name;
         }
 
+        /// <summary>
+        /// Gets the name of the data context.
+        /// </summary>
         public string Name { get; }
 
         Func<IDataContext> IDataContextFactory.Factory => () => Factory();

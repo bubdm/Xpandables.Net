@@ -51,9 +51,9 @@ namespace Xpandables.Net.Api
                 .EnableServiceProviderCaching())
                 .AddDbContext<ContactContextSecond>(options => options.UseInMemoryDatabase(nameof(ContactContextSecond))
                 .EnableServiceProviderCaching())
-                .AddXDataContextCorrelation()
-                .AddXDataContextCorrelation<ContactContext>()
-                .AddXDataContextCorrelation<ContactContextSecond>();
+                .AddXDataContextFactoryCollection()
+                .AddXDataContextFactory<ContactContext>()
+                .AddXDataContextFactory<ContactContextSecond>();
 
             services.AddXDispatcher();
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>

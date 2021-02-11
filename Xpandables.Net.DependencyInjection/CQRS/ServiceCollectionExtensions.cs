@@ -187,7 +187,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the default <see cref="IDispatcher"/> and <see cref="IHandlerAcessor"/> implementations to the services with scoped life time.
+        /// Adds the default <see cref="IDispatcher"/> and <see cref="IHandlerAccessor"/> implementations to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -195,7 +195,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IHandlerAcessor, HandlerAccessor>();
+            services.AddScoped<IHandlerAccessor, HandlerAccessor>();
             services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
             services.AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
             services.AddScoped<IDispatcher, Dispatcher>();
@@ -215,11 +215,11 @@ namespace Xpandables.Net.DependencyInjection
             where TDispatcher : class, IDispatcher
             where TDomainEventPublsher : class, IDomainEventPublisher
             where TIntegrationEventPublisher : class, IIntegrationEventPublisher
-            where THandlerAccessor : class, IHandlerAcessor
+            where THandlerAccessor : class, IHandlerAccessor
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IHandlerAcessor, THandlerAccessor>();
+            services.AddScoped<IHandlerAccessor, THandlerAccessor>();
             services.AddScoped<IDomainEventPublisher, TDomainEventPublsher>();
             services.AddScoped<IIntegrationEventPublisher, TIntegrationEventPublisher>();
             services.AddScoped<IDispatcher, TDispatcher>();
@@ -252,7 +252,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <typeparam name="TDataContext">The type of the data context.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDataContextCorrelation<TDataContext>(this IServiceCollection services)
+        public static IServiceCollection AddXDataContextFactory<TDataContext>(this IServiceCollection services)
             where TDataContext : class, IDataContext
         {
             var serviceDescriptor = new ServiceDescriptor(
@@ -265,21 +265,21 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IDataContextCorrelation"/> implementation type that get called to resolve <see cref="IDataContext"/> in multiple data context use.
+        /// Adds the <see cref="IDataContextFactoryCollection"/> implementation type that get called to resolve <see cref="IDataContext"/> in multiple data context use.
         /// The type is registered with scoped life time. Caution : Do not use with <see cref="AddXDataContext{TDataContext}(IServiceCollection)"/>.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDataContextCorrelation(this IServiceCollection services)
+        public static IServiceCollection AddXDataContextFactoryCollection(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IDataContextCorrelation, DataContextCorrelation>();
+            services.AddScoped<IDataContextFactoryCollection, DataContextFactoryCollection>();
             services.AddScoped(typeof(IDataContext<>), typeof(DataContext<>));
 
             var serviceDescriptor = new ServiceDescriptor(
                 typeof(IDataContext),
-                provider => provider.GetRequiredService<IDataContextCorrelation>().GetDataContext(),
+                provider => provider.GetRequiredService<IDataContextFactoryCollection>().GetDataContext(),
                 ServiceLifetime.Scoped);
 
             services.Add(serviceDescriptor);

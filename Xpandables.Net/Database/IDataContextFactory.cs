@@ -22,7 +22,7 @@ namespace Xpandables.Net.Database
     /// <summary>
     /// Provides with method for creating derived <see cref="IDataContext"/> instances.
     /// </summary>
-    internal interface IDataContextFactory
+    public interface IDataContextFactory
     {
         /// <summary>
         /// The factory used to retrieve an implementation of <see cref="IDataContext"/>.
@@ -39,7 +39,7 @@ namespace Xpandables.Net.Database
     /// Provides with method for creating <typeparamref name="TDataContext"/> instances.
     /// </summary>
     /// <typeparam name="TDataContext">The type of the data context.</typeparam>
-    internal interface IDataContextFactory<TDataContext> : IDataContextFactory
+    public interface IDataContextFactory<TDataContext> : IDataContextFactory
         where TDataContext : class, IDataContext
     {
         /// <summary>

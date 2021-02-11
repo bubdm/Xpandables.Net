@@ -38,14 +38,14 @@ namespace Xpandables.Net.Dispatchers
     /// </summary>
     public class Dispatcher : IDispatcher
     {
-        private readonly IHandlerAcessor _handlerAccessor;
+        private readonly IHandlerAccessor _handlerAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Dispatcher"/> class with the handlers provider.
         /// </summary>
         /// <param name="handlerAccessor">The handlers provider.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="handlerAccessor"/> is null.</exception>
-        public Dispatcher(IHandlerAcessor handlerAccessor)
+        public Dispatcher(IHandlerAccessor handlerAccessor)
             => _handlerAccessor = handlerAccessor ?? throw new ArgumentNullException(nameof(handlerAccessor));
 
         /// <summary>

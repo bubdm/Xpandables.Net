@@ -25,7 +25,7 @@ namespace Xpandables.Net.Dispatchers
     /// <summary>
     /// Defines set of methods to retrieve handlers of specific type.
     /// </summary>
-    public interface IHandlerAcessor
+    public interface IHandlerAccessor
     {
         /// <summary>
         /// Returns the handler of the <typeparamref name="THandler"/> type.

@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,50 +14,31 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Validators
 {
     /// <summary>
     /// Represents a helper class that allows implementation of the <see cref="IOperationValidator{TArgument}"/>.
-    /// The default behavior acts like the <see cref="ICompositeValidator{TArgument}"/>.
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
-    public class OperationValidator<TArgument> : IOperationValidator<TArgument>
+    public abstract class OperationValidator<TArgument> : OperationExtended, IOperationValidator<TArgument>
          where TArgument : notnull
     {
-        private readonly IEnumerable<IValidator<TArgument>> _validators;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="OperationValidator{TArgument}"/> with all
-        /// <see cref="IValidator{TArgument}"/> implementations.
+        /// Defines the <see cref="IOperationResult"/> result of the validator.
         /// </summary>
-        /// <param name="validators">The validator collection.</param>
-        public OperationValidator(IEnumerable<IValidator<TArgument>> validators)
-            => _validators = validators;
+        protected IOperationResult Result = new SuccessOperationResult();
 
         /// <summary>
-        /// Asynchronously validates the argument and returns validation state with errors if necessary.
+        /// If <see cref="IsSatisfiedBy(TArgument)" /> is <see langword="false" />, the property should be a <see cref="FailureOperationResult" />.
+        /// </summary>
+        public IOperationResult OperationResult => Result;
+
+        /// <summary>
+        /// Returns a value that determines whether or not the argument is valid.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="argument" /> is null.</exception>
-        /// <returns>Returns a result state that contains validation information.</returns>
-        public virtual async Task<IOperationResult> IsSatisfiedBy(TArgument argument, CancellationToken cancellationToken = default)
-        {
-            foreach (var validator in _validators.OrderBy(o => o.Order))
-            {
-                if (cancellationToken.IsCancellationRequested) cancellationToken.ThrowIfCancellationRequested();
-                var result = await validator.ValidateAsync(argument, cancellationToken).ConfigureAwait(false);
-                if (result.IsFailure)
-                    return result;
-            }
-
-            return new SuccessOperationResult();
-        }
+        /// <returns><see langword="true" /> if the argument is valid; otherwise returns <see langword="false" />.</returns>
+        public abstract bool IsSatisfiedBy(TArgument argument);
     }
 }

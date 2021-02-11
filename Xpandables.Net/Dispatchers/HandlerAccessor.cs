@@ -23,10 +23,10 @@ using System.Linq;
 namespace Xpandables.Net.Dispatchers
 {
     /// <summary>
-    /// An implementation of <see cref="IHandlerAcessor"/> that uses a instance of <see cref="IServiceProvider"/> to retrieve the handler.
+    /// An implementation of <see cref="IHandlerAccessor"/> that uses a instance of <see cref="IServiceProvider"/> to retrieve the handler.
     /// You can customize the behavior by implementing your own class.
     /// </summary>
-    public sealed class HandlerAccessor : IHandlerAcessor
+    public sealed class HandlerAccessor : IHandlerAccessor
     {
         private readonly IServiceProvider _serviceProvider;
 

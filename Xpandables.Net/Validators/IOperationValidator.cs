@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,26 +14,26 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Validators
 {
     /// <summary>
-    /// Defines method contracts used to validate a type-specific argument.
+    /// Defines property and method contracts used to validate a type-specific argument.
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
     public interface IOperationValidator<TArgument>
         where TArgument : notnull
     {
         /// <summary>
-        /// Asynchronously validates the argument and returns validation state with errors if necessary.
+        /// Returns a value that determines whether or not the argument is valid.
         /// </summary>
         /// <param name="argument">The target argument to be validated.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <returns>Returns a result state that contains validation information.</returns>
-        Task<IOperationResult> IsSatisfiedBy(TArgument argument, CancellationToken cancellationToken = default);
+        /// <returns><see langword="true"/> if the argument is valid; otherwise returns <see langword="false"/>.</returns>
+        bool IsSatisfiedBy(TArgument argument);
+
+        /// <summary>
+        /// If <see cref="IsSatisfiedBy(TArgument)"/> is <see langword="false"/>, the property should be a <see cref="FailureOperationResult"/>.
+        /// </summary>
+        IOperationResult OperationResult { get; }
     }
 }
