@@ -53,7 +53,7 @@ namespace Xpandables.Net.Events.DomainEvents
         {
             var domainEventTasks = _dataContext.Notifications
                 .OfType<IDomainEvent>()
-                .Select(async domainEvent => await _dispatcher.PublishAsync(domainEvent, cancellationToken).ConfigureAwait(false))
+                .Select(domainEvent => _dispatcher.PublishAsync(domainEvent, cancellationToken))
                 .ToList();
 
             _dataContext.ClearNotifications<IDomainEvent>();

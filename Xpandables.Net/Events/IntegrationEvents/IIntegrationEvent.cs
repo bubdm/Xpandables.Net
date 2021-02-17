@@ -17,12 +17,15 @@
 ************************************************************************************************************/
 using System;
 
+using Xpandables.Net.Database;
 using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as an integration domain event.
+    /// This kind of events are published after <see cref="IDataContext.PersistAsync(System.Threading.CancellationToken)"/> 
+    /// completed and the entity change successfully saved to the database.
     /// </summary>
     public interface IIntegrationEvent : IEvent
     {
@@ -33,7 +36,9 @@ namespace Xpandables.Net.Events.IntegrationEvents
     }
 
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as an integration domain event.
+    /// Defines a marker interface to be used to mark an object to act as an integration domain event targeting an <see cref="IDomainEvent"/>.
+    /// This kind of events are published after <see cref="IDataContext.PersistAsync(System.Threading.CancellationToken)"/> 
+    /// completed and the entity change successfully saved to the database.
     /// </summary>
     /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
     public interface IIntegrationEvent<TDomainEvent> : IIntegrationEvent
