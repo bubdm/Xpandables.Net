@@ -53,11 +53,10 @@ namespace Xpandables.Net.Events.IntegrationEvents
         {
             var domainEventTasks = _dataContext.Notifications
                 .OfType<IIntegrationEvent>()
-                .Select(integrationEvent => _dispatcher.PublishAsync(integrationEvent, cancellationToken))
-                .ToList();
+                .Select(integrationEvent => _dispatcher.PublishAsync(integrationEvent, cancellationToken));
 
-            _dataContext.ClearNotifications<IIntegrationEvent>();
             await Task.WhenAll(domainEventTasks).ConfigureAwait(false);
+            _dataContext.ClearNotifications<IIntegrationEvent>();
         }
     }
 }
