@@ -23,7 +23,8 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// Contains HTTP Rest API validation model result that contains member name with its list of error messages.
     /// </summary>
-    public sealed partial class HttpRestClientValidation : Dictionary<string, IEnumerable<string>>
+    [Serializable]
+    public sealed class HttpRestClientValidation : Dictionary<string, IEnumerable<string>>
     {
         /// <summary>
         /// Adds the specified member name and list of error messages to the dictionary.
@@ -79,5 +80,10 @@ namespace Xpandables.Net.Http
         /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
         public HttpRestClientValidation(IEnumerable<KeyValuePair<string, IEnumerable<string>>> collection)
             : base(collection) { }
+
+        private HttpRestClientValidation(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

@@ -95,47 +95,7 @@ namespace Xpandables.Net.Expressions.Specifications
         /// <returns>An opposite specification.</returns>
         [return: NotNull]
         public static SpecificationNot<TSource> operator !(Specification<TSource> other)
-            => new SpecificationNot<TSource>(other);
-
-        /// <summary>
-        /// Returns a specification that will be true only if the boolean is true.
-        /// </summary>
-        /// <param name="value">The boolean value to compare with.</param>
-        /// <param name="right">The target specification.</param>
-        /// <returns>A new specification.</returns>
-        [return: NotNull]
-        public static Specification<TSource> operator ==(bool value, Specification<TSource> right)
-            => value ? right : !right;
-
-        /// <summary>
-        /// Returns a specification that will be true only if the boolean is true.
-        /// </summary>
-        /// <param name="left">The target specification.</param>
-        /// <param name="value">The boolean value to compare with.</param>
-        /// <returns>A new specification.</returns>
-        [return: NotNull]
-        public static Specification<TSource> operator ==(Specification<TSource> left, bool value)
-            => value ? left : !left;
-
-        /// <summary>
-        /// Returns a specification that will be true only if the boolean is false.
-        /// </summary>
-        /// <param name="value">The boolean value to compare with.</param>
-        /// <param name="right">The target specification.</param>
-        /// <returns>A new specification.</returns>
-        [return: NotNull]
-        public static Specification<TSource> operator !=(bool value, Specification<TSource> right)
-            => value ? !right : right;
-
-        /// <summary>
-        /// Returns a specification that will be true only if the boolean is false.
-        /// </summary>
-        /// <param name="left">The target specification.</param>
-        /// <param name="value">The boolean value to compare with.</param>
-        /// <returns>A new specification.</returns>
-        [return: NotNull]
-        public static Specification<TSource> operator !=(Specification<TSource> left, bool value)
-            => value ? !left : left;
+            => new(other);
 
         /// <summary>
         /// Returns the current specification as <see cref="Func{T, TResult}"/>.

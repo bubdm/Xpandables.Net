@@ -39,7 +39,7 @@ namespace Xpandables.Net.Database
     /// Provides with method for creating <typeparamref name="TDataContext"/> instances.
     /// </summary>
     /// <typeparam name="TDataContext">The type of the data context.</typeparam>
-    public interface IDataContextFactory<TDataContext> : IDataContextFactory
+    public interface IDataContextFactory<out TDataContext> : IDataContextFactory
         where TDataContext : class, IDataContext
     {
         /// <summary>

@@ -85,6 +85,42 @@ namespace Xpandables.Net.Dispatchers
         }
 
         /// <summary>
+        /// Asynchronously fetches the query handler(<see cref="IQueryHandler{TQuery, TResult}"/> implementation) on the specified query.
+        /// </summary>
+        /// <typeparam name="TResult">Type of the result.</typeparam>
+        /// <param name="query">The query to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        /// <remarks>if errors, see Debug or Trace.</remarks>
+        public virtual async Task<IOperationResult<TResult>> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+        {
+            _ = query ?? throw new ArgumentNullException(nameof(query));
+
+            if (!typeof(QueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, query.GetType(), typeof(TResult)))
+            {
+                throw new InvalidOperationException("Building Query wrapper failed.", typeException);
+            }
+
+            if (!_handlerAccessor.TryGetHandler(wrapperType, out var foundHandler, out var ex))
+            {
+                throw new InvalidOperationException(
+                    $"The matching command handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} and handler are registered.", ex);
+            }
+
+            var handler = (IQueryHandlerWrapper<TResult>)foundHandler;
+
+            if (!handler.CanHandle(query))
+            {
+                var exception = new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
+                WriteLineException(exception);
+                return new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(query), exception);
+            }
+
+            return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Asynchronously sends the command handler (<see cref="ICommandHandler{TCommand}"/> implementation) on the specified command.
         /// </summary>
         /// <param name="command">The command to act on.</param>
@@ -153,42 +189,6 @@ namespace Xpandables.Net.Dispatchers
         }
 
         /// <summary>
-        /// Asynchronously fetches the query handler(<see cref="IQueryHandler{TQuery, TResult}"/> implementation) on the specified query.
-        /// </summary>
-        /// <typeparam name="TResult">Type of the result.</typeparam>
-        /// <param name="query">The query to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
-        public virtual async Task<IOperationResult<TResult>> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
-        {
-            _ = query ?? throw new ArgumentNullException(nameof(query));
-
-            if (!typeof(QueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, query.GetType(), typeof(TResult)))
-            {
-                throw new InvalidOperationException("Building Query wrapper failed.", typeException);
-            }
-
-            if (!_handlerAccessor.TryGetHandler(wrapperType, out var foundHandler, out var ex))
-            {
-                throw new InvalidOperationException(
-                    $"The matching command handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} and handler are registered.", ex);
-            }
-
-            var handler = (IQueryHandlerWrapper<TResult>)foundHandler;
-
-            if (!handler.CanHandle(query))
-            {
-                var exception = new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
-                WriteLineException(exception);
-                return new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(query), exception);
-            }
-
-            return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// Asynchronously publishes the events across all domain/integration handlers.
         /// </summary>
         /// <param name="event">The event to be published.</param>
@@ -200,9 +200,9 @@ namespace Xpandables.Net.Dispatchers
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
             Type genericHandlerType;
-            if (typeof(IDomainEvent).IsAssignableFrom(@event.GetType()))
+            if (@event is IDomainEvent)
                 genericHandlerType = typeof(IDomainEventHandler<>);
-            else if (typeof(IIntegrationEvent).IsAssignableFrom(@event.GetType()))
+            else if (@event is IIntegrationEvent)
                 genericHandlerType = typeof(IIntegrationEventHandler<>);
             else
                 return;
@@ -220,7 +220,7 @@ namespace Xpandables.Net.Dispatchers
             }
 
             IEnumerable<Task> tasks;
-            if (typeof(IDomainEvent).IsAssignableFrom(@event.GetType()))
+            if (@event is IDomainEvent)
             {
                 var handlers = (IEnumerable<IDomainEventHandler>)foundHandlers;
                 tasks = handlers.Select(handler => handler.HandleAsync(@event, cancellationToken));

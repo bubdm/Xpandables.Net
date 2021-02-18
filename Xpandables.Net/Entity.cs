@@ -177,23 +177,6 @@ namespace Xpandables.Net
         }
 
         /// <summary>
-        /// Applies equal operator.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public static bool operator ==(Entity a, Entity b)
-            => (a is null && b is null) || (!(a is null) && !(b is null) && a.Equals(b));
-
-        /// <summary>
-        /// Applies non equal operator.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public static bool operator !=(Entity a, Entity b) => !(a == b);
-
-        /// <summary>
         /// Serves as the default hash function.
         /// </summary>
         /// <returns>A hash code for the current entity.</returns>

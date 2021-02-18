@@ -223,10 +223,10 @@ namespace Xpandables.Net
         public uint GetUInt32() => _jsonReader.GetUInt32();
         public ulong GetUInt64() => _jsonReader.GetUInt64();
         public bool TryGetDecimal(out byte value) => _jsonReader.TryGetByte(out value);
+        public bool TryGetDecimal(out decimal value) => _jsonReader.TryGetDecimal(out value);
         public bool TryGetBytesFromBase64(out byte[]? value) => _jsonReader.TryGetBytesFromBase64(out value);
         public bool TryGetDateTime(out DateTime value) => _jsonReader.TryGetDateTime(out value);
         public bool TryGetDateTimeOffset(out DateTimeOffset value) => _jsonReader.TryGetDateTimeOffset(out value);
-        public bool TryGetDecimal(out decimal value) => _jsonReader.TryGetDecimal(out value);
         public bool TryGetDouble(out double value) => _jsonReader.TryGetDouble(out value);
         public bool TryGetGuid(out Guid value) => _jsonReader.TryGetGuid(out value);
         public bool TryGetInt16(out short value) => _jsonReader.TryGetInt16(out value);

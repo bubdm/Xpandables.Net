@@ -57,6 +57,7 @@ namespace Xpandables.Net.Database
         /// <returns><see cref="IDataContext" /> derived class.</returns>
         /// <exception cref="InvalidOperationException">The data context matching the current has not been registered.</exception>
         /// <exception cref="ArgumentNullException">The <see cref="CurrentDataContextName" /> is null.</exception>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3928:Parameter names used into ArgumentException constructors should match an existing one ", Justification = "<Pending>")]
         public IDataContext GetDataContext()
         {
             _ = CurrentDataContextName ?? throw new ArgumentNullException(nameof(CurrentDataContextName), "The data context name has not been set.");

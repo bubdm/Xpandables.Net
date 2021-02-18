@@ -67,12 +67,28 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// Enables domain event behavior to commands that are decorated with the <see cref="IEventDecorator"/>.
         /// </summary>
-        public HandlerOptions UseDomainEventDecorator() => this.With(cq => cq.IsDomainEventEnabled = true);
+        public HandlerOptions UseDomainEventDecorator() => this.With(cq => cq.IsDomainEventEnabled = typeof(DomainEventPublisher));
+
+        /// <summary>
+        /// Enables domain event behavior to commands that are decorated with the <see cref="IEventDecorator"/> using the specified publisher.
+        /// </summary>
+        /// <typeparam name="TDomainEventPublisher">The domain event publisher type to be used.</typeparam>
+        public HandlerOptions UseDomainEventDecorator<TDomainEventPublisher>()
+            where TDomainEventPublisher : class, IDomainEventPublisher
+            => this.With(cq => cq.IsDomainEventEnabled = typeof(TDomainEventPublisher));
 
         /// <summary>
         /// Enables integration event behavior to commands that are decorated with the <see cref="IEventDecorator"/>.
         /// </summary>
-        public HandlerOptions UseIntegrationEventDecorator() => this.With(cq => cq.IsIntegrationEventEnabled = true);
+        public HandlerOptions UseIntegrationEventDecorator() => this.With(cq => cq.IsIntegrationEventEnabled = typeof(IntegrationEventPublisher));
+
+        /// <summary>
+        /// Enables integration event behavior to commands that are decorated with the <see cref="IEventDecorator"/> using the specified publisher.
+        /// </summary>
+        /// <typeparam name="TIntegrationEventPublisher">The integration domain event publisher type to be used.</typeparam>
+        public HandlerOptions UseIntegrationEventDecorator<TIntegrationEventPublisher>()
+            where TIntegrationEventPublisher : class, IIntegrationEventPublisher
+            => this.With(cq => cq.IsIntegrationEventEnabled = typeof(TIntegrationEventPublisher));
 
         /// <summary>
         /// Enables logging behavior to commands/queries that are decorated with the <see cref="ILoggingDecorator"/> .
@@ -95,8 +111,8 @@ namespace Xpandables.Net.DependencyInjection
         internal bool IsVisitorEnabled { get; private set; }
         internal bool IsTransactionEnabled { get; private set; }
         internal bool IsPersistenceEnabled { get; private set; }
-        internal bool IsDomainEventEnabled { get; private set; }
-        internal bool IsIntegrationEventEnabled { get; private set; }
+        internal Type? IsDomainEventEnabled { get; private set; }
+        internal Type? IsIntegrationEventEnabled { get; private set; }
         internal bool IsCorrelationEnabled { get; private set; }
         internal bool IsLoggingEnabled { get; private set; }
     }
@@ -196,39 +212,31 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<IHandlerAccessor, HandlerAccessor>();
-            services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
-            services.AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
             services.AddScoped<IDispatcher, Dispatcher>();
             return services;
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TDispatcher"/>, <typeparamref name="TDomainEventPublsher"/> and <typeparamref name="TIntegrationEventPublisher"/> types to the services with scoped life time.
+        /// Adds the <typeparamref name="TDispatcher"/> <typeparamref name="THandlerAccessor"/> types to the services with scoped life time.
         /// </summary>
         /// <typeparam name="TDispatcher">The dispatcher type implementation.</typeparam>
-        /// <typeparam name="TDomainEventPublsher">The domain event publisher.</typeparam>
-        /// <typeparam name="TIntegrationEventPublisher">The integration event publisher.</typeparam>
         /// <typeparam name="THandlerAccessor">The handler provider.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDispatcher<TDispatcher, TDomainEventPublsher, TIntegrationEventPublisher, THandlerAccessor>(this IServiceCollection services)
+        public static IServiceCollection AddXDispatcher<TDispatcher, THandlerAccessor>(this IServiceCollection services)
             where TDispatcher : class, IDispatcher
-            where TDomainEventPublsher : class, IDomainEventPublisher
-            where TIntegrationEventPublisher : class, IIntegrationEventPublisher
             where THandlerAccessor : class, IHandlerAccessor
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<IHandlerAccessor, THandlerAccessor>();
-            services.AddScoped<IDomainEventPublisher, TDomainEventPublsher>();
-            services.AddScoped<IIntegrationEventPublisher, TIntegrationEventPublisher>();
             services.AddScoped<IDispatcher, TDispatcher>();
             return services;
         }
 
         /// <summary>
         /// Adds the <typeparamref name="TDataContext"/> type class reference implementation as <see cref="IDataContext"/> to the services with scoped life time.
-        /// Caution : Do not use with correlation.
+        /// Caution : Do not use with factory.
         /// </summary>
         /// <typeparam name="TDataContext">The type of the data context that implements <see cref="IDataContext"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
@@ -322,9 +330,36 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXDomainEventDecorator(this IServiceCollection services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
+            => services.AddXDomainEventDecorator<DomainEventPublisher>();
 
+        /// <summary>
+        /// Adds domain event behavior to commands that are decorated with the <see cref="IEventDecorator"/> to the services
+        /// with transient life time and uses the specified publisher.
+        /// </summary>
+        /// <typeparam name="TDomainEventPublisher">The type of the publisher to be used.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXDomainEventDecorator<TDomainEventPublisher>(this IServiceCollection services)
+            where TDomainEventPublisher : class, IDomainEventPublisher
+        {
+            services.AddScoped<IDomainEventPublisher, TDomainEventPublisher>();
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandDomainEventDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandDomainEventDecorator<,>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds domain event behavior to commands that are decorated with the <see cref="IEventDecorator"/> to the services
+        /// with transient life time and uses the specified publisher.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="domainEventPublisherType">The type of the publisher to be used.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXDomainEventDecorator(this IServiceCollection services, Type domainEventPublisherType)
+        {
+            _ = domainEventPublisherType ?? throw new ArgumentNullException(nameof(domainEventPublisherType));
+
+            services.AddScoped(typeof(IDomainEventPublisher), domainEventPublisherType);
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandDomainEventDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandDomainEventDecorator<,>));
             return services;
@@ -337,9 +372,39 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXIntegrationEventDecorator(this IServiceCollection services)
+            => services.AddXIntegrationEventDecorator<IntegrationEventPublisher>();
+
+        /// <summary>
+        /// Adds integration event behavior to commands that are decorated with the <see cref="IEventDecorator"/> to the services
+        /// with transient life time and used the specified publisher.
+        /// </summary>
+        /// <typeparam name="TIntegrationEventPublisher">The type of the publisher to be used.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXIntegrationEventDecorator<TIntegrationEventPublisher>(this IServiceCollection services)
+            where TIntegrationEventPublisher : class, IIntegrationEventPublisher
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
+            services.AddScoped<IIntegrationEventPublisher, TIntegrationEventPublisher>();
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandIntegrationEventDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandIntegrationEventDecorator<,>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds integration event behavior to commands that are decorated with the <see cref="IEventDecorator"/> to the services
+        /// with transient life time and used the specified publisher.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="integrationEventPublisherType">The type of the publisher to be used.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXIntegrationEventDecorator(this IServiceCollection services, Type integrationEventPublisherType)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = integrationEventPublisherType ?? throw new ArgumentNullException(nameof(integrationEventPublisherType));
+
+            services.AddScoped(typeof(IIntegrationEventPublisher), integrationEventPublisherType);
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandIntegrationEventDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandIntegrationEventDecorator<,>));
             return services;
@@ -548,10 +613,10 @@ namespace Xpandables.Net.DependencyInjection
             var definedOptions = new HandlerOptions();
             configureOptions.Invoke(definedOptions);
 
-            if (definedOptions.IsDomainEventEnabled)
+            if (definedOptions.IsDomainEventEnabled is not null)
             {
                 services.AddXDomainEventHandlers(assemblies);
-                services.AddXDomainEventDecorator();
+                services.AddXDomainEventDecorator(definedOptions.IsDomainEventEnabled);
             }
 
             if (definedOptions.IsPersistenceEnabled)
@@ -559,10 +624,10 @@ namespace Xpandables.Net.DependencyInjection
                 services.AddXPersistenceDecorator();
             }
 
-            if (definedOptions.IsIntegrationEventEnabled)
+            if (definedOptions.IsIntegrationEventEnabled is not null)
             {
                 services.AddXIntegrationEventHandlers(assemblies);
-                services.AddXIntegrationEventDecorator();
+                services.AddXIntegrationEventDecorator(definedOptions.IsIntegrationEventEnabled);
             }
 
             if (definedOptions.IsTransactionEnabled)

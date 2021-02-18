@@ -434,10 +434,9 @@ namespace Xpandables.Net.Http
                where TSource : notnull
         {
             ValidateInterfaceImplementation<IByteArrayRequest>(source);
-            if (source is IByteArrayRequest byteArrayRequest)
+            if (source is IByteArrayRequest byteArrayRequest && byteArrayRequest.GetByteContent() is { } byteContent)
             {
-                if (byteArrayRequest.GetByteContent() is { } byteContent)
-                    return new ByteArrayContent(byteContent);
+                return new ByteArrayContent(byteContent);
             }
 
             return default;
@@ -454,10 +453,9 @@ namespace Xpandables.Net.Http
             where TSource : notnull
         {
             ValidateInterfaceImplementation<IFormUrlEncodedRequest>(source);
-            if (source is IFormUrlEncodedRequest formUrlEncodedRequest)
+            if (source is IFormUrlEncodedRequest formUrlEncodedRequest && formUrlEncodedRequest.GetFormContent() is { } formContent)
             {
-                if (formUrlEncodedRequest.GetFormContent() is { } formContent)
-                    return new FormUrlEncodedContent(formContent);
+                return new FormUrlEncodedContent(formContent);
             }
 
             return default;
@@ -594,9 +592,6 @@ namespace Xpandables.Net.Http
         /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception>
         protected virtual async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream, JsonSerializerOptions? options = default)
         {
-            _ = stream ?? throw new ArgumentNullException(nameof(stream));
-            if (!stream.CanRead) throw new ArgumentException($"{nameof(stream)} does not support reading.");
-
             var result = await JsonSerializer.DeserializeAsync<TResult>(
                 stream, options ?? new JsonSerializerOptions { AllowTrailingCommas = false, WriteIndented = false, PropertyNameCaseInsensitive = true })
                 .ConfigureAwait(false);

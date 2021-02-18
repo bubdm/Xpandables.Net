@@ -22,6 +22,7 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// Represents an HTTP Rest API exception.
     /// </summary>
+    [Serializable]
     public sealed class HttpRestClientException : Exception
     {
         /// <summary>
@@ -44,5 +45,10 @@ namespace Xpandables.Net.Http
         /// (Nothing in Visual Basic) if no inner exception is specified.</param>
         public HttpRestClientException(string message, Exception innerException)
             : base(message, innerException) { }
+
+        private HttpRestClientException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

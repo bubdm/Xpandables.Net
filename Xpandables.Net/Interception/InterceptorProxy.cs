@@ -23,14 +23,24 @@ using System.Runtime.ExceptionServices;
 namespace Xpandables.Net.Interception
 {
     /// <summary>
+    /// The base class for interceptor that contains common types.
+    /// </summary>
+    public abstract class InterceptorProxy : DispatchProxy
+    {
+        /// <summary>
+        /// Contains the GetType method.
+        /// </summary>
+        protected static readonly MethodBase MethodBaseType = typeof(object).GetMethod("GetType")!;
+    }
+
+    /// <summary>
     /// The base implementation for interceptor.
     /// This implementation uses the <see cref="DispatchProxy" /> process to apply customer behaviors to a method.
     /// </summary>
     /// <typeparam name="TInterface">Type of interface.</typeparam>
-    public class InterceptorProxy<TInterface> : DispatchProxy
+    public class InterceptorProxy<TInterface> : InterceptorProxy
         where TInterface : class
     {
-        private static readonly MethodBase MethodBaseType = typeof(object).GetMethod("GetType")!;
         private TInterface _realInstance;
         private IInterceptor _interceptor;
 

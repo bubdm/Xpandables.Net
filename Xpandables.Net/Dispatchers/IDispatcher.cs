@@ -47,6 +47,17 @@ namespace Xpandables.Net.Dispatchers
         IAsyncEnumerable<TResult> FetchAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Asynchronously fetches the query handler(<see cref="IQueryHandler{TQuery, TResult}"/> implementation) on the specified query.
+        /// </summary>
+        /// <typeparam name="TResult">Type of the result.</typeparam>
+        /// <param name="query">The query to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        /// <remarks>if errors, see Debug or Trace.</remarks>
+        Task<IOperationResult<TResult>> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Asynchronously sends the command handler (<see cref="ICommandHandler{TCommand}"/> implementation) on the specified command.
         /// </summary>
         /// <param name="command">The command to act on.</param>
@@ -66,17 +77,6 @@ namespace Xpandables.Net.Dispatchers
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
         /// <remarks>if errors, see Debug or Trace.</remarks>
         Task<IOperationResult<TResult>> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Asynchronously fetches the query handler(<see cref="IQueryHandler{TQuery, TResult}"/> implementation) on the specified query.
-        /// </summary>
-        /// <typeparam name="TResult">Type of the result.</typeparam>
-        /// <param name="query">The query to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
-        Task<IOperationResult<TResult>> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously publishes the events across all domain/integration handlers.

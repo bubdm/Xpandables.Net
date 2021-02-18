@@ -47,6 +47,24 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
+        ///  and a named <see cref="HttpClient"/>. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/>.
+        /// </summary>
+        /// <typeparam name="THttpRestClientHandler"> The implementation type of the typed client (<see cref="IHttpRestClientHandler"/>). They type specified will be instantiated by the ITypedHttpClientFactory.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
+        public static IServiceCollection AddXHttpRestClientHandler<THttpRestClientHandler>(this IServiceCollection services, Action<HttpClient> configureClient)
+            where THttpRestClientHandler : class, IHttpRestClientHandler
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddHttpClient<IHttpRestClientHandler, THttpRestClientHandler>(configureClient);
+            return services;
+        }
+
+        /// <summary>
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> that uses <see cref="Newtonsoft"/>.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -63,24 +81,6 @@ namespace Xpandables.Net.DependencyInjection
 
         private static void DoAddXHttpRestClientHandler<THttpRestClientHandler>(this IServiceCollection services, Action<HttpClient> configureClient)
             where THttpRestClientHandler : class, IHttpRestClientHandler => services.AddHttpClient<IHttpRestClientHandler, THttpRestClientHandler>(configureClient);
-
-        /// <summary>
-        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
-        ///  and a named <see cref="HttpClient"/>. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/>.
-        /// </summary>
-        /// <typeparam name="THttpRestClientHandler"> The implementation type of the typed client (<see cref="IHttpRestClientHandler"/>). They type specified will be instantiated by the ITypedHttpClientFactory.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
-        public static IServiceCollection AddXHttpRestClientHandler<THttpRestClientHandler>(this IServiceCollection services, Action<HttpClient> configureClient)
-            where THttpRestClientHandler : class, IHttpRestClientHandler
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.AddHttpClient<IHttpRestClientHandler, THttpRestClientHandler>(configureClient);
-            return services;
-        }
 
         /// <summary>
         ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
@@ -103,24 +103,6 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
-        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> that use <see cref="Newtonsoft"/> and you need to register an implementation
-        ///  of <see cref="IHttpHeaderAccessor"/> using the <see cref="AddXHttpHeaderAccessor{THttpHeaderAccessor}(IServiceCollection)"/> method.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
-        public static IServiceCollection AddXHttpRestClientHandlerWithAuthorizationTokenHandlerUsingNewtonsoft(this IServiceCollection services, Action<HttpClient> configureClient)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.DoAddXHttpRestClientHandlerWithAuthorizationTokenHandler<HttpRestClientHandlerUsingNewtonsoft>(configureClient);
-            return services;
-        }
-
-        /// <summary>
-        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
-        ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
         ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpHeaderAccessor"/> using
         ///  the <see cref="AddXHttpHeaderAccessor{THttpHeaderAccessor}(IServiceCollection)"/> method.
         /// </summary>
@@ -135,6 +117,24 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.DoAddXHttpRestClientHandlerWithAuthorizationTokenHandler<THttpRestClientHandler>(configureClient);
+            return services;
+        }
+
+        /// <summary>
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
+        ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
+        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> that use <see cref="Newtonsoft"/> and you need to register an implementation
+        ///  of <see cref="IHttpHeaderAccessor"/> using the <see cref="AddXHttpHeaderAccessor{THttpHeaderAccessor}(IServiceCollection)"/> method.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
+        public static IServiceCollection AddXHttpRestClientHandlerWithAuthorizationTokenHandlerUsingNewtonsoft(this IServiceCollection services, Action<HttpClient> configureClient)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.DoAddXHttpRestClientHandlerWithAuthorizationTokenHandler<HttpRestClientHandlerUsingNewtonsoft>(configureClient);
             return services;
         }
 
@@ -182,6 +182,12 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// The default URI used to retrieve the IP address.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>")]
+        public const string DefaultIPAddressFinderUri = "https://ipinfo.io/ip";
+
+        /// <summary>
         /// Adds an <see cref="IHttpIPAddressAccessor"/> implementation to retrieve the IPAddress of caller from https://ipinfo.io/ip.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -212,12 +218,18 @@ namespace Xpandables.Net.DependencyInjection
         {
             services.AddHttpClient<IHttpIPAddressAccessor, THttpIPAddressAccessor>(httpClient =>
             {
-                httpClient.BaseAddress = new Uri("https://ipinfo.io/ip");
+                httpClient.BaseAddress = new Uri(DefaultIPAddressFinderUri);
                 httpClient.DefaultRequestHeaders.Clear();
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
             })
              .ConfigurePrimaryHttpMessageHandler(() => new HttpIPAddressDelegateHandler());
         }
+
+        /// <summary>
+        /// The default URI used to retrieve the IP address location.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>")]
+        public const string DefaultIPAddressLocationFinderUri = "http://api.ipstack.com";
 
         /// <summary>
         /// Adds an <see cref="IHttpIPAddressLocationAccessor"/> implementation to retrieve the IP Address location from http://api.ipstack.com.
@@ -250,7 +262,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             services.AddHttpClient<IHttpIPAddressLocationAccessor, THttpIPAddressLocationAccessor>(httpClient =>
             {
-                httpClient.BaseAddress = new Uri("http://api.ipstack.com");
+                httpClient.BaseAddress = new Uri(DefaultIPAddressLocationFinderUri);
                 httpClient.DefaultRequestHeaders.Clear();
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json; charset=utf-8");
             });

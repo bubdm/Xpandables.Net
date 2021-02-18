@@ -21,7 +21,7 @@ namespace Xpandables.Net.Validators
     /// Defines property and method contracts used to validate a type-specific argument.
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
-    public interface IOperationValidator<TArgument>
+    public interface IOperationValidator<in TArgument>
         where TArgument : notnull
     {
         /// <summary>
@@ -34,6 +34,6 @@ namespace Xpandables.Net.Validators
         /// <summary>
         /// If <see cref="IsSatisfiedBy(TArgument)"/> is <see langword="false"/>, the property should be a <see cref="FailureOperationResult"/>.
         /// </summary>
-        IOperationResult OperationResult { get; }
+        IOperationResult Result { get; }
     }
 }

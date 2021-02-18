@@ -41,7 +41,7 @@ namespace Xpandables.Net.Validators
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
         /// <returns>Returns a result state that contains validation information.</returns>
-        public virtual async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken)
+        public virtual async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
         {
             var validationResults = new List<ValidationResult>();
             if (!Validator.TryValidateObject(argument, new ValidationContext(argument, null, null), validationResults, true))

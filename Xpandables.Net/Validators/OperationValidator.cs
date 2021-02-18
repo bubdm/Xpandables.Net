@@ -25,14 +25,14 @@ namespace Xpandables.Net.Validators
          where TArgument : notnull
     {
         /// <summary>
-        /// Defines the <see cref="IOperationResult"/> result of the validator.
+        /// Initializes a new instance of <see cref="OperationValidator{TArgument}"/> class that sets <see cref="Result"/> to <see cref="SuccessOperationResult"/>.
         /// </summary>
-        protected IOperationResult Result = new SuccessOperationResult();
+        protected OperationValidator() => Result = new SuccessOperationResult();
 
         /// <summary>
         /// If <see cref="IsSatisfiedBy(TArgument)" /> is <see langword="false" />, the property should be a <see cref="FailureOperationResult" />.
         /// </summary>
-        public IOperationResult OperationResult => Result;
+        public IOperationResult Result { get; protected set; }
 
         /// <summary>
         /// Returns a value that determines whether or not the argument is valid.

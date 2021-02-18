@@ -172,9 +172,6 @@ namespace Xpandables.Net.Database
             where T : Entity
         {
             var enumerable = entities as T[] ?? entities.ToArray();
-            if (enumerable.Length == 0)
-                throw new ArgumentNullException(nameof(entities));
-
             await AddRangeAsync(enumerable, cancellationToken).ConfigureAwait(false);
         }
 
@@ -189,7 +186,6 @@ namespace Xpandables.Net.Database
         public virtual async Task DeleteEntityAsync<T>(T deletedEntity, CancellationToken cancellationToken = default)
             where T : Entity
         {
-            if (deletedEntity is null) throw new ArgumentNullException(nameof(deletedEntity));
             cancellationToken.ThrowIfCancellationRequested();
             Remove(deletedEntity);
             await Task.CompletedTask.ConfigureAwait(false);
@@ -206,7 +202,6 @@ namespace Xpandables.Net.Database
         public virtual async Task DeleteEntityAsync<T>(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
             where T : Entity
         {
-            if (predicate is null) throw new ArgumentNullException(nameof(predicate));
             foreach (var entity in Set<T>().Where(predicate))
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -226,43 +221,9 @@ namespace Xpandables.Net.Database
         public virtual async Task UpdateEntityAsync<T>(T updatedEntity, CancellationToken cancellationToken = default)
             where T : Entity
         {
-            if (updatedEntity is null) throw new ArgumentNullException(nameof(updatedEntity));
             cancellationToken.ThrowIfCancellationRequested();
             Update(updatedEntity);
             await Task.CompletedTask.ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Updates the domain objects matching the collection of entities.
-        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
-        /// you don't set will be left alone. If you have property you want to set to its default,
-        /// then you must explicitly set that property's value.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
-        /// <param name="updatedEntities">Contains the collection of updated values.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="updatedEntities" /> is null.</exception>
-        public virtual async Task UpdateEntityRangeAsync<T, TUpdated>(
-            IEnumerable<TUpdated> updatedEntities, CancellationToken cancellationToken = default)
-            where T : Entity
-            where TUpdated : Entity
-        {
-            var enumerable = updatedEntities as TUpdated[] ?? updatedEntities.ToArray();
-            if (enumerable.Length == 0)
-                throw new ArgumentNullException(nameof(updatedEntities));
-
-            foreach (var updatedEntity in enumerable)
-            {
-                if (await Set<T>().FirstOrDefaultAsync(e => e.Id == updatedEntity.Id, cancellationToken)
-                    .ConfigureAwait(false) is not { } entity)
-                {
-                    continue;
-                }
-
-                Entry(entity).CurrentValues.SetValues(updatedEntity);
-                Entry(entity).State = EntityState.Modified;
-            }
         }
 
         /// <summary>
@@ -283,9 +244,6 @@ namespace Xpandables.Net.Database
             where T : Entity
             where TUpdated : class
         {
-            if (predicate is null) throw new ArgumentNullException(nameof(predicate));
-            if (updater is null) throw new ArgumentNullException(nameof(updater));
-
             foreach (var entity in Set<T>().Where(predicate))
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -297,6 +255,37 @@ namespace Xpandables.Net.Database
         }
 
         /// <summary>
+        /// Updates the domain objects matching the collection of entities.
+        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
+        /// you don't set will be left alone. If you have property you want to set to its default,
+        /// then you must explicitly set that property's value.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
+        /// <param name="updatedEntities">Contains the collection of updated values.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="updatedEntities" /> is null.</exception>
+        public virtual async Task UpdateEntityRangeAsync<T, TUpdated>(
+            IEnumerable<TUpdated> updatedEntities, CancellationToken cancellationToken = default)
+            where T : Entity
+            where TUpdated : Entity
+        {
+            var enumerable = updatedEntities as TUpdated[] ?? updatedEntities.ToArray();
+
+            foreach (var updatedEntity in enumerable)
+            {
+                if (await Set<T>().FirstOrDefaultAsync(e => e.Id == updatedEntity.Id, cancellationToken)
+                    .ConfigureAwait(false) is not { } entity)
+                {
+                    continue;
+                }
+
+                Entry(entity).CurrentValues.SetValues(updatedEntity);
+                Entry(entity).State = EntityState.Modified;
+            }
+        }
+
+        /// <summary>
         /// Persists all pending domain objects to the data storage.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -304,7 +293,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="InvalidOperationException">All exceptions related to the operation.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual async Task PersistAsync(CancellationToken cancellationToken)
+        public virtual async Task PersistAsync(CancellationToken cancellationToken = default)
         {
             try
             {

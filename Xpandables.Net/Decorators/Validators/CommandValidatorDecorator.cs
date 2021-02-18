@@ -61,7 +61,7 @@ namespace Xpandables.Net.Decorators.Validators
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken)
+        public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             var resultState = await _validator.ValidateAsync(command, cancellationToken).ConfigureAwait(false);
             if (resultState.IsSuccess)
@@ -107,7 +107,7 @@ namespace Xpandables.Net.Decorators.Validators
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken)
+        public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             var resultState = await _validator.ValidateAsync(command, cancellationToken).ConfigureAwait(false);
             if (resultState.IsSuccess)

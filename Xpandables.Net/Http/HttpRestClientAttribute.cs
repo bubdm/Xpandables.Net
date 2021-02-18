@@ -116,6 +116,7 @@ namespace Xpandables.Net.Http
     /// The location of the parameter, can be combined.
     /// </summary>
     [Flags]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"", Justification = "<Pending>")]
     public enum ParameterLocation
     {
         /// <summary>

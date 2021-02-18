@@ -36,6 +36,6 @@ namespace Xpandables.Net.Transactions
         /// <exception cref="ArgumentNullException">The <paramref name="argument" /> is null.</exception>
         public TransactionScope? GetTransactionScope<TArgument>(TArgument argument)
             where TArgument : class, ITransactionDecorator
-            => new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            => new(TransactionScopeAsyncFlowOption.Enabled);
     }
 }

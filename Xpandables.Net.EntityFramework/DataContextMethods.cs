@@ -69,7 +69,7 @@ namespace Xpandables.Net.Database
             return new ValueConverter<T, string>(convertToStringLambda, convertToEnumerationLambda);
         }
 
-        void IDataContext.ClearNotifications<TNotification>() => _notifications.RemoveAll(notif => typeof(TNotification).IsAssignableFrom(notif.GetType()));
+        void IDataContext.ClearNotifications<TNotification>() => _notifications.RemoveAll(notif => notif is TNotification);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataContext"/> class

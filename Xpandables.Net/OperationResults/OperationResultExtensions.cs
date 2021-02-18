@@ -39,6 +39,6 @@ namespace Xpandables.Net
         /// <returns>A new instance of <see cref="SuccessOperationResult{TValue}"/> that contains the value.</returns>
         public static SuccessOperationResult<TValue> ToSuccessOperationResult<TValue>(this TValue value)
             where TValue : notnull
-            => new SuccessOperationResult<TValue>(value);
+            => new(value);
     }
 }

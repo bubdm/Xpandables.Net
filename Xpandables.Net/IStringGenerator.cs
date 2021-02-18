@@ -33,6 +33,16 @@ namespace Xpandables.Net
         public const string LookupCharacters = "abcdefghijklmonpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,;!(-è_çàà)=@%µ£¨//?§/.?";
 
         /// <summary>
+        /// Generates a string of the specified length that contains random characters.
+        /// <para>The implementation uses the <see cref="RNGCryptoServiceProvider"/>.</para>
+        /// </summary>
+        /// <param name="length">The length of the expected string value.</param>
+        /// <returns>A new string of the specified length with random characters.</returns>
+        /// <exception cref="ArgumentException">The <paramref name="length"/> must be greater than zero
+        /// and lower or equal to <see cref="ushort.MaxValue"/>.</exception>
+        public virtual string Generate(ushort length) => Generate(length, LookupCharacters);
+
+        /// <summary>
         /// Generates a string of the specified length that contains random characters from the lookup characters.
         /// <para>The implementation uses the <see cref="RNGCryptoServiceProvider"/>.</para>
         /// </summary>
@@ -93,16 +103,6 @@ namespace Xpandables.Net
                 throw new InvalidOperationException($"{nameof(GenerateSalt)} : Generating salt failed. See inner exception.", exception);
             }
         }
-
-        /// <summary>
-        /// Generates a string of the specified length that contains random characters.
-        /// <para>The implementation uses the <see cref="RNGCryptoServiceProvider"/>.</para>
-        /// </summary>
-        /// <param name="length">The length of the expected string value.</param>
-        /// <returns>A new string of the specified length with random characters.</returns>
-        /// <exception cref="ArgumentException">The <paramref name="length"/> must be greater than zero
-        /// and lower or equal to <see cref="ushort.MaxValue"/>.</exception>
-        public virtual string Generate(ushort length) => Generate(length, LookupCharacters);
     }
 
     /// <summary>

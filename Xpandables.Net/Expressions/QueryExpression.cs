@@ -92,29 +92,6 @@ namespace Xpandables.Net.Expressions
              QueryExpression<TSource, TResult> right)
             => new QueryExpressionOr<TSource, TResult>(left, right: right);
 
-        public static QueryExpression<TSource, TResult> operator ==(
-            bool value,
-             QueryExpression<TSource, TResult> right)
-            => value ? right : !right;
-
-        [return: NotNull]
-        public static QueryExpression<TSource, TResult> operator ==(
-             QueryExpression<TSource, TResult> left,
-            bool value)
-            => value ? left : !left;
-
-        [return: NotNull]
-        public static QueryExpression<TSource, TResult> operator !=(
-            bool value,
-             QueryExpression<TSource, TResult> right)
-            => value ? !right : right;
-
-        [return: NotNull]
-        public static QueryExpression<TSource, TResult> operator !=(
-             QueryExpression<TSource, TResult> left,
-            bool value)
-            => value ? !left : left;
-
         [return: NotNull]
         public static QueryExpression<TSource, TResult> operator !(
              QueryExpression<TSource, TResult> left)

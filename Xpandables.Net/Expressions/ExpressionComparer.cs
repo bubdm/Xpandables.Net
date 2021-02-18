@@ -150,10 +150,9 @@ namespace Xpandables.Net.Expressions
 
         protected virtual bool CompareParameter(ParameterExpression a, ParameterExpression b)
         {
-            if (_parameterScope != null)
+            if (_parameterScope != null && _parameterScope.TryGetValue(a, out var mapped))
             {
-                if (_parameterScope.TryGetValue(a, out var mapped))
-                    return mapped == b;
+                return mapped == b;
             }
             return a == b;
         }

@@ -123,7 +123,10 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <param name="headers">the headers to be used.</param>
         internal HttpRestClientResponse AddHeaders(NameValueCollection headers)
-            => this.With(h => h.Headers = headers ?? throw new ArgumentNullException(nameof(headers)));
+        {
+            _ = headers ?? throw new ArgumentNullException(nameof(headers));
+            return this.With(h => h.Headers = headers);
+        }
 
         /// <summary>
         /// Adds the version.
@@ -253,7 +256,10 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <param name="headers">the headers to be used.</param>
         internal new HttpRestClientResponse<TResult> AddHeaders(NameValueCollection headers)
-            => this.With(h => h.Headers = headers ?? throw new ArgumentNullException(nameof(headers)));
+        {
+            _ = headers ?? throw new ArgumentNullException(nameof(headers));
+            return this.With(h => h.Headers = headers);
+        }
 
         /// <summary>
         /// Adds the version.
@@ -274,6 +280,8 @@ namespace Xpandables.Net.Http
                 {
                     (Result as IDisposable)?.Dispose();
                 }
+
+                base.Dispose(disposing);
             }
         }
 
@@ -293,6 +301,8 @@ namespace Xpandables.Net.Http
                 {
                     (Result as IDisposable)?.Dispose();
                 }
+
+                await base.DisposeAsync(disposing).ConfigureAwait(false);
             }
         }
     }

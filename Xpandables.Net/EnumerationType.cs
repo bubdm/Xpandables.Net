@@ -29,6 +29,7 @@ namespace Xpandables.Net
     /// This is an <see langword="abstract"/> and serializable class.
     /// </summary>
     [Serializable]
+    [SuppressMessage("Major Code Smell", "S4035:Classes implementing \"IEquatable<T>\" should be sealed", Justification = "<Pending>")]
     public abstract class EnumerationType : IEqualityComparer<EnumerationType>, IEquatable<EnumerationType>, IComparable<EnumerationType>
     {
         /// <summary>
@@ -77,6 +78,11 @@ namespace Xpandables.Net
             if (enumerationType.IsSubclassOf(typeof(EnumerationType)) is false)
                 throw new ArgumentException($"The type is not a subclass of {typeof(EnumerationType)}", nameof(enumerationType));
 
+            return DoGetAll(enumerationType);
+        }
+
+        private static IEnumerable<object> DoGetAll(Type enumerationType)
+        {
             var properties = enumerationType
                 .GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy |
                                BindingFlags.Instance)
@@ -195,17 +201,17 @@ namespace Xpandables.Net
         }
 
         /// <summary>
-        /// Returns the hash-code of the current type.
-        /// </summary>
-        /// <returns>hash-code.</returns>
-        public override int GetHashCode() => Value.GetHashCode() + Name.GetHashCode(StringComparison.OrdinalIgnoreCase);
-
-        /// <summary>
         /// Returns the comparison value of both <see cref="EnumerationType"/> objects.
         /// </summary>
         /// <param name="obj">The other object for comparison.</param>
         /// <returns>A boolean value.</returns>
         public override bool Equals(object? obj) => Equals(obj as EnumerationType);
+
+        /// <summary>
+        /// Returns the hash-code of the current type.
+        /// </summary>
+        /// <returns>hash-code.</returns>
+        public override int GetHashCode() => Value.GetHashCode() + Name.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Returns the <see cref="string"/> value matching the <see cref="Name"/>.

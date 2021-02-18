@@ -53,9 +53,6 @@ namespace Xpandables.Net.Http
 
         protected override async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream, JsonSerializerOptions? options = null)
         {
-            _ = stream ?? throw new ArgumentNullException(nameof(stream));
-            if (!stream.CanRead) throw new ArgumentException($"{nameof(stream)} doe snot support reading.");
-
             using var streamReader = new StreamReader(stream);
             using var jsonTextReader = new JsonTextReader(streamReader);
 

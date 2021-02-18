@@ -49,9 +49,6 @@ namespace Xpandables.Net
         /// <exception cref="InvalidOperationException">The encryption failed. See inner exception.</exception>
         public virtual async Task<ValueEncrypted> EncryptAsync(string value, ushort keySize)
         {
-            _ = value ?? throw new ArgumentNullException(nameof(value));
-            if (keySize == 0) throw new ArgumentException($"{nameof(keySize)} must be greater than zero and lower or equal to {ushort.MaxValue}");
-
             var key = StringGenerator.Generate(keySize);
             var salt = StringGenerator.GenerateSalt();
             return await EncryptAsync(value, key, salt).ConfigureAwait(false);
@@ -70,7 +67,6 @@ namespace Xpandables.Net
         /// <exception cref="InvalidOperationException">The encryption failed. See inner exception.</exception>
         public virtual async Task<ValueEncrypted> EncryptAsync(string value, string? key = default, string? salt = default)
         {
-            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
             key ??= StringGenerator.Generate(12);
             salt ??= StringGenerator.GenerateSalt();
 

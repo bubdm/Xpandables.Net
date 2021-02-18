@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net
@@ -33,6 +34,15 @@ namespace Xpandables.Net
     /// </summary>
     public static class TypeExtensions
     {
+        /// <summary>
+        /// Casts the target object to the expected type.
+        /// </summary>
+        /// <typeparam name="T">The type to be casted.</typeparam>
+        /// <param name="obj">The object to cast.</param>
+        /// <returns>The casted object to <typeparamref name="T"/> type.</returns>
+        public static T As<T>(this object obj)
+            where T : class => (T)obj;
+
         /// <summary>
         /// Returns the description string attribute of the current <see cref="Enum"/> value type.
         /// if not found, returns the value as string.
@@ -149,6 +159,40 @@ namespace Xpandables.Net
                                             || exception is FileNotFoundException
                                             || exception is FileLoadException
                                             || exception is BadImageFormatException)
+            {
+                loadedAssembly = default;
+                assemblyException = exception;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries to load assembly from its name.
+        /// </summary>
+        /// <param name="assemblyName">The full assembly name.</param>
+        /// <param name="loadedAssembly">The loaded assembly if succeeded.</param>
+        /// <param name="assemblyException">The handled exception during assembly loading.</param>
+        /// <returns>Returns <see langword="true"/> if loading OK and <see langword="false"/> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
+        public static bool TryLoadAssembly(
+            this string assemblyName,
+            [MaybeNullWhen(returnValue: false)] out Assembly loadedAssembly,
+            [MaybeNullWhen(returnValue: true)] out Exception assemblyException)
+        {
+            _ = assemblyName ?? throw new ArgumentNullException(nameof(assemblyName));
+
+            try
+            {
+                assemblyException = default;
+                loadedAssembly = Assembly.Load(assemblyName);
+                return true;
+            }
+            catch (Exception exception) when (exception is ArgumentException
+                                            || exception is FileNotFoundException
+                                            || exception is FileLoadException
+                                            || exception is BadImageFormatException
+                                            || exception is PathTooLongException
+                                            || exception is System.Security.SecurityException)
             {
                 loadedAssembly = default;
                 assemblyException = exception;
@@ -438,40 +482,6 @@ namespace Xpandables.Net
         }
 
         /// <summary>
-        /// Tries to load assembly from its name.
-        /// </summary>
-        /// <param name="assemblyName">The full assembly name.</param>
-        /// <param name="loadedAssembly">The loaded assembly if succeeded.</param>
-        /// <param name="assemblyException">The handled exception during assembly loading.</param>
-        /// <returns>Returns <see langword="true"/> if loading OK and <see langword="false"/> otherwise.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="assemblyName"/> is null.</exception>
-        public static bool TryLoadAssembly(
-            this string assemblyName,
-            [MaybeNullWhen(returnValue: false)] out Assembly loadedAssembly,
-            [MaybeNullWhen(returnValue: true)] out Exception assemblyException)
-        {
-            _ = assemblyName ?? throw new ArgumentNullException(nameof(assemblyName));
-
-            try
-            {
-                assemblyException = default;
-                loadedAssembly = Assembly.LoadFrom(assemblyName);
-                return true;
-            }
-            catch (Exception exception) when (exception is ArgumentException
-                                            || exception is FileNotFoundException
-                                            || exception is FileLoadException
-                                            || exception is BadImageFormatException
-                                            || exception is PathTooLongException
-                                            || exception is System.Security.SecurityException)
-            {
-                loadedAssembly = default;
-                assemblyException = exception;
-                return false;
-            }
-        }
-
-        /// <summary>
         /// Tries to get type from its string name.
         /// </summary>
         /// <param name="typeName">The name of the type to find.</param>
@@ -638,5 +648,38 @@ namespace Xpandables.Net
                 .GetCustomAttributes<TAttribute>(inherit: true)
                 .Any(predicate);
         }
+
+        /// <summary>
+        /// Conditionally performs a function on an object if the condition is <see langword="true"/>.
+        /// </summary>
+        /// <param name="obj">The target object.</param>
+        /// <param name="condition">The condition that should be <see langword="true"/> to apply the function.</param>
+        /// <param name="func">The delegate to be executed only if the condition is <see langword="true"/>.</param>
+        /// <typeparam name="T">The type of the target object.</typeparam>
+        /// <returns>The object modified by the function if condition is <see langword="true"/>, otherwise the original object.</returns>
+        public static T When<T>(this T obj, bool condition, Func<T, T> func) => condition ? func(obj) : obj;
+
+        /// <summary>
+        /// Conditionally performs an action on an object if the condition is <see langword="true"/>.
+        /// </summary>
+        /// <param name="obj">The target object.</param>
+        /// <param name="condition">The condition that should be <see langword="true"/> to apply the action.</param>
+        /// <param name="action">The delegate to be executed only if the condition is <see langword="true"/>.</param>
+        /// <typeparam name="T">The type of the target object.</typeparam>
+        /// <returns>The object modified by the function if condition is <see langword="true"/>, otherwise the original object.</returns>
+        public static T When<T>(this T obj, bool condition, Action<T> action)
+        {
+            if (condition)
+                action(obj);
+
+            return obj;
+        }
+
+        /// <summary>
+        /// Re-throws the current exception using <see cref="ExceptionDispatchInfo.Capture"/> method while preserving stack trace.
+        /// </summary>
+        /// <param name="exception">The exception to be re-thrown.</param>
+        /// <exception cref="ArgumentException">The <paramref name="exception"/> is null.</exception>
+        public static void ReThrow(this Exception exception) => ExceptionDispatchInfo.Capture(exception).Throw();
     }
 }

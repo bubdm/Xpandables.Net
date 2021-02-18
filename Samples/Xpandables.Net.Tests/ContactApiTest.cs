@@ -41,7 +41,7 @@ namespace Xpandables.Net.Tests
             if (!response.IsValid())
             {
                 Trace.WriteLine($"{response.StatusCode}");
-                return;
+                Assert.Fail();
             }
             else
             {
@@ -59,7 +59,6 @@ namespace Xpandables.Net.Tests
             if (!response.IsValid())
             {
                 Trace.WriteLine($"{response.StatusCode}");
-                return;
             }
             else
             {
@@ -81,7 +80,7 @@ namespace Xpandables.Net.Tests
             if (!response.IsValid())
             {
                 Trace.WriteLine($"{response.StatusCode}");
-                return;
+                Assert.Fail();
             }
             else
             {
@@ -99,7 +98,6 @@ namespace Xpandables.Net.Tests
             if (!response.IsValid())
             {
                 Trace.WriteLine($"{response.StatusCode}");
-                return;
             }
             else
             {
@@ -109,7 +107,6 @@ namespace Xpandables.Net.Tests
                 if (!delResponse.IsValid())
                 {
                     Trace.WriteLine($"{delResponse.StatusCode}");
-                    return;
                 }
                 else
                 {

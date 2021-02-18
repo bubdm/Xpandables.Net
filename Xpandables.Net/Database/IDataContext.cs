@@ -187,21 +187,6 @@ namespace Xpandables.Net.Database
         Task UpdateEntityAsync<T>(T updatedEntity, CancellationToken cancellationToken = default) where T : Entity;
 
         /// <summary>
-        /// Updates the domain objects matching the collection of entities.
-        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
-        /// you don't set will be left alone. If you have property you want to set to its default,
-        /// then you must explicitly set that property's value.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
-        /// <param name="updatedEntities">Contains the collection of updated values.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="updatedEntities"/> is null.</exception>
-        Task UpdateEntityRangeAsync<T, TUpdated>(IEnumerable<TUpdated> updatedEntities, CancellationToken cancellationToken = default)
-            where T : Entity
-            where TUpdated : Entity;
-
-        /// <summary>
         /// Updates the domain objects matching the predicate by using the updater.
         /// Only the columns corresponding to properties you set in the object will be updated -- any properties
         /// you don't set will be left alone. If you have property you want to set to its default,
@@ -217,6 +202,21 @@ namespace Xpandables.Net.Database
         Task UpdateEntityAsync<T, TUpdated>(Expression<Func<T, bool>> predicate, Func<T, TUpdated> updater, CancellationToken cancellationToken = default)
             where T : Entity
             where TUpdated : class;
+
+        /// <summary>
+        /// Updates the domain objects matching the collection of entities.
+        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
+        /// you don't set will be left alone. If you have property you want to set to its default,
+        /// then you must explicitly set that property's value.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
+        /// <param name="updatedEntities">Contains the collection of updated values.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="updatedEntities"/> is null.</exception>
+        Task UpdateEntityRangeAsync<T, TUpdated>(IEnumerable<TUpdated> updatedEntities, CancellationToken cancellationToken = default)
+            where T : Entity
+            where TUpdated : Entity;
 
         /// <summary>
         /// Persists all pending domain objects to the data storage.
@@ -373,20 +373,6 @@ namespace Xpandables.Net.Database
            => await DataContext.UpdateEntityAsync(updatedEntity, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
-        /// Updates the domain objects matching the collection of entities.
-        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
-        /// you don't set will be left alone. If you have property you want to set to its default,
-        /// then you must explicitly set that property's value.
-        /// </summary>
-        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
-        /// <param name="updatedEntities">Contains the collection of updated values.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="updatedEntities"/> is null.</exception>
-        public async Task UpdateEntityRangeAsync<TUpdated>(IEnumerable<TUpdated> updatedEntities, CancellationToken cancellationToken = default)
-            where TUpdated : Entity
-            => await DataContext.UpdateEntityRangeAsync<TEntity, TUpdated>(updatedEntities, cancellationToken).ConfigureAwait(false);
-
-        /// <summary>
         /// Updates the domain objects matching the predicate by using the updater.
         /// Only the columns corresponding to properties you set in the object will be updated -- any properties
         /// you don't set will be left alone. If you have property you want to set to its default,
@@ -401,5 +387,19 @@ namespace Xpandables.Net.Database
         public async Task UpdateEntityAsync<TUpdated>(Expression<Func<TEntity, bool>> predicate, Func<TEntity, TUpdated> updater, CancellationToken cancellationToken = default)
             where TUpdated : class
             => await DataContext.UpdateEntityAsync(predicate, updater, cancellationToken).ConfigureAwait(false);
+
+        /// <summary>
+        /// Updates the domain objects matching the collection of entities.
+        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
+        /// you don't set will be left alone. If you have property you want to set to its default,
+        /// then you must explicitly set that property's value.
+        /// </summary>
+        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
+        /// <param name="updatedEntities">Contains the collection of updated values.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="updatedEntities"/> is null.</exception>
+        public async Task UpdateEntityRangeAsync<TUpdated>(IEnumerable<TUpdated> updatedEntities, CancellationToken cancellationToken = default)
+            where TUpdated : Entity
+            => await DataContext.UpdateEntityRangeAsync<TEntity, TUpdated>(updatedEntities, cancellationToken).ConfigureAwait(false);
     }
 }

@@ -28,12 +28,35 @@ namespace Xpandables.Net.Dispatchers
     public interface IHandlerAccessor
     {
         /// <summary>
+        /// Returns the handler of the specified type.
+        /// </summary>
+        /// <param name="handlerType">An object that specifies the type of handler object to get.</param>
+        /// <returns>A handler of the <paramref name="handlerType"/> -or- null if there is no handler of <paramref name="handlerType"/>.</returns>
+        [return: MaybeNull]
+        object GetHandler(Type handlerType);
+
+        /// <summary>
         /// Returns the handler of the <typeparamref name="THandler"/> type.
         /// </summary>
         /// <typeparam name="THandler">The type of the handler to look for.</typeparam>
         /// <returns>A handler of the <typeparamref name="THandler"/> type -or- null if there is no <typeparamref name="THandler"/> type.</returns>
         [return: MaybeNull]
         public sealed THandler GetHandler<THandler>() where THandler : class => GetHandler(typeof(THandler)) as THandler;
+
+        /// <summary>
+        /// Returns all the handlers of the <typeparamref name="THandler"/> type.
+        /// </summary>
+        /// <typeparam name="THandler">The type of the handler to look for.</typeparam>
+        /// <returns>A collection of handlers of the <typeparamref name="THandler"/> type -or- empty collection if there is no <typeparamref name="THandler"/> type.</returns>
+        [return: MaybeNull]
+        public sealed IEnumerable<THandler> GetHandlers<THandler>() where THandler : class => GetHandlers(typeof(THandler)) as IEnumerable<THandler> ?? Enumerable.Empty<THandler>();
+
+        /// <summary>
+        /// Returns all the handlers of the specified type.
+        /// </summary>
+        /// <param name="handlerType">An object that specifies the type of handler object to get.</param>
+        /// <returns>A collection of handlers of the <paramref name="handlerType"/> -or- empty collection if there is no handler of <paramref name="handlerType"/>.</returns>
+        IEnumerable<object> GetHandlers(Type handlerType);
 
         /// <summary>
         /// Tries to returns the handler of the specified type.
@@ -84,14 +107,6 @@ namespace Xpandables.Net.Dispatchers
         }
 
         /// <summary>
-        /// Returns all the handlers of the <typeparamref name="THandler"/> type.
-        /// </summary>
-        /// <typeparam name="THandler">The type of the handler to look for.</typeparam>
-        /// <returns>A collection of handlers of the <typeparamref name="THandler"/> type -or- empty collection if there is no <typeparamref name="THandler"/> type.</returns>
-        [return: MaybeNull]
-        public sealed IEnumerable<THandler> GetHandlers<THandler>() where THandler : class => GetHandlers(typeof(THandler)) as IEnumerable<THandler> ?? Enumerable.Empty<THandler>();
-
-        /// <summary>
         /// Tries to returns all the handlers of the specified type.
         /// </summary>
         /// <param name="handlerType">The type of the handler.</param>
@@ -137,20 +152,5 @@ namespace Xpandables.Net.Dispatchers
             handlers = default;
             return false;
         }
-
-        /// <summary>
-        /// Returns the handler of the specified type.
-        /// </summary>
-        /// <param name="handlerType">An object that specifies the type of handler object to get.</param>
-        /// <returns>A handler of the <paramref name="handlerType"/> -or- null if there is no handler of <paramref name="handlerType"/>.</returns>
-        [return: MaybeNull]
-        object GetHandler(Type handlerType);
-
-        /// <summary>
-        /// Returns all the handlers of the specified type.
-        /// </summary>
-        /// <param name="handlerType">An object that specifies the type of handler object to get.</param>
-        /// <returns>A collection of handlers of the <paramref name="handlerType"/> -or- empty collection if there is no handler of <paramref name="handlerType"/>.</returns>
-        IEnumerable<object> GetHandlers(Type handlerType);
     }
 }

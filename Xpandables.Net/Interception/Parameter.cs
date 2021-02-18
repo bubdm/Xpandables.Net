@@ -134,9 +134,10 @@ namespace Xpandables.Net.Interception
             if (parameterInfo is null)
                 throw new ArgumentNullException(nameof(parameterInfo));
 
-            return parameterInfo.IsOut
-                ? PassingState.Out
-                : parameterInfo.ParameterType.IsByRef
+            if (parameterInfo.IsOut)
+                return PassingState.Out;
+
+            return parameterInfo.ParameterType.IsByRef
                     ? PassingState.Ref
                     : PassingState.In;
         }

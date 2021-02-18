@@ -75,7 +75,6 @@ namespace Xpandables.Net.Decorators.Correlations
                 }
                 catch (Exception exception)
                 {
-                    resultExist = false;
                     await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
                     throw;
                 }
