@@ -87,10 +87,12 @@ namespace Xpandables.Net.Database
 
                 entity.SetCreationDate(DateTime.UtcNow);
 
-                if (entity.Notifications.Count == 0) return;
+                if (e.Entry.Entity is not AggregateRoot aggregateRoot) return;
 
-                _notifications.AddRange(entity.Notifications);
-                entity.ClearNotifications();
+                if (aggregateRoot.Events.Count == 0) return;
+
+                _notifications.AddRange(aggregateRoot.Events);
+                aggregateRoot.ClearEvents();
             };
 
             ChangeTracker.StateChanged += (sender, e) =>
@@ -103,10 +105,11 @@ namespace Xpandables.Net.Database
                 if (entity.IsDeleted)
                     entity.SetDeleteDate(date);
 
-                if (entity.Notifications.Count == 0) return;
+                if (e.Entry.Entity is not AggregateRoot aggregateRoot) return;
+                if (aggregateRoot.Events.Count == 0) return;
 
-                _notifications.AddRange(entity.Notifications);
-                entity.ClearNotifications();
+                _notifications.AddRange(aggregateRoot.Events);
+                aggregateRoot.ClearEvents();
             };
         }
     }

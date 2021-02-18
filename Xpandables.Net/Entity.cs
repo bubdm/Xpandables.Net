@@ -74,13 +74,6 @@ namespace Xpandables.Net
         /// </summary>
         public DateTime? DeletedOn { get; protected set; }
 
-        internal readonly HashSet<IEvent> InternalNotifications = new();
-
-        /// <summary>
-        /// Gets the collection of notifications occurred.
-        /// </summary>
-        public IReadOnlyCollection<IEvent> Notifications => InternalNotifications;
-
         /// <summary>
         /// Marks the underlying instance as deactivated.
         /// </summary>
@@ -113,33 +106,6 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="dateTime">the deletion date.</param>
         internal void SetDeleteDate(DateTime dateTime) => DeletedOn = dateTime;
-
-        /// <summary>
-        /// Adds the specified notification to the entity collection of notifications.
-        /// </summary>
-        /// <param name="notification">The notification to be added.</param>
-        /// <exception cref=" ArgumentNullException">The <paramref name="notification"/> is null. </exception>
-        public void AddNotification(IEvent notification)
-        {
-            _ = notification ?? throw new ArgumentNullException(nameof(notification));
-            InternalNotifications.Add(notification);
-        }
-
-        /// <summary>
-        /// Removes the specified notification from the entity collection of notifications.
-        /// </summary>
-        /// <param name="notification">The notification to be removed.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
-        public void RemoveNotification(IEvent notification)
-        {
-            _ = notification ?? throw new ArgumentNullException(nameof(notification));
-            InternalNotifications.Remove(notification);
-        }
-
-        /// <summary>
-        /// Clears all notifications.
-        /// </summary>
-        public void ClearNotifications() => InternalNotifications.Clear();
 
         /// <summary>
         /// Returns the unique signature of string type for an instance.

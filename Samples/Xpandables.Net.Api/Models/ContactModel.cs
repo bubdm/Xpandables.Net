@@ -29,13 +29,13 @@ namespace Xpandables.Net.Api.Models
     public sealed record ContactModelCreatedIntegrationEvent(string Id) : IIntegrationEvent { public DateTime OccurredOn => DateTime.UtcNow; }
     public sealed record ContactModelUpdatedDomainEvent(string Id, string? Name) : IDomainEvent { public DateTime OccurredOn => DateTime.UtcNow; };
 
-    public sealed class ContactModel : Entity, IAggregateRoot
+    public sealed class ContactModel : AggregateRoot
     {
         public ContactModel(string name, string city, string address, string country)
         {
             Update(name, city, address, country);
-            AddNotification(new ContactModelCreatedDomainEvent(Id));
-            AddNotification(new ContactModelCreatedIntegrationEvent(Id));
+            AddEvent(new ContactModelCreatedDomainEvent(Id));
+            AddEvent(new ContactModelCreatedIntegrationEvent(Id));
         }
 
         [MemberNotNull(nameof(Name), nameof(City), nameof(Address), nameof(Country))]
@@ -52,7 +52,7 @@ namespace Xpandables.Net.Api.Models
             if (city is not null) UpdateCity(city);
             if (address is not null) UpdateAddress(address);
             if (country is not null) UpdateCountry(country);
-            AddNotification(new ContactModelUpdatedDomainEvent(Id, name));
+            AddEvent(new ContactModelUpdatedDomainEvent(Id, name));
         }
 
         [MemberNotNull(nameof(Name))]
