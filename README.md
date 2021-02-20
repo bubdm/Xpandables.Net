@@ -10,6 +10,7 @@ See [Samples](https://github.com/Francescolis/Xpandables.Net/tree/Net5.0/Samples
 
 ```cs
 // Entity is the domain object base implementation that provides with an identifier and a key generator for derived class.
+// You can use AggregateRoot if you're targeting DDD
 
 public sealed class ContactModel : Entity
 {
@@ -24,6 +25,7 @@ public sealed class ContactModel : Entity
         UpdateAddress(address);
         UpdateCountry(country);
     }
+
     public void Edit(string? name, string? city, string? address, string? country)
     {
         if (name is not null) UpdateName(name);
@@ -68,9 +70,10 @@ public sealed class ContactModel : Entity
 // actions because they are already included in the contracts, 
 // by implementing interfaces such as IPathStringLocationRequest, IFormUrlEncodedRequest,
 // IMultipartRequest...
-// RecordExpression{T} allows the derived class to be used for a where clause.
+// RecordExpression{T} allows the derived class to be used for a where clause (for record).
+// You can use QueryExpression{T} for class definition or define Specifications.
 
- [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = true, 
+ [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = false, 
     IsNullable = true, In = ParameterLocation.Path)]
  public sealed record Select([Required] string Id) :
     RecordExpression<ContactModel>, IQuery<Contact>, IPathStringLocationRequest, IInterceptorDecorator
@@ -90,13 +93,15 @@ public sealed class ContactModel : Entity
 
 ```cs
 
-// IValidation{T} defines method contracts used to validate a type-specific argument using a decorator.
-// The validator get called during the control flow before the handdler.
+// IValidator{T} defines method contracts used to validate a type-specific argument using a decorator.
+// The validator get called during the control flow before the handler.
 // If the validator returns a failed operation result, the execution will be interrupted
 // and the result of the validator will be returned.
+// We consider as best practice to handle common conditions without throwing exceptions
+// and to design classes so that exceptions can be avoided.
 
-public sealed class ContactValidators : 
-   IValidation<Select>, IValidation<Add>, IValidation<Delete>, IValidation<Edit>
+public sealed class ContactValidators : OperationExtended,
+   IValidator<Select>, IValidator<Add>, IValidator<Delete>, IValidator<Edit>
 {
     private readonly IEntityAccessor<ContactModel> _readEntityAccessor;
     public ContactValidators(IEntityAccessor<ContactModel> readEntityAccessor) 
@@ -108,10 +113,9 @@ public sealed class ContactValidators :
         if (await _readEntityAccessor
            .TryFindAsync(argument, cancellationToken)
            .ConfigureAwait(false) is null)
-            return new FailureOperationResult(
-               System.Net.HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
+            return NotFoundOperation(nameof(argument.Id), "Contact not found");
                
-        return new SuccessOperationResult();
+        return OkOperation();
     }
     
     ....
@@ -122,8 +126,7 @@ public sealed class ContactValidators :
         if(await _dataContext
            .TryFindAsync(argument, cancellationToken)
            .ConfigureAwait(false) is not { } contact)
-           return new FailureOperationResult(
-              System.Net.HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
+           return NotFoundOperation(nameof(argument.Id), "Contact not found");
 
         argument.Name = contact.Name;
         argument.City = contact.City;
@@ -140,7 +143,7 @@ public sealed class ContactValidators :
 
 ```cs
 
-public sealed class ContactHandlers :
+public sealed class ContactHandlers : OperationExtended,
    IAsyncQueryHandler<SelectAll, Contact>, IQueryHandler<Select, Contact>, ICommandHandler<Add, string>, 
    ICommandHandler<Delete>, ICommandHandler<Edit, Contact>
 {
@@ -151,7 +154,7 @@ public sealed class ContactHandlers :
 
     public async Task<IOperationResult<Contact>> HandleAsync(
        Select query, CancellationToken cancellationToken = default)
-        => new SuccessOperationResult<Contact>(
+        => OkOperation<Contact>(
                 await _entityAccessor
                  .FindAsync(query,
                   s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken));
@@ -165,7 +168,7 @@ public sealed class ContactHandlers :
        toEdit.Edit(command.Name, command.City, command.Address, command.Country);
 
        await _entityAccessor.UpdateAsync(toEdit, cancellationToken).ConfigureAwait(false);
-       return new SuccessOperationResult<Contact>(
+       return OkOperation<Contact>(
           new Contact(toEdit.Id, toEdit.Name, toEdit.City, toEdit.Address, toEdit.Country));
    }
 }
@@ -240,7 +243,7 @@ In your api startup class
 
 ```cs
 // AddXServiceExport(IConfiguration, Action{ExportServiceOptions}) adds and configures registration of services using 
-// the IAddServiceExport interface implementation found the target libraries according to the export options.
+// the IAddServiceExport interface implementation found in the target libraries according to the export options.
 // You can use configuration file to set up the libraries to be scanned.
 
 public class Startup
@@ -294,21 +297,21 @@ Suppose you want to add logging for the Add command ...
 
 [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
 public sealed record Add([Required] string Name, [Required] string City, [Required] string Address, [Required] string Country) :
-   RecordExpression<ContactModel>, ICommand<string>, IValidationDecorator, IPersistenceDecorator, IInterceptorDecorator
+   RecordExpression<ContactModel>, ICommand<string>, IValidatorDecorator, IPersistenceDecorator, IInterceptorDecorator
 {
     public override Expression<Func<ContactModel, bool>> GetExpression()
       => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
 }
 
-// The Add commnand handler
+// The Add command handler
 
-public sealed class AddHandler : ICommandHandler<Add, string>
+public sealed class AddHandler : OperationExtended, ICommandHandler<Add, string>
 {
     public async Task<IOperationResult<string>> HandleAsync(
        Add command, CancellationToken cancellationToken = default)
     {
         .....
-        return new SuccessOperationResult<string>(...);
+        return OkOperation<string>(...);
     }
 }
 
@@ -362,4 +365,15 @@ public sealed class CommandLoggingDecorator<TCommand, TResult> : ICommandHandler
 
 services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));
 
+// or you can implement the ILoggingHandler interface and use the registration as follow
+
+services.AddXHandlers(assemblyCollection, options=>
+    {
+        options.UseLoggingDecorator();
+    });
+
+// services.AddXHandlers will register all handlers (ICommandhandler{}, IQueryHandler{}) adding a decorator for each
+// handler, that will apply your implementation of ILoggingHandler for commands implementing ILoggingDecorator
+.
 ```
+
