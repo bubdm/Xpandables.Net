@@ -1,14 +1,13 @@
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Xpandables.Net.Api;
 using Xpandables.Net.Api.Handlers;
-using Xpandables.Net.Api.Services;
 using Xpandables.Net.Http;
 
 namespace Xpandables.Net.Tests

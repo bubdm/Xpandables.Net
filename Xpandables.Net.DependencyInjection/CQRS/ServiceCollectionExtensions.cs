@@ -622,7 +622,7 @@ namespace Xpandables.Net.DependencyInjection
             if (definedOptions.IsPersistenceEnabled)
             {
                 services.AddXPersistenceDecorator();
-            }     
+            }
 
             if (definedOptions.IsTransactionEnabled)
             {

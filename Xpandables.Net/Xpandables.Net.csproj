@@ -17,11 +17,11 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.3.11</Version>
-    <AssemblyVersion>5.3.11</AssemblyVersion>
-    <FileVersion>5.3.11</FileVersion>
-    <PackageVersion>5.3.11</PackageVersion>
-    <PackageReleaseNotes>Fix EventDispatcher call</PackageReleaseNotes>    
+    <Version>5.3.12</Version>
+    <AssemblyVersion>5.3.12</AssemblyVersion>
+    <FileVersion>5.3.12</FileVersion>
+    <PackageVersion>5.3.12</PackageVersion>
+    <PackageReleaseNotes>Fix IntegrationEventDispatcher call</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
