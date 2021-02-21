@@ -22,12 +22,12 @@ namespace Xpandables.Net
     /// <summary>
     /// Provides with <see cref="IOperationResult"/> extension methods.
     /// </summary>
-    public abstract class OperationExtended
+    public abstract class OperationResultBase
     {
         /// <summary>
-        /// Returns a new instance of <see cref="OperationExtended"/> class.
+        /// Returns a new instance of <see cref="OperationResultBase"/> class.
         /// </summary>
-        protected OperationExtended() { }
+        protected OperationResultBase() { }
 
         /// <summary>
         /// Returns a <see cref="SuccessOperationResult"/> with <see cref="HttpStatusCode.OK"/>.

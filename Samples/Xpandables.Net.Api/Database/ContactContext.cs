@@ -41,6 +41,7 @@ namespace Xpandables.Net.Api.Database
             modelBuilder.Entity<ContactModel>().HasKey(new string[] { nameof(ContactModel.Id) });
             modelBuilder.Entity<ContactModel>().HasIndex(new string[] { nameof(ContactModel.Id) }).IsUnique();
         }
+
         public DbSet<ContactModel> Contacts { get; set; } = default!;
     }
 }

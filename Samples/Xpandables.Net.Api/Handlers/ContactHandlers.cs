@@ -35,7 +35,7 @@ namespace Xpandables.Net.Api.Handlers
         }
     }
 
-    public sealed class ContactHandlers : OperationExtended,
+    public sealed class ContactHandlers : OperationResultBase,
         IAsyncQueryHandler<SelectAll, Contact>, IQueryHandler<Select, Contact>, ICommandHandler<Add, string>, ICommandHandler<Delete>, ICommandHandler<Edit, Contact>
     {
         private readonly IContactEntityAccessor _entityAccessor;

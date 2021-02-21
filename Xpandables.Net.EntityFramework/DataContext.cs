@@ -312,6 +312,9 @@ namespace Xpandables.Net.Database
 
             if (rethrowException is not null)
             {
+                if (rethrowException is InvalidOperationException)
+                    rethrowException.ReThrow();
+
                 throw new InvalidOperationException(
                     "Persistence operation failed. See inner exception.",
                     exception);

@@ -33,7 +33,7 @@ namespace Xpandables.Net
     /// This is an <see langword="abstract"/>class.
     /// </summary>
     [DebuggerDisplay("Id = {" + nameof(Id) + "}")]
-    public abstract class Entity : OperationExtended
+    public abstract class Entity : OperationResultBase
     {
         /// <summary>
         /// Initializes the Id key.

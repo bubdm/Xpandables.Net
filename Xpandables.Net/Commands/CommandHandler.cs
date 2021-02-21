@@ -25,7 +25,7 @@ namespace Xpandables.Net.Commands
     /// Represents a helper class that allows implementation of <see cref="ICommandHandler{TCommand}"/> interface.
     /// </summary>
     /// <typeparam name="TCommand">Type of command to act on.</typeparam>
-    public abstract class CommandHandler<TCommand> : OperationExtended, ICommandHandler<TCommand>
+    public abstract class CommandHandler<TCommand> : OperationResultBase, ICommandHandler<TCommand>
         where TCommand : class, ICommand
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace Xpandables.Net.Commands
     /// </summary>
     /// <typeparam name="TCommand">Type of command to act on.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public abstract class CommandHandler<TCommand, TResult> : OperationExtended, ICommandHandler<TCommand, TResult>
+    public abstract class CommandHandler<TCommand, TResult> : OperationResultBase, ICommandHandler<TCommand, TResult>
         where TCommand : class, ICommand<TResult>
     {
         /// <summary>

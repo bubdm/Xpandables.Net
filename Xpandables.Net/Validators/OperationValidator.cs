@@ -21,7 +21,7 @@ namespace Xpandables.Net.Validators
     /// Represents a helper class that allows implementation of the <see cref="IOperationValidator{TArgument}"/>.
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
-    public abstract class OperationValidator<TArgument> : OperationExtended, IOperationValidator<TArgument>
+    public abstract class OperationValidator<TArgument> : OperationResultBase, IOperationValidator<TArgument>
          where TArgument : notnull
     {
         /// <summary>
