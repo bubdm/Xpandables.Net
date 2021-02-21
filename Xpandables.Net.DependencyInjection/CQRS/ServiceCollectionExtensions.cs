@@ -622,13 +622,7 @@ namespace Xpandables.Net.DependencyInjection
             if (definedOptions.IsPersistenceEnabled)
             {
                 services.AddXPersistenceDecorator();
-            }
-
-            if (definedOptions.IsIntegrationEventEnabled is not null)
-            {
-                services.AddXIntegrationEventHandlers(assemblies);
-                services.AddXIntegrationEventDecorator(definedOptions.IsIntegrationEventEnabled);
-            }
+            }     
 
             if (definedOptions.IsTransactionEnabled)
             {
@@ -655,6 +649,12 @@ namespace Xpandables.Net.DependencyInjection
             if (definedOptions.IsLoggingEnabled)
             {
                 services.AddXLoggingDecorator();
+            }
+
+            if (definedOptions.IsIntegrationEventEnabled is not null)
+            {
+                services.AddXIntegrationEventHandlers(assemblies);
+                services.AddXIntegrationEventDecorator(definedOptions.IsIntegrationEventEnabled);
             }
 
             return services;
