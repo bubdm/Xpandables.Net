@@ -26,7 +26,7 @@ using Xpandables.Net.Dispatchers;
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
-    /// The domain event publisher.
+    /// The integration event publisher.
     /// </summary>
     public sealed class IntegrationEventPublisher : IIntegrationEventPublisher
     {
@@ -45,7 +45,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
         }
 
         /// <summary>
-        /// Publishes domain events from the data context.
+        /// Publishes integration events.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>

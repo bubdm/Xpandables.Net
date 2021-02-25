@@ -43,7 +43,7 @@ namespace Xpandables.Net.Database
         /// <summary>
         /// Contains all notifications (domain events and domain event notifications) from entities being tracked.
         /// </summary>
-        public IReadOnlyCollection<IEvent> Notifications => _notifications;
+        public IReadOnlyCollection<IEvent> Notifications { get { ChangeTracker.DetectChanges(); return _notifications; } }
 
         /// <summary>
         /// Returns an entity of the <typeparamref name="T"/> type specified by the selector.

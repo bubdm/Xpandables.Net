@@ -27,7 +27,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
     public interface IIntegrationEventPublisher
     {
         /// <summary>
-        /// Publishes integration events from the data context.
+        /// Publishes integration events.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>

@@ -29,7 +29,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
     public interface IIntegrationEventHandler : ICanHandle
     {
         /// <summary>
-        ///  Asynchronously handle the integration domain event.
+        ///  Asynchronously handle the integration event.
         /// </summary>
         /// <param name="integrationEvent">The event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

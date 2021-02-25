@@ -23,7 +23,7 @@ using Xpandables.Net.Events.DomainEvents;
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as an integration domain event.
+    /// Defines a marker interface to be used to mark an object to act as an integration event.
     /// This kind of events are published after <see cref="IDataContext.PersistAsync(System.Threading.CancellationToken)"/>
     /// completed and the entity change successfully saved to the database.
     /// </summary>
@@ -36,7 +36,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
     }
 
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as an integration domain event targeting an <see cref="IDomainEvent"/>.
+    /// Defines a marker interface to be used to mark an object to act as an integration event targeting an <see cref="IDomainEvent"/>.
     /// This kind of events are published after <see cref="IDataContext.PersistAsync(System.Threading.CancellationToken)"/>
     /// completed and the entity change successfully saved to the database.
     /// </summary>
