@@ -15,23 +15,24 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Xpandables.Net.Http
 {
     /// <summary>
-    /// Provides with a method to request IP Address Geo-location using a typed client HTTP Client.
+    /// This interface is used as a marker for request without result.
     /// </summary>
-    public interface IHttpIPAddressLocationAccessor
-    {
-        /// <summary>
-        /// Asynchronously gets the IPAddress Geo-location of the specified IPAddress request using http://api.ipstack.com.
-        /// </summary>
-        /// <param name="request">The request to act with.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(IPAddressLocationRequest request, CancellationToken cancellationToken = default);
-    }
+    public interface IHttpRestClientRequest { }
+
+    /// <summary>
+    /// This interface is used as a marker for request that contains a specific-type result.
+    /// </summary>
+    /// <typeparam name="TResponse">Type of the result of the query.</typeparam>
+    public interface IHttpRestClientRequest<TResponse> { }
+
+    /// <summary>
+    /// This interface is used as a marker for request when using the asynchronous query pattern that contains a <see cref="IAsyncEnumerable{TResult}"/> of specific-type result.
+    /// </summary>
+    /// <typeparam name="TResponse">Type of the result of the request.</typeparam>
+    public interface IHttpRestClientAsyncRequest<TResponse> { }
 }

@@ -19,19 +19,35 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Http
+namespace Xpandables.Net.Http.RequestLocations
 {
     /// <summary>
-    /// Provides with a method to request IP Address Geo-location using a typed client HTTP Client.
+    /// Default implementation for <see cref="IHttpIPAddressLocationAccessor"/>.
     /// </summary>
-    public interface IHttpIPAddressLocationAccessor
+    public sealed class HttpIPAddressLocationAccessor : IHttpIPAddressLocationAccessor
     {
+        private readonly IHttpRestClientHandler _httpRestClientHandler;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpIPAddressLocationAccessor"/> class that uses the http://api.ipstack.com to retrieve the user location.
+        /// </summary>
+        /// <param name="httpRestClientHandler">The target handler.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientHandler"/> is null.</exception>
+        public HttpIPAddressLocationAccessor(IHttpRestClientHandler httpRestClientHandler)
+        {
+            _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
+        }
+
         /// <summary>
         /// Asynchronously gets the IPAddress Geo-location of the specified IPAddress request using http://api.ipstack.com.
         /// </summary>
         /// <param name="request">The request to act with.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(IPAddressLocationRequest request, CancellationToken cancellationToken = default);
+        public async Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(IPAddressLocationRequest request, CancellationToken cancellationToken = default)
+        {
+            _ = request ?? throw new ArgumentNullException(nameof(request));
+            return await _httpRestClientHandler.HandleAsync(request, cancellationToken).ConfigureAwait(false);
+        }
     }
 }

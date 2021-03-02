@@ -76,7 +76,8 @@ public sealed class ContactModel : Entity
  [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = false, 
     IsNullable = true, In = ParameterLocation.Path)]
  public sealed record Select([Required] string Id) :
-    RecordExpression<ContactModel>, IQuery<Contact>, IPathStringLocationRequest, IInterceptorDecorator
+    RecordExpression<ContactModel>, IQuery<Contact>, IHttpRestClientRequest<Contact>,
+    IPathStringLocationRequest, IInterceptorDecorator
  {
      public override Expression<Func<ContactModel, bool>> GetExpression() 
         => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
@@ -100,7 +101,7 @@ public sealed class ContactModel : Entity
 // We consider as best practice to handle common conditions without throwing exceptions
 // and to design classes so that exceptions can be avoided.
 
-public sealed class ContactValidators : OperationExtended,
+public sealed class ContactValidators : OperationResultBase,
    IValidator<Select>, IValidator<Add>, IValidator<Delete>, IValidator<Edit>
 {
     private readonly IEntityAccessor<ContactModel> _readEntityAccessor;
@@ -143,7 +144,7 @@ public sealed class ContactValidators : OperationExtended,
 
 ```cs
 
-public sealed class ContactHandlers : OperationExtended,
+public sealed class ContactHandlers : OperationResultBase,
    IAsyncQueryHandler<SelectAll, Contact>, IQueryHandler<Select, Contact>, ICommandHandler<Add, string>, 
    ICommandHandler<Delete>, ICommandHandler<Edit, Contact>
 {
@@ -305,7 +306,7 @@ public sealed record Add([Required] string Name, [Required] string City, [Requir
 
 // The Add command handler
 
-public sealed class AddHandler : OperationExtended, ICommandHandler<Add, string>
+public sealed class AddHandler : OperationResultBase, ICommandHandler<Add, string>
 {
     public async Task<IOperationResult<string>> HandleAsync(
        Add command, CancellationToken cancellationToken = default)

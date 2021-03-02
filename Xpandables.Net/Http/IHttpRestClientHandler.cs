@@ -18,12 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Xpandables.Net.Commands;
-using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Http
 {
@@ -45,55 +41,33 @@ namespace Xpandables.Net.Http
         HttpClient HttpClient { get; }
 
         /// <summary>
-        /// Handles the query as asynchronous operation.
+        /// Handles the request that returns a collection that can be async-enumerated.
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
-        /// <param name="options">The JSON serializer options used to customize deserialization.</param>
+        /// <param name="request">The request to act with. The request must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(
-            IAsyncQuery<TResult> query,
-            JsonSerializerOptions? options = default,
-            CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
+        Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IHttpRestClientAsyncRequest<TResult> request, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Handles the command as asynchronous operation.
+        /// Handles the request that does not return a response.
         /// </summary>
-        /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="request">The request to act with. The request must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        Task<HttpRestClientResponse> HandleAsync(ICommand command, CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
+        Task<HttpRestClientResponse> HandleAsync(IHttpRestClientRequest request, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Handles the command as asynchronous operation.
+        /// Handles the request that returns a response of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="command">The command to act with. The command must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
-        /// <param name="options">The JSON serializer options used to customize deserialization.</param>
+        /// <param name="request">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(
-            ICommand<TResult> command,
-            JsonSerializerOptions? options = default,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Handles the query as asynchronous operation.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="query">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
-        /// <param name="options">The JSON serializer options used to customize deserialization.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(
-            IQuery<TResult> query,
-            JsonSerializerOptions? options = default,
-            CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
+        Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IHttpRestClientRequest<TResult> request, CancellationToken cancellationToken = default);
     }
 }

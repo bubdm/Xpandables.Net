@@ -17,13 +17,11 @@
 ************************************************************************************************************/
 using System.Net;
 
-using Xpandables.Net.Queries;
-
 namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Represents a query to request an <see cref="IPAddress"/>.
     /// </summary>
     [HttpRestClient(Path = "", IsNullable = true, IsSecured = false, Method = "Get")]
-    public sealed class IPAddressRequest : IQuery<string> { }
+    public sealed class IPAddressRequest : IHttpRestClientRequest<string> { }
 }

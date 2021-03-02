@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Xpandables.Net.Api;
 using Xpandables.Net.Api.Handlers;
 using Xpandables.Net.Http;
+using Xpandables.Net.Http.RequestBuilders;
+using Xpandables.Net.Http.ResponseBuilders;
 
 namespace Xpandables.Net.Tests
 {
@@ -22,7 +24,7 @@ namespace Xpandables.Net.Tests
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
             var factory = new WebApplicationFactory<Program>();
             var client = factory.CreateClient();
-            httpRestClientHandler = new HttpRestClientHandlerUsingNewtonsoft(client);
+            httpRestClientHandler = new HttpRestClientHandler(new HttpRestClientNewtonSoftAsyncEnumerableBuilder(), new HttpRestClientNewtonSoftRequestBuilder(), new HttpRestClientNewtonSoftResponseBuilder(), client);
         }
 
         [TestCleanup]

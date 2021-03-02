@@ -15,23 +15,24 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Http
 {
     /// <summary>
-    /// Provides with a method to request IP Address Geo-location using a typed client HTTP Client.
+    /// Provides with <see cref="IHttpRestClientHandler"/> async-enumerable response builder.
     /// </summary>
-    public interface IHttpIPAddressLocationAccessor
+    public interface IHttpRestClientAsyncEnumerableBuilder
     {
         /// <summary>
-        /// Asynchronously gets the IPAddress Geo-location of the specified IPAddress request using http://api.ipstack.com.
+        /// Returns an async-enumerable from stream used for asynchronous result.
         /// </summary>
-        /// <param name="request">The request to act with.</param>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="stream">The stream source to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(IPAddressLocationRequest request, CancellationToken cancellationToken = default);
+        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
+        IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(Stream stream, CancellationToken cancellationToken = default);
     }
 }

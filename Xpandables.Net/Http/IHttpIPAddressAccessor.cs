@@ -15,7 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,18 +24,12 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// Provides with a method to request IP address of the caller.
     /// </summary>
-    public interface IHttpIPAddressAccessor : IDisposable
+    public interface IHttpIPAddressAccessor
     {
-        internal IHttpRestClientHandler HttpRestClientHandler { get; }
-
         /// <summary>
         /// Asynchronously gets the IPAddress of the current caller.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        public virtual async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(CancellationToken cancellationToken = default)
-        {
-            var response = await HttpRestClientHandler.HandleAsync(new IPAddressRequest(), default, cancellationToken).ConfigureAwait(false);
-            return response.ConvertTo(IPAddress.TryParse(response.Result, out var ipAddress) ? ipAddress : IPAddress.None);
-        }
+        Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(CancellationToken cancellationToken = default);
     }
 }

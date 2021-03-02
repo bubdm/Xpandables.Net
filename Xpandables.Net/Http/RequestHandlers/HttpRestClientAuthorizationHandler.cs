@@ -21,7 +21,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Http
+namespace Xpandables.Net.Http.RequestHandlers
 {
     /// <summary>
     /// Provides with a handler that can be used with <see cref="HttpClient"/> to add header authorization value
@@ -51,7 +51,7 @@ namespace Xpandables.Net.Http
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
-            if (request.Headers.Authorization is not {Parameter: null} authorization)
+            if (request.Headers.Authorization is not { Parameter: null } authorization)
                 return base.SendAsync(request, cancellationToken);
 
             var token = _httpHeaderAccessor.ReadValue("Authorization") ?? throw new InvalidOperationException("Expected authorization not found.");

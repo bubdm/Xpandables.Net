@@ -20,14 +20,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 
-using Xpandables.Net.Queries;
-
 namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Represents a query to request IP Address Geo-location.
     /// </summary>
-    public class IPAddressLocationRequest : IQuery<IPAddressLocation>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
+    public class IPAddressLocationRequest : IHttpRestClientRequest<IPAddressLocation>, IQueryStringLocationRequest, IHttpRestClientAttributeProvider
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IPAddressLocationRequest"/> class with IP address to locate.

@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("Xpandables.Net.DependencyInjection, PublicKey=0024000004800000940000000602000000240000525341310004000001000100410b9f6b317bb83c59c2727a39ad3e0c3aff55cbfc6f1328e2a925ab2e85d44b1815b23cea3f22924ea4226a6b3318eb90d1f28234e0116be8b70c29a41849a93e1baa680deae7f56e8d75d352d6f3b8457746223adf8cc2085a2d1d8c3f7be439bc53f1a032cc696f75afa378e0e054f3eb325fb9a7898a31c612c21e9c3cb8")]
 
-namespace Xpandables.Net.Http
+namespace Xpandables.Net.Http.RequestLocations
 {
     /// <summary>
     /// Provides with a handler that is used with <see cref="HttpClient"/> to format IpLocation result before returning response.
@@ -56,36 +56,28 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// Default implementation for <see cref="IHttpIPAddressAccessor"/>.
     /// </summary>
-    public sealed class HttpIPAddressAccessor : Disposable, IHttpIPAddressAccessor
+    public sealed class HttpIPAddressAccessor : IHttpIPAddressAccessor
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
-        IHttpRestClientHandler IHttpIPAddressAccessor.HttpRestClientHandler => _httpRestClientHandler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpIPAddressAccessor"/> class that uses the https://ipinfo.io/ip to retrieve the user ip address.
+        /// Initializes a new instance of the <see cref="HttpIPAddressAccessor"/> class that uses the https://ipinfo.io/ip to retrieve the user IP address.
         /// </summary>
-        public HttpIPAddressAccessor(HttpClient httpClient)
+        /// <param name="httpRestClientHandler">The target handler.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientHandler"/> is null.</exception>
+        public HttpIPAddressAccessor(IHttpRestClientHandler httpRestClientHandler)
         {
-            _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            _httpRestClientHandler = new HttpRestClientHandler(httpClient);
+            _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
         }
 
-        private bool _isDisposed;
-
         /// <summary>
-        /// Disposes the <see cref="IHttpRestClientHandler"/> instance.
+        /// Asynchronously gets the IPAddress of the current caller.
         /// </summary>
-        /// <param name="disposing">Determine whether the dispose has already been called.</param>
-        protected override void Dispose(bool disposing)
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        public async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(CancellationToken cancellationToken = default)
         {
-            if (_isDisposed)
-                return;
-
-            if (disposing)
-                _httpRestClientHandler.Dispose();
-
-            _isDisposed = true;
-            base.Dispose(disposing);
+            var response = await _httpRestClientHandler.HandleAsync(new IPAddressRequest(), cancellationToken).ConfigureAwait(false);
+            return response.ConvertTo(IPAddress.TryParse(response.Result, out var ipAddress) ? ipAddress : IPAddress.None);
         }
     }
 }
