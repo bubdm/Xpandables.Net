@@ -15,19 +15,19 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Validators
+namespace Xpandables.Net
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of the <see cref="IOperationValidator{TArgument}"/>.
+    /// Represents a helper class that allows implementation of the <see cref="IOperationRule{TArgument}"/>.
     /// </summary>
-    /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
-    public abstract class OperationValidator<TArgument> : OperationResultBase, IOperationValidator<TArgument>
+    /// <typeparam name="TArgument">Type of the argument to be checked.</typeparam>
+    public abstract class OperationRule<TArgument> : OperationResultBase, IOperationRule<TArgument>
          where TArgument : notnull
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="OperationValidator{TArgument}"/> class that sets <see cref="Result"/> to <see cref="SuccessOperationResult"/>.
+        /// Initializes a new instance of <see cref="OperationRule{TArgument}"/> class that sets <see cref="Result"/> to <see cref="SuccessOperationResult"/>.
         /// </summary>
-        protected OperationValidator() => Result = new SuccessOperationResult();
+        protected OperationRule() => Result = new SuccessOperationResult();
 
         /// <summary>
         /// If <see cref="IsSatisfiedBy(TArgument)" /> is <see langword="false" />, the property should be a <see cref="FailureOperationResult" />.
@@ -35,10 +35,10 @@ namespace Xpandables.Net.Validators
         public IOperationResult Result { get; protected set; }
 
         /// <summary>
-        /// Returns a value that determines whether or not the argument is valid.
+        /// Returns a value that determines whether or not the instance is satisfied by the argument.
         /// </summary>
-        /// <param name="argument">The target argument to be validated.</param>
-        /// <returns><see langword="true" /> if the argument is valid; otherwise returns <see langword="false" />.</returns>
+        /// <param name="argument">The target argument to be checked.</param>
+        /// <returns><see langword="true"/> if the argument satisfies the instance; otherwise returns <see langword="false"/>.</returns>
         public abstract bool IsSatisfiedBy(TArgument argument);
     }
 }

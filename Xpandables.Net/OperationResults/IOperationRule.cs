@@ -15,20 +15,20 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Validators
+namespace Xpandables.Net
 {
     /// <summary>
-    /// Defines property and method contracts used to validate a type-specific argument.
+    /// Defines method contract used to determines whether the implementation class is satisfied by the argument of a type-specific.
     /// </summary>
-    /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
-    public interface IOperationValidator<in TArgument>
+    /// <typeparam name="TArgument">Type of the argument to be checked.</typeparam>
+    public interface IOperationRule<in TArgument>
         where TArgument : notnull
     {
         /// <summary>
-        /// Returns a value that determines whether or not the argument is valid.
+        /// Returns a value that determines whether or not the instance is satisfied by the argument.
         /// </summary>
-        /// <param name="argument">The target argument to be validated.</param>
-        /// <returns><see langword="true"/> if the argument is valid; otherwise returns <see langword="false"/>.</returns>
+        /// <param name="argument">The target argument to be checked.</param>
+        /// <returns><see langword="true"/> if the argument satisfies the instance; otherwise returns <see langword="false"/>.</returns>
         bool IsSatisfiedBy(TArgument argument);
 
         /// <summary>
