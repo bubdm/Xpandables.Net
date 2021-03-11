@@ -42,11 +42,11 @@ namespace Xpandables.Net.Api.Handlers
         public ContactHandlers(IContactEntityAccessor entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
 
         public IAsyncEnumerable<Contact> HandleAsync(SelectAll query, CancellationToken cancellationToken = default)
-            => _entityAccessor.SelectAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken);
+            => _entityAccessor.FetchAllAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken: cancellationToken);
 
         public async Task<IOperationResult<Contact>> HandleAsync(Select query, CancellationToken cancellationToken = default)
         {
-            var found = await _entityAccessor.TryFindAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken).ConfigureAwait(false);
+            var found = await _entityAccessor.TryFindAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken: cancellationToken).ConfigureAwait(false);
             return found is not null ? OkOperation(found) : NotFoundOperation<Contact>();
         }
 
@@ -60,7 +60,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult> HandleAsync(Delete command, CancellationToken cancellationToken = default)
         {
-            var toDelete = (await _entityAccessor.FindAsync(command, cancellationToken).ConfigureAwait(false))!;
+            var toDelete = (await _entityAccessor.TryFindAsync(command, cmd => cmd, cancellationToken: cancellationToken).ConfigureAwait(false))!;
             toDelete.Delete();
 
             await _entityAccessor.UpdateAsync(toDelete, cancellationToken).ConfigureAwait(false);
@@ -69,7 +69,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult<Contact>> HandleAsync(Edit command, CancellationToken cancellationToken = default)
         {
-            var toEdit = (await _entityAccessor.FindAsync(command, cancellationToken).ConfigureAwait(false))!;
+            var toEdit = (await _entityAccessor.TryFindAsync(command, cmd => cmd, cancellationToken: cancellationToken).ConfigureAwait(false))!;
             toEdit.Edit(command.Name, command.City, command.Address, command.Country);
 
             await _entityAccessor.UpdateAsync(toEdit, cancellationToken).ConfigureAwait(false);

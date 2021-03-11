@@ -46,107 +46,41 @@ namespace Xpandables.Net.Database
         public IReadOnlyCollection<IEvent> Notifications { get { ChangeTracker.DetectChanges(); return _notifications; } }
 
         /// <summary>
-        /// Returns an entity of the <typeparamref name="T"/> type specified by the selector.
+        /// Tries to return an entity of the <typeparamref name="TResult"/> type specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
-        /// The result is not tracked.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <typeparamref name="T"/> type or not.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        public virtual async Task<T?> TryFindAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken = default)
-            where T : Entity
-        {
-            _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return await selector(Set<T>()).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Returns an anonymous type of <typeparamref name="TResult"/> specified by the selector.
-        /// If not found, returns the <see langword="default"/> value of the type.
-        /// The result is not tracked.
+        /// The result is tracked by default. You can set the <paramref name="isTracked"/> to <see langword="false"/> to disable tracking.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
+        /// <param name="isTracked">Determines whether or not the entity result is tracked. The default value is <see langword="true"/>.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        public virtual async Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
-            where T : Entity
+        public virtual async Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, bool isTracked = true, CancellationToken cancellationToken = default)
+            where T : class
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return await selector(Set<T>()).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Returns an entity of the <typeparamref name="T"/> type specified by the selector.
-        /// The result is tracked.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <typeparamref name="T"/> type or not.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
-        public virtual async Task<T> FindAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken = default)
-            where T : Entity
-        {
-            _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return await selector(Set<T>()).AsTracking().FirstAsync(cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Returns an anonymous type of <typeparamref name="TResult"/> specified by the selector.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
-        /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
-        public virtual async Task<TResult> FindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
-            where T : Entity
-        {
-            _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return await selector(Set<T>()).FirstAsync(cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Returns an asynchronous enumerable of <typeparamref name="T"/> entities specified by the selector.
-        /// If no result found, returns an empty enumerable.
-        /// The result is not tracked.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A collection of <typeparamref name="T"/> that can be asynchronously enumerable.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        public IAsyncEnumerable<T> FindAllAsync<T>(Func<IQueryable<T>, IQueryable<T>> selector, CancellationToken cancellationToken = default)
-            where T : Entity
-        {
-            _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return selector(Set<T>()).AsNoTracking().AsAsyncEnumerable();
+            return await selector(Set<T>().AsTracking(isTracked ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Returns an asynchronous enumerable of <typeparamref name="TResult"/> anonymous type specified by the selector.
         /// If no result found, returns an empty enumerable.
-        /// The result is not tracked.
+        /// The result is not tracked by default. You can set the <paramref name="isTracked"/> to <see langword="true"/> to enable tracking.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
+        /// <param name="isTracked">Determines whether or not the entity result is tracked. The default value is <see langword="true"/>.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerable.</returns>
+        /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        public IAsyncEnumerable<TResult> FindAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
-            where T : Entity
+        public IAsyncEnumerable<TResult> FetchAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, bool isTracked = false, CancellationToken cancellationToken = default)
+            where T : class
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return selector(Set<T>().AsNoTracking()).AsAsyncEnumerable();
+            return selector(Set<T>().AsTracking(isTracked ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking)).AsAsyncEnumerable();
         }
 
         /// <summary>
@@ -157,7 +91,8 @@ namespace Xpandables.Net.Database
         /// <param name="entity">The domain object to be added and persisted.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null or empty.</exception>
-        public virtual async Task AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default) where T : Entity
+        public virtual async Task AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default)
+            where T : class
             => await Set<T>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
@@ -169,7 +104,7 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="entities" /> is null or empty.</exception>
         public virtual async Task AddEntityRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
-            where T : Entity
+            where T : class
         {
             var enumerable = entities as T[] ?? entities.ToArray();
             await AddRangeAsync(enumerable, cancellationToken).ConfigureAwait(false);
@@ -184,7 +119,7 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="deletedEntity"/> is null.</exception>
         public virtual async Task DeleteEntityAsync<T>(T deletedEntity, CancellationToken cancellationToken = default)
-            where T : Entity
+            where T : class
         {
             cancellationToken.ThrowIfCancellationRequested();
             Remove(deletedEntity);
@@ -200,7 +135,7 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate" /> is null.</exception>
         public virtual async Task DeleteEntityAsync<T>(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
-            where T : Entity
+            where T : class
         {
             foreach (var entity in Set<T>().Where(predicate))
             {
@@ -219,7 +154,7 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="updatedEntity"/> is null.</exception>
         public virtual async Task UpdateEntityAsync<T>(T updatedEntity, CancellationToken cancellationToken = default)
-            where T : Entity
+            where T : class
         {
             cancellationToken.ThrowIfCancellationRequested();
             Update(updatedEntity);
@@ -233,16 +168,13 @@ namespace Xpandables.Net.Database
         /// then you must explicitly set that property's value.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
         /// <param name="predicate">The predicate to be used to filter domain objects.</param>
         /// <param name="updater">The delegate to be used for updating domain objects.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="predicate" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="updater" /> is null.</exception>
-        public virtual async Task UpdateEntityAsync<T, TUpdated>(
-            Expression<Func<T, bool>> predicate, Func<T, TUpdated> updater, CancellationToken cancellationToken = default)
-            where T : Entity
-            where TUpdated : class
+        /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="updater"/> is null.</exception>
+        public virtual async Task UpdateEntityAsync<T>(Expression<Func<T, bool>> predicate, Func<T, T> updater, CancellationToken cancellationToken = default)
+            where T : class
         {
             foreach (var entity in Set<T>().Where(predicate))
             {
@@ -252,37 +184,6 @@ namespace Xpandables.Net.Database
             }
 
             await Task.CompletedTask.ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Updates the domain objects matching the collection of entities.
-        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
-        /// you don't set will be left alone. If you have property you want to set to its default,
-        /// then you must explicitly set that property's value.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <typeparam name="TUpdated">Type of the object that contains updated values.</typeparam>
-        /// <param name="updatedEntities">Contains the collection of updated values.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="updatedEntities" /> is null.</exception>
-        public virtual async Task UpdateEntityRangeAsync<T, TUpdated>(
-            IEnumerable<TUpdated> updatedEntities, CancellationToken cancellationToken = default)
-            where T : Entity
-            where TUpdated : Entity
-        {
-            var enumerable = updatedEntities as TUpdated[] ?? updatedEntities.ToArray();
-
-            foreach (var updatedEntity in enumerable)
-            {
-                if (await Set<T>().FirstOrDefaultAsync(e => e.Id == updatedEntity.Id, cancellationToken)
-                    .ConfigureAwait(false) is not { } entity)
-                {
-                    continue;
-                }
-
-                Entry(entity).CurrentValues.SetValues(updatedEntity);
-                Entry(entity).State = EntityState.Modified;
-            }
         }
 
         /// <summary>

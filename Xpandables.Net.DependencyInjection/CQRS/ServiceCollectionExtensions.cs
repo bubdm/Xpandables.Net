@@ -50,9 +50,9 @@ namespace Xpandables.Net.DependencyInjection
     public sealed class HandlerOptions
     {
         /// <summary>
-        /// Enables validation behavior to operations that are decorated with the <see cref="IValidatorDecorator"/>.
+        /// Enables validator behavior to operations that are decorated with the <see cref="IValidatorDecorator"/>.
         /// </summary>
-        public HandlerOptions UseValidationDecorator() => this.With(cq => cq.IsValidatorEnabled = true);
+        public HandlerOptions UseValidatorDecorator() => this.With(cq => cq.IsValidatorEnabled = true);
 
         /// <summary>
         /// Enables visitor behavior to operations that implement the <see cref="IVisitable{TVisitable}"/> interface.

@@ -62,7 +62,7 @@ namespace Xpandables.Net.Api
                 options.UseIntegrationEventDecorator();
                 options.UseLoggingDecorator();
                 options.UseDomainEventDecorator();
-                options.UseValidationDecorator();
+                options.UseValidatorDecorator();
             });
 
             services.AddXLoggingProvider<LoggingService>();

@@ -26,6 +26,7 @@ namespace Xpandables.Net
     {
         /// <summary>
         /// Initializes a new instance of <see cref="OperationRule{TArgument}"/> class that sets <see cref="Result"/> to <see cref="SuccessOperationResult"/>.
+        /// The default <see cref="Result"/> is <see cref="SuccessOperationResult"/>.
         /// </summary>
         protected OperationRule() => Result = new SuccessOperationResult();
 

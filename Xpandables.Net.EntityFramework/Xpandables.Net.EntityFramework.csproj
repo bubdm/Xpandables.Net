@@ -17,11 +17,11 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.3.14</Version>
-    <AssemblyVersion>5.3.14</AssemblyVersion>
-    <FileVersion>5.3.14</FileVersion>
-    <PackageVersion>5.3.14</PackageVersion>
-    <PackageReleaseNotes>Fix events detection call</PackageReleaseNotes>
+    <Version>5.4.0</Version>
+    <AssemblyVersion>5.4.0</AssemblyVersion>
+    <FileVersion>5.4.0</FileVersion>
+    <PackageVersion>5.4.0</PackageVersion>
+    <PackageReleaseNotes>Rewrite IDataContext</PackageReleaseNotes>
     <PackageId>Xpandables.Net.EntityFramework</PackageId>
     <PackageTags>IDataContext DataContextFactory IEntityAcessor.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
@@ -65,7 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.4" />
   </ItemGroup>
 
   <ItemGroup>

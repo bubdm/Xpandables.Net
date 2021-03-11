@@ -27,9 +27,10 @@ namespace Xpandables.Net.Database
 {
     public abstract partial class DataContext : DbContext
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "<Pending>")]
         private static readonly MethodInfo ConvertToStringMethodInfo =
         typeof(DataContext).GetMethod(nameof(ConvertEnumerationToString), BindingFlags.NonPublic | BindingFlags.Static)!;
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "<Pending>")]
         private static readonly MethodInfo ConvertToEnumerationMethodInfo =
             typeof(DataContext).GetMethod(nameof(ConvertStringToEnumeration), BindingFlags.NonPublic | BindingFlags.Static)!;
 
