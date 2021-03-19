@@ -76,7 +76,7 @@ namespace Xpandables.Net.Http.RequestLocations
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         public async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(CancellationToken cancellationToken = default)
         {
-            var response = await _httpRestClientHandler.HandleAsync(new IPAddressRequest(), cancellationToken).ConfigureAwait(false);
+            var response = await _httpRestClientHandler.SendAsync(new IPAddressRequest(), cancellationToken).ConfigureAwait(false);
             return response.ConvertTo(IPAddress.TryParse(response.Result, out var ipAddress) ? ipAddress : IPAddress.None);
         }
     }

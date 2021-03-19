@@ -21,6 +21,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Http
@@ -72,5 +73,14 @@ namespace Xpandables.Net.Http
         /// <exception cref="ArgumentNullException">The <paramref name="stream"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception>
         Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream);
+
+        /// <summary>
+        /// Returns an async-enumerable from stream used for asynchronous result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="stream">The stream source to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
+        IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(Stream stream, CancellationToken cancellationToken = default);
     }
 }

@@ -41,7 +41,7 @@ namespace Xpandables.Net.Http
         HttpClient HttpClient { get; }
 
         /// <summary>
-        /// Handles the request that returns a collection that can be async-enumerated.
+        /// Sends the request that returns a collection that can be async-enumerated.
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
@@ -49,25 +49,25 @@ namespace Xpandables.Net.Http
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IHttpRestClientAsyncRequest<TResult> request, CancellationToken cancellationToken = default);
+        Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> SendAsync<TResult>(IHttpRestClientAsyncRequest<TResult> request, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Handles the request that does not return a response.
+        /// Sends the request that does not return a response.
         /// </summary>
         /// <param name="request">The request to act with. The request must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse> HandleAsync(IHttpRestClientRequest request, CancellationToken cancellationToken = default);
+        Task<HttpRestClientResponse> SendAsync(IHttpRestClientRequest request, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Handles the request that returns a response of <typeparamref name="TResult"/> type.
+        /// Sends the request that returns a response of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="request">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IHttpRestClientRequest<TResult> request, CancellationToken cancellationToken = default);
+        Task<HttpRestClientResponse<TResult>> SendAsync<TResult>(IHttpRestClientRequest<TResult> request, CancellationToken cancellationToken = default);
     }
 }

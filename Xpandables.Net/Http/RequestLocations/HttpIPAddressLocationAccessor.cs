@@ -47,7 +47,7 @@ namespace Xpandables.Net.Http.RequestLocations
         public async Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(IPAddressLocationRequest request, CancellationToken cancellationToken = default)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
-            return await _httpRestClientHandler.HandleAsync(request, cancellationToken).ConfigureAwait(false);
+            return await _httpRestClientHandler.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
     }
 }

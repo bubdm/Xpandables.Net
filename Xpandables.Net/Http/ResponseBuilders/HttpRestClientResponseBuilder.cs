@@ -16,14 +16,16 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Http.ResponseBuilders
@@ -46,9 +48,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
             var result = await JsonSerializer.DeserializeAsync<TResult>(
                    stream, new JsonSerializerOptions { AllowTrailingCommas = false, WriteIndented = false, PropertyNameCaseInsensitive = true })
                    .ConfigureAwait(false);
-#nullable disable
-            return result;
-#nullable enable
+            return result!;
         }
 
         /// <summary>
@@ -182,5 +182,49 @@ namespace Xpandables.Net.Http.ResponseBuilders
                     },
                     resultSelector: nvc => nvc
                     );
+
+        /// <summary>
+        /// Returns an async-enumerable from stream used for asynchronous result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="stream">The stream source to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>An enumerator of <typeparamref name="TResult" /> that can be asynchronously enumerated.</returns>
+        public virtual async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(Stream stream, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            using var blockingCollection = new BlockingCollection<TResult>();
+            await using var iterator = new AsyncEnumerable<TResult>(blockingCollection.GetConsumingEnumerable(cancellationToken)).GetAsyncEnumerator(cancellationToken);
+
+            var enumerateStreamElementToBlockingCollectionThread = new Thread(() => EnumerateStreamElementToBlockingCollection(stream, blockingCollection, cancellationToken));
+            enumerateStreamElementToBlockingCollectionThread.Start();
+
+            while (await iterator.MoveNextAsync().ConfigureAwait(false))
+                yield return iterator.Current;
+        }
+
+        /// <summary>
+        /// Enumerates the stream content to the blocking collection used to return <see cref="IAsyncEnumerable{T}"/>.
+        /// the method makes use of <see cref="Utf8JsonStreamReader"/>.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the collection item.</typeparam>
+        /// <param name="stream">The target stream.</param>
+        /// <param name="resultCollection">The collection result.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        private static void EnumerateStreamElementToBlockingCollection<TResult>(Stream stream, BlockingCollection<TResult> resultCollection, CancellationToken cancellationToken)
+        {
+            using var jsonStreamReader = new Utf8JsonStreamReader(stream, 32 * 1024);
+
+            jsonStreamReader.Read();
+            while (jsonStreamReader.Read())
+            {
+                if (cancellationToken.IsCancellationRequested) break;
+                if (jsonStreamReader.TokenType != JsonTokenType.StartObject)
+                    continue;
+                if (jsonStreamReader.Deserialise<TResult>(new JsonSerializerOptions { AllowTrailingCommas = false, WriteIndented = false, PropertyNameCaseInsensitive = true }) is { } result)
+                    resultCollection.Add(result, cancellationToken);
+            }
+
+            resultCollection.CompleteAdding();
+        }
     }
 }

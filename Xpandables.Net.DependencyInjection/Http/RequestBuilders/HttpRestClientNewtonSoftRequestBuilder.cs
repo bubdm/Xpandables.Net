@@ -27,7 +27,7 @@ namespace Xpandables.Net.Http.RequestBuilders
     /// <summary>
     /// The <see cref="HttpRequestMessage"/> builder using NewtonSoft.
     /// </summary>
-    public class HttpRestClientNewtonSoftRequestBuilder : HttpRestClientRequestBuilder
+    public class HttpRestClientNewtonsoftRequestBuilder : HttpRestClientRequestBuilder
     {
         /// <summary>
         /// Returns the source as stream content using <see cref="M:Xpandables.Net.Http.IStreamRequest.GetStreamContent" /> if available, if not use the hole source.

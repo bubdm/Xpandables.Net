@@ -31,6 +31,11 @@ namespace Xpandables.Net.Database
         where TEntity : Entity
     {
         /// <summary>
+        /// The data context instance.
+        /// </summary>
+        IDataContext<TEntity> DataContext { get; }
+
+        /// <summary>
         /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria and is tracked for changes.
         /// If not found, returns the <see langword="default"/> value of the type.
         /// </summary>

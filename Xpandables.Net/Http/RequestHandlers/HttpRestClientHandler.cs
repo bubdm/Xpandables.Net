@@ -21,7 +21,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Http
+namespace Xpandables.Net.Http.RequestHandlers
 {
     /// <summary>
     /// This helper class allows the application author to implement the <see cref="IHttpRestClientHandler"/> interface.
@@ -29,7 +29,6 @@ namespace Xpandables.Net.Http
     /// </summary>
     public sealed class HttpRestClientHandler : Disposable, IHttpRestClientHandler
     {
-        private readonly IHttpRestClientAsyncEnumerableBuilder _httpRestClientAsyncEnumerableBuilder;
         private readonly IHttpRestClientRequestBuilder _httpRestClientRequestBuilder;
         private readonly IHttpRestClientResponseBuilder _httpRestClientResponseBuilder;
 
@@ -41,28 +40,24 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpRestClientHandler"/> class with the HTTP typed client.
         /// </summary>
-        /// <param name="httpRestClientAsyncEnumerableBuilder">The async-enumerable builder.</param>
         /// <param name="httpRestClientRequestBuilder">The request builder.</param>
         /// <param name="httpRestClientResponseBuilder">The response builder.</param>
         /// <param name="httpClient">The HTTP client type to be used.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientAsyncEnumerableBuilder"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientRequestBuilder"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientResponseBuilder"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="httpClient"/> is null.</exception>
         public HttpRestClientHandler(
-            IHttpRestClientAsyncEnumerableBuilder httpRestClientAsyncEnumerableBuilder,
             IHttpRestClientRequestBuilder httpRestClientRequestBuilder,
             IHttpRestClientResponseBuilder httpRestClientResponseBuilder,
             HttpClient httpClient)
         {
-            _httpRestClientAsyncEnumerableBuilder = httpRestClientAsyncEnumerableBuilder ?? throw new ArgumentNullException(nameof(httpRestClientAsyncEnumerableBuilder));
             _httpRestClientRequestBuilder = httpRestClientRequestBuilder ?? throw new ArgumentNullException(nameof(httpRestClientRequestBuilder));
             _httpRestClientResponseBuilder = httpRestClientResponseBuilder ?? throw new ArgumentNullException(nameof(httpRestClientResponseBuilder));
             HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
-        /// Handles the request that returns a collection that can be async-enumerated.
+        /// Sends the request that returns a collection that can be async-enumerated.
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
@@ -70,7 +65,7 @@ namespace Xpandables.Net.Http
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> HandleAsync<TResult>(IHttpRestClientAsyncRequest<TResult> request, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> SendAsync<TResult>(IHttpRestClientAsyncRequest<TResult> request, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -83,7 +78,7 @@ namespace Xpandables.Net.Http
                 {
                     return await _httpRestClientResponseBuilder.WriteSuccessAsyncEnumerableResponseAsync(
                         response,
-                        stream => _httpRestClientAsyncEnumerableBuilder.AsyncEnumerableBuilderFromStreamAsync<TResult>(stream, cancellationToken)).ConfigureAwait(false);
+                        stream => _httpRestClientResponseBuilder.AsyncEnumerableBuilderFromStreamAsync<TResult>(stream, cancellationToken)).ConfigureAwait(false);
                 }
 
                 return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)await _httpRestClientResponseBuilder.WriteBadResultResponseAsync(
@@ -102,13 +97,13 @@ namespace Xpandables.Net.Http
         }
 
         /// <summary>
-        /// Handles the request that does not return a response.
+        /// Sends the request that does not return a response.
         /// </summary>
         /// <param name="request">The request to act with. The request must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        public async Task<HttpRestClientResponse> HandleAsync(IHttpRestClientRequest request, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse> SendAsync(IHttpRestClientRequest request, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -138,14 +133,14 @@ namespace Xpandables.Net.Http
         }
 
         /// <summary>
-        /// Handles the request that returns a response of <typeparamref name="TResult"/> type.
+        /// Sends the request that returns a response of <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="request">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        public async Task<HttpRestClientResponse<TResult>> HandleAsync<TResult>(IHttpRestClientRequest<TResult> request, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse<TResult>> SendAsync<TResult>(IHttpRestClientRequest<TResult> request, CancellationToken cancellationToken = default)
         {
             try
             {

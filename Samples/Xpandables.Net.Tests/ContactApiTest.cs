@@ -10,6 +10,7 @@ using Xpandables.Net.Api;
 using Xpandables.Net.Api.Handlers;
 using Xpandables.Net.Http;
 using Xpandables.Net.Http.RequestBuilders;
+using Xpandables.Net.Http.RequestHandlers;
 using Xpandables.Net.Http.ResponseBuilders;
 
 namespace Xpandables.Net.Tests
@@ -24,7 +25,7 @@ namespace Xpandables.Net.Tests
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
             var factory = new WebApplicationFactory<Program>();
             var client = factory.CreateClient();
-            httpRestClientHandler = new HttpRestClientHandler(new HttpRestClientNewtonSoftAsyncEnumerableBuilder(), new HttpRestClientNewtonSoftRequestBuilder(), new HttpRestClientNewtonSoftResponseBuilder(), client);
+            httpRestClientHandler = new HttpRestClientHandler(new HttpRestClientNewtonsoftRequestBuilder(), new HttpRestClientNewtonsoftResponseBuilder(), client);
         }
 
         [TestCleanup]
@@ -37,7 +38,7 @@ namespace Xpandables.Net.Tests
         public async Task SelectAllTest()
         {
             var selectAll = new SelectAll();
-            using var response = await httpRestClientHandler.HandleAsync(selectAll).ConfigureAwait(false);
+            using var response = await httpRestClientHandler.SendAsync(selectAll).ConfigureAwait(false);
 
             if (!response.IsValid())
             {
@@ -55,7 +56,7 @@ namespace Xpandables.Net.Tests
         public async Task AddTest()
         {
             var add = new Add("My New Name", "My New City", "My new Address", "My new Country");
-            using var response = await httpRestClientHandler.HandleAsync(add).ConfigureAwait(false);
+            using var response = await httpRestClientHandler.SendAsync(add).ConfigureAwait(false);
 
             if (!response.IsValid())
             {
@@ -64,7 +65,7 @@ namespace Xpandables.Net.Tests
             else
             {
                 var select = new Select(response.Result);
-                using var selectResponse = await httpRestClientHandler.HandleAsync(select).ConfigureAwait(false);
+                using var selectResponse = await httpRestClientHandler.SendAsync(select).ConfigureAwait(false);
                 var contact = selectResponse.Result!;
                 Trace.WriteLine($"{contact.Id} {contact.Name} {contact.City} {contact.Address} {contact.Country}");
 
@@ -76,7 +77,7 @@ namespace Xpandables.Net.Tests
         public async Task GetIpTest()
         {
             var getIp = new GetIp("216.58.204.100");
-            using var response = await httpRestClientHandler.HandleAsync(getIp).ConfigureAwait(false);
+            using var response = await httpRestClientHandler.SendAsync(getIp).ConfigureAwait(false);
 
             if (!response.IsValid())
             {
@@ -94,7 +95,7 @@ namespace Xpandables.Net.Tests
         public async Task DeleteTest()
         {
             var selectAll = new SelectAll();
-            using var response = await httpRestClientHandler.HandleAsync(selectAll).ConfigureAwait(false);
+            using var response = await httpRestClientHandler.SendAsync(selectAll).ConfigureAwait(false);
 
             if (!response.IsValid())
             {
@@ -104,7 +105,7 @@ namespace Xpandables.Net.Tests
             {
                 var toDelete = await response.Result.FirstAsync().ConfigureAwait(false);
                 var delete = new Delete(toDelete.Id);
-                using var delResponse = await httpRestClientHandler.HandleAsync(delete).ConfigureAwait(false);
+                using var delResponse = await httpRestClientHandler.SendAsync(delete).ConfigureAwait(false);
                 if (!delResponse.IsValid())
                 {
                     Trace.WriteLine($"{delResponse.StatusCode}");
