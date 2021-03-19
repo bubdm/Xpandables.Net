@@ -17,11 +17,11 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.4.1</Version>
-    <AssemblyVersion>5.4.1</AssemblyVersion>
-    <FileVersion>5.4.1</FileVersion>
-    <PackageVersion>5.4.1</PackageVersion>
-    <PackageReleaseNotes>Rewrite IDataContext</PackageReleaseNotes>
+    <Version>5.4.2</Version>
+    <AssemblyVersion>5.4.2</AssemblyVersion>
+    <FileVersion>5.4.2</FileVersion>
+    <PackageVersion>5.4.2</PackageVersion>
+    <PackageReleaseNotes>Add DbSet to IEntityAccessor</PackageReleaseNotes>
     <PackageId>Xpandables.Net.EntityFramework</PackageId>
     <PackageTags>IDataContext DataContextFactory IEntityAcessor.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
