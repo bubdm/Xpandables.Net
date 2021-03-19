@@ -38,11 +38,26 @@ namespace Xpandables.Net.Database
         /// <param name="dataContext">The target instance of db context.</param>
         /// <returns>An instance of <see cref="DbSet{TEntity}"/> for the specific type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public static DbSet<TEntity> SetOf<TEntity>(this IDataContext dataContext)
-            where TEntity : Entity
+        public static DbSet<TEntity> Set<TEntity>(this IDataContext dataContext)
+            where TEntity : class
         {
             _ = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             return (DbSet<TEntity>)dataContext.InternalDbSet<TEntity>();
+        }
+
+        /// <summary>
+        /// Represents a <see cref="DbSet{TEntity}"/> that can be used to query and save instances of <typeparamref name="TEntity"/>.
+        /// LINQ queries against a <see cref="DbSet{TEntity}"/> will be translated into queries against the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of entity being operated on by this set.</typeparam>
+        /// <param name="entityAccessor">the target instance of entity accessor.</param>
+        /// <returns>An instance of <see cref="DbSet{TEntity}"/> for the specific type.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="entityAccessor"/> is null.</exception>
+        public static DbSet<TEntity> Set<TEntity>(this IEntityAccessor<TEntity> entityAccessor)
+            where TEntity : class
+        {
+            _ = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
+            return (DbSet<TEntity>)entityAccessor.DataContext.InternalDbSet<TEntity>();
         }
 
         /// <summary>

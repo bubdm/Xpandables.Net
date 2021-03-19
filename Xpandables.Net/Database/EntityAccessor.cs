@@ -32,7 +32,7 @@ namespace Xpandables.Net.Database
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
     public class EntityAccessor<TEntity> : IEntityAccessor<TEntity>
-        where TEntity : Entity
+        where TEntity : class
     {
         private bool _disposedValue;
 
