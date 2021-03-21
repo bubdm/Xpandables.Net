@@ -17,12 +17,12 @@
 ************************************************************************************************************/
 using System;
 
-namespace Xpandables.Net.OperationResults
+namespace Xpandables.Net
 {
     /// <summary>
     /// Provides with properties that uniquely identify a control flow process.
     /// </summary>
-    public interface IOperationResultContextAccessor
+    public interface IOperationResultCorrelationContext
     {
         /// <summary>
         /// Gets the user identifier for the operation context.

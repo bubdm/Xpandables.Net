@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-using Xpandables.Net.Decorators;
 using Xpandables.Net.Logging;
 using Xpandables.Net.Queries;
 
@@ -64,6 +63,7 @@ namespace Xpandables.Net.Decorators.Logging
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
             _handlerLogger.OnEntry(new(_decoratee, query, default, default));
+            Exception? handledException = default;
 
             await using var asyncEnumerator = _decoratee.HandleAsync(query, cancellationToken).GetAsyncEnumerator(cancellationToken);
             for (var resultExist = true; resultExist;)
@@ -75,12 +75,13 @@ namespace Xpandables.Net.Decorators.Logging
                 catch (Exception exception)
                 {
                     resultExist = false;
+                    handledException = exception;
                     _handlerLogger.OnException(new(_decoratee, query, default, exception));
                     throw;
                 }
                 finally
                 {
-                    _handlerLogger.OnExit(new(_decoratee, query, default, default));
+                    _handlerLogger.OnExit(new(_decoratee, query, default, handledException));
                 }
 
                 if (resultExist)

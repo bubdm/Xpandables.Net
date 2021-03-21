@@ -20,7 +20,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
-using Xpandables.Net.Decorators;
 using Xpandables.Net.Logging;
 
 namespace Xpandables.Net.Decorators.Logging
@@ -60,21 +59,24 @@ namespace Xpandables.Net.Decorators.Logging
         public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             _handlerLogger.OnEntry(new(_decoratee, command, default, default));
+            IOperationResult? result = default;
+            Exception? handledException = default;
 
             try
             {
-                var result = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                result = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
                 _handlerLogger.OnSuccess(new(_decoratee, command, result, default));
                 return result;
             }
             catch (Exception exception)
             {
+                handledException = exception;
                 _handlerLogger.OnException(new(_decoratee, command, default, exception));
                 throw;
             }
             finally
             {
-                _handlerLogger.OnExit(new(_decoratee, command, default, default));
+                _handlerLogger.OnExit(new(_decoratee, command, result, handledException));
             }
         }
     }
@@ -115,21 +117,24 @@ namespace Xpandables.Net.Decorators.Logging
         public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             _handlerLogger.OnEntry(new(_decoratee, command, default, default));
+            IOperationResult<TResult>? result = default;
+            Exception? handledException = default;
 
             try
             {
-                var result = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                result = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
                 _handlerLogger.OnSuccess(new(_decoratee, command, result, default));
                 return result;
             }
             catch (Exception exception)
             {
+                handledException = exception;
                 _handlerLogger.OnException(new(_decoratee, command, default, exception));
                 throw;
             }
             finally
             {
-                _handlerLogger.OnExit(new(_decoratee, command, default, default));
+                _handlerLogger.OnExit(new(_decoratee, command, result, handledException));
             }
         }
     }

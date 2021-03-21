@@ -34,8 +34,10 @@ using Xpandables.Net.Decorators.Transactions;
 using Xpandables.Net.Decorators.Validators;
 using Xpandables.Net.Decorators.Visitors;
 using Xpandables.Net.Dispatchers;
+using Xpandables.Net.Events;
 using Xpandables.Net.Events.DomainEvents;
 using Xpandables.Net.Events.IntegrationEvents;
+using Xpandables.Net.Handlers;
 using Xpandables.Net.Logging;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
@@ -203,7 +205,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the default <see cref="IDispatcher"/> and <see cref="IHandlerAccessor"/> implementations to the services with scoped life time.
+        /// Adds the default <see cref="IDispatcher"/> implementations to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -211,26 +213,33 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IHandlerAccessor, HandlerAccessor>();
             services.AddScoped<IDispatcher, Dispatcher>();
             return services;
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TDispatcher"/> <typeparamref name="THandlerAccessor"/> types to the services with scoped life time.
+        /// Adds the default <see cref="IEventPublisher"/> implementations to the services with scoped life time.
         /// </summary>
-        /// <typeparam name="TDispatcher">The dispatcher type implementation.</typeparam>
-        /// <typeparam name="THandlerAccessor">The handler provider.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDispatcher<TDispatcher, THandlerAccessor>(this IServiceCollection services)
-            where TDispatcher : class, IDispatcher
-            where THandlerAccessor : class, IHandlerAccessor
+        public static IServiceCollection AddXEventPublisher(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IHandlerAccessor, THandlerAccessor>();
-            services.AddScoped<IDispatcher, TDispatcher>();
+            services.AddScoped<IEventPublisher, EventPublisher>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IHandlerAccessor"/> implementations to the services with scoped life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXHandlerAccessor(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<IHandlerAccessor, HandlerAccessor>();
             return services;
         }
 

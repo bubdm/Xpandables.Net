@@ -21,13 +21,11 @@ using System.ComponentModel.DataAnnotations;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// Contains properties for a token. This record can be extended using covariant return type.
-    /// <para>Returns a new instance of <see cref="Xpandables.Net.ValueToken"/> with its properties.</para>
+    /// Contains properties for a refresh token.
+    /// <para>Returns a new instance of <see cref="Xpandables.Net.RefreshToken"/> with its properties.</para>
     /// </summary>
-    /// <param name="Value">The value of the token string.</param>
-    /// <param name="Type">The type of the token.</param>
+    /// <param name="Value">The value of the refresh token.</param>
     /// <param name="Expiry">The token expiry date.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="Value"/> is null.</exception>
-    /// <exception cref="ArgumentNullException">The <paramref name="Type"/> is null.</exception>
-    public record ValueToken([Required, DataType(DataType.Text)] string Value, [Required, DataType(DataType.Text)] string Type, [Required, DataType(DataType.DateTime)] DateTime Expiry);
+    public sealed record RefreshToken([Required, DataType(DataType.Text)] string Value, [Required, DataType(DataType.DateTime)] DateTime Expiry);
 }

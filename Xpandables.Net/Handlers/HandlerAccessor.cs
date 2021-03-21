@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace Xpandables.Net.Dispatchers
+namespace Xpandables.Net.Handlers
 {
     /// <summary>
     /// An implementation of <see cref="IHandlerAccessor"/> that uses a instance of <see cref="IServiceProvider"/> to retrieve the handler.

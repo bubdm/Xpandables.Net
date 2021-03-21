@@ -18,7 +18,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Decorators;
 using Xpandables.Net.Logging;
 using Xpandables.Net.Queries;
 
@@ -62,21 +61,24 @@ namespace Xpandables.Net.Decorators.Logging
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
             _handlerLogger.OnEntry(new(_decoratee, query, default, default));
+            IOperationResult<TResult>? result = default;
+            Exception? handledException = default;
 
             try
             {
-                var result = await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
+                result = await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
                 _handlerLogger.OnSuccess(new(_decoratee, query, result, default));
                 return result;
             }
             catch (Exception exception)
             {
+                handledException = exception;
                 _handlerLogger.OnException(new(_decoratee, query, default, exception));
                 throw;
             }
             finally
             {
-                _handlerLogger.OnExit(new(_decoratee, query, default, default));
+                _handlerLogger.OnExit(new(_decoratee, query, result, handledException));
             }
         }
     }

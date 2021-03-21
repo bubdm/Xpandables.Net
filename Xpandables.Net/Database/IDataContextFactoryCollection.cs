@@ -31,7 +31,7 @@ namespace Xpandables.Net.Database
         string? CurrentDataContextName { get; }
 
         /// <summary>
-        /// Returns an instance of the ambient data context matching the <see cref="CurrentDataContextName"/>.
+        /// Returns an instance of the ambient data context matching the <see cref="CurrentDataContextName"/> for the current scope.
         /// </summary>
         /// <returns><see cref="IDataContext"/> derived class.</returns>
         /// <exception cref="InvalidOperationException">The data context matching the current has not been registered.</exception>

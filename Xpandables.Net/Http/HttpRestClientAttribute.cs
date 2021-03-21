@@ -81,9 +81,9 @@ namespace Xpandables.Net.Http
 
         /// <summary>
         /// Gets or sets the accept content.
-        /// The default value is 'application/json'.
+        /// The default value is <see cref="ContentType.Json"/>.
         /// </summary>
-        public string Accept { get; set; } = "application/json";
+        public string Accept { get; set; } = Http.ContentType.Json;
 
         /// <summary>
         /// Gets the value indicating whether or not the request needs authorization.
@@ -107,7 +107,7 @@ namespace Xpandables.Net.Http
         public string Scheme { get; set; } = "Bearer";
 
         /// <summary>
-        /// Gets or sets the built in Uri.
+        /// Gets or sets the built-in Uri.
         /// </summary>
         internal Uri Uri { get; set; } = null!;
     }
@@ -197,48 +197,18 @@ namespace Xpandables.Net.Http
         public const string Xml = "application/xml";
 
         /// <summary>
-        /// Returns the application pdf content type.
-        /// </summary>
-        public const string Pdf = "application/pdf";
-
-        /// <summary>
-        /// Returns the image jpeg content type.
-        /// </summary>
-        public const string Jpeg = "image/jpeg";
-
-        /// <summary>
-        /// Returns the image png content type.
-        /// </summary>
-        public const string Png = "image/png";
-
-        /// <summary>
-        /// Returns the multi part form data content type.
-        /// </summary>
-        public const string Multipart = "multipart/form-data";
-
-        /// <summary>
-        /// Returns the text plain content type.
-        /// </summary>
-        public const string Text = "text/plain";
-
-        /// <summary>
         /// Collections of content type from data format.
         /// </summary>
-        public static readonly Dictionary<DataFormat, string> FromDataFormat = new()
+        public static readonly IReadOnlyDictionary<DataFormat, string> DataFormats = new Dictionary<DataFormat, string>()
         {
             { DataFormat.Xml, Xml },
-            { DataFormat.Json, Json },
-            { DataFormat.Jpeg, Jpeg },
-            { DataFormat.Multipart, Multipart },
-            { DataFormat.Pdf, Pdf },
-            { DataFormat.Png, Png },
-            { DataFormat.Text, Text }
+            { DataFormat.Json, Json }
         };
 
         /// <summary>
         /// Returns the json accept header.
         /// </summary>
-        public static readonly string[] JsonAccept = new string[]
+        public static readonly string[] JsonHeader = new string[]
         {
             "application/json",
             "text/json",
@@ -250,7 +220,7 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// Returns the XML accept header.
         /// </summary>
-        public static readonly string[] XmlAccept = new string[]
+        public static readonly string[] XmlHeader = new string[]
         {
             "application/xml",
             "text/xml",
@@ -272,36 +242,6 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// uses for XML format.
         /// </summary>
-        Xml,
-
-        /// <summary>
-        /// uses for Pdf format.
-        /// </summary>
-        Pdf,
-
-        /// <summary>
-        /// uses for Jpeg format.
-        /// </summary>
-        Jpeg,
-
-        /// <summary>
-        /// uses for Png format.
-        /// </summary>
-        Png,
-
-        /// <summary>
-        /// uses for Text format.
-        /// </summary>
-        Text,
-
-        /// <summary>
-        /// uses for Multi part format.
-        /// </summary>
-        Multipart,
-
-        /// <summary>
-        /// No specified format.
-        /// </summary>
-        None
+        Xml
     }
 }

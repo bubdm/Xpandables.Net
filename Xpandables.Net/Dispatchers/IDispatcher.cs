@@ -21,14 +21,12 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
-
-using Xpandables.Net.Events;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Dispatchers
 {
     /// <summary>
-    /// Defines a set of methods to automatically handle <see cref="ICommand"/>, <see cref="ICommand{TResult}"/>, <see cref="IQuery{TResult}"/>, <see cref="IEvent"/> and <see cref="IAsyncQuery{TResult}"/>
+    /// Defines a set of methods to automatically handle <see cref="ICommand"/>, <see cref="ICommand{TResult}"/>, <see cref="IQuery{TResult}"/> and <see cref="IAsyncQuery{TResult}"/>
     /// when targeting <see cref="IAsyncQueryHandler{TQuery, TResult}"/>, <see cref="IQueryHandler{TQuery, TResult}"/> or/and <see cref="ICommandHandler{TCommand}"/>.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
@@ -77,14 +75,5 @@ namespace Xpandables.Net.Dispatchers
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
         /// <remarks>if errors, see Debug or Trace.</remarks>
         Task<IOperationResult<TResult>> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Asynchronously publishes the events across all domain/integration handlers.
-        /// </summary>
-        /// <param name="event">The event to be published.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
-        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
     }
 }

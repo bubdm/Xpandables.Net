@@ -18,15 +18,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
-using Xpandables.Net.Events;
-using Xpandables.Net.Events.DomainEvents;
-using Xpandables.Net.Events.IntegrationEvents;
+using Xpandables.Net.Handlers;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Dispatchers
@@ -186,52 +183,6 @@ namespace Xpandables.Net.Dispatchers
             }
 
             return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Asynchronously publishes the events across all domain/integration handlers.
-        /// </summary>
-        /// <param name="event">The event to be published.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
-        public virtual async Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default)
-        {
-            _ = @event ?? throw new ArgumentNullException(nameof(@event));
-
-            Type genericHandlerType;
-            if (@event is IDomainEvent)
-                genericHandlerType = typeof(IDomainEventHandler<>);
-            else if (@event is IIntegrationEvent)
-                genericHandlerType = typeof(IIntegrationEventHandler<>);
-            else
-                return;
-
-            if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, @event.GetType()))
-            {
-                WriteLineException(new InvalidOperationException("Building event Handler type failed.", typeException));
-                return;
-            }
-
-            if (!_handlerAccessor.TryGetHandlers(typeHandler, out var foundHandlers, out var ex))
-            {
-                WriteLineException(new InvalidOperationException($"Matching event handlers for {@event.GetType().Name} are missing.", ex));
-                return;
-            }
-
-            IEnumerable<Task> tasks;
-            if (@event is IDomainEvent)
-            {
-                var handlers = (IEnumerable<IDomainEventHandler>)foundHandlers;
-                tasks = handlers.Select(handler => handler.HandleAsync(@event, cancellationToken));
-            }
-            else
-            {
-                var handlers = (IEnumerable<IIntegrationEventHandler>)foundHandlers;
-                tasks = handlers.Select(handler => handler.HandleAsync(@event, cancellationToken));
-            }
-
-            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
         private static void WriteLineException(Exception exception)

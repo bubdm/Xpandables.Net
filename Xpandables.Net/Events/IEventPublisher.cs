@@ -19,29 +19,21 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Visitors
+namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// Allows an application author to apply the visitor pattern : The generic Visitor definition.
+    /// Defines a method to publish events.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
-    /// <typeparam name="TElement">Type of element to be visited.</typeparam>
-    public interface IVisitor<in TElement>
-        where TElement : class, IVisitable<TElement>
+    public interface IEventPublisher
     {
         /// <summary>
-        /// Gets the zero-base order in which the visitor will be applied.
-        /// The default value is zero.
+        /// Asynchronously publishes the events across all domain/integration handlers.
         /// </summary>
-        public virtual int Order => 0;
-
-        /// <summary>
-        /// Declares a Visit operation.
-        /// This method will do the actual job of visiting the specified element.
-        /// </summary>
-        /// <param name="element">Element to be visited.</param>
+        /// <param name="event">The event to be published.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
-        Task VisitAsync(TElement element, CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        /// <remarks>if errors, see Debug or Trace.</remarks>
+        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
     }
 }

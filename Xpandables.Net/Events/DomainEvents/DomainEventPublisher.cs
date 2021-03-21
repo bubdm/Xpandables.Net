@@ -21,7 +21,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Database;
-using Xpandables.Net.Dispatchers;
 
 namespace Xpandables.Net.Events.DomainEvents
 {
@@ -31,17 +30,17 @@ namespace Xpandables.Net.Events.DomainEvents
     public sealed class DomainEventPublisher : IDomainEventPublisher
     {
         private readonly IDataContext _dataContext;
-        private readonly IDispatcher _dispatcher;
+        private readonly IEventPublisher _eventPublisher;
 
         /// <summary>
-        /// Initializes a new instance of a <see cref="DomainEventPublisher"/> class with the data context and the dispatcher.
+        /// Initializes a new instance of a <see cref="DomainEventPublisher"/> class with the data context and the event publisher.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
-        /// <param name="dispatcher">The dispatcher.</param>
-        public DomainEventPublisher(IDataContext dataContext, IDispatcher dispatcher)
+        /// <param name="eventPublisher">The event publisher.</param>
+        public DomainEventPublisher(IDataContext dataContext, IEventPublisher eventPublisher)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+            _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
         }
 
         /// <summary>
@@ -53,7 +52,7 @@ namespace Xpandables.Net.Events.DomainEvents
         {
             var domainEventTasks = _dataContext.Notifications
                 .OfType<IDomainEvent>()
-                .Select(domainEvent => _dispatcher.PublishAsync(domainEvent, cancellationToken));
+                .Select(domainEvent => _eventPublisher.PublishAsync(domainEvent, cancellationToken));
 
             await Task.WhenAll(domainEventTasks).ConfigureAwait(false);
             _dataContext.ClearNotifications<IDomainEvent>();

@@ -83,7 +83,7 @@ namespace Xpandables.Net
         public virtual SuccessOperationResult<TValue> ToSuccessOperationResult<TValue>(TValue value) => new(StatusCode, value);
 
         /// <summary>
-        /// Converts the current failed operation instance to the -generic failed operation.
+        /// Converts the current failed operation instance to the generic failed operation.
         /// </summary>
         /// <typeparam name="TValue">The type of the value.</typeparam>
         /// <returns>A new instance of <see cref="FailureOperationResult{TValue}"/> with the status code and errors from the failed operation.</returns>

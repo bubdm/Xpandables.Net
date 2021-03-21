@@ -15,21 +15,19 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading;
-using System.Threading.Tasks;
+using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace Xpandables.Net.Visitors
+namespace Xpandables.Net
 {
     /// <summary>
-    /// Visitor when no explicit registration exist for a given type.
+    /// Contains properties for an access token.
+    /// <para>Returns a new instance of <see cref="Xpandables.Net.AccessToken"/> with its properties.</para>
     /// </summary>
-    /// <typeparam name="TElement">Type of element to be visited.</typeparam>
-    public sealed class NullVisitor<TElement> : IVisitor<TElement>
-        where TElement : class, IVisitable<TElement>
-    {
-        /// <summary>
-        /// Does nothing.
-        /// </summary>
-        public async Task VisitAsync(TElement element, CancellationToken cancellationToken = default) => await Task.CompletedTask.ConfigureAwait(false);
-    }
+    /// <param name="Value">The value of the token.</param>
+    /// <param name="Type">The type of the token.</param>
+    /// <param name="Expiry">The token expiry date.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="Value"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="Type"/> is null.</exception>
+    public record AccessToken([Required, DataType(DataType.Text)] string Value, [Required, DataType(DataType.Text)] string Type, [Required, DataType(DataType.DateTime)] DateTime Expiry);
 }

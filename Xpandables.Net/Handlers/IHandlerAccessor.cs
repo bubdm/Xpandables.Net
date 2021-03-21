@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace Xpandables.Net.Dispatchers
+namespace Xpandables.Net.Handlers
 {
     /// <summary>
     /// Defines set of methods to retrieve handlers of specific type.
@@ -48,7 +48,7 @@ namespace Xpandables.Net.Dispatchers
         /// </summary>
         /// <typeparam name="THandler">The type of the handler to look for.</typeparam>
         /// <returns>A collection of handlers of the <typeparamref name="THandler"/> type -or- empty collection if there is no <typeparamref name="THandler"/> type.</returns>
-        [return: MaybeNull]
+        [return: NotNull]
         public sealed IEnumerable<THandler> GetHandlers<THandler>() where THandler : class => GetHandlers(typeof(THandler)) as IEnumerable<THandler> ?? Enumerable.Empty<THandler>();
 
         /// <summary>

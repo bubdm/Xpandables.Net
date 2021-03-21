@@ -20,7 +20,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
-using Xpandables.Net.Decorators;
 using Xpandables.Net.Transactions;
 
 namespace Xpandables.Net.Decorators.Transactions

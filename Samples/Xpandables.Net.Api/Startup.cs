@@ -56,6 +56,8 @@ namespace Xpandables.Net.Api
                 .AddXDataContextFactory<ContactContextSecond>();
 
             services.AddXDispatcher();
+            services.AddXHandlerAccessor();
+            services.AddXEventPublisher();
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
             {
                 options.UsePersistenceDecorator();
