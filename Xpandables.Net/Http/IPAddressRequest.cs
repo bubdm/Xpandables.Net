@@ -22,6 +22,6 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// Represents a query to request an <see cref="IPAddress"/>.
     /// </summary>
-    [HttpRestClient(Path = "", IsNullable = true, IsSecured = false, Method = "Get")]
+    [HttpRestClient(Path = "", IsNullable = true, IsSecured = false, Method = HttpMethodVerbs.Get)]
     public sealed class IPAddressRequest : IHttpRestClientRequest<string> { }
 }
