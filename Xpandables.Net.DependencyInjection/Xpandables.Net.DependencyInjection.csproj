@@ -17,11 +17,11 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.4.2</Version>
-    <AssemblyVersion>5.4.2</AssemblyVersion>
-    <FileVersion>5.4.2</FileVersion>
-    <PackageVersion>5.4.2</PackageVersion>
-    <PackageReleaseNotes>Add DbSet to IEntityAccessor</PackageReleaseNotes>
+    <Version>5.4.3</Version>
+    <AssemblyVersion>5.4.3</AssemblyVersion>
+    <FileVersion>5.4.3</FileVersion>
+    <PackageVersion>5.4.3</PackageVersion>
+    <PackageReleaseNotes>Add IEventPublisher</PackageReleaseNotes>
     <PackageId>Xpandables.Net.DependencyInjection</PackageId>
     <PackageTags>XTryDecorate, XRegister.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
