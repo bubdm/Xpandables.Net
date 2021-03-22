@@ -20,7 +20,7 @@ using System.Net;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// Provides with <see cref="IOperationResult"/> extension methods.
+    /// Provides with <see cref="IOperationResult"/> helper methods.
     /// </summary>
     public abstract class OperationResultBase
     {

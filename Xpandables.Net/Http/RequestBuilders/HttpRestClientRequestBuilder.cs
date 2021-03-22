@@ -32,6 +32,7 @@ namespace Xpandables.Net.Http.RequestBuilders
 {
     /// <summary>
     /// The <see cref="HttpRequestMessage"/> builder.
+    /// You must derive from this class in order to customize its behaviors.
     /// </summary>
     public class HttpRestClientRequestBuilder : IHttpRestClientRequestBuilder
     {

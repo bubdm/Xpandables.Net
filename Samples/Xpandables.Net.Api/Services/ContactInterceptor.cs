@@ -21,9 +21,9 @@ using Xpandables.Net.Interception;
 
 namespace Xpandables.Net.Api.Services
 {
-    public sealed class ContactInterceptor : IInterceptor
+    public sealed class ContactInterceptor : Interceptor
     {
-        public void Intercept(IInvocation invocation)
+        public override void Intercept(IInvocation invocation)
         {
             _ = invocation ?? throw new ArgumentNullException(nameof(invocation));
             invocation.Proceed();

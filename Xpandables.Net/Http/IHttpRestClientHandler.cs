@@ -24,14 +24,11 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Http
 {
     /// <summary>
-    /// Provides with methods to handle HTTP Rest client queries and commands using a typed client HTTP Client.
-    /// The queries or commands should implement one of the following interfaces :
+    /// Provides with methods to handle <see cref="IHttpRestClientRequest"/> or <see cref="IHttpRestClientRequest{TResponse}"/> requests using a typed client HTTP Client.
+    /// The request should implement one of the following interfaces :
     /// <see cref="IStringRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, <see cref="IFormUrlEncodedRequest"/>,
-    /// <see cref="IMultipartRequest"/>, <see cref="IQueryStringLocationRequest"/>, <see cref="ICookieLocationRequest"/>, <see cref="IHeaderLocationRequest"/> or <see cref="IPathStringLocationRequest"/>.
-    /// <para>When used with dependency injection, you should register the handler using one of the extension methods
-    /// <see langword="AddHttpClient{TClient, TImplementation}(Action{IserviceProvider, HttpClient})"/> and you may add
-    /// <see langword="HttpClientBuilderExtensions.ConfigureHttpClient(IHttpClientBuilder, Action{HttpClient})"/> or other
-    /// to customize the client behaviors.</para>
+    /// <see cref="IMultipartRequest"/>, <see cref="IQueryStringLocationRequest"/>, <see cref="ICookieLocationRequest"/>, <see cref="IHeaderLocationRequest"/>
+    /// or <see cref="IPathStringLocationRequest"/>, and must be decorated with <see cref="HttpRestClientAttribute"/> or implement <see cref="IHttpRestClientAttributeProvider"/>.
     /// </summary>
     public interface IHttpRestClientHandler : IDisposable
     {

@@ -32,6 +32,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
 {
     /// <summary>
     /// The <see cref="HttpRestClientResponse"/> builder.
+    /// You must derive from this class in order to customize its behaviors.
     /// </summary>
     public class HttpRestClientResponseBuilder : IHttpRestClientResponseBuilder
     {

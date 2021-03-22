@@ -25,7 +25,6 @@ namespace Xpandables.Net.Http.RequestHandlers
 {
     /// <summary>
     /// This helper class allows the application author to implement the <see cref="IHttpRestClientHandler"/> interface.
-    /// You must derive from this class in order to customize its behaviors.
     /// </summary>
     public sealed class HttpRestClientHandler : Disposable, IHttpRestClientHandler
     {
