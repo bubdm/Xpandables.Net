@@ -57,9 +57,9 @@ namespace Xpandables.Net.Http
 
         /// <summary>
         /// Gets or sets the method name.
-        /// The default value is <see langword="HttpMethod.Post.Method"/>
+        /// The default value is <see cref="HttpMethodVerbs.Post"/>.
         /// </summary>
-        public string Method { get; set; } = HttpMethod.Post.Method;
+        public string Method { get; set; } = HttpMethodVerbs.Post;
 
         /// <summary>
         /// Gets or sets the format of the data.
@@ -110,6 +110,57 @@ namespace Xpandables.Net.Http
         /// Gets or sets the built-in Uri.
         /// </summary>
         internal Uri Uri { get; set; } = null!;
+    }
+
+    /// <summary>
+    /// The HTTP verbs.
+    /// </summary>
+    public static class HttpMethodVerbs
+    {
+        /// <summary>
+        /// Retrieves the information or entity that is identified by the URI of the request.
+        /// </summary>
+        public const string Get = "Get";
+
+        /// <summary>
+        /// Posts a new entity as an addition to a URI.
+        /// </summary>
+        public const string Post = "Post";
+
+        /// <summary>
+        /// Replaces an entity that is identified by a URI.
+        /// </summary>
+        public const string Put = "Put";
+
+        /// <summary>
+        /// Requests that a specified URI be deleted.
+        /// </summary>
+        public const string Delete = "Delete";
+
+        /// <summary>
+        /// Retrieves the message headers for the information or entity that is identified by the URI of the request.
+        /// </summary>
+        public const string Head = "Head";
+
+        /// <summary>
+        /// Requests that a set of changes described in the request entity be applied to the resource identified by the Request- URI.
+        /// </summary>
+        public const string Patch = "Patch";
+
+        /// <summary>
+        /// Represents a request for information about the communication options available on the request/response chain identified by the Request-URI.
+        /// </summary>
+        public const string Options = "Options";
+
+        /// <summary>
+        /// Performs a message loop-back test along the path to the target resource.
+        /// </summary>
+        public const string Trace = "Trace";
+
+        /// <summary>
+        /// Establishes a tunnel to the server identified by the target resource.
+        /// </summary>
+        public const string Connect = "Connect";
     }
 
     /// <summary>
