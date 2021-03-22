@@ -197,12 +197,42 @@ namespace Xpandables.Net.Http
         public const string Xml = "application/xml";
 
         /// <summary>
+        /// Returns the application pdf content type.
+        /// </summary>
+        public const string Pdf = "application/pdf";
+
+        /// <summary>
+        /// Returns the image jpeg content type.
+        /// </summary>
+        public const string Jpeg = "image/jpeg";
+
+        /// <summary>
+        /// Returns the image png content type.
+        /// </summary>
+        public const string Png = "image/png";
+
+        /// <summary>
+        /// Returns the multi part form data content type.
+        /// </summary>
+        public const string Multipart = "multipart/form-data";
+
+        /// <summary>
+        /// Returns the text plain content type.
+        /// </summary>
+        public const string Text = "text/plain";
+
+        /// <summary>
         /// Collections of content type from data format.
         /// </summary>
         public static readonly IReadOnlyDictionary<DataFormat, string> DataFormats = new Dictionary<DataFormat, string>()
         {
             { DataFormat.Xml, Xml },
-            { DataFormat.Json, Json }
+            { DataFormat.Json, Json },
+            { DataFormat.Jpeg, Jpeg },
+            { DataFormat.Multipart, Multipart },
+            { DataFormat.Pdf, Pdf },
+            { DataFormat.Png, Png },
+            { DataFormat.Text, Text }
         };
 
         /// <summary>
@@ -242,6 +272,36 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// uses for XML format.
         /// </summary>
-        Xml
+        Xml,
+
+        /// <summary>
+        /// uses for Pdf format.
+        /// </summary>
+        Pdf,
+
+        /// <summary>
+        /// uses for Jpeg format.
+        /// </summary>
+        Jpeg,
+
+        /// <summary>
+        /// uses for Png format.
+        /// </summary>
+        Png,
+
+        /// <summary>
+        /// uses for Text format.
+        /// </summary>
+        Text,
+
+        /// <summary>
+        /// uses for Multi part format.
+        /// </summary>
+        Multipart,
+
+        /// <summary>
+        /// No specified format.
+        /// </summary>
+        None
     }
 }
