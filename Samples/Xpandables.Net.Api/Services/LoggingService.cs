@@ -17,11 +17,9 @@
 ************************************************************************************************************/
 using System.Diagnostics;
 
-using Xpandables.Net.Logging;
-
 namespace Xpandables.Net.Api.Services
 {
-    public sealed class LoggingService : ILoggingHandler
+    public sealed class LoggingService : IOperationResultLogger
     {
         public void OnEntry(LoggerArgument argument)
         {
@@ -35,7 +33,7 @@ namespace Xpandables.Net.Api.Services
 
         public void OnExit(LoggerArgument argument)
         {
-            Trace.WriteLine($"On Exit => Handler name : {argument.Instance.GetType().Name} Argument : {argument.Argument.ToJsonString()}");
+            Trace.WriteLine($"On Exit => Handler name : {argument.Instance.GetType().Name} Argument : {argument.Argument.ToJsonString()} Result : {argument.ReturnValue?.Value?.ToJsonString()}");
         }
 
         public void OnSuccess(LoggerArgument argument)

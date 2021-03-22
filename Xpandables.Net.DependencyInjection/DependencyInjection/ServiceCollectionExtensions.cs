@@ -38,7 +38,6 @@ using Xpandables.Net.Events;
 using Xpandables.Net.Events.DomainEvents;
 using Xpandables.Net.Events.IntegrationEvents;
 using Xpandables.Net.Handlers;
-using Xpandables.Net.Logging;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
 using Xpandables.Net.Validators;
@@ -94,9 +93,9 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Enables logging behavior to commands/queries that are decorated with the <see cref="ILoggingDecorator"/> .
-        /// You must provide with an implementation of <see cref="ILoggingHandler"/>.
+        /// You must provide with an implementation of <see cref="IOperationResultLogger"/>.
         /// </summary>
-        public HandlerOptions UseLoggingDecorator() => this.With(cq => cq.IsLoggingEnabled = true);
+        public HandlerOptions UseOperationResultLoggerDecorator() => this.With(cq => cq.IsLoggingEnabled = true);
 
         /// <summary>
         /// Enables correlation behavior to operations that are decorated with the <see cref="ICorrelationDecorator"/>.
@@ -171,30 +170,52 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the logging type to the services.
+        /// Adds the operation result logging type to the services.
         /// </summary>
-        /// <typeparam name="THandlerLogger">The type handler logger.</typeparam>
+        /// <typeparam name="TOperationResultLogger">The operation result logger type.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXLoggingProvider<THandlerLogger>(this IServiceCollection services)
-            where THandlerLogger : class, ILoggingHandler
+        public static IServiceCollection AddXOperationResultLogger<TOperationResultLogger>(this IServiceCollection services)
+            where TOperationResultLogger : class, IOperationResultLogger
         {
             if (services is null)
             {
                 throw new ArgumentNullException(nameof(services));
             }
 
-            return services.AddScoped<ILoggingHandler, THandlerLogger>();
+            return services.AddScoped<IOperationResultLogger, TOperationResultLogger>();
         }
 
         /// <summary>
-        /// Adds logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/> to the services
+        /// Adds operation result logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/> to the services.
+        /// You need to register your implementation of <see cref="IOperationResultLogger"/> separately.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXLoggingDecorator(this IServiceCollection services)
+        public static IServiceCollection AddXOperationResultLoggerDecorator(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryLoggingDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryLoggingDecorator<,>));
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds operation result logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/> to the services.
+        /// </summary>
+        /// <typeparam name="TOperationResultLogger">The operation result logger type.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXOperationResultLoggerDecorator<TOperationResultLogger>(this IServiceCollection services)
+            where TOperationResultLogger : class, IOperationResultLogger
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddXOperationResultLogger<TOperationResultLogger>();
 
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));
@@ -657,7 +678,7 @@ namespace Xpandables.Net.DependencyInjection
 
             if (definedOptions.IsLoggingEnabled)
             {
-                services.AddXLoggingDecorator();
+                services.AddXOperationResultLoggerDecorator();
             }
 
             if (definedOptions.IsIntegrationEventEnabled is not null)

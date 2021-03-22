@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System;
 
-namespace Xpandables.Net.Logging
+namespace Xpandables.Net
 {
     /// <summary>
     /// Contains properties about argument, result and/or exception with which the handler method has being invoked.

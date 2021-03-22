@@ -62,12 +62,12 @@ namespace Xpandables.Net.Api
             {
                 options.UsePersistenceDecorator();
                 options.UseIntegrationEventDecorator();
-                options.UseLoggingDecorator();
+                options.UseOperationResultLoggerDecorator();
                 options.UseDomainEventDecorator();
                 options.UseValidatorDecorator();
             });
 
-            services.AddXLoggingProvider<LoggingService>();
+            services.AddXOperationResultLogger<LoggingService>();
             services.AddEntityAccessor();
             services.AddScoped<IContactEntityAccessor, ContactEntityAccessor>();
 

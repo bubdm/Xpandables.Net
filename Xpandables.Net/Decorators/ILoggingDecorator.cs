@@ -15,13 +15,11 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Logging;
-
 namespace Xpandables.Net.Decorators
 {
     /// <summary>
     /// A marker interface that allows the command/query class to add logging decorator to control flow.
-    /// You must implement the <see cref="ILoggingHandler"/> to provide logging behavior.
+    /// You must implement the <see cref="IOperationResultLogger"/> to provide logging behavior.
     /// </summary>
     public interface ILoggingDecorator { }
 }

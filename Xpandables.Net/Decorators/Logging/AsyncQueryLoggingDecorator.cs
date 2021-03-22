@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-using Xpandables.Net.Logging;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Decorators.Logging
@@ -35,20 +34,20 @@ namespace Xpandables.Net.Decorators.Logging
         where TQuery : class, IAsyncQuery<TResult>, ILoggingDecorator
     {
         private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
-        private readonly ILoggingHandler _handlerLogger;
+        private readonly IOperationResultLogger _operationResultLogger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncQueryLoggingDecorator{TQuery, TResult}"/> class with
         /// the query handler to be decorated and the handler logger.
         /// </summary>
         /// <param name="decoratee">The query to be decorated.</param>
-        /// <param name="handlerLogger">The handler logger to apply</param>
+        /// <param name="operationResultLogger">The operation result logger to apply</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="handlerLogger"/> is null.</exception>
-        public AsyncQueryLoggingDecorator(IAsyncQueryHandler<TQuery, TResult> decoratee, ILoggingHandler handlerLogger)
+        /// <exception cref="ArgumentNullException">The <paramref name="operationResultLogger"/> is null.</exception>
+        public AsyncQueryLoggingDecorator(IAsyncQueryHandler<TQuery, TResult> decoratee, IOperationResultLogger operationResultLogger)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-            _handlerLogger = handlerLogger ?? throw new ArgumentNullException(nameof(handlerLogger));
+            _operationResultLogger = operationResultLogger ?? throw new ArgumentNullException(nameof(operationResultLogger));
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace Xpandables.Net.Decorators.Logging
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            _handlerLogger.OnEntry(new(_decoratee, query, default, default));
+            _operationResultLogger.OnEntry(new(_decoratee, query, default, default));
             Exception? handledException = default;
 
             await using var asyncEnumerator = _decoratee.HandleAsync(query, cancellationToken).GetAsyncEnumerator(cancellationToken);
@@ -76,17 +75,17 @@ namespace Xpandables.Net.Decorators.Logging
                 {
                     resultExist = false;
                     handledException = exception;
-                    _handlerLogger.OnException(new(_decoratee, query, default, exception));
+                    _operationResultLogger.OnException(new(_decoratee, query, default, exception));
                     throw;
                 }
                 finally
                 {
-                    _handlerLogger.OnExit(new(_decoratee, query, default, handledException));
+                    _operationResultLogger.OnExit(new(_decoratee, query, default, handledException));
                 }
 
                 if (resultExist)
                 {
-                    _handlerLogger.OnSuccess(new(_decoratee, query, new SuccessOperationResult<TResult>(asyncEnumerator.Current), default));
+                    _operationResultLogger.OnSuccess(new(_decoratee, query, new SuccessOperationResult<TResult>(asyncEnumerator.Current), default));
                     yield return asyncEnumerator.Current;
                 }
                 else

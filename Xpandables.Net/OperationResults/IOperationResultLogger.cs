@@ -17,12 +17,12 @@
 
 using Xpandables.Net.Decorators;
 
-namespace Xpandables.Net.Logging
+namespace Xpandables.Net
 {
     /// <summary>
-    /// Represents a type used to perform handlers logging for classes implementing the <see cref="ILoggingDecorator"/> .
+    /// Represents a type used to perform operation results logging for classes implementing the <see cref="ILoggingDecorator"/> .
     /// </summary>
-    public interface ILoggingHandler
+    public interface IOperationResultLogger
     {
         /// <summary>
         /// Method executed before the decorated handler to which the decorator is applied.
