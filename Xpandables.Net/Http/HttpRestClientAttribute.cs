@@ -20,14 +20,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-using Xpandables.Net.Commands;
-using Xpandables.Net.Queries;
-
 namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Describes the parameters for a request used with <see cref="IHttpRestClientHandler"/>.
-    /// The attribute should decorate implementations of <see cref="IAsyncQuery{TResult}"/> or <see cref="ICommand"/>
+    /// The attribute should decorate implementations of <see cref="IHttpRestClientRequest"/>, <see cref="IHttpRestClientAsyncRequest{TResponse}"/> or <see cref="IHttpRestClientRequest{TResponse}"/>
     /// in order to be used with <see cref="IHttpRestClientHandler"/>.
     /// Your class can implement the <see cref="IHttpRestClientAttributeProvider"/> to dynamically return a <see cref="HttpRestClientAttribute"/>.
     /// </summary>
