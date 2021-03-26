@@ -137,6 +137,22 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the implementation type of <see cref="ICorrelationContext"/> to the services with scoped life time.
+        /// </summary>
+        /// <typeparam name="TCorrelationContext">the correlation context type.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXCorrelationContext<TCorrelationContext>(this IServiceCollection services)
+            where TCorrelationContext : class, ICorrelationContext
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<ICorrelationContext, TCorrelationContext>();
+            return services;
+        }
+
+
+        /// <summary>
         /// Adds the <see cref="ICorrelationEvent"/> to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
