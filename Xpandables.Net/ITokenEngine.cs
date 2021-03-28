@@ -31,7 +31,7 @@ namespace Xpandables.Net
         /// Uses the collection of claims to build a token.
         /// </summary>
         /// <param name="claims">collection of claims to be used to build token string.</param>
-        /// <returns>An instance of string token if OK.</returns>
+        /// <returns>An instance of <see cref="AccessToken"/> token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="claims"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Unable to write token from claims. See inner exception.</exception>
         AccessToken WriteToken(IEnumerable<Claim> claims);
