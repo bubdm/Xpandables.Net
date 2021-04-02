@@ -23,74 +23,74 @@ using System.Linq;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Implementation of <see cref="IDataContextFactoryCollection"/>.
+    /// Implementation of <see cref="IDataContextTenantAccessor"/>.
     /// </summary>
-    public sealed class DataContextFactoryCollection : IDataContextFactoryCollection
+    public sealed class DataContextTenantAccessor : IDataContextTenantAccessor
     {
-        private readonly IDictionary<string, IDataContextFactory> _dataContextFactories;
+        private readonly IDictionary<string, IDataContextTenant> _dataContextFactories;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataContextFactoryCollection"/> class with all the data context factories.
+        /// Initializes a new instance of <see cref="DataContextTenantAccessor"/> class with all the tenant factories.
         /// </summary>
         /// <param name="dataContextFactories">The collection of data context factories.</param>
-        public DataContextFactoryCollection(IEnumerable<IDataContextFactory> dataContextFactories)
+        public DataContextTenantAccessor(IEnumerable<IDataContextTenant> dataContextFactories)
         {
-            _dataContextFactories = dataContextFactories?.ToDictionary(d => d.Name, d => d) ?? new Dictionary<string, IDataContextFactory>();
+            _dataContextFactories = dataContextFactories?.ToDictionary(d => d.Name, d => d) ?? new Dictionary<string, IDataContextTenant>();
         }
 
         /// <summary>
-        /// Returns the data context matching the specified name. If not found returns null.
+        /// Returns the data context matching the specified tenant name. If not found returns null.
         /// </summary>
-        /// <param name="name">The data context name to search for.</param>
+        /// <param name="name">The tenant name to search for.</param>
         /// <returns>The requested data context or null if not present.</returns>
         public IDataContext? this[string name] =>
             _dataContextFactories.TryGetValue(name, out var factory) ? factory.Factory() : default;
 
         /// <summary>
-        /// Gets the name of the ambient data context.
+        /// Gets the name of the ambient tenant.
         /// </summary>
-        public string? CurrentDataContextName { get; private set; }
+        public string? TenantName { get; private set; }
 
         /// <summary>
-        /// Returns an instance of the ambient data context matching the <see cref="CurrentDataContextName" />.
+        /// Returns an instance of the ambient data context matching the <see cref="TenantName" />.
         /// </summary>
         /// <returns><see cref="IDataContext" /> derived class.</returns>
         /// <exception cref="InvalidOperationException">The data context matching the current has not been registered.</exception>
-        /// <exception cref="ArgumentNullException">The <see cref="CurrentDataContextName" /> is null.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3928:Parameter names used into ArgumentException constructors should match an existing one ", Justification = "<Pending>")]
+        /// <exception cref="ArgumentException">The tenant name is null.</exception>
         public IDataContext GetDataContext()
         {
-            _ = CurrentDataContextName ?? throw new ArgumentNullException(nameof(CurrentDataContextName), "The data context name has not been set.");
-            if (_dataContextFactories.TryGetValue(CurrentDataContextName, out var factory))
+            _ = TenantName ?? throw new ArgumentException("The tenant name has not been set.");
+
+            if (_dataContextFactories.TryGetValue(TenantName, out var factory))
                 return factory.Factory();
 
             throw new InvalidOperationException(
-                $"The '{CurrentDataContextName}' factory has not been registered. Use services.AddXDataContextFactory<{CurrentDataContextName}>() to register the factory.");
+                $"The '{TenantName}' factory has not been registered. Use services.AddXDataContextTenant<{TenantName}>() to register the target factory.");
         }
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
-        public IEnumerator<KeyValuePair<string, IDataContextFactory>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, IDataContextTenant>> GetEnumerator()
         {
             foreach (var pair in _dataContextFactories)
                 yield return pair;
         }
 
         /// <summary>
-        /// Sets the ambient data context name.
+        /// Sets the ambient tenant name using the type name.
         /// </summary>
         /// <typeparam name="TDataContext">The type of the data context.</typeparam>
-        public void SetCurrentDataContextName<TDataContext>()
-            where TDataContext : class, IDataContext => CurrentDataContextName = typeof(TDataContext).Name;
+        public void SetTenantName<TDataContext>()
+            where TDataContext : class, IDataContext => TenantName = typeof(TDataContext).Name;
 
         /// <summary>
-        /// Sets the ambient data context name.
+        /// Sets the ambient tenant name.
         /// </summary>
-        /// <param name="name">The name of the data context.</param>
+        /// <param name="name">The name of the tenant.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="name" /> is null.</exception>
-        public void SetCurrentDataContextName(string name) => CurrentDataContextName = name ?? throw new ArgumentNullException(nameof(name));
+        public void SetTenantName(string name) => TenantName = name ?? throw new ArgumentNullException(nameof(name));
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

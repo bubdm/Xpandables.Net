@@ -21,42 +21,41 @@ using System.Collections.Generic;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Allows use of multiple data context that need to be shared across asynchronous control flows.
+    /// Allows use of multiple data contexts that need to be shared across asynchronous control flows.
     /// </summary>
-    public interface IDataContextFactoryCollection : IEnumerable<KeyValuePair<string, IDataContextFactory>>
+    public interface IDataContextTenantAccessor : IEnumerable<KeyValuePair<string, IDataContextTenant>>
     {
         /// <summary>
-        /// Gets the name of the ambient data context.
+        /// Gets the unique identifier of the ambient tenant.
         /// </summary>
-        string? CurrentDataContextName { get; }
+        string? TenantName { get; }
 
         /// <summary>
-        /// Returns an instance of the ambient data context matching the <see cref="CurrentDataContextName"/> for the current scope.
+        /// Returns an instance of the ambient data context matching the <see cref="TenantName"/> for the current scope.
         /// </summary>
         /// <returns><see cref="IDataContext"/> derived class.</returns>
-        /// <exception cref="InvalidOperationException">The data context matching the current has not been registered.</exception>
-        /// <exception cref="ArgumentNullException">The <see cref="CurrentDataContextName"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">The data context tenant matching the current name has not been registered.</exception>
+        /// <exception cref="ArgumentException">The tenant name is null.</exception>
         IDataContext GetDataContext();
 
         /// <summary>
-        /// Returns the data context matching the specified name. If not found returns null.
+        /// Returns the data context matching the specified tenant name. If not found returns null.
         /// </summary>
-        /// <param name="name">The data context name to search for.</param>
+        /// <param name="name">The tenant name to search for.</param>
         /// <returns>The requested data context or null if not present.</returns>
         IDataContext? this[string name] { get; }
 
         /// <summary>
-        /// Sets the ambient data context name for the current scope.
+        /// Sets the ambient tenant name from the specified type name for the current scope.
         /// </summary>
-        /// <typeparam name="TDataContext">The type of the data context.</typeparam>
-        void SetCurrentDataContextName<TDataContext>()
-            where TDataContext : class, IDataContext;
+        /// <typeparam name="TDataContext">The type of data context.</typeparam>
+        void SetTenantName<TDataContext>() where TDataContext : class, IDataContext;
 
         /// <summary>
-        /// Sets the ambient data context name for the current scope.
+        /// Sets the ambient tenant name for the current scope.
         /// </summary>
-        /// <param name="name">The name of the data context.</param>
+        /// <param name="name">The name of the tenant.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="name"/> is null.</exception>
-        void SetCurrentDataContextName(string name);
+        void SetTenantName(string name);
     }
 }

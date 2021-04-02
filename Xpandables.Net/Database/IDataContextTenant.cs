@@ -20,9 +20,9 @@ using System;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Provides with method for creating derived <see cref="IDataContext"/> instances.
+    /// Provides with method for creating derived <see cref="IDataContext"/> in multi-tenancy.
     /// </summary>
-    public interface IDataContextFactory
+    public interface IDataContextTenant
     {
         /// <summary>
         /// The factory used to retrieve an implementation of <see cref="IDataContext"/>.
@@ -30,16 +30,16 @@ namespace Xpandables.Net.Database
         Func<IDataContext> Factory { get; }
 
         /// <summary>
-        /// Gets the name of the data context.
+        /// Gets the unique identifier for the tenant.
         /// </summary>
         string Name { get; }
     }
 
     /// <summary>
-    /// Provides with method for creating <typeparamref name="TDataContext"/> instances.
+    /// Provides with method for creating <typeparamref name="TDataContext"/> in multi-tenancy.
     /// </summary>
     /// <typeparam name="TDataContext">The type of the data context.</typeparam>
-    public interface IDataContextFactory<out TDataContext> : IDataContextFactory
+    public interface IDataContextTenant<out TDataContext> : IDataContextTenant
         where TDataContext : class, IDataContext
     {
         /// <summary>

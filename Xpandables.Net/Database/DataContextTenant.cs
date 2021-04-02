@@ -20,10 +20,10 @@ using System;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Implementation of <see cref="IDataContextFactory{TDataContext}"/>.
+    /// Implementation of <see cref="IDataContextTenant{TDataContext}"/> for multi-tenancy.
     /// </summary>
     /// <typeparam name="TDataContext">The type of data context.</typeparam>
-    public sealed class DataContextFactory<TDataContext> : IDataContextFactory<TDataContext>
+    public sealed class DataContextTenant<TDataContext> : IDataContextTenant<TDataContext>
         where TDataContext : class, IDataContext
     {
         /// <summary>
@@ -32,21 +32,36 @@ namespace Xpandables.Net.Database
         public Func<TDataContext> Factory { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataContextFactory{TDataContext}"/> class with the factory of the target type.
+        /// Initializes a new instance of <see cref="DataContextTenant{TDataContext}"/> class with the factory of the target type.
+        /// The unique identifier or the tenant will be the name of the type.
         /// </summary>
         /// <param name="factory">The factory for <typeparamref name="TDataContext"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="factory"/> is null.</exception>
-        public DataContextFactory(Func<TDataContext> factory)
+        public DataContextTenant(Func<TDataContext> factory)
         {
             Factory = factory ?? throw new ArgumentNullException(nameof(factory));
             Name = typeof(TDataContext).Name;
         }
 
         /// <summary>
-        /// Gets the name of the data context.
+        /// Initializes a new instance of <see cref="DataContextTenant{TDataContext}"/> class with the factory of the target type.
+        /// The unique identifier or the tenant will be the name of the type.
+        /// </summary>
+        /// <param name="name">The unique identifier of the tenant.</param>
+        /// <param name="factory">The factory for <typeparamref name="TDataContext"/>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="factory"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="name"/> is null.</exception>
+        public DataContextTenant(string name, Func<TDataContext> factory)
+        {
+            Factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+        }
+
+        /// <summary>
+        /// Gets the unique identifier of the tenant.
         /// </summary>
         public string Name { get; }
 
-        Func<IDataContext> IDataContextFactory.Factory => () => Factory();
+        Func<IDataContext> IDataContextTenant.Factory => () => Factory();
     }
 }

@@ -151,7 +151,6 @@ namespace Xpandables.Net.DependencyInjection
             return services;
         }
 
-
         /// <summary>
         /// Adds the <see cref="ICorrelationEvent"/> to the services with scoped life time.
         /// </summary>
@@ -282,7 +281,7 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Adds the <typeparamref name="TDataContext"/> type class reference implementation as <see cref="IDataContext"/> to the services with scoped life time.
-        /// Caution : Do not use with factory.
+        /// Caution : Do not use with multi-tenancy.
         /// </summary>
         /// <typeparam name="TDataContext">The type of the data context that implements <see cref="IDataContext"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
@@ -300,18 +299,19 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TDataContext"/> type to the collection of data context in multiple data context use.
-        /// Caution : Do not use with <see cref="AddXDataContext{TDataContext}(IServiceCollection)"/>.
+        /// Adds the <typeparamref name="TDataContext"/> type to the collection of tenants in multi-tenancy context.
+        /// The tenant will be named as the type of the data context.
+        /// <para>Caution : Do not use with <see cref="AddXDataContext{TDataContext}(IServiceCollection)"/>.</para>
         /// </summary>
         /// <typeparam name="TDataContext">The type of the data context.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDataContextFactory<TDataContext>(this IServiceCollection services)
+        public static IServiceCollection AddXDataContextTenant<TDataContext>(this IServiceCollection services)
             where TDataContext : class, IDataContext
         {
             var serviceDescriptor = new ServiceDescriptor(
-                typeof(IDataContextFactory),
-                provider => new DataContextFactory<TDataContext>(() => provider.GetRequiredService<TDataContext>()),
+                typeof(IDataContextTenant),
+                provider => new DataContextTenant<TDataContext>(() => provider.GetRequiredService<TDataContext>()),
                 ServiceLifetime.Scoped);
 
             services.Add(serviceDescriptor);
@@ -319,21 +319,45 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IDataContextFactoryCollection"/> implementation type that get called to resolve <see cref="IDataContext"/> in multiple data context use.
-        /// The type is registered with scoped life time. Caution : Do not use with <see cref="AddXDataContext{TDataContext}(IServiceCollection)"/>.
+        /// Adds the <typeparamref name="TDataContext"/> type to the collection of tenants in multi-tenancy context.
+        /// <para>Caution : Do not use with <see cref="AddXDataContext{TDataContext}(IServiceCollection)"/>.</para>
+        /// </summary>
+        /// <typeparam name="TDataContext">The type of the data context.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="name">The unique identifier of the tenant.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXDataContextTenant<TDataContext>(this IServiceCollection services, string name)
+            where TDataContext : class, IDataContext
+        {
+            _ = name ?? throw new ArgumentNullException(nameof(name));
+
+            var serviceDescriptor = new ServiceDescriptor(
+                typeof(IDataContextTenant),
+                provider => new DataContextTenant<TDataContext>(name, () => provider.GetRequiredService<TDataContext>()),
+                ServiceLifetime.Scoped);
+
+            services.Add(serviceDescriptor);
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IDataContextTenantAccessor"/> implementation type that get called to resolve <see cref="IDataContext"/> in multi-tenancy context.
+        /// You have to register your data context(s) using the <see cref="AddXDataContextTenant{TDataContext}(IServiceCollection)"/>.
+        /// The type is registered with scoped life time.
+        /// <para>Caution : Do not use with <see cref="AddXDataContext{TDataContext}(IServiceCollection)"/>.</para>
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDataContextFactoryCollection(this IServiceCollection services)
+        public static IServiceCollection AddXDataContextTenantAccessor(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IDataContextFactoryCollection, DataContextFactoryCollection>();
+            services.AddScoped<IDataContextTenantAccessor, DataContextTenantAccessor>();
             services.AddScoped(typeof(IDataContext<>), typeof(DataContext<>));
 
             var serviceDescriptor = new ServiceDescriptor(
                 typeof(IDataContext),
-                provider => provider.GetRequiredService<IDataContextFactoryCollection>().GetDataContext(),
+                provider => provider.GetRequiredService<IDataContextTenantAccessor>().GetDataContext(),
                 ServiceLifetime.Scoped);
 
             services.Add(serviceDescriptor);

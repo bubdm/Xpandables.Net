@@ -45,10 +45,10 @@ namespace Xpandables.Net.Api.Controllers
     {
         private readonly IDispatcher _dispatcher;
 
-        public ContactsController(IDispatcher dispatcher, IDataContextFactoryCollection correlationCollection)
+        public ContactsController(IDispatcher dispatcher, IDataContextTenantAccessor correlationCollection)
         {
             _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
-            correlationCollection.SetCurrentDataContextName<ContactContext>();
+            correlationCollection.SetTenantName<ContactContext>();
         }
 
         [Route("")]
