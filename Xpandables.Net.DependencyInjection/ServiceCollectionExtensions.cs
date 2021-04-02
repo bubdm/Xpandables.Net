@@ -144,40 +144,6 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the specified HTTP request token claim provider that implements the <see cref="ITokenEntityProvider"/>.
-        /// </summary>
-        /// <typeparam name="TTokenEntityProvider">The type of HTTP token claim provider.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXTokenEntityProvider<TTokenEntityProvider>(
-            this IServiceCollection services)
-            where TTokenEntityProvider : class, ITokenEntityProvider
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.AddScoped<ITokenEntityProvider, TTokenEntityProvider>();
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the specified HTTP request token claim provider that implements the <see cref="ITokenEntityProvider"/>.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <param name="tokenClaimProviderType">The token claims provider type.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="tokenClaimProviderType"/> is null.</exception>
-        public static IServiceCollection AddXTokenEntityProvider(this IServiceCollection services, Type tokenClaimProviderType)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            _ = tokenClaimProviderType ?? throw new ArgumentNullException(nameof(tokenClaimProviderType));
-
-            if (!typeof(ITokenEntityProvider).IsAssignableFrom(tokenClaimProviderType))
-                throw new ArgumentException($"{nameof(tokenClaimProviderType)} must implement {nameof(ITokenEntityProvider)}.");
-
-            return services.AddScoped(typeof(ITokenEntityProvider), tokenClaimProviderType);
-        }
-
-        /// <summary>
         /// Adds the specified token engine to the services collection with scoped life time..
         /// </summary>
         /// <typeparam name="TTokenEngine">The token engine type.</typeparam>
