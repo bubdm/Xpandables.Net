@@ -65,7 +65,7 @@ namespace Xpandables.Net.Decorators.Transactions
             {
                 using var scope = transaction;
                 var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                if (resultState.IsSuccess)
+                if (resultState.Succeeded)
                     scope.Complete();
 
                 return resultState;
@@ -119,7 +119,7 @@ namespace Xpandables.Net.Decorators.Transactions
             {
                 using var scope = transaction;
                 var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                if (resultState.IsSuccess)
+                if (resultState.Succeeded)
                     scope.Complete();
 
                 return resultState;

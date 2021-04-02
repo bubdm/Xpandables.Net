@@ -53,7 +53,7 @@ namespace Xpandables.Net.Validators
             {
                 if (cancellationToken.IsCancellationRequested) cancellationToken.ThrowIfCancellationRequested();
                 var result = await validator.ValidateAsync(argument, cancellationToken).ConfigureAwait(false);
-                if (result.IsFailure)
+                if (result.Failed)
                     return result;
             }
 

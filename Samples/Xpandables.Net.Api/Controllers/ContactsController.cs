@@ -67,7 +67,7 @@ namespace Xpandables.Net.Api.Controllers
         public async Task<IActionResult> AddAsync([FromBody] Add add, CancellationToken cancellationToken = default)
         {
             var createdResult = await _dispatcher.SendAsync(add, cancellationToken).ConfigureAwait(false);
-            if (createdResult.IsFailure) return Ok(createdResult);
+            if (createdResult.Failed) return Ok(createdResult);
 
             return CreatedAtRoute("ContactLink", new { id = createdResult.Value }, createdResult.Value);
         }

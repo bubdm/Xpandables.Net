@@ -64,7 +64,7 @@ namespace Xpandables.Net.Decorators.DomainEvents
         public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            if (resultState.IsFailure)
+            if (resultState.Failed)
                 return resultState;
 
             await _domainEventPublisher.PublishAsync(cancellationToken).ConfigureAwait(false);
@@ -112,7 +112,7 @@ namespace Xpandables.Net.Decorators.DomainEvents
         public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            if (resultState.IsFailure)
+            if (resultState.Failed)
                 return resultState;
 
             await _domainEventPublisher.PublishAsync(cancellationToken).ConfigureAwait(false);

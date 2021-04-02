@@ -34,7 +34,7 @@ namespace Xpandables.Net.Api.Middlewares
                 return next();
             }
 
-            if (operationResult.IsFailure)
+            if (operationResult.Failed)
             {
                 context.Result = operationResult.StatusCode switch
                 {
