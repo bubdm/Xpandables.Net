@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,37 +14,22 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Xpandables.Net.Http
 {
     /// <summary>
-    /// Provides with methods to retrieve an HTTP request header value matching a specific key.
+    /// Provides with methods to get/set an HTTP request/response header value matching a specific key.
     /// </summary>
     public interface IHttpHeaderAccessor
     {
         /// <summary>
-        /// Gets the HTTP header value from the current HTTP request matching the specified key.
+        /// The HTTP request header accessor.
         /// </summary>
-        /// <param name="key">The key of the value to match.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
-        public sealed string? ReadValue(string key) => ReadValues(key).FirstOrDefault();
+        IHttpHeaderProvider Request { get; }
 
         /// <summary>
-        /// Gets all HTTP header values from the current HTTP request matching the specified key.
-        /// If not found, returns an empty enumerable.
+        /// The HTTP response header accessor.
         /// </summary>
-        /// <param name="key">The key of the value to match.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
-        public sealed IEnumerable<string> ReadValues(string key)
-            => ReadValues().TryGetValue(key, out var values) ? values.AsEnumerable() : Enumerable.Empty<string>();
-
-        /// <summary>
-        /// Gets all HTTP header values from the current HTTP request.
-        /// If not found, returns an empty dictionary.
-        /// </summary>
-        IReadOnlyDictionary<string, IReadOnlyList<string>> ReadValues();
+        IHttpHeaderProvider Response { get; }
     }
 }

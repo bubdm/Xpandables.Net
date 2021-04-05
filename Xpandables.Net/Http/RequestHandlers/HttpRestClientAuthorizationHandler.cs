@@ -54,7 +54,7 @@ namespace Xpandables.Net.Http.RequestHandlers
             if (request.Headers.Authorization is not { Parameter: null } authorization)
                 return base.SendAsync(request, cancellationToken);
 
-            var token = _httpHeaderAccessor.ReadValue("Authorization") ?? throw new InvalidOperationException("Expected authorization not found.");
+            var token = _httpHeaderAccessor.Request.ReadValue("Authorization") ?? throw new InvalidOperationException("Expected authorization not found.");
             request.Headers.Authorization = new AuthenticationHeaderValue(authorization.Scheme, token);
 
             return base.SendAsync(request, cancellationToken);
