@@ -18,6 +18,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
@@ -48,6 +49,26 @@ namespace Xpandables.Net.OperationResults
                     .Where(key => modelState[key].Errors.Count > 0)
                     .Select(key => new OperationError(key, modelState[key].Errors.Select(error => error.ErrorMessage).ToArray()))
                     .ToList());
+        }
+
+        /// <summary>
+        /// Returns a <see cref="ModelStateDictionary"/> from the collection of errors.
+        /// </summary>
+        /// <param name="operationErrors">The collection of errors to act on.</param>
+        /// <returns>A new instance of <see cref="ModelStateDictionary"/> that contains found errors.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="operationErrors"/> is null.</exception>
+        public static ModelStateDictionary GetModelStateDictionary(this IReadOnlyCollection<OperationError> operationErrors)
+        {
+            _ = operationErrors ?? throw new ArgumentNullException(nameof(operationErrors));
+
+            var modelStateDictionary = new ModelStateDictionary();
+            foreach (var error in operationErrors)
+            {
+                foreach (var errorMessage in error.ErrorMessages)
+                    modelStateDictionary.AddModelError(error.Key, errorMessage);
+            }
+
+            return modelStateDictionary;
         }
     }
 }
