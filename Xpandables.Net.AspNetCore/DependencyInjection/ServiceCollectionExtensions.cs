@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 
 using Xpandables.Net.Http;
+using Xpandables.Net.Razors;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -29,7 +30,7 @@ namespace Xpandables.Net.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the specified HTTP request header values accessor that implements the <see cref="IHttpHeaderAccessor"/>.
+        /// Adds the HTTP context header values accessor that implements the <see cref="IHttpHeaderAccessor"/>.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -38,6 +39,20 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<IHttpHeaderAccessor, HttpHeaderAccessor>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IRazorViewRenderer"/> implementation.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXRazorViewRenderer(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<IRazorViewRenderer, RazorViewRenderer>();
+            services.AddSingleton<IRazorModelViewCollection, RazorModelViewCollection>();
             return services;
         }
     }
