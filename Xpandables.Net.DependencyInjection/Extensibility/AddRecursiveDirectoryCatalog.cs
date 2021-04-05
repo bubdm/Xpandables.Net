@@ -27,28 +27,28 @@ namespace Xpandables.Net.Extensibility
     /// <summary>
     /// Extends <see cref="DirectoryCatalog"/> to support discovery of parts in sub-directories.
     /// </summary>
-    public sealed class RecursiveDirectoryCatalog : ComposablePartCatalog, INotifyComposablePartCatalogChanged, ICompositionElement
+    public sealed class AddRecursiveDirectoryCatalog : ComposablePartCatalog, INotifyComposablePartCatalogChanged, ICompositionElement
     {
         private readonly AggregateCatalog _aggregateCatalog = new();
         private readonly string _path;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RecursiveDirectoryCatalog"/> class with <see cref="ComposablePartDefinition"/> objects based
+        /// Initializes a new instance of the <see cref="AddRecursiveDirectoryCatalog"/> class with <see cref="ComposablePartDefinition"/> objects based
         /// on all the DLL files in the specified directory path and its sub-directories.
         /// </summary>
         /// <param name="path">Path to the directory to scan for assemblies to add to the catalog.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="path"/> is null.</exception>
-        public RecursiveDirectoryCatalog(string path) : this(path, "*.dll") { }
+        public AddRecursiveDirectoryCatalog(string path) : this(path, "*.dll") { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RecursiveDirectoryCatalog"/> class with <see cref="ComposablePartDefinition"/> objects based on
+        /// Initializes a new instance of the <see cref="AddRecursiveDirectoryCatalog"/> class with <see cref="ComposablePartDefinition"/> objects based on
         /// the specified search pattern in the specified directory path and its sub-directories.
         /// </summary>
         /// <param name="path">Path to the directory to scan for assemblies to add to the catalog.</param>
         /// <param name="searchPattern">The pattern to search with. The format of the pattern should be the same as specified for GetFiles.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="path"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="searchPattern"/> is null.</exception>
-        public RecursiveDirectoryCatalog(string path, string searchPattern)
+        public AddRecursiveDirectoryCatalog(string path, string searchPattern)
         {
             _path = path ?? throw new ArgumentNullException(nameof(path));
             _ = searchPattern ?? throw new ArgumentNullException(nameof(searchPattern));

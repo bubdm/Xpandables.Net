@@ -59,7 +59,7 @@ namespace Xpandables.Net.Extensibility
             try
             {
                 var directoryCatalog = options.SearchSubDirectories
-                    ? new RecursiveDirectoryCatalog(options.Path, options.SearchPattern)
+                    ? new AddRecursiveDirectoryCatalog(options.Path, options.SearchPattern)
                     : (ComposablePartCatalog)new DirectoryCatalog(options.Path, options.SearchPattern);
 
                 using var aggregateCatalog = new AggregateCatalog(directoryCatalog);

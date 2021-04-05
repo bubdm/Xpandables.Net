@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,25 +15,24 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Xpandables.Net.DependencyInjection
 {
     /// <summary>
-    /// Provides with an interface that allows external libraries to register types to the services collection.
+    /// Provides with an interface that allows external libraries to configure application.
     /// This interface is used with MEF : Managed Extensibility Framework.
     /// The implementation class must be decorated with the attribute <see cref="System.ComponentModel.Composition.ExportAttribute"/> attribute,
-    /// with <see cref="IAddServiceExport"/> type as contract type.
+    /// with <see cref="IUseServiceExport"/> type as contract type.
     /// </summary>
-    public interface IAddServiceExport
+    public interface IUseServiceExport
     {
         /// <summary>
-        /// When implemented, this method should add types to the services collection.
+        /// When implemented, this method should configure application.
         /// </summary>
-        /// <param name="services">The services collection to act on.</param>
-        /// <param name="configuration">The application configuration.</param>
-        void AddServices(IServiceCollection services, IConfiguration configuration);
+        /// <param name="application">The application builder to act on.</param>
+        /// <param name="environment">The web hosting environment instance.</param>
+        void UseServices(IApplicationBuilder application, IWebHostEnvironment environment);
     }
 }

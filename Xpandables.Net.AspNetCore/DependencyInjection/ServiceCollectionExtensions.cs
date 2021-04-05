@@ -15,10 +15,17 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
+using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Composition.Primitives;
+using System.Linq;
+using System.Reflection;
 
+using Xpandables.Net.Extensibility;
 using Xpandables.Net.Http;
 using Xpandables.Net.Razors;
 
@@ -55,5 +62,86 @@ namespace Xpandables.Net.DependencyInjection
             services.AddSingleton<IRazorModelViewCollection, RazorModelViewCollection>();
             return services;
         }
+
+        /// <summary>
+        /// Adds and configures application services using the<see cref="IUseServiceExport"/> implementations found in the current application path.
+        /// This method is used with MEF : Managed Extensibility Framework.
+        /// </summary>
+        /// <param name="application">The collection of services.</param>
+        /// <param name="environment">The web hosting environment instance.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="application"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        public static IApplicationBuilder UseXServiceExport(this IApplicationBuilder application, IWebHostEnvironment environment)
+        {
+            if (application is null) throw new ArgumentNullException(nameof(application));
+            return application.UseXServiceExport(environment, _ => { });
+        }
+
+        /// <summary>
+        /// Adds and configures application services using the<see cref="IUseServiceExport"/> implementations found in the path.
+        /// This method is used with MEF : Managed Extensibility Framework.
+        /// </summary>
+        /// <param name="application">The application builder instance.</param>
+        /// <param name="environment">The </param>
+        /// <param name="configureOptions">A delegate to configure the <see cref="ExportServiceOptions"/>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="application"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="environment"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="configureOptions"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
+        public static IApplicationBuilder UseXServiceExport(
+            this IApplicationBuilder application, IWebHostEnvironment environment, Action<ExportServiceOptions> configureOptions)
+        {
+            if (application is null) throw new ArgumentNullException(nameof(application));
+            if (environment == null) throw new ArgumentNullException(nameof(environment));
+            if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
+
+            var definedOptions = new ExportServiceOptions();
+            configureOptions.Invoke(definedOptions);
+            application.UseServiceExport(environment, definedOptions);
+
+            return application;
+        }
+
+        private static void UseServiceExport(
+            this IApplicationBuilder application, IWebHostEnvironment environment, ExportServiceOptions options)
+        {
+            try
+            {
+                using var directoryCatalog = options.SearchSubDirectories
+                    ? new UseRecursiveDirectoryCatalog(options.Path, options.SearchPattern)
+                    : (ComposablePartCatalog)new DirectoryCatalog(options.Path, options.SearchPattern);
+
+                var importDefinition = BuildUseImportDefinition();
+
+                using var aggregateCatalog = new AggregateCatalog();
+                aggregateCatalog.Catalogs.Add(directoryCatalog);
+
+                using var compositionContainer = new CompositionContainer(aggregateCatalog);
+                var exportServices = compositionContainer
+                    .GetExports(importDefinition)
+                    .Select(def => def.Value)
+                    .OfType<IUseServiceExport>();
+
+                foreach (var export in exportServices)
+                    export.UseServices(application, environment);
+            }
+            catch (Exception exception) when (exception is NotSupportedException
+                                            || exception is System.IO.DirectoryNotFoundException
+                                            || exception is UnauthorizedAccessException
+                                            || exception is ArgumentException
+                                            || exception is System.IO.PathTooLongException
+                                            || exception is ReflectionTypeLoadException)
+            {
+                throw new InvalidOperationException("Using exports failed. See inner exception.", exception);
+            }
+        }
+
+        private static ImportDefinition BuildUseImportDefinition()
+            => new(
+                    _ => true,
+                    typeof(IUseServiceExport).FullName,
+                    ImportCardinality.ZeroOrMore,
+                    false,
+                    false);
     }
 }
