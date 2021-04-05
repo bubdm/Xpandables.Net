@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Platforms>AnyCPU</Platforms>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <Authors>Francis-Black EWANE</Authors>
+    <Product>Xpandables Net AspNetCore</Product>
+    <Description>A utility library in .Net5.0 that adds AspNetCore behaviors to Xpandables.Net.</Description>
+    <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
+    <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
+    <title>Xpandables.Net</title>
+    <PackageIcon>Xpandables.Net.png</PackageIcon>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>5.4.3</Version>
+    <AssemblyVersion>5.4.3</AssemblyVersion>
+    <FileVersion>5.4.3</FileVersion>
+    <PackageVersion>5.4.3</PackageVersion>
+    <PackageReleaseNotes>Add Retry policy</PackageReleaseNotes>
+    <PackageId>Xpandables.Net.AspNetCore</PackageId>
+    <PackageTags>Razor Blazor Internationalization</PackageTags>
+    <PackageOutputPath>..\Packages\</PackageOutputPath>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AssemblyName>Xpandables.Net.AspNetCore</AssemblyName>
+    <RootNamespace>Xpandables.Net.AspNetCore</RootNamespace>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <summary>A utility library in .Net5.0 that adds AspNetCore behaviors to Xpandables.Net.</summary>
+    <language>en-GB</language>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Xpandables.Net.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+    <Company>EFB Entreprises</Company>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningsAsErrors />
+    <NoWarn />
+    <OutputPath>bin\AnyCPU\Debug\</OutputPath>
+    <DocumentationFile>bin\AnyCPU\Debug\net5.0\Xpandables.Net.AspNetCore.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningsAsErrors />
+    <NoWarn />
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <OutputPath>bin\AnyCPU\Release\</OutputPath>
+    <DocumentationFile>bin\AnyCPU\Release\net5.0\Xpandables.Net.AspNetCore.xml</DocumentationFile>
+    <Optimize>false</Optimize>
+  </PropertyGroup> 
+
+  <ItemGroup>
+    <None Include="..\Xpandables.Net.png" Link="Xpandables.Net.png">
+      <PackagePath></PackagePath>
+      <Pack>True</Pack>
+    </None>
+  </ItemGroup>  
+
+</Project>
