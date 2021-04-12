@@ -124,16 +124,16 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="IServiceScopeFactory{TService}"/> needed to resolve the <see cref="IServiceScope{TService}"/> to the services with scope life time.
+        /// Adds the <see cref="IServiceScopeFactory{TService}"/> needed to resolve the <see cref="IServiceScope{TService}"/> to the services with singleton life time.
         /// </summary>
         /// <param name="services"></param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXServiceScope(this IServiceCollection services)
+        public static IServiceCollection AddXServiceScopeFactory(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped(typeof(IServiceScopeFactory<>), typeof(ServiceScopeFactory<>));
+            services.AddSingleton(typeof(IServiceScopeFactory<>), typeof(ServiceScopeFactory<>));
             return services;
         }
 
