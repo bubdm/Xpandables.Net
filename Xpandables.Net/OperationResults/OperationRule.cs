@@ -15,6 +15,8 @@
  *
 ************************************************************************************************************/
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Xpandables.Net
 {
     /// <summary>
@@ -36,10 +38,21 @@ namespace Xpandables.Net
         public IOperationResult Result { get; protected set; }
 
         /// <summary>
-        /// Returns a value that determines whether or not the instance is satisfied by the argument.
+        /// Returns a value that determines whether or not the instance is satisfied by the argument, after calling the <see cref="ApplyRule(TArgument)"/> method.
         /// </summary>
         /// <param name="argument">The target argument to be checked.</param>
         /// <returns><see langword="true"/> if the argument satisfies the instance; otherwise returns <see langword="false"/>.</returns>
-        public abstract bool IsSatisfiedBy(TArgument argument);
+        public bool IsSatisfiedBy(TArgument argument)
+        {
+            ApplyRule(argument);
+            return Result.Succeeded;
+        }
+
+        /// <summary>
+        /// When overridden in derived class, this method will do the actual job of applying the rule and set the <see cref="Result"/> property to the expected value.
+        /// </summary>
+        /// <param name="argument">The target argument to be checked.</param>
+        [MemberNotNull(nameof(Result))]
+        protected abstract void ApplyRule(TArgument argument);
     }
 }
