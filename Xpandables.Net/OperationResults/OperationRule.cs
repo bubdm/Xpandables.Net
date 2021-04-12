@@ -50,9 +50,9 @@ namespace Xpandables.Net
 
         /// <summary>
         /// When overridden in derived class, this method will do the actual job of applying the rule and set the <see cref="Result"/> property to the expected value.
+        /// The default <see cref="Result"/> is <see cref="SuccessOperationResult"/>.
         /// </summary>
         /// <param name="argument">The target argument to be checked.</param>
-        [MemberNotNull(nameof(Result))]
         protected abstract void ApplyRule(TArgument argument);
     }
 }
