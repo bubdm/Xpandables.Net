@@ -30,7 +30,6 @@ namespace Xpandables.Net.Validators
         /// <summary>
         /// Does nothing.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S927:Parameter names should match base declaration and other partial definitions", Justification = "<Pending>")]
         public async Task<IOperationResult> ValidateAsync(TArgument _, CancellationToken cancellationToken = default)
             => await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
     }

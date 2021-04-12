@@ -166,7 +166,6 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// The default URI used to retrieve the IP address.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>")]
         public const string DefaultIPAddressFinderUri = "https://ipinfo.io/ip";
 
         /// <summary>
@@ -201,7 +200,6 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// The default URI used to retrieve the IP address location.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>")]
         public const string DefaultIPAddressLocationFinderUri = "http://api.ipstack.com";
 
         /// <summary>

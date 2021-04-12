@@ -236,10 +236,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             }
 
             attribute.Uri = new Uri(attribute.Path, UriKind.Relative);
-
-#pragma warning disable SecurityIntelliSenseCS // MS Security rules violation
             var httpRequestMessage = new HttpRequestMessage(new HttpMethod(attribute.Method), attribute.Uri);
-#pragma warning restore SecurityIntelliSenseCS // MS Security rules violation
             httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(attribute.Accept));
             httpRequestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(Thread.CurrentThread.CurrentCulture.Name));
 

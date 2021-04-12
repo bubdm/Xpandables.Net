@@ -29,7 +29,6 @@ namespace Xpandables.Net
     /// This is an <see langword="abstract"/> and serializable class.
     /// </summary>
     [Serializable]
-    [SuppressMessage("Major Code Smell", "S4035:Classes implementing \"IEquatable<T>\" should be sealed", Justification = "<Pending>")]
     public abstract class EnumerationType : IEqualityComparer<EnumerationType>, IEquatable<EnumerationType>, IComparable<EnumerationType>
     {
         /// <summary>

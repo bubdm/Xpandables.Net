@@ -95,7 +95,6 @@ namespace Xpandables.Net.Api.Handlers
         public string? Address { get; set; }
         public string? Country { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S1104:Fields should not have public accessibility", Justification = "<Pending>")]
         public Func<Edit, IOperationResult> ApplyPatch = null!;
     }
 }
