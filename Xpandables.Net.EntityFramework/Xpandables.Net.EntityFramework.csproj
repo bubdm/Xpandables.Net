@@ -17,11 +17,11 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.4.3</Version>
-    <AssemblyVersion>5.4.3</AssemblyVersion>
-    <FileVersion>5.4.3</FileVersion>
-    <PackageVersion>5.4.3</PackageVersion>
-    <PackageReleaseNotes>Add IEventPublisher</PackageReleaseNotes>
+    <Version>5.4.4</Version>
+    <AssemblyVersion>5.4.4</AssemblyVersion>
+    <FileVersion>5.4.4</FileVersion>
+    <PackageVersion>5.4.4</PackageVersion>
+    <PackageReleaseNotes>Add MultiTenant DbContext</PackageReleaseNotes>
     <PackageId>Xpandables.Net.EntityFramework</PackageId>
     <PackageTags>IDataContext DataContextFactory IEntityAcessor.</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
