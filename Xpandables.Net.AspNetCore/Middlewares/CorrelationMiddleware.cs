@@ -15,36 +15,33 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-
+using System;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Database;
+using Microsoft.AspNetCore.Http;
+
+using Xpandables.Net.Correlations;
 
 namespace Xpandables.Net.Middlewares
 {
     /// <summary>
-    /// Defines the data context scope using the <see cref="DataContextTenantAttribute"/> found in the current endpoint.
+    /// Adds the correlation header id to the current request.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
-    public class DataContextTenantMiddleware : IMiddleware
+    public class CorrelationMiddleware : IMiddleware
     {
         /// <summary>
-        /// Request handling method.
+        /// Request handling method after setting the correlation header id.
         /// </summary>
         /// <param name="context">The <see cref="HttpContext" /> for the current request.</param>
         /// <param name="next">The delegate representing the remaining middleware in the request pipeline.</param>
         /// <returns>A <see cref="Task" /> that represents the execution of this middleware.</returns>
-        public virtual async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public virtual Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (context.GetEndpoint() is { } endpoint && endpoint.Metadata.GetMetadata<DataContextTenantAttribute>() is { } dataContextFactoryAttribute)
-            {
-                var dataContextTenantAccessor = context.RequestServices.GetRequiredService<IDataContextTenantAccessor>();
-                dataContextTenantAccessor.SetTenantName(dataContextFactoryAttribute.TenantName);
-            }
+            var correlationId = Guid.NewGuid().ToString();
+            context.Request.Headers.Add(ICorrelationContext.DefaultHeader, correlationId);
 
-            await next(context).ConfigureAwait(false);
+            return next(context);
         }
     }
 }

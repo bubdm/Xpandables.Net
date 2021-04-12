@@ -65,6 +65,19 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the default <see cref="CorrelationMiddleware"/> type to the application's request pipeline.
+        /// </summary>
+        /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
+        /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
+        public static IApplicationBuilder UseXCorrelationMiddleware(this IApplicationBuilder builder)
+        {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+            builder.UseMiddleware<CorrelationMiddleware>();
+
+            return builder;
+        }
+
+        /// <summary>
         /// Adds the HTTP context header values accessor that implements the <see cref="IHttpHeaderAccessor"/>.
         /// </summary>
         /// <param name="services">The collection of services.</param>
