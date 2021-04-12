@@ -28,6 +28,7 @@ using System.Reflection;
 using Xpandables.Net.Correlations;
 using Xpandables.Net.Extensibility;
 using Xpandables.Net.Http;
+using Xpandables.Net.Middlewares;
 using Xpandables.Net.Razors;
 
 namespace Xpandables.Net.DependencyInjection
@@ -48,6 +49,19 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddScoped<ICorrelationContext, CorrelationContext>();
             return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="DataContextTenantMiddleware"/> type to the application's request pipeline.
+        /// </summary>
+        /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
+        /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
+        public static IApplicationBuilder UseXDataContextTenantMiddleware(this IApplicationBuilder builder)
+        {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+            builder.UseMiddleware<DataContextTenantMiddleware>();
+
+            return builder;
         }
 
         /// <summary>

@@ -25,7 +25,7 @@ using Xpandables.Net.Database;
 namespace Xpandables.Net.Middlewares
 {
     /// <summary>
-    /// Defines the data context scope using the <see cref="DataContextTenantAttribute"/> if available.
+    /// Defines the data context scope using the <see cref="DataContextTenantAttribute"/> found in the current endpoint.
     /// </summary>
     public sealed class DataContextTenantMiddleware : IMiddleware
     {
