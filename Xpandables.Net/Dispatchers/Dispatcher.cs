@@ -74,7 +74,7 @@ namespace Xpandables.Net.Dispatchers
 
             if (!handler.CanHandle(query))
             {
-                WriteLineException(new ArgumentException($"The wrapper {handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type. The handler CanHandle returned false."));
+                WriteLineException(new ArgumentException($"The wrapper {handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type. The target handler method 'CanHandle' returned false."));
                 return AsyncEnumerableExtensions.Empty<TResult>();
             }
 
@@ -109,7 +109,7 @@ namespace Xpandables.Net.Dispatchers
 
             if (!handler.CanHandle(query))
             {
-                var exception = new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type.");
+                var exception = new ArgumentException($"The wrapper {handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type. The target handler method 'CanHandle' returned false.");
                 WriteLineException(exception);
                 return new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(query), exception);
             }
@@ -141,7 +141,7 @@ namespace Xpandables.Net.Dispatchers
 
             if (!((ICanHandle)handler).CanHandle(command))
             {
-                var exception = new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
+                var exception = new ArgumentException($"The wrapper {handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type. The target handler method 'CanHandle' returned false.");
                 WriteLineException(exception);
                 return new FailureOperationResult(HttpStatusCode.BadRequest, nameof(command), exception);
             }
@@ -177,7 +177,7 @@ namespace Xpandables.Net.Dispatchers
 
             if (!handler.CanHandle(command))
             {
-                var exception = new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type.");
+                var exception = new ArgumentException($"The wrapper {handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type. The target handler method 'CanHandler' returned false.");
                 WriteLineException(exception);
                 return new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(command), exception);
             }
