@@ -74,7 +74,7 @@ namespace Xpandables.Net.Dispatchers
 
             if (!handler.CanHandle(query))
             {
-                WriteLineException(new ArgumentException($"{handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type."));
+                WriteLineException(new ArgumentException($"The wrapper {handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type. The handler CanHandle returned false."));
                 return AsyncEnumerableExtensions.Empty<TResult>();
             }
 
