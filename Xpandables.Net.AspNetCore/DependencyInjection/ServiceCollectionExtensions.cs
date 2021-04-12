@@ -25,6 +25,7 @@ using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using System.Reflection;
 
+using Xpandables.Net.Correlations;
 using Xpandables.Net.Extensibility;
 using Xpandables.Net.Http;
 using Xpandables.Net.Razors;
@@ -36,6 +37,19 @@ namespace Xpandables.Net.DependencyInjection
     /// </summary>
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds the default correlation context implementation type to the services with scoped life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXCorrelationContext(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<ICorrelationContext, CorrelationContext>();
+            return services;
+        }
+
         /// <summary>
         /// Adds the HTTP context header values accessor that implements the <see cref="IHttpHeaderAccessor"/>.
         /// </summary>
