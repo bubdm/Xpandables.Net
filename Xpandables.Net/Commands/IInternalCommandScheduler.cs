@@ -23,7 +23,7 @@ namespace Xpandables.Net.Commands
     /// <summary>
     /// Provides with a method to asynchronously enqueue a command of specific type that implements <see cref="IInternalCommand"/> interface.
     /// </summary>
-    public interface ICommandScheduler
+    public interface IInternalCommandScheduler
     {
         /// <summary>
         /// Asynchronously enqueues the specified command.
