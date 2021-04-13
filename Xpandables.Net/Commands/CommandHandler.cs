@@ -29,7 +29,7 @@ namespace Xpandables.Net.Commands
         where TCommand : class, ICommand
     {
         /// <summary>
-        /// Asynchronously handles the specified command using the delegate from the constructor.
+        /// Asynchronously handles the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -47,7 +47,7 @@ namespace Xpandables.Net.Commands
         where TCommand : class, ICommand<TResult>
     {
         /// <summary>
-        /// Asynchronously handles the specified command using the delegate from the constructor.
+        /// Asynchronously handles the specified command.
         /// </summary>
         /// <param name="command">The command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

@@ -29,7 +29,7 @@ namespace Xpandables.Net.Commands
         where TInternalCommand : class, IInternalCommand
     {
         /// <summary>
-        /// Asynchronously handles the specified internal command using the delegate from the constructor.
+        /// Asynchronously handles the specified internal command.
         /// </summary>
         /// <param name="command">The internal command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

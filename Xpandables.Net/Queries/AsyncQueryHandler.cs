@@ -30,7 +30,7 @@ namespace Xpandables.Net.Queries
         where TQuery : class, IAsyncQuery<TResult>
     {
         /// <summary>
-        /// Asynchronously handles the specified query using the delegate from the constructor and returns an asynchronous enumerable of result type.
+        /// Asynchronously handles the specified query and returns an asynchronous enumerable of result type.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
