@@ -20,7 +20,7 @@ namespace Xpandables.Net.Commands
     /// <summary>
     /// This interface is used as a marker for commands used for internal processes.
     /// </summary>
-    public interface IInternalCommand : ICommand
+    public interface IInternalCommand : ICommandQueryEvent
     {
         /// <summary>
         /// Gets the command type.

@@ -545,7 +545,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="ICommandHandler{TCommand}"/> and <see cref="ICommandHandler{TCommand, TResult}"/> to the services with scope life time.
+        /// Adds the <see cref="ICommandHandler{TCommand}"/>, <see cref="ICommandHandler{TCommand, TResult}"/> and <see cref="IInternalCommandHandler{TInternalCommand}"/> to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -567,6 +567,19 @@ namespace Xpandables.Net.DependencyInjection
                 .ToList();
 
             foreach (var handler in genericHandlers)
+            {
+                foreach (var interf in handler.Interfaces)
+                {
+                    services.AddScoped(interf, handler.Type);
+                }
+            }
+
+            var genericInternalHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IInternalCommandHandler<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IInternalCommandHandler<>)) })
+                .ToList();
+
+            foreach (var handler in genericInternalHandlers)
             {
                 foreach (var interf in handler.Interfaces)
                 {
@@ -667,7 +680,7 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Adds and configures the <see cref="ICommandHandler{TCommand}"/>, <see cref="IDomainEventHandler{TEvent}"/>, <see cref="IIntegrationEventHandler{TEvent}"/>,
-        /// <see cref="IQueryHandler{TQuery, TResult}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
+        /// <see cref="IQueryHandler{TQuery, TResult}"/>, <see cref="IInternalCommandHandler{TInternalCommand}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
