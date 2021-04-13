@@ -124,9 +124,25 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
+        /// Adds the <see cref="IInternalCommandScheduler"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TInternalCommandScheduler">The scheduler type implementation.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXInternalCommandScheduler<TInternalCommandScheduler>(this IServiceCollection services)
+            where TInternalCommandScheduler:class, IInternalCommandScheduler
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<IInternalCommandScheduler, TInternalCommandScheduler>();
+            return services;
+        }
+
+        /// <summary>
         /// Adds the <see cref="IServiceScopeFactory{TService}"/> needed to resolve the <see cref="IServiceScope{TService}"/> to the services with singleton life time.
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXServiceScopeFactory(this IServiceCollection services)
