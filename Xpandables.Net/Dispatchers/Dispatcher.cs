@@ -185,6 +185,31 @@ namespace Xpandables.Net.Dispatchers
             return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Asynchronously sends the command handler (<see cref="IInternalCommandHandler{TInternalCommand}"/> implementation) on the specified command.
+        /// </summary>
+        /// <param name="command">The command to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        /// <remarks>if errors, see Debug or Trace.</remarks>
+        public virtual async Task SendAsync(IInternalCommand command, CancellationToken cancellationToken = default)
+        {
+            _ = command ?? throw new ArgumentNullException(nameof(command));
+
+            if (!typeof(IInternalCommandHandler<>).TryMakeGenericType(out var handlerType, out var typeException, command.GetType()))
+            {
+                throw new InvalidOperationException("Building internal command handler failed.", typeException);
+            }
+
+            if (!_handlerAccessor.TryGetHandler(handlerType, out dynamic? handler, out var ex))
+            {
+                throw new InvalidOperationException($"The matching internal command handler for {command.GetType().Name} is missing.", ex);
+            }
+
+            await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
+        }
+
         private static void WriteLineException(Exception exception)
         {
 #if DEBUG

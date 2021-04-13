@@ -75,5 +75,15 @@ namespace Xpandables.Net.Dispatchers
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
         /// <remarks>if errors, see Debug or Trace.</remarks>
         Task<IOperationResult<TResult>> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Asynchronously sends the command handler (<see cref="IInternalCommandHandler{TInternalCommand}"/> implementation) on the specified command.
+        /// </summary>
+        /// <param name="command">The command to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        /// <remarks>if errors, see Debug or Trace.</remarks>
+        Task SendAsync(IInternalCommand command, CancellationToken cancellationToken = default);
     }
 }
