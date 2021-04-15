@@ -68,7 +68,7 @@ namespace Xpandables.Net.Decorators.DomainEvents
                 return resultState;
 
             await _domainEventPublisher.PublishAsync(cancellationToken).ConfigureAwait(false);
-            return new SuccessOperationResult();
+            return resultState;
         }
     }
 

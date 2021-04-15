@@ -17,6 +17,8 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,7 +59,7 @@ namespace Xpandables.Net.Decorators.Validators
 
         /// <summary>
         /// Asynchronously validates the query before handling and returns an asynchronous result type.
-        /// if a validator is failed, returns an empty enumerable.
+        /// if a validator is failed, traces the errors and returns an empty enumerable.
         /// </summary>
         /// <param name="query">The query to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -67,7 +69,10 @@ namespace Xpandables.Net.Decorators.Validators
         {
             var resultState = await _validator.ValidateAsync(query, cancellationToken).ConfigureAwait(false);
             if (resultState.Failed)
+            {
+                Trace.WriteLine(resultState.Errors.ToArray().ToJsonString());
                 yield break;
+            }
 
             await foreach (var result in _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false))
                 yield return result;

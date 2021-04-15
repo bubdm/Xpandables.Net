@@ -69,7 +69,7 @@ namespace Xpandables.Net.Decorators.IntegrationEvents
                 return resultState;
 
             await _integrationEventPublisher.PublishAsync(cancellationToken).ConfigureAwait(false);
-            return new SuccessOperationResult();
+            return resultState;
         }
     }
 
