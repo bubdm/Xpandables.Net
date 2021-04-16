@@ -37,7 +37,7 @@ namespace Xpandables.Net.Http
         public HttpRestClientAttribute() { }
 
         /// <summary>
-        /// Gets or sets the Uri path.
+        /// Gets or sets the Uri path. If null, the root path will be set.
         /// </summary>
         public string? Path { get; set; }
 
@@ -47,10 +47,10 @@ namespace Xpandables.Net.Http
         /// </summary>
         public ParameterLocation In { get; set; } = ParameterLocation.Body;
 
-        /// <summary>
-        /// Gets or sets the header / cookie name for <see cref="In"/> = <see cref="ParameterLocation.Cookie"/> or <see cref="ParameterLocation.Header"/>.
-        /// </summary>
-        public string HeaderCookieName { get; set; } = string.Empty;
+        ///// <summary>
+        ///// Gets or sets the header / cookie name for <see cref="In"/> = <see cref="ParameterLocation.Cookie"/> or <see cref="ParameterLocation.Header"/>.
+        ///// </summary>
+        //public string HeaderCookieName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the method name.
@@ -86,14 +86,16 @@ namespace Xpandables.Net.Http
         /// Gets the value indicating whether or not the request needs authorization.
         /// The default value is <see langword="true"/>.
         /// In this case, an <see cref="AuthenticationHeaderValue"/> with the <see cref="Scheme"/> value will be initialized and filled
-        /// using one of the <see langword="ConfigureXPrimaryAuthorizationTokenHandler(IHttpClientBuilder)"/> methods extension if necessary.
+        /// with <see cref="IHttpHeaderAccessor"/> reading the "Authorization" key. You should add <see langword="ConfigureXPrimaryAuthorizationTokenHandler"/> extension method
+        /// when registering <see cref="IHttpRestClientHandler"/>.
         /// </summary>
         public bool IsSecured { get; set; } = true;
 
         /// <summary>
-        /// Gets the value indicating whether or not the query/command should be added to the request content.
-        /// If <see langword="true"/> the query/command will not be added.
+        /// Gets the value indicating whether or not the target class should be added to the request body.
+        /// If <see langword="true"/> the target class will not be added.
         /// The default value is <see langword="false"/>.
+        /// Be aware of the fact that, setting this value to <see langword="true"/> will disable all parameters linked to <see cref="ParameterLocation.Body"/>.
         /// </summary>
         public bool IsNullable { get; set; }
 
@@ -167,7 +169,8 @@ namespace Xpandables.Net.Http
     public enum ParameterLocation
     {
         /// <summary>
-        /// Used in the content of the request.
+        /// Used in the content of the request. You can use <see cref="IStringRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, 
+        /// <see cref="IMultipartRequest"/> or <see cref="IFormUrlEncodedRequest"/> to customize the body content, otherwise the whole class will be serialized.
         /// </summary>
         Body = 0x0,
 
@@ -199,7 +202,7 @@ namespace Xpandables.Net.Http
     {
         /// <summary>
         /// Body content matching the <see cref="StringContent"/>.
-        /// The target class should implement <see cref="IStringRequest"/>, otherwise the hole class will be serialized.
+        /// The target class should implement <see cref="IStringRequest"/>, otherwise the whole class will be serialized.
         /// </summary>
         String,
 
