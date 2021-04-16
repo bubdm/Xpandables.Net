@@ -20,7 +20,7 @@ using System;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// Provides with shared member for commands, queries and events.
+    /// Provides with shared members for commands, queries and events.
     /// </summary>
     public interface ICommandQueryEvent
     {

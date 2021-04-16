@@ -21,16 +21,16 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Commands
 {
     /// <summary>
-    /// Provides with a method to asynchronously enqueue a command of specific type that implements <see cref="IInternalCommand"/> interface.
+    /// Provides with a method to asynchronously enqueue an internal command of specific type that implements <see cref="IInternalCommand"/> interface.
     /// </summary>
     public interface IInternalCommandScheduler
     {
         /// <summary>
-        /// Asynchronously enqueues the specified command.
+        /// Asynchronously enqueues the specified internal command.
         /// </summary>
-        /// <param name="command">The command instance to act on.</param>
+        /// <param name="command">The internal command instance to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task EnqueueAsync<TCommand>(TCommand command) where TCommand : class, IInternalCommand;
+        Task EnqueueAsync<TInternalCommand>(TInternalCommand command) where TInternalCommand : class, IInternalCommand;
     }
 }

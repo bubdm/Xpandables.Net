@@ -25,7 +25,7 @@ namespace Xpandables.Net.Commands
     /// Represents a helper class that allows implementation of <see cref="IInternalCommandHandler{TInternalCommand}"/> interface.
     /// </summary>
     /// <typeparam name="TInternalCommand">Type of internal command to act on.</typeparam>
-    public abstract class InternalCommandHandler<TInternalCommand> : IInternalCommandHandler<TInternalCommand>
+    public abstract class InternalCommandHandler<TInternalCommand> : OperationResultBase, IInternalCommandHandler<TInternalCommand>
         where TInternalCommand : class, IInternalCommand
     {
         /// <summary>
@@ -35,6 +35,6 @@ namespace Xpandables.Net.Commands
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        public abstract Task HandleAsync(TInternalCommand command, CancellationToken cancellationToken = default);
+        public abstract Task<IOperationResult> HandleAsync(TInternalCommand command, CancellationToken cancellationToken = default);
     }
 }
