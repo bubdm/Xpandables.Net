@@ -30,6 +30,7 @@ namespace Xpandables.Net.Database
     /// Represents a method used to handle persistence exception.
     /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null exception.
     /// If there's not delegate, the handled exception will be re-thrown normally.
+    /// You may use extension methods <see langword="AsNoTracking()"/> or <see langword="AsTracking()"/> to enable/disable entities tracking.
     /// </summary>
     /// <param name="exception">The handled exception during persistence.</param>
     /// <returns>An exception to re-throw or null if not.</returns>
@@ -42,7 +43,7 @@ namespace Xpandables.Net.Database
     /// When a value is not found, a default value of the expected type should be returned.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
-    public interface IDataContext : IDisposable, IAsyncDisposable
+    public interface IDataContext : IDisposable, IAsyncDisposable, IDataTracker
     {
         internal object InternalDbSet<T>() where T : class;
 
@@ -60,31 +61,27 @@ namespace Xpandables.Net.Database
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TResult"/> type specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
-        /// The result is tracked by default. You can set the <paramref name="isTracked"/> to <see langword="false"/> to disable tracking.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="isTracked">Determines whether or not the entity result is tracked. The default value is <see langword="true"/>.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, bool isTracked = true, CancellationToken cancellationToken = default)
+        Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
             where T : class;
 
         /// <summary>
         /// Returns an asynchronous enumerable of <typeparamref name="TResult"/> anonymous type specified by the selector.
         /// If no result found, returns an empty enumerable.
-        /// The result is not tracked by default. You can set the <paramref name="isTracked"/> to <see langword="true"/> to enable tracking.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="isTracked">Determines whether or not the entity result is tracked. The default value is <see langword="true"/>.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        IAsyncEnumerable<TResult> FetchAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, bool isTracked = false, CancellationToken cancellationToken = default)
+        IAsyncEnumerable<TResult> FetchAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
             where T : class;
 
         /// <summary>
@@ -181,7 +178,7 @@ namespace Xpandables.Net.Database
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
-    public interface IDataContext<TEntity>
+    public interface IDataContext<TEntity> : IDataTracker
         where TEntity : class
     {
         internal object InternalDbSet<T>() where T : class;
@@ -189,28 +186,24 @@ namespace Xpandables.Net.Database
         /// <summary>
         /// Returns an anonymous type of <typeparamref name="TResult"/> specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
-        /// The result is tracked by default. You can set the <paramref name="isTracked"/> to <see langword="false"/> to disable tracking.
         /// </summary>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="isTracked">Determines whether or not the entity result is tracked. The default value is <see langword="true"/>.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        Task<TResult?> TryFindAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> selector, bool isTracked = true, CancellationToken cancellationToken = default);
+        Task<TResult?> TryFindAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns an asynchronous enumerable of <typeparamref name="TResult"/> anonymous type specified by the selector.
         /// If no result found, returns an empty enumerable.
-        /// The result is not tracked by default. You can set the <paramref name="isTracked"/> to <see langword="true"/> to enable tracking.
         /// </summary>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="isTracked">Determines whether or not the entity result is tracked. The default value is <see langword="true"/>.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> selector, bool isTracked = false, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Adds a collection of domain objects to the data storage that will be inserted

@@ -41,6 +41,9 @@ namespace Xpandables.Net.Database
         /// </summary>
         public IDataContext<TEntity> DataContext { get; }
 
+        private bool _isTracked;
+        bool IDataTracker.IsTracked { get => _isTracked; set => _isTracked = value; }
+
         /// <summary>
         /// Initializes a new instance of <see cref="EntityAccessor{TEntity}"/> with the context to act on.
         /// </summary>
@@ -58,18 +61,23 @@ namespace Xpandables.Net.Database
             (IQueryable<TEntity>)DataContext.InternalDbSet<TEntity>();
 
         /// <summary>
-        /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria and is tracked for changes.
+        /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria.
         /// If not found, returns the <see langword="default"/> value of the type.
         /// </summary>
         /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TEntity"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        public async Task<TEntity?> TryFindTrackedAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
-            => await DataContext.TryFindAsync(_ => QueryableEntity().Where(criteria).Select(s => s), true, cancellationToken).ConfigureAwait(false);
+        public async Task<TEntity?> TryFindAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
+            => await DataContext.AsTracking(_isTracked).TryFindAsync(_ =>
+                QueryableEntity()
+                    .Where(criteria)
+                    .Select(s => s),
+                cancellationToken)
+            .ConfigureAwait(false);
 
         /// <summary>
-        /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria applied on <paramref name="propertyExpression"/> and is tracked for changes.
+        /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria applied on <paramref name="propertyExpression"/>.
         /// If not found, returns the <see langword="default"/> value of the type.
         /// </summary>
         /// <typeparam name="TParam">The type of the model parameter.</typeparam>
@@ -79,13 +87,18 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an object of <typeparamref name="TEntity"/> type that meets the criteria.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
-        public async Task<TEntity?> TryFindTrackedAsync<TParam>(Expression<Func<TEntity, TParam>> propertyExpression,
+        public async Task<TEntity?> TryFindAsync<TParam>(Expression<Func<TEntity, TParam>> propertyExpression,
             Expression<Func<TParam, bool>> criteria, CancellationToken cancellationToken = default)
             where TParam : class
-            => await DataContext.TryFindAsync(_ => QueryableEntity().Where(propertyExpression, criteria).Select(s => s), true, cancellationToken).ConfigureAwait(false);
+            => await DataContext.AsTracking(_isTracked).TryFindAsync(_ =>
+                QueryableEntity()
+                    .Where(propertyExpression, criteria)
+                    .Select(s => s),
+                cancellationToken)
+            .ConfigureAwait(false);
 
         /// <summary>
-        /// Tries to return an entity converted to the <typeparamref name="TResult"/> type that matches the criteria using the <paramref name="converter"/> and can be tracked for changes.
+        /// Tries to return an entity converted to the <typeparamref name="TResult"/> type that matches the criteria using the <paramref name="converter"/>.
         /// If not found, returns the <see langword="default"/> value of the <typeparamref name="TResult"/> type.
         /// </summary>
         /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
@@ -93,14 +106,18 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        public async Task<TResult?> TryFindTrackedAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
+        public async Task<TResult?> TryFindAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
             Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
-            => await DataContext.TryFindAsync(_ => QueryableEntity().Where(criteria).Select(converter), true, cancellationToken)
-                .ConfigureAwait(false);
+            => await DataContext.AsTracking(_isTracked).TryFindAsync(_ =>
+                QueryableEntity()
+                    .Where(criteria)
+                    .Select(converter),
+                cancellationToken)
+            .ConfigureAwait(false);
 
         /// <summary>
         /// Tries to return an entity converted to the <typeparamref name="TResult"/> type that matches the criteria applied on <paramref name="propertyExpression"/>
-        /// using the <paramref name="converter"/> and is tracked for changes.
+        /// using the <paramref name="converter"/>.
         /// If not found, returns the <see langword="default"/> value of the <typeparamref name="TResult"/> type.
         /// </summary>
         /// <typeparam name="TParam">The type of the model parameter.</typeparam>
@@ -112,77 +129,18 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type that meets the criteria.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
-        public async Task<TResult?> TryFindTrackedAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
+        public async Task<TResult?> TryFindAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
             Expression<Func<TParam, bool>> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
             where TParam : class
-            => await DataContext.TryFindAsync(_ => QueryableEntity().Where(propertyExpression, criteria).Select(converter), true, cancellationToken)
-                .ConfigureAwait(false);
+            => await DataContext.AsTracking(_isTracked).TryFindAsync(_ =>
+                QueryableEntity()
+                    .Where(propertyExpression, criteria)
+                    .Select(converter),
+                cancellationToken)
+            .ConfigureAwait(false);
 
         /// <summary>
-        /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria and is not tracked.
-        /// If not found, returns the <see langword="default"/> value of the type.
-        /// </summary>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TEntity"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        public async Task<TEntity?> TryFindUnTrackedAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
-            => await DataContext.TryFindAsync(_ => QueryableEntity().Where(criteria).Select(s => s), false, cancellationToken)
-                .ConfigureAwait(false);
-
-        /// <summary>
-        /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria applied on <paramref name="propertyExpression"/> and is not tracked.
-        /// If not found, returns the <see langword="default"/> value of the type.
-        /// </summary>
-        /// <typeparam name="TParam">The type of the model parameter.</typeparam>
-        /// <param name="propertyExpression">The expression that contains the member to apply criteria on.</param>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TEntity"/> type that meets the criteria.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
-        public async Task<TEntity?> TryFindUnTrackedAsync<TParam>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Expression<Func<TParam, bool>> criteria, CancellationToken cancellationToken = default)
-            where TParam : class
-            => await DataContext.TryFindAsync(_ => QueryableEntity().Where(propertyExpression, criteria).Select(s => s), false, cancellationToken)
-                .ConfigureAwait(false);
-
-        /// <summary>
-        /// Tries to return an entity converted to the <typeparamref name="TResult"/> type that matches the criteria using the <paramref name="converter"/> and is not tracked.
-        /// If not found, returns the <see langword="default"/> value of the <typeparamref name="TResult"/> type.
-        /// </summary>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="converter">Defines the expression to convert n entity to the expected result.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TResult"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        public async Task<TResult?> TryFindUnTrackedAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
-            Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
-            => await DataContext.TryFindAsync(_ => QueryableEntity().Where(criteria).Select(converter), false, cancellationToken)
-                .ConfigureAwait(false);
-
-        /// <summary>
-        /// Tries to return an entity converted to the <typeparamref name="TResult"/> type that matches the criteria applied on <paramref name="propertyExpression"/>
-        /// using the <paramref name="converter"/> and is not tracked.
-        /// If not found, returns the <see langword="default"/> value of the <typeparamref name="TResult"/> type.
-        /// </summary>
-        /// <typeparam name="TParam">The type of the model parameter.</typeparam>
-        /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
-        /// <param name="propertyExpression">The expression that contains the member to apply criteria on.</param>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="converter">Defines the expression to convert n entity to the expected result.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TResult"/> type that meets the criteria.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
-        public async Task<TResult?> TryFindUnTrackedAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Expression<Func<TParam, bool>> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
-            where TParam : class
-            => await DataContext.TryFindAsync(_ => QueryableEntity().Where(propertyExpression, criteria).Select(converter), false, cancellationToken)
-                .ConfigureAwait(false);
-
-        /// <summary>
-        /// Returns an enumerable of <typeparamref name="TResult"/> type that match the criteria, can be tracked for changes and that can be asynchronously enumerated.
+        /// Returns an enumerable of <typeparamref name="TResult"/> type that match the criteria and that can be asynchronously enumerated.
         /// If no result found, returns an empty enumerable.
         /// </summary>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
@@ -192,47 +150,16 @@ namespace Xpandables.Net.Database
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
-        public IAsyncEnumerable<TResult> FetchTrackedAllAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
+        public IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
             Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
-            => DataContext.FetchAllAsync(_ => QueryableEntity().Where(criteria).Select(converter), true, cancellationToken);
-
-        /// <summary>
-        /// Returns an enumerable of <typeparamref name="TResult"/> type that match the criteria, can be tracked for changes and that can be asynchronously enumerated.
-        /// If no result found, returns an empty enumerable.
-        /// </summary>
-        /// <typeparam name="TParam">The type of the model parameter.</typeparam>
-        /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
-        /// <param name="propertyExpression">The expression that contains the member to apply criteria on.</param>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="converter">Defines the expression to convert n entity to the expected result.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
-        public virtual IAsyncEnumerable<TResult> FetchTrackedAllAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Expression<Func<TParam, bool>> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
-            where TParam : class
-            => DataContext.FetchAllAsync(_ => QueryableEntity().Where(propertyExpression, criteria).Select(converter), true,
+            => DataContext.AsTracking(_isTracked).FetchAllAsync(_ =>
+                QueryableEntity()
+                    .Where(criteria)
+                    .Select(converter),
                 cancellationToken);
 
         /// <summary>
-        /// Returns an enumerable of <typeparamref name="TResult"/> type that match the criteria, is no tracked and that can be asynchronously enumerated.
-        /// If no result found, returns an empty enumerable.
-        /// </summary>
-        /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="converter">Defines the expression to convert n entity to the expected result.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
-        public virtual IAsyncEnumerable<TResult> FetchUnTrackedAllAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
-            Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
-            => DataContext.FetchAllAsync(_ => QueryableEntity().Where(criteria).Select(converter), false,
-                cancellationToken);
-
-        /// <summary>
-        /// Returns an enumerable of <typeparamref name="TResult"/> type that match the criteria, is not tracked and that can be asynchronously enumerated.
+        /// Returns an enumerable of <typeparamref name="TResult"/> type that match the criteria and that can be asynchronously enumerated.
         /// If no result found, returns an empty enumerable.
         /// </summary>
         /// <typeparam name="TParam">The type of the model parameter.</typeparam>
@@ -244,10 +171,13 @@ namespace Xpandables.Net.Database
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
-        public virtual IAsyncEnumerable<TResult> FetchUnTrackedAllAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
+        public virtual IAsyncEnumerable<TResult> FetchAllAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
             Expression<Func<TParam, bool>> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
             where TParam : class
-            => DataContext.FetchAllAsync(_ => QueryableEntity().Where(propertyExpression, criteria).Select(converter), false,
+            => DataContext.AsTracking(_isTracked).FetchAllAsync(_ =>
+                QueryableEntity()
+                    .Where(propertyExpression, criteria)
+                    .Select(converter),
                 cancellationToken);
 
         /// <summary>
@@ -258,7 +188,10 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an  asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
         public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
-            => await DataContext.AddEntityAsync(entity, cancellationToken).ConfigureAwait(false);
+            => await DataContext.AddEntityAsync(
+                entity,
+                cancellationToken)
+            .ConfigureAwait(false);
 
         /// <summary>
         /// Marks the specified entity to be updated to the data storage on persistence.
@@ -268,7 +201,10 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an  asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
         public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
-            => await DataContext.UpdateEntityAsync(entity, cancellationToken).ConfigureAwait(false);
+            => await DataContext.UpdateEntityAsync(
+                entity,
+                cancellationToken)
+            .ConfigureAwait(false);
 
         /// <summary>
         /// Persists all pending entities to the data storage.

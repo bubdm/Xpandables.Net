@@ -34,6 +34,9 @@ namespace Xpandables.Net.Database
         private readonly IDataContext _dataContext;
         object IDataContext<TEntity>.InternalDbSet<T>() => _dataContext.InternalDbSet<T>();
 
+        private bool _isTracked;
+        bool IDataTracker.IsTracked { get => _isTracked; set => _isTracked = value; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DataContext{T}"/> class
         /// using the original data context to be wrapped.
@@ -45,30 +48,31 @@ namespace Xpandables.Net.Database
         /// <summary>
         /// Returns an anonymous type of <typeparamref name="TResult"/> specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
-        /// The result is tracked by default. You can set the <paramref name="isTracked"/> to <see langword="false"/> to disable tracking.
         /// </summary>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="isTracked">Determines whether or not the entity result is tracked. The default value is <see langword="true"/>.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        public async Task<TResult?> TryFindAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> selector, bool isTracked = true, CancellationToken cancellationToken = default)
-         => await _dataContext.TryFindAsync(selector, isTracked, cancellationToken).ConfigureAwait(false);
+        public async Task<TResult?> TryFindAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
+         => await _dataContext
+                .AsTracking(_isTracked)
+                .TryFindAsync(selector, cancellationToken)
+            .ConfigureAwait(false);
 
         /// <summary>
         /// Returns an asynchronous enumerable of <typeparamref name="TResult"/> anonymous type specified by the selector.
         /// If no result found, returns an empty enumerable.
-        /// The result is not tracked by default. You can set the <paramref name="isTracked"/> to <see langword="true"/> to enable tracking.
         /// </summary>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="isTracked">Determines whether or not the entity result is tracked. The default value is <see langword="true"/>.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        public IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> selector, bool isTracked = false, CancellationToken cancellationToken = default)
-            => _dataContext.FetchAllAsync(selector, isTracked, cancellationToken);
+        public IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
+            => _dataContext
+                .AsTracking(_isTracked)
+                .FetchAllAsync(selector, cancellationToken);
 
         /// <summary>
         /// Adds a collection of domain objects to the data storage that will be inserted

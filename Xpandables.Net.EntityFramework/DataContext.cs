@@ -38,6 +38,9 @@ namespace Xpandables.Net.Database
     {
         object IDataContext.InternalDbSet<T>() => Set<T>();
 
+        private bool _isTracked;
+        bool IDataTracker.IsTracked { get => _isTracked; set => _isTracked = value; }
+
         private readonly List<IEvent> _notifications = new();
 
         /// <summary>
@@ -48,39 +51,35 @@ namespace Xpandables.Net.Database
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TResult"/> type specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
-        /// The result is tracked by default. You can set the <paramref name="isTracked"/> to <see langword="false"/> to disable tracking.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="isTracked">Determines whether or not the entity result is tracked. The default value is <see langword="true"/>.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        public virtual async Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, bool isTracked = true, CancellationToken cancellationToken = default)
+        public virtual async Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
             where T : class
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return await selector(Set<T>().AsTracking(isTracked ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            return await selector(Set<T>().AsTracking(_isTracked ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Returns an asynchronous enumerable of <typeparamref name="TResult"/> anonymous type specified by the selector.
         /// If no result found, returns an empty enumerable.
-        /// The result is not tracked by default. You can set the <paramref name="isTracked"/> to <see langword="true"/> to enable tracking.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="selector">Expression used for selecting entities.</param>
-        /// <param name="isTracked">Determines whether or not the entity result is tracked. The default value is <see langword="true"/>.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        public IAsyncEnumerable<TResult> FetchAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, bool isTracked = false, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<TResult> FetchAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
             where T : class
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return selector(Set<T>().AsTracking(isTracked ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking)).AsAsyncEnumerable();
+            return selector(Set<T>().AsTracking(_isTracked ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking)).AsAsyncEnumerable();
         }
 
         /// <summary>
