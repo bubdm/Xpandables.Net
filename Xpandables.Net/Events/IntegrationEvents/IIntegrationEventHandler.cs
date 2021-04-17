@@ -34,7 +34,8 @@ namespace Xpandables.Net.Events.IntegrationEvents
         /// <param name="integrationEvent">The event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="integrationEvent"/> is null.</exception>
-        Task HandleAsync(object integrationEvent, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        Task<IOperationResult> HandleAsync(object integrationEvent, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -44,7 +45,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
     /// </summary>
     /// <typeparam name="TEvent">The event type to be handled.</typeparam>
     public interface IIntegrationEventHandler<in TEvent> : IIntegrationEventHandler, ICanHandle<TEvent>
-        where TEvent : class, IEvent
+        where TEvent : class, IIntegrationEvent
     {
         /// <summary>
         /// Asynchronously handles the event.
@@ -52,9 +53,10 @@ namespace Xpandables.Net.Events.IntegrationEvents
         /// <param name="integrationEvent">The event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="integrationEvent"/> is null.</exception>
-        Task HandleAsync(TEvent integrationEvent, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        Task<IOperationResult> HandleAsync(TEvent integrationEvent, CancellationToken cancellationToken = default);
 
-        Task IIntegrationEventHandler.HandleAsync(object integrationEvent, CancellationToken cancellationToken)
+        Task<IOperationResult> IIntegrationEventHandler.HandleAsync(object integrationEvent, CancellationToken cancellationToken)
         {
             if (integrationEvent is TEvent integrationInstance)
                 return HandleAsync(integrationInstance, cancellationToken);

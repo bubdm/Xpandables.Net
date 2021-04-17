@@ -26,30 +26,33 @@ using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class ContactModelCreatedDomainEventHandler : IDomainEventHandler<ContactModelCreatedDomainEvent>
+    public sealed class ContactModelCreatedDomainEventHandler : DomainEventHandler<ContactModelCreatedDomainEvent>
     {
-        public Task HandleAsync(ContactModelCreatedDomainEvent domainEvent, CancellationToken cancellationToken = default)
+        public override async Task<IOperationResult> HandleAsync(ContactModelCreatedDomainEvent domainEvent, CancellationToken cancellationToken = default)
         {
             Trace.WriteLine($"A newly created contact with id : {domainEvent.Id} : {DateTime.Now.Ticks}");
-            return Task.CompletedTask;
+            await Task.CompletedTask.ConfigureAwait(false);
+            return OkOperation();
         }
     }
 
-    public sealed class ContactModelCreatedIntegrationEventHandler : IIntegrationEventHandler<ContactModelCreatedIntegrationEvent>
+    public sealed class ContactModelCreatedIntegrationEventHandler : IntegrationEventHandler<ContactModelCreatedIntegrationEvent>
     {
-        public Task HandleAsync(ContactModelCreatedIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
+        public override async Task<IOperationResult> HandleAsync(ContactModelCreatedIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
         {
             Trace.WriteLine($"A newly contact has been created with id : {integrationEvent.Id} {DateTime.Now.Ticks}");
-            return Task.CompletedTask;
+            await Task.CompletedTask.ConfigureAwait(false);
+            return OkOperation();
         }
     }
 
-    public sealed class ContactModelUpdatedDomainEventHandler : IDomainEventHandler<ContactModelUpdatedDomainEvent>
+    public sealed class ContactModelUpdatedDomainEventHandler : DomainEventHandler<ContactModelUpdatedDomainEvent>
     {
-        public Task HandleAsync(ContactModelUpdatedDomainEvent domainEvent, CancellationToken cancellationToken = default)
+        public override async Task<IOperationResult> HandleAsync(ContactModelUpdatedDomainEvent domainEvent, CancellationToken cancellationToken = default)
         {
             Trace.WriteLine($"The contact with id '{domainEvent.Id}' has changed name to : {domainEvent.Name} {DateTime.Now}");
-            return Task.CompletedTask;
+            await Task.CompletedTask.ConfigureAwait(false);
+            return OkOperation();
         }
     }
 }

@@ -15,8 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-
 using Xpandables.Net.Database;
 using Xpandables.Net.Events.DomainEvents;
 
@@ -27,13 +25,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
     /// This kind of events are published after <see cref="IDataContext.PersistAsync(System.Threading.CancellationToken)"/>
     /// completed and the entity change successfully saved to the database.
     /// </summary>
-    public interface IIntegrationEvent : IEvent
-    {
-        /// <summary>
-        /// When the event occurred.
-        /// </summary>
-        DateTime OccurredOn { get; }
-    }
+    public interface IIntegrationEvent : IEvent { }
 
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as an integration event targeting an <see cref="IDomainEvent"/>.

@@ -57,7 +57,6 @@ namespace Xpandables.Net.Api
 
             services.AddXDispatcher();
             services.AddXHandlerAccessor();
-            services.AddXEventPublisher();
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
             {
                 options.UsePersistenceDecorator();

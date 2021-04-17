@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,23 +14,11 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
 namespace Xpandables.Net.Events.DomainEvents
 {
     /// <summary>
-    /// This is the <see langword="abstract"/> class that implements <see cref="IDomainEvent"/> with <see cref="DateTime.UtcNow"/> as default <see cref="OccurredOn"/> value.
+    /// This is the <see langword="abstract"/> class that implements <see cref="IDomainEvent"/>.
     /// </summary>
-    public abstract class DomainEvent : IDomainEvent
-    {
-        /// <summary>
-        /// Initializes a default instance of the <see cref="DomainEvent"/> class assigning <see cref="DateTime.UtcNow"/> to the <see cref="OccurredOn"/> property.
-        /// </summary>
-        protected DomainEvent() => OccurredOn = DateTime.UtcNow;
-
-        /// <summary>
-        /// When the event occurred.
-        /// </summary>
-        public DateTime OccurredOn { get; }
-    }
+    public abstract class DomainEvent : EventBase, IDomainEvent { }
 }

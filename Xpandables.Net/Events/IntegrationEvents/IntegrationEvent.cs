@@ -26,7 +26,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
     /// This is the <see langword="abstract"/> class that implements <see cref="IIntegrationEvent{TDomainEvent}"/> with <see cref="DateTime.UtcNow"/> as default <see cref="OccurredOn"/> value.
     /// </summary>
     /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
-    public abstract class IntegrationEvent<TDomainEvent> : IIntegrationEvent<TDomainEvent>
+    public abstract class IntegrationEvent<TDomainEvent> : EventBase, IIntegrationEvent<TDomainEvent>
         where TDomainEvent : notnull, IDomainEvent
     {
         /// <summary>

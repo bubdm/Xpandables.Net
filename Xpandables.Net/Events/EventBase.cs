@@ -16,24 +16,18 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// Defines a method to publish events.
-    /// The implementation must be thread-safe when working in a multi-threaded environment.
+    /// Represents a helper class that allows implementation of <see cref="IEvent"/> interface. 
     /// </summary>
-    public interface IEventPublisher
+    [Serializable]
+    public abstract class EventBase : IEvent
     {
-        /// <summary>
-        /// Asynchronously publishes the events across all domain/integration handlers.
-        /// </summary>
-        /// <param name="event">The event to be published.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
-        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
+        private PublishingStatus _status;
+        private DateTimeOffset _updatedOn;
+        PublishingStatus IEvent.Status { get => _status; set => _status = value; }
+        DateTimeOffset IEvent.UpdatedOn { get => _updatedOn; set => _updatedOn = value; }
     }
 }

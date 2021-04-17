@@ -21,26 +21,26 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Database;
+using Xpandables.Net.Handlers;
 
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
     /// The integration event publisher.
     /// </summary>
-    public sealed class IntegrationEventPublisher : IIntegrationEventPublisher
+    public sealed class IntegrationEventPublisher : EventPublisher, IIntegrationEventPublisher
     {
         private readonly IDataContext _dataContext;
-        private readonly IEventPublisher _eventPublisher;
 
         /// <summary>
-        /// Initializes a new instance of a <see cref="IntegrationEventPublisher"/> class with the data context and the event publisher.
+        /// Initializes a new instance of a <see cref="IntegrationEventPublisher"/> class with the data context and the handler accessor.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
-        /// <param name="eventPublisher">The event publisher.</param>
-        public IntegrationEventPublisher(IDataContext dataContext, IEventPublisher eventPublisher)
+        /// <param name="handlerAccessor">The handler accessor.</param>
+        public IntegrationEventPublisher(IDataContext dataContext, IHandlerAccessor handlerAccessor)
+            : base(handlerAccessor)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
         {
             var domainEventTasks = _dataContext.Notifications
                 .OfType<IIntegrationEvent>()
-                .Select(integrationEvent => _eventPublisher.PublishAsync(integrationEvent, cancellationToken));
+                .Select(integrationEvent => PublishAsync(integrationEvent, cancellationToken));
 
             await Task.WhenAll(domainEventTasks).ConfigureAwait(false);
             _dataContext.ClearNotifications<IIntegrationEvent>();

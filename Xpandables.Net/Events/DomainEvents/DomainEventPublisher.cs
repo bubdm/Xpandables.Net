@@ -21,26 +21,26 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Database;
+using Xpandables.Net.Handlers;
 
 namespace Xpandables.Net.Events.DomainEvents
 {
     /// <summary>
     /// The domain event publisher.
     /// </summary>
-    public sealed class DomainEventPublisher : IDomainEventPublisher
+    public sealed class DomainEventPublisher : EventPublisher, IDomainEventPublisher
     {
         private readonly IDataContext _dataContext;
-        private readonly IEventPublisher _eventPublisher;
 
         /// <summary>
-        /// Initializes a new instance of a <see cref="DomainEventPublisher"/> class with the data context and the event publisher.
+        /// Initializes a new instance of a <see cref="DomainEventPublisher"/> class with the data context and the handler accessor.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
-        /// <param name="eventPublisher">The event publisher.</param>
-        public DomainEventPublisher(IDataContext dataContext, IEventPublisher eventPublisher)
+        /// <param name="handlerAccessor">The handler accessor.</param>
+        public DomainEventPublisher(IDataContext dataContext, IHandlerAccessor handlerAccessor)
+            : base(handlerAccessor)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Xpandables.Net.Events.DomainEvents
         {
             var domainEventTasks = _dataContext.Notifications
                 .OfType<IDomainEvent>()
-                .Select(domainEvent => _eventPublisher.PublishAsync(domainEvent, cancellationToken));
+                .Select(domainEvent => PublishAsync(domainEvent, cancellationToken));
 
             await Task.WhenAll(domainEventTasks).ConfigureAwait(false);
             _dataContext.ClearNotifications<IDomainEvent>();

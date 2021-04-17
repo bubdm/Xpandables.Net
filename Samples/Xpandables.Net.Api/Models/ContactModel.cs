@@ -25,17 +25,30 @@ using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Api.Models
 {
-    public sealed record ContactModelCreatedDomainEvent(string Id) : IDomainEvent { public DateTime OccurredOn => DateTime.UtcNow; }
-    public sealed record ContactModelCreatedIntegrationEvent(string Id) : IIntegrationEvent { public DateTime OccurredOn => DateTime.UtcNow; }
-    public sealed record ContactModelUpdatedDomainEvent(string Id, string? Name) : IDomainEvent { public DateTime OccurredOn => DateTime.UtcNow; };
+    public sealed class ContactModelCreatedDomainEvent : DomainEvent { public ContactModelCreatedDomainEvent(string id) { Id = id; } public string Id { get; set; } = default!; }
+    public sealed class ContactModelCreatedIntegrationEvent : IntegrationEvent<ContactModelCreatedDomainEvent>
+    {
+        public ContactModelCreatedIntegrationEvent(ContactModelCreatedDomainEvent domainEvent) : base(domainEvent) { }
+        public string Id { get; set; } = default!;
+    }
+    public sealed class ContactModelUpdatedDomainEvent : DomainEvent
+    {
+        public ContactModelUpdatedDomainEvent(string id, string? name)
+        {
+            Id = id;
+            Name = name;
+        }
 
+        public string Id { get; set; } = default!;
+        public string? Name { get; set; }
+    }
     public sealed class ContactModel : AggregateRoot
     {
         public ContactModel(string name, string city, string address, string country)
         {
             Update(name, city, address, country);
             AddEvent(new ContactModelCreatedDomainEvent(Id));
-            AddEvent(new ContactModelCreatedIntegrationEvent(Id));
+            AddEvent(new ContactModelCreatedIntegrationEvent(new ContactModelCreatedDomainEvent(Id)));
         }
 
         [MemberNotNull(nameof(Name), nameof(City), nameof(Address), nameof(Country))]

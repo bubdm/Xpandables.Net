@@ -29,9 +29,9 @@ using Xpandables.Net.Handlers;
 namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// /// The implementation for <see cref="IEventPublisher"/>.
+    /// /// The base implementation for an event publisher
     /// </summary>
-    public sealed class EventPublisher : IEventPublisher
+    public abstract class EventPublisher
     {
         private readonly IHandlerAccessor _handlerAccessor;
 
@@ -40,7 +40,7 @@ namespace Xpandables.Net.Events
         /// </summary>
         /// <param name="handlerAccessor">The handlers provider.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="handlerAccessor"/> is null.</exception>
-        public EventPublisher(IHandlerAccessor handlerAccessor)
+        protected EventPublisher(IHandlerAccessor handlerAccessor)
             => _handlerAccessor = handlerAccessor ?? throw new ArgumentNullException(nameof(handlerAccessor));
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Xpandables.Net.Events
                 return;
             }
 
-            IEnumerable<Task> tasks;
+            IEnumerable<Task<IOperationResult>> tasks;
             if (@event is IDomainEvent)
             {
                 var handlers = (IEnumerable<IDomainEventHandler>)foundHandlers;
@@ -86,7 +86,11 @@ namespace Xpandables.Net.Events
                 tasks = handlers.Select(handler => handler.HandleAsync(@event, cancellationToken));
             }
 
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            var results = await Task.WhenAll(tasks).ConfigureAwait(false);
+            if (results.Any(result => result.Failed))
+                @event.PublishingStatusFailed();
+            else
+                @event.PublishingStatusPublished();
         }
 
         private static void WriteLineException(Exception exception)

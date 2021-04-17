@@ -16,28 +16,24 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Xpandables.Net
+namespace Xpandables.Net.Events.DomainEvents
 {
     /// <summary>
-    /// Provides with shared members for commands, queries and events.
+    /// Represents a helper class that allows implementation of <see cref="IDomainEventHandler{TEvent}"/> interface.
     /// </summary>
-    public interface ICommandQueryEvent
+    /// <typeparam name="TEvent">Type of event to act on.</typeparam>
+    public abstract class DomainEventHandler<TEvent> : OperationResultBase, IDomainEventHandler<TEvent>
+        where TEvent : class, IDomainEvent
     {
         /// <summary>
-        /// Gets the unique identifier for the instance.
+        /// Asynchronously handles the domain event.
         /// </summary>
-        public Guid Guid => Guid.NewGuid();
-
-        /// <summary>
-        /// Gets When the event occurred.
-        /// </summary>
-        public DateTimeOffset OccurredOn => DateTimeOffset.Now;
-
-        /// <summary>
-        /// Gets the name of the user running associated with the current instance.
-        /// The default value is associated with the current thread.
-        /// </summary>
-        public string CreatedBy => Environment.UserName;
+        /// <param name="domainEvent">The domain event instance to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="domainEvent"/> is null.</exception>
+        public abstract Task<IOperationResult> HandleAsync(TEvent domainEvent, CancellationToken cancellationToken = default);
     }
 }

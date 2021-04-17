@@ -34,7 +34,8 @@ namespace Xpandables.Net.Events.DomainEvents
         /// <param name="domainEvent">The domain event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="domainEvent"/> is null.</exception>
-        Task HandleAsync(object domainEvent, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        Task<IOperationResult> HandleAsync(object domainEvent, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -52,9 +53,9 @@ namespace Xpandables.Net.Events.DomainEvents
         /// <param name="domainEvent">The domain event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="domainEvent"/> is null.</exception>
-        Task HandleAsync(TEvent domainEvent, CancellationToken cancellationToken = default);
+        Task<IOperationResult> HandleAsync(TEvent domainEvent, CancellationToken cancellationToken = default);
 
-        Task IDomainEventHandler.HandleAsync(object domainEvent, CancellationToken cancellationToken)
+        Task<IOperationResult> IDomainEventHandler.HandleAsync(object domainEvent, CancellationToken cancellationToken)
         {
             if (domainEvent is TEvent eventInstance)
                 return HandleAsync(eventInstance, cancellationToken);

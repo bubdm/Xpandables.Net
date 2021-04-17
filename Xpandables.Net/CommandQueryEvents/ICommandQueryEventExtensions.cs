@@ -22,7 +22,7 @@ namespace Xpandables.Net
     /// <summary>
     /// Provides with extension methods to access <see cref="ICommandQueryEvent"/> members.
     /// </summary>
-    public static class CommandQueryEventExtensions
+    public static class ICommandQueryEventExtensions
     {
         /// <summary>
         /// Returns the <see cref="System.Guid"/> of the current object.
@@ -36,7 +36,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="this">The target object.</param>
         /// <returns>A <see cref="DateTimeOffset"/> value.</returns>
-        public static DateTimeOffset CreatedOn(this ICommandQueryEvent @this) => @this.CreatedOn;
+        public static DateTimeOffset CreatedOn(this ICommandQueryEvent @this) => @this.OccurredOn;
 
         /// <summary>
         /// Returns the name of the user running associated with the current object.

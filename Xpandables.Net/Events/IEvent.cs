@@ -15,10 +15,72 @@
  *
 ************************************************************************************************************/
 
+using System;
+
 namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as an event.
     /// </summary>
-    public interface IEvent : ICommandQueryEvent { }
+    public interface IEvent : ICommandQueryEvent
+    {
+        /// <summary>
+        /// Determines the publishing status of the event.
+        /// The default value is <see cref="PublishingStatus.Ready"/>.
+        /// </summary>
+        PublishingStatus Status { get; protected set; }
+
+        /// <summary>
+        /// Gets When the event was updated.
+        /// </summary>
+        DateTimeOffset UpdatedOn { get; protected set; }
+
+        /// <summary>
+        /// Sets the publishing status of the event to <see cref="PublishingStatus.Ready"/>.
+        /// </summary>
+        public virtual void PublishingStatusReady()
+        {
+            UpdatedOn = DateTime.UtcNow;
+            Status = PublishingStatus.Ready;
+        }
+
+        /// <summary>
+        /// Sets the publishing status of the event to <see cref="PublishingStatus.Published"/>.
+        /// </summary>
+        public virtual void PublishingStatusPublished()
+        {
+            UpdatedOn = DateTime.UtcNow;
+            Status = PublishingStatus.Published;
+        }
+
+        /// <summary>
+        /// Sets the publishing status of the event to <see cref="PublishingStatus.Failed"/>.
+        /// </summary>
+        public virtual void PublishingStatusFailed()
+        {
+            UpdatedOn = DateTime.UtcNow;
+            Status = PublishingStatus.Failed;
+        }
+    }
+
+    /// <summary>
+    /// Defines the different publishing event status.
+    /// </summary>
+    public enum PublishingStatus
+    {
+        /// <summary>
+        /// The target event has be created and ready to be published.
+        /// </summary>
+        Ready,
+
+        /// <summary>
+        /// The target event has been successfully published.
+        /// </summary>
+        Published,
+
+        /// <summary>
+        /// The publish event action in the publisher has failed.
+        /// </summary>
+        Failed
+    }
 }

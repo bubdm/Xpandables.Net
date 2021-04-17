@@ -26,11 +26,5 @@ namespace Xpandables.Net.Events.DomainEvents
     /// This kind of events are published before <see cref="IDataContext.PersistAsync(System.Threading.CancellationToken)"/>.
     /// In case of exception in event handlers, you can rollback the operation (transaction).
     /// </summary>
-    public interface IDomainEvent : IEvent
-    {
-        /// <summary>
-        /// When the event occurred.
-        /// </summary>
-        DateTime OccurredOn { get; }
-    }
+    public interface IDomainEvent : IEvent { }
 }
