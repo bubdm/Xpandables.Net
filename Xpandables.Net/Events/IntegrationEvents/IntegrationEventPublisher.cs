@@ -21,12 +21,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Database;
+using Xpandables.Net.Events.DomainEvents;
 using Xpandables.Net.Handlers;
 
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
-    /// The integration event publisher.
+    /// The integration event publisher. The default implementation behaves like the <see cref="DomainEventPublisher"/>
     /// </summary>
     public sealed class IntegrationEventPublisher : EventPublisher, IIntegrationEventPublisher
     {

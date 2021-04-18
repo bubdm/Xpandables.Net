@@ -18,11 +18,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Events.DomainEvents;
+
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
-    /// Defines a method to automatically dispatch <see cref="IIntegrationEvent"/>.
-    /// The implementation must be thread-safe when working in a multi-threaded environment.
+    /// Defines a method to automatically dispatch <see cref="IIntegrationEvent"/> type.
+    /// The default implementation works just like the <see cref="IDomainEventPublisher"/>, if you don't configure a real integration provider.
     /// </summary>
     public interface IIntegrationEventPublisher
     {

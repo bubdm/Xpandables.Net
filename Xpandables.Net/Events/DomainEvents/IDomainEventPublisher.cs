@@ -22,7 +22,6 @@ namespace Xpandables.Net.Events.DomainEvents
 {
     /// <summary>
     /// Defines a method to automatically dispatch <see cref="IDomainEvent"/>.
-    /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     public interface IDomainEventPublisher
     {
