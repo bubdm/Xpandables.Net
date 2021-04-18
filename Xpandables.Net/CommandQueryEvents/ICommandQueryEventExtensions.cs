@@ -32,7 +32,7 @@ namespace Xpandables.Net
         public static Guid Guid(this ICommandQueryEvent @this) => @this.Guid;
 
         /// <summary>
-        /// Returns the <see cref="DateTimeOffset"/> of the current object.
+        /// Returns the created date of the current object.
         /// </summary>
         /// <param name="this">The target object.</param>
         /// <returns>A <see cref="DateTimeOffset"/> value.</returns>

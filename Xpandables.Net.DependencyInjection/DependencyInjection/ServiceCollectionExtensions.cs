@@ -66,7 +66,7 @@ namespace Xpandables.Net.DependencyInjection
         public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
 
         /// <summary>
-        /// Enables domain event behavior to commands that are decorated with the <see cref="IEventDecorator"/>.
+        /// Enables domain event behavior to commands that are decorated with the <see cref="IEventDecorator"/> using the default event publisher.
         /// </summary>
         public HandlerOptions UseDomainEventDecorator() => this.With(cq => cq.IsDomainEventEnabled = typeof(DomainEventPublisher));
 
@@ -79,7 +79,7 @@ namespace Xpandables.Net.DependencyInjection
             => this.With(cq => cq.IsDomainEventEnabled = typeof(TDomainEventPublisher));
 
         /// <summary>
-        /// Enables integration event behavior to commands that are decorated with the <see cref="IEventDecorator"/>.
+        /// Enables integration event behavior to commands that are decorated with the <see cref="IEventDecorator"/> using the default event publisher.
         /// </summary>
         public HandlerOptions UseIntegrationEventDecorator() => this.With(cq => cq.IsIntegrationEventEnabled = typeof(IntegrationEventPublisher));
 
