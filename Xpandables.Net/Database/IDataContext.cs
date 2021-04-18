@@ -48,12 +48,12 @@ namespace Xpandables.Net.Database
         internal object InternalDbSet<T>() where T : class;
 
         /// <summary>
-        /// Contains all notifications (domain events and domain event notifications) from entities being tracked.
+        /// Contains all notifications (domain events and integration events) from entities being tracked.
         /// </summary>
         IReadOnlyCollection<IEvent> Notifications { get; }
 
         /// <summary>
-        /// Clears all notifications found in tracked entities that match the type.
+        /// Clears all notifications found in tracked entities that match the event type.
         /// </summary>
         /// <typeparam name="TNotification">The type of notification to clear.</typeparam>
         internal void ClearNotifications<TNotification>() where TNotification : IEvent;
