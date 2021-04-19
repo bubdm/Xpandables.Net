@@ -17,15 +17,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using Xpandables.Net.Events;
 
-namespace Xpandables.Net
+namespace Xpandables.Net.Entities
 {
     /// <summary>
     /// Aggregate is a pattern in Domain-Driven Design. A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
     /// </summary>
-    public abstract class AggregateRoot : Entity
+    [Serializable]
+    [DebuggerDisplay("Id = {" + nameof(Id) + "}")]
+    public abstract class AggregateRoot : Entity, IAggregateRoot
     {
         internal readonly HashSet<IEvent> InternalEvents = new();
 
@@ -39,7 +42,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="event">The event to be added.</param>
         /// <exception cref=" ArgumentNullException">The <paramref name="event"/> is null. </exception>
-        public void AddEvent(IEvent @event)
+        public virtual void AddEvent(IEvent @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
             InternalEvents.Add(@event);
@@ -50,7 +53,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="event">The event to be removed.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        public void RemoveEvent(IEvent @event)
+        public virtual void RemoveEvent(IEvent @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
             InternalEvents.Remove(@event);
@@ -59,6 +62,12 @@ namespace Xpandables.Net
         /// <summary>
         /// Clears all events.
         /// </summary>
-        public void ClearEvents() => InternalEvents.Clear();
+        public virtual void ClearEvents() => InternalEvents.Clear();
+
+        /// <summary>
+        /// Clears all events that match the specified type of events.
+        /// </summary>
+        /// <typeparam name="TEvent">The type of the event to search for.</typeparam>
+        public virtual void ClearEvents<TEvent>() where TEvent : class, IEvent => InternalEvents.RemoveWhere(@event => @event is TEvent);
     }
 }

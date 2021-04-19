@@ -20,44 +20,47 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Api.Models;
-using Xpandables.Net.Database;
+using Xpandables.Net.Expressions.Specifications;
 using Xpandables.Net.Validators;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class ContactValidators : IValidator<Select>, IValidator<Add>, IValidator<Delete>, IValidator<Edit>
+    public sealed class ContactValidators : IValidator<SelectQuery>, IValidator<AddCommand>, IValidator<DeleteCommand>, IValidator<EditCommand>
     {
-        private readonly IEntityAccessor<ContactModel> _dataContext;
-        public ContactValidators(IEntityAccessor<ContactModel> dataContext) => _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+        private readonly IContactEntityAccessor _entityAccessor;
+        public ContactValidators(IContactEntityAccessor entityAcessor) => _entityAccessor = entityAcessor ?? throw new ArgumentNullException(nameof(entityAcessor));
 
-        public async Task<IOperationResult> ValidateAsync(Select argument, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult> ValidateAsync(SelectQuery argument, CancellationToken cancellationToken = default)
         {
-            var contact = await _dataContext.AsNoTracking().TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
+            var criteria = SpecificationFactory.CreateFromQuery(argument);
+            var contact = await _entityAccessor.TryFindAsync(criteria, cancellationToken).ConfigureAwait(false);
             if (contact is null)
                 return new FailureOperationResult(HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
             return new SuccessOperationResult();
         }
-        public async Task<IOperationResult> ValidateAsync(Add argument, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult> ValidateAsync(AddCommand argument, CancellationToken cancellationToken = default)
         {
-            var contact = await _dataContext.AsNoTracking().TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
+            var criteria = SpecificationFactory.CreateFromQuery(argument);
+            var contact = await _entityAccessor.TryFindAsync(criteria, cancellationToken).ConfigureAwait(false);
             if (contact is not null)
                 return new FailureOperationResult(HttpStatusCode.BadRequest, nameof(argument.Name), "Contact already exist");
 
             return new SuccessOperationResult();
         }
-        public async Task<IOperationResult> ValidateAsync(Delete argument, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult> ValidateAsync(DeleteCommand argument, CancellationToken cancellationToken = default)
         {
-            var contact = await _dataContext.AsNoTracking().TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
+            var criteria = SpecificationFactory.CreateFromQuery(argument);
+            var contact = await _entityAccessor.TryFindAsync(criteria, cancellationToken).ConfigureAwait(false);
             if (contact is null)
                 return new FailureOperationResult(HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
             return new SuccessOperationResult();
         }
-        public async Task<IOperationResult> ValidateAsync(Edit argument, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult> ValidateAsync(EditCommand argument, CancellationToken cancellationToken = default)
         {
-            var contact = await _dataContext.AsNoTracking().TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
+            var criteria = SpecificationFactory.CreateFromQuery(argument);
+            var contact = await _entityAccessor.TryFindAsync(criteria, cancellationToken).ConfigureAwait(false);
             if (contact is null)
                 return new FailureOperationResult(HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 

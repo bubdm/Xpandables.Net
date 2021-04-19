@@ -19,13 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
+using Xpandables.Net.Entities;
 using Xpandables.Net.Events;
+using Xpandables.Net.Expressions.Specifications;
 
 namespace Xpandables.Net.Database
 {
@@ -33,19 +34,26 @@ namespace Xpandables.Net.Database
     /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/>
     /// and implements <see cref="IDataContext"/>.
     /// </summary>
-    public abstract partial class DataContext : IDataContext
+    public abstract partial class DataContextEFCore : IDataContext, IDataContextEntityTracker
     {
-        object IDataContext.InternalDbSet<T>() => Set<T>();
+        object IDataContextEntityTracker.InternalDbSet<T>() => Set<T>();
 
         private bool _isTracked;
-        bool IDataTracker.IsTracked { get => _isTracked; set => _isTracked = value; }
+        bool IDataContextEntityTracker.IsTracked { get => _isTracked; set => _isTracked = value; }
 
         private readonly List<IEvent> _notifications = new();
 
         /// <summary>
         /// Contains all notifications (domain events and domain event notifications) from entities being tracked.
         /// </summary>
-        public IReadOnlyCollection<IEvent> Notifications { get { ChangeTracker.DetectChanges(); return _notifications; } }
+        public IReadOnlyCollection<IEvent> Events { get { ChangeTracker.DetectChanges(); return _notifications; } }
+
+        /// <summary>
+        /// Clears all events found in tracked entities that match the event type.
+        /// </summary>
+        /// <typeparam name="TEvent">The type of event to clear.</typeparam>
+        public virtual void ClearNotifications<TEvent>() where TEvent : IEvent
+            => _notifications.RemoveAll(@event => @event is TEvent);
 
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TResult"/> type specified by the selector.
@@ -58,7 +66,7 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
         public virtual async Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
-            where T : class
+            where T : class, IEntity
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
             return await selector(Set<T>().AsTracking(_isTracked ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
@@ -74,8 +82,8 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
-        public IAsyncEnumerable<TResult> FetchAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
-            where T : class
+        public virtual IAsyncEnumerable<TResult> FetchAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
+            where T : class, IEntity
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
             return selector(Set<T>().AsTracking(_isTracked ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking)).AsAsyncEnumerable();
@@ -83,41 +91,41 @@ namespace Xpandables.Net.Database
 
         /// <summary>
         /// Adds a domain object to the data storage that will be inserted
-        /// into the database when <see cref="PersistAsync(CancellationToken)"/> is called.
+        /// into the database when <see cref="IDataContext.SaveChangesAsync(CancellationToken)"/> is called.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <param name="entity">The domain object to be added and persisted.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null or empty.</exception>
-        public virtual async Task AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default)
-            where T : class
+        public virtual async Task InsertAsync<T>(T entity, CancellationToken cancellationToken = default)
+            where T : class, IEntity
             => await Set<T>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Adds a collection of domain objects to the data storage that will be inserted
-        /// into the database when <see cref="IDataContext.PersistAsync(CancellationToken)" /> is called.
+        /// into the database when <see cref="IDataContext.SaveChangesAsync(CancellationToken)" /> is called.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <param name="entities">The domain objects collection to be added and persisted.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="entities" /> is null or empty.</exception>
-        public virtual async Task AddEntityRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
-            where T : class
+        public virtual async Task InsertManyAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+            where T : class, IEntity
         {
             var enumerable = entities as T[] ?? entities.ToArray();
             await AddRangeAsync(enumerable, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Deletes the domain object matching the specified entity that will be removed from the database when <see cref="PersistAsync(CancellationToken)"/>
+        /// Deletes the domain object matching the specified entity that will be removed from the database when <see cref="IDataContext.SaveChangesAsync(CancellationToken)"/>
         /// is called.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <param name="deletedEntity">The entity to be deleted.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="deletedEntity"/> is null.</exception>
-        public virtual async Task DeleteEntityAsync<T>(T deletedEntity, CancellationToken cancellationToken = default)
-            where T : class
+        public virtual async Task DeleteAsync<T>(T deletedEntity, CancellationToken cancellationToken = default)
+            where T : class, IEntity
         {
             cancellationToken.ThrowIfCancellationRequested();
             Remove(deletedEntity);
@@ -125,15 +133,15 @@ namespace Xpandables.Net.Database
         }
 
         /// <summary>
-        /// Deletes the domain objects matching the predicate that will be removed from the database when <see cref="IDataContext.PersistAsync(CancellationToken)" />
+        /// Deletes the domain objects matching the predicate that will be removed from the database when <see cref="IDataContext.SaveChangesAsync(CancellationToken)" />
         /// is called. You can use a third party library with <see langword="IDataContext.SetOf{T}" /> for performance.
         /// </summary>
         /// <typeparam name="T">The Domain object type.</typeparam>
         /// <param name="predicate">The predicate to be used to filter domain objects.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate" /> is null.</exception>
-        public virtual async Task DeleteEntityAsync<T>(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
-            where T : class
+        public virtual async Task DeleteAsync<T>(Specification<T> predicate, CancellationToken cancellationToken = default)
+            where T : class, IEntity
         {
             foreach (var entity in Set<T>().Where(predicate))
             {
@@ -151,8 +159,8 @@ namespace Xpandables.Net.Database
         /// <param name="updatedEntity">the updated entity.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="updatedEntity"/> is null.</exception>
-        public virtual async Task UpdateEntityAsync<T>(T updatedEntity, CancellationToken cancellationToken = default)
-            where T : class
+        public virtual async Task UpdateAsync<T>(T updatedEntity, CancellationToken cancellationToken = default)
+            where T : class, IEntity
         {
             cancellationToken.ThrowIfCancellationRequested();
             Update(updatedEntity);
@@ -171,8 +179,8 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="updater"/> is null.</exception>
-        public virtual async Task UpdateEntityAsync<T>(Expression<Func<T, bool>> predicate, Func<T, T> updater, CancellationToken cancellationToken = default)
-            where T : class
+        public virtual async Task UpdateAsync<T>(Specification<T> predicate, Func<T, T> updater, CancellationToken cancellationToken = default)
+            where T : class, IEntity
         {
             foreach (var entity in Set<T>().Where(predicate))
             {
@@ -192,7 +200,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="InvalidOperationException">All exceptions related to the operation.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual async Task PersistAsync(CancellationToken cancellationToken = default)
+        async Task IDataContext.SaveChangesAsync(CancellationToken cancellationToken)
         {
             try
             {

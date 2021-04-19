@@ -53,18 +53,18 @@ namespace Xpandables.Net.Api.Controllers
 
         [Route("")]
         [HttpGet]
-        public IAsyncEnumerable<Contact> SelectAllAsync([FromQuery] SelectAll selectAll, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<Contact> SelectAllAsync([FromQuery] SelectAllQuery selectAll, CancellationToken cancellationToken = default)
         {
             return _dispatcher.FetchAsync(selectAll, cancellationToken);
         }
 
         [Route("{id}", Name = "ContactLink")]
         [HttpGet]
-        public async Task<IActionResult> SelectAsync([FromRoute] Select select, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> SelectAsync([FromRoute] SelectQuery select, CancellationToken cancellationToken = default)
             => Ok(await _dispatcher.FetchAsync(select, cancellationToken).ConfigureAwait(false));
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] Add add, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> AddAsync([FromBody] AddCommand add, CancellationToken cancellationToken = default)
         {
             var createdResult = await _dispatcher.SendAsync(add, cancellationToken).ConfigureAwait(false);
             if (createdResult.Failed) return Ok(createdResult);
@@ -74,20 +74,20 @@ namespace Xpandables.Net.Api.Controllers
 
         [HttpDelete]
         [Route("{id:string}")]
-        public async Task<IActionResult> DeleteAsync([FromRoute] Delete del, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> DeleteAsync([FromRoute] DeleteCommand del, CancellationToken cancellationToken = default)
             => Ok(await _dispatcher.SendAsync(del, cancellationToken).ConfigureAwait(false));
 
         [HttpPatch]
         [Route("{id:string}")]
-        public async Task<IActionResult> EditAsync([FromRoute] string id, [FromBody] JsonPatchDocument<Edit> editPatch, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> EditAsync([FromRoute] string id, [FromBody] JsonPatchDocument<EditCommand> editPatch, CancellationToken cancellationToken = default)
         {
-            var edit = new Edit { Id = id, ApplyPatch = value => ApplyJsonPatch(value, editPatch) };
+            var edit = new EditCommand { Id = id, ApplyPatch = value => ApplyJsonPatch(value, editPatch) };
             return Ok(await _dispatcher.SendAsync(edit, cancellationToken).ConfigureAwait(false));
         }
 
-        [HttpPost]
-        [Route("{id}")]
-        public async Task<IActionResult> GetLocationAsync([FromRoute] GetIp ipAddress,
+        [HttpGet]
+        [Route("ip/{id:string}")]
+        public async Task<IActionResult> GetLocationAsync([FromRoute] GetIpQuery ipAddress,
             [FromServices] IHttpIPAddressLocationAccessor httpIpAddressLocationAccessor,
             [FromServices] IConfiguration configuration,
             CancellationToken cancellationToken = default)

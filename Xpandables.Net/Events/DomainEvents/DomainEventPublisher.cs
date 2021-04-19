@@ -50,7 +50,7 @@ namespace Xpandables.Net.Events.DomainEvents
         /// <returns>A task that represents an asynchronous operation.</returns>
         public async Task PublishAsync(CancellationToken cancellationToken = default)
         {
-            var domainEventTasks = _dataContext.Notifications
+            var domainEventTasks = _dataContext.Events
                 .OfType<IDomainEvent>()
                 .Select(domainEvent => PublishAsync(domainEvent, cancellationToken));
 

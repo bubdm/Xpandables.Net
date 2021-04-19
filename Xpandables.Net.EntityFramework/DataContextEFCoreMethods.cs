@@ -23,14 +23,16 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Xpandables.Net.Entities;
+
 namespace Xpandables.Net.Database
 {
-    public abstract partial class DataContext : DbContext
+    public abstract partial class DataContextEFCore : DbContext
     {
         private static readonly MethodInfo ConvertToStringMethodInfo =
-        typeof(DataContext).GetMethod(nameof(ConvertEnumerationToString), BindingFlags.NonPublic | BindingFlags.Static)!;
+        typeof(DataContextEFCore).GetMethod(nameof(ConvertEnumerationToString), BindingFlags.NonPublic | BindingFlags.Static)!;
         private static readonly MethodInfo ConvertToEnumerationMethodInfo =
-            typeof(DataContext).GetMethod(nameof(ConvertStringToEnumeration), BindingFlags.NonPublic | BindingFlags.Static)!;
+            typeof(DataContextEFCore).GetMethod(nameof(ConvertStringToEnumeration), BindingFlags.NonPublic | BindingFlags.Static)!;
 
         private static string ConvertEnumerationToString<T>(T enumeration)
             where T : EnumerationType => enumeration.Name;
@@ -68,23 +70,21 @@ namespace Xpandables.Net.Database
             return new ValueConverter<T, string>(convertToStringLambda, convertToEnumerationLambda);
         }
 
-        void IDataContext.ClearNotifications<TNotification>() => _notifications.RemoveAll(notif => notif is TNotification);
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataContext"/> class
+        /// Initializes a new instance of the <see cref="DataContextEFCore"/> class
         /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
         /// method will still be called to allow further configuration of the options.
         /// Applies the tracked delegate for automatically set <see cref="Entity.CreatedOn"/>, <see cref="Entity.UpdatedOn"/> and <see cref="Entity.DeletedOn"/> properties.
         /// </summary>
         /// <param name="contextOptions">The options for this context.</param>
-        protected DataContext(DbContextOptions contextOptions)
+        protected DataContextEFCore(DbContextOptions contextOptions)
             : base(contextOptions)
         {
             ChangeTracker.Tracked += (sender, e) =>
             {
                 if (e.FromQuery || e.Entry.State != EntityState.Added || e.Entry.Entity is not Entity entity) return;
 
-                entity.SetCreationDate(DateTime.UtcNow);
+                entity.Created();
 
                 if (e.Entry.Entity is not AggregateRoot aggregateRoot) return;
 
@@ -98,11 +98,10 @@ namespace Xpandables.Net.Database
             {
                 if (e.NewState != EntityState.Modified || e.Entry.Entity is not Entity entity) return;
 
-                var date = DateTime.UtcNow;
-                entity.SetUpdateDate(date);
+                entity.Updated();
 
                 if (entity.IsDeleted)
-                    entity.SetDeleteDate(date);
+                    entity.Deleted();
 
                 if (e.Entry.Entity is not AggregateRoot aggregateRoot) return;
                 if (aggregateRoot.Events.Count == 0) return;

@@ -18,7 +18,8 @@
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Provides with extension methods for <see cref="IDataTracker"/>.
+    /// Provides with extension methods for <see cref="IDataContextEntityTracker"/>.
+    /// When used with EFCore, you can apply extension methods <see langword="AsNoTracking()"/> or <see langword="AsTracking()"/> to enable/disable entities tracking.
     /// </summary>
     public static class IDataTrackerExtensions
     {
@@ -29,7 +30,7 @@ namespace Xpandables.Net.Database
         /// <param name="dataSource">The target instance to act on.</param>
         /// <returns>The same instance with entities tracking changes enabled.</returns>
         public static TDataSource AsTracking<TDataSource>(this TDataSource dataSource)
-            where TDataSource : class, IDataTracker
+            where TDataSource : class, IDataContextEntityTracker
         {
             dataSource.IsTracked = true;
             return dataSource;
@@ -43,7 +44,7 @@ namespace Xpandables.Net.Database
         /// <param name="enableOrDisableTracking">Enable or disable the entities tracking.</param>
         /// <returns>The same instance with entities tracking changes enabled or not.</returns>
         public static TDataSource AsTracking<TDataSource>(this TDataSource dataSource, bool enableOrDisableTracking)
-            where TDataSource : class, IDataTracker
+            where TDataSource : class, IDataContextEntityTracker
         {
             dataSource.IsTracked = enableOrDisableTracking;
             return dataSource;
@@ -56,7 +57,7 @@ namespace Xpandables.Net.Database
         /// <param name="dataSource">The target instance to act on</param>
         /// <returns>The same instance with entities tracking changes disabled.</returns>
         public static TDataSource AsNoTracking<TDataSource>(this TDataSource dataSource)
-            where TDataSource : class, IDataTracker
+            where TDataSource : class, IDataContextEntityTracker
         {
             dataSource.IsTracked = false;
             return dataSource;

@@ -22,7 +22,7 @@ using Xpandables.Net.Database;
 
 namespace Xpandables.Net.Api.Database
 {
-    public sealed class ContactContext : DataContext
+    public sealed class ContactContext : DataContextEFCore
     {
         public ContactContext(DbContextOptions<ContactContext> contextOptions) : base(contextOptions) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -33,7 +33,7 @@ namespace Xpandables.Net.Api.Database
         public DbSet<ContactModel> Contacts { get; set; } = default!;
     }
 
-    public sealed class ContactContextSecond : DataContext
+    public sealed class ContactContextSecond : DataContextEFCore
     {
         public ContactContextSecond(DbContextOptions<ContactContextSecond> contextOptions) : base(contextOptions) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

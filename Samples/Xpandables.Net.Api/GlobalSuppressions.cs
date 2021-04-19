@@ -5,6 +5,3 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Security", "SEC0019:Missing AntiForgeryToken Attribute", Justification = "<Pending>", Scope = "member", Target = "~M:Xpandables.Net.Api.Controllers.ContactsController.AddAsync(Xpandables.Net.Api.Handlers.Add,System.Threading.CancellationToken)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.IActionResult}")]
-[assembly: SuppressMessage("Security", "SEC0019:Missing AntiForgeryToken Attribute", Justification = "<Pending>", Scope = "member", Target = "~M:Xpandables.Net.Api.Controllers.ContactsController.DeleteAsync(Xpandables.Net.Api.Handlers.Delete,System.Threading.CancellationToken)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.IActionResult}")]
-[assembly: SuppressMessage("Security", "SEC0019:Missing AntiForgeryToken Attribute", Justification = "<Pending>", Scope = "member", Target = "~M:Xpandables.Net.Api.Controllers.ContactsController.EditAsync(System.String,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Xpandables.Net.Api.Handlers.Edit},System.Threading.CancellationToken)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.IActionResult}")]

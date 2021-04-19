@@ -51,7 +51,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
         /// <returns>A task that represents an asynchronous operation.</returns>
         public async Task PublishAsync(CancellationToken cancellationToken = default)
         {
-            var domainEventTasks = _dataContext.Notifications
+            var domainEventTasks = _dataContext.Events
                 .OfType<IIntegrationEvent>()
                 .Select(integrationEvent => PublishAsync(integrationEvent, cancellationToken));
 

@@ -22,43 +22,36 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Expressions;
+using Microsoft.EntityFrameworkCore;
 
-namespace Xpandables.Net.Database
+using Xpandables.Net.Database;
+using Xpandables.Net.Entities;
+using Xpandables.Net.Expressions;
+using Xpandables.Net.Expressions.Specifications;
+
+namespace Xpandables.Net
 {
     /// <summary>
-    /// An implementation of <see cref="IEntityAccessor{TEntity}"/>.
+    /// An implementation of <see cref="IEntityAccessor{TEntity}"/> for EFCore.
     /// You must derive from this class to customize its behaviors.
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
-    public class EntityAccessor<TEntity> : IEntityAccessor<TEntity>
-        where TEntity : class
+    public class EntityAccessorEFCore<TEntity> : IEntityAccessor<TEntity>
+        where TEntity : class, IAggregateRoot
     {
-        private bool _disposedValue;
+        private readonly DataContextEFCore _dataContext;
+        internal readonly DbSet<TEntity> _entities;
 
         /// <summary>
-        /// The data context instance.
-        /// </summary>
-        public IDataContext<TEntity> DataContext { get; }
-
-        private bool _isTracked;
-        bool IDataTracker.IsTracked { get => _isTracked; set => _isTracked = value; }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="EntityAccessor{TEntity}"/> with the context to act on.
+        /// Initializes a new instance of <see cref="EntityAccessorEFCore{TEntity}"/> with the context to act on.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public EntityAccessor(IDataContext<TEntity> dataContext) =>
-            DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-
-        /// <summary>
-        /// Provides with the query selector for the entity type.
-        /// You must override this method to customize its behavior.
-        /// </summary>
-        /// <returns>An <see cref="IQueryable{T}"/> of <typeparamref name="TEntity"/>.</returns>
-        protected virtual IQueryable<TEntity> QueryableEntity() =>
-            (IQueryable<TEntity>)DataContext.InternalDbSet<TEntity>();
+        /// <exception cref="ArgumentException">The <paramref name="dataContext"/> must derive from <see cref="EntityAccessorEFCore{TEntity}"/>.</exception>
+        protected EntityAccessorEFCore(IDataContext dataContext)
+        {
+            _dataContext = dataContext as DataContextEFCore ?? throw new ArgumentException($"Derived {nameof(DataContextEFCore)} expected.");
+            _entities = _dataContext.Set<TEntity>();
+        }
 
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria.
@@ -68,9 +61,10 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TEntity"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        public async Task<TEntity?> TryFindAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
-            => await DataContext.AsTracking(_isTracked).TryFindAsync(_ =>
-                QueryableEntity()
+        public async Task<TEntity?> TryFindAsync(Specification<TEntity> criteria, CancellationToken cancellationToken = default)
+            => await _dataContext.TryFindAsync<TEntity, TEntity>(_ =>
+                _entities
+                    .AsTracking()
                     .Where(criteria)
                     .Select(s => s),
                 cancellationToken)
@@ -88,10 +82,11 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
         public async Task<TEntity?> TryFindAsync<TParam>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Expression<Func<TParam, bool>> criteria, CancellationToken cancellationToken = default)
+            Specification<TParam> criteria, CancellationToken cancellationToken = default)
             where TParam : class
-            => await DataContext.AsTracking(_isTracked).TryFindAsync(_ =>
-                QueryableEntity()
+            => await _dataContext.TryFindAsync<TEntity, TEntity>(_ =>
+                _entities
+                    .AsTracking()
                     .Where(propertyExpression, criteria)
                     .Select(s => s),
                 cancellationToken)
@@ -106,10 +101,11 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        public async Task<TResult?> TryFindAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
+        public async Task<TResult?> TryFindAsync<TResult>(Specification<TEntity> criteria,
             Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
-            => await DataContext.AsTracking(_isTracked).TryFindAsync(_ =>
-                QueryableEntity()
+            => await _dataContext.TryFindAsync<TEntity, TResult>(_ =>
+                _entities
+                    .AsNoTracking()
                     .Where(criteria)
                     .Select(converter),
                 cancellationToken)
@@ -130,10 +126,11 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
         public async Task<TResult?> TryFindAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Expression<Func<TParam, bool>> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
+            Specification<TParam> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
             where TParam : class
-            => await DataContext.AsTracking(_isTracked).TryFindAsync(_ =>
-                QueryableEntity()
+            => await _dataContext.TryFindAsync<TEntity, TResult>(_ =>
+                _entities
+                    .AsNoTracking()
                     .Where(propertyExpression, criteria)
                     .Select(converter),
                 cancellationToken)
@@ -150,10 +147,11 @@ namespace Xpandables.Net.Database
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
-        public IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
+        public IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Specification<TEntity> criteria,
             Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
-            => DataContext.AsTracking(_isTracked).FetchAllAsync(_ =>
-                QueryableEntity()
+            => _dataContext.FetchAllAsync<TEntity, TResult>(_ =>
+                _entities
+                    .AsNoTracking()
                     .Where(criteria)
                     .Select(converter),
                 cancellationToken);
@@ -172,10 +170,11 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
         public virtual IAsyncEnumerable<TResult> FetchAllAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Expression<Func<TParam, bool>> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
+            Specification<TParam> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
             where TParam : class
-            => DataContext.AsTracking(_isTracked).FetchAllAsync(_ =>
-                QueryableEntity()
+            => _dataContext.FetchAllAsync<TEntity, TResult>(_ =>
+                _entities
+                    .AsNoTracking()
                     .Where(propertyExpression, criteria)
                     .Select(converter),
                 cancellationToken);
@@ -187,8 +186,8 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an  asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
-        public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
-            => await DataContext.AddEntityAsync(
+        public virtual async Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
+            => await _dataContext.InsertAsync(
                 entity,
                 cancellationToken)
             .ConfigureAwait(false);
@@ -201,20 +200,12 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an  asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
         public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
-            => await DataContext.UpdateEntityAsync(
+            => await _dataContext.UpdateAsync(
                 entity,
                 cancellationToken)
             .ConfigureAwait(false);
 
-        /// <summary>
-        /// Persists all pending entities to the data storage.
-        /// </summary>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous persist all operation.</returns>
-        /// <exception cref="InvalidOperationException">All exceptions related to the operation.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        public async Task PersistAsync(CancellationToken cancellationToken = default)
-            => await DataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
+        private bool _disposedValue;
 
         /// <summary>
         /// Applies dispose. Override to customize the behavior.

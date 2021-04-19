@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,18 +15,26 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Collections.Generic;
+
+using Xpandables.Net.Events;
 
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Provides with a property to determines tracking of entities to be used with EFCore.
+    /// using with EFCore, provides with members to track entities events.
     /// </summary>
-    public interface IDataTracker
+    public interface IDataContextEventTracker
     {
         /// <summary>
-        /// Determines whether or not the result of a query should be tracked for changes.
-        /// The default value is <see langword="false"/>.
+        /// When used with EFCore, contains all events (domain events and integration events) from entities being tracked.
         /// </summary>
-        internal bool IsTracked { get; set; }
+        IReadOnlyCollection<IEvent> Events { get; }
+
+        /// <summary>
+        /// Clears all events found in tracked entities that match the event type.
+        /// </summary>
+        /// <typeparam name="TEvent">The type of event to clear.</typeparam>
+        void ClearNotifications<TEvent>() where TEvent : IEvent;
     }
 }

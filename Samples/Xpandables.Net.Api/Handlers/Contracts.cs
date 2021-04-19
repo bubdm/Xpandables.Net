@@ -23,7 +23,7 @@ using System.Linq.Expressions;
 using Xpandables.Net.Api.Models;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Decorators;
-using Xpandables.Net.Expressions.Records;
+using Xpandables.Net.Expressions;
 using Xpandables.Net.Http;
 using Xpandables.Net.Queries;
 
@@ -32,7 +32,7 @@ namespace Xpandables.Net.Api.Handlers
     public sealed record Contact(string Id, string Name, string City, string Address, string Country);
 
     [HttpRestClient(Path = "api/contacts", Method = HttpMethodVerbs.Get, IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
-    public sealed record SelectAll : RecordExpression<ContactModel>, IHttpRestClientAsyncRequest<Contact>, IAsyncQuery<Contact>, IQueryStringLocationRequest, ILoggingDecorator
+    public sealed class SelectAllQuery : QueryExpression<ContactModel>, IHttpRestClientAsyncRequest<Contact>, IAsyncQuery<Contact>, IQueryStringLocationRequest, ILoggingDecorator
     {
         public string? Name { get; set; }
         public string? City { get; set; }
@@ -41,7 +41,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public override Expression<Func<ContactModel, bool>> GetExpression()
         {
-            var queryExpression = RecordExpressionFactory.Create<ContactModel>();
+            var queryExpression = QueryExpressionFactory.Create<ContactModel>();
             if (Name is not null) queryExpression = queryExpression.And(contact => contact.Name.Contains(Name));
             if (City is not null) queryExpression = queryExpression.And(contact => contact.City.Contains(City));
             if (Address is not null) queryExpression = queryExpression.And(contact => contact.Address.Contains(Address));
@@ -59,34 +59,68 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Get, IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed record Select([Required] string Id) : RecordExpression<ContactModel>, IQuery<Contact>, IHttpRestClientRequest<Contact>, IPathStringLocationRequest, IInterceptorDecorator, ILoggingDecorator
+    public sealed class SelectQuery : QueryExpression<ContactModel>, IQuery<Contact>, IHttpRestClientRequest<Contact>, IPathStringLocationRequest, IInterceptorDecorator, ILoggingDecorator
     {
+        public SelectQuery(string id)
+        {
+            Id = id;
+        }
+
+        [Required]
+        public string Id { get; set; }
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
     }
 
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
-    public sealed record Add([Required] string Name, [Required] string City, [Required] string Address, [Required] string Country)
-        : RecordExpression<ContactModel>, ICommand<string>, IHttpRestClientRequest<string>, IValidatorDecorator, IPersistenceDecorator, IInterceptorDecorator, IEventDecorator, ILoggingDecorator
+    public sealed class AddCommand :
+        QueryExpression<ContactModel>, ICommand<string>, IHttpRestClientRequest<string>, IValidatorDecorator, IPersistenceDecorator, IInterceptorDecorator, IEventDecorator, ILoggingDecorator
     {
+        public AddCommand(string name, string city, string address, string country)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            City = city ?? throw new ArgumentNullException(nameof(city));
+            Address = address ?? throw new ArgumentNullException(nameof(address));
+            Country = country ?? throw new ArgumentNullException(nameof(country));
+        }
+
+        [Required] public string Name { get; }
+        [Required] public string City { get; }
+        [Required] public string Address { get; }
+        [Required] public string Country { get; }
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Delete, IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed record Delete([Required] string Id) : RecordExpression<ContactModel>, ICommand, IHttpRestClientRequest, IValidatorDecorator, IPersistenceDecorator, IPathStringLocationRequest, ILoggingDecorator
+    public sealed class DeleteCommand : QueryExpression<ContactModel>, ICommand, IHttpRestClientRequest, IValidatorDecorator, IPersistenceDecorator, IPathStringLocationRequest, ILoggingDecorator
     {
+        public DeleteCommand(string id)
+        {
+            Id = id ?? throw new ArgumentNullException(nameof(id));
+        }
+
+        [Required]
+        public string Id { get; set; }
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
     }
 
-    [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Post, IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed record GetIp([Required] string Id) : IQuery<IPAddressLocation>, IHttpRestClientRequest<IPAddressLocation>, IPathStringLocationRequest, ILoggingDecorator
+    [HttpRestClient(Path = "api/contacts/ip/{id}", Method = HttpMethodVerbs.Get, IsSecured = true, IsNullable = true, In = ParameterLocation.Query | ParameterLocation.Path)]
+    public sealed class GetIpQuery : IQuery<IPAddressLocation>, IHttpRestClientRequest<IPAddressLocation>, IPathStringLocationRequest, ILoggingDecorator
     {
+        public GetIpQuery(string id)
+        {
+            Id = id;
+        }
+
+        [Required]
+        public string Id { get; set; }
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
     }
 
     [HttpRestClient(Path = "api/contacts", Method = HttpMethodVerbs.Patch, IsSecured = true, IsNullable = false, In = ParameterLocation.Body)]
-    public sealed record Edit : RecordExpression<ContactModel>, ICommand<Contact>, IHttpRestClientRequest<Contact>, IValidatorDecorator, IPersistenceDecorator, IEventDecorator, ILoggingDecorator
+    public sealed class EditCommand :
+        QueryExpression<ContactModel>, ICommand<Contact>, IHttpRestClientRequest<Contact>, IValidatorDecorator, IPersistenceDecorator, IEventDecorator, ILoggingDecorator
     {
         public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         public string Id { get; set; } = null!;
@@ -95,6 +129,6 @@ namespace Xpandables.Net.Api.Handlers
         public string? Address { get; set; }
         public string? Country { get; set; }
 
-        public Func<Edit, IOperationResult> ApplyPatch = null!;
+        public Func<EditCommand, IOperationResult> ApplyPatch = null!;
     }
 }

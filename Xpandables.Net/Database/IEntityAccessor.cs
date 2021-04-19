@@ -21,21 +21,18 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Entities;
+using Xpandables.Net.Expressions.Specifications;
+
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Represents a set of methods to read/write objects from a data source when used with <see cref="IDataContext{TEntity}"/>.
-    /// You may use extension methods <see langword="AsNoTracking()"/> or <see langword="AsTracking()"/> to enable/disable entities tracking.
+    /// Represents a set of methods to read/write objects from a data source.
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
-    public interface IEntityAccessor<TEntity> : IDisposable, IDataTracker
-        where TEntity : class
+    public interface IEntityAccessor<TEntity> : IDisposable
+        where TEntity : class, IAggregateRoot
     {
-        /// <summary>
-        /// The data context instance.
-        /// </summary>
-        IDataContext<TEntity> DataContext { get; }
-
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria.
         /// If not found, returns the <see langword="default"/> value of the type.
@@ -44,7 +41,7 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TEntity"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        Task<TEntity?> TryFindAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default);
+        Task<TEntity?> TryFindAsync(Specification<TEntity> criteria, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria applied on <paramref name="propertyExpression"/>.
@@ -58,7 +55,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
         Task<TEntity?> TryFindAsync<TParam>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Expression<Func<TParam, bool>> criteria, CancellationToken cancellationToken = default)
+            Specification<TParam> criteria, CancellationToken cancellationToken = default)
             where TParam : class;
 
         /// <summary>
@@ -70,7 +67,7 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        Task<TResult?> TryFindAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
+        Task<TResult?> TryFindAsync<TResult>(Specification<TEntity> criteria,
             Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -88,7 +85,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
         Task<TResult?> TryFindAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Expression<Func<TParam, bool>> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
+            Specification<TParam> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
             where TParam : class;
 
         /// <summary>
@@ -102,7 +99,7 @@ namespace Xpandables.Net.Database
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
-        IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
+        IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Specification<TEntity> criteria,
             Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -119,7 +116,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
         IAsyncEnumerable<TResult> FetchAllAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Expression<Func<TParam, bool>> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
+            Specification<TParam> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
             where TParam : class;
 
         /// <summary>
@@ -129,7 +126,7 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an  asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
-        Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Marks the specified entity to be updated to the data storage on persistence.
@@ -139,14 +136,5 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an  asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
         Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Persists all pending entities to the data storage.
-        /// </summary>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous persist all operation.</returns>
-        /// <exception cref="InvalidOperationException">All exceptions related to the operation.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        Task PersistAsync(CancellationToken cancellationToken = default);
     }
 }

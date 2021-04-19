@@ -67,7 +67,6 @@ namespace Xpandables.Net.Api
             });
 
             services.AddXOperationResultLogger<LoggingService>();
-            services.AddEntityAccessor();
             services.AddScoped<IContactEntityAccessor, ContactEntityAccessor>();
 
             // comment to disable Interception

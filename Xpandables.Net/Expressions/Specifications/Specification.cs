@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 
 namespace Xpandables.Net.Expressions.Specifications
 {
@@ -103,6 +104,13 @@ namespace Xpandables.Net.Expressions.Specifications
         [return:NotNull]
         public static implicit operator Func<TSource, bool>(Specification<TSource> other)
             =>other.IsSatisfiedBy;
+
+        /// <summary>
+        /// Returns the current specification as <see cref="Expression{TDelegate}"/>.
+        /// </summary>
+        /// <param name="other">The target specification</param>
+        public static implicit operator Expression<Func<TSource, bool>>(Specification<TSource> other)
+            =>other.GetExpression();
 
         /// <summary>Returns a string that represents the current expression.</summary>
         /// <returns>A string that represents the current expression.</returns>

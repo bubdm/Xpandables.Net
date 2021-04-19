@@ -38,7 +38,16 @@ namespace Xpandables.Net.Expressions.Specifications
         /// <typeparam name="TSource">The data type source.</typeparam>
         /// <param name="expression">The expression to be wrapped.</param>
         /// <returns>a new instance of <see cref="Specification{TSource}"/> with boolean result.</returns>
-        public static Specification<TSource> Create<TSource>(Expression<Func<TSource, bool>> expression)
+        public static Specification<TSource> CreateFromExpression<TSource>(Expression<Func<TSource, bool>> expression)
             where TSource : notnull => new SpecificationBuilder<TSource>(expression);
+
+        /// <summary>
+        /// Creates a new instance of <see cref="Specification{TSource}"/> from the specified expression.
+        /// </summary>
+        /// <typeparam name="TSource">The data type source.</typeparam>
+        /// <param name="expression">The expression to be wrapped.</param>
+        /// <returns>a new instance of <see cref="Specification{TSource}"/> with boolean result.</returns>
+        public static Specification<TSource> CreateFromQuery<TSource>(IQueryExpression<TSource> expression)
+            where TSource : notnull => new SpecificationBuilder<TSource>(expression.GetExpression());
     }
 }

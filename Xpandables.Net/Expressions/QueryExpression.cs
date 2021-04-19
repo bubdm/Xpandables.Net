@@ -113,5 +113,17 @@ namespace Xpandables.Net.Expressions
         /// </summary>
         [return: NotNull]
         public override Expression<Func<TSource, bool>> GetExpression() => _ => true;
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        [return: NotNull]
+        public static implicit operator Expression<Func<TSource, bool>>(
+              QueryExpression<TSource> queryExpression)
+             => queryExpression.GetExpression();
+
+        [return: NotNull]
+        public static implicit operator Func<TSource, bool>(
+             QueryExpression<TSource> queryExpression)
+            => queryExpression.GetExpression().Compile();
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

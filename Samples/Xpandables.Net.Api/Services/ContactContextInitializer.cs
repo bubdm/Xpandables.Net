@@ -43,8 +43,8 @@ namespace Xpandables.Net.Api.Services
 
             var contact = new ContactModel("myName", "Paris", "Alexandre LeGrand 01", "France");
 
-            await dataContext.AddEntityAsync(contact, cancellationToken).ConfigureAwait(false);
-            await dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
+            await dataContext.InsertAsync(contact, cancellationToken).ConfigureAwait(false);
+            await dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken) => await Task.CompletedTask.ConfigureAwait(false);

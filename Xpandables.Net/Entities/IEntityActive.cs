@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +14,27 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Xpandables.Net.Database;
 
-namespace Xpandables.Net.Events.DomainEvents
+namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as a event domain.
-    /// This kind of events are published before <see cref="IDataContext.SaveChangesAsync(System.Threading.CancellationToken)"/>.
-    /// In case of exception in target event handlers, you can rollback the operation using transaction.
+    /// Adds active information to an entity.
     /// </summary>
-    public interface IDomainEvent : IEvent { }
+    public interface IEntityActive
+    {
+        /// <summary>
+        /// Gets a value indicating whether or not the underlying instance is marked as active.
+        /// </summary>
+        bool IsActive { get; }
+
+        /// <summary>
+        /// Marks the underlying instance as deactivated.
+        /// </summary>
+        void Deactivated();
+
+        /// <summary>
+        /// Marks the underlying instance as activated.
+        /// </summary>
+        void Activated();
+    }
 }

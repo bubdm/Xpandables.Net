@@ -37,7 +37,7 @@ namespace Xpandables.Net.Tests
         [TestMethod]
         public async Task SelectAllTest()
         {
-            var selectAll = new SelectAll();
+            var selectAll = new SelectAllQuery();
             using var response = await httpRestClientHandler.SendAsync(selectAll).ConfigureAwait(false);
 
             if (!response.IsValid())
@@ -55,7 +55,7 @@ namespace Xpandables.Net.Tests
         [TestMethod]
         public async Task AddTest()
         {
-            var add = new Add("My New Name", "My New City", "My new Address", "My new Country");
+            var add = new AddCommand("My New Name", "My New City", "My new Address", "My new Country");
             using var response = await httpRestClientHandler.SendAsync(add).ConfigureAwait(false);
 
             if (!response.IsValid())
@@ -64,7 +64,7 @@ namespace Xpandables.Net.Tests
             }
             else
             {
-                var select = new Select(response.Result);
+                var select = new SelectQuery(response.Result);
                 using var selectResponse = await httpRestClientHandler.SendAsync(select).ConfigureAwait(false);
                 var contact = selectResponse.Result!;
                 Trace.WriteLine($"{contact.Id} {contact.Name} {contact.City} {contact.Address} {contact.Country}");
@@ -76,7 +76,7 @@ namespace Xpandables.Net.Tests
         [TestMethod]
         public async Task GetIpTest()
         {
-            var getIp = new GetIp("216.58.204.100");
+            var getIp = new GetIpQuery("216.58.204.100");
             using var response = await httpRestClientHandler.SendAsync(getIp).ConfigureAwait(false);
 
             if (!response.IsValid())
@@ -94,7 +94,7 @@ namespace Xpandables.Net.Tests
         [TestMethod]
         public async Task DeleteTest()
         {
-            var selectAll = new SelectAll();
+            var selectAll = new SelectAllQuery();
             using var response = await httpRestClientHandler.SendAsync(selectAll).ConfigureAwait(false);
 
             if (!response.IsValid())
@@ -104,7 +104,7 @@ namespace Xpandables.Net.Tests
             else
             {
                 var toDelete = await response.Result.FirstAsync().ConfigureAwait(false);
-                var delete = new Delete(toDelete.Id);
+                var delete = new DeleteCommand(toDelete.Id);
                 using var delResponse = await httpRestClientHandler.SendAsync(delete).ConfigureAwait(false);
                 if (!delResponse.IsValid())
                 {

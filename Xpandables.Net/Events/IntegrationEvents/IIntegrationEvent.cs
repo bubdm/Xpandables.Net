@@ -24,7 +24,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as an integration event.
-    /// This kind of events are published after <see cref="IDataContext.PersistAsync(System.Threading.CancellationToken)"/>
+    /// This kind of events are published after <see cref="IDataContext.SaveChangesAsync(System.Threading.CancellationToken)"/>
     /// completed and the entity change successfully saved to the database, using an implementation of <see cref="IIntegrationEventPublisher"/> 
     /// whose default behavior is similar to the <see cref="IDomainEventPublisher"/>.
     /// </summary>
@@ -32,7 +32,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
 
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as an integration event targeting a specific <see cref="IDomainEvent"/>.
-    /// This kind of events are published after <see cref="IDataContext.PersistAsync(System.Threading.CancellationToken)"/>
+    /// This kind of events are published after <see cref="IDataContext.SaveChangesAsync(System.Threading.CancellationToken)"/>
     /// completed and the entity change successfully saved to the database, using an implementation of <see cref="IIntegrationEventPublisher"/> 
     /// whose default behavior is similar to the <see cref="IDomainEventPublisher"/>.
     /// </summary>

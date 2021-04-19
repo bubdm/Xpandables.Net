@@ -131,7 +131,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXInternalCommandScheduler<TInternalCommandScheduler>(this IServiceCollection services)
-            where TInternalCommandScheduler:class, IInternalCommandScheduler
+            where TInternalCommandScheduler : class, IInternalCommandScheduler
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
@@ -308,10 +308,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped(typeof(IDataContext<>), typeof(DataContext<>));
-            var serviceDescriptor = new ServiceDescriptor(typeof(IDataContext), provider => provider.GetRequiredService<TDataContext>(), ServiceLifetime.Scoped);
-            services.Add(serviceDescriptor);
-
+            services.AddScoped<IDataContext, TDataContext>();
             return services;
         }
 
@@ -370,7 +367,6 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<IDataContextTenantAccessor, DataContextTenantAccessor>();
-            services.AddScoped(typeof(IDataContext<>), typeof(DataContext<>));
 
             var serviceDescriptor = new ServiceDescriptor(
                 typeof(IDataContext),
@@ -378,19 +374,6 @@ namespace Xpandables.Net.DependencyInjection
                 ServiceLifetime.Scoped);
 
             services.Add(serviceDescriptor);
-
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the default implementation of <see cref="IEntityAccessor{TEntity}"/>.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddEntityAccessor(this IServiceCollection services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.AddScoped(typeof(IEntityAccessor<>), typeof(EntityAccessor<>));
 
             return services;
         }

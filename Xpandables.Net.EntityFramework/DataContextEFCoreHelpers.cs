@@ -23,12 +23,14 @@ using System;
 using System.Linq;
 using System.Reflection;
 
+using Xpandables.Net.Entities;
+
 namespace Xpandables.Net.Database
 {
     /// <summary>
     ///  Provides with methods used to extend <see cref="IDataContext"/>.
     /// </summary>
-    public static class DataContextHelpers
+    public static class DataContextEFCoreHelpers
     {
         /// <summary>
         /// Represents a <see cref="DbSet{TEntity}"/> that can be used to query and save instances of <typeparamref name="TEntity"/>.
@@ -39,10 +41,10 @@ namespace Xpandables.Net.Database
         /// <returns>An instance of <see cref="DbSet{TEntity}"/> for the specific type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
         public static DbSet<TEntity> Set<TEntity>(this IDataContext dataContext)
-            where TEntity : class
+            where TEntity : class, IEntity
         {
             _ = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            return (DbSet<TEntity>)dataContext.InternalDbSet<TEntity>();
+            return ((DataContextEFCore)dataContext).Set<TEntity>();
         }
 
         /// <summary>
@@ -50,14 +52,14 @@ namespace Xpandables.Net.Database
         /// LINQ queries against a <see cref="DbSet{TEntity}"/> will be translated into queries against the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of entity being operated on by this set.</typeparam>
-        /// <param name="entityAccessor">the target instance of entity accessor.</param>
+        /// <param name="entityAccessor">The target instance of entity accessor.</param>
         /// <returns>An instance of <see cref="DbSet{TEntity}"/> for the specific type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="entityAccessor"/> is null.</exception>
         public static DbSet<TEntity> Set<TEntity>(this IEntityAccessor<TEntity> entityAccessor)
-            where TEntity : class
+            where TEntity : class, IAggregateRoot
         {
             _ = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
-            return (DbSet<TEntity>)entityAccessor.DataContext.InternalDbSet<TEntity>();
+            return ((EntityAccessorEFCore<TEntity>)entityAccessor)._entities;
         }
 
         /// <summary>
