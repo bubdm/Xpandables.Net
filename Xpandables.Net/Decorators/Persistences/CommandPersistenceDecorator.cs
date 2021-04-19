@@ -30,8 +30,6 @@ namespace Xpandables.Net.Decorators.Persistences
     /// The target command should implement the <see cref="IPersistenceDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/> and executes the
     /// the <see cref="IDataContext.PersistAsync(CancellationToken)"/> after the main one in the same control flow only
-    /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
-    /// delegate command, in order to manage the exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     public sealed class CommandPersistenceDecorator<TCommand> : ICommandHandler<TCommand>
@@ -76,8 +74,6 @@ namespace Xpandables.Net.Decorators.Persistences
     /// The target command should implement the <see cref="IPersistenceDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/> and executes the
     /// the <see cref="IDataContext.PersistAsync(CancellationToken)"/> after the main one in the same control flow only
-    /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
-    /// delegate command, in order to manage the exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>

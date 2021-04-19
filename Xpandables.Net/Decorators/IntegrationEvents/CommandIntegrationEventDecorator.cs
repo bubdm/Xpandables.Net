@@ -31,8 +31,6 @@ namespace Xpandables.Net.Decorators.IntegrationEvents
     /// The target command should implement the <see cref="IEventDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IIntegrationEventPublisher"/> and publishes all
     /// the <see cref="IIntegrationEvent"/> after persistence and after decorated handler execution only
-    /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
-    /// delegate command, in order to manage the data context exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     public sealed class CommandIntegrationEventDecorator<TCommand> : ICommandHandler<TCommand>
@@ -78,8 +76,6 @@ namespace Xpandables.Net.Decorators.IntegrationEvents
     /// The target command should implement the <see cref="IEventDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IIntegrationEventPublisher"/> and publishes all
     /// the <see cref="IIntegrationEvent"/> after persistence and after decorated handler execution only
-    /// if there is no exception or error. You can set the <see cref="IDataContext.OnPersistenceException"/> with the
-    /// delegate command, in order to manage the data context exception.
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>

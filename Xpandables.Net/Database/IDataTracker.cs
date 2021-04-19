@@ -18,7 +18,7 @@
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Provides with a property to determines tracking of entities.
+    /// Provides with a property to determines tracking of entities to be used with EFCore.
     /// </summary>
     public interface IDataTracker
     {

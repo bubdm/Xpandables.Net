@@ -25,23 +25,12 @@ using System.Threading.Tasks;
 using Xpandables.Net.Events;
 
 namespace Xpandables.Net.Database
-{
+{ 
     /// <summary>
-    /// Represents a method used to handle persistence exception.
-    /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null exception.
-    /// If there's not delegate, the handled exception will be re-thrown normally.
-    /// You may use extension methods <see langword="AsNoTracking()"/> or <see langword="AsTracking()"/> to enable/disable entities tracking.
-    /// </summary>
-    /// <param name="exception">The handled exception during persistence.</param>
-    /// <returns>An exception to re-throw or null if not.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "ET001:Type name does not match file name", Justification = "<Pending>")]
-    public delegate Exception? PersistenceExceptionHandler(Exception exception);
-
-    /// <summary>
-    /// Represents a set of commands to manage domain objects using EntityFrameworkCore.
+    /// Represents a set of commands to manage storage domain objects.
     /// When argument is null, an <see cref="ArgumentNullException"/> will be thrown.
     /// When a value is not found, a default value of the expected type should be returned.
-    /// The implementation must be thread-safe when working in a multi-threaded environment.
+    /// When used with EFCore, you may apply extension methods <see langword="AsNoTracking()"/> or <see langword="AsTracking()"/> to enable/disable entities tracking.
     /// </summary>
     public interface IDataContext : IDisposable, IAsyncDisposable, IDataTracker
     {
@@ -155,20 +144,12 @@ namespace Xpandables.Net.Database
 
         /// <summary>
         /// Persists all pending domain objects to the data storage.
-        /// You can use the <see cref="OnPersistenceException"/> to manage exception.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous persist all operation.</returns>
         /// <exception cref="InvalidOperationException">All exceptions related to the operation.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         Task PersistAsync(CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Allows to set or unset the delegate that get called on persistence exception.
-        /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null.
-        /// To disable the delegate, just set the handler to <see langword="null"/>.
-        /// </summary>
-        PersistenceExceptionHandler? OnPersistenceException { get; set; }
     }
 
     /// <summary>
@@ -264,19 +245,11 @@ namespace Xpandables.Net.Database
 
         /// <summary>
         /// Persists all pending domain objects to the data storage.
-        /// You can use the <see cref="OnPersistenceException"/> to manage exception.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous persist all operation.</returns>
         /// <exception cref="InvalidOperationException">All exceptions related to the operation.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         Task PersistAsync(CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Allows to set or unset the delegate that get called on persistence exception.
-        /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null.
-        /// To disable the delegate, just set the handler to <see langword="null"/>.
-        /// </summary>
-        PersistenceExceptionHandler? OnPersistenceException { get; set; }
     }
 }

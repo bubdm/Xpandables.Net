@@ -139,19 +139,11 @@ namespace Xpandables.Net.Database
 
         /// <summary>
         /// Persists all pending domain objects to the data storage.
-        /// You can use the <see cref="OnPersistenceException"/> to manage exception.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous persist all operation.</returns>
         /// <exception cref="InvalidOperationException">All exceptions related to the operation.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        public async Task PersistAsync(CancellationToken cancellationToken = default) => await _dataContext.PersistAsync(cancellationToken).ConfigureAwait(false);
-
-        /// <summary>
-        /// Allows to set or unset the delegate that get called on persistence exception.
-        /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null.
-        /// To disable the delegate, just set the handler to <see langword="null"/>.
-        /// </summary>
-        public PersistenceExceptionHandler? OnPersistenceException { get => _dataContext.OnPersistenceException; set => _dataContext.OnPersistenceException = value; }
+        public async Task PersistAsync(CancellationToken cancellationToken = default) => await _dataContext.PersistAsync(cancellationToken).ConfigureAwait(false); 
     }
 }

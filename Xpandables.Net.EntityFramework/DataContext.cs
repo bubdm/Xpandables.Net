@@ -15,16 +15,15 @@
  *
 ************************************************************************************************************/
 
-using Microsoft.EntityFrameworkCore;
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Events;
 
@@ -201,31 +200,8 @@ namespace Xpandables.Net.Database
             }
             catch (Exception exception) when (exception is DbUpdateException)
             {
-                ExceptionHandler(exception);
+                throw new InvalidOperationException("Persistence exception.", exception);
             }
         }
-
-        [DebuggerStepThrough]
-        private void ExceptionHandler(Exception exception)
-        {
-            var rethrowException = OnPersistenceException is null ? exception : OnPersistenceException.Invoke(exception);
-
-            if (rethrowException is not null)
-            {
-                if (rethrowException is InvalidOperationException)
-                    rethrowException.ReThrow();
-
-                throw new InvalidOperationException(
-                    "Persistence operation failed. See inner exception.",
-                    exception);
-            }
-        }
-
-        /// <summary>
-        /// Allows to set or unset the delegate that get called on persistence exception.
-        /// If you want the exception to be re-thrown, the delegate should return an exception, otherwise null.
-        /// To disable the delegate, just set the handler to <see langword="null"/>.
-        /// </summary>
-        public PersistenceExceptionHandler? OnPersistenceException { get; set; }
     }
 }
