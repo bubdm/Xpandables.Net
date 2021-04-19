@@ -34,7 +34,7 @@ namespace Xpandables.Net.Transactions
         /// </summary>
         /// <param name="argument">The command/query instance to retrieve the transaction scope for.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="argument" /> is null.</exception>
-        public TransactionScope? GetTransactionScope<TArgument>(TArgument argument)
+        public virtual TransactionScope? GetTransactionScope<TArgument>(TArgument argument)
             where TArgument : class, ITransactionDecorator
             => new(TransactionScopeAsyncFlowOption.Enabled);
     }

@@ -22,17 +22,17 @@ using Xpandables.Net.Events;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// using with EFCore, provides with members to track entities events.
+    /// Provides with members to track entities events.
     /// </summary>
     public interface IDataContextEventTracker
     {
         /// <summary>
-        /// When used with EFCore, contains all events (domain events and integration events) from entities being tracked.
+        /// Contains all events (domain events and integration events) from entities in the current context.
         /// </summary>
         IReadOnlyCollection<IEvent> Events { get; }
 
         /// <summary>
-        /// Clears all events found in tracked entities that match the event type.
+        /// Clears all events found that match the event type.
         /// </summary>
         /// <typeparam name="TEvent">The type of event to clear.</typeparam>
         void ClearNotifications<TEvent>() where TEvent : IEvent;

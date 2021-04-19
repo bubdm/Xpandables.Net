@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Xpandables.Net
+namespace Xpandables.Net.Security
 {
     /// <summary>
     ///  Defines a set of methods that can be used to build a token from a collection of claims

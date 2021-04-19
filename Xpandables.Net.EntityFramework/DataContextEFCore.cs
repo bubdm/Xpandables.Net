@@ -34,26 +34,21 @@ namespace Xpandables.Net.Database
     /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/>
     /// and implements <see cref="IDataContext"/>.
     /// </summary>
-    public abstract partial class DataContextEFCore : IDataContext, IDataContextEntityTracker
+    public abstract partial class DataContextEFCore : IDataContext
     {
-        object IDataContextEntityTracker.InternalDbSet<T>() => Set<T>();
-
-        private bool _isTracked;
-        bool IDataContextEntityTracker.IsTracked { get => _isTracked; set => _isTracked = value; }
-
-        private readonly List<IEvent> _notifications = new();
+        private readonly List<IEvent> _events = new();
 
         /// <summary>
         /// Contains all notifications (domain events and domain event notifications) from entities being tracked.
         /// </summary>
-        public IReadOnlyCollection<IEvent> Events { get { ChangeTracker.DetectChanges(); return _notifications; } }
+        public IReadOnlyCollection<IEvent> Events { get { ChangeTracker.DetectChanges(); return _events; } }
 
         /// <summary>
         /// Clears all events found in tracked entities that match the event type.
         /// </summary>
         /// <typeparam name="TEvent">The type of event to clear.</typeparam>
         public virtual void ClearNotifications<TEvent>() where TEvent : IEvent
-            => _notifications.RemoveAll(@event => @event is TEvent);
+            => _events.RemoveAll(@event => @event is TEvent);
 
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TResult"/> type specified by the selector.
@@ -69,7 +64,7 @@ namespace Xpandables.Net.Database
             where T : class, IEntity
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return await selector(Set<T>().AsTracking(_isTracked ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            return await selector(Set<T>()).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -86,7 +81,7 @@ namespace Xpandables.Net.Database
             where T : class, IEntity
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
-            return selector(Set<T>().AsTracking(_isTracked ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking)).AsAsyncEnumerable();
+            return selector(Set<T>()).AsAsyncEnumerable();
         }
 
         /// <summary>
