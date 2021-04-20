@@ -28,7 +28,7 @@ namespace Xpandables.Net.Entities
     /// </summary>
     [DebuggerDisplay("Id = {" + nameof(Id) + "}")]
     [Serializable]
-    public abstract class Entity : IEntity
+    public abstract class Entity : OperationResultBase, IEntity
     {
         /// <summary>
         /// Initializes the Id key with <see cref="KeyGenerator"/>.
