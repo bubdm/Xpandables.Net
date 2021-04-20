@@ -44,7 +44,7 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
         Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
-            where T : class, IEntity;
+            where T : class, IAggregateRoot;
 
         /// <summary>
         /// Returns an asynchronous enumerable of <typeparamref name="TResult"/> anonymous type specified by the selector.
@@ -57,17 +57,7 @@ namespace Xpandables.Net.Database
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
         IAsyncEnumerable<TResult> FetchAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
-            where T : class, IEntity;
-
-        /// <summary>
-        /// Adds a collection of domain objects to the data storage that will be inserted according to the database provider/ORM.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <param name="entities">The domain objects collection to be added and persisted.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="entities"/> is null or empty.</exception>
-        Task InsertManyAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
-            where T : class, IEntity;
+            where T : class, IAggregateRoot;
 
         /// <summary>
         /// Adds a domain object to the data storage that will be inserted according to the database provider/ORM.
@@ -76,18 +66,9 @@ namespace Xpandables.Net.Database
         /// <param name="entity">The domain object to be added and persisted.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null or empty.</exception>
+        /// <returns>A task that represents an asynchronous operation.</returns>
         Task InsertAsync<T>(T entity, CancellationToken cancellationToken = default)
-            where T : class, IEntity;
-
-        /// <summary>
-        /// Deletes the domain object matching the specified entity that will be removed according to the database provider/ORM.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <param name="deletedEntity">The entity to be deleted.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="deletedEntity"/> is null.</exception>
-        Task DeleteAsync<T>(T deletedEntity, CancellationToken cancellationToken = default)
-            where T : class, IEntity;
+            where T : class, IAggregateRoot;
 
         /// <summary>
         /// Deletes the domain objects matching the predicate that will be removed according to the database provider/ORM.
@@ -97,8 +78,9 @@ namespace Xpandables.Net.Database
         /// <param name="predicate">The predicate to be used to filter domain objects.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        /// <returns>A task that represents an asynchronous operation.</returns>
         Task DeleteAsync<T>(Specification<T> predicate, CancellationToken cancellationToken = default)
-            where T : class, IEntity;
+            where T : class, IAggregateRoot;
 
         /// <summary>
         /// Updates the domain object matching the specify entity that will be persisted according to the database provider/ORM.
@@ -107,32 +89,9 @@ namespace Xpandables.Net.Database
         /// <param name="updatedEntity">the updated entity.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="updatedEntity"/> is null.</exception>
+        /// <returns>A task that represents an asynchronous operation.</returns>
         Task UpdateAsync<T>(T updatedEntity, CancellationToken cancellationToken = default)
-            where T : class, IEntity;
-
-        /// <summary>
-        /// Updates the domain objects matching the predicate by using the updater according to the database provider/ORM.
-        /// Only the columns corresponding to properties you set in the object will be updated -- any properties
-        /// you don't set will be left alone. If you have property you want to set to its default,
-        /// then you must explicitly set that property's value.
-        /// </summary>
-        /// <typeparam name="T">The Domain object type.</typeparam>
-        /// <param name="predicate">The predicate to be used to filter domain objects.</param>
-        /// <param name="updater">The delegate to be used for updating domain objects.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="updater"/> is null.</exception>
-        Task UpdateAsync<T>(Specification<T> predicate, Func<T, T> updater, CancellationToken cancellationToken = default)
-            where T : class, IEntity;
-
-        /// <summary>
-        /// Persists all pending domain objects to the data storage according to the database provider/ORM.
-        /// </summary>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous persist all operation.</returns>
-        /// <exception cref="InvalidOperationException">All exceptions related to the operation.</exception>
-        /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
-        Task SaveChangesAsync(CancellationToken cancellationToken = default);
+            where T : class, IAggregateRoot;
     }
 
 }

@@ -21,7 +21,7 @@ namespace Xpandables.Net.Events.DomainEvents
 {
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as a event domain.
-    /// This kind of events are published before <see cref="IDataContext.SaveChangesAsync(System.Threading.CancellationToken)"/>.
+    /// This kind of events are published before <see cref="IDataContextPersistence.SaveChangesAsync(System.Threading.CancellationToken)"/>.
     /// In case of exception in target event handlers, you can rollback the operation using transaction.
     /// </summary>
     public interface IDomainEvent : IEvent { }

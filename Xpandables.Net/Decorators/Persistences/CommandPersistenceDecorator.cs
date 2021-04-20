@@ -29,7 +29,7 @@ namespace Xpandables.Net.Decorators.Persistences
     /// This class allows the application author to add persistence support to command control flow.
     /// The target command should implement the <see cref="IPersistenceDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/> and executes the
-    /// the <see cref="IDataContext.SaveChangesAsync(CancellationToken)"/> after the main one in the same control flow only
+    /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     public sealed class CommandPersistenceDecorator<TCommand> : ICommandHandler<TCommand>
@@ -63,7 +63,10 @@ namespace Xpandables.Net.Decorators.Persistences
         {
             var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
             if (resultState.Succeeded)
-                await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            {
+                if (_dataContext is IDataContextPersistence persistence)
+                    await persistence.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            }
 
             return resultState;
         }
@@ -73,7 +76,7 @@ namespace Xpandables.Net.Decorators.Persistences
     /// This class allows the application author to add persistence support to command control flow.
     /// The target command should implement the <see cref="IPersistenceDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IDataContext"/> and executes the
-    /// the <see cref="IDataContext.SaveChangesAsync(CancellationToken)"/> after the main one in the same control flow only
+    /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
@@ -108,7 +111,8 @@ namespace Xpandables.Net.Decorators.Persistences
         {
             var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
             if (resultState.Succeeded)
-                await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                if (_dataContext is IDataContextPersistence persistence)
+                    await persistence.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return resultState;
         }

@@ -44,49 +44,16 @@ namespace Xpandables.Net.Database
         Task<TEntity?> TryFindAsync(Specification<TEntity> criteria, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria applied on <paramref name="propertyExpression"/>.
-        /// If not found, returns the <see langword="default"/> value of the type.
-        /// </summary>
-        /// <typeparam name="TParam">The type of the model parameter.</typeparam>
-        /// <param name="propertyExpression">The expression that contains the member to apply criteria on.</param>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TEntity"/> type that meets the criteria.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
-        Task<TEntity?> TryFindAsync<TParam>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Specification<TParam> criteria, CancellationToken cancellationToken = default)
-            where TParam : class;
-
-        /// <summary>
-        /// Tries to return an entity converted to the <typeparamref name="TResult"/> type that matches the criteria using the <paramref name="converter"/>.
+        /// Tries to return an entity converted to the <typeparamref name="TResult"/> type that matches the criteria using the <paramref name="select"/>.
         /// If not found, returns the <see langword="default"/> value of the <typeparamref name="TResult"/> type.
         /// </summary>
         /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="converter">Defines the expression to convert n entity to the expected result.</param>
+        /// <param name="select">Defines the expression to convert n entity to the expected result.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         Task<TResult?> TryFindAsync<TResult>(Specification<TEntity> criteria,
-            Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Tries to return an entity converted to the <typeparamref name="TResult"/> type that matches the criteria applied on <paramref name="propertyExpression"/>
-        /// using the <paramref name="converter"/>.
-        /// If not found, returns the <see langword="default"/> value of the <typeparamref name="TResult"/> type.
-        /// </summary>
-        /// <typeparam name="TParam">The type of the model parameter.</typeparam>
-        /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
-        /// <param name="propertyExpression">The expression that contains the member to apply criteria on.</param>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="converter">Defines the expression to convert n entity to the expected result.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TResult"/> type that meets the criteria.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The result source contains no elements.</exception>
-        Task<TResult?> TryFindAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Specification<TParam> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
-            where TParam : class;
+            Expression<Func<TEntity, TResult>> select, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns an enumerable of <typeparamref name="TResult"/> type that match the criteria and that can be asynchronously enumerated.
@@ -94,33 +61,16 @@ namespace Xpandables.Net.Database
         /// </summary>
         /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="converter">Defines the expression to convert n entity to the expected result.</param>
+        /// <param name="select">Defines the expression to convert n entity to the expected result.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="select"/> is null.</exception>
         IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Specification<TEntity> criteria,
-            Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default);
+            Expression<Func<TEntity, TResult>> select, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Returns an enumerable of <typeparamref name="TResult"/> type that match the criteria and that can be asynchronously enumerated.
-        /// If no result found, returns an empty enumerable.
-        /// </summary>
-        /// <typeparam name="TParam">The type of the model parameter.</typeparam>
-        /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
-        /// <param name="propertyExpression">The expression that contains the member to apply criteria on.</param>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="converter">Defines the expression to convert n entity to the expected result.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="converter"/> is null.</exception>
-        IAsyncEnumerable<TResult> FetchAllAsync<TParam, TResult>(Expression<Func<TEntity, TParam>> propertyExpression,
-            Specification<TParam> criteria, Expression<Func<TEntity, TResult>> converter, CancellationToken cancellationToken = default)
-            where TParam : class;
-
-        /// <summary>
-        /// Marks the specified entity to be inserted to the data storage on persistence.
+        /// Marks the specified entity to be inserted to the data storage on persistence according to the database provider/ORM.
         /// </summary>
         /// <param name="entity">The entity to be added and persisted.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -129,12 +79,21 @@ namespace Xpandables.Net.Database
         Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Marks the specified entity to be updated to the data storage on persistence.
+        /// Marks the specified entity to be updated to the data storage on persistence according to the database provider/ORM..
         /// </summary>
-        /// <param name="entity">The entity to be added and persisted.</param>
+        /// <param name="entity">The entity to be updated and persisted.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an  asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
         Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Marks the domain objects matching the predicate as deleted and will be removed according to the database provider/ORM.
+        /// </summary>
+        /// <param name="predicate">Defines a set of criteria that entity should meet to be deleted.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an  asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        Task DeleteAsync(Specification<TEntity> predicate, CancellationToken cancellationToken = default);
     }
 }
