@@ -23,26 +23,39 @@ using Xpandables.Net.Events.DomainEvents;
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
-    /// This is the <see langword="abstract"/> class that implements <see cref="IIntegrationEvent{TDomainEvent}"/> with <see cref="DateTime.UtcNow"/> as default <see cref="OccurredOn"/> value.
+    /// This is the <see langword="abstract"/> class that implements <see cref="IIntegrationEvent"/> with <see cref="DateTime.UtcNow"/> as default <see cref="OccurredOn"/> value.
     /// </summary>
-    /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
-    public abstract class IntegrationEvent<TDomainEvent> : EventBase, IIntegrationEvent<TDomainEvent>
-        where TDomainEvent : notnull, IDomainEvent
+    public abstract class IntegrationEvent : EventBase, IIntegrationEvent
     {
         /// <summary>
-        /// Initializes a default instance of the <see cref="IntegrationEvent{TDomainEvent}"/>
+        /// Initializes a default instance of the <see cref="IntegrationEvent"/>
         /// class assigning <see cref="DateTime.UtcNow"/> to the <see cref="OccurredOn"/> property.
         /// </summary>
-        protected IntegrationEvent(TDomainEvent domainEvent)
+        protected IntegrationEvent()
         {
             OccurredOn = DateTime.UtcNow;
-            DomainEvent = domainEvent;
         }
 
         /// <summary>
         /// When the event occurred.
         /// </summary>
         public DateTime OccurredOn { get; }
+    }
+
+    /// <summary>
+    /// This is the <see langword="abstract"/> class that implements <see cref="IIntegrationEvent{TDomainEvent}"/>.
+    /// </summary>
+    /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
+    public abstract class IntegrationEvent<TDomainEvent> : IntegrationEvent, IIntegrationEvent<TDomainEvent>
+        where TDomainEvent : notnull, IDomainEvent
+    {
+        /// <summary>
+        /// Initializes a default instance of the <see cref="IntegrationEvent{TDomainEvent}"/>.
+        /// </summary>
+        protected IntegrationEvent(TDomainEvent domainEvent)
+        {
+            DomainEvent = domainEvent;
+        }
 
         /// <summary>
         /// Gets the target domain event.
