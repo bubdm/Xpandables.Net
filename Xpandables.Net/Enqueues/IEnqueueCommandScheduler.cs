@@ -18,19 +18,19 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Commands
+namespace Xpandables.Net.Enqueues
 {
     /// <summary>
-    /// Provides with a method to asynchronously enqueue an internal command of specific type that implements <see cref="IInternalCommand"/> interface.
+    /// Provides with a method to asynchronously enqueue a command of specific type that implements <see cref="IEnqueueCommand"/> interface.
     /// </summary>
-    public interface IInternalCommandScheduler
+    public interface IEnqueueCommandScheduler
     {
         /// <summary>
-        /// Asynchronously enqueues the specified internal command.
+        /// Asynchronously enqueues the specified command.
         /// </summary>
-        /// <param name="command">The internal command instance to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <param name="enqueueCommand">The command instance to act on.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="enqueueCommand"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task EnqueueAsync<TInternalCommand>(TInternalCommand command) where TInternalCommand : class, IInternalCommand;
+        Task EnqueueAsync<TEnqueueCommand>(TEnqueueCommand enqueueCommand) where TEnqueueCommand : class, IEnqueueCommand;
     }
 }

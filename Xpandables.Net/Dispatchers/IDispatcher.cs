@@ -21,6 +21,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
+using Xpandables.Net.Enqueues;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Dispatchers
@@ -77,13 +78,13 @@ namespace Xpandables.Net.Dispatchers
         Task<IOperationResult<TResult>> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Asynchronously sends the command handler (<see cref="IInternalCommandHandler{TInternalCommand}"/> implementation) on the specified command.
+        /// Asynchronously sends the command handler (<see cref="IEnqueueCommandHandler{TInternalCommand}"/> implementation) on the specified command.
         /// </summary>
         /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <remarks>if errors, see Debug or Trace.</remarks>
-        Task SendAsync(IInternalCommand command, CancellationToken cancellationToken = default);
+        Task SendAsync(IEnqueueCommand command, CancellationToken cancellationToken = default);
     }
 }

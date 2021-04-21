@@ -63,10 +63,7 @@ namespace Xpandables.Net.Decorators.Persistences
         {
             var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
             if (resultState.Succeeded)
-            {
-                if (_dataContext is IDataContextPersistence persistence)
-                    await persistence.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            }
+                await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return resultState;
         }
@@ -111,8 +108,7 @@ namespace Xpandables.Net.Decorators.Persistences
         {
             var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
             if (resultState.Succeeded)
-                if (_dataContext is IDataContextPersistence persistence)
-                    await persistence.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return resultState;
         }

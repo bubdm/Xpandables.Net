@@ -15,16 +15,16 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Commands
+namespace Xpandables.Net.Enqueues
 {
     /// <summary>
-    /// This interface is used as a marker for commands used for internal processes.
+    /// This interface is used as a marker for enqueue commands.
     /// </summary>
-    public interface IInternalCommand : ICommandQueryEvent
+    public interface IEnqueueCommand : ICommandQueryEvent
     {
         /// <summary>
-        /// Gets the command type.
+        /// Gets the enqueue type.
         /// </summary>
-        string CommandType { get; }
+        string EnqueueType { get; }
     }
 }

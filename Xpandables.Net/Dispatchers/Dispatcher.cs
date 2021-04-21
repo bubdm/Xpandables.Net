@@ -23,6 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
+using Xpandables.Net.Enqueues;
 using Xpandables.Net.Handlers;
 using Xpandables.Net.Queries;
 
@@ -186,18 +187,18 @@ namespace Xpandables.Net.Dispatchers
         }
 
         /// <summary>
-        /// Asynchronously sends the command handler (<see cref="IInternalCommandHandler{TInternalCommand}"/> implementation) on the specified command.
+        /// Asynchronously sends the command handler (<see cref="IEnqueueCommandHandler{TInternalCommand}"/> implementation) on the specified command.
         /// </summary>
         /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <remarks>if errors, see Debug or Trace.</remarks>
-        public virtual async Task SendAsync(IInternalCommand command, CancellationToken cancellationToken = default)
+        public virtual async Task SendAsync(IEnqueueCommand command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
-            if (!typeof(IInternalCommandHandler<>).TryMakeGenericType(out var handlerType, out var typeException, command.GetType()))
+            if (!typeof(IEnqueueCommandHandler<>).TryMakeGenericType(out var handlerType, out var typeException, command.GetType()))
             {
                 throw new InvalidOperationException("Building internal command handler failed.", typeException);
             }

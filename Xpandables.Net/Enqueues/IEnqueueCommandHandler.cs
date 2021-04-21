@@ -19,22 +19,23 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Commands
+namespace Xpandables.Net.Enqueues
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IInternalCommandHandler{TInternalCommand}"/> interface.
+    /// Provides with a method to asynchronously handle an enqueue command of specific type that implements <see cref="IEnqueueCommand"/> interface.
+    /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
-    /// <typeparam name="TInternalCommand">Type of internal command to act on.</typeparam>
-    public abstract class InternalCommandHandler<TInternalCommand> : OperationResultBase, IInternalCommandHandler<TInternalCommand>
-        where TInternalCommand : class, IInternalCommand
+    /// <typeparam name="TEnqueueCommand">Type of the enqueue command to act on.</typeparam>
+    public interface IEnqueueCommandHandler<in TEnqueueCommand>
+        where TEnqueueCommand : class, IEnqueueCommand
     {
         /// <summary>
-        /// Asynchronously handles the specified internal command.
+        /// Asynchronously handles the specified enqueue command.
         /// </summary>
-        /// <param name="command">The internal command instance to act on.</param>
+        /// <param name="enqueueCommand">The enqueue command instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="enqueueCommand"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        public abstract Task<IOperationResult> HandleAsync(TInternalCommand command, CancellationToken cancellationToken = default);
+        Task<IOperationResult> HandleAsync(TEnqueueCommand enqueueCommand, CancellationToken cancellationToken = default);
     }
 }
