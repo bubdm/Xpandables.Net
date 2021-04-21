@@ -15,10 +15,13 @@
  *
 ************************************************************************************************************/
 
+using System;
+
 namespace Xpandables.Net.Events.DomainEvents
 {
     /// <summary>
     /// This is the <see langword="abstract"/> class that implements <see cref="IDomainEvent"/>.
     /// </summary>
+    [Serializable]
     public abstract class DomainEvent : EventBase, IDomainEvent { }
 }
