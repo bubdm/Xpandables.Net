@@ -194,7 +194,7 @@ namespace Xpandables.Net.Dispatchers
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <remarks>if errors, see Debug or Trace.</remarks>
-        public virtual async Task SendAsync(IEnqueueCommand command, CancellationToken cancellationToken = default)
+        public virtual async Task<IOperationResult> SendAsync(IEnqueueCommand command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
@@ -208,7 +208,7 @@ namespace Xpandables.Net.Dispatchers
                 throw new InvalidOperationException($"The matching internal command handler for {command.GetType().Name} is missing.", ex);
             }
 
-            await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
+            return await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
         }
 
         private static void WriteLineException(Exception exception)

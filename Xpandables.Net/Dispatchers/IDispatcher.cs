@@ -83,8 +83,8 @@ namespace Xpandables.Net.Dispatchers
         /// <param name="command">The command to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <returns>A task that represents an asynchronous operation.</returns>
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
         /// <remarks>if errors, see Debug or Trace.</remarks>
-        Task SendAsync(IEnqueueCommand command, CancellationToken cancellationToken = default);
+        Task<IOperationResult> SendAsync(IEnqueueCommand command, CancellationToken cancellationToken = default);
     }
 }
