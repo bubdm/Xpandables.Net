@@ -24,12 +24,11 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
-using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
 using Xpandables.Net.Expressions;
 using Xpandables.Net.Expressions.Specifications;
 
-namespace Xpandables.Net
+namespace Xpandables.Net.Database
 {
     /// <summary>
     /// An implementation of <see cref="IEntityAccessor{TEntity}"/> for EFCore.
