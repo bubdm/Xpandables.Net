@@ -15,8 +15,12 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Xpandables.Net.Entities;
 
 namespace Xpandables.Net.Enqueues
 {
@@ -31,5 +35,14 @@ namespace Xpandables.Net.Enqueues
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         Task<IOperationResult> DequeueAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Asynchronously dequeues messages.
+        /// </summary>
+        /// <param name="predicate">The predicate to be used to filter queue domain objects.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        Task<IOperationResult> DequeueAsync<TEntityQueue>(Expression<Func<TEntityQueue, bool>> predicate, CancellationToken cancellationToken = default)
+            where TEntityQueue : class, IEntityQueue;
     }
 }
