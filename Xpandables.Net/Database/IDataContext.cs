@@ -18,11 +18,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Entities;
-using Xpandables.Net.Expressions.Specifications;
 
 namespace Xpandables.Net.Database
 {
@@ -79,7 +79,7 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task DeleteAsync<T>(Specification<T> predicate, CancellationToken cancellationToken = default)
+        Task DeleteAsync<T>(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
             where T : class, IAggregateRoot;
 
         /// <summary>
