@@ -34,7 +34,7 @@ namespace Xpandables.Net.Enqueues
         /// <param name="queueMessage">The queue message instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="queueMessage"/> is null.</exception>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        Task DequeueAsync(TQueueMessage queueMessage, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        Task<IOperationResult> DequeueAsync(TQueueMessage queueMessage, CancellationToken cancellationToken = default);
     }
 }

@@ -29,7 +29,7 @@ namespace Xpandables.Net.Enqueues
         /// Asynchronously dequeues messages.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        Task DequeueAsync(CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        Task<IOperationResult> DequeueAsync(CancellationToken cancellationToken = default);
     }
 }
