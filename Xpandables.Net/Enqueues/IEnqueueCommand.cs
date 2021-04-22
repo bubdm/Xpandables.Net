@@ -26,5 +26,47 @@ namespace Xpandables.Net.Enqueues
         /// Gets the enqueue type.
         /// </summary>
         string EnqueueType { get; }
+
+        /// <summary>
+        /// Determines the status of the enqueue.
+        /// The default value is <see cref="EnqueueStatus.NewlyAdded"/>.
+        /// </summary>
+        EnqueueStatus Status { get; protected set; }
+
+        /// <summary>
+        /// Sets the enqueue status of the command to <see cref="EnqueueStatus.NewlyAdded"/>.
+        /// </summary>
+        public virtual void EnqueueStatusNewlyAdded() => Status = EnqueueStatus.NewlyAdded;
+
+        /// <summary>
+        /// Sets the enqueue status of the command to <see cref="EnqueueStatus.AlreadyCollected"/>.
+        /// </summary>
+        public virtual void EnqueueStatusAlreadyCollected() => Status = EnqueueStatus.AlreadyCollected;
+
+        /// <summary>
+        /// Sets the enqueue status of the command to <see cref="EnqueueStatus.ProcessFailed"/>.
+        /// </summary>
+        public virtual void EnqueueStatusProcessFailed() => Status = EnqueueStatus.ProcessFailed;
+    }
+
+    /// <summary>
+    /// Defines the different enqueue status.
+    /// </summary>
+    public enum EnqueueStatus
+    {
+        /// <summary>
+        /// The target enqueue command has been newly added.
+        /// </summary>
+        NewlyAdded,
+
+        /// <summary>
+        /// The target enqueue command has been already collected.
+        /// </summary>
+        AlreadyCollected,
+
+        /// <summary>
+        /// The process failed to process the target enqueue command.
+        /// </summary>
+        ProcessFailed
     }
 }
