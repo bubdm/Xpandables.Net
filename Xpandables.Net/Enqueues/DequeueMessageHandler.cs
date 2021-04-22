@@ -25,7 +25,7 @@ namespace Xpandables.Net.Enqueues
     /// Represents a helper class that allows implementation of <see cref="IDequeueMessageHandler{TQueueMessage}"/> interface.
     /// </summary>
     /// <typeparam name="TEnqueueMessage">Type of queue message to act on.</typeparam>
-    public abstract class DequeueMessageHandler<TEnqueueMessage> : IDequeueMessageHandler<TEnqueueMessage>
+    public abstract class DequeueMessageHandler<TEnqueueMessage> : OperationResultBase, IDequeueMessageHandler<TEnqueueMessage>
         where TEnqueueMessage : class, IQueueMessage
     {
         /// <summary>
