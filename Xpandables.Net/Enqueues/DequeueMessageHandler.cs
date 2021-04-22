@@ -22,20 +22,19 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Enqueues
 {
     /// <summary>
-    /// Provides with a method to asynchronously handle an enqueue command of specific type that implements <see cref="IEnqueueCommand"/> interface.
-    /// The implementation must be thread-safe when working in a multi-threaded environment.
+    /// Represents a helper class that allows implementation of <see cref="IDequeueMessageHandler{TQueueMessage}"/> interface.
     /// </summary>
-    /// <typeparam name="TEnqueueCommand">Type of the enqueue command to act on.</typeparam>
-    public interface IEnqueueCommandHandler<in TEnqueueCommand>
-        where TEnqueueCommand : class, IEnqueueCommand
+    /// <typeparam name="TEnqueueMessage">Type of queue message to act on.</typeparam>
+    public abstract class DequeueMessageHandler<TEnqueueMessage> : IDequeueMessageHandler<TEnqueueMessage>
+        where TEnqueueMessage : class, IQueueMessage
     {
         /// <summary>
-        /// Asynchronously handles the specified enqueue command.
+        /// Asynchronously handles the specified dequeue message.
         /// </summary>
-        /// <param name="enqueueCommand">The enqueue command instance to act on.</param>
+        /// <param name="queueMessage">The queue message instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="enqueueCommand"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        Task<IOperationResult> HandleAsync(TEnqueueCommand enqueueCommand, CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="queueMessage"/> is null.</exception>
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        public abstract Task DequeueAsync(TEnqueueMessage queueMessage, CancellationToken cancellationToken = default);
     }
 }

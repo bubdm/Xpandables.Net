@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,19 +15,21 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xpandables.Net.Enqueues
 {
     /// <summary>
-    /// Provides with extension methods to access <see cref="IEnqueueCommand"/> members.
+    /// Provides with a method to asynchronously dequeues message of specific type that implements <see cref="IQueueMessage"/> interface.
     /// </summary>
-    public static class IEnqueueCommandExtensions
+    public interface IQueueMessageScheduler
     {
         /// <summary>
-        /// Returns the status of the current enqueue command.
+        /// Asynchronously dequeues messages.
         /// </summary>
-        /// <param name="this">The target command.</param>
-        /// <returns>A <see cref="EnqueueStatus"/> value.</returns>
-        public static EnqueueStatus Status(this IEnqueueCommand @this) => @this.Status;
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task DequeueAsync(CancellationToken cancellationToken = default);
     }
 }

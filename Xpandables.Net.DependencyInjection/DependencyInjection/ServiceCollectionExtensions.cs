@@ -125,18 +125,34 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="IEnqueueCommandScheduler"/> type implementation to the services with scope life time.
+        /// Adds the <see cref="IQueueMessageScheduler"/> type implementation to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TEnqueueCommandScheduler">The scheduler type implementation.</typeparam>
+        /// <typeparam name="TQueueMessageScheduler">The scheduler type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXEnqueueCommandScheduler<TEnqueueCommandScheduler>(this IServiceCollection services)
-            where TEnqueueCommandScheduler : class, IEnqueueCommandScheduler
+        public static IServiceCollection AddXQueueMessageScheduler<TQueueMessageScheduler>(this IServiceCollection services)
+            where TQueueMessageScheduler : class, IQueueMessageScheduler
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IEnqueueCommandScheduler, TEnqueueCommandScheduler>();
+            services.AddScoped<IQueueMessageScheduler, TQueueMessageScheduler>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IEnqueueMessageHandler"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TEnqueueMessageHandler">The scheduler type implementation.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXEnqueueMessageHandler<TEnqueueMessageHandler>(this IServiceCollection services)
+            where TEnqueueMessageHandler : class, IEnqueueMessageHandler
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<IEnqueueMessageHandler, TEnqueueMessageHandler>();
             return services;
         }
 
@@ -532,7 +548,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="ICommandHandler{TCommand}"/>, <see cref="ICommandHandler{TCommand, TResult}"/> and <see cref="IEnqueueCommandHandler{TInternalCommand}"/> to the services with scope life time.
+        /// Adds the <see cref="ICommandHandler{TCommand}"/>, <see cref="ICommandHandler{TCommand, TResult}"/> and <see cref="IDequeueMessageHandler{TQueueMessage}"/> to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -562,8 +578,8 @@ namespace Xpandables.Net.DependencyInjection
             }
 
             var genericInternalHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEnqueueCommandHandler<>)))
-                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IEnqueueCommandHandler<>)) })
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IDequeueMessageHandler<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IDequeueMessageHandler<>)) })
                 .ToList();
 
             foreach (var handler in genericInternalHandlers)
@@ -667,7 +683,7 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Adds and configures the <see cref="ICommandHandler{TCommand}"/>, <see cref="IDomainEventHandler{TEvent}"/>, <see cref="IIntegrationEventHandler{TEvent}"/>,
-        /// <see cref="IQueryHandler{TQuery, TResult}"/>, <see cref="IEnqueueCommandHandler{TInternalCommand}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
+        /// <see cref="IQueryHandler{TQuery, TResult}"/>, <see cref="IDequeueMessageHandler{TQueueMessage}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>

@@ -78,13 +78,13 @@ namespace Xpandables.Net.Dispatchers
         Task<IOperationResult<TResult>> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Asynchronously sends the command handler (<see cref="IEnqueueCommandHandler{TInternalCommand}"/> implementation) on the specified command.
+        /// Asynchronously sends the queue handler (<see cref="IDequeueMessageHandler{TQueueMessage}"/> implementation) on the specified queue message.
         /// </summary>
-        /// <param name="command">The command to act on.</param>
+        /// <param name="queueMessage">The queue message to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="queueMessage"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
         /// <remarks>if errors, see Debug or Trace.</remarks>
-        Task<IOperationResult> SendAsync(IEnqueueCommand command, CancellationToken cancellationToken = default);
+        Task<IOperationResult> SendAsync(IQueueMessage queueMessage, CancellationToken cancellationToken = default);
     }
 }

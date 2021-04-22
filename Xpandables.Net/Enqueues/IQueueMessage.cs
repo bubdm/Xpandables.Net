@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,22 +14,17 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Enqueues
 {
     /// <summary>
-    /// Provides with a method to asynchronously enqueue a command of specific type that implements <see cref="IEnqueueCommand"/> interface.
+    /// This interface is used as a marker for queue messages.
     /// </summary>
-    public interface IEnqueueCommandScheduler
+    public interface IQueueMessage : ICommandQueryEvent
     {
         /// <summary>
-        /// Asynchronously enqueues the specified command.
+        /// Gets the queue message type.
         /// </summary>
-        /// <param name="enqueueCommand">The command instance to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="enqueueCommand"/> is null.</exception>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        Task EnqueueAsync<TEnqueueCommand>(TEnqueueCommand enqueueCommand) where TEnqueueCommand : class, IEnqueueCommand;
+        string QueueType { get; }
     }
 }

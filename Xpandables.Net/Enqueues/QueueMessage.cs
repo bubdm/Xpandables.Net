@@ -20,29 +20,30 @@ using System;
 namespace Xpandables.Net.Enqueues
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IEnqueueCommand"/> interface.
+    /// Represents a helper class that allows implementation of <see cref="IQueueMessage"/> interface.
     /// </summary>
-    public abstract class EnqueueCommand : IEnqueueCommand
+    public abstract class QueueMessage : IQueueMessage
     {
-        private EnqueueStatus _status;
-
         /// <summary>
-        /// Constructs a new instance of <see cref="EnqueueCommand"/> with the target type.
-        /// The <see cref="IEnqueueCommand.Status"/> is set to <see cref="EnqueueStatus.NewlyAdded"/>.
+        /// Constructs a new instance of <see cref="QueueMessage"/> with the target type.
         /// </summary>
-        /// <param name="enqueueType">The target enqueue type.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="enqueueType"/> is null.</exception>
-        protected EnqueueCommand(string enqueueType)
+        /// <param name="queueType">The target queue message type.</param>
+        /// <param name="occurredOn">When the message occurred.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="queueType"/> is null.</exception>
+        protected QueueMessage(string queueType, DateTimeOffset occurredOn)
         {
-            EnqueueType = enqueueType ?? throw new ArgumentNullException(nameof(enqueueType));
-            _status = EnqueueStatus.NewlyAdded;
+            QueueType = queueType ?? throw new ArgumentNullException(nameof(queueType));
+            OccurredOn = occurredOn;
         }
 
         /// <summary>
-        /// Gets the enqueue type.
+        /// Gets the queue message type.
         /// </summary>
-        public string EnqueueType { get; }
+        public string QueueType { get; }
 
-        EnqueueStatus IEnqueueCommand.Status { get => _status; set => _status = value; }
+        /// <summary>
+        /// Gets the message occurred.
+        /// </summary>
+        public DateTimeOffset OccurredOn { get; } 
     }
 }

@@ -15,57 +15,52 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Enqueues
+namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// This interface is used as a marker for enqueue commands.
+    /// The queue domain object base definition.
     /// </summary>
-    public interface IEnqueueCommand : ICommandQueryEvent
+    public interface IEntityQueue : IAggregateRoot
     {
         /// <summary>
-        /// Gets the enqueue type.
+        /// Gets the queue type.
         /// </summary>
-        string EnqueueType { get; }
+        string QueueType { get; }
 
         /// <summary>
-        /// Determines the status of the enqueue.
-        /// The default value is <see cref="EnqueueStatus.NewlyAdded"/>.
+        /// Gets the .Net Framework content type.
         /// </summary>
-        EnqueueStatus Status { get; protected set; }
+        string Type { get; }
 
         /// <summary>
-        /// Sets the enqueue status of the command to <see cref="EnqueueStatus.NewlyAdded"/>.
+        /// Gets the JSON <see cref="string"/> representation of the type.
         /// </summary>
-        public virtual void EnqueueStatusNewlyAdded() => Status = EnqueueStatus.NewlyAdded;
+        string JsonTypeContent { get; }
 
         /// <summary>
-        /// Sets the enqueue status of the command to <see cref="EnqueueStatus.AlreadyCollected"/>.
+        /// Determines the status of the queue.
+        /// The default value is <see cref="QueueStatus.NewlyAdded"/>.
         /// </summary>
-        public virtual void EnqueueStatusAlreadyCollected() => Status = EnqueueStatus.AlreadyCollected;
-
-        /// <summary>
-        /// Sets the enqueue status of the command to <see cref="EnqueueStatus.ProcessFailed"/>.
-        /// </summary>
-        public virtual void EnqueueStatusProcessFailed() => Status = EnqueueStatus.ProcessFailed;
+        QueueStatus Status { get; }
     }
 
     /// <summary>
-    /// Defines the different enqueue status.
+    /// Defines the different queue message status.
     /// </summary>
-    public enum EnqueueStatus
+    public enum QueueStatus
     {
         /// <summary>
-        /// The target enqueue command has been newly added.
+        /// The queue message has been newly added.
         /// </summary>
         NewlyAdded,
 
         /// <summary>
-        /// The target enqueue command has been already collected.
+        /// The queue message has been already collected.
         /// </summary>
         AlreadyCollected,
 
         /// <summary>
-        /// The process failed to process the target enqueue command.
+        /// The process failed to process the queue message.
         /// </summary>
         ProcessFailed
     }

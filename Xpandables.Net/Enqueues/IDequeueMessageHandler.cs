@@ -22,19 +22,19 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Enqueues
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IEnqueueCommandHandler{TEnqueueCommand}"/> interface.
+    /// Provides with a method to asynchronously handle a dequeue message of specific type that implements <see cref="IQueueMessage"/> interface.
     /// </summary>
-    /// <typeparam name="TEnqueueCommand">Type of enqueue command to act on.</typeparam>
-    public abstract class EnqueueCommandHandler<TEnqueueCommand> : OperationResultBase, IEnqueueCommandHandler<TEnqueueCommand>
-        where TEnqueueCommand : class, IEnqueueCommand
+    /// <typeparam name="TQueueMessage">The queue message type</typeparam>
+    public interface IDequeueMessageHandler<TQueueMessage>
+        where TQueueMessage : class, IQueueMessage
     {
         /// <summary>
-        /// Asynchronously handles the specified enqueue command.
+        /// Asynchronously handles the specified dequeue message.
         /// </summary>
-        /// <param name="enqueueCommand">The enqueue command instance to act on.</param>
+        /// <param name="queueMessage">The queue message instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="enqueueCommand" /> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        public abstract Task<IOperationResult> HandleAsync(TEnqueueCommand enqueueCommand, CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="queueMessage"/> is null.</exception>
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task DequeueAsync(TQueueMessage queueMessage, CancellationToken cancellationToken = default);
     }
 }
