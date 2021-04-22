@@ -208,7 +208,7 @@ namespace Xpandables.Net.Dispatchers
                 throw new InvalidOperationException($"The matching internal command handler for {queueMessage.GetType().Name} is missing.", ex);
             }
 
-            return await handler.HandleAsync((dynamic)queueMessage, (dynamic)cancellationToken).ConfigureAwait(false);
+            return await handler.DequeueAsync((dynamic)queueMessage, (dynamic)cancellationToken).ConfigureAwait(false);
         }
 
         private static void WriteLineException(Exception exception)
