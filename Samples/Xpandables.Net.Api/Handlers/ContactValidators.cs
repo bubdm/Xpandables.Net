@@ -32,8 +32,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult> ValidateAsync(SelectQuery argument, CancellationToken cancellationToken = default)
         {
-            var criteria = SpecificationFactory.CreateFromQuery(argument);
-            var contact = await _entityAccessor.TryFindAsync(criteria, cancellationToken).ConfigureAwait(false);
+            var contact = await _entityAccessor.TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
             if (contact is null)
                 return new FailureOperationResult(HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
@@ -41,8 +40,7 @@ namespace Xpandables.Net.Api.Handlers
         }
         public async Task<IOperationResult> ValidateAsync(AddCommand argument, CancellationToken cancellationToken = default)
         {
-            var criteria = SpecificationFactory.CreateFromQuery(argument);
-            var contact = await _entityAccessor.TryFindAsync(criteria, cancellationToken).ConfigureAwait(false);
+            var contact = await _entityAccessor.TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
             if (contact is not null)
                 return new FailureOperationResult(HttpStatusCode.BadRequest, nameof(argument.Name), "Contact already exist");
 
@@ -50,8 +48,7 @@ namespace Xpandables.Net.Api.Handlers
         }
         public async Task<IOperationResult> ValidateAsync(DeleteCommand argument, CancellationToken cancellationToken = default)
         {
-            var criteria = SpecificationFactory.CreateFromQuery(argument);
-            var contact = await _entityAccessor.TryFindAsync(criteria, cancellationToken).ConfigureAwait(false);
+            var contact = await _entityAccessor.TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
             if (contact is null)
                 return new FailureOperationResult(HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 
@@ -59,8 +56,7 @@ namespace Xpandables.Net.Api.Handlers
         }
         public async Task<IOperationResult> ValidateAsync(EditCommand argument, CancellationToken cancellationToken = default)
         {
-            var criteria = SpecificationFactory.CreateFromQuery(argument);
-            var contact = await _entityAccessor.TryFindAsync(criteria, cancellationToken).ConfigureAwait(false);
+            var contact = await _entityAccessor.TryFindAsync(argument, cancellationToken).ConfigureAwait(false);
             if (contact is null)
                 return new FailureOperationResult(HttpStatusCode.NotFound, nameof(argument.Id), "Contact not found");
 

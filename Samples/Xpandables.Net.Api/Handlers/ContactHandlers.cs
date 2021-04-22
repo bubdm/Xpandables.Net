@@ -42,14 +42,12 @@ namespace Xpandables.Net.Api.Handlers
 
         public IAsyncEnumerable<Contact> HandleAsync(SelectAllQuery query, CancellationToken cancellationToken = default)
         {
-            var criteria = SpecificationFactory.CreateFromQuery(query);
-            return _entityAccessor.FetchAllAsync(criteria, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken: cancellationToken);
+            return _entityAccessor.FetchAllAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken: cancellationToken);
         }
 
         public async Task<IOperationResult<Contact>> HandleAsync(SelectQuery query, CancellationToken cancellationToken = default)
         {
-            var criteria = SpecificationFactory.CreateFromQuery(query);
-            var found = await _entityAccessor.TryFindAsync(criteria, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken).ConfigureAwait(false);
+            var found = await _entityAccessor.TryFindAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken).ConfigureAwait(false);
             return found is not null ? OkOperation(found) : NotFoundOperation<Contact>();
         }
 
@@ -63,8 +61,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult> HandleAsync(DeleteCommand command, CancellationToken cancellationToken = default)
         {
-            var criteria = SpecificationFactory.CreateFromQuery(command);
-            var toDelete = (await _entityAccessor.TryFindAsync(criteria, cancellationToken).ConfigureAwait(false))!;
+            var toDelete = (await _entityAccessor.TryFindAsync(command, cancellationToken).ConfigureAwait(false))!;
             toDelete.Deleted();
 
             return new SuccessOperationResult();
@@ -72,8 +69,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult<Contact>> HandleAsync(EditCommand command, CancellationToken cancellationToken = default)
         {
-            var criteria = SpecificationFactory.CreateFromQuery(command);
-            var toEdit = (await _entityAccessor.TryFindAsync(criteria, cancellationToken).ConfigureAwait(false))!;
+            var toEdit = (await _entityAccessor.TryFindAsync(command, cancellationToken).ConfigureAwait(false))!;
             toEdit.Edit(command.Name, command.City, command.Address, command.Country);
 
             return new SuccessOperationResult<Contact>(new Contact(toEdit.Id, toEdit.Name, toEdit.City, toEdit.Address, toEdit.Country));

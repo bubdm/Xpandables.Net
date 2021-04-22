@@ -113,13 +113,6 @@ namespace Xpandables.Net.Expressions.Specifications
         public static implicit operator Expression<Func<TSource, bool>>(Specification<TSource> other)
             => other.GetExpression();
 
-        /// <summary>
-        /// Returns a specification from the expression.
-        /// </summary>
-        /// <param name="expression">The target expression.</param>
-        public static implicit operator Specification<TSource>(Expression<Func<TSource, bool>> expression)
-            => SpecificationFactory.CreateFromExpression(expression);
-
         /// <summary>Returns a string that represents the current expression.</summary>
         /// <returns>A string that represents the current expression.</returns>
         public override string ToString() => GetExpression().ToString();
