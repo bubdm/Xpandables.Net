@@ -20,7 +20,7 @@ namespace Xpandables.Net.Entities
     /// <summary>
     /// The queue domain object base definition.
     /// </summary>
-    public interface IEntityQueue : IAggregateRoot
+    public interface IEntityQueue : IAggregateRoot, IEntityQueueStatus
     {
         /// <summary>
         /// Gets the queue type.
@@ -36,32 +36,5 @@ namespace Xpandables.Net.Entities
         /// Gets the JSON <see cref="string"/> representation of the type.
         /// </summary>
         string JsonTypeContent { get; }
-
-        /// <summary>
-        /// Determines the status of the queue.
-        /// The default value is <see cref="QueueStatus.NewlyAdded"/>.
-        /// </summary>
-        QueueStatus Status { get; }
-    }
-
-    /// <summary>
-    /// Defines the different queue message status.
-    /// </summary>
-    public enum QueueStatus
-    {
-        /// <summary>
-        /// The queue message has been newly added.
-        /// </summary>
-        NewlyAdded,
-
-        /// <summary>
-        /// The queue message has been already collected.
-        /// </summary>
-        AlreadyCollected,
-
-        /// <summary>
-        /// The process failed to process the queue message.
-        /// </summary>
-        ProcessFailed
     }
 }
