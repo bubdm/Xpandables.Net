@@ -46,12 +46,12 @@ namespace Xpandables.Net
         {
             if (!typeToConvert.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IOperationResult<>)))
             {
-                return (OperationResultConverter)_instanceCreator.Create(typeof(OperationResultConverter))!;
+                return _instanceCreator.Create(typeof(OperationResultConverter)) as OperationResultConverter;
             }
             else
             {
                 Type elementType = typeToConvert.GetGenericArguments()[0];
-                return (JsonConverter)_instanceCreator.Create(typeof(OperationResultConverter<>).MakeGenericType(elementType))!;
+                return _instanceCreator.Create(typeof(OperationResultConverter<>).MakeGenericType(elementType)) as JsonConverter;
             }
         }
     }
