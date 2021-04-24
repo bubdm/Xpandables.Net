@@ -29,6 +29,15 @@ using Xpandables.Net.Expressions;
 
 namespace Xpandables.Net.Database
 {
+    class Ent : AggregateRoot { }
+    class Test : EntityAccessorEFCore<Ent>
+    {
+        protected Test(IDataContext dataContext) : base(dataContext)
+        {
+            Entities = Context.Set<Ent>();
+        }
+    }
+
     /// <summary>
     /// An implementation of <see cref="IEntityAccessor{TEntity}"/> for EFCore.
     /// You must derive from this class to customize its behaviors.
@@ -37,7 +46,16 @@ namespace Xpandables.Net.Database
     public class EntityAccessorEFCore<TEntity> : IEntityAccessor<TEntity>
         where TEntity : class, IAggregateRoot
     {
-        private readonly DataContextEFCore _dataContext;
+        /// <summary>
+        /// Gets the current data context.
+        /// </summary>
+        protected readonly DataContextEFCore Context;
+
+        /// <summary>
+        /// Gets the current DbSet of the entity type.
+        /// </summary>
+        protected DbSet<TEntity> Entities { get; set; }
+
         internal readonly DbSet<TEntity> _entities;
 
         /// <summary>
@@ -47,8 +65,9 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentException">The <paramref name="dataContext"/> must derive from <see cref="EntityAccessorEFCore{TEntity}"/>.</exception>
         protected EntityAccessorEFCore(IDataContext dataContext)
         {
-            _dataContext = dataContext as DataContextEFCore ?? throw new ArgumentException($"Derived {nameof(DataContextEFCore)} expected.");
-            _entities = _dataContext.Set<TEntity>();
+            Context = dataContext as DataContextEFCore ?? throw new ArgumentException($"Derived {nameof(DataContextEFCore)} expected.");
+            Entities = Context.Set<TEntity>();
+            _entities = Entities;
         }
 
         /// <summary>
@@ -60,8 +79,8 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an object of <typeparamref name="TEntity"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         public async Task<TEntity?> TryFindAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
-            => await _dataContext.TryFindAsync<TEntity, TEntity>(_ =>
-                _entities
+            => await Context.TryFindAsync<TEntity, TEntity>(_ =>
+                Entities
                     .Where(criteria)
                     .Select(s => s),
                 cancellationToken)
@@ -78,8 +97,8 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         public async Task<TResult?> TryFindAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
             Expression<Func<TEntity, TResult>> select, CancellationToken cancellationToken = default)
-            => await _dataContext.TryFindAsync<TEntity, TResult>(_ =>
-                _entities
+            => await Context.TryFindAsync<TEntity, TResult>(_ =>
+                Entities
                     .Where(criteria)
                     .Select(select),
                 cancellationToken)
@@ -98,7 +117,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="select"/> is null.</exception>
         public IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
             Expression<Func<TEntity, TResult>> select, CancellationToken cancellationToken = default)
-            => _dataContext.FetchAllAsync<TEntity, TResult>(_ =>
+            => Context.FetchAllAsync<TEntity, TResult>(_ =>
                 _entities
                     .Where(criteria)
                     .Select(select),
@@ -112,7 +131,7 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an  asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
         public virtual async Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
-            => await _dataContext.InsertAsync(
+            => await Context.InsertAsync(
                 entity,
                 cancellationToken)
             .ConfigureAwait(false);
@@ -125,7 +144,7 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an  asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
         public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
-            => await _dataContext.UpdateAsync(
+            => await Context.UpdateAsync(
                 entity,
                 cancellationToken)
             .ConfigureAwait(false);
@@ -138,7 +157,7 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an  asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
         public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-            => await _dataContext.DeleteAsync(predicate, cancellationToken).ConfigureAwait(false);
+            => await Context.DeleteAsync(predicate, cancellationToken).ConfigureAwait(false);
 
         private bool _disposedValue;
 
