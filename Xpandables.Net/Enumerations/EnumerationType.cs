@@ -21,12 +21,15 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace Xpandables.Net
 {
     /// <summary>
     /// Helper class used to implement enumeration. You can use the <see cref="EnumerationTypeConverter"/> for conversion.
     /// This is an <see langword="abstract"/> and serializable class.
+    /// You can decorate the derived classes using the <see cref="EnumerationTypeConverter"/> with <see cref="TypeConverter"/> attribute 
+    /// or <see cref="EnumerationTypeJsonConverterFactory"/> with <see cref="JsonConverter"/> attribute for serialization.
     /// </summary>
     [Serializable]
     public abstract class EnumerationType : IEqualityComparer<EnumerationType>, IEquatable<EnumerationType>, IComparable<EnumerationType>
