@@ -17,27 +17,38 @@
 ************************************************************************************************************/
 using System;
 
-namespace Xpandables.Net
+namespace Xpandables.Net.CommandQueryEvents
 {
     /// <summary>
-    /// Provides with shared members for commands, queries and events.
+    /// Provides with shared implementation members for <see cref="ICommandQueryEvent"/>.
     /// </summary>
-    public interface ICommandQueryEvent
+    public abstract class CommandQueryEvent : ICommandQueryEvent
     {
+        /// <summary>
+        /// Constructs a default instance of <see cref="CommandQueryEvent"/>
+        /// that initializes <see cref="Guid"/>, <see cref="OccurredOn"/> and <see cref="CreatedBy"/> properties.
+        /// </summary>
+        protected CommandQueryEvent()
+        {
+            Guid = Guid.NewGuid();
+            OccurredOn = DateTime.UtcNow;
+            CreatedBy = Environment.UserName;
+        }
+
         /// <summary>
         /// Gets the unique identifier for the instance.
         /// </summary>
-        Guid Guid { get; }
+        public Guid Guid { get; protected set; }
 
         /// <summary>
         /// Gets When the event occurred.
         /// </summary>
-        DateTimeOffset OccurredOn { get; }
+        public DateTimeOffset OccurredOn { get; protected set; }
 
         /// <summary>
         /// Gets the name of the user running associated with the current instance.
         /// The default value is associated with the current thread.
         /// </summary>
-        string CreatedBy { get; }
+        public string CreatedBy { get; protected set; }
     }
 }

@@ -21,7 +21,7 @@ namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as an event : Domain event or Integration event.
-    /// The events are raised using the differed approach described by "Jimmy Bogard"
+    /// The events can be raised using the differed approach described by "Jimmy Bogard"
     /// </summary>
     public interface IEvent : ICommandQueryEvent
     {
