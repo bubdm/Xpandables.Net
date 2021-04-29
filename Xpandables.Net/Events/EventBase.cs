@@ -17,17 +17,37 @@
 ************************************************************************************************************/
 using System;
 
+using Xpandables.Net.CommandQueryEvents;
+
 namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Represents a helper class that allows implementation of <see cref="IEvent"/> interface. 
     /// </summary>
     [Serializable]
-    public abstract class EventBase : IEvent
+    public abstract class EventBase : CommandQueryEvent, IEvent
     {
-        private PublishingStatus _status;
-        private DateTimeOffset _updatedOn;
-        PublishingStatus IEvent.Status { get => _status; set => _status = value; }
-        DateTimeOffset IEvent.UpdatedOn { get => _updatedOn; set => _updatedOn = value; }
+        /// <summary>
+        /// Constructs a new instance of <see cref="EventBase"/> with its target aggregate id.
+        /// </summary>
+        /// <param name="aggregateId">The target aggregate Id</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
+        protected EventBase(Guid aggregateId) : base() => AggregateId = aggregateId;
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="EventBase"/> with the specified information.
+        /// </summary>
+        /// <param name="aggregateId">The aggregate id.</param>
+        /// <param name="guid">The event identifier.</param>
+        /// <param name="occurredOn">When the event occurred.</param>
+        /// <param name="createdBy">The user name.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
+        protected EventBase(Guid aggregateId, Guid guid, DateTimeOffset occurredOn, string createdBy)
+            : base(guid, occurredOn, createdBy) => AggregateId = aggregateId;
+
+        /// <summary>
+        /// Gets the identifier of the target aggregate.
+        /// </summary>
+        public Guid AggregateId { get; protected set; }
     }
 }

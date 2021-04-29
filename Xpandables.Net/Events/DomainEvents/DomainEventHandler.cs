@@ -25,7 +25,7 @@ namespace Xpandables.Net.Events.DomainEvents
     /// Represents a helper class that allows implementation of <see cref="IDomainEventHandler{TEvent}"/> interface.
     /// </summary>
     /// <typeparam name="TEvent">Type of event to act on.</typeparam>
-    public abstract class DomainEventHandler<TEvent> : OperationResultBase, IDomainEventHandler<TEvent>
+    public abstract class DomainEventHandler<TEvent> : IDomainEventHandler<TEvent>
         where TEvent : class, IDomainEvent
     {
         /// <summary>
@@ -34,6 +34,7 @@ namespace Xpandables.Net.Events.DomainEvents
         /// <param name="domainEvent">The domain event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="domainEvent"/> is null.</exception>
-        public abstract Task<IOperationResult> HandleAsync(TEvent domainEvent, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        public abstract Task HandleAsync(TEvent domainEvent, CancellationToken cancellationToken = default);
     }
 }

@@ -85,12 +85,6 @@ namespace Xpandables.Net.Database
                 if (e.FromQuery || e.Entry.State != EntityState.Added || e.Entry.Entity is not Entity entity) return;
 
                 entity.Created();
-
-                if (e.Entry.Entity is IAggregateRoot aggregateRoot && aggregateRoot.Events.Count > 0)
-                {
-                    _events.AddRange(aggregateRoot.Events);
-                    aggregateRoot.ClearEvents();
-                }
             };
 
             ChangeTracker.StateChanged += (sender, e) =>
@@ -101,12 +95,6 @@ namespace Xpandables.Net.Database
 
                 if (entity.IsDeleted)
                     entity.Deleted();
-
-                if (e.Entry.Entity is IAggregateRoot aggregateRoot && aggregateRoot.Events.Count > 0)
-                {
-                    _events.AddRange(aggregateRoot.Events);
-                    aggregateRoot.ClearEvents();
-                }
             };
         }
     }

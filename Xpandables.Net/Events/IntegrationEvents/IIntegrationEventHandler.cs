@@ -34,8 +34,8 @@ namespace Xpandables.Net.Events.IntegrationEvents
         /// <param name="integrationEvent">The event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="integrationEvent"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        Task<IOperationResult> HandleAsync(object integrationEvent, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task HandleAsync(object integrationEvent, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -53,10 +53,10 @@ namespace Xpandables.Net.Events.IntegrationEvents
         /// <param name="integrationEvent">The event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="integrationEvent"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        Task<IOperationResult> HandleAsync(TEvent integrationEvent, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task HandleAsync(TEvent integrationEvent, CancellationToken cancellationToken = default);
 
-        Task<IOperationResult> IIntegrationEventHandler.HandleAsync(object integrationEvent, CancellationToken cancellationToken)
+        Task IIntegrationEventHandler.HandleAsync(object integrationEvent, CancellationToken cancellationToken)
         {
             if (integrationEvent is TEvent integrationInstance)
                 return HandleAsync(integrationInstance, cancellationToken);

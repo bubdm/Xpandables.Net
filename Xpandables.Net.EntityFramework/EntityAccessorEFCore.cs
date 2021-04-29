@@ -29,22 +29,13 @@ using Xpandables.Net.Expressions;
 
 namespace Xpandables.Net.Database
 {
-    class Ent : AggregateRoot { }
-    class Test : EntityAccessorEFCore<Ent>
-    {
-        protected Test(IDataContext dataContext) : base(dataContext)
-        {
-            Entities = Context.Set<Ent>();
-        }
-    }
-
     /// <summary>
     /// An implementation of <see cref="IEntityAccessor{TEntity}"/> for EFCore.
     /// You must derive from this class to customize its behaviors.
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
     public class EntityAccessorEFCore<TEntity> : IEntityAccessor<TEntity>
-        where TEntity : class, IAggregateRoot
+        where TEntity : class, IEntity
     {
         /// <summary>
         /// Gets the current data context.

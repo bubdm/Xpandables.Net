@@ -16,11 +16,12 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Database;
 using Xpandables.Net.Handlers;
 
 namespace Xpandables.Net.Events.DomainEvents
@@ -28,34 +29,60 @@ namespace Xpandables.Net.Events.DomainEvents
     /// <summary>
     /// The domain event publisher.
     /// </summary>
-    public sealed class DomainEventPublisher : EventPublisher, IDomainEventPublisher
+    public class DomainEventPublisher : IDomainEventPublisher
     {
-        private readonly IDataContext _dataContext;
+        private readonly IHandlerAccessor _handlerAccessor;
 
         /// <summary>
-        /// Initializes a new instance of a <see cref="DomainEventPublisher"/> class with the data context and the handler accessor.
+        /// Initializes a new instance of the <see cref="DomainEventPublisher"/> class with the handlers provider.
         /// </summary>
-        /// <param name="dataContext">The data context to act on.</param>
-        /// <param name="handlerAccessor">The handler accessor.</param>
-        public DomainEventPublisher(IDataContext dataContext, IHandlerAccessor handlerAccessor)
-            : base(handlerAccessor)
-        {
-            _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-        }
+        /// <param name="handlerAccessor">The handlers provider.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="handlerAccessor"/> is null.</exception>
+        public DomainEventPublisher(IHandlerAccessor handlerAccessor)
+            => _handlerAccessor = handlerAccessor ?? throw new ArgumentNullException(nameof(handlerAccessor));
 
         /// <summary>
-        /// Publishes domain events from the data context.
+        /// Publishes the specified domain event.
         /// </summary>
+        /// <param name="event">The event to be published.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        public async Task PublishAsync(CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        public virtual async Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default)
         {
-            var domainEventTasks = _dataContext.Events
-                .OfType<IDomainEvent>()
-                .Select(domainEvent => PublishAsync(domainEvent, cancellationToken));
+            _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            await Task.WhenAll(domainEventTasks).ConfigureAwait(false);
-            _dataContext.ClearNotifications<IDomainEvent>();
+            var domainEvent = @event as IDomainEvent ?? throw new ArgumentNullException(nameof(@event));
+            var genericHandlerType = typeof(IDomainEventHandler<>);
+
+            if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, @event.GetType()))
+            {
+                WriteLineException(new InvalidOperationException("Building event Handler type failed.", typeException));
+                return;
+            }
+
+            if (!_handlerAccessor.TryGetHandlers(typeHandler, out var foundHandlers, out var ex))
+            {
+                WriteLineException(new InvalidOperationException($"Matching event handlers for {@event.GetType().Name} are missing.", ex));
+                return;
+            }
+
+            if (!foundHandlers.Any())
+                return;
+
+            var handlers = (IEnumerable<IDomainEventHandler>)foundHandlers;
+            var tasks = handlers.Select(handler => handler.HandleAsync(@event, cancellationToken));
+
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+        }
+
+        private static void WriteLineException(Exception exception)
+        {
+#if DEBUG
+            Debug.WriteLine(exception);
+#else
+            Trace.WriteLine(exception);
+#endif
         }
     }
 }

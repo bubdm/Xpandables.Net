@@ -18,8 +18,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 using Xpandables.Net.Events;
+using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net.Entities
 {
@@ -27,47 +29,100 @@ namespace Xpandables.Net.Entities
     /// Aggregate is a pattern in Domain-Driven Design. A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
     /// </summary>
     [Serializable]
-    [DebuggerDisplay("Id = {" + nameof(Id) + "}")]
-    public abstract class AggregateRoot : Entity, IAggregateRoot
+    [DebuggerDisplay("Guid = {" + nameof(Id) + "} Version = {" + nameof(Version) + "}")]
+    public abstract class AggregateRoot : OperationResultBase, IAggregateRoot
     {
-        internal readonly HashSet<IEvent> InternalEvents = new();
+        private readonly ICollection<IEvent> _events = new LinkedList<IEvent>();
 
         /// <summary>
-        /// Gets the collection of events occurred.
+        /// Gets the current version of the instance, the default value is -1.
         /// </summary>
-        public IReadOnlyCollection<IEvent> Events => InternalEvents;
+        public long Version { get; internal set; } = -1;
 
         /// <summary>
-        /// Adds the specified event to the entity collection of events.
+        /// Gets the aggregate unique identifier. The default value is <see cref="Guid.NewGuid"/>.
         /// </summary>
-        /// <param name="event">The event to be added.</param>
-        /// <exception cref=" ArgumentNullException">The <paramref name="event"/> is null. </exception>
-        public virtual void AddEvent(IEvent @event)
+        public Guid Id { get; protected set; } = Guid.NewGuid();
+
+        /// <summary>
+        /// Constructs the default instance of an aggregate root.
+        /// </summary>
+        protected AggregateRoot()
         {
-            _ = @event ?? throw new ArgumentNullException(nameof(@event));
-            InternalEvents.Add(@event);
         }
 
         /// <summary>
-        /// Removes the specified event from the entity collection of events.
+        /// Constructs a new instance of <see cref="AggregateRoot"/> using the specified collection of events.
         /// </summary>
-        /// <param name="event">The event to be removed.</param>
+        /// <param name="domainEvents">The events to be applied to the aggregate root</param>
+        public AggregateRoot(IEnumerable<IDomainEvent> domainEvents)
+        {
+            foreach (var domainEvent in domainEvents)
+            {
+                Mutate(domainEvent);
+                Version++;
+            }
+        }
+
+        /// <summary>
+        /// Marks all the events as committed. Just clear the list.
+        /// </summary>
+        public void MarkEventsAsCommitted() => _events.Clear();
+
+        /// <summary>
+        /// Returns a collection of uncommitted events.
+        /// </summary>
+        /// <returns>A list of uncommitted events.</returns>
+        public IEnumerable<IDomainEvent> GetUncommittedEvents() => _events.OfType<IDomainEvent>();
+
+        /// <summary>
+        /// Applies the specified event to the current instance.
+        /// </summary>
+        /// <param name="event">The event to act with.</param>
+        /// <exception cref="ArgumentException">The <paramref name="event"/> is null.</exception>
+        protected virtual void Apply(IEvent @event)
+        {
+            _ = @event ?? throw new ArgumentNullException(nameof(@event));
+
+            if (@event is IDomainEvent domainEvent)
+                if (!_events.Any(e => Equals(e.Guid, domainEvent.Guid)))
+                    Mutate(domainEvent);
+                else
+                    return;
+
+            _events.Add(@event);
+        }
+
+        /// <summary>
+        /// Applies the specified collection of events to the current instance.
+        /// </summary>
+        /// <param name="events">The collection of events to act with.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="events"/> is null.</exception>
+        protected virtual void Apply(IEnumerable<IEvent> @events)
+        {
+            _ = events ?? throw new ArgumentNullException(nameof(events));
+
+            foreach (var @event in events)
+                Apply(@event);
+        }
+
+        /// <summary>
+        /// Dynamically applies the event using the specific pattern :
+        /// Every event handler should be defined like : void On(EventType event)
+        /// </summary>
+        /// <param name="event">The event to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        public virtual void RemoveEvent(IEvent @event)
+        protected virtual void Mutate(IDomainEvent @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
-            InternalEvents.Remove(@event);
+
+            ((dynamic)this).On((dynamic)@event);
         }
 
         /// <summary>
-        /// Clears all events.
+        /// Returns the new version of the instance.
         /// </summary>
-        public virtual void ClearEvents() => InternalEvents.Clear();
-
-        /// <summary>
-        /// Clears all events that match the specified type of events.
-        /// </summary>
-        /// <typeparam name="TEvent">The type of the event to search for.</typeparam>
-        public virtual void ClearEvents<TEvent>() where TEvent : class, IEvent => InternalEvents.RemoveWhere(@event => @event is TEvent);
+        /// <returns>A <see cref="long"/> value that represents the new version of the instance</returns>
+        protected long GetNewVersion() => ++Version;
     }
 }

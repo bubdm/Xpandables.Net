@@ -31,8 +31,9 @@ namespace Xpandables.Net.Events.IntegrationEvents
         /// <summary>
         /// Publishes integration events.
         /// </summary>
+        /// <param name="event">The event to be published.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task PublishAsync(CancellationToken cancellationToken = default);
+        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
     }
 }

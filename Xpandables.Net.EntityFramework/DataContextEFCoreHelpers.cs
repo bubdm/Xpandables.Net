@@ -56,7 +56,7 @@ namespace Xpandables.Net.Database
         /// <returns>An instance of <see cref="DbSet{TEntity}"/> for the specific type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="entityAccessor"/> is null.</exception>
         public static DbSet<TEntity> Set<TEntity>(this IEntityAccessor<TEntity> entityAccessor)
-            where TEntity : class, IAggregateRoot
+            where TEntity : class, IEntity
         {
             _ = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
             return ((EntityAccessorEFCore<TEntity>)entityAccessor)._entities;

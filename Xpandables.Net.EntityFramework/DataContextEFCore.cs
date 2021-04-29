@@ -37,20 +37,6 @@ namespace Xpandables.Net.Database
     /// </summary>
     public abstract partial class DataContextEFCore : IDataContext, IDataContextPersistence
     {
-        private readonly List<IEvent> _events = new();
-
-        /// <summary>
-        /// Contains all notifications (domain events and domain event notifications) from entities being tracked.
-        /// </summary>
-        public IReadOnlyCollection<IEvent> Events { get { ChangeTracker.DetectChanges(); return _events; } }
-
-        /// <summary>
-        /// Clears all events found in tracked entities that match the event type.
-        /// </summary>
-        /// <typeparam name="TEvent">The type of event to clear.</typeparam>
-        public virtual void ClearNotifications<TEvent>() where TEvent : IEvent
-            => _events.RemoveAll(@event => @event is TEvent);
-
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TResult"/> type specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
@@ -62,7 +48,7 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
         public virtual async Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
-            where T : class, IAggregateRoot
+            where T : class, IEntity
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
             return await selector(Set<T>()).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
@@ -79,7 +65,7 @@ namespace Xpandables.Net.Database
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
         public virtual IAsyncEnumerable<TResult> FetchAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
-            where T : class, IAggregateRoot
+            where T : class, IEntity
         {
             _ = selector ?? throw new ArgumentNullException(nameof(selector));
             return selector(Set<T>().AsNoTracking()).AsAsyncEnumerable();
@@ -95,7 +81,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null or empty.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
         public virtual async Task InsertAsync<T>(T entity, CancellationToken cancellationToken = default)
-            where T : class, IAggregateRoot
+            where T : class, IEntity
             => await Set<T>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
@@ -108,7 +94,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="predicate" /> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
         public virtual async Task DeleteAsync<T>(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
-            where T : class, IAggregateRoot
+            where T : class, IEntity
         {
             foreach (var entity in Set<T>().Where(predicate))
             {
@@ -128,7 +114,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="updatedEntity"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
         public virtual async Task UpdateAsync<T>(T updatedEntity, CancellationToken cancellationToken = default)
-            where T : class, IAggregateRoot
+            where T : class, IEntity
         {
             cancellationToken.ThrowIfCancellationRequested();
             Update(updatedEntity);

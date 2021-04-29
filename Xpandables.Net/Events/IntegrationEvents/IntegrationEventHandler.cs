@@ -25,7 +25,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
     /// Represents a helper class that allows implementation of <see cref="IIntegrationEventHandler{TEvent}"/> interface.
     /// </summary>
     /// <typeparam name="TEvent">Type of event to act on.</typeparam>
-    public abstract class IntegrationEventHandler<TEvent> : OperationResultBase, IIntegrationEventHandler<TEvent>
+    public abstract class IntegrationEventHandler<TEvent> : IIntegrationEventHandler<TEvent>
         where TEvent : class, IIntegrationEvent
     {
         /// <summary>
@@ -34,7 +34,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
         /// <param name="integrationEvent">The event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="integrationEvent"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        public abstract Task<IOperationResult> HandleAsync(TEvent integrationEvent, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        public abstract Task HandleAsync(TEvent integrationEvent, CancellationToken cancellationToken = default);
     }
 }

@@ -17,24 +17,17 @@
 ************************************************************************************************************/
 using System.Text.Json.Serialization;
 
-using Xpandables.Net.Database;
 using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as an integration event.
-    /// This kind of events are published after <see cref="IDataContextPersistence.SaveChangesAsync(System.Threading.CancellationToken)"/>
-    /// completed and the entity change successfully saved to the database, using an implementation of <see cref="IIntegrationEventPublisher"/> 
-    /// whose default behavior is similar to the <see cref="IDomainEventPublisher"/>.
     /// </summary>
     public interface IIntegrationEvent : IEvent { }
 
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as an integration event targeting a specific <see cref="IDomainEvent"/>.
-    /// This kind of events are published after <see cref="IDataContextPersistence.SaveChangesAsync(System.Threading.CancellationToken)"/>
-    /// completed and the entity change successfully saved to the database, using an implementation of <see cref="IIntegrationEventPublisher"/> 
-    /// whose default behavior is similar to the <see cref="IDomainEventPublisher"/>.
     /// </summary>
     /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
     public interface IIntegrationEvent<out TDomainEvent> : IIntegrationEvent

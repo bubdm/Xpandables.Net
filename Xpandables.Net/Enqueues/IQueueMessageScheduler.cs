@@ -43,6 +43,6 @@ namespace Xpandables.Net.Enqueues
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         Task<IOperationResult> DequeueAsync<TEntityQueue>(Expression<Func<TEntityQueue, bool>> predicate, CancellationToken cancellationToken = default)
-            where TEntityQueue : class, IEntityQueue;
+            where TEntityQueue : class, IEntityEvent;
     }
 }

@@ -15,26 +15,38 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
-using Xpandables.Net.Events;
+using Xpandables.Net.Entities;
 
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Provides with members to track entities events.
+    /// 
     /// </summary>
-    public interface IDataContextEventTracker
+    /// <typeparam name="TAggregateRoot"></typeparam>
+    public interface IAggregateRootAccessor<TAggregateRoot>
+        where TAggregateRoot : class, IAggregateRoot
     {
         /// <summary>
-        /// Contains all events (domain events and integration events) from entities in the current context.
+        /// 
         /// </summary>
-        IReadOnlyCollection<IEvent> Events { get; }
+        /// <param name="aggregateId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<IOperationResult<TAggregateRoot>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Clears all events found that match the event type.
+        /// 
         /// </summary>
-        /// <typeparam name="TEvent">The type of event to clear.</typeparam>
-        void ClearNotifications<TEvent>() where TEvent : IEvent;
+        /// <param name="aggregate"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<IOperationResult> AppendAsync(TAggregateRoot aggregate, CancellationToken cancellationToken = default);
     }
 }

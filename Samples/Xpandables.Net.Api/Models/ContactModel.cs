@@ -43,7 +43,7 @@ namespace Xpandables.Net.Api.Models
         public string Id { get; set; } = default!;
         public string? Name { get; set; }
     }
-    public sealed class ContactModel : AggregateRoot
+    public sealed class ContactModel : Entity
     {
         public ContactModel(string name, string city, string address, string country)
         {

@@ -15,6 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,10 +27,12 @@ namespace Xpandables.Net.Events.DomainEvents
     public interface IDomainEventPublisher
     {
         /// <summary>
-        /// Publishes domain events from the data context.
+        /// Publishes the specified domain event.
         /// </summary>
+        /// <param name="event">The event to be published.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task PublishAsync(CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
     }
 }

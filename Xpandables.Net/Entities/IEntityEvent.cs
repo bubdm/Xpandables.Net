@@ -18,9 +18,9 @@
 namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// The queue domain object base definition.
+    /// The event domain object base definition.
     /// </summary>
-    public interface IEntityQueue : IAggregateRoot, IEntityQueueStatus
+    public interface IEntityEvent
     {
         /// <summary>
         /// Gets the queue type.

@@ -31,7 +31,7 @@ namespace Xpandables.Net.Database
     /// When argument is null, an <see cref="ArgumentNullException"/> will be thrown.
     /// When a value is not found, a default value of the expected type should be returned or an empty collection if necessary.
     /// </summary>
-    public interface IDataContext : IDisposable, IAsyncDisposable, IDataContextEventTracker, IDataContextPersistence
+    public interface IDataContext : IDisposable, IAsyncDisposable, IDataContextPersistence
     {
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TResult"/> type specified by the selector.
@@ -44,7 +44,7 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type or not.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
         Task<TResult?> TryFindAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
-            where T : class, IAggregateRoot;
+            where T : class, IEntity;
 
         /// <summary>
         /// Returns an asynchronous enumerable of <typeparamref name="TResult"/> anonymous type specified by the selector.
@@ -57,7 +57,7 @@ namespace Xpandables.Net.Database
         /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="selector"/> is null.</exception>
         IAsyncEnumerable<TResult> FetchAllAsync<T, TResult>(Func<IQueryable<T>, IQueryable<TResult>> selector, CancellationToken cancellationToken = default)
-            where T : class, IAggregateRoot;
+            where T : class, IEntity;
 
         /// <summary>
         /// Adds a domain object to the data storage that will be inserted according to the database provider/ORM.
@@ -68,7 +68,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null or empty.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
         Task InsertAsync<T>(T entity, CancellationToken cancellationToken = default)
-            where T : class, IAggregateRoot;
+            where T : class, IEntity;
 
         /// <summary>
         /// Deletes the domain objects matching the predicate that will be removed according to the database provider/ORM.
@@ -80,7 +80,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
         Task DeleteAsync<T>(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
-            where T : class, IAggregateRoot;
+            where T : class, IEntity;
 
         /// <summary>
         /// Updates the domain object matching the specify entity that will be persisted according to the database provider/ORM.
@@ -91,7 +91,7 @@ namespace Xpandables.Net.Database
         /// <exception cref="ArgumentNullException">The <paramref name="updatedEntity"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
         Task UpdateAsync<T>(T updatedEntity, CancellationToken cancellationToken = default)
-            where T : class, IAggregateRoot;
+            where T : class, IEntity;
     }
 
 }

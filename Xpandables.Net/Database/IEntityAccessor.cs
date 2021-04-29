@@ -30,7 +30,7 @@ namespace Xpandables.Net.Database
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
     public interface IEntityAccessor<TEntity> : IDisposable
-        where TEntity : class, IAggregateRoot
+        where TEntity : class, IEntity
     {
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria.

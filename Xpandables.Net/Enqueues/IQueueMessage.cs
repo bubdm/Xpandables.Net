@@ -20,7 +20,7 @@ namespace Xpandables.Net.Enqueues
     /// <summary>
     /// This interface is used as a marker for queue messages.
     /// </summary>
-    public interface IQueueMessage : ICommandQueryEvent
+    public interface IQueueMessage
     {
         /// <summary>
         /// Gets the queue message type.

@@ -23,24 +23,26 @@ using Xpandables.Net.Events.DomainEvents;
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
-    /// This is the <see langword="abstract"/> class that implements <see cref="IIntegrationEvent"/> with <see cref="DateTime.UtcNow"/> as default <see cref="OccurredOn"/> value.
+    /// This is the <see langword="abstract"/> class that implements <see cref="IIntegrationEvent"/>.
     /// </summary>
     [Serializable]
     public abstract class IntegrationEvent : EventBase, IIntegrationEvent
     {
         /// <summary>
-        /// Initializes a default instance of the <see cref="IntegrationEvent"/>
-        /// class assigning <see cref="DateTime.UtcNow"/> to the <see cref="OccurredOn"/> property.
+        /// Initializes a default instance of the <see cref="IntegrationEvent"/>.
         /// </summary>
-        protected IntegrationEvent()
-        {
-            OccurredOn = DateTime.UtcNow;
-        }
+        /// <param name="aggregateId">The aggregate id.</param>
+        protected IntegrationEvent(Guid aggregateId) : base(aggregateId) { }
 
         /// <summary>
-        /// When the event occurred.
+        /// Constructs a new instance of <see cref="IntegrationEvent"/>.
         /// </summary>
-        public DateTime OccurredOn { get; }
+        /// <param name="aggregateId">The aggregate identifier.</param>
+        /// <param name="eventId">The event identifier.</param>
+        /// <param name="occurredOn">When the event occurred.</param>
+        /// <param name="createdBy">The user name.</param>
+        protected IntegrationEvent(Guid aggregateId, Guid eventId, DateTimeOffset occurredOn, string createdBy)
+            : base(aggregateId, eventId, occurredOn, createdBy) { }
     }
 
     /// <summary>
@@ -54,7 +56,24 @@ namespace Xpandables.Net.Events.IntegrationEvents
         /// <summary>
         /// Initializes a default instance of the <see cref="IntegrationEvent{TDomainEvent}"/>.
         /// </summary>
-        protected IntegrationEvent(TDomainEvent domainEvent)
+        /// <param name="aggregateId">The aggregate id.</param>
+        /// <param name="domainEvent">The target domain event.</param>
+        protected IntegrationEvent(TDomainEvent domainEvent, Guid aggregateId)
+            : base(aggregateId)
+        {
+            DomainEvent = domainEvent;
+        }
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="IntegrationEvent"/>.
+        /// </summary>
+        /// <param name="aggregateId">The aggregate identifier.</param>
+        /// <param name="domainEvent">The target domain event.</param>
+        /// <param name="eventId">The event identifier.</param>
+        /// <param name="occurredOn">When the event occurred.</param>
+        /// <param name="createdBy">The user name.</param>
+        protected IntegrationEvent(TDomainEvent domainEvent, Guid aggregateId, Guid eventId, DateTimeOffset occurredOn, string createdBy)
+            : base(aggregateId, eventId, occurredOn, createdBy)
         {
             DomainEvent = domainEvent;
         }
