@@ -16,63 +16,66 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Models;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Database;
-using Xpandables.Net.Expressions.Specifications;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public interface IContactEntityAccessor : IEntityAccessor<ContactModel> { }
-    public class ContactEntityAccessor : EntityAccessorEFCore<ContactModel>, IContactEntityAccessor
-    {
-        public ContactEntityAccessor(IDataContext dataContext) : base(dataContext) { }
-    }
-
     public sealed class ContactHandlers : OperationResultBase,
-        IAsyncQueryHandler<SelectAllQuery, Contact>, IQueryHandler<SelectQuery, Contact>, ICommandHandler<AddCommand, string>, ICommandHandler<DeleteCommand>, ICommandHandler<EditCommand, Contact>
+         ICommandHandler<AddCommand, string>, IQueryHandler<SelectQuery, Contact>, ICommandHandler<EditCommand, Contact>
     {
-        private readonly IContactEntityAccessor _entityAccessor;
-        public ContactHandlers(IContactEntityAccessor entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
+        private readonly IAggregateAccessor<ContactModel> _entityAccessor;
+        public ContactHandlers(IAggregateAccessor<ContactModel> entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
 
-        public IAsyncEnumerable<Contact> HandleAsync(SelectAllQuery query, CancellationToken cancellationToken = default)
-        {
-            return _entityAccessor.FetchAllAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken: cancellationToken);
-        }
+        //public IAsyncEnumerable<Contact> HandleAsync(SelectAllQuery query, CancellationToken cancellationToken = default)
+        //{
+
+        //    return _entityAccessor.FetchAllAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken: cancellationToken);
+        //}
 
         public async Task<IOperationResult<Contact>> HandleAsync(SelectQuery query, CancellationToken cancellationToken = default)
         {
-            var found = await _entityAccessor.TryFindAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken).ConfigureAwait(false);
-            return found is not null ? OkOperation(found) : NotFoundOperation<Contact>();
+            var foundResult = await _entityAccessor.ReadAsync(Guid.Parse(query.Id), cancellationToken).ConfigureAwait(false);
+            if (foundResult.Failed)
+                return NotFoundOperation<Contact>();
+            var found = foundResult.Value;
+            return OkOperation(new Contact(found.Id.ToString(), found.Name, found.City, found.Address, found.Country));
         }
 
         public async Task<IOperationResult<string>> HandleAsync(AddCommand command, CancellationToken cancellationToken = default)
         {
-            var newContact = new ContactModel(command.Name, command.City, command.Address, command.Country);
-            await _entityAccessor.InsertAsync(newContact, cancellationToken).ConfigureAwait(false);
+            var newContact = ContactModel.CreateNewContact(command.Name, command.City, command.Address, command.Country);
+            await _entityAccessor.AppendAsync(newContact, cancellationToken).ConfigureAwait(false);
 
-            return new SuccessOperationResult<string>(newContact.Id);
+            return new SuccessOperationResult<string>(newContact.Id.ToString());
         }
 
-        public async Task<IOperationResult> HandleAsync(DeleteCommand command, CancellationToken cancellationToken = default)
-        {
-            var toDelete = (await _entityAccessor.TryFindAsync(command, cancellationToken).ConfigureAwait(false))!;
-            toDelete.Deleted();
+        //public async Task<IOperationResult> HandleAsync(DeleteCommand command, CancellationToken cancellationToken = default)
+        //{
+        //    var toDelete = (await _entityAccessor.TryFindAsync(command, cancellationToken).ConfigureAwait(false))!;
+        //    toDelete.Deleted();
 
-            return new SuccessOperationResult();
-        }
+        //    return new SuccessOperationResult();
+        //}
 
         public async Task<IOperationResult<Contact>> HandleAsync(EditCommand command, CancellationToken cancellationToken = default)
         {
-            var toEdit = (await _entityAccessor.TryFindAsync(command, cancellationToken).ConfigureAwait(false))!;
-            toEdit.Edit(command.Name, command.City, command.Address, command.Country);
+            var foundResult = await _entityAccessor.ReadAsync(Guid.Parse(command.Id), cancellationToken).ConfigureAwait(false);
+            if (foundResult.Failed)
+                return NotFoundOperation<Contact>();
 
-            return new SuccessOperationResult<Contact>(new Contact(toEdit.Id, toEdit.Name, toEdit.City, toEdit.Address, toEdit.Country));
+            var found = foundResult.Value;
+            if (command.Address is not null) found.ChangeContactAddress(command.Address);
+            if (command.City is not null) found.ChangeContactCity(command.City);
+            if (command.Country is not null) found.ChangeContactCountry(command.Country);
+            if (command.Name is not null) found.ChangeContactName(command.Name);
+
+            return OkOperation(new Contact(found.Id.ToString(), found.Name, found.City, found.Address, found.Country));
         }
     }
 }

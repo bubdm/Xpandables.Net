@@ -77,11 +77,11 @@ namespace Xpandables.Net.Api.Controllers
         public async Task<IActionResult> DeleteAsync([FromRoute] DeleteCommand del, CancellationToken cancellationToken = default)
             => Ok(await _dispatcher.SendAsync(del, cancellationToken).ConfigureAwait(false));
 
-        [HttpPatch]
+        [HttpPut]
         [Route("{id:string}")]
-        public async Task<IActionResult> EditAsync([FromRoute] string id, [FromBody] JsonPatchDocument<EditCommand> editPatch, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> EditAsync([FromRoute] string id, [FromBody] EditCommand edit, CancellationToken cancellationToken = default)
         {
-            var edit = new EditCommand { Id = id, ApplyPatch = value => ApplyJsonPatch(value, editPatch) };
+            edit.Id = id;
             return Ok(await _dispatcher.SendAsync(edit, cancellationToken).ConfigureAwait(false));
         }
 

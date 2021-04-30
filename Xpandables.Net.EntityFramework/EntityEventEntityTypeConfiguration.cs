@@ -15,38 +15,34 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.Database
+namespace Xpandables.Net
 {
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TAggregateRoot"></typeparam>
-    public interface IAggregateRootAccessor<TAggregateRoot>
-        where TAggregateRoot : class, IAggregateRoot
+    public class EntityEventEntityTypeConfiguration : IEntityTypeConfiguration<EntityEvent>
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="aggregateId"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        Task<IOperationResult<TAggregateRoot>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default);
+        /// <param name="builder"></param>
+        public void Configure(EntityTypeBuilder<EntityEvent> builder)
+        {
+            builder.HasKey(p => p.EventId);
+            builder.HasIndex(p => p.EventId).IsUnique();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aggregate"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        Task<IOperationResult> AppendAsync(TAggregateRoot aggregate, CancellationToken cancellationToken = default);
+            builder.Property(p => p.AggregateId);
+            builder.Property(p => p.Data);
+            builder.Property(p => p.EventId);
+            builder.Property(p => p.Version);
+            builder.Property(p => p.IsJson);
+            builder.Property(p => p.Type);
+        }
     }
 }

@@ -40,6 +40,11 @@ namespace Xpandables.Net.Entities
         public string Type { get; }
 
         /// <summary>
+        /// Gets the version.
+        /// </summary>
+        public long Version { get; }
+
+        /// <summary>
         /// Determines whether or not the data is JSON.
         /// </summary>
         public bool IsJson { get; }
@@ -55,13 +60,15 @@ namespace Xpandables.Net.Entities
         /// <param name="eventId">The event identifier.</param>
         /// <param name="aggregateId">The related aggregate identifier.</param>
         /// <param name="type">The .Net assembly content type.</param>
+        /// <param name="version">The event version.</param>
         /// <param name="isJson">Determines whether or not the data is JSON.</param>
         /// <param name="data">The byte representation of the event.</param>
-        public EntityEvent(Guid eventId, Guid aggregateId, string type, bool isJson, byte[] data)
+        public EntityEvent(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
         {
             EventId = eventId;
             AggregateId = aggregateId;
             Type = type ?? throw new ArgumentNullException(nameof(type));
+            Version = version;
             IsJson = isJson;
             Data = data ?? throw new ArgumentNullException(nameof(data));
         }

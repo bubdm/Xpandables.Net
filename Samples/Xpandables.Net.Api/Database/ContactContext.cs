@@ -17,8 +17,8 @@
 ************************************************************************************************************/
 using Microsoft.EntityFrameworkCore;
 
-using Xpandables.Net.Api.Models;
 using Xpandables.Net.Database;
+using Xpandables.Net.Entities;
 
 namespace Xpandables.Net.Api.Database
 {
@@ -27,10 +27,9 @@ namespace Xpandables.Net.Api.Database
         public ContactContext(DbContextOptions<ContactContext> contextOptions) : base(contextOptions) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ContactModel>().HasKey(new string[] { nameof(ContactModel.Id) });
-            modelBuilder.Entity<ContactModel>().HasIndex(new string[] { nameof(ContactModel.Id) }).IsUnique();
+            modelBuilder.ApplyConfiguration(new EntityEventEntityTypeConfiguration());
         }
-        public DbSet<ContactModel> Contacts { get; set; } = default!;
+        public DbSet<EntityEvent> Events { get; set; } = default!;
     }
 
     public sealed class ContactContextSecond : DataContextEFCore
@@ -38,10 +37,10 @@ namespace Xpandables.Net.Api.Database
         public ContactContextSecond(DbContextOptions<ContactContextSecond> contextOptions) : base(contextOptions) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ContactModel>().HasKey(new string[] { nameof(ContactModel.Id) });
-            modelBuilder.Entity<ContactModel>().HasIndex(new string[] { nameof(ContactModel.Id) }).IsUnique();
+            modelBuilder.Entity<EntityEvent>().HasKey(new string[] { nameof(EntityEvent.Id) });
+            modelBuilder.Entity<EntityEvent>().HasIndex(new string[] { nameof(EntityEvent.Id) }).IsUnique();
         }
 
-        public DbSet<ContactModel> Contacts { get; set; } = default!;
+        public DbSet<EntityEvent> Events { get; set; } = default!;
     }
 }

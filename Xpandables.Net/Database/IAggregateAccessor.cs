@@ -16,28 +16,34 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Xpandables.Net
+using Xpandables.Net.Entities;
+
+namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Provides with shared members for commands, queries and events.
+    /// 
     /// </summary>
-    public interface ICommandQueryEvent
+    /// <typeparam name="TAggregate"></typeparam>
+    public interface IAggregateAccessor<TAggregate>
+        where TAggregate : class, IAggregate, new()
     {
         /// <summary>
-        /// Gets the unique identifier for the instance.
+        /// 
         /// </summary>
-        public Guid Guid => Guid.NewGuid();
+        /// <param name="aggregateId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<IOperationResult<TAggregate>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Gets When the event occurred.
+        /// 
         /// </summary>
-        public DateTimeOffset OccurredOn => DateTimeOffset.Now;
-
-        /// <summary>
-        /// Gets the name of the user running associated with the current instance.
-        /// The default value is associated with the current thread.
-        /// </summary>
-        public string CreatedBy => Environment.UserName;
+        /// <param name="aggregate"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<IOperationResult> AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default);
     }
 }

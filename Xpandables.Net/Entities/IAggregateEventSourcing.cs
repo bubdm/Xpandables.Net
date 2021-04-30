@@ -1,0 +1,55 @@
+﻿
+/************************************************************************************************************
+ * Copyright (C) 2020 Francis-Black EWANE
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+************************************************************************************************************/
+using System;
+using System.Linq;
+
+using Xpandables.Net.Events.DomainEvents;
+
+namespace Xpandables.Net.Entities
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IAggregateEventSourcing
+    {
+        /// <summary>
+        /// Marks all the events as committed.
+        /// </summary>
+        void MarkEventsAsCommitted();
+
+        /// <summary>
+        /// Returns a collection of uncommitted events.
+        /// </summary>
+        /// <returns>A list of uncommitted events.</returns>
+        IOrderedEnumerable<IDomainEvent> GetUncommittedEvents();
+
+        /// <summary>
+        /// Initializes the underlying aggregate with the specified events.
+        /// </summary>
+        /// <param name="events">The collection of events to act with.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="events"/> is null.</exception>
+        void LoadFromHistory(IOrderedEnumerable<IDomainEvent> events);
+
+        /// <summary>
+        /// Applies the specified domain event to the underlying aggregate.
+        /// </summary>
+        /// <param name="event">The event to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        internal void Apply(IDomainEvent @event);
+    }
+}

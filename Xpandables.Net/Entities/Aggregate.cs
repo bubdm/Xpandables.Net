@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Emit;
 
 using Xpandables.Net.Events;
 using Xpandables.Net.Events.DomainEvents;
@@ -30,9 +31,10 @@ namespace Xpandables.Net.Entities
     /// </summary>
     [Serializable]
     [DebuggerDisplay("Guid = {" + nameof(Id) + "} Version = {" + nameof(Version) + "}")]
-    public abstract class AggregateRoot : OperationResultBase, IAggregateRoot
+    public abstract class Aggregate : OperationResultBase, IAggregate
     {
         private readonly ICollection<IEvent> _events = new LinkedList<IEvent>();
+        private readonly IDictionary<Type, Action<IDomainEvent>> _eventHandles = new Dictionary<Type, Action<IDomainEvent>>();
 
         /// <summary>
         /// Gets the current version of the instance, the default value is -1.
@@ -47,21 +49,9 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Constructs the default instance of an aggregate root.
         /// </summary>
-        protected AggregateRoot()
+        protected Aggregate()
         {
-        }
-
-        /// <summary>
-        /// Constructs a new instance of <see cref="AggregateRoot"/> using the specified collection of events.
-        /// </summary>
-        /// <param name="domainEvents">The events to be applied to the aggregate root</param>
-        public AggregateRoot(IEnumerable<IDomainEvent> domainEvents)
-        {
-            foreach (var domainEvent in domainEvents)
-            {
-                Mutate(domainEvent);
-                Version++;
-            }
+            RegisterEventHandlers();
         }
 
         /// <summary>
@@ -73,7 +63,41 @@ namespace Xpandables.Net.Entities
         /// Returns a collection of uncommitted events.
         /// </summary>
         /// <returns>A list of uncommitted events.</returns>
-        public IEnumerable<IDomainEvent> GetUncommittedEvents() => _events.OfType<IDomainEvent>();
+        public IOrderedEnumerable<IDomainEvent> GetUncommittedEvents() => _events.OfType<IDomainEvent>().OrderBy(o => o.Version);
+
+        /// <summary>
+        /// Initializes the underlying aggregate with the specified events.
+        /// </summary>
+        /// <param name="events">The collection of events to act with.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="events"/> is null.</exception>
+        public void LoadFromHistory(IOrderedEnumerable<IDomainEvent> events)
+        {
+            _ = events ?? throw new ArgumentNullException(nameof(events));
+
+            foreach (var domainEvent in events)
+            {
+                Mutate(domainEvent);
+                Version = domainEvent.Version;
+            }
+        }
+
+        /// <summary>
+        /// Registers all required event handlers for the underlying aggregate.
+        /// </summary>
+        protected abstract void RegisterEventHandlers();
+
+        /// <summary>
+        /// Registers an handler for the specified event type.
+        /// </summary>
+        /// <typeparam name="TEvent">The type of the event.</typeparam>
+        /// <param name="eventHandler">the target handler to register.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="eventHandler"/> is null.</exception>
+        protected void RegisterEventHandler<TEvent>(Action<TEvent> eventHandler)
+            where TEvent : class, IDomainEvent
+        {
+            _ = eventHandler ?? throw new ArgumentNullException(nameof(eventHandler));
+            _eventHandles.Add(typeof(TEvent), @event => eventHandler((TEvent)@event));
+        }
 
         /// <summary>
         /// Applies the specified event to the current instance.
@@ -98,7 +122,7 @@ namespace Xpandables.Net.Entities
         /// </summary>
         /// <param name="events">The collection of events to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="events"/> is null.</exception>
-        protected virtual void Apply(IEnumerable<IEvent> @events)
+        protected virtual void Apply(IOrderedEnumerable<IEvent> @events)
         {
             _ = events ?? throw new ArgumentNullException(nameof(events));
 
@@ -112,11 +136,16 @@ namespace Xpandables.Net.Entities
         /// </summary>
         /// <param name="event">The event to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        protected virtual void Mutate(IDomainEvent @event)
+        protected void Mutate(IDomainEvent @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            ((dynamic)this).On((dynamic)@event);
+            if (!_eventHandles.TryGetValue(@event.GetType(), out var eventHandler))
+                return;
+
+            Id = @event.AggregateId;
+            eventHandler(@event);
+
         }
 
         /// <summary>
@@ -124,5 +153,18 @@ namespace Xpandables.Net.Entities
         /// </summary>
         /// <returns>A <see cref="long"/> value that represents the new version of the instance</returns>
         protected long GetNewVersion() => ++Version;
+
+        /// <summary>
+        /// Applies the specified domain event to the underlying aggregate.
+        /// </summary>
+        /// <param name="event">The event to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        void IAggregateEventSourcing.Apply(IDomainEvent @event)
+        {
+            _ = @event ?? throw new ArgumentNullException(nameof(@event));
+
+            Mutate(@event);
+            Version = @event.Version;
+        }
     }
 }

@@ -16,16 +16,13 @@
 ************************************************************************************************************/
 
 using System;
-using System.Collections.Generic;
-
-using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net.Entities
 {
     /// <summary>
     /// Aggregate is a pattern in Domain-Driven Design. A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
     /// </summary>
-    public interface IAggregateRoot
+    public interface IAggregate : IAggregateEventSourcing
     {
         /// <summary>
         /// Gets the aggregate unique identifier.
@@ -35,17 +32,6 @@ namespace Xpandables.Net.Entities
         /// <summary>
         ///   /// Gets the current version of the instance, the default value is -1.
         /// </summary>
-        long Version { get; }
-
-        /// <summary>
-        /// Marks all the events as committed.
-        /// </summary>
-        void MarkEventsAsCommitted();
-
-        /// <summary>
-        /// Returns a collection of uncommitted events.
-        /// </summary>
-        /// <returns>A list of uncommitted events.</returns>
-        IEnumerable<IDomainEvent> GetUncommittedEvents();
+        long Version { get; } 
     }
 }

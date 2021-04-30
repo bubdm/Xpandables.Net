@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 using Xpandables.Net.Api.Models;
@@ -59,7 +60,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Get, IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed class SelectQuery : QueryExpression<ContactModel>, IQuery<Contact>, IHttpRestClientRequest<Contact>, IPathStringLocationRequest, IInterceptorDecorator, ILoggingDecorator
+    public sealed class SelectQuery : IQuery<Contact>, IHttpRestClientRequest<Contact>, IPathStringLocationRequest, IInterceptorDecorator, ILoggingDecorator
     {
         public SelectQuery(string id)
         {
@@ -68,7 +69,6 @@ namespace Xpandables.Net.Api.Handlers
 
         [Required]
         public string Id { get; set; }
-        public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
     }
 
@@ -92,7 +92,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Delete, IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed class DeleteCommand : QueryExpression<ContactModel>, ICommand, IHttpRestClientRequest, IValidatorDecorator, IPersistenceDecorator, IPathStringLocationRequest, ILoggingDecorator
+    public sealed class DeleteCommand : ICommand, IHttpRestClientRequest, IValidatorDecorator, IPersistenceDecorator, IPathStringLocationRequest, ILoggingDecorator
     {
         public DeleteCommand(string id)
         {
@@ -101,7 +101,6 @@ namespace Xpandables.Net.Api.Handlers
 
         [Required]
         public string Id { get; set; }
-        public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
     }
 
@@ -118,11 +117,10 @@ namespace Xpandables.Net.Api.Handlers
         public IDictionary<string, string> GetPathStringSource() => new Dictionary<string, string> { { nameof(Id), Id } };
     }
 
-    [HttpRestClient(Path = "api/contacts", Method = HttpMethodVerbs.Patch, IsSecured = true, IsNullable = false, In = ParameterLocation.Body)]
+    [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Put, IsSecured = false, IsNullable = false, In = ParameterLocation.Body | ParameterLocation.Path)]
     public sealed class EditCommand :
-        QueryExpression<ContactModel>, ICommand<Contact>, IHttpRestClientRequest<Contact>, IValidatorDecorator, IPersistenceDecorator, IEventDecorator, ILoggingDecorator
+        ICommand<Contact>, IHttpRestClientRequest<Contact>, IValidatorDecorator, IPersistenceDecorator, IEventDecorator, ILoggingDecorator, IPathStringLocationRequest, IStringRequest
     {
-        public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         public string Id { get; set; } = null!;
         public string? Name { get; set; }
         public string? City { get; set; }
@@ -130,5 +128,17 @@ namespace Xpandables.Net.Api.Handlers
         public string? Country { get; set; }
 
         public Func<EditCommand, IOperationResult> ApplyPatch = null!;
+
+        [return: NotNull]
+        public IDictionary<string, string> GetPathStringSource()
+        {
+            return new Dictionary<string, string> { { nameof(Id), Id } };
+        }
+
+        [return: NotNull]
+        public object GetStringContent()
+        {
+            return new { Id, Name, City, Address, Country };
+        }
     }
 }

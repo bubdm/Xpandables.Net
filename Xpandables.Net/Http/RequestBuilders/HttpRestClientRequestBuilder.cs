@@ -243,7 +243,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             WriteLocationCookie(source, attribute, httpRequestMessage);
             WriteLocationHeader(source, attribute, httpRequestMessage);
 
-            if (!attribute.IsNullable && attribute.In == ParameterLocation.Body)
+            if (!attribute.IsNullable && (attribute.In & ParameterLocation.Body) == ParameterLocation.Body)
             {
                 httpRequestMessage.Content = attribute.BodyFormat switch
                 {
@@ -285,7 +285,7 @@ namespace Xpandables.Net.Http.RequestBuilders
         /// <param name="httpRequestMessage">The target request message.</param>
         public virtual void WriteLocationCookie<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage) where TSource : class
         {
-            if ((attribute.In & ParameterLocation.Cookie) == 0) return;
+            if ((attribute.In & ParameterLocation.Cookie) != ParameterLocation.Cookie) return;
             ValidateInterfaceImplementation<ICookieLocationRequest>(source);
             if (source is not ICookieLocationRequest cookieLocationRequest) return;
 
@@ -303,7 +303,7 @@ namespace Xpandables.Net.Http.RequestBuilders
         /// <param name="httpRequestMessage">The target request message.</param>
         public virtual void WriteLocationHeader<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage) where TSource : class
         {
-            if ((attribute.In & ParameterLocation.Header) == 0) return;
+            if ((attribute.In & ParameterLocation.Header) != ParameterLocation.Header) return;
 
             ValidateInterfaceImplementation<IHeaderLocationRequest>(source);
             if (source is not IHeaderLocationRequest headerLocationRequest) return;
@@ -324,7 +324,7 @@ namespace Xpandables.Net.Http.RequestBuilders
         /// <param name="attribute">The target attribute.</param>
         public virtual void WriteLocationPath<TSource>(TSource source, HttpRestClientAttribute attribute) where TSource : class
         {
-            if ((attribute.In & ParameterLocation.Path) == 0) return;
+            if ((attribute.In & ParameterLocation.Path) != ParameterLocation.Path) return;
 
             ValidateInterfaceImplementation<IPathStringLocationRequest>(source);
             if (source is not IPathStringLocationRequest pathStringRequest) return;
@@ -341,7 +341,7 @@ namespace Xpandables.Net.Http.RequestBuilders
         /// <param name="attribute">The target attribute.</param>
         public virtual void WriteLocationQuery<TSource>(TSource source, HttpRestClientAttribute attribute) where TSource : class
         {
-            if ((attribute.In & ParameterLocation.Query) == 0) return;
+            if ((attribute.In & ParameterLocation.Query) != ParameterLocation.Query) return;
             ValidateInterfaceImplementation<IQueryStringLocationRequest>(source);
             if (source is not IQueryStringLocationRequest queryStringRequest) return;
 

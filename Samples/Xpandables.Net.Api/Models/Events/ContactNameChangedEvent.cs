@@ -17,27 +17,17 @@
 ************************************************************************************************************/
 using System;
 
-namespace Xpandables.Net
+using Xpandables.Net.Events.DomainEvents;
+
+namespace Xpandables.Net.Api.Models.Events
 {
-    /// <summary>
-    /// Provides with shared members for commands, queries and events.
-    /// </summary>
-    public interface ICommandQueryEvent
+    public class ContactNameChangedEvent : DomainEvent
     {
-        /// <summary>
-        /// Gets the unique identifier for the instance.
-        /// </summary>
-        public Guid Guid => Guid.NewGuid();
-
-        /// <summary>
-        /// Gets When the event occurred.
-        /// </summary>
-        public DateTimeOffset OccurredOn => DateTimeOffset.Now;
-
-        /// <summary>
-        /// Gets the name of the user running associated with the current instance.
-        /// The default value is associated with the current thread.
-        /// </summary>
-        public string CreatedBy => Environment.UserName;
+        public string Name { get; }
+        public ContactNameChangedEvent(string name, Guid aggregateId, long version)
+            : base(aggregateId, version)
+        {
+            Name = name;
+        }
     }
 }

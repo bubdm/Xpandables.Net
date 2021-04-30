@@ -28,9 +28,9 @@ namespace Xpandables.Net.Database
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TAggregateRoot"></typeparam>
-    public class AggregateRootAccessor<TAggregateRoot> : OperationResultBase, IAggregateRootAccessor<TAggregateRoot>
-        where TAggregateRoot : class, IAggregateRoot
+    /// <typeparam name="TAggregate"></typeparam>
+    public class AggregateAccessor<TAggregate> : OperationResultBase, IAggregateAccessor<TAggregate>
+        where TAggregate : class, IAggregate, new()
     {
         private readonly IEventStore _eventStore;
         private readonly IDomainEventPublisher _eventPublisher;
@@ -44,7 +44,7 @@ namespace Xpandables.Net.Database
         /// <param name="eventStore"></param>
         /// <param name="eventPublisher"></param>
         /// <param name="instanceCreator"></param>
-        public AggregateRootAccessor(IEventStore eventStore, IDomainEventPublisher eventPublisher, IInstanceCreator instanceCreator)
+        public AggregateAccessor(IEventStore eventStore, IDomainEventPublisher eventPublisher, IInstanceCreator instanceCreator)
         {
             _eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
             _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
@@ -58,7 +58,7 @@ namespace Xpandables.Net.Database
         /// <param name="aggregate"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<IOperationResult> AppendAsync(TAggregateRoot aggregate, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult> AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
         {
             _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
 
@@ -82,24 +82,27 @@ namespace Xpandables.Net.Database
         /// <param name="aggregateId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<IOperationResult<TAggregateRoot>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult<TAggregate>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default)
         {
-            var events = new List<IDomainEvent>();
-            await foreach (var @event in _eventStore.ReadEventsAsync(aggregateId, cancellationToken))
-                events.Add(@event);
-
-            if (events.Count <= 0)
-                return NotFoundOperation<TAggregateRoot>();
-
-            if (_instanceCreator.Create<IEnumerable<IDomainEvent>>(typeof(TAggregateRoot), events) is not TAggregateRoot aggregateRoot)
+            if (_instanceCreator.Create(typeof(TAggregate)) is not TAggregate aggregate)
             {
                 if (instanceCreatorException is not null)
-                    return BadOperation<TAggregateRoot>(new OperationError(typeof(TAggregateRoot).Name, instanceCreatorException));
+                    return BadOperation<TAggregate>(new OperationError(typeof(TAggregate).Name, instanceCreatorException));
                 return
-                    BadOperation<TAggregateRoot>(typeof(TAggregateRoot).Name, "Unable to create a new instance.");
+                    BadOperation<TAggregate>(typeof(TAggregate).Name, "Unable to create a new instance.");
             }
 
-            return OkOperation(aggregateRoot);
+            var eventCount = 0;
+            await foreach (var @event in _eventStore.ReadEventsAsync(aggregateId, cancellationToken))
+            {
+                aggregate.Apply(@event);
+                eventCount++;
+            }
+
+            if (eventCount <= 0)
+                return NotFoundOperation<TAggregate>();
+
+            return OkOperation(aggregate);
         }
     }
 }

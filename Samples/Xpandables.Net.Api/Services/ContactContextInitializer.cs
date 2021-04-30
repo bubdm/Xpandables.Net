@@ -25,6 +25,7 @@ using Microsoft.Extensions.Hosting;
 
 using Xpandables.Net.Api.Database;
 using Xpandables.Net.Api.Models;
+using Xpandables.Net.Database;
 
 namespace Xpandables.Net.Api.Services
 {
@@ -37,14 +38,16 @@ namespace Xpandables.Net.Api.Services
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             using var service = _serviceScopeFactory.CreateScope();
-            var dataContext = service.ServiceProvider.GetRequiredService<ContactContext>();
+            var tenant = service.ServiceProvider.GetRequiredService<IDataContextTenantAccessor>();
+            tenant.SetTenantName<ContactContext>();
+            using var context = tenant.GetDataContext();
+            var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateAccessor<ContactModel>>();
 
-            if (dataContext.Contacts.Any()) return;
+            var contact = ContactModel.CreateNewContact("myName", "Paris", "Alexandre LeGrand 01", "France");
+            ContactModel.FirstGuidCreated = contact.Id.ToString();
 
-            var contact = new ContactModel("myName", "Paris", "Alexandre LeGrand 01", "France");
-
-            await dataContext.InsertAsync(contact, cancellationToken).ConfigureAwait(false);
-            await dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await aggregateAccessor.AppendAsync(contact, cancellationToken).ConfigureAwait(false);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken) => await Task.CompletedTask.ConfigureAwait(false);

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Api;
 using Xpandables.Net.Api.Handlers;
+using Xpandables.Net.Api.Models;
 using Xpandables.Net.Http;
 using Xpandables.Net.Http.RequestBuilders;
 using Xpandables.Net.Http.RequestHandlers;
@@ -70,6 +71,34 @@ namespace Xpandables.Net.Tests
                 Trace.WriteLine($"{contact.Id} {contact.Name} {contact.City} {contact.Address} {contact.Country}");
 
                 Assert.AreEqual(response.Result, contact.Id);
+            }
+        }
+
+        [TestMethod]
+        public async Task EditTest()
+        {
+            var select = new SelectQuery(ContactModel.FirstGuidCreated);
+            using var response = await httpRestClientHandler.SendAsync(select).ConfigureAwait(false);
+
+            if (!response.IsValid())
+            {
+                Trace.WriteLine($"{response.StatusCode}");
+            }
+            else
+            {
+                var toEdit = response.Result;
+                var edit = new EditCommand { Id = toEdit.Id, Address = "Address from edit", City = "City from edit", Country = "Country from edit", Name = "Name from edit" };
+                using var editResponse = await httpRestClientHandler.SendAsync(edit).ConfigureAwait(false);
+                if (!editResponse.IsValid())
+                {
+                    Trace.WriteLine($"{editResponse.StatusCode}");
+                }
+                else
+                {
+                    Trace.WriteLine($"{editResponse.StatusCode}");
+                    var contact = editResponse.Result!;
+                    Trace.WriteLine($"{contact.Id} {contact.Name} {contact.City} {contact.Address} {contact.Country}");
+                }
             }
         }
 

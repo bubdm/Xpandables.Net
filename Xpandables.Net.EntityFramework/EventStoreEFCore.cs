@@ -61,6 +61,7 @@ namespace Xpandables.Net
                 @event.Guid,
                 @event.AggregateId,
                 @event.GetType().AssemblyQualifiedName!,
+                @event.Version,
                 true,
                 Serialize(@event));
 
@@ -77,7 +78,8 @@ namespace Xpandables.Net
         public virtual async IAsyncEnumerable<IDomainEvent> ReadEventsAsync(Guid aggreagateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await foreach (var entityEvent in _context.FetchAllAsync<EntityEvent, EntityEvent>(
-                e => e.Where(x => x.AggregateId == aggreagateId), cancellationToken)
+                e => e.Where(x => x.AggregateId == aggreagateId)
+                    .OrderBy(o => o.Version), cancellationToken)
                 .ConfigureAwait(false))
             {
                 if (Deserialize(entityEvent.Type, entityEvent.Data) is { } @event)

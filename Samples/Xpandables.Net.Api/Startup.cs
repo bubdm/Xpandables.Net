@@ -27,7 +27,9 @@ using Xpandables.Net.Api.Database;
 using Xpandables.Net.Api.Handlers;
 using Xpandables.Net.Api.Middlewares;
 using Xpandables.Net.Api.Services;
+using Xpandables.Net.Database;
 using Xpandables.Net.DependencyInjection;
+using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net.Api
 {
@@ -60,18 +62,21 @@ namespace Xpandables.Net.Api
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
             {
                 options.UsePersistenceDecorator();
-                options.UseIntegrationEventDecorator();
                 options.UseOperationResultLoggerDecorator();
-                options.UseDomainEventDecorator();
                 options.UseValidatorDecorator();
             });
 
+            services.AddXInstanceCreator();
             services.AddXOperationResultLogger<LoggingService>();
-            services.AddScoped<IContactEntityAccessor, ContactEntityAccessor>();
+            services.AddScoped<IEventStore, EventStoreEFCore>();
+            services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
+            services.AddScoped(typeof(IAggregateAccessor<>), typeof(AggregateAccessor<>));
 
             // comment to disable Interception
             services.AddTransient<ContactInterceptor>();
             services.AddXInterceptorHandlers<ContactInterceptor>(new[] { Assembly.GetExecutingAssembly() });
+
+            services.AddXDomainEventHandlers(new[] { Assembly.GetExecutingAssembly() });
 
             services.AddXHttpRestClientHandler(_ => { });
             services.AddXHttpIPAddressAccessor();

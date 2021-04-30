@@ -20,39 +20,17 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Api.Models;
+using Xpandables.Net.Api.Models.Events;
 using Xpandables.Net.Events.DomainEvents;
-using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class ContactModelCreatedDomainEventHandler : DomainEventHandler<ContactModelCreatedDomainEvent>
+    public sealed class ContactModelCreatedDomainEventHandler : DomainEventHandler<ContactCreatedEvent>
     {
-        public override async Task<IOperationResult> HandleAsync(ContactModelCreatedDomainEvent domainEvent, CancellationToken cancellationToken = default)
+        public override async Task HandleAsync(ContactCreatedEvent domainEvent, CancellationToken cancellationToken = default)
         {
-            Trace.WriteLine($"A newly created contact with id : {domainEvent.Id} : {DateTime.Now.Ticks}");
+            Trace.WriteLine($"A newly created contact with id : {domainEvent.Guid} : {DateTime.Now.Ticks}");
             await Task.CompletedTask.ConfigureAwait(false);
-            return OkOperation();
-        }
-    }
-
-    public sealed class ContactModelCreatedIntegrationEventHandler : IntegrationEventHandler<ContactModelCreatedIntegrationEvent>
-    {
-        public override async Task<IOperationResult> HandleAsync(ContactModelCreatedIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
-        {
-            Trace.WriteLine($"A newly contact has been created with id : {integrationEvent.Id} {DateTime.Now.Ticks}");
-            await Task.CompletedTask.ConfigureAwait(false);
-            return OkOperation();
-        }
-    }
-
-    public sealed class ContactModelUpdatedDomainEventHandler : DomainEventHandler<ContactModelUpdatedDomainEvent>
-    {
-        public override async Task<IOperationResult> HandleAsync(ContactModelUpdatedDomainEvent domainEvent, CancellationToken cancellationToken = default)
-        {
-            Trace.WriteLine($"The contact with id '{domainEvent.Id}' has changed name to : {domainEvent.Name} {DateTime.Now}");
-            await Task.CompletedTask.ConfigureAwait(false);
-            return OkOperation();
         }
     }
 }

@@ -459,7 +459,7 @@ namespace Xpandables.Net
             try
             {
                 constructorInfo = type.GetConstructor(
-                    BindingFlags.Instance | BindingFlags.Public,
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                     null,
                     CallingConventions.HasThis,
                     parameterTypes,

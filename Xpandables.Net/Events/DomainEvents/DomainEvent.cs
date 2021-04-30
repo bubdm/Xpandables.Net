@@ -63,7 +63,12 @@ namespace Xpandables.Net.Events.DomainEvents
         /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="version">The aggregate version.</param>
         /// <returns>A new instance of the domain event.</returns>
-        public abstract IDomainEvent WithAggregate(Guid aggregateId, long version);
+        public virtual IDomainEvent WithAggregate(Guid aggregateId, long version)
+        {
+            AggregateId = aggregateId;
+            Version = version;
+            return this;
+        }
 
         /// <summary>
         /// Determines whether the specified object is equal to the current object.

@@ -15,87 +15,85 @@
  *
 ************************************************************************************************************/
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-
+using Xpandables.Net.Api.Models.Events;
 using Xpandables.Net.Entities;
-using Xpandables.Net.Events.DomainEvents;
-using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Api.Models
 {
-    public sealed class ContactModelCreatedDomainEvent : DomainEvent { public ContactModelCreatedDomainEvent(string id) { Id = id; } public string Id { get; set; } = default!; }
-    public sealed class ContactModelCreatedIntegrationEvent : IntegrationEvent<ContactModelCreatedDomainEvent>
+#pragma warning disable CS8618 
+    public sealed class ContactModel : Aggregate
     {
-        public ContactModelCreatedIntegrationEvent(ContactModelCreatedDomainEvent domainEvent) : base(domainEvent) { }
-        public string Id { get; set; } = default!;
-    }
-    public sealed class ContactModelUpdatedDomainEvent : DomainEvent
-    {
-        public ContactModelUpdatedDomainEvent(string id, string? name)
+        public static string FirstGuidCreated { get; set; } = string.Empty;
+
+        public static ContactModel CreateNewContact(string name, string city, string address, string country)
+            => new(name, city, address, country);
+
+        public ContactModel() : base() { }
+        private ContactModel(string name, string city, string address, string country)
         {
-            Id = id;
-            Name = name;
+            Apply(new ContactCreatedEvent(name, city, address, country, Id, GetNewVersion()));
         }
 
-        public string Id { get; set; } = default!;
-        public string? Name { get; set; }
-    }
-    public sealed class ContactModel : Entity
-    {
-        public ContactModel(string name, string city, string address, string country)
+        public void ChangeContactName(string name)
         {
-            Update(name, city, address, country);
-            AddEvent(new ContactModelCreatedDomainEvent(Id));
-            AddEvent(new ContactModelCreatedIntegrationEvent(new ContactModelCreatedDomainEvent(Id)));
+            Apply(new ContactNameChangedEvent(name, Id, GetNewVersion()));
         }
 
-        [MemberNotNull(nameof(Name), nameof(City), nameof(Address), nameof(Country))]
-        public void Update(string name, string city, string address, string country)
+        public void ChangeContactCity(string city)
         {
-            UpdateName(name);
-            UpdateCity(city);
-            UpdateAddress(address);
-            UpdateCountry(country);
-        }
-        public void Edit(string? name, string? city, string? address, string? country)
-        {
-            if (name is not null) UpdateName(name);
-            if (city is not null) UpdateCity(city);
-            if (address is not null) UpdateAddress(address);
-            if (country is not null) UpdateCountry(country);
-            AddEvent(new ContactModelUpdatedDomainEvent(Id, name));
+            Apply(new ContactCityChangedEvent(city, Id, GetNewVersion()));
         }
 
-        [MemberNotNull(nameof(Name))]
-        public void UpdateName(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
-        [MemberNotNull(nameof(City))]
-        public void UpdateCity(string city) => City = city ?? throw new ArgumentNullException(nameof(city));
-        [MemberNotNull(nameof(Address))]
-        public void UpdateAddress(string address) => Address = address ?? throw new ArgumentNullException(nameof(address));
-        [MemberNotNull(nameof(Country))]
-        public void UpdateCountry(string country) => Country = country ?? throw new ArgumentNullException(nameof(country));
+        public void ChangeContactAddress(string address)
+        {
+            Apply(new ContactAddressChangedEvent(address, Id, GetNewVersion()));
+        }
+
+        public void ChangeContactCountry(string country)
+        {
+            Apply(new ContactCountryChangedEvent(country, Id, GetNewVersion()));
+        }
+
+        void On(ContactCreatedEvent createdEvent)
+        {
+            Name = createdEvent.Name;
+            City = createdEvent.City;
+            Address = createdEvent.Address;
+            Country = createdEvent.Country;
+        }
+
+        void On(ContactNameChangedEvent nameChangedEvent)
+        {
+            Name = nameChangedEvent.Name;
+        }
+
+        void On(ContactCityChangedEvent cityChangedEvent)
+        {
+            City = cityChangedEvent.City;
+        }
+
+        void On(ContactAddressChangedEvent addressChangedEvent)
+        {
+            Address = addressChangedEvent.Address;
+        }
+
+        void On(ContactCountryChangedEvent countryChangedEvent)
+        {
+            Country = countryChangedEvent.Country;
+        }
+
+        protected override void RegisterEventHandlers()
+        {
+            RegisterEventHandler<ContactCreatedEvent>(On);
+            RegisterEventHandler<ContactNameChangedEvent>(On);
+            RegisterEventHandler<ContactAddressChangedEvent>(On);
+            RegisterEventHandler<ContactCityChangedEvent>(On);
+            RegisterEventHandler<ContactCountryChangedEvent>(On);
+        }
+
         public string Name { get; private set; }
         public string City { get; private set; }
         public string Address { get; private set; }
         public string Country { get; private set; }
-        protected override string KeyGenerator()
-        {
-            var stringBuilder = new StringBuilder();
-
-            Enumerable
-               .Range(65, 26)
-                .Select(e => ((char)e).ToString())
-                .Concat(Enumerable.Range(97, 26).Select(e => ((char)e).ToString()))
-                .Concat(Enumerable.Range(0, 10).Select(e => e.ToString()))
-                .OrderBy(_ => Guid.NewGuid())
-                .Take(32)
-                .ToList()
-                .ForEach(e => stringBuilder.Append(e));
-
-            return stringBuilder.ToString().ToUpperInvariant();
-        }
     }
 }
