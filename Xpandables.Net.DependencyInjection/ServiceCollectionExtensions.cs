@@ -23,6 +23,9 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using Xpandables.Net.Database;
+using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.Events.IntegrationEvents;
 using Xpandables.Net.Security;
 
 namespace Xpandables.Net.DependencyInjection
@@ -47,6 +50,58 @@ namespace Xpandables.Net.DependencyInjection
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds the <see cref="IEventStore"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TEventStore">The type that implements <see cref="IEventStore"/></typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXEventStore<TEventStore>(this IServiceCollection services)
+            where TEventStore : class, IEventStore
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddScoped<IEventStore, TEventStore>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IAggregateAccessor{TAggregate}"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXAggregateAccessor(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddScoped(typeof(IAggregateAccessor<>), typeof(AggregateAccessor<>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IDomainEventPublisher"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXDomainPublisher(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IIntegrationEventPublisher"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TIntegrationEventPublisher">The type that implements <see cref="IIntegrationEventPublisher"/>.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXIntegrationPublisher<TIntegrationEventPublisher>(this IServiceCollection services)
+            where TIntegrationEventPublisher : class, IIntegrationEventPublisher
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddScoped<IIntegrationEventPublisher, TIntegrationEventPublisher>();
+            return services;
+        }
+
         /// <summary>
         /// Adds the default <see cref="IInstanceCreator"/> implementation to the services with singleton life time.
         /// </summary>

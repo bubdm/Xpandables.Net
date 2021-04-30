@@ -68,9 +68,9 @@ namespace Xpandables.Net.Api
 
             services.AddXInstanceCreator();
             services.AddXOperationResultLogger<LoggingService>();
-            services.AddScoped<IEventStore, EventStoreEFCore>();
-            services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
-            services.AddScoped(typeof(IAggregateAccessor<>), typeof(AggregateAccessor<>));
+            services.AddXEventStore<EventStoreEFCore>();
+            services.AddXDomainPublisher();
+            services.AddXAggregateAccessor();
 
             // comment to disable Interception
             services.AddTransient<ContactInterceptor>();

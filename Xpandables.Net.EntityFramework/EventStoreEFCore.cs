@@ -34,27 +34,23 @@ using Xpandables.Net.Events.DomainEvents;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// 
+    /// The EFCore implementation of <see cref="IEventStore"/>.
     /// </summary>
     public class EventStoreEFCore : OperationResultBase, IEventStore
     {
         private readonly IDataContext _context;
 
         /// <summary>
-        /// 
+        /// Constructs a new instance of <see cref="EventStoreEFCore"/>.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The context to be used.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
         public EventStoreEFCore(IDataContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="event"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public virtual async Task<IOperationResult> AppendEventAsync(IDomainEvent @event, CancellationToken cancellationToken = default)
         {
             var entityEvent = new EntityEvent(
@@ -69,12 +65,7 @@ namespace Xpandables.Net
             return OkOperation();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aggreagateId"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public virtual async IAsyncEnumerable<IDomainEvent> ReadEventsAsync(Guid aggreagateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await foreach (var entityEvent in _context.FetchAllAsync<EntityEvent, EntityEvent>(
