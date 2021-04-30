@@ -16,7 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,9 +25,10 @@ using Xpandables.Net.Events.DomainEvents;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// 
+    /// The default implementation of <see cref="IAggregateAccessor{TAggregate}"/>.
+    /// You can derive from this class to customize its behaviors.
     /// </summary>
-    /// <typeparam name="TAggregate"></typeparam>
+    /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
     public class AggregateAccessor<TAggregate> : OperationResultBase, IAggregateAccessor<TAggregate>
         where TAggregate : class, IAggregate, new()
     {
@@ -53,11 +53,12 @@ namespace Xpandables.Net.Database
         }
 
         /// <summary>
-        /// 
+        /// Asynchronously appends the specified aggregate to the event store.
         /// </summary>
-        /// <param name="aggregate"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="aggregate">The aggregate to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
         public async Task<IOperationResult> AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
         {
             _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
@@ -77,13 +78,14 @@ namespace Xpandables.Net.Database
         }
 
         /// <summary>
-        /// 
+        /// Asynchronously returns the aggregate that matches the specified aggregate identifier.
         /// </summary>
-        /// <param name="aggregateId"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="aggregateId">The aggregate identifier to search for.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
         public async Task<IOperationResult<TAggregate>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default)
         {
+            instanceCreatorException = default;
             if (_instanceCreator.Create(typeof(TAggregate)) is not TAggregate aggregate)
             {
                 if (instanceCreatorException is not null)
@@ -100,7 +102,7 @@ namespace Xpandables.Net.Database
             }
 
             if (eventCount <= 0)
-                return NotFoundOperation<TAggregate>();
+                return NotFoundOperation<TAggregate>(typeof(TAggregate).Name, "Event not found.");
 
             return OkOperation(aggregate);
         }
