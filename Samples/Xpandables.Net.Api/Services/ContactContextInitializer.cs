@@ -43,7 +43,7 @@ namespace Xpandables.Net.Api.Services
             var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateAccessor<ContactModel>>();
 
             var contact = ContactModel.CreateNewContact("myName", "Paris", "Alexandre LeGrand 01", "France");
-            ContactModel.FirstGuidCreated = contact.Id.ToString();
+            ContactModel.FirstGuidCreated = contact.Guid.ToString();
 
             await aggregateAccessor.AppendAsync(contact, cancellationToken).ConfigureAwait(false);
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

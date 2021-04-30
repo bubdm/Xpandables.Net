@@ -23,7 +23,7 @@ using Xpandables.Net.Events.DomainEvents;
 namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// 
+    /// Provides with methods to manage aggregate events.
     /// </summary>
     public interface IAggregateEventSourcing
     {

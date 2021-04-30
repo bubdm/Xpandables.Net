@@ -31,27 +31,27 @@ namespace Xpandables.Net.Api.Models
         public ContactModel() : base() { }
         private ContactModel(string name, string city, string address, string country)
         {
-            Apply(new ContactCreatedEvent(name, city, address, country, Id, GetNewVersion()));
+            Apply(new ContactCreatedEvent(name, city, address, country, Guid, GetNewVersion()));
         }
 
         public void ChangeContactName(string name)
         {
-            Apply(new ContactNameChangedEvent(name, Id, GetNewVersion()));
+            Apply(new ContactNameChangedEvent(name, Guid, GetNewVersion()));
         }
 
         public void ChangeContactCity(string city)
         {
-            Apply(new ContactCityChangedEvent(city, Id, GetNewVersion()));
+            Apply(new ContactCityChangedEvent(city, Guid, GetNewVersion()));
         }
 
         public void ChangeContactAddress(string address)
         {
-            Apply(new ContactAddressChangedEvent(address, Id, GetNewVersion()));
+            Apply(new ContactAddressChangedEvent(address, Guid, GetNewVersion()));
         }
 
         public void ChangeContactCountry(string country)
         {
-            Apply(new ContactCountryChangedEvent(country, Id, GetNewVersion()));
+            Apply(new ContactCountryChangedEvent(country, Guid, GetNewVersion()));
         }
 
         void On(ContactCreatedEvent createdEvent)

@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection.Emit;
 
 using Xpandables.Net.Events;
 using Xpandables.Net.Events.DomainEvents;
@@ -30,7 +29,7 @@ namespace Xpandables.Net.Entities
     /// Aggregate is a pattern in Domain-Driven Design. A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
     /// </summary>
     [Serializable]
-    [DebuggerDisplay("Guid = {" + nameof(Id) + "} Version = {" + nameof(Version) + "}")]
+    [DebuggerDisplay("Guid = {" + nameof(Guid) + "} Version = {" + nameof(Version) + "}")]
     public abstract class Aggregate : OperationResultBase, IAggregate
     {
         private readonly ICollection<IEvent> _events = new LinkedList<IEvent>();
@@ -44,7 +43,7 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Gets the aggregate unique identifier. The default value is <see cref="Guid.NewGuid"/>.
         /// </summary>
-        public Guid Id { get; protected set; } = Guid.NewGuid();
+        public Guid Guid { get; protected set; } = Guid.NewGuid();
 
         /// <summary>
         /// Constructs the default instance of an aggregate root.
@@ -57,20 +56,20 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Marks all the events as committed. Just clear the list.
         /// </summary>
-        public void MarkEventsAsCommitted() => _events.Clear();
+        public virtual void MarkEventsAsCommitted() => _events.Clear();
 
         /// <summary>
         /// Returns a collection of uncommitted events.
         /// </summary>
         /// <returns>A list of uncommitted events.</returns>
-        public IOrderedEnumerable<IDomainEvent> GetUncommittedEvents() => _events.OfType<IDomainEvent>().OrderBy(o => o.Version);
+        public virtual IOrderedEnumerable<IDomainEvent> GetUncommittedEvents() => _events.OfType<IDomainEvent>().OrderBy(o => o.Version);
 
         /// <summary>
         /// Initializes the underlying aggregate with the specified events.
         /// </summary>
         /// <param name="events">The collection of events to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="events"/> is null.</exception>
-        public void LoadFromHistory(IOrderedEnumerable<IDomainEvent> events)
+        public virtual void LoadFromHistory(IOrderedEnumerable<IDomainEvent> events)
         {
             _ = events ?? throw new ArgumentNullException(nameof(events));
 
@@ -83,6 +82,7 @@ namespace Xpandables.Net.Entities
 
         /// <summary>
         /// Registers all required event handlers for the underlying aggregate.
+        /// You may use the <see cref="RegisterEventHandler{TEvent}(Action{TEvent})"/> method.
         /// </summary>
         protected abstract void RegisterEventHandlers();
 
@@ -92,7 +92,7 @@ namespace Xpandables.Net.Entities
         /// <typeparam name="TEvent">The type of the event.</typeparam>
         /// <param name="eventHandler">the target handler to register.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="eventHandler"/> is null.</exception>
-        protected void RegisterEventHandler<TEvent>(Action<TEvent> eventHandler)
+        protected virtual void RegisterEventHandler<TEvent>(Action<TEvent> eventHandler)
             where TEvent : class, IDomainEvent
         {
             _ = eventHandler ?? throw new ArgumentNullException(nameof(eventHandler));
@@ -131,21 +131,21 @@ namespace Xpandables.Net.Entities
         }
 
         /// <summary>
-        /// Dynamically applies the event using the specific pattern :
-        /// Every event handler should be defined like : void On(EventType event)
+        /// Raises the handler that matches the specified event.
+        /// The default behavior uses a dictionary of type event and handlers.
         /// </summary>
         /// <param name="event">The event to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        protected void Mutate(IDomainEvent @event)
+        /// <exception cref="InvalidOperationException">The expected handler is not registered.</exception>
+        protected virtual void Mutate(IDomainEvent @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
             if (!_eventHandles.TryGetValue(@event.GetType(), out var eventHandler))
-                return;
+                throw new InvalidOperationException($"The {@event.GetType().Name} requested handler is not registered.");
 
-            Id = @event.AggregateId;
+            Guid = @event.AggregateId;
             eventHandler(@event);
-
         }
 
         /// <summary>

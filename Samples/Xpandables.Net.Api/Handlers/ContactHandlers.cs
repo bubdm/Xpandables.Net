@@ -44,7 +44,7 @@ namespace Xpandables.Net.Api.Handlers
             if (foundResult.Failed)
                 return NotFoundOperation<Contact>();
             var found = foundResult.Value;
-            return OkOperation(new Contact(found.Id.ToString(), found.Name, found.City, found.Address, found.Country));
+            return OkOperation(new Contact(found.Guid.ToString(), found.Name, found.City, found.Address, found.Country));
         }
 
         public async Task<IOperationResult<string>> HandleAsync(AddCommand command, CancellationToken cancellationToken = default)
@@ -52,7 +52,7 @@ namespace Xpandables.Net.Api.Handlers
             var newContact = ContactModel.CreateNewContact(command.Name, command.City, command.Address, command.Country);
             await _entityAccessor.AppendAsync(newContact, cancellationToken).ConfigureAwait(false);
 
-            return new SuccessOperationResult<string>(newContact.Id.ToString());
+            return new SuccessOperationResult<string>(newContact.Guid.ToString());
         }
 
         //public async Task<IOperationResult> HandleAsync(DeleteCommand command, CancellationToken cancellationToken = default)
@@ -75,7 +75,7 @@ namespace Xpandables.Net.Api.Handlers
             if (command.Country is not null) found.ChangeContactCountry(command.Country);
             if (command.Name is not null) found.ChangeContactName(command.Name);
 
-            return OkOperation(new Contact(found.Id.ToString(), found.Name, found.City, found.Address, found.Country));
+            return OkOperation(new Contact(found.Guid.ToString(), found.Name, found.City, found.Address, found.Country));
         }
     }
 }
