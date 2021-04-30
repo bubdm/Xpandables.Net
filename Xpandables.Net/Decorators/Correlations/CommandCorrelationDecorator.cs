@@ -21,7 +21,6 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.Correlations;
-using Xpandables.Net.Decorators;
 
 namespace Xpandables.Net.Decorators.Correlations
 {

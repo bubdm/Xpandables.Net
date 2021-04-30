@@ -21,7 +21,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 
 using Xpandables.Net.Correlations;
-using Xpandables.Net.Decorators;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Decorators.Correlations
