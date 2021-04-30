@@ -28,7 +28,7 @@ namespace Xpandables.Net.Correlations
     public sealed class CorrelationEvent : ICorrelationEvent
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CorrelationEvent"/> class using default initialization for event.
+        /// Initializes the default instance of the <see cref="CorrelationEvent"/> class using default initialization for event.
         /// </summary>
         public CorrelationEvent() { }
 

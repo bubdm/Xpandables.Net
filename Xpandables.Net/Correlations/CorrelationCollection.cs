@@ -31,7 +31,7 @@ namespace Xpandables.Net.Correlations
         where TKey : notnull
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CorrelationCollection{TKey, TValue}"/>
+        /// Initializes the default instance of the <see cref="CorrelationCollection{TKey, TValue}"/>
         /// class that is empty, has the default concurrency level, has the default initial
         /// capacity, and uses the default comparer for the key type.
         /// </summary>
