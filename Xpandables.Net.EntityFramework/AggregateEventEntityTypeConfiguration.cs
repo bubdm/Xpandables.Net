@@ -24,21 +24,22 @@ using Xpandables.Net.Entities;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// EFCore configuration for <see cref="AggregateRootEventEntity"/>.
+    /// EFCore configuration for <see cref="AggregateEventEntity"/>.
     /// You may derive from this class to customize its behaviors.
     /// </summary>
-    public class AggregateRootEventEntityTypeConfiguration : IEntityTypeConfiguration<AggregateRootEventEntity>
+    public class AggregateEventEntityTypeConfiguration : IEntityTypeConfiguration<AggregateEventEntity>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<AggregateRootEventEntity> builder)
+        public void Configure(EntityTypeBuilder<AggregateEventEntity> builder)
         {
             builder.HasKey(p => p.EventId);
-            builder.HasIndex(p => p.EventId).IsUnique();
+            builder.HasIndex(p => new { p.AggregateId, p.Version })
+                .IsUnique();
 
-            builder.Property(p => p.AggregateId);
+            builder.Property(p => p.AggregateId).IsConcurrencyToken();
             builder.Property(p => p.Data);
             builder.Property(p => p.EventId);
-            builder.Property(p => p.Version);
+            builder.Property(p => p.Version).IsConcurrencyToken();
             builder.Property(p => p.IsJson);
             builder.Property(p => p.Type);
         }

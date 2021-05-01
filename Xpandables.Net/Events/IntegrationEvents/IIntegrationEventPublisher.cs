@@ -24,7 +24,6 @@ namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
     /// Defines a method to automatically dispatch <see cref="IIntegrationEvent"/> type.
-    /// The default implementation works just like the <see cref="IDomainEventPublisher"/>, if you don't configure a real integration provider.
     /// </summary>
     public interface IIntegrationEventPublisher
     {
@@ -34,6 +33,6 @@ namespace Xpandables.Net.Events.IntegrationEvents
         /// <param name="event">The event to be published.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
+        Task PublishAsync(IIntegrationEvent @event, CancellationToken cancellationToken = default);
     }
 }

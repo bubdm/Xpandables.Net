@@ -48,11 +48,10 @@ namespace Xpandables.Net.Events.DomainEvents
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        public virtual async Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default)
+        public virtual async Task PublishAsync(IDomainEvent @event, CancellationToken cancellationToken = default)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            var domainEvent = @event as IDomainEvent ?? throw new ArgumentNullException(nameof(@event));
             var genericHandlerType = typeof(IDomainEventHandler<>);
 
             if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, @event.GetType()))

@@ -18,6 +18,7 @@
 using System;
 using System.Linq;
 
+using Xpandables.Net.Events;
 using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net.Entities
@@ -25,7 +26,7 @@ namespace Xpandables.Net.Entities
     /// <summary>
     /// Provides with methods to manage aggregate events.
     /// </summary>
-    public interface IAggregateRootEventSourcing
+    internal interface IAggregateEventSourcing
     {
         /// <summary>
         /// Marks all the events as committed.
@@ -39,17 +40,32 @@ namespace Xpandables.Net.Entities
         IOrderedEnumerable<IDomainEvent> GetUncommittedEvents();
 
         /// <summary>
-        /// Initializes the underlying aggregate with the specified events.
+        /// Initializes the underlying aggregate with the specified history collection of events.
         /// </summary>
         /// <param name="events">The collection of events to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="events"/> is null.</exception>
         void LoadFromHistory(IOrderedEnumerable<IDomainEvent> events);
 
         /// <summary>
-        /// Applies the specified domain event to the underlying aggregate.
+        /// Applies the history specified domain event to the underlying aggregate.
         /// </summary>
         /// <param name="event">The event to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        internal void Apply(IDomainEvent @event);
+        void LoadFromHistory(IDomainEvent @event);
+
+        /// <summary>
+        /// Applies the specified event to the current instance.
+        /// </summary>
+        /// <param name="event">The event to act with.</param>
+        /// <exception cref="ArgumentException">The <paramref name="event"/> is null.</exception>
+        void Apply(IDomainEvent @event);
+
+        /// <summary>
+        /// Applies the mutation calling the handler that matches the specified event.
+        /// </summary>
+        /// <param name="event">The event to be applied.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">The expected handler is not registered.</exception>
+        void Mutate(IDomainEvent @event);
     }
 }

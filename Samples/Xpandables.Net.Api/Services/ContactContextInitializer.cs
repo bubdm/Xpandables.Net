@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,6 +26,7 @@ using Microsoft.Extensions.Hosting;
 using Xpandables.Net.Api.Database;
 using Xpandables.Net.Api.Models;
 using Xpandables.Net.Database;
+using Xpandables.Net.Entities;
 
 namespace Xpandables.Net.Api.Services
 {
@@ -40,7 +42,10 @@ namespace Xpandables.Net.Api.Services
             var tenant = service.ServiceProvider.GetRequiredService<IDataContextTenantAccessor>();
             tenant.SetTenantName<ContactContext>();
             using var context = tenant.GetDataContext();
-            var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateRootAccessor<ContactModel>>();
+            var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateAccessor<ContactModel>>();
+
+            if (context.Set<AggregateEventEntity>().Any())
+                return;
 
             var contact = ContactModel.CreateNewContact("myName", "Paris", "Alexandre LeGrand 01", "France");
             ContactModel.FirstGuidCreated = contact.Guid.ToString();

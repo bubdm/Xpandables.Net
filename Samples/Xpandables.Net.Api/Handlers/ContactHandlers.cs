@@ -31,8 +31,8 @@ namespace Xpandables.Net.Api.Handlers
     public sealed class ContactHandlers : OperationResultBase,
          ICommandHandler<AddCommand, string>, IQueryHandler<SelectQuery, Contact>, ICommandHandler<EditCommand, Contact>
     {
-        private readonly IAggregateRootAccessor<ContactModel> _entityAccessor;
-        public ContactHandlers(IAggregateRootAccessor<ContactModel> entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
+        private readonly IAggregateAccessor<ContactModel> _entityAccessor;
+        public ContactHandlers(IAggregateAccessor<ContactModel> entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
 
         public async Task<IOperationResult<Contact>> HandleAsync(SelectQuery query, CancellationToken cancellationToken = default)
         {
@@ -48,17 +48,7 @@ namespace Xpandables.Net.Api.Handlers
             var newContact = ContactModel.CreateNewContact(command.Name, command.City, command.Address, command.Country);
             await _entityAccessor.AppendAsync(newContact, cancellationToken).ConfigureAwait(false);
 
-            return new SuccessOperationResult<string>(newContact.Guid.ToString());
-        }
-
-        public async Task<IOperationResult> HandleAsync(DeleteCommand command, CancellationToken cancellationToken = default)
-{
-            var foundResult = await _entityAccessor.ReadAsync(Guid.Parse(command.Id), cancellationToken).ConfigureAwait(false);
-            if (foundResult.Failed)
-                return NotFoundOperation<Contact>();
-
-
-            return new SuccessOperationResult();
+            return OkOperation(newContact.Guid.ToString());
         }
 
         public async Task<IOperationResult<Contact>> HandleAsync(EditCommand command, CancellationToken cancellationToken = default)
@@ -72,6 +62,8 @@ namespace Xpandables.Net.Api.Handlers
             if (command.City is not null) found.ChangeContactCity(command.City);
             if (command.Country is not null) found.ChangeContactCountry(command.Country);
             if (command.Name is not null) found.ChangeContactName(command.Name);
+
+            await _entityAccessor.AppendAsync(found, cancellationToken).ConfigureAwait(false);
 
             return OkOperation(new Contact(found.Guid.ToString(), found.Name, found.City, found.Address, found.Country));
         }

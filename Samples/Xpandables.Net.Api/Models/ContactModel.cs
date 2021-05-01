@@ -21,7 +21,7 @@ using Xpandables.Net.Entities;
 namespace Xpandables.Net.Api.Models
 {
 #pragma warning disable CS8618 
-    public sealed class ContactModel : AggregateRoot
+    public sealed class ContactModel : Aggregate
     {
         public static string FirstGuidCreated { get; set; } = string.Empty;
 
@@ -31,27 +31,27 @@ namespace Xpandables.Net.Api.Models
         public ContactModel() : base() { }
         private ContactModel(string name, string city, string address, string country)
         {
-            Apply(new ContactCreatedEvent(name, city, address, country, Guid, GetNewVersion()));
+            RaiseEvent(new ContactCreatedEvent(name, city, address, country, Guid, GetNewVersion()));
         }
 
         public void ChangeContactName(string name)
         {
-            Apply(new ContactNameChangedEvent(name, Guid, GetNewVersion()));
+            RaiseEvent(new ContactNameChangedEvent(name, Guid, GetNewVersion()));
         }
 
         public void ChangeContactCity(string city)
         {
-            Apply(new ContactCityChangedEvent(city, Guid, GetNewVersion()));
+            RaiseEvent(new ContactCityChangedEvent(city, Guid, GetNewVersion()));
         }
 
         public void ChangeContactAddress(string address)
         {
-            Apply(new ContactAddressChangedEvent(address, Guid, GetNewVersion()));
+            RaiseEvent(new ContactAddressChangedEvent(address, Guid, GetNewVersion()));
         }
 
         public void ChangeContactCountry(string country)
         {
-            Apply(new ContactCountryChangedEvent(country, Guid, GetNewVersion()));
+            RaiseEvent(new ContactCountryChangedEvent(country, Guid, GetNewVersion()));
         }
 
         void On(ContactCreatedEvent createdEvent)

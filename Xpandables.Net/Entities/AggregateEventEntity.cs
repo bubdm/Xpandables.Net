@@ -16,13 +16,14 @@
  *
 ************************************************************************************************************/
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Xpandables.Net.Entities
 {
     /// <summary>
     /// Represents an aggregate event to be written.
     /// </summary>
-    public class AggregateRootEventEntity : Entity
+    public class AggregateEventEntity : Entity
     {
         /// <summary>
         /// Gets the event id.
@@ -32,6 +33,7 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Gets the aggregate related id.
         /// </summary>
+        [ConcurrencyCheck]
         public Guid AggregateId { get; }
 
         /// <summary>
@@ -42,6 +44,7 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Gets the version.
         /// </summary>
+        [ConcurrencyCheck]
         public long Version { get; }
 
         /// <summary>
@@ -55,7 +58,7 @@ namespace Xpandables.Net.Entities
         public byte[] Data { get; }
 
         /// <summary>
-        /// Constructs a new instance of <see cref="AggregateRootEventEntity"/> with its properties.
+        /// Constructs a new instance of <see cref="AggregateEventEntity"/> with its properties.
         /// </summary>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="aggregateId">The related aggregate identifier.</param>
@@ -63,7 +66,7 @@ namespace Xpandables.Net.Entities
         /// <param name="version">The event version.</param>
         /// <param name="isJson">Determines whether or not the data is JSON.</param>
         /// <param name="data">The byte representation of the event.</param>
-        public AggregateRootEventEntity(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
+        public AggregateEventEntity(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
         {
             EventId = eventId;
             AggregateId = aggregateId;

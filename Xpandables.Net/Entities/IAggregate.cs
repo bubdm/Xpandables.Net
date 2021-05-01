@@ -22,7 +22,7 @@ namespace Xpandables.Net.Entities
     /// <summary>
     /// Aggregate is a pattern in Domain-Driven Design. A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
     /// </summary>
-    public interface IAggregateRoot : ICommandQueryEvent, IAggregateRootEventSourcing
+    public interface IAggregate : ICommandQueryEvent
     {
         /// <summary>
         /// Gets the unique identifier of the aggregate.
