@@ -77,30 +77,28 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the default <see cref="IDomainEventPublisher"/> implementation to the services with scope life time.
+        /// Adds the <see cref="IDomainEventPublisher"/> type implementation to the services with scope life time.
         /// </summary>
+        /// <typeparam name="TDomainEventPublisher">The domain event publisher type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDomainPublisher(this IServiceCollection services)
+        public static IServiceCollection AddXDomainEventPublisher<TDomainEventPublisher>(this IServiceCollection services)
+            where TDomainEventPublisher : class, IDomainEventPublisher
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
+
+            services.AddScoped<IDomainEventPublisher, TDomainEventPublisher>();
             return services;
         }
 
         /// <summary>
-        /// Adds the <see cref="IIntegrationEventPublisher"/> implementation to the services with scope life time.
+        /// Adds the default <see cref="IDomainEventPublisher"/> implementation to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TIntegrationEventPublisher">The type that implements <see cref="IIntegrationEventPublisher"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIntegrationPublisher<TIntegrationEventPublisher>(this IServiceCollection services)
-            where TIntegrationEventPublisher : class, IIntegrationEventPublisher
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.AddScoped<IIntegrationEventPublisher, TIntegrationEventPublisher>();
-            return services;
-        }
+        public static IServiceCollection AddXDomainEventPublisher(this IServiceCollection services)
+            => services.AddXDomainEventPublisher<DomainEventPublisher>();
 
         /// <summary>
         /// Adds the default <see cref="IInstanceCreator"/> implementation to the services with singleton life time.

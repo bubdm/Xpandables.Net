@@ -17,6 +17,10 @@
 ************************************************************************************************************/
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
+using System.Text;
+using System.Text.Json.Serialization;
+using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net.Entities
 {
@@ -25,6 +29,17 @@ namespace Xpandables.Net.Entities
     /// </summary>
     public class AggregateEventEntity : Entity
     {
+        [JsonConstructor]
+        private AggregateEventEntity(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
+        {
+            EventId = eventId;
+            AggregateId = aggregateId;
+            Type = type ?? throw new ArgumentNullException(nameof(type));
+            Version = version;
+            IsJson = isJson;
+            Data = data ?? throw new ArgumentNullException(nameof(data));
+        }
+
         /// <summary>
         /// Gets the event id.
         /// </summary>
@@ -60,20 +75,36 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Constructs a new instance of <see cref="AggregateEventEntity"/> with its properties.
         /// </summary>
-        /// <param name="eventId">The event identifier.</param>
-        /// <param name="aggregateId">The related aggregate identifier.</param>
-        /// <param name="type">The .Net assembly content type.</param>
-        /// <param name="version">The event version.</param>
-        /// <param name="isJson">Determines whether or not the data is JSON.</param>
-        /// <param name="data">The byte representation of the event.</param>
-        public AggregateEventEntity(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
+        /// <param name="event">The event to act on.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        public AggregateEventEntity(IDomainEvent @event)
         {
-            EventId = eventId;
-            AggregateId = aggregateId;
-            Type = type ?? throw new ArgumentNullException(nameof(type));
-            Version = version;
-            IsJson = isJson;
-            Data = data ?? throw new ArgumentNullException(nameof(data));
+            _ = @event ?? throw new ArgumentNullException(nameof(@event));
+
+            EventId = @event.Guid;
+            AggregateId = @event.AggregateId;
+            Type = @event.GetType().AssemblyQualifiedName!;
+            Version = @event.Version;
+            IsJson = true;
+            Data = Serialize(@event);
         }
+
+        /// <summary>
+        /// Serializes the event to a JSON string using the <see cref="System.Text.Json"/>.
+        /// You can override this method to customize its behavior.
+        /// </summary>
+        /// <returns>A JSON string.</returns>
+        protected virtual byte[] Serialize(IDomainEvent @event)
+        {
+            _ = @event ?? throw new ArgumentNullException(nameof(@event));
+            return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event, @event.GetType()));
+        }
+
+        /// <summary>
+        /// Deserializes the current message to the expected type or null using the <see cref="System.Text.Json"/>.
+        /// </summary>
+        /// <returns>An instance of the target event type or null.</returns>
+        public virtual IDomainEvent? Deserialize()
+            => JsonSerializer.Deserialize(Encoding.UTF8.GetString(Data), System.Type.GetType(Type)!) as IDomainEvent;
     }
 }

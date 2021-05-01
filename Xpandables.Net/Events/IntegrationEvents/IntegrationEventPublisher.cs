@@ -19,22 +19,42 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.Database;
+using Xpandables.Net.Entities;
 
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
-    /// Defines a method to automatically publish <see cref="IIntegrationEvent"/> type.
+    /// The default implementation of <see cref="IIntegrationEventPublisher"/>.
+    /// You can derive from this class in order to customize its behaviors.
     /// </summary>
-    public interface IIntegrationEventPublisher
+    public class IntegrationEventPublisher : IIntegrationEventPublisher
     {
+        private readonly IDataContext _context;
+
         /// <summary>
-        /// Publishes integration events.
+        /// Constructs a new instance of <see cref="IntegrationEventPublisher"/>.
+        /// </summary>
+        /// <param name="context">The context to act on.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
+        public IntegrationEventPublisher(IDataContext context)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        /// <summary>
+        /// Persists the target event to the context.
         /// </summary>
         /// <param name="event">The event to be published.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        Task PublishAsync(IIntegrationEvent @event, CancellationToken cancellationToken = default);
+        public virtual async Task PublishAsync(IIntegrationEvent @event, CancellationToken cancellationToken = default)
+        {
+            _ = @event ?? throw new ArgumentNullException(nameof(@event));
+
+            var messageEntity = new IntegrationEventEntity(@event);
+            await _context.InsertAsync(messageEntity, cancellationToken).ConfigureAwait(false);
+        }
     }
 }

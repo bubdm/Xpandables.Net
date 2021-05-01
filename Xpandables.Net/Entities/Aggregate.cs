@@ -17,12 +17,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
 
 using Xpandables.Net.Events;
 using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Entities
 {
@@ -31,10 +31,11 @@ namespace Xpandables.Net.Entities
     /// </summary>
     [Serializable]
     [DebuggerDisplay("Guid = {" + nameof(Guid) + "} Version = {" + nameof(Version) + "}")]
-    public abstract class Aggregate : OperationResultBase, IAggregate, IAggregateEventSourcing
+    public abstract class Aggregate : OperationResultBase, IAggregate, IAggregateEventSourcing, IAggregateOutbox
     {
-        private readonly ICollection<IDomainEvent> _events = new LinkedList<IDomainEvent>();
-        private readonly IDictionary<Type, Action<IDomainEvent>> _eventHandles = new Dictionary<Type, Action<IDomainEvent>>();
+        private readonly ICollection<IDomainEvent> _domainEvents = new LinkedList<IDomainEvent>();
+        private readonly ICollection<IIntegrationEvent> _integrationEvents = new LinkedList<IIntegrationEvent>();
+        private readonly IDictionary<Type, Action<IDomainEvent>> _domainEventHandlers = new Dictionary<Type, Action<IDomainEvent>>();
 
         /// <summary>
         /// Gets the current version of the instance, the default value is -1.
@@ -55,15 +56,26 @@ namespace Xpandables.Net.Entities
         }
 
         /// <summary>
+        /// Marks all the integration events as committed.
+        /// </summary>
+        void IAggregateOutbox.MarkEventsAsCommitted() => _integrationEvents.Clear();
+
+        /// <summary>
+        /// Returns a collection of integration events.
+        /// </summary>
+        /// <returns>A list of integration events.</returns>
+        IOrderedEnumerable<IIntegrationEvent> IAggregateOutbox.GetOutboxEvents() => _integrationEvents.OrderBy(o => o.OccurredOn);
+
+        /// <summary>
         /// Marks all the events as committed. Just clear the list.
         /// </summary>
-        public virtual void MarkEventsAsCommitted() => _events.Clear();
+        void IAggregateEventSourcing.MarkEventsAsCommitted() => _domainEvents.Clear();
 
         /// <summary>
         /// Returns a collection of uncommitted events.
         /// </summary>
         /// <returns>A list of uncommitted events.</returns>
-        public virtual IOrderedEnumerable<IDomainEvent> GetUncommittedEvents() => _events.OrderBy(o => o.Version);
+        IOrderedEnumerable<IDomainEvent> IAggregateEventSourcing.GetUncommittedEvents() => _domainEvents.OrderBy(o => o.Version);
 
         /// <summary>
         /// Initializes the underlying aggregate with the specified history events.
@@ -103,12 +115,12 @@ namespace Xpandables.Net.Entities
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            if (!_events.Any(e => Equals(e.Guid, @event.Guid)))
+            if (!_domainEvents.Any(e => Equals(e.Guid, @event.Guid)))
                 ((IAggregateEventSourcing)this).Mutate(@event);
             else
                 return;
 
-            _events.Add(@event);
+            _domainEvents.Add(@event);
         }
 
         /// <summary>
@@ -122,11 +134,28 @@ namespace Xpandables.Net.Entities
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            if (!_eventHandles.TryGetValue(@event.GetType(), out var eventHandler))
+            if (!_domainEventHandlers.TryGetValue(@event.GetType(), out var eventHandler))
                 throw new InvalidOperationException($"The {@event.GetType().Name} requested handler is not registered.");
 
             Guid = @event.AggregateId;
             eventHandler(@event);
+        }
+
+        /// <summary>
+        /// Adds the specified integration event to the entity collection of events.
+        /// This event will be published using the out-box pattern.
+        /// </summary>
+        /// <param name="event">The event to be added.</param>
+        /// <exception cref=" ArgumentNullException">The <paramref name="event"/> is null. </exception>
+        /// <exception cref="InvalidOperationException">The target event already exist in the collection.</exception>
+        protected void AddIntegrationEvent(IIntegrationEvent @event)
+        {
+            _ = @event ?? throw new ArgumentNullException(nameof(@event));
+
+            if (_integrationEvents.Any(e => e.Guid == @event.Guid))
+                throw new InvalidOperationException($"The {@event.Guid} already exist in the collection");
+
+            _integrationEvents.Add(@event);
         }
 
         /// <summary>
@@ -136,7 +165,7 @@ namespace Xpandables.Net.Entities
         /// <param name="event">The event instance to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         protected void RaiseEvent<TEvent>(TEvent @event)
-            where TEvent:class, IDomainEvent
+            where TEvent : class, IDomainEvent
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
@@ -159,7 +188,7 @@ namespace Xpandables.Net.Entities
             where TEvent : class, IDomainEvent
         {
             _ = eventHandler ?? throw new ArgumentNullException(nameof(eventHandler));
-            _eventHandles.Add(typeof(TEvent), @event => eventHandler((TEvent)@event));
+            _domainEventHandlers.Add(typeof(TEvent), @event => eventHandler((TEvent)@event));
         }
 
         /// <summary>

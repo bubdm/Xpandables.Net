@@ -79,7 +79,7 @@ namespace Xpandables.Net.Api
             services.AddXInstanceCreator();
             services.AddXOperationResultLogger<LoggingService>();
             services.AddXEventStore<EventStoreEFCore>();
-            services.AddXDomainPublisher();
+            services.AddXDomainEventPublisher();
             services.AddXAggregateAccessor();
 
             // comment to disable Interception

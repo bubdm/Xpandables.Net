@@ -15,25 +15,33 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Enqueues
+namespace Xpandables.Net.Services
 {
     /// <summary>
-    /// Provides with a method to asynchronously enqueue a message of specific type that implements <see cref="IQueueMessage"/> interface.
+    /// Provides with method to manage background service.
     /// </summary>
-    public interface IEnqueueMessageHandler
+    public interface IBackgroundService
     {
         /// <summary>
-        /// Asynchronously enqueues the specified message.
+        /// Determines whether the service is running.
         /// </summary>
-        /// <param name="queueMessage">The queue message instance to act on.</param>
+        bool IsRunning { get; }
+
+        /// <summary>
+        /// tries to stop the service.
+        /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="queueMessage"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        Task<IOperationResult> EnqueueAsync<TQueueMessage>(TQueueMessage queueMessage, CancellationToken cancellationToken = default)
-            where TQueueMessage : class, IQueueMessage;
+        Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Tries to start the service.
+        /// </summary>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default);
     }
 }

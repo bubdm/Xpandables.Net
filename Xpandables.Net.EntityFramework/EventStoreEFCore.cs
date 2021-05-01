@@ -18,17 +18,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
 using Xpandables.Net.Database;
-using Xpandables.Net.Entities;
 using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net
@@ -53,14 +47,7 @@ namespace Xpandables.Net
         ///<inheritdoc/>
         public virtual async Task<IOperationResult> AppendEventAsync(IDomainEvent @event, CancellationToken cancellationToken = default)
         {
-            var entityEvent = new AggregateEventEntity(
-                @event.Guid,
-                @event.AggregateId,
-                @event.GetType().AssemblyQualifiedName!,
-                @event.Version,
-                true,
-                Serialize(@event));
-
+            var entityEvent = new AggregateEventEntityEFCore(@event);
             await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
             return OkOperation();
         }
@@ -68,43 +55,14 @@ namespace Xpandables.Net
         /// <inheritdoc/>
         public virtual async IAsyncEnumerable<IDomainEvent> ReadEventsAsync(Guid aggreagateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await foreach (var entityEvent in _context.FetchAllAsync<AggregateEventEntity, AggregateEventEntity>(
+            await foreach (var entityEvent in _context.FetchAllAsync<AggregateEventEntityEFCore, AggregateEventEntityEFCore>(
                 e => e.Where(x => x.AggregateId == aggreagateId)
                     .OrderBy(o => o.Version), cancellationToken)
                 .ConfigureAwait(false))
             {
-                if (Deserialize(entityEvent.Type, entityEvent.Data) is { } @event)
+                if (entityEvent.Deserialize() is { } @event)
                     yield return @event;
             }
-        }
-
-        private static byte[] Serialize(IDomainEvent @event) => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
-        private static IDomainEvent? Deserialize(string eventType, byte[] data)
-        {
-            JsonSerializerSettings settings = new() { ContractResolver = new PrivateSetterContractResolver() };
-            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data), Type.GetType(eventType), settings) as IDomainEvent;
-        }
-    }
-
-    class PrivateSetterContractResolver : DefaultContractResolver
-    {
-        protected override JsonProperty CreateProperty(
-            MemberInfo member,
-            MemberSerialization memberSerialization)
-        {
-            var prop = base.CreateProperty(member, memberSerialization);
-
-            if (!prop.Writable)
-            {
-                var property = member as PropertyInfo;
-                if (property != null)
-                {
-                    var hasPrivateSetter = property.GetSetMethod(true) != null;
-                    prop.Writable = hasPrivateSetter;
-                }
-            }
-
-            return prop;
         }
     }
 }

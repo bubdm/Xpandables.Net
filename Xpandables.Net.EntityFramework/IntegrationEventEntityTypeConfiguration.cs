@@ -15,26 +15,30 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
-using Xpandables.Net.Events.DomainEvents;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Xpandables.Net.Events.IntegrationEvents
+using Xpandables.Net.Entities;
+
+namespace Xpandables.Net
 {
     /// <summary>
-    /// Defines a method to automatically publish <see cref="IIntegrationEvent"/> type.
+    /// EFCore configuration for <see cref="AggregateEventEntity"/>.
+    /// You may derive from this class to customize its behaviors.
     /// </summary>
-    public interface IIntegrationEventPublisher
+    public class IntegrationEventEntityTypeConfiguration : IEntityTypeConfiguration<IntegrationEventEntity>
     {
-        /// <summary>
-        /// Publishes integration events.
-        /// </summary>
-        /// <param name="event">The event to be published.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        Task PublishAsync(IIntegrationEvent @event, CancellationToken cancellationToken = default);
+        ///<inheritdoc/>
+        public void Configure(EntityTypeBuilder<IntegrationEventEntity> builder)
+        {
+            builder.HasKey(p => p.Id);
+            builder.HasIndex(p => p.Id)
+                .IsUnique();
+
+            builder.Property(p => p.Data);
+            builder.Property(p => p.IsJson);
+            builder.Property(p => p.Type);
+        }
     }
 }

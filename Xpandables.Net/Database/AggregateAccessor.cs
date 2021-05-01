@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Entities;
 using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Database
 {
@@ -33,7 +34,8 @@ namespace Xpandables.Net.Database
         where TAggregate : class, IAggregate, new()
     {
         private readonly IEventStore _eventStore;
-        private readonly IDomainEventPublisher _eventPublisher;
+        private readonly IDomainEventPublisher _domainEventPublisher;
+        private readonly IIntegrationEventPublisher _integrationEventPublisher;
         private readonly IInstanceCreator _instanceCreator;
 
         private Exception? instanceCreatorException;
@@ -42,13 +44,19 @@ namespace Xpandables.Net.Database
         /// Constructs a new instance of <see cref="AggregateAccessor{TAggregate}"/>.
         /// </summary>
         /// <param name="eventStore">The target event store.</param>
-        /// <param name="eventPublisher">The target event publisher.</param>
+        /// <param name="domainEventPublisher">The target domain event publisher.</param>
+        /// <param name="integrationEventPublisher">the target integration event publisher.</param>
         /// <param name="instanceCreator">The instance creator.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="eventStore"/> or <paramref name="eventPublisher"/> or <paramref name="instanceCreator"/> is null.</exception>
-        public AggregateAccessor(IEventStore eventStore, IDomainEventPublisher eventPublisher, IInstanceCreator instanceCreator)
+        /// <exception cref="ArgumentNullException">The <paramref name="eventStore"/> or <paramref name="domainEventPublisher"/> or <paramref name="instanceCreator"/> is null.</exception>
+        public AggregateAccessor(
+            IEventStore eventStore,
+            IDomainEventPublisher domainEventPublisher,
+            IIntegrationEventPublisher integrationEventPublisher,
+            IInstanceCreator instanceCreator)
         {
             _eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
-            _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
+            _domainEventPublisher = domainEventPublisher ?? throw new ArgumentNullException(nameof(domainEventPublisher));
+            _integrationEventPublisher = integrationEventPublisher ?? throw new ArgumentNullException(nameof(integrationEventPublisher));
             _instanceCreator = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
             _instanceCreator.OnException = dispatchException => instanceCreatorException = dispatchException.SourceException;
         }
@@ -60,7 +68,7 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
-        public async Task<IOperationResult> AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
+        public virtual async Task<IOperationResult> AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
         {
             _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
 
@@ -73,10 +81,18 @@ namespace Xpandables.Net.Database
                 if (appendresult.Failed)
                     return appendresult;
 
-                await _eventPublisher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
+                await _domainEventPublisher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
             }
 
             aggregateEventSourcing.MarkEventsAsCommitted();
+
+            if (aggregate is IAggregateOutbox aggregateOutbox)
+            {
+                foreach (var @event in aggregateOutbox.GetOutboxEvents())
+                    await _integrationEventPublisher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
+
+                aggregateOutbox.MarkEventsAsCommitted();
+            }
 
             return OkOperation();
         }
@@ -87,7 +103,7 @@ namespace Xpandables.Net.Database
         /// <param name="aggregateId">The aggregate identifier to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        public async Task<IOperationResult<TAggregate>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default)
+        public virtual async Task<IOperationResult<TAggregate>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default)
         {
             instanceCreatorException = default;
             if (_instanceCreator.Create(typeof(TAggregate)) is not TAggregate aggregate)

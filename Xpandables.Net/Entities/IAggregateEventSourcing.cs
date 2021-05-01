@@ -18,18 +18,17 @@
 using System;
 using System.Linq;
 
-using Xpandables.Net.Events;
 using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// Provides with methods to manage aggregate events.
+    /// Event-sourcing pattern interface.
     /// </summary>
     internal interface IAggregateEventSourcing
     {
         /// <summary>
-        /// Marks all the events as committed.
+        /// Marks all the domain events as committed.
         /// </summary>
         void MarkEventsAsCommitted();
 

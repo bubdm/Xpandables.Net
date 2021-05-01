@@ -23,7 +23,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Commands;
-using Xpandables.Net.Enqueues;
 using Xpandables.Net.Handlers;
 using Xpandables.Net.Queries;
 
@@ -31,7 +30,7 @@ namespace Xpandables.Net.Dispatchers
 {
     /// <summary>
     /// The implementation for <see cref="IDispatcher"/>.
-    /// Implements methods to execute the <see cref="IAsyncQueryHandler{TQuery, TResult}"/>, <see cref="IQueryHandler{TQuery, TResult}"/>, <see cref="IDequeueMessageHandler{TQueueMessage}"/> and
+    /// Implements methods to execute the <see cref="IAsyncQueryHandler{TQuery, TResult}"/>, <see cref="IQueryHandler{TQuery, TResult}"/> and
     /// <see cref="ICommandHandler{TCommand}"/> process dynamically.
     /// </summary>
     public class Dispatcher : IDispatcher
@@ -184,31 +183,6 @@ namespace Xpandables.Net.Dispatchers
             }
 
             return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Asynchronously sends the queue handler (<see cref="IDequeueMessageHandler{TQueueMessage}"/> implementation) on the specified queue message.
-        /// </summary>
-        /// <param name="queueMessage">The message to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="queueMessage"/> is null.</exception>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
-        public virtual async Task<IOperationResult> SendAsync(IQueueMessage queueMessage, CancellationToken cancellationToken = default)
-        {
-            _ = queueMessage ?? throw new ArgumentNullException(nameof(queueMessage));
-
-            if (!typeof(IDequeueMessageHandler<>).TryMakeGenericType(out var handlerType, out var typeException, queueMessage.GetType()))
-            {
-                throw new InvalidOperationException("Building internal command handler failed.", typeException);
-            }
-
-            if (!_handlerAccessor.TryGetHandler(handlerType, out dynamic? handler, out var ex))
-            {
-                throw new InvalidOperationException($"The matching internal command handler for {queueMessage.GetType().Name} is missing.", ex);
-            }
-
-            return await handler.DequeueAsync((dynamic)queueMessage, (dynamic)cancellationToken).ConfigureAwait(false);
         }
 
         private static void WriteLineException(Exception exception)

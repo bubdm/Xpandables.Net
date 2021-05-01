@@ -20,6 +20,7 @@ using System.Linq;
 using System.Reflection;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.Correlations;
@@ -32,7 +33,6 @@ using Xpandables.Net.Decorators.Transactions;
 using Xpandables.Net.Decorators.Validators;
 using Xpandables.Net.Decorators.Visitors;
 using Xpandables.Net.Dispatchers;
-using Xpandables.Net.Enqueues;
 using Xpandables.Net.Events.DomainEvents;
 using Xpandables.Net.Events.IntegrationEvents;
 using Xpandables.Net.Handlers;
@@ -94,36 +94,80 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="IQueueMessageScheduler"/> type implementation to the services with scope life time.
+        /// Adds the <see cref="IIntegrationEventService"/> type implementation to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TQueueMessageScheduler">The scheduler type implementation.</typeparam>
+        /// <typeparam name="TIntegrationEventService">The integration event service type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXQueueMessageScheduler<TQueueMessageScheduler>(this IServiceCollection services)
-            where TQueueMessageScheduler : class, IQueueMessageScheduler
+        public static IServiceCollection AddXIntegrationEventService<TIntegrationEventService>(this IServiceCollection services)
+            where TIntegrationEventService : class, IHostedService, IIntegrationEventService
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IQueueMessageScheduler, TQueueMessageScheduler>();
+            services.AddSingleton<IIntegrationEventService, TIntegrationEventService>();
+            services.AddHostedService(provider => provider.GetRequiredService<IIntegrationEventService>() as TIntegrationEventService);
             return services;
         }
 
         /// <summary>
-        /// Adds the <see cref="IEnqueueMessageHandler"/> type implementation to the services with scope life time.
+        /// Adds the default <see cref="IIntegrationEventService"/> type implementation to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TEnqueueMessageHandler">The scheduler type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXEnqueueMessageHandler<TEnqueueMessageHandler>(this IServiceCollection services)
-            where TEnqueueMessageHandler : class, IEnqueueMessageHandler
+        public static IServiceCollection AddXIntegrationEventService(this IServiceCollection services)
+            => services.AddXIntegrationEventService<IntegrationEventService>();
+
+        /// <summary>
+        /// Adds the <see cref="IIntegrationEventProcessor"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TIntegrationEventProcessor">The integration event processor type implementation.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXIntegrationEventProcessor<TIntegrationEventProcessor>(this IServiceCollection services)
+            where TIntegrationEventProcessor : class, IIntegrationEventProcessor
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IEnqueueMessageHandler, TEnqueueMessageHandler>();
+            services.AddScoped<IIntegrationEventProcessor, TIntegrationEventProcessor>();
             return services;
         }
+
+        /// <summary>
+        /// Adds the default <see cref="IIntegrationEventProcessor"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXIntegrationEventProcessor(this IServiceCollection services)
+            => services.AddXIntegrationEventProcessor<IntegrationEventProcessor>();
+
+        /// <summary>
+        /// Adds the <see cref="IIntegrationEventPublisher"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TIntegrationEventPublisher">The integration event publisher type implementation.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXIntegrationEventPublisher<TIntegrationEventPublisher>(this IServiceCollection services)
+            where TIntegrationEventPublisher : class, IIntegrationEventPublisher
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<IIntegrationEventPublisher, TIntegrationEventPublisher>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IIntegrationEventPublisher"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXIntegrationEventPublisher(this IServiceCollection services)
+            => services.AddXIntegrationEventPublisher<IntegrationEventPublisher>();
 
         /// <summary>
         /// Adds the <see cref="IServiceScopeFactory{TService}"/> needed to resolve the <see cref="IServiceScope{TService}"/> to the services with singleton life time.
@@ -430,7 +474,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="ICommandHandler{TCommand}"/>, <see cref="ICommandHandler{TCommand, TResult}"/> and <see cref="IDequeueMessageHandler{TQueueMessage}"/> to the services with scope life time.
+        /// Adds the <see cref="ICommandHandler{TCommand}"/>, <see cref="ICommandHandler{TCommand, TResult}"/> and to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -452,19 +496,6 @@ namespace Xpandables.Net.DependencyInjection
                 .ToList();
 
             foreach (var handler in genericHandlers)
-            {
-                foreach (var interf in handler.Interfaces)
-                {
-                    services.AddScoped(interf, handler.Type);
-                }
-            }
-
-            var genericInternalHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IDequeueMessageHandler<>)))
-                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IDequeueMessageHandler<>)) })
-                .ToList();
-
-            foreach (var handler in genericInternalHandlers)
             {
                 foreach (var interf in handler.Interfaces)
                 {
@@ -565,7 +596,7 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Adds and configures the <see cref="ICommandHandler{TCommand}"/>, <see cref="IDomainEventHandler{TEvent}"/>, <see cref="IIntegrationEventHandler{TEvent}"/>,
-        /// <see cref="IQueryHandler{TQuery, TResult}"/>, <see cref="IDequeueMessageHandler{TQueueMessage}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
+        /// <see cref="IQueryHandler{TQuery, TResult}"/> and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>

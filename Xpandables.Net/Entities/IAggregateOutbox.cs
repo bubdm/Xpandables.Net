@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +15,26 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Linq;
 
-namespace Xpandables.Net.Enqueues
+using Xpandables.Net.Events.IntegrationEvents;
+
+namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// This interface is used as a marker for queue messages.
+    /// Out-box pattern interface.
     /// </summary>
-    public interface IQueueMessage
+    internal interface IAggregateOutbox
     {
         /// <summary>
-        /// Gets the queue message type.
+        /// Marks all the integration events as committed.
         /// </summary>
-        string QueueType { get; }
+        void MarkEventsAsCommitted();
+
+        /// <summary>
+        /// Returns a collection of integration events.
+        /// </summary>
+        /// <returns>A list of integration events.</returns>
+        IOrderedEnumerable<IIntegrationEvent> GetOutboxEvents();
     }
 }

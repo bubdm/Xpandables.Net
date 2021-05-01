@@ -15,26 +15,19 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading;
 using System.Threading.Tasks;
-
-using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
-    /// Defines a method to automatically publish <see cref="IIntegrationEvent"/> type.
+    /// Out-box pattern to publish pending messages.
     /// </summary>
-    public interface IIntegrationEventPublisher
+    public interface IIntegrationEventProcessor
     {
         /// <summary>
-        /// Publishes integration events.
+        /// Asynchronously pushes pending messages.
         /// </summary>
-        /// <param name="event">The event to be published.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        Task PublishAsync(IIntegrationEvent @event, CancellationToken cancellationToken = default);
+        Task PushPendingMessages();
     }
 }

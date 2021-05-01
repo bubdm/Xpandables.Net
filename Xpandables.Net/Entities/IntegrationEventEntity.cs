@@ -19,14 +19,14 @@ using System;
 using System.Text;
 using System.Text.Json;
 
-using Xpandables.Net.Entities;
+using Xpandables.Net.Events.IntegrationEvents;
 
-namespace Xpandables.Net.Outboxes
+namespace Xpandables.Net.Entities
 {
     /// <summary>
     /// Represents an out box message to be written.
     /// </summary>
-    public class MessageEntity : Entity
+    public class IntegrationEventEntity : Entity
     {
         /// <summary>
         /// Gets the .Net Framework content type.
@@ -44,17 +44,17 @@ namespace Xpandables.Net.Outboxes
         public byte[] Data { get; }
 
         /// <summary>
-        /// Constructs anew instance of <see cref="MessageEntity"/> from the specified message.
+        /// Constructs anew instance of <see cref="IntegrationEventEntity"/> from the specified event.
         /// </summary>
-        /// <param name="message">The message to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="message"/> is null.</exception>
-        public MessageEntity(object message)
+        /// <param name="event">The event to act with.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        public IntegrationEventEntity(IIntegrationEvent @event)
         {
-            _ = message ?? throw new ArgumentNullException(nameof(message));
+            _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            Type = message.GetType().AssemblyQualifiedName!;
+            Type = @event.GetType().AssemblyQualifiedName!;
             IsJson = true;
-            Data = Serialize(message);
+            Data = Serialize(@event);
         }
 
         /// <summary>
@@ -71,11 +71,8 @@ namespace Xpandables.Net.Outboxes
         /// <summary>
         /// Deserializes the current message to the expected type or null using the <see cref="System.Text.Json"/>.
         /// </summary>
-        /// <typeparam name="TMessage">The expected type of the message.</typeparam>
-        /// <returns>An instance of the type <typeparamref name="TMessage"/> type or null.</returns>
-        public virtual TMessage? Deserialize<TMessage>()
-        {
-            return JsonSerializer.Deserialize<TMessage>(Encoding.UTF8.GetString(Data));
-        }
+        /// <returns>An instance of the integration event type type or null.</returns>
+        public virtual IIntegrationEvent? Deserialize()
+            => JsonSerializer.Deserialize(Encoding.UTF8.GetString(Data), System.Type.GetType(Type)!) as IIntegrationEvent;
     }
 }
