@@ -48,7 +48,7 @@ namespace Xpandables.Net
         ///<inheritdoc/>
         public virtual async Task<IOperationResult> AppendEventAsync(IDomainEvent @event, CancellationToken cancellationToken = default)
         {
-            var entityEvent = new AggregateEventEntityEFCore(@event);
+            var entityEvent = new AggregateEventEntity(@event);
             await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
             return OkOperation();
         }

@@ -28,8 +28,10 @@ namespace Xpandables.Net.Api.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new AggregateEventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new IntegrationEventEntityTypeConfiguration());
         }
         public DbSet<AggregateEventEntity> Events { get; set; } = default!;
+        public DbSet<IntegrationEventEntity> Integrations { get; set; } = default!;
     }
 
     public sealed class ContactContextSecond : DataContextEFCore

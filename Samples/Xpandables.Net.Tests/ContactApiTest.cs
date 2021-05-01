@@ -94,7 +94,7 @@ namespace Xpandables.Net.Tests
         [TestMethod]
         public async Task EditTest()
         {
-            var select = new SelectQuery(ContactModel.FirstGuidCreated);
+            var select = new SelectQuery("c0bc392c-fd86-41a3-aec8-1894e8908490");
             using var response = await httpRestClientHandler.SendAsync(select).ConfigureAwait(false);
 
             if (!response.IsValid())

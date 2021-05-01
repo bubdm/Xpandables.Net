@@ -37,6 +37,7 @@ namespace Xpandables.Net.Api.Models
         public void ChangeContactName(string name)
         {
             RaiseEvent(new ContactNameChangedEvent(name, Guid, GetNewVersion()));
+            AddIntegrationEvent(new ContactNameChangeIntegrationEvent(name, Guid));
         }
 
         public void ChangeContactCity(string city)

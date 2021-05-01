@@ -18,6 +18,7 @@
 using System;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using Xpandables.Net.Events.IntegrationEvents;
 
@@ -55,6 +56,14 @@ namespace Xpandables.Net.Entities
             Type = @event.GetType().AssemblyQualifiedName!;
             IsJson = true;
             Data = Serialize(@event);
+        }
+
+        [JsonConstructor]
+        private IntegrationEventEntity(string type, bool isJson, byte[] data)
+        {
+            Type = type ?? throw new ArgumentNullException(nameof(type));
+            IsJson = isJson;
+            Data = data ?? throw new ArgumentNullException(nameof(data));
         }
 
         /// <summary>

@@ -24,6 +24,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.Database;
+using Xpandables.Net.Events;
 using Xpandables.Net.Events.DomainEvents;
 using Xpandables.Net.Events.IntegrationEvents;
 using Xpandables.Net.Security;
@@ -61,6 +62,20 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             services.AddScoped<IEventStore, TEventStore>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IEventBus"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TEventBus">The type that implements <see cref="IEventBus"/></typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXEventBus<TEventBus>(this IServiceCollection services)
+            where TEventBus : class, IEventBus
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddScoped<IEventBus, TEventBus>();
             return services;
         }
 

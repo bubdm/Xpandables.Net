@@ -79,6 +79,9 @@ namespace Xpandables.Net.Api
             services.AddXDomainEventPublisher();
             services.AddXIntegrationEventPublisher();
             services.AddXAggregateAccessor();
+            services.AddXIntegrationEventProcessor();
+            services.AddXIntegrationEventService();
+            services.AddXEventBus<EventBus>();
 
             // comment to disable Interception
             services.AddTransient<ContactInterceptor>();

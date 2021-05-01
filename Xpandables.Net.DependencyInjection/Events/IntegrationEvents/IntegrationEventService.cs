@@ -19,7 +19,10 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using Xpandables.Net.Database;
 
 namespace Xpandables.Net.Events.IntegrationEvents
 {
@@ -32,15 +35,15 @@ namespace Xpandables.Net.Events.IntegrationEvents
         private readonly Timer _timer;
         private static readonly object _locker = new();
 
-        private readonly IIntegrationEventProcessor _integrationEventProcessor;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
         /// <summary>
         /// Constructs a new instance of <see cref="IntegrationEventService"/>.
         /// </summary>
-        /// <param name="integrationEventProcessor">The out-box processor.</param>
-        public IntegrationEventService(IIntegrationEventProcessor integrationEventProcessor)
+        /// <param name="serviceScopeFactory">the scope factory.</param>
+        public IntegrationEventService(IServiceScopeFactory serviceScopeFactory)
         {
-            _integrationEventProcessor = integrationEventProcessor ?? throw new ArgumentNullException(nameof(integrationEventProcessor));
+            _serviceScopeFactory = serviceScopeFactory?? throw new ArgumentNullException(nameof(serviceScopeFactory));
             _timer = new Timer(
                 PushMessages,
                 null,
@@ -80,27 +83,31 @@ namespace Xpandables.Net.Events.IntegrationEvents
 
         private async void PushMessages(object? state)
         {
-            var hasLock = false;
+            //var hasLock = false;
 
-            try
-            {
-                Monitor.TryEnter(_locker, ref hasLock);
+            //try
+            //{
+            //    Monitor.TryEnter(_locker, ref hasLock);
 
-                if (!hasLock)
-                {
-                    return;
-                }
+            //    if (!hasLock)
+            //    {
+            //        return;
+            //    }
 
-                await _integrationEventProcessor.PushPendingMessages().ConfigureAwait(false);
+                using var scope = _serviceScopeFactory.CreateScope();
+                var tenant = scope.ServiceProvider.GetRequiredService<IDataContextTenantAccessor>();
+                tenant.SetTenantName("ContactContext");
+                var integrationEventProcessor = scope.ServiceProvider.GetRequiredService<IIntegrationEventProcessor>();
+                await integrationEventProcessor.PushPendingMessages().ConfigureAwait(false);
 
-            }
-            finally
-            {
-                if (hasLock)
-                {
-                    Monitor.Exit(_locker);
-                }
-            }
+            //}
+            //finally
+            //{
+            //    if (hasLock)
+            //    {
+            //        Monitor.Exit(_locker);
+            //    }
+            //}
         }
     }
 }
