@@ -23,6 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Database;
+using Xpandables.Net.Entities;
 using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net
@@ -55,7 +56,7 @@ namespace Xpandables.Net
         /// <inheritdoc/>
         public virtual async IAsyncEnumerable<IDomainEvent> ReadEventsAsync(Guid aggreagateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await foreach (var entityEvent in _context.FetchAllAsync<AggregateEventEntityEFCore, AggregateEventEntityEFCore>(
+            await foreach (var entityEvent in _context.FetchAllAsync<AggregateEventEntity, AggregateEventEntity>(
                 e => e.Where(x => x.AggregateId == aggreagateId)
                     .OrderBy(o => o.Version), cancellationToken)
                 .ConfigureAwait(false))

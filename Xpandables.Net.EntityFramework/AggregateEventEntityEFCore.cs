@@ -15,6 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 using System.Reflection;
 using System.Text;
 
@@ -31,6 +32,11 @@ namespace Xpandables.Net
     /// </summary>
     public class AggregateEventEntityEFCore : AggregateEventEntity
     {
+        ///<inheritdoc/>
+        [JsonConstructor]
+        protected AggregateEventEntityEFCore(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
+            : base(eventId, aggregateId, type, version, isJson, data) { }
+
         ///<inheritdoc/>
         public AggregateEventEntityEFCore(IDomainEvent @event) : base(@event)
         {

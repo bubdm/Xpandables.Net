@@ -62,10 +62,10 @@ namespace Xpandables.Net.Entities
         /// You can override this method to customize its behavior.
         /// </summary>
         /// <returns>A JSON string.</returns>
-        protected virtual byte[] Serialize(object message)
+        protected virtual byte[] Serialize(IIntegrationEvent @event)
         {
-            _ = message ?? throw new ArgumentNullException(nameof(message));
-            return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message, message.GetType()));
+            _ = @event ?? throw new ArgumentNullException(nameof(@event));
+            return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event, @event.GetType()));
         }
 
         /// <summary>

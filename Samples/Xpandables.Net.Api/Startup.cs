@@ -15,6 +15,8 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Reflection;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,15 +24,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using System.Reflection;
-
 using Xpandables.Net.Api.Database;
-using Xpandables.Net.Api.Handlers;
 using Xpandables.Net.Api.Middlewares;
 using Xpandables.Net.Api.Services;
-using Xpandables.Net.Database;
 using Xpandables.Net.DependencyInjection;
-using Xpandables.Net.Events.DomainEvents;
 
 namespace Xpandables.Net.Api
 {
@@ -80,6 +77,7 @@ namespace Xpandables.Net.Api
             services.AddXOperationResultLogger<LoggingService>();
             services.AddXEventStore<EventStoreEFCore>();
             services.AddXDomainEventPublisher();
+            services.AddXIntegrationEventPublisher();
             services.AddXAggregateAccessor();
 
             // comment to disable Interception

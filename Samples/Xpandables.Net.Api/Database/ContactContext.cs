@@ -41,6 +41,6 @@ namespace Xpandables.Net.Api.Database
             modelBuilder.Entity<AggregateEventEntity>().HasIndex(new string[] { nameof(AggregateEventEntity.Id) }).IsUnique();
         }
 
-        public DbSet<AggregateEventEntity> Events { get; set; } = default!;
+        public DbSet<AggregateEventEntityEFCore> Events { get; set; } = default!;
     }
 }
