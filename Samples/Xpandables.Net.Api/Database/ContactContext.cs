@@ -27,9 +27,9 @@ namespace Xpandables.Net.Api.Database
         public ContactContext(DbContextOptions<ContactContext> contextOptions) : base(contextOptions) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new EntityEventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AggregateRootEventEntityTypeConfiguration());
         }
-        public DbSet<EntityEvent> Events { get; set; } = default!;
+        public DbSet<AggregateRootEventEntity> Events { get; set; } = default!;
     }
 
     public sealed class ContactContextSecond : DataContextEFCore
@@ -37,10 +37,10 @@ namespace Xpandables.Net.Api.Database
         public ContactContextSecond(DbContextOptions<ContactContextSecond> contextOptions) : base(contextOptions) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<EntityEvent>().HasKey(new string[] { nameof(EntityEvent.Id) });
-            modelBuilder.Entity<EntityEvent>().HasIndex(new string[] { nameof(EntityEvent.Id) }).IsUnique();
+            modelBuilder.Entity<AggregateRootEventEntity>().HasKey(new string[] { nameof(AggregateRootEventEntity.Id) });
+            modelBuilder.Entity<AggregateRootEventEntity>().HasIndex(new string[] { nameof(AggregateRootEventEntity.Id) }).IsUnique();
         }
 
-        public DbSet<EntityEvent> Events { get; set; } = default!;
+        public DbSet<AggregateRootEventEntity> Events { get; set; } = default!;
     }
 }

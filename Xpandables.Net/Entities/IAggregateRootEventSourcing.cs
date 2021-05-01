@@ -25,7 +25,7 @@ namespace Xpandables.Net.Entities
     /// <summary>
     /// Provides with methods to manage aggregate events.
     /// </summary>
-    public interface IAggregateEventSourcing
+    public interface IAggregateRootEventSourcing
     {
         /// <summary>
         /// Marks all the events as committed.

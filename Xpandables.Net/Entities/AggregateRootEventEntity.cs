@@ -20,9 +20,9 @@ using System;
 namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// Represents an event to be written.
+    /// Represents an aggregate event to be written.
     /// </summary>
-    public class EntityEvent : Entity
+    public class AggregateRootEventEntity : Entity
     {
         /// <summary>
         /// Gets the event id.
@@ -55,7 +55,7 @@ namespace Xpandables.Net.Entities
         public byte[] Data { get; }
 
         /// <summary>
-        /// Constructs a new instance of <see cref="EntityEvent"/> with its properties.
+        /// Constructs a new instance of <see cref="AggregateRootEventEntity"/> with its properties.
         /// </summary>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="aggregateId">The related aggregate identifier.</param>
@@ -63,7 +63,7 @@ namespace Xpandables.Net.Entities
         /// <param name="version">The event version.</param>
         /// <param name="isJson">Determines whether or not the data is JSON.</param>
         /// <param name="data">The byte representation of the event.</param>
-        public EntityEvent(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
+        public AggregateRootEventEntity(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
         {
             EventId = eventId;
             AggregateId = aggregateId;

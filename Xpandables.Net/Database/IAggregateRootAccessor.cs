@@ -26,25 +26,25 @@ namespace Xpandables.Net.Database
     /// <summary>
     /// Represents a set of methods to read/write aggregates from an event store.
     /// </summary>
-    /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public interface IAggregateAccessor<TAggregate>
-        where TAggregate : class, IAggregate, new()
+    /// <typeparam name="TAggregateRoot">The type of the target aggregate.</typeparam>
+    public interface IAggregateRootAccessor<TAggregateRoot>
+        where TAggregateRoot : class, IAggregateRoot, new()
     {
         /// <summary>
-        /// Asynchronously returns the aggregate that matches the specified aggregate identifier.
+        /// Asynchronously returns the <typeparamref name="TAggregateRoot"/> aggregate that matches the specified aggregate identifier.
         /// </summary>
         /// <param name="aggregateId">The aggregate identifier to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        Task<IOperationResult<TAggregate>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default);
+        Task<IOperationResult<TAggregateRoot>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Asynchronously appends the specified aggregate to the event store.
+        /// Asynchronously appends the specified <typeparamref name="TAggregateRoot"/> aggregate to the event store.
         /// </summary>
         /// <param name="aggregate">The aggregate to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
-        Task<IOperationResult> AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default);
+        Task<IOperationResult> AppendAsync(TAggregateRoot aggregate, CancellationToken cancellationToken = default);
     }
 }

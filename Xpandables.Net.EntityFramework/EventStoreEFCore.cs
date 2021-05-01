@@ -53,7 +53,7 @@ namespace Xpandables.Net
         ///<inheritdoc/>
         public virtual async Task<IOperationResult> AppendEventAsync(IDomainEvent @event, CancellationToken cancellationToken = default)
         {
-            var entityEvent = new EntityEvent(
+            var entityEvent = new AggregateRootEventEntity(
                 @event.Guid,
                 @event.AggregateId,
                 @event.GetType().AssemblyQualifiedName!,
@@ -68,7 +68,7 @@ namespace Xpandables.Net
         /// <inheritdoc/>
         public virtual async IAsyncEnumerable<IDomainEvent> ReadEventsAsync(Guid aggreagateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await foreach (var entityEvent in _context.FetchAllAsync<EntityEvent, EntityEvent>(
+            await foreach (var entityEvent in _context.FetchAllAsync<AggregateRootEventEntity, AggregateRootEventEntity>(
                 e => e.Where(x => x.AggregateId == aggreagateId)
                     .OrderBy(o => o.Version), cancellationToken)
                 .ConfigureAwait(false))

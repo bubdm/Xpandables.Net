@@ -21,7 +21,7 @@ using Xpandables.Net.Entities;
 namespace Xpandables.Net.Api.Models
 {
 #pragma warning disable CS8618 
-    public sealed class ContactModel : Aggregate
+    public sealed class ContactModel : AggregateRoot
     {
         public static string FirstGuidCreated { get; set; } = string.Empty;
 

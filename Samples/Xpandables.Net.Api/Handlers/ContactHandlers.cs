@@ -24,19 +24,15 @@ using Xpandables.Net.Commands;
 using Xpandables.Net.Database;
 using Xpandables.Net.Queries;
 
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
 namespace Xpandables.Net.Api.Handlers
 {
     public sealed class ContactHandlers : OperationResultBase,
          ICommandHandler<AddCommand, string>, IQueryHandler<SelectQuery, Contact>, ICommandHandler<EditCommand, Contact>
     {
-        private readonly IAggregateAccessor<ContactModel> _entityAccessor;
-        public ContactHandlers(IAggregateAccessor<ContactModel> entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
-
-        //public IAsyncEnumerable<Contact> HandleAsync(SelectAllQuery query, CancellationToken cancellationToken = default)
-        //{
-
-        //    return _entityAccessor.FetchAllAsync(query, s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken: cancellationToken);
-        //}
+        private readonly IAggregateRootAccessor<ContactModel> _entityAccessor;
+        public ContactHandlers(IAggregateRootAccessor<ContactModel> entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
 
         public async Task<IOperationResult<Contact>> HandleAsync(SelectQuery query, CancellationToken cancellationToken = default)
         {
@@ -55,13 +51,15 @@ namespace Xpandables.Net.Api.Handlers
             return new SuccessOperationResult<string>(newContact.Guid.ToString());
         }
 
-        //public async Task<IOperationResult> HandleAsync(DeleteCommand command, CancellationToken cancellationToken = default)
-        //{
-        //    var toDelete = (await _entityAccessor.TryFindAsync(command, cancellationToken).ConfigureAwait(false))!;
-        //    toDelete.Deleted();
+        public async Task<IOperationResult> HandleAsync(DeleteCommand command, CancellationToken cancellationToken = default)
+{
+            var foundResult = await _entityAccessor.ReadAsync(Guid.Parse(command.Id), cancellationToken).ConfigureAwait(false);
+            if (foundResult.Failed)
+                return NotFoundOperation<Contact>();
 
-        //    return new SuccessOperationResult();
-        //}
+
+            return new SuccessOperationResult();
+        }
 
         public async Task<IOperationResult<Contact>> HandleAsync(EditCommand command, CancellationToken cancellationToken = default)
         {

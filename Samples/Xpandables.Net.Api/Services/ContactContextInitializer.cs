@@ -40,7 +40,7 @@ namespace Xpandables.Net.Api.Services
             var tenant = service.ServiceProvider.GetRequiredService<IDataContextTenantAccessor>();
             tenant.SetTenantName<ContactContext>();
             using var context = tenant.GetDataContext();
-            var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateAccessor<ContactModel>>();
+            var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateRootAccessor<ContactModel>>();
 
             var contact = ContactModel.CreateNewContact("myName", "Paris", "Alexandre LeGrand 01", "France");
             ContactModel.FirstGuidCreated = contact.Guid.ToString();

@@ -24,15 +24,13 @@ using Xpandables.Net.Entities;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// 
+    /// EFCore configuration for <see cref="AggregateRootEventEntity"/>.
+    /// You may derive from this class to customize its behaviors.
     /// </summary>
-    public class EntityEventEntityTypeConfiguration : IEntityTypeConfiguration<EntityEvent>
+    public class AggregateRootEventEntityTypeConfiguration : IEntityTypeConfiguration<AggregateRootEventEntity>
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="builder"></param>
-        public void Configure(EntityTypeBuilder<EntityEvent> builder)
+        ///<inheritdoc/>
+        public void Configure(EntityTypeBuilder<AggregateRootEventEntity> builder)
         {
             builder.HasKey(p => p.EventId);
             builder.HasIndex(p => p.EventId).IsUnique();

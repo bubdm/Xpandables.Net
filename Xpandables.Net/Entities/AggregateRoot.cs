@@ -30,7 +30,7 @@ namespace Xpandables.Net.Entities
     /// </summary>
     [Serializable]
     [DebuggerDisplay("Guid = {" + nameof(Guid) + "} Version = {" + nameof(Version) + "}")]
-    public abstract class Aggregate : OperationResultBase, IAggregate
+    public abstract class AggregateRoot : OperationResultBase, IAggregateRoot
     {
         private readonly ICollection<IEvent> _events = new LinkedList<IEvent>();
         private readonly IDictionary<Type, Action<IDomainEvent>> _eventHandles = new Dictionary<Type, Action<IDomainEvent>>();
@@ -48,7 +48,7 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Constructs the default instance of an aggregate root.
         /// </summary>
-        protected Aggregate()
+        protected AggregateRoot()
         {
             RegisterEventHandlers();
         }
@@ -87,7 +87,7 @@ namespace Xpandables.Net.Entities
         protected abstract void RegisterEventHandlers();
 
         /// <summary>
-        /// Registers an handler for the specified event type.
+        /// Registers an handler for the <typeparamref name="TEvent"/> event type.
         /// </summary>
         /// <typeparam name="TEvent">The type of the event.</typeparam>
         /// <param name="eventHandler">the target handler to register.</param>
@@ -159,7 +159,7 @@ namespace Xpandables.Net.Entities
         /// </summary>
         /// <param name="event">The event to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        void IAggregateEventSourcing.Apply(IDomainEvent @event)
+        void IAggregateRootEventSourcing.Apply(IDomainEvent @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
