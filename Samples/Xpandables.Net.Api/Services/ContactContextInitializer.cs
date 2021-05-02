@@ -23,28 +23,32 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using Xpandables.Net.Api.Database;
 using Xpandables.Net.Api.Models;
 using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
+using Xpandables.Net.EntityFramework;
 
 namespace Xpandables.Net.Api.Services
 {
-    public sealed class ContactContextInitializer : IHostedService
+    public sealed class ContactContextInitializer : BackgroundService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
         public ContactContextInitializer(IServiceScopeFactory serviceScopeFactory)
             => _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            return DoInitializeContextAsync(stoppingToken);
+        }
+
+        private async Task DoInitializeContextAsync(CancellationToken cancellationToken)
+        {
+            await Task.Yield();
             using var service = _serviceScopeFactory.CreateScope();
-            var tenant = service.ServiceProvider.GetRequiredService<IDataContextTenantAccessor>();
-            tenant.SetTenantName<ContactContext>();
-            using var context = tenant.GetDataContext();
+            using var context = service.ServiceProvider.GetRequiredService<IDataContext>();
             var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateAccessor<ContactModel>>();
 
-            if (context.Set<AggregateEventEntity>().Any())
+            if (context.Set<DomainEventEntity>().Any())
                 return;
 
             var contact = ContactModel.CreateNewContact("myName", "Paris", "Alexandre LeGrand 01", "France");
@@ -53,7 +57,5 @@ namespace Xpandables.Net.Api.Services
             await aggregateAccessor.AppendAsync(contact, cancellationToken).ConfigureAwait(false);
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
-
-        public async Task StopAsync(CancellationToken cancellationToken) => await Task.CompletedTask.ConfigureAwait(false);
     }
 }

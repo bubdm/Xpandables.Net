@@ -27,7 +27,9 @@ using Microsoft.Extensions.Hosting;
 using Xpandables.Net.Api.Database;
 using Xpandables.Net.Api.Middlewares;
 using Xpandables.Net.Api.Services;
+using Xpandables.Net.Database;
 using Xpandables.Net.DependencyInjection;
+using Xpandables.Net.EntityFramework;
 
 namespace Xpandables.Net.Api
 {
@@ -58,11 +60,7 @@ namespace Xpandables.Net.Api
             services
                 .AddDbContext<ContactContext>(options => options.UseSqlServer(Configuration.GetConnectionString("xpandables"))
                 .EnableServiceProviderCaching())
-                .AddDbContext<ContactContextSecond>(options => options.UseInMemoryDatabase(nameof(ContactContextSecond))
-                .EnableServiceProviderCaching())
-                .AddXDataContextTenantAccessor()
-                .AddXDataContextTenant<ContactContext>()
-                .AddXDataContextTenant<ContactContextSecond>();
+                .AddXDataContext<ContactContext>();
 
             services.AddXDispatcher();
             services.AddXHandlerAccessor();
@@ -75,13 +73,14 @@ namespace Xpandables.Net.Api
 
             services.AddXInstanceCreator();
             services.AddXOperationResultLogger<LoggingService>();
-            services.AddXEventStore<EventStoreEFCore>();
+            services.AddXEventStore<EventStore>();
             services.AddXDomainEventPublisher();
             services.AddXIntegrationEventPublisher();
             services.AddXAggregateAccessor();
             services.AddXIntegrationEventProcessor();
             services.AddXIntegrationEventService();
             services.AddXEventBus<EventBus>();
+            services.AddXServiceScopeFactory();
 
             // comment to disable Interception
             services.AddTransient<ContactInterceptor>();
@@ -103,6 +102,12 @@ namespace Xpandables.Net.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<IDataContext>();
+                ((DbContext)context).Database.Migrate();
             }
 
             app.UseRouting();

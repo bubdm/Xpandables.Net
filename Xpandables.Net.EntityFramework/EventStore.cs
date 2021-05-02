@@ -26,21 +26,21 @@ using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
 using Xpandables.Net.Events.DomainEvents;
 
-namespace Xpandables.Net
+namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
     /// The EFCore implementation of <see cref="IEventStore"/>.
     /// </summary>
-    public class EventStoreEFCore : OperationResultBase, IEventStore
+    public class EventStore : OperationResultBase, IEventStore
     {
         private readonly IDataContext _context;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="EventStoreEFCore"/>.
+        /// Constructs a new instance of <see cref="EventStore"/>.
         /// </summary>
         /// <param name="context">The context to be used.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public EventStoreEFCore(IDataContext context)
+        public EventStore(IDataContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
@@ -48,7 +48,7 @@ namespace Xpandables.Net
         ///<inheritdoc/>
         public virtual async Task<IOperationResult> AppendEventAsync(IDomainEvent @event, CancellationToken cancellationToken = default)
         {
-            var entityEvent = new AggregateEventEntity(@event);
+            var entityEvent = new DomainEventEntity(@event);
             await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
             return OkOperation();
         }
@@ -56,7 +56,7 @@ namespace Xpandables.Net
         /// <inheritdoc/>
         public virtual async IAsyncEnumerable<IDomainEvent> ReadEventsAsync(Guid aggreagateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await foreach (var entityEvent in _context.FetchAllAsync<AggregateEventEntity, AggregateEventEntity>(
+            await foreach (var entityEvent in _context.FetchAllAsync<DomainEventEntity, DomainEventEntity>(
                 e => e.Where(x => x.AggregateId == aggreagateId)
                     .OrderBy(o => o.Version), cancellationToken)
                 .ConfigureAwait(false))

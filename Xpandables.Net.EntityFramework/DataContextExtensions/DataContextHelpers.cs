@@ -23,14 +23,15 @@ using System;
 using System.Linq;
 using System.Reflection;
 
+using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.Database
+namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
     ///  Provides with methods used to extend <see cref="IDataContext"/>.
     /// </summary>
-    public static class DataContextEFCoreHelpers
+    public static class DataContextHelpers
     {
         /// <summary>
         /// Represents a <see cref="DbSet{TEntity}"/> that can be used to query and save instances of <typeparamref name="TEntity"/>.
@@ -44,7 +45,7 @@ namespace Xpandables.Net.Database
             where TEntity : class, IEntity
         {
             _ = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            return ((DataContextEFCore)dataContext).Set<TEntity>();
+            return ((DataContext)dataContext).Set<TEntity>();
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace Xpandables.Net.Database
             where TEntity : class, IEntity
         {
             _ = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
-            return ((EntityAccessorEFCore<TEntity>)entityAccessor)._entities;
+            return ((EntityAccessor<TEntity>)entityAccessor)._entities;
         }
 
         /// <summary>

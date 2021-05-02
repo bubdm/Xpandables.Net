@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using Xpandables.Net.Database;
+using Xpandables.Net.DependencyInjection;
 
 namespace Xpandables.Net.Events.IntegrationEvents
 {
@@ -32,82 +32,59 @@ namespace Xpandables.Net.Events.IntegrationEvents
     /// </summary>
     public class IntegrationEventService : BackgroundService, IIntegrationEventService
     {
-        private readonly Timer _timer;
-        private static readonly object _locker = new();
-
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IServiceScopeFactory<IIntegrationEventProcessor> _serviceScopeFactory;
 
         /// <summary>
         /// Constructs a new instance of <see cref="IntegrationEventService"/>.
         /// </summary>
         /// <param name="serviceScopeFactory">the scope factory.</param>
-        public IntegrationEventService(IServiceScopeFactory serviceScopeFactory)
+        public IntegrationEventService(IServiceScopeFactory<IIntegrationEventProcessor> serviceScopeFactory)
         {
-            _serviceScopeFactory = serviceScopeFactory?? throw new ArgumentNullException(nameof(serviceScopeFactory));
-            _timer = new Timer(
-                PushMessages,
-                null,
-                TimeSpan.Zero,
-                TimeSpan.FromSeconds(30));
+            _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
         }
 
         ///<inheritdoc/>
         public bool IsRunning { get; private set; }
 
         ///<inheritdoc/>
-        public async Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default)
         {
             if (IsRunning)
                 return new FailureOperationResult("status", $"{nameof(IntegrationEventService)} is already up.");
 
             IsRunning = true;
-            _timer.Change(30, 0);
             await StartAsync(cancellationToken).ConfigureAwait(false);
             return new SuccessOperationResult();
         }
 
         ///<inheritdoc/>
-        public async Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default)
         {
             if (!IsRunning)
                 return new FailureOperationResult("status", $"{nameof(IntegrationEventService)} is already down.");
 
             await StopAsync(cancellationToken).ConfigureAwait(false);
-            _timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(30));
             IsRunning = false;
             return new SuccessOperationResult();
         }
 
         ///<inheritdoc/>
-        protected override Task ExecuteAsync(CancellationToken stoppingToken) => Task.CompletedTask;
-
-        private async void PushMessages(object? state)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            //var hasLock = false;
+            return DoPublishPendingMessages(stoppingToken);
+        }
 
-            //try
-            //{
-            //    Monitor.TryEnter(_locker, ref hasLock);
-
-            //    if (!hasLock)
-            //    {
-            //        return;
-            //    }
-
+        private async Task DoPublishPendingMessages(CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                await Task.Yield();
                 using var scope = _serviceScopeFactory.CreateScope();
-                var tenant = scope.ServiceProvider.GetRequiredService<IDataContextTenantAccessor>();
-                tenant.SetTenantName("ContactContext");
-                var integrationEventProcessor = scope.ServiceProvider.GetRequiredService<IIntegrationEventProcessor>();
+                var integrationEventProcessor = scope.GetRequiredService();
                 await integrationEventProcessor.PushPendingMessages().ConfigureAwait(false);
 
-            //}
-            //finally
-            //{
-            //    if (hasLock)
-            //    {
-            //        Monitor.Exit(_locker);
-            //    }
-            //}
+                await Task.Delay(TimeSpan.FromSeconds(60), cancellationToken).ConfigureAwait(false);
+            }
         }
     }
 }

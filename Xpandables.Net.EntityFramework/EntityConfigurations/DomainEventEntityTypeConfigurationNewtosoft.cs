@@ -19,22 +19,21 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Xpandables.Net.Entities;
+using Xpandables.Net.EntityFramework.Entities;
 
-namespace Xpandables.Net
+namespace Xpandables.Net.EntityFramework.EntityConfigurations
 {
     /// <summary>
-    /// EFCore configuration for <see cref="AggregateEventEntity"/>.
+    /// EFCore configuration for <see cref="DomainEventEntityNewtonsoft"/>.
     /// You may derive from this class to customize its behaviors.
     /// </summary>
-    public class AggregateEventEntityTypeConfiguration : IEntityTypeConfiguration<AggregateEventEntity>
+    public class DomainEventEntityTypeConfigurationNewtosoft : IEntityTypeConfiguration<DomainEventEntityNewtonsoft>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<AggregateEventEntity> builder)
+        public void Configure(EntityTypeBuilder<DomainEventEntityNewtonsoft> builder)
         {
             builder.HasKey(p => p.EventId);
-            builder.HasIndex(p => new { p.AggregateId, p.Version })
-                .IsUnique();
+            builder.HasIndex(p => new { p.AggregateId, p.Version }).IsUnique();
 
             builder.Property(p => p.AggregateId).IsConcurrencyToken();
             builder.Property(p => p.Data);

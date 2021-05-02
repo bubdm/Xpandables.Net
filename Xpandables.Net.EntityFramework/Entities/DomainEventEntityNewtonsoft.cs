@@ -17,37 +17,38 @@
 ************************************************************************************************************/
 using System;
 using System.Text;
-using System.Text.Json;
 
 using Newtonsoft.Json;
 
 using Xpandables.Net.Entities;
 using Xpandables.Net.Events.DomainEvents;
-using Xpandables.Net.Events.IntegrationEvents;
 
-namespace Xpandables.Net
+namespace Xpandables.Net.EntityFramework.Entities
 {
     /// <summary>
-    /// Represents an out box message to be written using Newtonsoft.
+    /// Represents a domain event to be written using Newtonsoft.
     /// </summary>
-    public class IntegrationEventEntityEFCore : IntegrationEventEntity
+    public class DomainEventEntityNewtonsoft : DomainEventEntity
     {
-        /// <summary>
-        /// Constructs anew instance of <see cref="IntegrationEventEntityEFCore"/> from the specified event.
-        /// </summary>
-        /// <param name="event">The event to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        public IntegrationEventEntityEFCore(IIntegrationEvent @event) : base(@event) { }
+        ///<inheritdoc/>
+        [JsonConstructor]
+        protected DomainEventEntityNewtonsoft(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
+            : base(eventId, aggregateId, type, version, isJson, data) { }
 
         ///<inheritdoc/>
-        protected override byte[] Serialize(IIntegrationEvent @event)
+        public DomainEventEntityNewtonsoft(IDomainEvent @event) : base(@event)
+        {
+        }
+
+        ///<inheritdoc/>
+        protected override byte[] Serialize(IDomainEvent @event)
             => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
 
         ///<inheritdoc/>
-        public override IIntegrationEvent? Deserialize()
+        public override IDomainEvent? Deserialize()
         {
-            JsonSerializerSettings settings = new() { ContractResolver = new PrivateSetterContractResolver() };
-            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(Data), System.Type.GetType(Type)!, settings) as IIntegrationEvent;
+            JsonSerializerSettings settings = new() { ContractResolver = new NewtonsoftPrivateSetterContractResolver() };
+            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(Data), System.Type.GetType(Type)!, settings) as IDomainEvent;
         }
     }
 }

@@ -15,46 +15,14 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Reflection;
-using System.Text;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-using Xpandables.Net.Entities;
-using Xpandables.Net.Events.DomainEvents;
-
-namespace Xpandables.Net
+namespace Xpandables.Net.EntityFramework.Entities
 {
-    /// <summary>
-    /// Represents an aggregate event to be written for EFCore using Newtonsoft.
-    /// </summary>
-    public class AggregateEventEntityEFCore : AggregateEventEntity
-    {
-        ///<inheritdoc/>
-        [JsonConstructor]
-        protected AggregateEventEntityEFCore(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
-            : base(eventId, aggregateId, type, version, isJson, data) { }
-
-        ///<inheritdoc/>
-        public AggregateEventEntityEFCore(IDomainEvent @event) : base(@event)
-        {
-        }
-
-        ///<inheritdoc/>
-        protected override byte[] Serialize(IDomainEvent @event)
-            => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
-
-        ///<inheritdoc/>
-        public override IDomainEvent? Deserialize()
-        {
-            JsonSerializerSettings settings = new() { ContractResolver = new PrivateSetterContractResolver() };
-            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(Data), System.Type.GetType(Type)!, settings) as IDomainEvent;
-        }
-    }
-
-    class PrivateSetterContractResolver : DefaultContractResolver
+    class NewtonsoftPrivateSetterContractResolver : DefaultContractResolver
     {
         protected override JsonProperty CreateProperty(
             MemberInfo member,

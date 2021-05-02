@@ -70,7 +70,11 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Marks the underlying instance as deactivated.
         /// </summary>
-        public virtual void Deactivated() => IsActive = false;
+        public virtual void Deactivated()
+        {
+            IsActive = false;
+            UpdatedOn = DateTime.UtcNow;
+        }
 
         /// <summary>
         /// Activates the underlying instance.

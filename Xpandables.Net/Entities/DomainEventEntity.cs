@@ -25,13 +25,13 @@ using Xpandables.Net.Events.DomainEvents;
 namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// Represents an aggregate event to be written.
+    /// Represents a domain event to be written.
     /// </summary>
-    public class AggregateEventEntity : Entity
+    public class DomainEventEntity : Entity
     {
         ///<inheritdoc/>
         [JsonConstructor]
-        protected AggregateEventEntity(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
+        protected DomainEventEntity(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
         {
             EventId = eventId;
             AggregateId = aggregateId;
@@ -74,11 +74,11 @@ namespace Xpandables.Net.Entities
         public byte[] Data { get; }
 
         /// <summary>
-        /// Constructs a new instance of <see cref="AggregateEventEntity"/> with its properties.
+        /// Constructs a new instance of <see cref="DomainEventEntity"/> with its properties.
         /// </summary>
         /// <param name="event">The event to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        public AggregateEventEntity(IDomainEvent @event)
+        public DomainEventEntity(IDomainEvent @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 

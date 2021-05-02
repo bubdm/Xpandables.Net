@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
 
 using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
@@ -44,17 +43,23 @@ namespace Xpandables.Net.Events.IntegrationEvents
         public IntegrationEventProcessor(IEventBus eventBus, IDataContext context)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context;
         }
 
         ///<inheritdoc/>
         public virtual async Task PushPendingMessages()
         {
+            var updatedEvents = new List<IntegrationEventEntity>();
             await foreach (var entity in FetchPendingIntegrationEvents())
             {
                 if (!await TryPushAsync(entity).ConfigureAwait(false))
                     break;
+                else
+                    updatedEvents.Add(entity);
             }
+
+            if (updatedEvents.Count > 0)
+                await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         IAsyncEnumerable<IntegrationEventEntity> FetchPendingIntegrationEvents()
@@ -66,11 +71,9 @@ namespace Xpandables.Net.Events.IntegrationEvents
 
         async Task<bool> TryPushAsync(IntegrationEventEntity entity)
         {
-            using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             try
             {
-                var @event = entity.Deserialize();
-                if (@event is null)
+                if (entity.Deserialize() is not { } @event)
                     return false;
 
                 await _eventBus.PublishAsync(@event).ConfigureAwait(false);
@@ -78,9 +81,6 @@ namespace Xpandables.Net.Events.IntegrationEvents
                 entity.Deactivated();
                 entity.Deleted();
                 await _context.UpdateAsync(entity).ConfigureAwait(false);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-
-                transactionScope.Complete();
 
                 return true;
             }

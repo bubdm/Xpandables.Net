@@ -19,18 +19,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Xpandables.Net.Entities;
+using Xpandables.Net.EntityFramework.Entities;
 
-namespace Xpandables.Net
+namespace Xpandables.Net.EntityFramework.EntityConfigurations
 {
     /// <summary>
-    /// EFCore configuration for <see cref="AggregateEventEntity"/>.
+    /// EFCore configuration for <see cref="IntegrationEventEntityNewtonsoft"/>.
     /// You may derive from this class to customize its behaviors.
     /// </summary>
-    public class IntegrationEventEntityTypeConfigurationEFCore : IEntityTypeConfiguration<IntegrationEventEntityEFCore>
+    public class IntegrationEventEntityTypeConfigurationNewtonsoft : IEntityTypeConfiguration<IntegrationEventEntityNewtonsoft>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<IntegrationEventEntityEFCore> builder)
+        public void Configure(EntityTypeBuilder<IntegrationEventEntityNewtonsoft> builder)
         {
             builder.HasKey(p => p.Id);
             builder.HasIndex(p => p.Id)

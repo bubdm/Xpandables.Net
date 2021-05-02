@@ -17,32 +17,35 @@
 ************************************************************************************************************/
 using Microsoft.EntityFrameworkCore;
 
-using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
+using Xpandables.Net.EntityFramework;
+using Xpandables.Net.EntityFramework.Entities;
+using Xpandables.Net.EntityFramework.EntityConfigurations;
 
 namespace Xpandables.Net.Api.Database
 {
-    public sealed class ContactContext : DataContextEFCore
+    public sealed class ContactContext : DataContext
     {
         public ContactContext(DbContextOptions<ContactContext> contextOptions) : base(contextOptions) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new AggregateEventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new DomainEventEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new IntegrationEventEntityTypeConfiguration());
         }
-        public DbSet<AggregateEventEntity> Events { get; set; } = default!;
+        public DbSet<DomainEventEntity> Events { get; set; } = default!;
         public DbSet<IntegrationEventEntity> Integrations { get; set; } = default!;
     }
 
-    public sealed class ContactContextSecond : DataContextEFCore
+    public sealed class ContactContextSecond : DataContext
     {
         public ContactContextSecond(DbContextOptions<ContactContextSecond> contextOptions) : base(contextOptions) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AggregateEventEntity>().HasKey(new string[] { nameof(AggregateEventEntity.Id) });
-            modelBuilder.Entity<AggregateEventEntity>().HasIndex(new string[] { nameof(AggregateEventEntity.Id) }).IsUnique();
+            modelBuilder.ApplyConfiguration(new DomainEventEntityTypeConfigurationNewtosoft());
+            modelBuilder.Entity<DomainEventEntityNewtonsoft>().HasKey(new string[] { nameof(DomainEventEntityNewtonsoft.Id) });
+            modelBuilder.Entity<DomainEventEntityNewtonsoft>().HasIndex(new string[] { nameof(DomainEventEntityNewtonsoft.Id) }).IsUnique();
         }
 
-        public DbSet<AggregateEventEntityEFCore> Events { get; set; } = default!;
+        public DbSet<DomainEventEntityNewtonsoft> Events { get; set; } = default!;
     }
 }

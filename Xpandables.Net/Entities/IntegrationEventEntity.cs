@@ -58,8 +58,9 @@ namespace Xpandables.Net.Entities
             Data = Serialize(@event);
         }
 
+        ///<inheritdoc/>
         [JsonConstructor]
-        private IntegrationEventEntity(string type, bool isJson, byte[] data)
+        protected IntegrationEventEntity(string type, bool isJson, byte[] data)
         {
             Type = type ?? throw new ArgumentNullException(nameof(type));
             IsJson = isJson;

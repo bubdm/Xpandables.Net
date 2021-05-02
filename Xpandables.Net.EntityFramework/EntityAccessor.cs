@@ -24,23 +24,24 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
+using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
 using Xpandables.Net.Expressions;
 
-namespace Xpandables.Net.Database
+namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
     /// An implementation of <see cref="IEntityAccessor{TEntity}"/> for EFCore.
     /// You must derive from this class to customize its behaviors.
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
-    public class EntityAccessorEFCore<TEntity> : IEntityAccessor<TEntity>
+    public class EntityAccessor<TEntity> : IEntityAccessor<TEntity>
         where TEntity : class, IEntity
     {
         /// <summary>
         /// Gets the current data context.
         /// </summary>
-        protected readonly DataContextEFCore Context;
+        protected readonly DataContext Context;
 
         /// <summary>
         /// Gets the current DbSet of the entity type.
@@ -50,13 +51,13 @@ namespace Xpandables.Net.Database
         internal readonly DbSet<TEntity> _entities;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="EntityAccessorEFCore{TEntity}"/> with the context to act on.
+        /// Initializes a new instance of <see cref="EntityAccessor{TEntity}"/> with the context to act on.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
-        /// <exception cref="ArgumentException">The <paramref name="dataContext"/> must derive from <see cref="EntityAccessorEFCore{TEntity}"/>.</exception>
-        protected EntityAccessorEFCore(IDataContext dataContext)
+        /// <exception cref="ArgumentException">The <paramref name="dataContext"/> must derive from <see cref="EntityAccessor{TEntity}"/>.</exception>
+        protected EntityAccessor(IDataContext dataContext)
         {
-            Context = dataContext as DataContextEFCore ?? throw new ArgumentException($"Derived {nameof(DataContextEFCore)} expected.");
+            Context = dataContext as DataContext ?? throw new ArgumentException($"Derived {nameof(DataContext)} expected.");
             Entities = Context.Set<TEntity>();
             _entities = Context.Set<TEntity>();
         }

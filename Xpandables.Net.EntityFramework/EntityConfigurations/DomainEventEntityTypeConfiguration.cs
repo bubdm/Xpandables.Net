@@ -21,22 +21,25 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net
+namespace Xpandables.Net.EntityFramework.EntityConfigurations
 {
     /// <summary>
-    /// EFCore configuration for <see cref="AggregateEventEntity"/>.
+    /// EFCore configuration for <see cref="DomainEventEntity"/>.
     /// You may derive from this class to customize its behaviors.
     /// </summary>
-    public class IntegrationEventEntityTypeConfiguration : IEntityTypeConfiguration<IntegrationEventEntity>
+    public class DomainEventEntityTypeConfiguration : IEntityTypeConfiguration<DomainEventEntity>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<IntegrationEventEntity> builder)
+        public void Configure(EntityTypeBuilder<DomainEventEntity> builder)
         {
-            builder.HasKey(p => p.Id);
-            builder.HasIndex(p => p.Id)
+            builder.HasKey(p => p.EventId);
+            builder.HasIndex(p => new { p.AggregateId, p.Version })
                 .IsUnique();
 
+            builder.Property(p => p.AggregateId).IsConcurrencyToken();
             builder.Property(p => p.Data);
+            builder.Property(p => p.EventId);
+            builder.Property(p => p.Version).IsConcurrencyToken();
             builder.Property(p => p.IsJson);
             builder.Property(p => p.Type);
         }

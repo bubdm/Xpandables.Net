@@ -25,17 +25,16 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
+using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
-using Xpandables.Net.Events;
-using Xpandables.Net.Expressions.Specifications;
 
-namespace Xpandables.Net.Database
+namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
     /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/>
     /// and implements <see cref="IDataContext"/> and <see cref="IDataContextPersistence"/>.
     /// </summary>
-    public abstract partial class DataContextEFCore : IDataContext, IDataContextPersistence
+    public abstract partial class DataContext : IDataContext
     {
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TResult"/> type specified by the selector.

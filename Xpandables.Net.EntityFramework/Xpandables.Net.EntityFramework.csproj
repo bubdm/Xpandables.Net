@@ -28,7 +28,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AssemblyName>Xpandables.Net.EntityFramework</AssemblyName>
-    <RootNamespace>Xpandables.Net</RootNamespace>
+    <RootNamespace>Xpandables.Net.EntityFramework</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <summary>A utility library in .Net5.0 that adds EFCore behaviors to Xpandables.Net.</summary>

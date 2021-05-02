@@ -25,14 +25,14 @@ using System.Reflection;
 
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.Database
+namespace Xpandables.Net.EntityFramework
 {
-    public abstract partial class DataContextEFCore : DbContext
+    public abstract partial class DataContext : DbContext
     {
         private static readonly MethodInfo ConvertToStringMethodInfo =
-        typeof(DataContextEFCore).GetMethod(nameof(ConvertEnumerationToString), BindingFlags.NonPublic | BindingFlags.Static)!;
+        typeof(DataContext).GetMethod(nameof(ConvertEnumerationToString), BindingFlags.NonPublic | BindingFlags.Static)!;
         private static readonly MethodInfo ConvertToEnumerationMethodInfo =
-            typeof(DataContextEFCore).GetMethod(nameof(ConvertStringToEnumeration), BindingFlags.NonPublic | BindingFlags.Static)!;
+            typeof(DataContext).GetMethod(nameof(ConvertStringToEnumeration), BindingFlags.NonPublic | BindingFlags.Static)!;
 
         private static string ConvertEnumerationToString<T>(T enumeration)
             where T : EnumerationType => enumeration.Name;
@@ -71,13 +71,13 @@ namespace Xpandables.Net.Database
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataContextEFCore"/> class
+        /// Initializes a new instance of the <see cref="DataContext"/> class
         /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
         /// method will still be called to allow further configuration of the options.
         /// Applies the tracked delegate for automatically set <see cref="Entity.CreatedOn"/>, <see cref="Entity.UpdatedOn"/> and <see cref="Entity.DeletedOn"/> properties.
         /// </summary>
         /// <param name="contextOptions">The options for this context.</param>
-        protected DataContextEFCore(DbContextOptions contextOptions)
+        protected DataContext(DbContextOptions contextOptions)
             : base(contextOptions)
         {
             ChangeTracker.Tracked += (sender, e) =>
