@@ -88,7 +88,6 @@ namespace Xpandables.Net.Events.IntegrationEvents
             {
                 return false;
             }
-
         }
     }
 }
