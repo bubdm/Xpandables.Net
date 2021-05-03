@@ -66,7 +66,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IEventBus"/> implementation to the services with scope life time.
+        /// Adds the <see cref="IEventBus"/> implementation to the services with singleton life time.
         /// </summary>
         /// <typeparam name="TEventBus">The type that implements <see cref="IEventBus"/></typeparam>
         /// <param name="services">The collection of services.</param>
@@ -80,6 +80,14 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the default <see cref="IEventBus"/> implementation to the services with singleton life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXEventBus(this IServiceCollection services)
+            => services.AddXEventBus<EventBus>();
+
+        /// <summary>
         /// Adds the default <see cref="IAggregateAccessor{TAggregate}"/> implementation to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -88,6 +96,18 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             services.AddScoped(typeof(IAggregateAccessor<>), typeof(AggregateAccessor<>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IEntityAccessor{TEntity}"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXEntityAccessor(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddScoped(typeof(IEntityAccessor<>), typeof(IEntityAccessor<>));
             return services;
         }
 

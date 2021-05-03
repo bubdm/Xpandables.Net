@@ -79,7 +79,7 @@ namespace Xpandables.Net.Api
             services.AddXAggregateAccessor();
             services.AddXIntegrationEventProcessor();
             services.AddXIntegrationEventService();
-            services.AddXEventBus<EventBus>();
+            services.AddXEventBus();
             services.AddXServiceScopeFactory();
 
             // comment to disable Interception

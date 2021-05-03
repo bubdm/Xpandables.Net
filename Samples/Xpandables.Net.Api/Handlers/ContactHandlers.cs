@@ -24,8 +24,6 @@ using Xpandables.Net.Commands;
 using Xpandables.Net.Database;
 using Xpandables.Net.Queries;
 
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-
 namespace Xpandables.Net.Api.Handlers
 {
     public sealed class ContactHandlers : OperationResultBase,
