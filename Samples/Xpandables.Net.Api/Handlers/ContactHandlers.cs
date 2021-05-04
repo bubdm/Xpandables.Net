@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Api.Models;
+using Xpandables.Net.Api.Domains;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Database;
 using Xpandables.Net.Queries;
@@ -30,8 +30,8 @@ namespace Xpandables.Net.Api.Handlers
          ICommandHandler<AddCommand, string>, IQueryHandler<SelectQuery, Contact>, ICommandHandler<EditCommand, Contact>,
         ICommandHandler<ContactNameChangedFailedCommand>
     {
-        private readonly IAggregateAccessor<ContactModel> _entityAccessor;
-        public ContactHandlers(IAggregateAccessor<ContactModel> entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
+        private readonly IAggregateAccessor<ContactAggregate> _entityAccessor;
+        public ContactHandlers(IAggregateAccessor<ContactAggregate> entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
 
         public async Task<IOperationResult<Contact>> HandleAsync(SelectQuery query, CancellationToken cancellationToken = default)
         {
@@ -44,7 +44,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult<string>> HandleAsync(AddCommand command, CancellationToken cancellationToken = default)
         {
-            var newContact = ContactModel.CreateNewContact(command.Name, command.City, command.Address, command.Country);
+            var newContact = ContactAggregate.CreateNewContact(command.Name, command.City, command.Address, command.Country);
             await _entityAccessor.AppendAsync(newContact, cancellationToken).ConfigureAwait(false);
 
             return OkOperation(newContact.Guid.ToString());
@@ -69,7 +69,13 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult> HandleAsync(ContactNameChangedFailedCommand command, CancellationToken cancellationToken = default)
         {
-            await Task.CompletedTask.ConfigureAwait(false);
+            var foundResult = await _entityAccessor.ReadAsync(command.AggregateId, cancellationToken).ConfigureAwait(false);
+            if (foundResult.Failed)
+                return NotFoundOperation();
+
+            var found = foundResult.Value;
+            found.CancelNameChange(command.Name);
+            await _entityAccessor.AppendAsync(found, cancellationToken).ConfigureAwait(false);
             return OkOperation();
         }
     }

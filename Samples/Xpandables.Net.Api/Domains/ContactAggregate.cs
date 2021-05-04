@@ -15,29 +15,35 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Api.Models.Events;
+using Xpandables.Net.Api.Domains.Events;
+using Xpandables.Net.Api.Domains.Integrations;
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.Api.Models
+namespace Xpandables.Net.Api.Domains
 {
 #pragma warning disable CS8618 
-    public sealed class ContactModel : Aggregate
+    public sealed class ContactAggregate : Aggregate
     {
         public static string FirstGuidCreated { get; set; } = string.Empty;
 
-        public static ContactModel CreateNewContact(string name, string city, string address, string country)
+        public static ContactAggregate CreateNewContact(string name, string city, string address, string country)
             => new(name, city, address, country);
 
-        public ContactModel() : base() { }
-        private ContactModel(string name, string city, string address, string country)
+        public ContactAggregate() : base() { }
+        private ContactAggregate(string name, string city, string address, string country)
         {
             RaiseEvent(new ContactCreatedEvent(name, city, address, country, Guid, GetNewVersion()));
         }
 
+        public void CancelNameChange(string oldName)
+        {
+            RaiseEvent(new ContactNameChangeCanceledEvent(oldName, Guid, GetNewVersion()));
+        }
+
         public void ChangeContactName(string name)
         {
+            AddIntegrationEvent(new ContactNameChangeIntegrationEvent(name, Name, Guid));
             RaiseEvent(new ContactNameChangedEvent(name, Guid, GetNewVersion()));
-            AddIntegrationEvent(new ContactNameChangeIntegrationEvent(name, Guid));
         }
 
         public void ChangeContactCity(string city)
@@ -61,6 +67,11 @@ namespace Xpandables.Net.Api.Models
             City = createdEvent.City;
             Address = createdEvent.Address;
             Country = createdEvent.Country;
+        }
+
+        void On(ContactNameChangeCanceledEvent contactNameChangeCanceledEvent)
+        {
+            Name = contactNameChangeCanceledEvent.OldName;
         }
 
         void On(ContactNameChangedEvent nameChangedEvent)
@@ -87,6 +98,7 @@ namespace Xpandables.Net.Api.Models
         {
             RegisterEventHandler<ContactCreatedEvent>(On);
             RegisterEventHandler<ContactNameChangedEvent>(On);
+            RegisterEventHandler<ContactNameChangeCanceledEvent>(On);
             RegisterEventHandler<ContactAddressChangedEvent>(On);
             RegisterEventHandler<ContactCityChangedEvent>(On);
             RegisterEventHandler<ContactCountryChangedEvent>(On);

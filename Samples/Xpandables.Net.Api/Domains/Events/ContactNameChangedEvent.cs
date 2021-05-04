@@ -16,21 +16,18 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 
-using Xpandables.Net.Api.Domains.Events;
 using Xpandables.Net.Events.DomainEvents;
 
-namespace Xpandables.Net.Api.Handlers
+namespace Xpandables.Net.Api.Domains.Events
 {
-    public sealed class ContactModelCreatedDomainEventHandler : DomainEventHandler<ContactCreatedEvent>
+    public class ContactNameChangedEvent : DomainEvent
     {
-        public override async Task HandleAsync(ContactCreatedEvent domainEvent, CancellationToken cancellationToken = default)
+        public string Name { get; }
+        public ContactNameChangedEvent(string name, Guid aggregateId, long version)
+            : base(aggregateId, version)
         {
-            Trace.WriteLine($"A newly created contact with id : {domainEvent.Guid} : {DateTime.Now.Ticks}");
-            await Task.CompletedTask.ConfigureAwait(false);
+            Name = name;
         }
     }
 }

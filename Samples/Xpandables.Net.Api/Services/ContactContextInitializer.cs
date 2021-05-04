@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using Xpandables.Net.Api.Models;
+using Xpandables.Net.Api.Domains;
 using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
 using Xpandables.Net.EntityFramework;
@@ -46,13 +46,13 @@ namespace Xpandables.Net.Api.Services
             await Task.Yield();
             using var service = _serviceScopeFactory.CreateScope();
             using var context = service.ServiceProvider.GetRequiredService<IEventStoreDataContext>();
-            var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateAccessor<ContactModel>>();
+            var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateAccessor<ContactAggregate>>();
 
             if (context.Set<DomainEventEntity>().Any())
                 return;
 
-            var contact = ContactModel.CreateNewContact("myName", "Paris", "Alexandre LeGrand 01", "France");
-            ContactModel.FirstGuidCreated = contact.Guid.ToString();
+            var contact = ContactAggregate.CreateNewContact("myName", "Paris", "Alexandre LeGrand 01", "France");
+            ContactAggregate.FirstGuidCreated = contact.Guid.ToString();
 
             await aggregateAccessor.AppendAsync(contact, cancellationToken).ConfigureAwait(false);
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

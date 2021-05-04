@@ -19,19 +19,22 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Api.Models.Events;
+using Xpandables.Net.Api.Domains.Integrations;
 using Xpandables.Net.Commands;
+using Xpandables.Net.Decorators;
 using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public class ContactNameChangedFailedCommand : ICommand
+    public class ContactNameChangedFailedCommand : ICommand, IAggregatePersistenceDecorator
     {
-        public ContactNameChangedFailedCommand(string name)
+        public ContactNameChangedFailedCommand(Guid aggregateId, string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
+            AggregateId = aggregateId;
         }
 
+        public Guid AggregateId { get; }
         public string Name { get; }
     }
 
@@ -40,7 +43,7 @@ namespace Xpandables.Net.Api.Handlers
         public override async Task<IOperationResult<ICommand>> HandleAsync(ContactNameChangeIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask.ConfigureAwait(false);
-            return BadOperation(new ContactNameChangedFailedCommand(integrationEvent.Name));
+            return BadOperation(new ContactNameChangedFailedCommand(integrationEvent.AggregateId, integrationEvent.OldName));
         }
     }
 }

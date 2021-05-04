@@ -21,7 +21,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
-using Xpandables.Net.Api.Models;
+using Xpandables.Net.Api.Domains;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Decorators;
 using Xpandables.Net.Expressions;
@@ -33,16 +33,16 @@ namespace Xpandables.Net.Api.Handlers
     public sealed record Contact(string Id, string Name, string City, string Address, string Country);
 
     [HttpRestClient(Path = "api/contacts", Method = HttpMethodVerbs.Get, IsSecured = true, IsNullable = true, In = ParameterLocation.Query)]
-    public sealed class SelectAllQuery : QueryExpression<ContactModel>, IHttpRestClientAsyncRequest<Contact>, IAsyncQuery<Contact>, IQueryStringLocationRequest, ILoggingDecorator
+    public sealed class SelectAllQuery : QueryExpression<ContactAggregate>, IHttpRestClientAsyncRequest<Contact>, IAsyncQuery<Contact>, IQueryStringLocationRequest, ILoggingDecorator
     {
         public string? Name { get; set; }
         public string? City { get; set; }
         public string? Address { get; set; }
         public string? Country { get; set; }
 
-        public override Expression<Func<ContactModel, bool>> GetExpression()
+        public override Expression<Func<ContactAggregate, bool>> GetExpression()
         {
-            var queryExpression = QueryExpressionFactory.Create<ContactModel>();
+            var queryExpression = QueryExpressionFactory.Create<ContactAggregate>();
             if (Name is not null) queryExpression = queryExpression.And(contact => contact.Name.Contains(Name));
             if (City is not null) queryExpression = queryExpression.And(contact => contact.City.Contains(City));
             if (Address is not null) queryExpression = queryExpression.And(contact => contact.Address.Contains(Address));
@@ -74,7 +74,7 @@ namespace Xpandables.Net.Api.Handlers
 
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
     public sealed class AddCommand :
-        QueryExpression<ContactModel>, ICommand<string>, IHttpRestClientRequest<string>, IValidatorDecorator, IAggregatePersistenceDecorator, IInterceptorDecorator, ILoggingDecorator
+        QueryExpression<ContactAggregate>, ICommand<string>, IHttpRestClientRequest<string>, IValidatorDecorator, IAggregatePersistenceDecorator, IInterceptorDecorator, ILoggingDecorator
     {
         public AddCommand(string name, string city, string address, string country)
         {
@@ -88,7 +88,7 @@ namespace Xpandables.Net.Api.Handlers
         [Required] public string City { get; }
         [Required] public string Address { get; }
         [Required] public string Country { get; }
-        public override Expression<Func<ContactModel, bool>> GetExpression() => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
+        public override Expression<Func<ContactAggregate, bool>> GetExpression() => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Delete, IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]

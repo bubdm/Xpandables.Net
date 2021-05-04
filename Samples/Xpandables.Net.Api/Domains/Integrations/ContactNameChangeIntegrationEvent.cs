@@ -17,17 +17,18 @@
 ************************************************************************************************************/
 using System;
 
-using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.Events.IntegrationEvents;
 
-namespace Xpandables.Net.Api.Models.Events
+namespace Xpandables.Net.Api.Domains.Integrations
 {
-    public class ContactCountryChangedEvent : DomainEvent
+    public class ContactNameChangeIntegrationEvent : IntegrationEvent
     {
-        public string Country { get; }
-        public ContactCountryChangedEvent(string country, Guid aggregateId, long version)
-            : base(aggregateId, version)
+        public string Name { get; }
+        public string OldName { get; }
+        public ContactNameChangeIntegrationEvent(string name, string oldName, Guid aggregateId) : base(aggregateId)
         {
-            Country = country;
+            Name = name;
+            OldName = oldName;
         }
     }
 }

@@ -51,7 +51,9 @@ namespace Xpandables.Net.Events
         public async Task PushAsync()
         {
             var updatedEvents = new List<IntegrationEventEntity>();
-            await foreach (var entity in FetchPendingIntegrationEvents())
+            var integrationEntites = await FetchPendingIntegrationEvents().ConfigureAwait(false);
+
+            foreach (var entity in integrationEntites)
             {
                 if (!await TryPushAsync(entity).ConfigureAwait(false))
                     break;
@@ -63,12 +65,18 @@ namespace Xpandables.Net.Events
                 await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        IAsyncEnumerable<IntegrationEventEntity> FetchPendingIntegrationEvents()
-             => _context.FetchAllAsync<IntegrationEventEntity, IntegrationEventEntity>(
-                 entity => entity
-                     .Where(w => !w.IsDeleted && w.IsActive)
-                     .OrderBy(o => o.CreatedOn)
-                     .Take(50));
+        async Task<List<IntegrationEventEntity>> FetchPendingIntegrationEvents()
+        {
+            var results = new List<IntegrationEventEntity>();
+            await foreach (var entity in _context.FetchAllAsync<IntegrationEventEntity, IntegrationEventEntity>(
+                           entity => entity
+                               .Where(w => !w.IsDeleted && w.IsActive)
+                               .OrderBy(o => o.CreatedOn)
+                               .Take(50)))
+                results.Add(entity);
+
+            return results;
+        }
 
         async Task<bool> TryPushAsync(IntegrationEventEntity entity)
         {

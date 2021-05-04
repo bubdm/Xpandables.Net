@@ -19,15 +19,15 @@ using System;
 
 using Xpandables.Net.Events.DomainEvents;
 
-namespace Xpandables.Net.Api.Models.Events
+namespace Xpandables.Net.Api.Domains.Events
 {
-    public class ContactNameChangedEvent : DomainEvent
+    public class ContactCityChangedEvent : DomainEvent
     {
-        public string Name { get; }
-        public ContactNameChangedEvent(string name, Guid aggregateId, long version)
+        public string City { get; }
+        public ContactCityChangedEvent(string city, Guid aggregateId, long version)
             : base(aggregateId, version)
         {
-            Name = name;
+            City = city;
         }
     }
 }

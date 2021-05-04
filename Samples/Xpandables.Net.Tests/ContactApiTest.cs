@@ -7,7 +7,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Xpandables.Net.Api;
 using Xpandables.Net.Api.Handlers;
-using Xpandables.Net.Api.Models;
 using Xpandables.Net.Http;
 using Xpandables.Net.Http.RequestBuilders;
 using Xpandables.Net.Http.RequestHandlers;
@@ -55,7 +54,7 @@ namespace Xpandables.Net.Tests
         [TestMethod]
         public async Task SelectTest()
         {
-            var select = new SelectQuery("c0bc392c-fd86-41a3-aec8-1894e8908490");
+            var select = new SelectQuery("70bf164a-2547-4b9a-aae3-5118ce09cb71");
             using var response = await httpRestClientHandler.SendAsync(select).ConfigureAwait(false);
 
             if (!response.IsValid())
@@ -94,7 +93,7 @@ namespace Xpandables.Net.Tests
         [TestMethod]
         public async Task EditTest()
         {
-            var select = new SelectQuery("e4545923-c883-49fe-be2b-2b7458143387");
+            var select = new SelectQuery("70bf164a-2547-4b9a-aae3-5118ce09cb71");
             using var response = await httpRestClientHandler.SendAsync(select).ConfigureAwait(false);
 
             if (!response.IsValid())
