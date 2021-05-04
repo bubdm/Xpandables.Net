@@ -33,7 +33,7 @@ namespace Xpandables.Net.Events
     public class EventBus : IEventBus
     {
         private readonly IIntegrationEventPublisher _integrationEventPublisher;
-        private readonly IDataContext _context;
+        private readonly IEventStoreDataContext _context;
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventBus"/>.
@@ -41,7 +41,7 @@ namespace Xpandables.Net.Events
         /// <param name="integrationEventPublisher">The integration event publisher.</param>
         /// <param name="context">The data context.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="integrationEventPublisher"/> or <paramref name="context"/> is null.</exception>
-        public EventBus(IIntegrationEventPublisher integrationEventPublisher, IDataContext context)
+        public EventBus(IIntegrationEventPublisher integrationEventPublisher, IEventStoreDataContext context)
         {
             _integrationEventPublisher = integrationEventPublisher ?? throw new ArgumentNullException(nameof(integrationEventPublisher));
             _context = context ?? throw new ArgumentNullException(nameof(context));

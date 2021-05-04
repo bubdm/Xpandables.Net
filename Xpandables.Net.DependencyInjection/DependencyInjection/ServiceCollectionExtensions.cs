@@ -65,6 +65,11 @@ namespace Xpandables.Net.DependencyInjection
         public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
 
         /// <summary>
+        /// Enables aggregate persistence behavior to commands that are decorated with the <see cref="IAggregatePersistenceDecorator"/> .
+        /// </summary>
+        public HandlerOptions UseAggregatePersistenceDecorator() => this.With(cq => cq.IsAggregatePersistenceEnabled = true);
+
+        /// <summary>
         /// Enables logging behavior to commands/queries that are decorated with the <see cref="ILoggingDecorator"/> .
         /// You must provide with an implementation of <see cref="IOperationResultLogger"/>.
         /// </summary>
@@ -85,6 +90,7 @@ namespace Xpandables.Net.DependencyInjection
         internal bool IsVisitorEnabled { get; private set; }
         internal bool IsTransactionEnabled { get; private set; }
         internal bool IsPersistenceEnabled { get; private set; }
+        internal bool IsAggregatePersistenceEnabled { get; private set; }
         internal bool IsCorrelationEnabled { get; private set; }
         internal bool IsLoggingEnabled { get; private set; }
     }
@@ -415,6 +421,21 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds aggregate persistence behavior to commands and queries that are decorated with the <see cref="IAggregatePersistenceDecorator"/> to the services
+        /// with transient life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXAggregatePersistenceDecorator(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandAggregatePersistenceDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandAggregatePersistenceDecorator<,>));
+            return services;
+        }
+
+        /// <summary>
         /// Adds the transaction type provider to the services.
         /// </summary>
         /// <typeparam name="TTransactionScopeProvider">The type transaction scope provider.</typeparam>
@@ -620,6 +641,11 @@ namespace Xpandables.Net.DependencyInjection
             if (definedOptions.IsPersistenceEnabled)
             {
                 services.AddXPersistenceDecorator();
+            }
+
+            if (definedOptions.IsAggregatePersistenceEnabled)
+            {
+                services.AddXAggregatePersistenceDecorator();
             }
 
             if (definedOptions.IsTransactionEnabled)

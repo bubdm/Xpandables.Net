@@ -58,15 +58,16 @@ namespace Xpandables.Net.Api
                 });
 
             services
-                .AddDbContext<ContactContext>(options => options.UseSqlServer(Configuration.GetConnectionString("xpandables"))
+                .AddXDataContext<ContactContext>(options => options.UseSqlServer(Configuration.GetConnectionString("xpandables"))
                 .EnableServiceProviderCaching())
-                .AddXDataContext<ContactContext>();
+                .AddXEventStoreDataContext(options => options.UseSqlServer(Configuration.GetConnectionString("xpandables"), builder => builder.MigrationsAssembly("Xpandables.Net.Api"))
+                .EnableServiceProviderCaching());
 
             services.AddXDispatcher();
             services.AddXHandlerAccessor();
             services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
             {
-                options.UsePersistenceDecorator();
+                options.UseAggregatePersistenceDecorator();
                 options.UseOperationResultLoggerDecorator();
                 options.UseValidatorDecorator();
             });
@@ -74,7 +75,6 @@ namespace Xpandables.Net.Api
             services.AddXInstanceCreator();
             services.AddXOperationResultLogger<LoggingService>();
             services.AddXEventStore();
-            services.AddXEventStoreDataContext();
             services.AddXDomainEventPublisher();
             services.AddXIntegrationEventPublisher();
             services.AddXAggregateAccessor();

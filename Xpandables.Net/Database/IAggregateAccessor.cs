@@ -25,6 +25,7 @@ namespace Xpandables.Net.Database
 {
     /// <summary>
     /// Represents a set of methods to read/write aggregates from an event store.
+    /// For persistence, decorate your command with <see cref="Decorators.IAggregatePersistenceDecorator"/> interface.
     /// </summary>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
     public interface IAggregateAccessor<TAggregate>

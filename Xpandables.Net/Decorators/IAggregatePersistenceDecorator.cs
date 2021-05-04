@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,17 +14,15 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.EntityFrameworkCore;
 
-using Xpandables.Net.EntityFramework;
+using Xpandables.Net.Database;
 
-namespace Xpandables.Net.Api.Database
+namespace Xpandables.Net.Decorators
 {
-    public sealed class ContactContext : DataContext
-    {
-        public ContactContext(DbContextOptions<ContactContext> contextOptions) : base(contextOptions) { }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-        }
-    }
+    /// <summary>
+    /// A marker interface that allows the command handler class implementation to use persistence data across the control flow.
+    /// The behavior makes use of an implementation of <see cref="IEventStoreDataContext"/> in the handler class implementation
+    /// to persist data at the end of the control flow only if there is no exception.
+    /// </summary>
+    public interface IAggregatePersistenceDecorator { }
 }

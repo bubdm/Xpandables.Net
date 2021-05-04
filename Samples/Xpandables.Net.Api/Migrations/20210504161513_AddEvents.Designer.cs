@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Xpandables.Net.Api.Database;
+using Xpandables.Net.EntityFramework;
 
 namespace Xpandables.Net.Api.Migrations
 {
-    [DbContext(typeof(ContactContext))]
-    [Migration("20210501230920_ADDIntEvents")]
-    partial class ADDIntEvents
+    [DbContext(typeof(EventStoreDataContext))]
+    [Migration("20210504161513_AddEvents")]
+    partial class AddEvents
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace Xpandables.Net.Api.Migrations
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Xpandables.Net.Entities.AggregateEventEntity", b =>
+            modelBuilder.Entity("Xpandables.Net.Entities.DomainEventEntity", b =>
                 {
                     b.Property<Guid>("EventId")
                         .ValueGeneratedOnAdd()

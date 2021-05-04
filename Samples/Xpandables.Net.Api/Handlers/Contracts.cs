@@ -74,7 +74,7 @@ namespace Xpandables.Net.Api.Handlers
 
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
     public sealed class AddCommand :
-        QueryExpression<ContactModel>, ICommand<string>, IHttpRestClientRequest<string>, IValidatorDecorator, IPersistenceDecorator, IInterceptorDecorator, ILoggingDecorator
+        QueryExpression<ContactModel>, ICommand<string>, IHttpRestClientRequest<string>, IValidatorDecorator, IAggregatePersistenceDecorator, IInterceptorDecorator, ILoggingDecorator
     {
         public AddCommand(string name, string city, string address, string country)
         {
@@ -92,7 +92,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Delete, IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed class DeleteCommand : ICommand, IHttpRestClientRequest, IValidatorDecorator, IPersistenceDecorator, IPathStringLocationRequest, ILoggingDecorator
+    public sealed class DeleteCommand : ICommand, IHttpRestClientRequest, IValidatorDecorator, IAggregatePersistenceDecorator, IPathStringLocationRequest, ILoggingDecorator
     {
         public DeleteCommand(string id)
         {
@@ -119,7 +119,7 @@ namespace Xpandables.Net.Api.Handlers
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Put, IsSecured = false, IsNullable = false, In = ParameterLocation.Body | ParameterLocation.Path)]
     public sealed class EditCommand :
-        ICommand<Contact>, IHttpRestClientRequest<Contact>, IValidatorDecorator, IPersistenceDecorator, ILoggingDecorator, IPathStringLocationRequest, IStringRequest
+        ICommand<Contact>, IHttpRestClientRequest<Contact>, IValidatorDecorator, IAggregatePersistenceDecorator, ILoggingDecorator, IPathStringLocationRequest, IStringRequest
     {
         public string Id { get; set; } = null!;
         public string? Name { get; set; }

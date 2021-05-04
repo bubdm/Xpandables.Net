@@ -94,7 +94,7 @@ namespace Xpandables.Net.Tests
         [TestMethod]
         public async Task EditTest()
         {
-            var select = new SelectQuery("b4ff0623-ae80-4630-af7f-eb6382811bd2");
+            var select = new SelectQuery("e4545923-c883-49fe-be2b-2b7458143387");
             using var response = await httpRestClientHandler.SendAsync(select).ConfigureAwait(false);
 
             if (!response.IsValid())
