@@ -21,7 +21,6 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Entities;
 using Xpandables.Net.Events.DomainEvents;
-using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Database
 {
@@ -35,7 +34,6 @@ namespace Xpandables.Net.Database
     {
         private readonly IEventStore _eventStore;
         private readonly IDomainEventPublisher _domainEventPublisher;
-        private readonly IIntegrationEventPublisher _integrationEventPublisher;
         private readonly IInstanceCreator _instanceCreator;
 
         private Exception? instanceCreatorException;
@@ -45,18 +43,15 @@ namespace Xpandables.Net.Database
         /// </summary>
         /// <param name="eventStore">The target event store.</param>
         /// <param name="domainEventPublisher">The target domain event publisher.</param>
-        /// <param name="integrationEventPublisher">the target integration event publisher.</param>
         /// <param name="instanceCreator">The instance creator.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="eventStore"/> or <paramref name="domainEventPublisher"/> or <paramref name="instanceCreator"/> is null.</exception>
         public AggregateAccessor(
             IEventStore eventStore,
             IDomainEventPublisher domainEventPublisher,
-            IIntegrationEventPublisher integrationEventPublisher,
             IInstanceCreator instanceCreator)
         {
             _eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
             _domainEventPublisher = domainEventPublisher ?? throw new ArgumentNullException(nameof(domainEventPublisher));
-            _integrationEventPublisher = integrationEventPublisher ?? throw new ArgumentNullException(nameof(integrationEventPublisher));
             _instanceCreator = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
             _instanceCreator.OnException = dispatchException => instanceCreatorException = dispatchException.SourceException;
         }
@@ -77,9 +72,9 @@ namespace Xpandables.Net.Database
 
             foreach (var @event in aggregateEventSourcing.GetUncommittedEvents())
             {
-                var appendresult = await _eventStore.AppendEventAsync(@event, cancellationToken).ConfigureAwait(false);
-                if (appendresult.Failed)
-                    return appendresult;
+                var appendResult = await _eventStore.AppendEventAsync(@event, cancellationToken).ConfigureAwait(false);
+                if (appendResult.Failed)
+                    return appendResult;
 
                 await _domainEventPublisher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
             }
@@ -89,7 +84,11 @@ namespace Xpandables.Net.Database
             if (aggregate is IAggregateOutbox aggregateOutbox)
             {
                 foreach (var @event in aggregateOutbox.GetOutboxEvents())
-                    await _integrationEventPublisher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
+                {
+                    var appendResult = await _eventStore.AppendEventAsync(@event, cancellationToken).ConfigureAwait(false);
+                    if (appendResult.Failed)
+                        return appendResult;
+                }
 
                 aggregateOutbox.MarkEventsAsCommitted();
             }
@@ -118,7 +117,7 @@ namespace Xpandables.Net.Database
                 throw new InvalidOperationException($"{typeof(TAggregate).Name} must implement {nameof(Aggregate)}");
 
             var eventCount = 0;
-            await foreach (var @event in _eventStore.ReadEventsAsync(aggregateId, cancellationToken))
+            await foreach (var @event in _eventStore.ReadDomainEventsAsync(aggregateId, cancellationToken))
             {
                 aggregateEventSourcing.LoadFromHistory(@event);
                 eventCount++;

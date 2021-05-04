@@ -15,10 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Threading.Tasks;
-
-using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Events
 {
@@ -28,26 +25,9 @@ namespace Xpandables.Net.Events
     public interface IEventBus
     {
         /// <summary>
-        /// Subscribes to the specified integration event type with the specified action.
+        /// Asynchronously pushes events to any subscribers.
         /// </summary>
-        /// <typeparam name="TEvent">The type of the integration event.</typeparam>
-        /// <param name="handler">The Action to invoke when an event of this type is published</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
-        void Subscribe<TEvent>(IIntegrationEventHandler<TEvent> handler) where TEvent : class, IIntegrationEvent;
-
-        /// <summary>
-        ///  Unsubscribes from the integration Event type related to the specified <paramref name="handler"/>.
-        /// </summary>
-        /// <typeparam name="TEvent">The type of the integration event.</typeparam>
-        /// <param name="handler">The action to unsubscribe from.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null.</exception>
-        void Unsubscribe<TEvent>(IIntegrationEventHandler<TEvent> handler) where TEvent : class, IIntegrationEvent;
-
-        /// <summary>
-        /// Asynchronously publishes the specified event to any subscribers.
-        /// </summary>
-        /// <param name="event">The event to be published.</param>
         /// <returns>a task that represents an asynchronous operation.</returns>
-        Task PublishAsync(IIntegrationEvent @event);
+        Task PushAsync();
     }
 }

@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +14,11 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Xpandables.Net.Services;
 
-namespace Xpandables.Net.Events.IntegrationEvents
+namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Defines the out-box host service.
+    /// Represents a set of commands to manage data context for events.
     /// </summary>
-    public interface IIntegrationEventService : IBackgroundService { }
+    public interface IEventStoreDataContext : IDataContext { }
 }

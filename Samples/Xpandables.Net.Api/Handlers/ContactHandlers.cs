@@ -27,7 +27,8 @@ using Xpandables.Net.Queries;
 namespace Xpandables.Net.Api.Handlers
 {
     public sealed class ContactHandlers : OperationResultBase,
-         ICommandHandler<AddCommand, string>, IQueryHandler<SelectQuery, Contact>, ICommandHandler<EditCommand, Contact>
+         ICommandHandler<AddCommand, string>, IQueryHandler<SelectQuery, Contact>, ICommandHandler<EditCommand, Contact>,
+        ICommandHandler<ContactNameChangedFailedCommand>
     {
         private readonly IAggregateAccessor<ContactModel> _entityAccessor;
         public ContactHandlers(IAggregateAccessor<ContactModel> entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
@@ -64,6 +65,12 @@ namespace Xpandables.Net.Api.Handlers
             await _entityAccessor.AppendAsync(found, cancellationToken).ConfigureAwait(false);
 
             return OkOperation(new Contact(found.Guid.ToString(), found.Name, found.City, found.Address, found.Country));
+        }
+
+        public async Task<IOperationResult> HandleAsync(ContactNameChangedFailedCommand command, CancellationToken cancellationToken = default)
+        {
+            await Task.CompletedTask.ConfigureAwait(false);
+            return OkOperation();
         }
     }
 }

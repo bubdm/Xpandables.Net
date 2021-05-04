@@ -76,6 +76,16 @@ namespace Xpandables.Net
             => new FailureOperationResult<TResult>(errors);
 
         /// <summary>
+        /// Returns a <see cref="FailureOperationResult{TValue}"/> with <see cref="HttpStatusCode.BadRequest"/> and errors.
+        /// </summary>
+        /// <typeparam name="TResult">The type the result.</typeparam>
+        /// <param name="result">The operation result.</param>
+        /// <param name="errors">The collection of errors.</param>
+        /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
+        protected virtual IOperationResult<TResult> BadOperation<TResult>(TResult result, params OperationError[] errors)
+            => new FailureOperationResult<TResult>(result, errors);
+
+        /// <summary>
         /// Returns a <see cref="FailureOperationResult{TValue}"/> with <see cref="HttpStatusCode.BadRequest"/>,, key and error messages.
         /// </summary>
         /// <typeparam name="TResult">The type the result.</typeparam>
@@ -86,11 +96,30 @@ namespace Xpandables.Net
             => new FailureOperationResult<TResult>(key, errorMessages);
 
         /// <summary>
+        /// Returns a <see cref="FailureOperationResult{TValue}"/> with <see cref="HttpStatusCode.BadRequest"/>,, key and error messages.
+        /// </summary>
+        /// <typeparam name="TResult">The type the result.</typeparam>
+        /// <param name="result">The operation result.</param>
+        /// <param name="key">The key of the error.</param>
+        /// <param name="errorMessages">The array of error messages.</param>
+        /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
+        protected virtual IOperationResult<TResult> BadOperation<TResult>(TResult result, string key, params string[] errorMessages)
+            => new FailureOperationResult<TResult>(result, key, errorMessages);
+
+        /// <summary>
         /// Returns a <see cref="FailureOperationResult{TValue}"/> with the <see cref="HttpStatusCode.BadRequest"/> status code.
         /// </summary>
         /// <typeparam name="TResult">The type the result.</typeparam>
         /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
         protected virtual IOperationResult<TResult> BadOperation<TResult>() => new FailureOperationResult<TResult>();
+
+        /// <summary>
+        /// Returns a <see cref="FailureOperationResult{TValue}"/> with the <see cref="HttpStatusCode.BadRequest"/> status code.
+        /// </summary>
+        /// <typeparam name="TResult">The type the result.</typeparam>
+        /// <param name="result">The operation result.</param>
+        /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
+        protected virtual IOperationResult<TResult> BadOperation<TResult>(TResult result) => new FailureOperationResult<TResult>(result);
 
         /// <summary>
         /// Returns a <see cref="FailureOperationResult"/> with <see cref="HttpStatusCode.BadRequest"/> and specified errors.

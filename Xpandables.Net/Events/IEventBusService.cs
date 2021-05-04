@@ -15,19 +15,12 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading.Tasks;
+using Xpandables.Net.Services;
 
-namespace Xpandables.Net.Events.IntegrationEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// Out-box pattern to publish pending messages.
+    /// Defines the out-box host service.
     /// </summary>
-    public interface IIntegrationEventProcessor
-    {
-        /// <summary>
-        /// Asynchronously pushes pending messages.
-        /// </summary>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        Task PushPendingMessages();
-    }
+    public interface IEventBusService : IBackgroundService { }
 }

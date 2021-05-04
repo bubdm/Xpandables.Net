@@ -56,13 +56,13 @@ namespace Xpandables.Net.Events.DomainEvents
 
             if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, @event.GetType()))
             {
-                WriteLineException(new InvalidOperationException("Building event Handler type failed.", typeException));
+                WriteLineException(new InvalidOperationException("Building domain event Handler type failed.", typeException));
                 return;
             }
 
             if (!_handlerAccessor.TryGetHandlers(typeHandler, out var foundHandlers, out var ex))
             {
-                WriteLineException(new InvalidOperationException($"Matching event handlers for {@event.GetType().Name} are missing.", ex));
+                WriteLineException(new InvalidOperationException($"Matching domain event handlers for {@event.GetType().Name} are missing.", ex));
                 return;
             }
 

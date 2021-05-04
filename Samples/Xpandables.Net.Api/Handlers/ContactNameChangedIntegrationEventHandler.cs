@@ -19,20 +19,28 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Events.IntegrationEvents
+using Xpandables.Net.Api.Models.Events;
+using Xpandables.Net.Commands;
+using Xpandables.Net.Events.IntegrationEvents;
+
+namespace Xpandables.Net.Api.Handlers
 {
-    /// <summary>
-    /// Defines a method to automatically publish <see cref="IIntegrationEvent"/> type.
-    /// </summary>
-    public interface IIntegrationEventPublisher
+    public class ContactNameChangedFailedCommand : ICommand
     {
-        /// <summary>
-        /// Publishes integration events.
-        /// </summary>
-        /// <param name="event">The event to be published.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        Task PublishAsync(IIntegrationEvent @event, CancellationToken cancellationToken = default);
+        public ContactNameChangedFailedCommand(string name)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+        }
+
+        public string Name { get; }
+    }
+
+    public class ContactNameChangedIntegrationEventHandler : IntegrationEventHandler<ContactNameChangeIntegrationEvent>
+    {
+        public override async Task<IOperationResult<ICommand>> HandleAsync(ContactNameChangeIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
+        {
+            await Task.CompletedTask.ConfigureAwait(false);
+            return BadOperation(new ContactNameChangedFailedCommand(integrationEvent.Name));
+        }
     }
 }

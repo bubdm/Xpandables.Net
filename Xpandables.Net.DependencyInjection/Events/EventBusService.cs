@@ -23,21 +23,21 @@ using Microsoft.Extensions.Hosting;
 
 using Xpandables.Net.DependencyInjection;
 
-namespace Xpandables.Net.Events.IntegrationEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// The default implementation of <see cref="IIntegrationEventService"/>.
+    /// The default implementation of <see cref="IEventBusService"/>.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
-    public class IntegrationEventService : BackgroundService, IIntegrationEventService
+    public class EventBusService : BackgroundService, IEventBusService
     {
-        private readonly IServiceScopeFactory<IIntegrationEventProcessor> _serviceScopeFactory;
+        private readonly IServiceScopeFactory<IEventBus> _serviceScopeFactory;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="IntegrationEventService"/>.
+        /// Constructs a new instance of <see cref="EventBusService"/>.
         /// </summary>
         /// <param name="serviceScopeFactory">the scope factory.</param>
-        public IntegrationEventService(IServiceScopeFactory<IIntegrationEventProcessor> serviceScopeFactory)
+        public EventBusService(IServiceScopeFactory<IEventBus> serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
         }
@@ -49,7 +49,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
         public virtual async Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default)
         {
             if (IsRunning)
-                return new FailureOperationResult("status", $"{nameof(IntegrationEventService)} is already up.");
+                return new FailureOperationResult("status", $"{nameof(EventBusService)} is already up.");
 
             IsRunning = true;
             await StartAsync(cancellationToken).ConfigureAwait(false);
@@ -60,7 +60,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
         public virtual async Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default)
         {
             if (!IsRunning)
-                return new FailureOperationResult("status", $"{nameof(IntegrationEventService)} is already down.");
+                return new FailureOperationResult("status", $"{nameof(EventBusService)} is already down.");
 
             await StopAsync(cancellationToken).ConfigureAwait(false);
             IsRunning = false;
@@ -70,17 +70,17 @@ namespace Xpandables.Net.Events.IntegrationEvents
         ///<inheritdoc/>
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            return DoPublishPendingMessages(stoppingToken);
+            return DoPushPendingMessages(stoppingToken);
         }
 
-        private async Task DoPublishPendingMessages(CancellationToken cancellationToken)
+        private async Task DoPushPendingMessages(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
                 await Task.Yield();
                 using var scope = _serviceScopeFactory.CreateScope();
-                var integrationEventProcessor = scope.GetRequiredService();
-                await integrationEventProcessor.PushPendingMessages().ConfigureAwait(false);
+                var eventBus = scope.GetRequiredService();
+                await eventBus.PushAsync().ConfigureAwait(false);
 
                 await Task.Delay(TimeSpan.FromSeconds(60), cancellationToken).ConfigureAwait(false);
             }

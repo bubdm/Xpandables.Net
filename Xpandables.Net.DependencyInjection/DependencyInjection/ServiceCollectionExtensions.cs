@@ -33,6 +33,7 @@ using Xpandables.Net.Decorators.Transactions;
 using Xpandables.Net.Decorators.Validators;
 using Xpandables.Net.Decorators.Visitors;
 using Xpandables.Net.Dispatchers;
+using Xpandables.Net.Events;
 using Xpandables.Net.Events.DomainEvents;
 using Xpandables.Net.Events.IntegrationEvents;
 using Xpandables.Net.Handlers;
@@ -94,55 +95,30 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="IIntegrationEventService"/> type implementation to the services with scope life time.
+        /// Adds the <see cref="IEventBusService"/> type implementation to the services with scope life time.
         /// </summary>
         /// <typeparam name="TIntegrationEventService">The integration event service type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXIntegrationEventService<TIntegrationEventService>(this IServiceCollection services)
-            where TIntegrationEventService : class, IHostedService, IIntegrationEventService
+            where TIntegrationEventService : class, IHostedService, IEventBusService
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddSingleton<IIntegrationEventService, TIntegrationEventService>();
-            services.AddHostedService(provider => provider.GetRequiredService<IIntegrationEventService>() as TIntegrationEventService);
+            services.AddSingleton<IEventBusService, TIntegrationEventService>();
+            services.AddHostedService(provider => provider.GetRequiredService<IEventBusService>() as TIntegrationEventService);
             return services;
         }
 
         /// <summary>
-        /// Adds the default <see cref="IIntegrationEventService"/> type implementation to the services with scope life time.
+        /// Adds the default <see cref="IEventBusService"/> type implementation to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddXIntegrationEventService(this IServiceCollection services)
-            => services.AddXIntegrationEventService<IntegrationEventService>();
-
-        /// <summary>
-        /// Adds the <see cref="IIntegrationEventProcessor"/> type implementation to the services with scope life time.
-        /// </summary>
-        /// <typeparam name="TIntegrationEventProcessor">The integration event processor type implementation.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIntegrationEventProcessor<TIntegrationEventProcessor>(this IServiceCollection services)
-            where TIntegrationEventProcessor : class, IIntegrationEventProcessor
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.AddScoped<IIntegrationEventProcessor, TIntegrationEventProcessor>();
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the default <see cref="IIntegrationEventProcessor"/> type implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIntegrationEventProcessor(this IServiceCollection services)
-            => services.AddXIntegrationEventProcessor<IntegrationEventProcessor>();
+            => services.AddXIntegrationEventService<EventBusService>();
 
         /// <summary>
         /// Adds the <see cref="IIntegrationEventPublisher"/> type implementation to the services with scope life time.
@@ -339,6 +315,21 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.AddScoped<IDataContext, TDataContext>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <typeparamref name="TEventStoreDataContext"/> type class reference implementation as <see cref="IEventStoreDataContext"/> to the services with scoped life time.
+        /// </summary>
+        /// <typeparam name="TEventStoreDataContext">The type of the data context that implements <see cref="IEventStoreDataContext"/>.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXEventStoreDataContext<TEventStoreDataContext>(this IServiceCollection services)
+            where TEventStoreDataContext : class, IEventStoreDataContext
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped<IEventStoreDataContext, TEventStoreDataContext>();
             return services;
         }
 

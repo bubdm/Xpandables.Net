@@ -24,37 +24,53 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
+using Xpandables.Net.Events;
 using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
     /// The EFCore implementation of <see cref="IEventStore"/>.
+    /// You can derived from this class to customize its behaviors.
     /// </summary>
     public class EventStore : OperationResultBase, IEventStore
     {
-        private readonly IDataContext _context;
+        private readonly IEventStoreDataContext _context;
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventStore"/>.
         /// </summary>
         /// <param name="context">The context to be used.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public EventStore(IDataContext context)
+        public EventStore(IEventStoreDataContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         ///<inheritdoc/>
-        public virtual async Task<IOperationResult> AppendEventAsync(IDomainEvent @event, CancellationToken cancellationToken = default)
+        public virtual async Task<IOperationResult> AppendEventAsync(IEvent @event, CancellationToken cancellationToken = default)
         {
-            var entityEvent = new DomainEventEntity(@event);
-            await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
+            if (@event is IDomainEvent domainEvent)
+            {
+                var entityEvent = new DomainEventEntity(domainEvent);
+                await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
+            }
+            else if(@event is IIntegrationEvent integrationEvent)
+            {
+                var entityEvent = new IntegrationEventEntity(integrationEvent);
+                await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                return BadOperation(@event.GetType().Name, "Unexpected event type.");
+            }
+
             return OkOperation();
         }
 
         /// <inheritdoc/>
-        public virtual async IAsyncEnumerable<IDomainEvent> ReadEventsAsync(Guid aggreagateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public virtual async IAsyncEnumerable<IDomainEvent> ReadDomainEventsAsync(Guid aggreagateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await foreach (var entityEvent in _context.FetchAllAsync<DomainEventEntity, DomainEventEntity>(
                 e => e.Where(x => x.AggregateId == aggreagateId)

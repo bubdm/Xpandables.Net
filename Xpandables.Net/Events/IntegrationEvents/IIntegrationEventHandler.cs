@@ -19,6 +19,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Commands;
+
 namespace Xpandables.Net.Events.IntegrationEvents
 {
     /// <summary>
@@ -30,12 +32,13 @@ namespace Xpandables.Net.Events.IntegrationEvents
     {
         /// <summary>
         ///  Asynchronously handle the integration event.
+        ///  If error, returns the corrective command to be processed.
         /// </summary>
         /// <param name="integrationEvent">The event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="integrationEvent"/> is null.</exception>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        Task HandleAsync(object integrationEvent, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TCommand}"/>.</returns>
+        Task<IOperationResult<ICommand>> HandleAsync(object integrationEvent, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -48,15 +51,16 @@ namespace Xpandables.Net.Events.IntegrationEvents
         where TEvent : class, IIntegrationEvent
     {
         /// <summary>
-        /// Asynchronously handles the event.
+        /// Asynchronously handles the integration event of specific type.
+        ///  If error, returns the corrective command to be processed.
         /// </summary>
         /// <param name="integrationEvent">The event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="integrationEvent"/> is null.</exception>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        Task HandleAsync(TEvent integrationEvent, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TCommand}"/>.</returns>
+        Task<IOperationResult<ICommand>> HandleAsync(TEvent integrationEvent, CancellationToken cancellationToken = default);
 
-        Task IIntegrationEventHandler.HandleAsync(object integrationEvent, CancellationToken cancellationToken)
+        Task<IOperationResult<ICommand>> IIntegrationEventHandler.HandleAsync(object integrationEvent, CancellationToken cancellationToken)
         {
             if (integrationEvent is TEvent integrationInstance)
                 return HandleAsync(integrationInstance, cancellationToken);

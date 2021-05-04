@@ -73,11 +73,11 @@ namespace Xpandables.Net.Api
 
             services.AddXInstanceCreator();
             services.AddXOperationResultLogger<LoggingService>();
-            services.AddXEventStore<EventStore>();
+            services.AddXEventStore();
+            services.AddXEventStoreDataContext();
             services.AddXDomainEventPublisher();
             services.AddXIntegrationEventPublisher();
             services.AddXAggregateAccessor();
-            services.AddXIntegrationEventProcessor();
             services.AddXIntegrationEventService();
             services.AddXEventBus();
             services.AddXServiceScopeFactory();
@@ -87,6 +87,7 @@ namespace Xpandables.Net.Api
             services.AddXInterceptorHandlers<ContactInterceptor>(new[] { Assembly.GetExecutingAssembly() });
 
             services.AddXDomainEventHandlers(new[] { Assembly.GetExecutingAssembly() });
+            services.AddXIntegrationEventHandlers(new[] { Assembly.GetExecutingAssembly() });
 
             services.AddXHttpRestClientHandler(_ => { });
             services.AddXHttpIPAddressAccessor();

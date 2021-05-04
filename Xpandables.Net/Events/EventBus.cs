@@ -17,9 +17,12 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Database;
+using Xpandables.Net.Entities;
 using Xpandables.Net.Events.IntegrationEvents;
 
 namespace Xpandables.Net.Events
@@ -29,57 +32,63 @@ namespace Xpandables.Net.Events
     /// </summary>
     public class EventBus : IEventBus
     {
-        private readonly IDictionary<Type, List<IIntegrationEventHandler>> _subscriptions;
-        private static readonly object _subscriptionsLock = new();
+        private readonly IIntegrationEventPublisher _integrationEventPublisher;
+        private readonly IDataContext _context;
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventBus"/>.
         /// </summary>
-        public EventBus() => _subscriptions = new Dictionary<Type, List<IIntegrationEventHandler>>();
+        /// <param name="integrationEventPublisher">The integration event publisher.</param>
+        /// <param name="context">The data context.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="integrationEventPublisher"/> or <paramref name="context"/> is null.</exception>
+        public EventBus(IIntegrationEventPublisher integrationEventPublisher, IDataContext context)
+        {
+            _integrationEventPublisher = integrationEventPublisher ?? throw new ArgumentNullException(nameof(integrationEventPublisher));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
 
         ///<inheritdoc/>
-        public async Task PublishAsync(IIntegrationEvent @event)
+        public async Task PushAsync()
         {
-            _ = @event ?? throw new ArgumentNullException(nameof(@event));
-
-            var handlers = new List<IIntegrationEventHandler>();
-
-            lock (_subscriptionsLock)
+            var updatedEvents = new List<IntegrationEventEntity>();
+            await foreach (var entity in FetchPendingIntegrationEvents())
             {
-                if (_subscriptions.ContainsKey(@event.GetType()))
-                    handlers = _subscriptions[@event.GetType()];
+                if (!await TryPushAsync(entity).ConfigureAwait(false))
+                    break;
+                else
+                    updatedEvents.Add(entity);
             }
 
-            foreach (var handler in handlers)
-                await handler.HandleAsync(@event).ConfigureAwait(false);
+            if (updatedEvents.Count > 0)
+                await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        void IEventBus.Subscribe<TEvent>(IIntegrationEventHandler<TEvent> handler)
+        IAsyncEnumerable<IntegrationEventEntity> FetchPendingIntegrationEvents()
+             => _context.FetchAllAsync<IntegrationEventEntity, IntegrationEventEntity>(
+                 entity => entity
+                     .Where(w => !w.IsDeleted && w.IsActive)
+                     .OrderBy(o => o.CreatedOn)
+                     .Take(50));
+
+        async Task<bool> TryPushAsync(IntegrationEventEntity entity)
         {
-            _ = handler ?? throw new ArgumentNullException(nameof(handler));
-
-            lock (_subscriptionsLock)
+            try
             {
-                if (!_subscriptions.ContainsKey(typeof(TEvent)))
-                    _subscriptions.Add(typeof(TEvent), new());
+                if (entity.Deserialize() is not { } @event)
+                    return false;
 
-                _subscriptions[typeof(TEvent)].Add(handler);
+                await _integrationEventPublisher.PublishAsync(@event).ConfigureAwait(false);
+
+                entity.Deactivated();
+                entity.Deleted();
+                await _context.UpdateAsync(entity).ConfigureAwait(false);
+
+                return true;
             }
-        }
-
-        void IEventBus.Unsubscribe<TEvent>(IIntegrationEventHandler<TEvent> handler)
-        {
-            _ = handler ?? throw new ArgumentNullException(nameof(handler));
-
-            lock (_subscriptionsLock)
+            catch (Exception exception)
             {
-                if (_subscriptions.ContainsKey(typeof(TEvent)))
-                {
-                    var allSubscriptions = _subscriptions[typeof(TEvent)];
-                    var subscriptionToRemove = allSubscriptions.FirstOrDefault(h => handler.GetType().Equals(h.GetType()));
-                    if (subscriptionToRemove is not null)
-                        _subscriptions[typeof(TEvent)].Remove(subscriptionToRemove);
-                }
+                Trace.WriteLine(exception);
+                return false;
             }
         }
     }
