@@ -32,6 +32,12 @@ namespace Xpandables.Net.Entities
         /// <summary>
         ///   /// Gets the current version of the instance, the default value is -1.
         /// </summary>
-        long Version { get; } 
+        long Version { get; }
+
+        /// <summary>
+        /// Determines whether or not the underlying instance is a new one.
+        /// </summary>
+        /// <returns>Returns <see langword="true"/> if so, otherwise <see langword="false"/></returns>
+        public bool IsNew() => Guid == Guid.Empty;
     }
 }

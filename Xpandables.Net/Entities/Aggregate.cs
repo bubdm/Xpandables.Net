@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using Xpandables.Net.Events;
 using Xpandables.Net.Events.DomainEvents;
 using Xpandables.Net.Events.IntegrationEvents;
 
@@ -43,9 +42,9 @@ namespace Xpandables.Net.Entities
         public long Version { get; internal set; } = -1;
 
         /// <summary>
-        /// Gets the aggregate unique identifier. The default value is <see cref="Guid.NewGuid"/>.
+        /// Gets the aggregate unique identifier. The default value is <see cref="Guid.Empty"/>.
         /// </summary>
-        public Guid Guid { get; protected set; } = Guid.NewGuid();
+        public Guid Guid { get; protected set; } = Guid.Empty;
 
         /// <summary>
         /// Constructs the default instance of an aggregate root.
