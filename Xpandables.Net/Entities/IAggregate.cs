@@ -35,9 +35,9 @@ namespace Xpandables.Net.Entities
         long Version { get; }
 
         /// <summary>
-        /// Determines whether or not the underlying instance is a empty.
+        /// Determines whether or not the underlying instance is a empty one.
         /// </summary>
         /// <returns>Returns <see langword="true"/> if so, otherwise <see langword="false"/></returns>
-        public bool IsEmpty() => Guid == Guid.Empty;
+        public bool IsEmpty => Guid == Guid.Empty;
     }
 }

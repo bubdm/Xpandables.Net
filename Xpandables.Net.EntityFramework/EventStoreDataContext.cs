@@ -41,6 +41,7 @@ namespace Xpandables.Net.EntityFramework
         {
             modelBuilder.ApplyConfiguration(new DomainEventEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new IntegrationEventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new SnapShotEntityTypeConfiguration());
         }
 
         /// <summary>
@@ -52,5 +53,10 @@ namespace Xpandables.Net.EntityFramework
         /// Gets the integration events collection. Read/Write
         /// </summary>
         public DbSet<IntegrationEventEntity> Integrations { get; set; } = default!;
+
+        /// <summary>
+        /// Gets the snapShots collection. Read/Write
+        /// </summary>
+        public DbSet<SnapShotEntity> SnapShots { get; set; } = default!;
     }
 }

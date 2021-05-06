@@ -90,15 +90,11 @@ namespace Xpandables.Net.Database
         ///<inheritdoc/>
         public async Task<IOperationResult<TAggregate>> LoadFromSnapShot(Guid aggregateId, CancellationToken cancellationToken = default)
         {
-            var instanceCreatorException = default(Exception?);
-            _instanceCreator.OnException = ex => instanceCreatorException = ex.SourceException;
-            if (_instanceCreator.Create(typeof(TAggregate)) is not TAggregate aggregate)
-            {
-                if (instanceCreatorException is not null)
-                    return BadOperation<TAggregate>(new OperationError(typeof(TAggregate).Name, instanceCreatorException));
-                return
-                    BadOperation<TAggregate>(typeof(TAggregate).Name, "Unable to create a new instance.");
-            }
+            var createInstanceResult = CreateInstance();
+            if (createInstanceResult.Failed)
+                return createInstanceResult;
+
+            var aggregate = createInstanceResult.Value;
 
             if (aggregate is not IOriginator originator)
                 return BadOperation<TAggregate>(typeof(TAggregate).Name, $"Must implement {typeof(IOriginator).Name}");
@@ -107,11 +103,32 @@ namespace Xpandables.Net.Database
             if (snapShot is not null)
                 originator.SetMemento(snapShot.Memento);
 
-            return OkOperation(aggregate);
+            return aggregate.IsEmpty ? BadOperation<TAggregate>() : OkOperation(aggregate);
         }
 
         ///<inheritdoc/>
         public virtual async Task<IOperationResult<TAggregate>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default)
+        {
+            var createInstanceResult = CreateInstance();
+            if (createInstanceResult.Failed)
+                return createInstanceResult;
+
+            var aggregate = createInstanceResult.Value;
+
+            if (aggregate is not IAggregateEventSourcing aggregateEventSourcing)
+                throw new InvalidOperationException($"{typeof(TAggregate).Name} must implement {nameof(Aggregate)}");
+
+            await foreach (var @event in _eventStore.ReadAllEventsAsync(aggregateId, cancellationToken))
+            {
+                aggregateEventSourcing.LoadFromHistory(@event);
+            }
+
+            return aggregate.IsEmpty
+                ? NotFoundOperation<TAggregate>(typeof(TAggregate).Name, "Event not found.")
+                : OkOperation(aggregate);
+        }
+
+        private IOperationResult<TAggregate> CreateInstance()
         {
             var instanceCreatorException = default(Exception?);
             _instanceCreator.OnException = ex => instanceCreatorException = ex.SourceException;
@@ -122,19 +139,6 @@ namespace Xpandables.Net.Database
                 return
                     BadOperation<TAggregate>(typeof(TAggregate).Name, "Unable to create a new instance.");
             }
-
-            if (aggregate is not IAggregateEventSourcing aggregateEventSourcing)
-                throw new InvalidOperationException($"{typeof(TAggregate).Name} must implement {nameof(Aggregate)}");
-
-            var eventCount = 0;
-            await foreach (var @event in _eventStore.ReadAllEventsAsync(aggregateId, cancellationToken))
-            {
-                aggregateEventSourcing.LoadFromHistory(@event);
-                eventCount++;
-            }
-
-            if (eventCount <= 0)
-                return NotFoundOperation<TAggregate>(typeof(TAggregate).Name, "Event not found.");
 
             return OkOperation(aggregate);
         }
