@@ -23,10 +23,9 @@ using Xpandables.Net.Entities;
 namespace Xpandables.Net.EntityFramework.EntityConfigurations
 {
     /// <summary>
-    /// EFCore configuration for <see cref="DomainEventEntity"/>.
-    /// You may derive from this class to customize its behaviors.
+    /// EFCore configuration for <see cref="SnapShotEntity"/>.
     /// </summary>
-    public class SnapShotEntityTypeConfiguration : IEntityTypeConfiguration<SnapShotEntity>
+    public sealed class SnapShotEntityTypeConfiguration : IEntityTypeConfiguration<SnapShotEntity>
     {
         ///<inheritdoc/>
         public void Configure(EntityTypeBuilder<SnapShotEntity> builder)

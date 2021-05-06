@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Database;
@@ -34,17 +35,20 @@ namespace Xpandables.Net.Events
     {
         private readonly IIntegrationEventPublisher _integrationEventPublisher;
         private readonly IEventStoreDataContext _context;
+        private readonly IStoreEntityConverter _converter;
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventBus"/>.
         /// </summary>
         /// <param name="integrationEventPublisher">The integration event publisher.</param>
         /// <param name="context">The data context.</param>
+        /// <param name="converter">The converter.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="integrationEventPublisher"/> or <paramref name="context"/> is null.</exception>
-        public EventBus(IIntegrationEventPublisher integrationEventPublisher, IEventStoreDataContext context)
+        public EventBus(IIntegrationEventPublisher integrationEventPublisher, IEventStoreDataContext context, IStoreEntityConverter converter)
         {
             _integrationEventPublisher = integrationEventPublisher ?? throw new ArgumentNullException(nameof(integrationEventPublisher));
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _converter = converter ?? throw new ArgumentNullException(nameof(converter));
         }
 
         ///<inheritdoc/>
@@ -82,7 +86,7 @@ namespace Xpandables.Net.Events
         {
             try
             {
-                if (entity.Deserialize() is not { } @event)
+                if (_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!) is not IIntegrationEvent @event)
                     return false;
 
                 await _integrationEventPublisher.PublishAsync(@event).ConfigureAwait(false);

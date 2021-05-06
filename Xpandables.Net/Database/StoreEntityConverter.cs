@@ -15,30 +15,20 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
+using System.Text.Json;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-using Xpandables.Net.EntityFramework.Entities;
-
-namespace Xpandables.Net.EntityFramework.EntityConfigurations
+namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// EFCore configuration for <see cref="IntegrationEventEntityNewtonsoft"/>.
-    /// You may derive from this class to customize its behaviors.
+    /// Event Store entity converter using <see cref="System.Text.Json"/>.
     /// </summary>
-    public class IntegrationEventEntityTypeConfigurationNewtonsoft : IEntityTypeConfiguration<IntegrationEventEntityNewtonsoft>
+    public sealed class StoreEntityConverter : IStoreEntityConverter
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<IntegrationEventEntityNewtonsoft> builder)
-        {
-            builder.HasKey(p => p.Id);
-            builder.HasIndex(p => p.Id)
-                .IsUnique();
+        public object Deserialize(string value, Type returnType) => JsonSerializer.Deserialize(value, returnType)!;
 
-            builder.Property(p => p.Data);
-            builder.Property(p => p.IsJson);
-            builder.Property(p => p.Type);
-        }
+        ///<inheritdoc/>
+        public string Serialize(object value, Type inputType) => JsonSerializer.Serialize(value, inputType);
     }
 }

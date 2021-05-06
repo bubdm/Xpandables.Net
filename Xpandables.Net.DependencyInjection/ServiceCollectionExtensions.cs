@@ -66,6 +66,32 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the <see cref="System.Text.Json"/> event store entity converter implementation to the services with singleton life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXEventStoreConverter(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddSingleton<IStoreEntityConverter, StoreEntityConverter>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <typeparamref name="TStoreEntityConverter"/> as <see cref="IStoreEntityConverter"/> event store entity converter implementation to the services with singleton life time.
+        /// </summary>
+        /// <typeparam name="TStoreEntityConverter">Type of the converter.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXEventStoreConverter<TStoreEntityConverter>(this IServiceCollection services)
+            where TStoreEntityConverter : class, IStoreEntityConverter
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddSingleton<IStoreEntityConverter, TStoreEntityConverter>();
+            return services;
+        }
+
+        /// <summary>
         /// Adds the <see cref="IEventBus"/> implementation to the services with singleton life time.
         /// </summary>
         /// <typeparam name="TEventBus">The type that implements <see cref="IEventBus"/></typeparam>

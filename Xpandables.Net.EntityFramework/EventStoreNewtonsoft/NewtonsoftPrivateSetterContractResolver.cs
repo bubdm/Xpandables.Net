@@ -15,29 +15,32 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Reflection;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
-using Xpandables.Net.Entities;
-
-namespace Xpandables.Net.EntityFramework.EntityConfigurations
+namespace Xpandables.Net.EntityFramework.EventStoreNewtonsoft
 {
-    /// <summary>
-    /// EFCore configuration for <see cref="IntegrationEventEntity"/>.
-    /// </summary>
-    public sealed class IntegrationEventEntityTypeConfiguration : IEntityTypeConfiguration<IntegrationEventEntity>
+    class NewtonsoftPrivateSetterContractResolver : DefaultContractResolver
     {
-        ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<IntegrationEventEntity> builder)
+        protected override JsonProperty CreateProperty(
+            MemberInfo member,
+            MemberSerialization memberSerialization)
         {
-            builder.HasKey(p => p.Id);
-            builder.HasIndex(p => p.Id)
-                .IsUnique();
+            var prop = base.CreateProperty(member, memberSerialization);
 
-            builder.Property(p => p.Data);
-            builder.Property(p => p.IsJson);
-            builder.Property(p => p.Type);
+            if (!prop.Writable)
+            {
+                var property = member as PropertyInfo;
+                if (property != null)
+                {
+                    var hasPrivateSetter = property.GetSetMethod(true) != null;
+                    prop.Writable = hasPrivateSetter;
+                }
+            }
+
+            return prop;
         }
     }
 }

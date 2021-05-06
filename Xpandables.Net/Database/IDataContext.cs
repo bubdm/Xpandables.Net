@@ -93,5 +93,4 @@ namespace Xpandables.Net.Database
         Task UpdateAsync<T>(T updatedEntity, CancellationToken cancellationToken = default)
             where T : class, IEntity;
     }
-
 }

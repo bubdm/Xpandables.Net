@@ -16,43 +16,30 @@
  *
 ************************************************************************************************************/
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
-using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Represents a domain event to be written.
+    /// Converter to be used with <see cref="StoreEntity{TEntity}"/>
     /// </summary>
-    public class DomainEventEntity : StoreEntity<IDomainEvent>
+    public interface IStoreEntityConverter
     {
-        ///<inheritdoc/>
-        [JsonConstructor]
-        public DomainEventEntity(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
-            : base(type, isJson, data)
-        {
-            EventId = eventId;
-            AggregateId = aggregateId;
-            Version = version;
-        }
+        /// <summary>
+        /// Converts the value of a specified type into a JSON string.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <param name="inputType">The type of the value to convert.</param>
+        /// <returns>The JSON string representation of the value.</returns>
+        string Serialize(object value, Type inputType);
 
         /// <summary>
-        /// Gets the event id.
+        /// Parses the text representing a single JSON value into an instance of a specified type.
         /// </summary>
-        public Guid EventId { get; }
-
-        /// <summary>
-        /// Gets the aggregate related id.
-        /// </summary>
-        [ConcurrencyCheck]
-        public Guid AggregateId { get; }
-
-        /// <summary>
-        /// Gets the version.
-        /// </summary>
-        [ConcurrencyCheck]
-        public long Version { get; }
+        /// <param name="value">The JSON text to parse.</param>
+        /// <param name="returnType">The type of the object to convert to and return.</param>
+        /// <returns>A returnType representation of the JSON value.</returns>
+        object Deserialize(string value, Type returnType);
     }
 }

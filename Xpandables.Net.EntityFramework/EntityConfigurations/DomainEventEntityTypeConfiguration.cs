@@ -25,9 +25,8 @@ namespace Xpandables.Net.EntityFramework.EntityConfigurations
 {
     /// <summary>
     /// EFCore configuration for <see cref="DomainEventEntity"/>.
-    /// You may derive from this class to customize its behaviors.
     /// </summary>
-    public class DomainEventEntityTypeConfiguration : IEntityTypeConfiguration<DomainEventEntity>
+    public sealed class DomainEventEntityTypeConfiguration : IEntityTypeConfiguration<DomainEventEntity>
     {
         ///<inheritdoc/>
         public void Configure(EntityTypeBuilder<DomainEventEntity> builder)

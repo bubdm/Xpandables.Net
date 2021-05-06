@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,15 +40,18 @@ namespace Xpandables.Net.EntityFramework
     public class EventStore : OperationResultBase, IEventStore
     {
         private readonly IEventStoreDataContext _context;
+        private readonly IStoreEntityConverter _converter;
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventStore"/>.
         /// </summary>
         /// <param name="context">The context to be used.</param>
+        /// <param name="converter">The converter.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public EventStore(IEventStoreDataContext context)
+        public EventStore(IEventStoreDataContext context, IStoreEntityConverter converter)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _converter = converter ?? throw new ArgumentNullException(nameof(converter));
         }
 
         ///<inheritdoc/>
@@ -55,12 +59,14 @@ namespace Xpandables.Net.EntityFramework
         {
             if (@event is IDomainEvent domainEvent)
             {
-                var entityEvent = new DomainEventEntity(domainEvent);
+                var data = Encoding.UTF8.GetBytes(_converter.Serialize(domainEvent, domainEvent.GetType()));
+                var entityEvent = new DomainEventEntity(domainEvent.Guid, domainEvent.AggregateId, domainEvent.GetType().AssemblyQualifiedName!, domainEvent.Version, true, data);
                 await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
             }
             else if (@event is IIntegrationEvent integrationEvent)
             {
-                var entityEvent = new IntegrationEventEntity(integrationEvent);
+                var data = Encoding.UTF8.GetBytes(_converter.Serialize(integrationEvent, integrationEvent.GetType()));
+                var entityEvent = new IntegrationEventEntity(integrationEvent.GetType().AssemblyQualifiedName!, true, data);
                 await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
             }
             else
@@ -89,7 +95,8 @@ namespace Xpandables.Net.EntityFramework
                     .Remove(oldSnapShot);
 
             var snapShot = new SnapShot(originator.CreateMemento(), aggregate.Guid, aggregate.Version);
-            var snapShotEnity = new SnapShotEntity(snapShot);
+            var data = Encoding.UTF8.GetBytes(_converter.Serialize(snapShot, snapShot.GetType()));
+            var snapShotEnity = new SnapShotEntity(aggregate.Guid, snapShot.GetType().AssemblyQualifiedName!, snapShot.Version, true, data);
 
             await _context.InsertAsync(snapShotEnity, cancellationToken).ConfigureAwait(false);
             return OkOperation();
@@ -99,7 +106,7 @@ namespace Xpandables.Net.EntityFramework
         public async Task<ISnapShot?> GetSnapShotAsync(Guid aggreagteId, CancellationToken cancellationToken = default)
             => await _context.Set<SnapShotEntity>()
                 .Where(w => w.AggregateId == aggreagteId && w.Version != -1)
-                .Select(entity => entity.Deserialize())
+                .Select(entity => (ISnapShot)_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!))
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
 
@@ -108,7 +115,7 @@ namespace Xpandables.Net.EntityFramework
             => _context.Set<DomainEventEntity>()
                 .Where(w => w.AggregateId == aggreagateId)
                 .OrderBy(o => o.Version)
-                .Select(entity => entity.Deserialize())
+                .Select(entity => (IDomainEvent)_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!))
                 .AsAsyncEnumerable();
 
         ///<inheritdoc/>
@@ -123,7 +130,7 @@ namespace Xpandables.Net.EntityFramework
                 cancellationToken)
                 .ConfigureAwait(false))
             {
-                yield return entity.Deserialize();
+                yield return (IDomainEvent)_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!);
             }
         }
 

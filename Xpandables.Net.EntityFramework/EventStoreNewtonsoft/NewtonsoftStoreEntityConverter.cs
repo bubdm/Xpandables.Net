@@ -15,32 +15,27 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Reflection;
+using System;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
-namespace Xpandables.Net.EntityFramework.Entities
+using Xpandables.Net.Database;
+
+namespace Xpandables.Net.EntityFramework.EventStoreNewtonsoft
 {
-    class NewtonsoftPrivateSetterContractResolver : DefaultContractResolver
+    /// <summary>
+    /// Event Store converter using <see cref="Newtonsoft.Json"/>.
+    /// </summary>
+    public sealed class NewtonsoftStoreEntityConverter : IStoreEntityConverter
     {
-        protected override JsonProperty CreateProperty(
-            MemberInfo member,
-            MemberSerialization memberSerialization)
+        ///<inheritdoc/>
+        public object Deserialize(string value, Type returnType)
         {
-            var prop = base.CreateProperty(member, memberSerialization);
-
-            if (!prop.Writable)
-            {
-                var property = member as PropertyInfo;
-                if (property != null)
-                {
-                    var hasPrivateSetter = property.GetSetMethod(true) != null;
-                    prop.Writable = hasPrivateSetter;
-                }
-            }
-
-            return prop;
+            JsonSerializerSettings settings = new() { ContractResolver = new NewtonsoftPrivateSetterContractResolver() };
+            return JsonConvert.DeserializeObject(value, returnType, settings)!;
         }
+
+        ///<inheritdoc/>
+        public string Serialize(object value, Type inputType) => JsonConvert.SerializeObject(value, inputType, null);
     }
 }
