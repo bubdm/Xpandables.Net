@@ -49,11 +49,28 @@ namespace Xpandables.Net.Database
         Task<IOperationResult> AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Initializes an aggregate matching the specified identifier from its snapShot. The aggregate must implement <see cref="IOriginator"/> interface.
+        /// Asynchronously returns the <typeparamref name="TAggregate"/> aggregate that matches the specified aggregate identifier from its snapShot. The aggregate must implement <see cref="IOriginator"/> interface.
         /// </summary>
         /// <param name="aggregateId">The aggregate identifier to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        Task<IOperationResult<TAggregate>> LoadFromSnapShot(Guid aggregateId, CancellationToken cancellationToken = default);
+        Task<IOperationResult<TAggregate>> ReadFromSnapShot(Guid aggregateId, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Asynchronously appends the specified aggregate as snapshot. The aggregate must implement <see cref="IOriginator"/> interface.
+        /// </summary>
+        /// <param name="aggregate">The aggregate to act on.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
+        Task<IOperationResult> AppendAsSnapShotAsync(TAggregate aggregate, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Asynchronously returns the snapshot matching the specified aggregate identifier or null if not found.
+        /// </summary>
+        /// <param name="aggreagteId">the aggregate id to search for.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an object of <see cref="ISnapShot"/>.</returns>
+        Task<ISnapShot?> GetSnapShotAsync(Guid aggreagteId, CancellationToken cancellationToken = default);
     }
 }

@@ -88,7 +88,7 @@ namespace Xpandables.Net.Database
         }
 
         ///<inheritdoc/>
-        public async Task<IOperationResult<TAggregate>> LoadFromSnapShot(Guid aggregateId, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult<TAggregate>> ReadFromSnapShot(Guid aggregateId, CancellationToken cancellationToken = default)
         {
             var createInstanceResult = CreateInstance();
             if (createInstanceResult.Failed)
@@ -127,6 +127,18 @@ namespace Xpandables.Net.Database
                 ? NotFoundOperation<TAggregate>(typeof(TAggregate).Name, "Event not found.")
                 : OkOperation(aggregate);
         }
+
+        ///<inheritdoc/>
+        public async Task<IOperationResult> AppendAsSnapShotAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
+        {
+            _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
+
+            return await _eventStore.AppendSnapShotAsync(aggregate, cancellationToken);
+        }
+
+        ///<inheritdoc/>
+        public async Task<ISnapShot?> GetSnapShotAsync(Guid aggreagteId, CancellationToken cancellationToken = default)
+            => await _eventStore.GetSnapShotAsync(aggreagteId, cancellationToken).ConfigureAwait(false);
 
         private IOperationResult<TAggregate> CreateInstance()
         {
