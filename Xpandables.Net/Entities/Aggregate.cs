@@ -39,7 +39,7 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Gets the current version of the instance, the default value is -1.
         /// </summary>
-        public long Version { get; internal set; } = -1;
+        public long Version { get; protected set; } = -1;
 
         /// <summary>
         /// Gets the aggregate unique identifier. The default value is <see cref="Guid.Empty"/>.

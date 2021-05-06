@@ -17,12 +17,14 @@
 
 using Xpandables.Net.Api.Domains.Events;
 using Xpandables.Net.Api.Domains.Integrations;
+using Xpandables.Net.Api.Domains.Mementos;
+using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
 
 namespace Xpandables.Net.Api.Domains
 {
 #pragma warning disable CS8618 
-    public sealed class ContactAggregate : Aggregate
+    public sealed class ContactAggregate : Aggregate, IOriginator
     {
         public static string FirstGuidCreated { get; set; } = string.Empty;
 
@@ -33,6 +35,20 @@ namespace Xpandables.Net.Api.Domains
         private ContactAggregate(string name, string city, string address, string country)
         {
             RaiseEvent(new ContactCreatedEvent(name, city, address, country, Guid, GetNewVersion()));
+        }
+
+        IMemento IOriginator.CreateMemento()
+            => new ContactMemento(Guid, Version, Name, City, Address, Country);
+
+        void IOriginator.SetMemento(IMemento memento)
+        {
+            var contactMemento = (ContactMemento)memento;
+            Guid = contactMemento.Id;
+            Version = contactMemento.Version;
+            Name = contactMemento.Name;
+            City = contactMemento.City;
+            Address = contactMemento.Address;
+            Country = contactMemento.Country;
         }
 
         public void CancelNameChange(string oldName)
