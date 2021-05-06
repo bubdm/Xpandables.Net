@@ -47,5 +47,13 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
         Task<IOperationResult> AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Initializes an aggregate matching the specified identifier from its snapShot. The aggregate must implement <see cref="IOriginator"/> interface.
+        /// </summary>
+        /// <param name="aggregateId">The aggregate identifier to search for.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        Task<IOperationResult<TAggregate>> LoadFromSnapShot(Guid aggregateId, CancellationToken cancellationToken = default);
     }
 }

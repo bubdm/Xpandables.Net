@@ -17,23 +17,24 @@
 ************************************************************************************************************/
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using Xpandables.Net.Events.DomainEvents;
+
+using Xpandables.Net.Database;
 
 namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// Represents a domain event to be written.
+    /// Represents a snapshot to be written.
     /// </summary>
-    public class DomainEventEntity : Entity
+    [Serializable]
+    public class SnapShotEntity : Entity
     {
         ///<inheritdoc/>
         [JsonConstructor]
-        protected DomainEventEntity(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
+        public SnapShotEntity(Guid aggregateId, string type, long version, bool isJson, byte[] data)
         {
-            EventId = eventId;
             AggregateId = aggregateId;
             Type = type ?? throw new ArgumentNullException(nameof(type));
             Version = version;
@@ -42,13 +43,11 @@ namespace Xpandables.Net.Entities
         }
 
         /// <summary>
-        /// Gets the event id.
+        /// Gets the snapShot content.
         /// </summary>
-        public Guid EventId { get; }
+        public byte[] Data { get; }
 
-        /// <summary>
-        /// Gets the aggregate related id.
-        /// </summary>
+        ///<inheritdoc/>
         [ConcurrencyCheck]
         public Guid AggregateId { get; }
 
@@ -58,54 +57,47 @@ namespace Xpandables.Net.Entities
         public string Type { get; }
 
         /// <summary>
-        /// Gets the version.
-        /// </summary>
-        [ConcurrencyCheck]
-        public long Version { get; }
-
-        /// <summary>
         /// Determines whether or not the data is JSON.
         /// </summary>
         public bool IsJson { get; }
 
         /// <summary>
-        /// Gets the byte representation of the type.
+        /// Gets the version.
         /// </summary>
-        public byte[] Data { get; }
+        public long Version { get; }
 
         /// <summary>
-        /// Constructs a new instance of <see cref="DomainEventEntity"/> with its properties.
+        /// Constructs a new instance of <see cref="SnapShotEntity"/> with its properties.
         /// </summary>
-        /// <param name="event">The event to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        public DomainEventEntity(IDomainEvent @event)
+        /// <param name="snapShot">The snapShot to act on.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="snapShot"/> is null.</exception>
+        public SnapShotEntity(ISnapShot snapShot)
         {
-            _ = @event ?? throw new ArgumentNullException(nameof(@event));
+            _ = snapShot ?? throw new ArgumentNullException(nameof(snapShot));
 
-            EventId = @event.Guid;
-            AggregateId = @event.AggregateId;
-            Type = @event.GetType().AssemblyQualifiedName!;
-            Version = @event.Version;
+            AggregateId = snapShot.AggregateId;
+            Type = snapShot.GetType().AssemblyQualifiedName!;
+            Version = snapShot.Version;
             IsJson = true;
-            Data = Serialize(@event);
+            Data = Serialize(snapShot);
         }
 
         /// <summary>
-        /// Serializes the event to a JSON string using the <see cref="System.Text.Json"/>.
+        /// Serializes the snapShot to a JSON string using the <see cref="System.Text.Json"/>.
         /// You can override this method to customize its behavior.
         /// </summary>
         /// <returns>A JSON string.</returns>
-        protected virtual byte[] Serialize(IDomainEvent @event)
+        protected virtual byte[] Serialize(ISnapShot snapShot)
         {
-            _ = @event ?? throw new ArgumentNullException(nameof(@event));
-            return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event, @event.GetType()));
+            _ = snapShot ?? throw new ArgumentNullException(nameof(snapShot));
+            return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(snapShot, snapShot.GetType()));
         }
 
         /// <summary>
-        /// Deserializes the current message to the expected type or null using the <see cref="System.Text.Json"/>.
+        /// Deserializes the current content to the expected type or null using the <see cref="System.Text.Json"/>.
         /// </summary>
-        /// <returns>An instance of the target event type or null.</returns>
-        public virtual IDomainEvent Deserialize()
-            => (IDomainEvent)JsonSerializer.Deserialize(Encoding.UTF8.GetString(Data), System.Type.GetType(Type)!)!;
+        /// <returns>An instance of the target snapShot type or null.</returns>
+        public virtual ISnapShot Deserialize()
+            => (ISnapShot)JsonSerializer.Deserialize(Encoding.UTF8.GetString(Data), System.Type.GetType(Type)!)!;
     }
 }

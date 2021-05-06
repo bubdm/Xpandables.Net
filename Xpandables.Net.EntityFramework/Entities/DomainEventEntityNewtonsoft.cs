@@ -45,10 +45,10 @@ namespace Xpandables.Net.EntityFramework.Entities
             => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
 
         ///<inheritdoc/>
-        public override IDomainEvent? Deserialize()
+        public override IDomainEvent Deserialize()
         {
             JsonSerializerSettings settings = new() { ContractResolver = new NewtonsoftPrivateSetterContractResolver() };
-            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(Data), System.Type.GetType(Type)!, settings) as IDomainEvent;
+            return (IDomainEvent)JsonConvert.DeserializeObject(Encoding.UTF8.GetString(Data), System.Type.GetType(Type)!, settings)!;
         }
     }
 }

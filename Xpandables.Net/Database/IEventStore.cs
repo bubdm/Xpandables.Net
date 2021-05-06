@@ -28,7 +28,7 @@ namespace Xpandables.Net.Database
     /// <summary>
     /// Provides with methods to retrieve and persist events.
     /// </summary>
-    public interface IEventStore
+    public interface IEventStore : ISnapShotStore
     {
         /// <summary>
         /// Asynchronously returns a collection of domain events where aggregate identifier matches the specified one.
@@ -37,7 +37,7 @@ namespace Xpandables.Net.Database
         /// <param name="aggreagateId">The target aggregate identifier.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An enumerator of <see cref="IDomainEvent"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<IDomainEvent> ReadDomainEventsAsync(Guid aggreagateId, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<IDomainEvent> ReadAllEventsAsync(Guid aggreagateId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously appends the specified event.

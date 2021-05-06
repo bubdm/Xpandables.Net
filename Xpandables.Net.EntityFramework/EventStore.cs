@@ -22,6 +22,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+
 using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
 using Xpandables.Net.Events;
@@ -56,7 +58,7 @@ namespace Xpandables.Net.EntityFramework
                 var entityEvent = new DomainEventEntity(domainEvent);
                 await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
             }
-            else if(@event is IIntegrationEvent integrationEvent)
+            else if (@event is IIntegrationEvent integrationEvent)
             {
                 var entityEvent = new IntegrationEventEntity(integrationEvent);
                 await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
@@ -69,17 +71,72 @@ namespace Xpandables.Net.EntityFramework
             return OkOperation();
         }
 
-        /// <inheritdoc/>
-        public virtual async IAsyncEnumerable<IDomainEvent> ReadDomainEventsAsync(Guid aggreagateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        ///<inheritdoc/>
+        public async Task<IOperationResult> AppendSnapShotAsync(IAggregate aggregate, CancellationToken cancellationToken = default)
         {
-            await foreach (var entityEvent in _context.FetchAllAsync<DomainEventEntity, DomainEventEntity>(
-                e => e.Where(x => x.AggregateId == aggreagateId)
-                    .OrderBy(o => o.Version), cancellationToken)
+            _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
+
+            if (aggregate is not IOriginator originator)
+                return BadOperation(aggregate.GetType().Name, $"{typeof(IOriginator).Name} expected.");
+
+            var oldSnapShot = await _context.Set<SnapShotEntity>()
+                .Where(s => s.AggregateId == aggregate.Guid && s.Version == aggregate.Version)
+                .FirstOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            if (oldSnapShot is not null)
+                _context.Set<SnapShotEntity>()
+                    .Remove(oldSnapShot);
+
+            var snapShot = new SnapShot(originator.CreateMemento(), aggregate.Guid, aggregate.Version);
+            var snapShotEnity = new SnapShotEntity(snapShot);
+
+            await _context.InsertAsync(snapShotEnity, cancellationToken).ConfigureAwait(false);
+            return OkOperation();
+        }
+
+        ///<inheritdoc/>
+        public async Task<ISnapShot?> GetSnapShotAsync(Guid aggreagteId, CancellationToken cancellationToken = default)
+            => await _context.Set<SnapShotEntity>()
+                .Where(w => w.AggregateId == aggreagteId && w.Version != -1)
+                .Select(entity => entity.Deserialize())
+                .FirstOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+        /// <inheritdoc/>
+        public virtual IAsyncEnumerable<IDomainEvent> ReadAllEventsAsync(Guid aggreagateId, CancellationToken cancellationToken = default)
+            => _context.Set<DomainEventEntity>()
+                .Where(w => w.AggregateId == aggreagateId)
+                .OrderBy(o => o.Version)
+                .Select(entity => entity.Deserialize())
+                .AsAsyncEnumerable();
+
+        ///<inheritdoc/>
+        public async IAsyncEnumerable<IDomainEvent> ReadEventsSinceLastSnapShotAsync(Guid aggregateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var snapShot = await GetSnapShotAsync(aggregateId, cancellationToken).ConfigureAwait(false);
+            var snapShotVersion = snapShot?.Version ?? -1;
+
+            await foreach (var entity in _context.FetchAllAsync<DomainEventEntity, DomainEventEntity>(
+                e => e.Where(w => w.AggregateId == aggregateId && w.Version > snapShotVersion)
+                .OrderBy(o => o.Version),
+                cancellationToken)
                 .ConfigureAwait(false))
             {
-                if (entityEvent.Deserialize() is { } @event)
-                    yield return @event;
+                yield return entity.Deserialize();
             }
+        }
+
+        ///<inheritdoc/>
+        public async Task<int> ReadEventCountSinceLastSnapShot(Guid aggregateId, CancellationToken cancellationToken = default)
+        {
+            var snapShot = await GetSnapShotAsync(aggregateId, cancellationToken).ConfigureAwait(false);
+            var snapShotVersion = snapShot?.Version ?? 0;
+
+            return await _context.Set<DomainEventEntity>()
+                .CountAsync(c => c.AggregateId == aggregateId && c.Version > snapShotVersion,
+                cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 }

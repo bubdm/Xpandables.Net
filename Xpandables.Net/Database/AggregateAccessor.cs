@@ -36,8 +36,6 @@ namespace Xpandables.Net.Database
         private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly IInstanceCreator _instanceCreator;
 
-        private Exception? instanceCreatorException;
-
         /// <summary>
         /// Constructs a new instance of <see cref="AggregateAccessor{TAggregate}"/>.
         /// </summary>
@@ -53,16 +51,9 @@ namespace Xpandables.Net.Database
             _eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
             _domainEventPublisher = domainEventPublisher ?? throw new ArgumentNullException(nameof(domainEventPublisher));
             _instanceCreator = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
-            _instanceCreator.OnException = dispatchException => instanceCreatorException = dispatchException.SourceException;
         }
 
-        /// <summary>
-        /// Asynchronously appends the specified <typeparamref name="TAggregate"/> aggregate to the event store.
-        /// </summary>
-        /// <param name="aggregate">The aggregate to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
+        ///<inheritdoc/>
         public virtual async Task<IOperationResult> AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
         {
             _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
@@ -96,15 +87,34 @@ namespace Xpandables.Net.Database
             return OkOperation();
         }
 
-        /// <summary>
-        /// Asynchronously returns the <typeparamref name="TAggregate"/> aggregate that matches the specified aggregate identifier.
-        /// </summary>
-        /// <param name="aggregateId">The aggregate identifier to search for.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        ///<inheritdoc/>
+        public async Task<IOperationResult<TAggregate>> LoadFromSnapShot(Guid aggregateId, CancellationToken cancellationToken = default)
+        {
+            var instanceCreatorException = default(Exception?);
+            _instanceCreator.OnException = ex => instanceCreatorException = ex.SourceException;
+            if (_instanceCreator.Create(typeof(TAggregate)) is not TAggregate aggregate)
+            {
+                if (instanceCreatorException is not null)
+                    return BadOperation<TAggregate>(new OperationError(typeof(TAggregate).Name, instanceCreatorException));
+                return
+                    BadOperation<TAggregate>(typeof(TAggregate).Name, "Unable to create a new instance.");
+            }
+
+            if (aggregate is not IOriginator originator)
+                return BadOperation<TAggregate>(typeof(TAggregate).Name, $"Must implement {typeof(IOriginator).Name}");
+
+            var snapShot = await _eventStore.GetSnapShotAsync(aggregateId, cancellationToken).ConfigureAwait(false);
+            if (snapShot is not null)
+                originator.SetMemento(snapShot.Memento);
+
+            return OkOperation(aggregate);
+        }
+
+        ///<inheritdoc/>
         public virtual async Task<IOperationResult<TAggregate>> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default)
         {
-            instanceCreatorException = default;
+            var instanceCreatorException = default(Exception?);
+            _instanceCreator.OnException = ex => instanceCreatorException = ex.SourceException;
             if (_instanceCreator.Create(typeof(TAggregate)) is not TAggregate aggregate)
             {
                 if (instanceCreatorException is not null)
@@ -117,7 +127,7 @@ namespace Xpandables.Net.Database
                 throw new InvalidOperationException($"{typeof(TAggregate).Name} must implement {nameof(Aggregate)}");
 
             var eventCount = 0;
-            await foreach (var @event in _eventStore.ReadDomainEventsAsync(aggregateId, cancellationToken))
+            await foreach (var @event in _eventStore.ReadAllEventsAsync(aggregateId, cancellationToken))
             {
                 aggregateEventSourcing.LoadFromHistory(@event);
                 eventCount++;

@@ -25,8 +25,13 @@ namespace Xpandables.Net.Entities
     /// <summary>
     /// Event-sourcing pattern interface.
     /// </summary>
-    internal interface IAggregateEventSourcing
+    public interface IAggregateEventSourcing
     {
+        /// <summary>
+        /// Gets the unique identifier of the aggregate.
+        /// </summary>
+        Guid Guid { get; }
+
         /// <summary>
         /// Marks all the domain events as committed.
         /// </summary>

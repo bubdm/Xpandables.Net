@@ -15,29 +15,10 @@
  *
 ************************************************************************************************************/
 
-using System;
-
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Aggregate is a pattern in Domain-Driven Design. A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
+    /// The Memento interface used as a marker for objects that need to restore their previous state (stores internal state of an <see cref="IOriginator"/> object).
     /// </summary>
-    public interface IAggregate : ICommandQueryEvent
-    {
-        /// <summary>
-        /// Gets the unique identifier of the aggregate.
-        /// </summary>
-        public new Guid Guid { get; }
-
-        /// <summary>
-        ///   /// Gets the current version of the instance, the default value is -1.
-        /// </summary>
-        long Version { get; }
-
-        /// <summary>
-        /// Determines whether or not the underlying instance is a empty.
-        /// </summary>
-        /// <returns>Returns <see langword="true"/> if so, otherwise <see langword="false"/></returns>
-        public bool IsEmpty() => Guid == Guid.Empty;
-    }
+    public interface IMemento { }
 }
