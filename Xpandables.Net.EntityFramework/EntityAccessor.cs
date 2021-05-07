@@ -55,7 +55,7 @@ namespace Xpandables.Net.EntityFramework
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
         /// <exception cref="ArgumentException">The <paramref name="dataContext"/> must derive from <see cref="EntityAccessor{TEntity}"/>.</exception>
-        protected EntityAccessor(IDataContext dataContext)
+        public EntityAccessor(IDataContext dataContext)
         {
             Context = dataContext as DataContext ?? throw new ArgumentException($"Derived {nameof(DataContext)} expected.");
             Entities = Context.Set<TEntity>();
