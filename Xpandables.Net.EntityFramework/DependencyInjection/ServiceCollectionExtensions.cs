@@ -100,6 +100,18 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the default <see cref="IEntityAccessor{TEntity}"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXEntityAccessor(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.AddScoped(typeof(IEntityAccessor<>), typeof(EntityAccessor<>));
+            return services;
+        }
+
+        /// <summary>
         /// Adds the <typeparamref name="TDataContext"/> type class reference implementation as <see cref="IDataContext"/> to the services with scoped life time.
         /// Caution : Do not use with multi-tenancy.
         /// </summary>

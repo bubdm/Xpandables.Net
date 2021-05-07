@@ -126,18 +126,6 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the default <see cref="IEntityAccessor{TEntity}"/> implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXEntityAccessor(this IServiceCollection services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.AddScoped(typeof(IEntityAccessor<>), typeof(IEntityAccessor<>));
-            return services;
-        }
-
-        /// <summary>
         /// Adds the <see cref="IDomainEventPublisher"/> type implementation to the services with scope life time.
         /// </summary>
         /// <typeparam name="TDomainEventPublisher">The domain event publisher type implementation.</typeparam>
