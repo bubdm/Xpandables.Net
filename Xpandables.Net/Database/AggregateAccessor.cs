@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -139,6 +140,18 @@ namespace Xpandables.Net.Database
         ///<inheritdoc/>
         public async Task<ISnapShot?> GetSnapShotAsync(Guid aggreagteId, CancellationToken cancellationToken = default)
             => await _eventStore.GetSnapShotAsync(aggreagteId, cancellationToken).ConfigureAwait(false);
+
+        ///<inheritdoc/>
+        public IAsyncEnumerable<IDomainEvent> ReadAllEventsAsync(Guid aggreagateId, CancellationToken cancellationToken = default)
+            => _eventStore.ReadAllEventsAsync(aggreagateId, cancellationToken);
+
+        ///<inheritdoc/>
+        public IAsyncEnumerable<IDomainEvent> ReadEventsSinceLastSnapShotAsync(Guid aggregateId, CancellationToken cancellationToken = default)
+            => _eventStore.ReadEventsSinceLastSnapShotAsync(aggregateId, cancellationToken);
+
+        ///<inheritdoc/>
+        public async Task<int> ReadEventCountSinceLastSnapShot(Guid aggregateId, CancellationToken cancellationToken = default)
+            => await _eventStore.ReadEventCountSinceLastSnapShot(aggregateId, cancellationToken).ConfigureAwait(false);
 
         private IOperationResult<TAggregate> CreateInstance()
         {
