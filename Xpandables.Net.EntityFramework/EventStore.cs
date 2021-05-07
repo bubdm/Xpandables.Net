@@ -106,6 +106,7 @@ namespace Xpandables.Net.EntityFramework
         public async Task<ISnapShot?> GetSnapShotAsync(Guid aggreagteId, CancellationToken cancellationToken = default)
             => await _context.Set<SnapShotEntity>()
                 .Where(w => w.AggregateId == aggreagteId && w.Version != -1)
+                .OrderByDescending(o => o.CreatedOn)
                 .Select(entity => (ISnapShot)_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!))
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);

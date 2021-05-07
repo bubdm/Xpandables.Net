@@ -31,11 +31,15 @@ namespace Xpandables.Net.EntityFramework.EventStoreNewtonsoft
         ///<inheritdoc/>
         public object Deserialize(string value, Type returnType)
         {
-            JsonSerializerSettings settings = new() { ContractResolver = new NewtonsoftPrivateSetterContractResolver() };
+            JsonSerializerSettings settings = new() { TypeNameHandling = TypeNameHandling.All };
             return JsonConvert.DeserializeObject(value, returnType, settings)!;
         }
 
         ///<inheritdoc/>
-        public string Serialize(object value, Type inputType) => JsonConvert.SerializeObject(value, inputType, null);
+        public string Serialize(object value, Type inputType)
+        {
+            JsonSerializerSettings settings = new() { TypeNameHandling = TypeNameHandling.All };
+            return JsonConvert.SerializeObject(value, inputType, settings);
+        }
     }
 }
