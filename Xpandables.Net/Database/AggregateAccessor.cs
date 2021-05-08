@@ -31,7 +31,7 @@ namespace Xpandables.Net.Database
     /// </summary>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
     public class AggregateAccessor<TAggregate> : OperationResultBase, IAggregateAccessor<TAggregate>
-        where TAggregate : class, IAggregate, new()
+        where TAggregate : class, IAggregate
     {
         private readonly IEventStore _eventStore;
         private readonly IDomainEventPublisher _domainEventPublisher;

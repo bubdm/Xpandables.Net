@@ -31,7 +31,7 @@ namespace Xpandables.Net.Database
     /// </summary>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
     public interface IAggregateAccessor<TAggregate>
-        where TAggregate : class, IAggregate, new()
+        where TAggregate : class, IAggregate
     {
         /// <summary>
         /// Asynchronously returns the <typeparamref name="TAggregate"/> aggregate that matches the specified aggregate identifier.
