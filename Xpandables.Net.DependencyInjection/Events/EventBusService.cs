@@ -73,6 +73,14 @@ namespace Xpandables.Net.Events
             return DoPushPendingMessages(stoppingToken);
         }
 
+        /// <summary>
+        /// Returns the <see cref="TimeSpan"/> delay between each execution.
+        /// The default value is 60s.
+        /// </summary>
+        /// <returns>A 60s timespan.</returns>
+        protected virtual TimeSpan GetTimeSpanDelay()
+            => TimeSpan.FromSeconds(60);
+
         private async Task DoPushPendingMessages(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
@@ -82,7 +90,7 @@ namespace Xpandables.Net.Events
                 var eventBus = scope.GetRequiredService();
                 await eventBus.PushAsync().ConfigureAwait(false);
 
-                await Task.Delay(TimeSpan.FromSeconds(60), cancellationToken).ConfigureAwait(false);
+                await Task.Delay(GetTimeSpanDelay(), cancellationToken).ConfigureAwait(false);
             }
         }
     }
