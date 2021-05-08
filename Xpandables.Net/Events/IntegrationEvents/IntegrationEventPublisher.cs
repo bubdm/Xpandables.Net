@@ -65,7 +65,7 @@ namespace Xpandables.Net.Events.IntegrationEvents
             var errorResults = results.Where(result => result.Failed);
 
             // TODO : think about thread pool
-            foreach(var error in errorResults)
+            foreach (var error in errorResults.Where(result => result.HasValue))
             {
                 var correctiveCommand = error.Value;
                 var handler = TryGetCommandHandler(correctiveCommand);

@@ -64,6 +64,12 @@ namespace Xpandables.Net
         HttpStatusCode StatusCode { get; }
 
         /// <summary>
+        /// Determines whether or not the <see cref="Value"/> has a content.
+        /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+        /// </summary>
+        public bool HasValue => Value is not null;
+
+        /// <summary>
         /// Gets a value that indicates whether the operation is completed successfully and returns <see langword="true"/> if so, otherwise <see langword="false"/>.
         /// </summary>
         /// <returns><see langword="true"/> if the operation is completed successfully; otherwise, <see langword="false"/>.</returns>

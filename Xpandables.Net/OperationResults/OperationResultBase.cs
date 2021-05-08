@@ -44,6 +44,13 @@ namespace Xpandables.Net
         protected virtual IOperationResult<TResult> OkOperation<TResult>(TResult result) => new SuccessOperationResult<TResult>(result);
 
         /// <summary>
+        /// Returns a <see cref="SuccessOperationResult{TValue}"/> with <see cref="HttpStatusCode.OK"/>.
+        /// </summary>
+        /// <typeparam name="TResult">The type the result.</typeparam>
+        /// <returns>A <see cref="SuccessOperationResult{TValue}"/>.</returns>
+        protected virtual IOperationResult<TResult> OkOperation<TResult>() => new SuccessOperationResult<TResult>(default!);
+
+        /// <summary>
         /// Returns a <see cref="SuccessOperationResult{TValue}"/> with the specified status code and result.
         /// </summary>
         /// <typeparam name="TResult">The type the result.</typeparam>
