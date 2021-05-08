@@ -21,7 +21,7 @@ using Xpandables.Net.Database;
 namespace Xpandables.Net.Decorators
 {
     /// <summary>
-    /// A marker interface that allows the command handler class implementation to use persistence data across the control flow.
+    /// A marker interface that allows the handler class implementation to use persistence data across the control flow.
     /// The behavior makes use of an implementation of <see cref="IDataContext"/> in the handler class implementation
     /// to persist data at the end of the control flow only if there is no exception.
     /// In order to control the behavior, you can add the <see cref="ICorrelationDecorator"/> to the command/query class and reference

@@ -45,6 +45,19 @@ using Xpandables.Net.Visitors;
 namespace Xpandables.Net.DependencyInjection
 {
     /// <summary>
+    /// Defines options to configure event options.
+    /// </summary>
+    public sealed class EventOptions
+    {
+        /// <summary>
+        /// Enables persistence behavior to events that are decorated with the <see cref="IPersistenceDecorator"/> .
+        /// </summary>
+        public EventOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
+
+        internal bool IsPersistenceEnabled { get; private set; }
+    }
+
+    /// <summary>
     /// Defines options to configure operations options.
     /// </summary>
     public sealed class HandlerOptions
@@ -436,6 +449,20 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds aggregate persistence behavior to integration events that are decorated with the <see cref="IPersistenceDecorator"/> to the services
+        /// with transient life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXIntegrationEventPersistenceDecorator(this IServiceCollection services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.XTryDecorate(typeof(IIntegrationEventHandler<>), typeof(IntegrationEventPersistenceDecorator<>));
+            return services;
+        }
+
+        /// <summary>
         /// Adds the transaction type provider to the services.
         /// </summary>
         /// <typeparam name="TTransactionScopeProvider">The type transaction scope provider.</typeparam>
@@ -602,6 +629,30 @@ namespace Xpandables.Net.DependencyInjection
                     services.AddScoped(interf, handler.Type);
                 }
             }
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds and configures the <see cref="IIntegrationEventHandler{TEvent}"/> implementations to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <param name="configureOptions">A delegate to configure the <see cref="EventOptions"/>.</param>///
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IServiceCollection AddXIntegrationEventHandlers(
+            this IServiceCollection services, Assembly[] assemblies, Action<EventOptions> configureOptions)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            if (assemblies.Length == 0)
+                throw new ArgumentNullException(nameof(assemblies));
+
+            services.AddXIntegrationEventHandlers(assemblies);
+            var definedOptions = new EventOptions();
+            configureOptions.Invoke(definedOptions);
+
+            if (definedOptions.IsPersistenceEnabled)
+                services.AddXIntegrationEventPersistenceDecorator();
 
             return services;
         }
