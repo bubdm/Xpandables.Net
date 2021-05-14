@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System;
 
-namespace Xpandables.Net.CommandQueryEvents
+namespace Xpandables.Net
 {
     /// <summary>
     /// Provides with shared implementation members for <see cref="ICommandQueryEvent"/>.

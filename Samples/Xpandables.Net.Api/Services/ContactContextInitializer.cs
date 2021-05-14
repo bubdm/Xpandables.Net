@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Api.Domains;
 using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
@@ -48,7 +49,7 @@ namespace Xpandables.Net.Api.Services
             using var context = service.ServiceProvider.GetRequiredService<IEventStoreDataContext>();
             var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateAccessor<ContactAggregate>>();
 
-            if (context.Set<DomainEventEntity>().Any())
+            if (context.Set<EventEntity>().Any())
                 return;
 
             var contact = ContactAggregate.CreateNewContact("myName", "Paris", "Alexandre LeGrand 01", "France");

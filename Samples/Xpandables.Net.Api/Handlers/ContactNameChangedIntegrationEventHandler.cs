@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 using Xpandables.Net.Api.Domains.Integrations;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Decorators;
-using Xpandables.Net.Events.IntegrationEvents;
+using Xpandables.Net.Notifications;
 
 namespace Xpandables.Net.Api.Handlers
 {
@@ -38,9 +38,9 @@ namespace Xpandables.Net.Api.Handlers
         public string Name { get; }
     }
 
-    public class ContactNameChangedIntegrationEventHandler : IntegrationEventHandler<ContactNameChangeIntegrationEvent>
+    public class ContactNameChangedIntegrationEventHandler : NotificationHandler<ContactNameChangeIntegrationEvent>
     {
-        public override async Task<IOperationResult<ICommand>> HandleAsync(ContactNameChangeIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
+        public override async Task<IOperationResult<ICommand?>> HandleAsync(ContactNameChangeIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask.ConfigureAwait(false);
             return BadOperation(new ContactNameChangedFailedCommand(integrationEvent.AggregateId, integrationEvent.OldName));

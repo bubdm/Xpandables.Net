@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System;
 
-using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.DomainEvents;
 
 namespace Xpandables.Net.Api.Domains.Events
 {

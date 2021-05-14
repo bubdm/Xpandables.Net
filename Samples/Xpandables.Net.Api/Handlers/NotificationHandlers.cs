@@ -21,7 +21,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Api.Domains.Events;
-using Xpandables.Net.Events.DomainEvents;
+using Xpandables.Net.DomainEvents;
 
 namespace Xpandables.Net.Api.Handlers
 {

@@ -19,7 +19,7 @@ using System;
 
 using Newtonsoft.Json;
 
-using Xpandables.Net.Database;
+using Xpandables.Net.Aggregates;
 
 namespace Xpandables.Net.EntityFramework.EventStoreNewtonsoft
 {

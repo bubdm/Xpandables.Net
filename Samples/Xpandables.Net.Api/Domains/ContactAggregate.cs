@@ -15,11 +15,10 @@
  *
 ************************************************************************************************************/
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Api.Domains.Events;
 using Xpandables.Net.Api.Domains.Integrations;
 using Xpandables.Net.Api.Domains.Mementos;
-using Xpandables.Net.Database;
-using Xpandables.Net.Entities;
 
 namespace Xpandables.Net.Api.Domains
 {

@@ -15,18 +15,17 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-using Xpandables.Net.Database;
-using Xpandables.Net.Events;
-using Xpandables.Net.Events.DomainEvents;
-using Xpandables.Net.Events.IntegrationEvents;
+using Xpandables.Net.Aggregates;
+using Xpandables.Net.DomainEvents;
+using Xpandables.Net.Notifications;
 using Xpandables.Net.Security;
 
 namespace Xpandables.Net.DependencyInjection

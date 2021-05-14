@@ -76,9 +76,9 @@ namespace Xpandables.Net.Api
             services.AddXOperationResultLogger<LoggingService>();
             services.AddXEventStore();
             services.AddXDomainEventPublisher();
-            services.AddXIntegrationEventPublisher();
+            services.AddXNotificationPublisher();
             services.AddXAggregateAccessor();
-            services.AddXIntegrationEventService();
+            services.AddXNotificationBusService();
             services.AddXEventBus();
             services.AddXServiceScopeFactory();
 
@@ -87,7 +87,7 @@ namespace Xpandables.Net.Api
             services.AddXInterceptorHandlers<ContactInterceptor>(new[] { Assembly.GetExecutingAssembly() });
 
             services.AddXDomainEventHandlers(new[] { Assembly.GetExecutingAssembly() });
-            services.AddXIntegrationEventHandlers(new[] { Assembly.GetExecutingAssembly() });
+            services.AddXNotificationHandlers(new[] { Assembly.GetExecutingAssembly() });
 
             services.AddXHttpRestClientHandler(_ => { });
             services.AddXHttpIPAddressAccessor();

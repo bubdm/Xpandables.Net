@@ -19,9 +19,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Api.Domains;
 using Xpandables.Net.Commands;
-using Xpandables.Net.Database;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api.Handlers
@@ -35,10 +35,9 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult<Contact>> HandleAsync(SelectQuery query, CancellationToken cancellationToken = default)
         {
-            var foundResult = await _entityAccessor.ReadAsync(Guid.Parse(query.Id), cancellationToken).ConfigureAwait(false);
-            if (foundResult.Failed)
+            var found = await _entityAccessor.ReadAsync(Guid.Parse(query.Id), cancellationToken).ConfigureAwait(false);
+            if (found is null)
                 return NotFoundOperation<Contact>();
-            var found = foundResult.Value;
             return OkOperation(new Contact(found.Guid.ToString(), found.Name, found.City, found.Address, found.Country));
         }
 
@@ -52,11 +51,10 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult<Contact>> HandleAsync(EditCommand command, CancellationToken cancellationToken = default)
         {
-            var foundResult = await _entityAccessor.ReadAsync(Guid.Parse(command.Id), cancellationToken).ConfigureAwait(false);
-            if (foundResult.Failed)
+            var found = await _entityAccessor.ReadAsync(Guid.Parse(command.Id), cancellationToken).ConfigureAwait(false);
+            if (found is null)
                 return NotFoundOperation<Contact>();
 
-            var found = foundResult.Value;
             if (command.Address is not null) found.ChangeContactAddress(command.Address);
             if (command.City is not null) found.ChangeContactCity(command.City);
             if (command.Country is not null) found.ChangeContactCountry(command.Country);
@@ -69,11 +67,10 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult> HandleAsync(ContactNameChangedFailedCommand command, CancellationToken cancellationToken = default)
         {
-            var foundResult = await _entityAccessor.ReadAsync(command.AggregateId, cancellationToken).ConfigureAwait(false);
-            if (foundResult.Failed)
+            var found = await _entityAccessor.ReadAsync(command.AggregateId, cancellationToken).ConfigureAwait(false);
+            if (found is null)
                 return NotFoundOperation();
 
-            var found = foundResult.Value;
             found.CancelNameChange(command.Name);
             await _entityAccessor.AppendAsync(found, cancellationToken).ConfigureAwait(false);
             return OkOperation();

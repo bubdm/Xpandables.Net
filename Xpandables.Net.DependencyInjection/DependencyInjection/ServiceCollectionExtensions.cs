@@ -33,10 +33,10 @@ using Xpandables.Net.Decorators.Transactions;
 using Xpandables.Net.Decorators.Validators;
 using Xpandables.Net.Decorators.Visitors;
 using Xpandables.Net.Dispatchers;
+using Xpandables.Net.DomainEvents;
 using Xpandables.Net.Events;
-using Xpandables.Net.Events.DomainEvents;
-using Xpandables.Net.Events.IntegrationEvents;
 using Xpandables.Net.Handlers;
+using Xpandables.Net.Notifications;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
 using Xpandables.Net.Validators;
@@ -114,55 +114,55 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="IEventBusService"/> type implementation to the services with scope life time.
+        /// Adds the <see cref="INotificationBusService"/> type implementation to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TIntegrationEventService">The integration event service type implementation.</typeparam>
+        /// <typeparam name="TNotificationBusService">The notification bus service type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIntegrationEventService<TIntegrationEventService>(this IServiceCollection services)
-            where TIntegrationEventService : class, IHostedService, IEventBusService
+        public static IServiceCollection AddXNotificationBusService<TNotificationBusService>(this IServiceCollection services)
+            where TNotificationBusService : class, IHostedService, INotificationBusService
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddSingleton<IEventBusService, TIntegrationEventService>();
-            services.AddHostedService(provider => provider.GetRequiredService<IEventBusService>() as TIntegrationEventService);
+            services.AddSingleton<INotificationBusService, TNotificationBusService>();
+            services.AddHostedService(provider => provider.GetRequiredService<INotificationBusService>() as TNotificationBusService);
             return services;
         }
 
         /// <summary>
-        /// Adds the default <see cref="IEventBusService"/> type implementation to the services with scope life time.
+        /// Adds the default <see cref="INotificationBusService"/> type implementation to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIntegrationEventService(this IServiceCollection services)
-            => services.AddXIntegrationEventService<EventBusService>();
+        public static IServiceCollection AddXNotificationBusService(this IServiceCollection services)
+            => services.AddXNotificationBusService<EventBusService>();
 
         /// <summary>
-        /// Adds the <see cref="IIntegrationEventPublisher"/> type implementation to the services with scope life time.
+        /// Adds the <see cref="INotificationPublisher"/> type implementation to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TIntegrationEventPublisher">The integration event publisher type implementation.</typeparam>
+        /// <typeparam name="TNotificationPublisher">The notification publisher type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIntegrationEventPublisher<TIntegrationEventPublisher>(this IServiceCollection services)
-            where TIntegrationEventPublisher : class, IIntegrationEventPublisher
+        public static IServiceCollection AddXNotificationPublisher<TNotificationPublisher>(this IServiceCollection services)
+            where TNotificationPublisher : class, INotificationPublisher
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IIntegrationEventPublisher, TIntegrationEventPublisher>();
+            services.AddScoped<INotificationPublisher, TNotificationPublisher>();
             return services;
         }
 
         /// <summary>
-        /// Adds the default <see cref="IIntegrationEventPublisher"/> type implementation to the services with scope life time.
+        /// Adds the default <see cref="INotificationPublisher"/> type implementation to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIntegrationEventPublisher(this IServiceCollection services)
-            => services.AddXIntegrationEventPublisher<IntegrationEventPublisher>();
+        public static IServiceCollection AddXNotificationPublisher(this IServiceCollection services)
+            => services.AddXNotificationPublisher<NotificationPublisher>();
 
         /// <summary>
         /// Adds the <see cref="IServiceScopeFactory{TService}"/> needed to resolve the <see cref="IServiceScope{TService}"/> to the services with singleton life time.
@@ -454,11 +454,11 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIntegrationEventPersistenceDecorator(this IServiceCollection services)
+        public static IServiceCollection AddXNotificationPersistenceDecorator(this IServiceCollection services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.XTryDecorate(typeof(IIntegrationEventHandler<>), typeof(IntegrationEventPersistenceDecorator<>));
+            services.XTryDecorate(typeof(INotificationHandler<>), typeof(NotificationPersistenceDecorator<>));
             return services;
         }
 
@@ -603,13 +603,13 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IIntegrationEventHandler{TEvent}"/> implementations to the services with scope life time.
+        /// Adds the <see cref="INotificationHandler{TEvent}"/> implementations to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IServiceCollection AddXIntegrationEventHandlers(this IServiceCollection services, Assembly[] assemblies)
+        public static IServiceCollection AddXNotificationHandlers(this IServiceCollection services, Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies.Length == 0)
@@ -618,8 +618,8 @@ namespace Xpandables.Net.DependencyInjection
             }
 
             var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)))
-                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)) })
+                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<>)) })
                 .ToList();
 
             foreach (var handler in genericHandlers)
@@ -634,25 +634,25 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds and configures the <see cref="IIntegrationEventHandler{TEvent}"/> implementations to the services with scope life time.
+        /// Adds and configures the <see cref="INotificationHandler{TEvent}"/> implementations to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
         /// <param name="configureOptions">A delegate to configure the <see cref="EventOptions"/>.</param>///
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXIntegrationEventHandlers(
+        public static IServiceCollection AddXNotificationHandlers(
             this IServiceCollection services, Assembly[] assemblies, Action<EventOptions> configureOptions)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies.Length == 0)
                 throw new ArgumentNullException(nameof(assemblies));
 
-            services.AddXIntegrationEventHandlers(assemblies);
+            services.AddXNotificationHandlers(assemblies);
             var definedOptions = new EventOptions();
             configureOptions.Invoke(definedOptions);
 
             if (definedOptions.IsPersistenceEnabled)
-                services.AddXIntegrationEventPersistenceDecorator();
+                services.AddXNotificationPersistenceDecorator();
 
             return services;
         }

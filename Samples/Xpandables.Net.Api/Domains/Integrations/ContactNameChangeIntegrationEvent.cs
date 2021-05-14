@@ -17,11 +17,11 @@
 ************************************************************************************************************/
 using System;
 
-using Xpandables.Net.Events.IntegrationEvents;
+using Xpandables.Net.Notifications;
 
 namespace Xpandables.Net.Api.Domains.Integrations
 {
-    public class ContactNameChangeIntegrationEvent : IntegrationEvent
+    public class ContactNameChangeIntegrationEvent : Notification
     {
         public string Name { get; }
         public string OldName { get; }

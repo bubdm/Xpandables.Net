@@ -23,9 +23,9 @@ using System.Reflection;
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.Decorators;
-using Xpandables.Net.Events.DomainEvents;
-using Xpandables.Net.Events.IntegrationEvents;
+using Xpandables.Net.DomainEvents;
 using Xpandables.Net.Interception;
+using Xpandables.Net.Notifications;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.DependencyInjection
@@ -121,7 +121,7 @@ namespace Xpandables.Net.DependencyInjection
                 throw new ArgumentException($"{nameof(interceptorType)} must implement {nameof(IInterceptor)}.");
             if (assemblies.Length == 0) throw new ArgumentNullException(nameof(assemblies));
 
-            var genericInterfaceTypes = new[] { typeof(IQueryHandler<,>), typeof(ICommandHandler<>), typeof(ICommandHandler<,>), typeof(IDomainEventHandler<>), typeof(IIntegrationEventHandler<>) };
+            var genericInterfaceTypes = new[] { typeof(IQueryHandler<,>), typeof(ICommandHandler<>), typeof(ICommandHandler<,>), typeof(IDomainEventHandler<>), typeof(INotificationHandler<>) };
             foreach (var genericInterfaceType in genericInterfaceTypes)
             {
                 foreach (var handler in assemblies.SelectMany(ass => ass.GetExportedTypes())

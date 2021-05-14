@@ -22,14 +22,15 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
 using Xpandables.Net.DependencyInjection;
+using Xpandables.Net.Notifications;
 
 namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// The default implementation of <see cref="IEventBusService"/>.
+    /// The default implementation of <see cref="INotificationBusService"/>.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
-    public class EventBusService : BackgroundService, IEventBusService
+    public class EventBusService : BackgroundService, INotificationBusService
     {
         private readonly IServiceScopeFactory<IEventBus> _serviceScopeFactory;
 

@@ -20,6 +20,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
 using Xpandables.Net.EntityFramework;
 using Xpandables.Net.EntityFramework.EventStoreNewtonsoft;

@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using Microsoft.EntityFrameworkCore;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
 using Xpandables.Net.EntityFramework.EntityConfigurations;
@@ -39,20 +40,20 @@ namespace Xpandables.Net.EntityFramework
         ///<inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new DomainEventEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new IntegrationEventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new EventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationEventEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new SnapShotEntityTypeConfiguration());
         }
 
         /// <summary>
         /// Gets the domain events collection. Read Only.
         /// </summary>
-        public DbSet<DomainEventEntity> Events { get; set; } = default!;
+        public DbSet<EventEntity> Events { get; set; } = default!;
 
         /// <summary>
-        /// Gets the integration events collection. Read/Write
+        /// Gets the notifications collection. Read/Write
         /// </summary>
-        public DbSet<IntegrationEventEntity> Integrations { get; set; } = default!;
+        public DbSet<NotificationEntity> Notifications { get; set; } = default!;
 
         /// <summary>
         /// Gets the snapShots collection. Read/Write

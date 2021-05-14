@@ -18,7 +18,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Xpandables.Net.Entities;
+using Xpandables.Net.Aggregates;
 
 namespace Xpandables.Net.EntityFramework.EntityConfigurations
 {
