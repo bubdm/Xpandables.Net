@@ -27,15 +27,15 @@ namespace Xpandables.Net.EntityFramework
     /// <summary>
     /// The <see cref="EventStore"/> data context definition.
     /// </summary>
-    public class EventStoreDataContext : DataContext, IEventStoreDataContext
+    public class EventStoreContext : DataContext, IEventStoreContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EventStoreDataContext"/> class
+        /// Initializes a new instance of the <see cref="EventStoreContext"/> class
         /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
         /// method will still be called to allow further configuration of the options.
         /// </summary>
         /// <param name="contextOptions">The options for this context.</param>
-        public EventStoreDataContext(DbContextOptions contextOptions) : base(contextOptions) { }
+        public EventStoreContext(DbContextOptions contextOptions) : base(contextOptions) { }
 
         ///<inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)

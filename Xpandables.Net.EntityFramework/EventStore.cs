@@ -39,7 +39,7 @@ namespace Xpandables.Net.EntityFramework
     /// </summary>
     public class EventStore : OperationResultBase, IEventStore
     {
-        private readonly IEventStoreDataContext _context;
+        private readonly IEventStoreContext _context;
         private readonly IStoreEntityConverter _converter;
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Xpandables.Net.EntityFramework
         /// <param name="context">The context to be used.</param>
         /// <param name="converter">The converter.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public EventStore(IEventStoreDataContext context, IStoreEntityConverter converter)
+        public EventStore(IEventStoreContext context, IStoreEntityConverter converter)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _converter = converter ?? throw new ArgumentNullException(nameof(converter));

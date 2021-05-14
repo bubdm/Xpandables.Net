@@ -43,14 +43,14 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentException">The <typeparamref name="TInterface"/> must be an interface.</exception>
-        public static IServiceCollection AddXInterceptor<TInterface, TInterceptor>(this IServiceCollection services)
+        public static IXpandableServiceBuilder AddXInterceptor<TInterface, TInterceptor>(this IXpandableServiceBuilder services)
             where TInterface : class
             where TInterceptor : class, IInterceptor
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (!typeof(TInterface).IsInterface) throw new ArgumentException($"{typeof(TInterface).Name} must be an interface.");
 
-            services.XTryDecorate<TInterface>((instance, provider) =>
+            services.Services.XTryDecorate<TInterface>((instance, provider) =>
             {
                 var interceptor = provider.GetRequiredService<TInterceptor>();
                 return InterceptorFactory.CreateProxy(interceptor, instance);
@@ -70,7 +70,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="interfaceType"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="interceptorType"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="interceptorType"/> must implement <see cref="IInterceptor"/>.</exception>
-        public static IServiceCollection AddXInterceptor(this IServiceCollection services, Type interfaceType, Type interceptorType)
+        public static IXpandableServiceBuilder AddXInterceptor(this IXpandableServiceBuilder services, Type interfaceType, Type interceptorType)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = interfaceType ?? throw new ArgumentNullException(nameof(interfaceType));
@@ -81,7 +81,7 @@ namespace Xpandables.Net.DependencyInjection
             if (!typeof(IInterceptor).IsAssignableFrom(interceptorType))
                 throw new ArgumentException($"{nameof(interceptorType)} must implement {nameof(IInterceptor)}.");
 
-            services.XTryDecorate(interfaceType, (instance, provider) =>
+            services.Services.XTryDecorate(interfaceType, (instance, provider) =>
             {
                 var interceptor = (IInterceptor)provider.GetRequiredService(interceptorType);
                 return InterceptorFactory.CreateProxy(interfaceType, interceptor, instance);
@@ -99,7 +99,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IServiceCollection AddXInterceptorHandlers<TInterceptor>(this IServiceCollection services, params Assembly[] assemblies)
+        public static IXpandableServiceBuilder AddXInterceptorHandlers<TInterceptor>(this IXpandableServiceBuilder services, params Assembly[] assemblies)
             where TInterceptor : class, IInterceptor => services.AddXInterceptorHandlers(typeof(TInterceptor), assemblies);
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="interceptorType"/> must implement <see cref="IInterceptor"/>.</exception>
-        public static IServiceCollection AddXInterceptorHandlers(this IServiceCollection services, Type interceptorType, params Assembly[] assemblies)
+        public static IXpandableServiceBuilder AddXInterceptorHandlers(this IXpandableServiceBuilder services, Type interceptorType, params Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = interceptorType ?? throw new ArgumentNullException(nameof(interceptorType));
@@ -130,7 +130,7 @@ namespace Xpandables.Net.DependencyInjection
                 {
                     foreach (var handlerInterface in handler.Interfaces)
                     {
-                        services.XTryDecorate(handlerInterface, (instance, provider) =>
+                        services.Services.XTryDecorate(handlerInterface, (instance, provider) =>
                          {
                              var interceptor = (IInterceptor)provider.GetRequiredService(interceptorType);
                              return InterceptorFactory.CreateProxy(handlerInterface, interceptor, instance);

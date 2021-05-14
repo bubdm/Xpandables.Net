@@ -37,10 +37,10 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXEventStore(this IServiceCollection services)
+        public static IXpandableServiceBuilder AddXEventStore(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.AddScoped<IEventStore, EventStore>();
+            services.Services.AddScoped<IEventStore, EventStore>();
             return services;
         }
 
@@ -49,36 +49,36 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXEventStoreConverterNewtonsoft(this IServiceCollection services)
+        public static IXpandableServiceBuilder AddXEventStoreConverterNewtonsoft(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.AddSingleton<IStoreEntityConverter, NewtonsoftStoreEntityConverter>();
+            services.Services.AddSingleton<IStoreEntityConverter, NewtonsoftStoreEntityConverter>();
             return services;
         }
 
         /// <summary>
-        /// Adds the default <see cref="IEventStoreDataContext"/> implementation to the services with scoped life time.
+        /// Adds the default <see cref="IEventStoreContext"/> implementation to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
         /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
         /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXEventStoreDataContext(
-            this IServiceCollection services,
+        public static IXpandableServiceBuilder AddXEventStoreDataContext(
+            this IXpandableServiceBuilder services,
             Action<DbContextOptionsBuilder>? optionsAction = null,
             ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
             ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddDbContext<EventStoreDataContext>(optionsAction, contextLifetime, optionsLifetime);
-            services.AddScoped<IEventStoreDataContext, EventStoreDataContext>();
+            services.Services.AddDbContext<EventStoreContext>(optionsAction, contextLifetime, optionsLifetime);
+            services.Services.AddScoped<IEventStoreContext, EventStoreContext>();
             return services;
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TEventStoreDataContext"/> type as <see cref="IEventStoreDataContext"/> implementation to the services with scoped life time.
+        /// Adds the <typeparamref name="TEventStoreDataContext"/> type as <see cref="IEventStoreContext"/> implementation to the services with scoped life time.
         /// </summary>
         /// <typeparam name="TEventStoreDataContext">The type of the event store data context.</typeparam>
         /// <param name="services">The collection of services.</param>
@@ -86,17 +86,17 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
         /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXEventStoreDataContext<TEventStoreDataContext>(
-            this IServiceCollection services,
+        public static IXpandableServiceBuilder AddXEventStoreDataContext<TEventStoreDataContext>(
+            this IXpandableServiceBuilder services,
             Action<DbContextOptionsBuilder>? optionsAction = null,
             ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
             ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
-            where TEventStoreDataContext : DbContext, IEventStoreDataContext
+            where TEventStoreDataContext : DbContext, IEventStoreContext
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddDbContext<TEventStoreDataContext>(optionsAction, contextLifetime, optionsLifetime);
-            services.AddScoped<IEventStoreDataContext, TEventStoreDataContext>();
+            services.Services.AddDbContext<TEventStoreDataContext>(optionsAction, contextLifetime, optionsLifetime);
+            services.Services.AddScoped<IEventStoreContext, TEventStoreDataContext>();
             return services;
         }
 
@@ -105,10 +105,10 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXEntityAccessor(this IServiceCollection services)
+        public static IXpandableServiceBuilder AddXEntityAccessor(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.AddScoped(typeof(IEntityAccessor<>), typeof(EntityAccessor<>));
+            services.Services.AddScoped(typeof(IEntityAccessor<>), typeof(EntityAccessor<>));
             return services;
         }
 
@@ -122,8 +122,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
         /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXDataContext<TDataContext>(
-            this IServiceCollection services,
+        public static IXpandableServiceBuilder AddXDataContext<TDataContext>(
+            this IXpandableServiceBuilder services,
             Action<DbContextOptionsBuilder>? optionsAction = null,
             ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
             ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
@@ -131,8 +131,8 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddDbContext<TDataContext>(optionsAction, contextLifetime, optionsLifetime);
-            services.AddScoped<IDataContext, TDataContext>();
+            services.Services.AddDbContext<TDataContext>(optionsAction, contextLifetime, optionsLifetime);
+            services.Services.AddScoped<IDataContext, TDataContext>();
             return services;
         }
     }

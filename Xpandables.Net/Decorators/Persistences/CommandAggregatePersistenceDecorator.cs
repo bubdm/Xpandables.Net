@@ -27,14 +27,14 @@ namespace Xpandables.Net.Decorators.Persistences
     /// <summary>
     /// This class allows the application author to add persistence support to command control flow.
     /// The target command should implement the <see cref="IAggregatePersistenceDecorator"/> interface in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="IEventStoreDataContext"/> and executes the
+    /// The class decorates the target command handler with an implementation of <see cref="IEventStoreContext"/> and executes the
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     public sealed class CommandAggregatePersistenceDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : class, ICommand, IAggregatePersistenceDecorator
     {
-        private readonly IEventStoreDataContext _context;
+        private readonly IEventStoreContext _context;
         private readonly ICommandHandler<TCommand> _decoratee;
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public CommandAggregatePersistenceDecorator(IEventStoreDataContext dataContext, ICommandHandler<TCommand> decoratee)
+        public CommandAggregatePersistenceDecorator(IEventStoreContext dataContext, ICommandHandler<TCommand> decoratee)
         {
             _context = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
@@ -71,7 +71,7 @@ namespace Xpandables.Net.Decorators.Persistences
     /// <summary>
     /// This class allows the application author to add persistence support to command control flow.
     /// The target command should implement the <see cref="IAggregatePersistenceDecorator"/> interface in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="IEventStoreDataContext"/> and executes the
+    /// The class decorates the target command handler with an implementation of <see cref="IEventStoreContext"/> and executes the
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
@@ -79,7 +79,7 @@ namespace Xpandables.Net.Decorators.Persistences
     public sealed class CommandAggregatePersistenceDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
         where TCommand : class, ICommand<TResult>, IAggregatePersistenceDecorator
     {
-        private readonly IEventStoreDataContext _context;
+        private readonly IEventStoreContext _context;
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public CommandAggregatePersistenceDecorator(IEventStoreDataContext dataContext, ICommandHandler<TCommand, TResult> decoratee)
+        public CommandAggregatePersistenceDecorator(IEventStoreContext dataContext, ICommandHandler<TCommand, TResult> decoratee)
         {
             _context = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));

@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +15,20 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using Xpandables.Net.Decorators;
 
-using Xpandables.Net.Database;
-
-namespace Xpandables.Net.Decorators
+namespace Xpandables.Net.DependencyInjection
 {
     /// <summary>
-    /// A marker interface that allows the command handler class implementation to use persistence data across the control flow.
-    /// The behavior makes use of an implementation of <see cref="IEventStoreContext"/> in the handler class implementation
-    /// to persist data at the end of the control flow only if there is no exception.
+    /// Defines options to configure event options.
     /// </summary>
-    public interface IAggregatePersistenceDecorator { }
+    public sealed class EventOptions
+    {
+        /// <summary>
+        /// Enables persistence behavior to events that are decorated with the <see cref="IPersistenceDecorator"/> .
+        /// </summary>
+        public EventOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
+
+        internal bool IsPersistenceEnabled { get; private set; }
+    }
 }

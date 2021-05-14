@@ -39,15 +39,24 @@ namespace Xpandables.Net.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
+        /// Allows configuration of Xpandable Services.
+        /// </summary>
+        /// <param name="builder">The configuration builder to act on.</param>
+        /// <returns>The Xpandable application builder.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
+        public static IXpandableApplicationBuilder UseXpandableApplications(this IApplicationBuilder builder)
+            => new XpandableApplicationBuilder(builder);
+
+        /// <summary>
         /// Adds the default correlation context implementation type to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXCorrelationContext(this IServiceCollection services)
+        public static IXpandableServiceBuilder AddXCorrelationContext(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<ICorrelationContext, CorrelationContext>();
+            services.Services.AddScoped<ICorrelationContext, CorrelationContext>();
             return services;
         }
 
@@ -56,10 +65,10 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
         /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
-        public static IApplicationBuilder UseXDataContextTenantMiddleware(this IApplicationBuilder builder)
+        public static IXpandableApplicationBuilder UseXDataContextTenantMiddleware(this IXpandableApplicationBuilder builder)
         {
             _ = builder ?? throw new ArgumentNullException(nameof(builder));
-            builder.UseMiddleware<DataContextTenantMiddleware>();
+            builder.Builder.UseMiddleware<DataContextTenantMiddleware>();
 
             return builder;
         }
@@ -69,10 +78,10 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
         /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
-        public static IApplicationBuilder UseXCorrelationMiddleware(this IApplicationBuilder builder)
+        public static IXpandableApplicationBuilder UseXCorrelationMiddleware(this IXpandableApplicationBuilder builder)
         {
             _ = builder ?? throw new ArgumentNullException(nameof(builder));
-            builder.UseMiddleware<CorrelationMiddleware>();
+            builder.Builder.UseMiddleware<CorrelationMiddleware>();
 
             return builder;
         }
@@ -82,11 +91,11 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXHttpHeaderAccessor(this IServiceCollection services)
+        public static IXpandableServiceBuilder AddXHttpHeaderAccessor(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IHttpHeaderAccessor, HttpHeaderAccessor>();
+            services.Services.AddScoped<IHttpHeaderAccessor, HttpHeaderAccessor>();
             return services;
         }
 
@@ -95,12 +104,12 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXRazorViewRenderer(this IServiceCollection services)
+        public static IXpandableServiceBuilder AddXRazorViewRenderer(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IRazorViewRenderer, RazorViewRenderer>();
-            services.AddSingleton<IRazorModelViewCollection, RazorModelViewCollection>();
+            services.Services.AddScoped<IRazorViewRenderer, RazorViewRenderer>();
+            services.Services.AddSingleton<IRazorModelViewCollection, RazorModelViewCollection>();
             return services;
         }
 
@@ -112,7 +121,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="environment">The web hosting environment instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="application"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public static IApplicationBuilder UseXServiceExport(this IApplicationBuilder application, IWebHostEnvironment environment)
+        public static IXpandableApplicationBuilder UseXServiceExport(this IXpandableApplicationBuilder application, IWebHostEnvironment environment)
         {
             if (application is null) throw new ArgumentNullException(nameof(application));
             return application.UseXServiceExport(environment, _ => { });
@@ -129,8 +138,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="environment"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="configureOptions"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public static IApplicationBuilder UseXServiceExport(
-            this IApplicationBuilder application, IWebHostEnvironment environment, Action<ExportServiceOptions> configureOptions)
+        public static IXpandableApplicationBuilder UseXServiceExport(
+            this IXpandableApplicationBuilder application, IWebHostEnvironment environment, Action<ExportServiceOptions> configureOptions)
         {
             if (application is null) throw new ArgumentNullException(nameof(application));
             if (environment == null) throw new ArgumentNullException(nameof(environment));
@@ -144,7 +153,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         private static void UseServiceExport(
-            this IApplicationBuilder application, IWebHostEnvironment environment, ExportServiceOptions options)
+            this IXpandableApplicationBuilder application, IWebHostEnvironment environment, ExportServiceOptions options)
         {
             try
             {
@@ -164,7 +173,7 @@ namespace Xpandables.Net.DependencyInjection
                     .OfType<IUseServiceExport>();
 
                 foreach (var export in exportServices)
-                    export.UseServices(application, environment);
+                    export.UseServices(application.Builder, environment);
             }
             catch (Exception exception) when (exception is NotSupportedException
                                             || exception is System.IO.DirectoryNotFoundException

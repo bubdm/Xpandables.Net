@@ -33,7 +33,7 @@ namespace Xpandables.Net.Notifications
     public sealed class EventBus : IEventBus
     {
         private readonly INotificationPublisher _notificationPublisher;
-        private readonly IEventStoreDataContext _context;
+        private readonly IEventStoreContext _context;
         private readonly IStoreEntityConverter _converter;
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Xpandables.Net.Notifications
         /// <param name="context">The data context.</param>
         /// <param name="converter">The converter.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="notificationPublisher"/> or <paramref name="context"/> is null.</exception>
-        public EventBus(INotificationPublisher notificationPublisher, IEventStoreDataContext context, IStoreEntityConverter converter)
+        public EventBus(INotificationPublisher notificationPublisher, IEventStoreContext context, IStoreEntityConverter converter)
         {
             _notificationPublisher = notificationPublisher ?? throw new ArgumentNullException(nameof(notificationPublisher));
             _context = context ?? throw new ArgumentNullException(nameof(context));

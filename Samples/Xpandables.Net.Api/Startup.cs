@@ -15,8 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Reflection;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,12 +22,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using System.Reflection;
+
 using Xpandables.Net.Api.Database;
+using Xpandables.Net.Api.Handlers;
 using Xpandables.Net.Api.Middlewares;
 using Xpandables.Net.Api.Services;
 using Xpandables.Net.Database;
 using Xpandables.Net.DependencyInjection;
-using Xpandables.Net.EntityFramework;
 
 namespace Xpandables.Net.Api
 {
@@ -58,40 +58,39 @@ namespace Xpandables.Net.Api
                 });
 
             services
+                .AddXpandableServices()
                 .AddXDataContext<ContactContext>(options => options.UseSqlServer(Configuration.GetConnectionString("xpandables"))
                 .EnableServiceProviderCaching())
                 .AddXEventStoreDataContext(options => options.UseSqlServer(Configuration.GetConnectionString("xpandables"), builder => builder.MigrationsAssembly("Xpandables.Net.Api"))
-                .EnableServiceProviderCaching());
-
-            services.AddXDispatcher();
-            services.AddXHandlerAccessor();
-            services.AddXHandlers(new[] { Assembly.GetExecutingAssembly() }, options =>
-            {
-                options.UseAggregatePersistenceDecorator();
-                options.UseOperationResultLoggerDecorator();
-                options.UseValidatorDecorator();
-            });
-
-            services.AddXInstanceCreator();
-            services.AddXOperationResultLogger<LoggingService>();
-            services.AddXEventStore();
-            services.AddXDomainEventPublisher();
-            services.AddXNotificationPublisher();
-            services.AddXAggregateAccessor();
-            services.AddXNotificationBusService();
-            services.AddXEventBus();
-            services.AddXServiceScopeFactory();
+                .EnableServiceProviderCaching())
+                .AddXDispatcher()
+                .AddXHandlerAccessor()
+                .AddXHandlers(new[] { typeof(ContactHandlers).Assembly }, options =>
+                {
+                    options.UseAggregatePersistenceDecorator();
+                    options.UseOperationResultLoggerDecorator();
+                    options.UseValidatorDecorator();
+                })
+                .AddXInstanceCreator()
+                .AddXOperationResultLogger<LoggingService>()
+                .AddXEventStore()
+                .AddXEventStoreConverterNewtonsoft()
+                .AddXDomainEventPublisher()
+                .AddXNotificationPublisher()
+                .AddXAggregateAccessor()
+                .AddXNotificationBusService()
+                .AddXEventBus()
+                .AddXServiceScopeFactory()
+                .AddXInterceptorHandlers<ContactInterceptor>(new[] { Assembly.GetExecutingAssembly() })
+                .AddXNotificationHandlers(new[] { Assembly.GetExecutingAssembly() })
+                .AddXDomainEventHandlers(new[] { Assembly.GetExecutingAssembly() })
+                .AddXHttpRestClientHandler(_ => { })
+                .AddXHttpIPAddressAccessor()
+                .AddXHttpIPAddressLocationAccessor()
+                .Build();
 
             // comment to disable Interception
             services.AddTransient<ContactInterceptor>();
-            services.AddXInterceptorHandlers<ContactInterceptor>(new[] { Assembly.GetExecutingAssembly() });
-
-            services.AddXDomainEventHandlers(new[] { Assembly.GetExecutingAssembly() });
-            services.AddXNotificationHandlers(new[] { Assembly.GetExecutingAssembly() });
-
-            services.AddXHttpRestClientHandler(_ => { });
-            services.AddXHttpIPAddressAccessor();
-            services.AddXHttpIPAddressLocationAccessor();
 
             services.AddHostedService<ContactContextInitializer>();
             services.AddRouting(options => options.ConstraintMap.Add("string", typeof(StringConstraintMap)));

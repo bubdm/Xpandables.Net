@@ -46,7 +46,7 @@ namespace Xpandables.Net.Api.Services
         {
             await Task.Yield();
             using var service = _serviceScopeFactory.CreateScope();
-            using var context = service.ServiceProvider.GetRequiredService<IEventStoreDataContext>();
+            using var context = service.ServiceProvider.GetRequiredService<IEventStoreContext>();
             var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateAccessor<ContactAggregate>>();
 
             if (context.Set<EventEntity>().Any())

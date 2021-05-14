@@ -76,7 +76,7 @@
   </ItemGroup> 
 
   <ItemGroup>
-    <ProjectReference Include="..\Xpandables.Net\Xpandables.Net.csproj" />
+    <ProjectReference Include="..\Xpandables.Net.DependencyInjection\Xpandables.Net.DependencyInjection.csproj" />
   </ItemGroup>  
 
 </Project>

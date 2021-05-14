@@ -54,7 +54,7 @@ namespace Xpandables.Net.Tests
         [TestMethod]
         public async Task SelectTest()
         {
-            var select = new SelectQuery("70bf164a-2547-4b9a-aae3-5118ce09cb71");
+            var select = new SelectQuery("778dd33e-7ac3-4595-8717-a240a44ba96d");
             using var response = await httpRestClientHandler.SendAsync(select).ConfigureAwait(false);
 
             if (!response.IsValid())

@@ -15,14 +15,13 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using Microsoft.Extensions.Configuration;
+
 using System;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using System.Reflection;
-
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.Extensibility;
 
@@ -41,7 +40,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="configuration">The application configuration.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public static IServiceCollection AddXServiceExport(this IServiceCollection services, IConfiguration configuration)
+        public static IXpandableServiceBuilder AddXServiceExport(this IXpandableServiceBuilder services, IConfiguration configuration)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -59,7 +58,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="configureOptions"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-        public static IServiceCollection AddXServiceExport(this IServiceCollection services, IConfiguration configuration, Action<ExportServiceOptions> configureOptions)
+        public static IXpandableServiceBuilder AddXServiceExport(this IXpandableServiceBuilder services, IConfiguration configuration, Action<ExportServiceOptions> configureOptions)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -80,7 +79,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="options">The export options.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="options"/> is null.</exception>
-        private static void AddServiceExport(this IServiceCollection services, IConfiguration configuration, ExportServiceOptions options)
+        private static void AddServiceExport(this IXpandableServiceBuilder services, IConfiguration configuration, ExportServiceOptions options)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = options ?? throw new ArgumentNullException(nameof(options));
@@ -103,7 +102,7 @@ namespace Xpandables.Net.DependencyInjection
                     .OfType<IAddServiceExport>();
 
                 foreach (var export in exportServices)
-                    export.AddServices(services, configuration);
+                    export.AddServices(services.Services, configuration);
             }
             catch (Exception exception) when (exception is NotSupportedException
                                             || exception is System.IO.DirectoryNotFoundException

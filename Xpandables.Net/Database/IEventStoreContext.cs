@@ -20,5 +20,5 @@ namespace Xpandables.Net.Database
     /// <summary>
     /// Represents a set of commands to manage data context for events.
     /// </summary>
-    public interface IEventStoreDataContext : IDataContext { }
+    public interface IEventStoreContext : IDataContext { }
 }

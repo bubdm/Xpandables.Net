@@ -22,23 +22,22 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
 using Xpandables.Net.DependencyInjection;
-using Xpandables.Net.Notifications;
 
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.Notifications
 {
     /// <summary>
     /// The default implementation of <see cref="INotificationBusService"/>.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
-    public class EventBusService : BackgroundService, INotificationBusService
+    public class NotificationBusService : BackgroundService, INotificationBusService
     {
         private readonly IServiceScopeFactory<IEventBus> _serviceScopeFactory;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="EventBusService"/>.
+        /// Constructs a new instance of <see cref="NotificationBusService"/>.
         /// </summary>
         /// <param name="serviceScopeFactory">the scope factory.</param>
-        public EventBusService(IServiceScopeFactory<IEventBus> serviceScopeFactory)
+        public NotificationBusService(IServiceScopeFactory<IEventBus> serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
         }
@@ -50,7 +49,7 @@ namespace Xpandables.Net.Events
         public virtual async Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default)
         {
             if (IsRunning)
-                return new FailureOperationResult("status", $"{nameof(EventBusService)} is already up.");
+                return new FailureOperationResult("status", $"{nameof(NotificationBusService)} is already up.");
 
             IsRunning = true;
             await StartAsync(cancellationToken).ConfigureAwait(false);
@@ -61,7 +60,7 @@ namespace Xpandables.Net.Events
         public virtual async Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default)
         {
             if (!IsRunning)
-                return new FailureOperationResult("status", $"{nameof(EventBusService)} is already down.");
+                return new FailureOperationResult("status", $"{nameof(NotificationBusService)} is already down.");
 
             await StopAsync(cancellationToken).ConfigureAwait(false);
             IsRunning = false;
