@@ -48,17 +48,17 @@ namespace Xpandables.Net.Notifications
     /// <summary>
     /// This is the <see langword="abstract"/> class that implements <see cref="INotification{TDomainEvent}"/>.
     /// </summary>
-    /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
+    /// <typeparam name="TEvent">The type of target domain event.</typeparam>
     [Serializable]
-    public abstract class IntegrationEvent<TDomainEvent> : Notification, INotification<TDomainEvent>
-        where TDomainEvent : notnull, IDomainEvent
+    public abstract class Notification<TEvent> : Notification, INotification<TEvent>
+        where TEvent : notnull, IDomainEvent
     {
         /// <summary>
-        /// Initializes a default instance of the <see cref="IntegrationEvent{TDomainEvent}"/>.
+        /// Initializes a default instance of the <see cref="Notification{TDomainEvent}"/>.
         /// </summary>
         /// <param name="aggregateId">The aggregate id.</param>
         /// <param name="domainEvent">The target domain event.</param>
-        protected IntegrationEvent(TDomainEvent domainEvent, Guid aggregateId)
+        protected Notification(TEvent domainEvent, Guid aggregateId)
             : base(aggregateId)
         {
             DomainEvent = domainEvent;
@@ -72,7 +72,7 @@ namespace Xpandables.Net.Notifications
         /// <param name="eventId">The event identifier.</param>
         /// <param name="occurredOn">When the event occurred.</param>
         /// <param name="createdBy">The user name.</param>
-        protected IntegrationEvent(TDomainEvent domainEvent, Guid aggregateId, Guid eventId, DateTimeOffset occurredOn, string createdBy)
+        protected Notification(TEvent domainEvent, Guid aggregateId, Guid eventId, DateTimeOffset occurredOn, string createdBy)
             : base(aggregateId, eventId, occurredOn, createdBy)
         {
             DomainEvent = domainEvent;
@@ -82,6 +82,6 @@ namespace Xpandables.Net.Notifications
         /// Gets the target domain event.
         /// </summary>
         [JsonIgnore]
-        public TDomainEvent DomainEvent { get; }
+        public TEvent DomainEvent { get; }
     }
 }
