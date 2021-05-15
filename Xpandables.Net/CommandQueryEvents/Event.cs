@@ -43,9 +43,7 @@ namespace Xpandables.Net
         protected Event(Guid aggregateId, Guid guid, DateTimeOffset occurredOn, string createdBy)
             : base(guid, occurredOn, createdBy) => AggregateId = aggregateId;
 
-        /// <summary>
-        /// Gets the identifier of the target aggregate.
-        /// </summary>
+        ///<inheritdoc/>
         public Guid AggregateId { get; protected set; }
     }
 }

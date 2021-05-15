@@ -57,7 +57,7 @@ namespace Xpandables.Net.Api.Domains
 
         public void ChangeContactName(string name)
         {
-            AddIntegrationEvent(new ContactNameChangeIntegrationEvent(name, Name, Guid));
+            AddNotification(new ContactNameChangeIntegrationEvent(name, Name, Guid));
             RaiseEvent(new ContactNameChangedEvent(name, Guid, GetNewVersion()));
         }
 

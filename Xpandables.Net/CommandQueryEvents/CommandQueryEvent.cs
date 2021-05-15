@@ -48,21 +48,13 @@ namespace Xpandables.Net
             CreatedBy = createdBy;
         }
 
-
-        /// <summary>
-        /// Gets the unique identifier for the instance.
-        /// </summary>
+        ///<inheritdoc/>
         public Guid Guid { get; protected set; }
 
-        /// <summary>
-        /// Gets When the event occurred.
-        /// </summary>
+        ///<inheritdoc/>
         public DateTimeOffset OccurredOn { get; protected set; }
 
-        /// <summary>
-        /// Gets the name of the user running associated with the current instance.
-        /// The default value is associated with the current thread.
-        /// </summary>
+        ///<inheritdoc/>
         public string CreatedBy { get; protected set; }
     }
 }

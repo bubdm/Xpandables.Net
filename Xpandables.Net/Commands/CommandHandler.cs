@@ -28,13 +28,7 @@ namespace Xpandables.Net.Commands
     public abstract class CommandHandler<TCommand> : OperationResultBase, ICommandHandler<TCommand>
         where TCommand : class, ICommand
     {
-        /// <summary>
-        /// Asynchronously handles the specified command.
-        /// </summary>
-        /// <param name="command">The command instance to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        ///<inheritdoc/>
         public abstract Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
     }
 
@@ -46,13 +40,7 @@ namespace Xpandables.Net.Commands
     public abstract class CommandHandler<TCommand, TResult> : OperationResultBase, ICommandHandler<TCommand, TResult>
         where TCommand : class, ICommand<TResult>
     {
-        /// <summary>
-        /// Asynchronously handles the specified command.
-        /// </summary>
-        /// <param name="command">The command instance to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        ///<inheritdoc/>
         public abstract Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
     }
 }

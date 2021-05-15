@@ -26,9 +26,7 @@ namespace Xpandables.Net.Database
     public sealed class DataContextTenant<TDataContext> : IDataContextTenant<TDataContext>
         where TDataContext : class, IDataContext
     {
-        /// <summary>
-        /// The factory used to retrieve an instance of <typeparamref name="TDataContext" />.
-        /// </summary>
+        ///<inheritdoc/>
         public Func<TDataContext> Factory { get; }
 
         /// <summary>
@@ -57,9 +55,7 @@ namespace Xpandables.Net.Database
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
-        /// <summary>
-        /// Gets the unique identifier of the tenant.
-        /// </summary>
+        ///<inheritdoc/>
         public string Name { get; }
 
         Func<IDataContext> IDataContextTenant.Factory => () => Factory();

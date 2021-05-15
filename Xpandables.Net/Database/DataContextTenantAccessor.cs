@@ -38,25 +38,14 @@ namespace Xpandables.Net.Database
             _dataContextFactories = dataContextFactories?.ToDictionary(d => d.Name, d => d) ?? new Dictionary<string, IDataContextTenant>();
         }
 
-        /// <summary>
-        /// Returns the data context matching the specified tenant name. If not found returns null.
-        /// </summary>
-        /// <param name="name">The tenant name to search for.</param>
-        /// <returns>The requested data context or null if not present.</returns>
+        ///<inheritdoc/>
         public IDataContext? this[string name] =>
             _dataContextFactories.TryGetValue(name, out var factory) ? factory.Factory() : default;
 
-        /// <summary>
-        /// Gets the name of the ambient tenant.
-        /// </summary>
+        ///<inheritdoc/>
         public string? TenantName { get; private set; }
 
-        /// <summary>
-        /// Returns an instance of the ambient data context matching the <see cref="TenantName" />.
-        /// </summary>
-        /// <returns><see cref="IDataContext" /> derived class.</returns>
-        /// <exception cref="InvalidOperationException">The data context matching the current has not been registered.</exception>
-        /// <exception cref="ArgumentException">The tenant name is null.</exception>
+        ///<inheritdoc/>
         public IDataContext GetDataContext()
         {
             _ = TenantName ?? throw new ArgumentException("The tenant name has not been set.");
@@ -78,18 +67,11 @@ namespace Xpandables.Net.Database
                 yield return pair;
         }
 
-        /// <summary>
-        /// Sets the ambient tenant name using the type name.
-        /// </summary>
-        /// <typeparam name="TDataContext">The type of the data context.</typeparam>
+        ///<inheritdoc/>
         public void SetTenantName<TDataContext>()
             where TDataContext : class, IDataContext => TenantName = typeof(TDataContext).Name;
 
-        /// <summary>
-        /// Sets the ambient tenant name.
-        /// </summary>
-        /// <param name="name">The name of the tenant.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="name" /> is null.</exception>
+        ///<inheritdoc/>
         public void SetTenantName(string name) => TenantName = name ?? throw new ArgumentNullException(nameof(name));
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

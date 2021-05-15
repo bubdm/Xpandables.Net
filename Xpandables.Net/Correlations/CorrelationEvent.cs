@@ -32,15 +32,10 @@ namespace Xpandables.Net.Correlations
         /// </summary>
         public CorrelationEvent() { }
 
-        /// <summary>
-        /// The event that will be asynchronously raised after the main one in the same control flow only if there is no exception.
-        /// The event will received the control flow return value for non-void method. Its default behavior does nothing.
-        /// </summary>
+        ///<inheritdoc/>
         public event CorrelationPostEvent PostEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
 
-        /// <summary>
-        /// The event that will be asynchronously raised after the main one when exception. The event will received the control flow handled exception. Its default behavior does nothing.
-        /// </summary>
+        ///<inheritdoc/>
         public event CorrelationRollbackEvent RollbackEvent = async _ => await Task.CompletedTask.ConfigureAwait(false);
 
         /// <summary>

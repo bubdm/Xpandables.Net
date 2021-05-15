@@ -45,16 +45,7 @@ namespace Xpandables.Net.Dispatchers
         public Dispatcher(IHandlerAccessor handlerAccessor)
             => _handlerAccessor = handlerAccessor ?? throw new ArgumentNullException(nameof(handlerAccessor));
 
-        /// <summary>
-        /// Asynchronously fetches the query handler (<see cref="IAsyncQueryHandler{TQuery, TResult}"/> implementation) on the specified query
-        /// and returns an asynchronous enumerable of <typeparamref name="TResult"/> type.
-        /// </summary>
-        /// <typeparam name="TResult">Type of the result.</typeparam>
-        /// <param name="query">The query to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
+        ///<inheritdoc/>
         public virtual IAsyncEnumerable<TResult> FetchAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
@@ -81,15 +72,7 @@ namespace Xpandables.Net.Dispatchers
             return handler.HandleAsync(query, cancellationToken);
         }
 
-        /// <summary>
-        /// Asynchronously fetches the query handler(<see cref="IQueryHandler{TQuery, TResult}"/> implementation) on the specified query.
-        /// </summary>
-        /// <typeparam name="TResult">Type of the result.</typeparam>
-        /// <param name="query">The query to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
+        ///<inheritdoc/>
         public virtual async Task<IOperationResult<TResult>> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
@@ -117,14 +100,7 @@ namespace Xpandables.Net.Dispatchers
             return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Asynchronously sends the command handler (<see cref="ICommandHandler{TCommand}"/> implementation) on the specified command.
-        /// </summary>
-        /// <param name="command">The command to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
+        ///<inheritdoc/>
         public virtual async Task<IOperationResult> SendAsync(ICommand command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
@@ -149,15 +125,7 @@ namespace Xpandables.Net.Dispatchers
             return await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Asynchronously sends the command handler(<see cref="ICommandHandler{TCommand, TResult}"/> implementation) on the specified command.
-        /// </summary>
-        /// <typeparam name="TResult">Type of the result.</typeparam>
-        /// <param name="command">The command to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
+        ///<inheritdoc/>
         public virtual async Task<IOperationResult<TResult>> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));

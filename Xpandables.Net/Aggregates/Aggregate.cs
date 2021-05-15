@@ -32,9 +32,9 @@ namespace Xpandables.Net.Aggregates
     [DebuggerDisplay("Guid = {" + nameof(Guid) + "} Version = {" + nameof(Version) + "}")]
     public abstract class Aggregate : OperationResultBase, IAggregate, IEventSourcing, INotificationSourcing
     {
-        private readonly ICollection<IDomainEvent> _domainEvents = new LinkedList<IDomainEvent>();
-        private readonly ICollection<INotification> _integrationEvents = new LinkedList<INotification>();
-        private readonly IDictionary<Type, Action<IDomainEvent>> _domainEventHandlers = new Dictionary<Type, Action<IDomainEvent>>();
+        private readonly ICollection<IDomainEvent> _events = new LinkedList<IDomainEvent>();
+        private readonly ICollection<INotification> _notifications = new LinkedList<INotification>();
+        private readonly IDictionary<Type, Action<IDomainEvent>> _eventHandlers = new Dictionary<Type, Action<IDomainEvent>>();
 
         /// <summary>
         /// Gets the current version of the instance, the default value is -1.
@@ -54,33 +54,14 @@ namespace Xpandables.Net.Aggregates
             RegisterEventHandlers();
         }
 
-        /// <summary>
-        /// Marks all the integration events as committed.
-        /// </summary>
-        void INotificationSourcing.MarkEventsAsCommitted() => _integrationEvents.Clear();
+        void INotificationSourcing.MarkNotificationsAsCommitted() => _notifications.Clear();
 
-        /// <summary>
-        /// Returns a collection of integration events.
-        /// </summary>
-        /// <returns>A list of integration events.</returns>
-        IOrderedEnumerable<INotification> INotificationSourcing.GetOutboxEvents() => _integrationEvents.OrderBy(o => o.OccurredOn);
+        IOrderedEnumerable<INotification> INotificationSourcing.GetNotifications() => _notifications.OrderBy(o => o.OccurredOn);
 
-        /// <summary>
-        /// Marks all the events as committed. Just clear the list.
-        /// </summary>
-        void IEventSourcing.MarkEventsAsCommitted() => _domainEvents.Clear();
+        void IEventSourcing.MarkEventsAsCommitted() => _events.Clear();
 
-        /// <summary>
-        /// Returns a collection of uncommitted events.
-        /// </summary>
-        /// <returns>A list of uncommitted events.</returns>
-        IOrderedEnumerable<IDomainEvent> IEventSourcing.GetUncommittedEvents() => _domainEvents.OrderBy(o => o.Version);
+        IOrderedEnumerable<IDomainEvent> IEventSourcing.GetUncommittedEvents() => _events.OrderBy(o => o.Version);
 
-        /// <summary>
-        /// Initializes the underlying aggregate with the specified history events.
-        /// </summary>
-        /// <param name="events">The collection of events to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="events"/> is null.</exception>
         void IEventSourcing.LoadFromHistory(IOrderedEnumerable<IDomainEvent> events)
         {
             _ = events ?? throw new ArgumentNullException(nameof(events));
@@ -92,11 +73,6 @@ namespace Xpandables.Net.Aggregates
             }
         }
 
-        /// <summary>
-        /// Applies the specified history domain event to the underlying aggregate.
-        /// </summary>
-        /// <param name="event">The event to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         void IEventSourcing.LoadFromHistory(IDomainEvent @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
@@ -105,35 +81,23 @@ namespace Xpandables.Net.Aggregates
             Version = @event.Version;
         }
 
-        /// <summary>
-        /// Applies the specified event to the current instance.
-        /// </summary>
-        /// <param name="event">The event to act with.</param>
-        /// <exception cref="ArgumentException">The <paramref name="event"/> is null.</exception>
         void IEventSourcing.Apply(IDomainEvent @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            if (!_domainEvents.Any(e => Equals(e.Guid, @event.Guid)))
+            if (!_events.Any(e => Equals(e.Guid, @event.Guid)))
                 ((IEventSourcing)this).Mutate(@event);
             else
                 return;
 
-            _domainEvents.Add(@event);
+            _events.Add(@event);
         }
 
-        /// <summary>
-        /// Applies the mutation calling the handler that matches the specified event.
-        /// The default behavior uses a dictionary of type event and handlers.
-        /// </summary>
-        /// <param name="event">The event to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The expected handler is not registered.</exception>
         void IEventSourcing.Mutate(IDomainEvent @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            if (!_domainEventHandlers.TryGetValue(@event.GetType(), out var eventHandler))
+            if (!_eventHandlers.TryGetValue(@event.GetType(), out var eventHandler))
                 throw new InvalidOperationException($"The {@event.GetType().Name} requested handler is not registered.");
 
             Guid = @event.AggregateId;
@@ -141,20 +105,20 @@ namespace Xpandables.Net.Aggregates
         }
 
         /// <summary>
-        /// Adds the specified integration event to the entity collection of events.
+        /// Adds the specified notification to the entity collection of events.
         /// This event will be published using the out-box pattern.
         /// </summary>
-        /// <param name="event">The event to be added.</param>
-        /// <exception cref=" ArgumentNullException">The <paramref name="event"/> is null. </exception>
-        /// <exception cref="InvalidOperationException">The target event already exist in the collection.</exception>
-        protected void AddIntegrationEvent(INotification @event)
+        /// <param name="notification">The notification to be added.</param>
+        /// <exception cref=" ArgumentNullException">The <paramref name="notification"/> is null. </exception>
+        /// <exception cref="InvalidOperationException">The target notification already exist in the collection.</exception>
+        protected void AddNotification(INotification notification)
         {
-            _ = @event ?? throw new ArgumentNullException(nameof(@event));
+            _ = notification ?? throw new ArgumentNullException(nameof(notification));
 
-            if (_integrationEvents.Any(e => e.Guid == @event.Guid))
-                throw new InvalidOperationException($"The {@event.Guid} already exist in the collection");
+            if (_notifications.Any(e => e.Guid == notification.Guid))
+                throw new InvalidOperationException($"The {notification.Guid} already exist in the collection");
 
-            _integrationEvents.Add(@event);
+            _notifications.Add(notification);
         }
 
         /// <summary>
@@ -187,7 +151,7 @@ namespace Xpandables.Net.Aggregates
             where TEvent : class, IDomainEvent
         {
             _ = eventHandler ?? throw new ArgumentNullException(nameof(eventHandler));
-            _domainEventHandlers.Add(typeof(TEvent), @event => eventHandler((TEvent)@event));
+            _eventHandlers.Add(typeof(TEvent), @event => eventHandler((TEvent)@event));
         }
 
         /// <summary>

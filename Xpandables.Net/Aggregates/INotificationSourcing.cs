@@ -29,12 +29,12 @@ namespace Xpandables.Net.Aggregates
         /// <summary>
         /// Marks all notifications as committed.
         /// </summary>
-        void MarkEventsAsCommitted();
+        void MarkNotificationsAsCommitted();
 
         /// <summary>
         /// Returns a collection of notifications.
         /// </summary>
         /// <returns>A list of notifications.</returns>
-        IOrderedEnumerable<INotification> GetOutboxEvents();
+        IOrderedEnumerable<INotification> GetNotifications();
     }
 }

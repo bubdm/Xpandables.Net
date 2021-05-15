@@ -71,12 +71,12 @@ namespace Xpandables.Net.Aggregates
 
             if (aggregate is INotificationSourcing aggregateOutbox)
             {
-                foreach (var @event in aggregateOutbox.GetOutboxEvents())
+                foreach (var @event in aggregateOutbox.GetNotifications())
                 {
                     await _eventStore.AppendEventAsync(@event, cancellationToken).ConfigureAwait(false);
                 }
 
-                aggregateOutbox.MarkEventsAsCommitted();
+                aggregateOutbox.MarkNotificationsAsCommitted();
             }
         }
 

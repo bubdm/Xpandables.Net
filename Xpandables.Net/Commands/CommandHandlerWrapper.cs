@@ -38,22 +38,10 @@ namespace Xpandables.Net.Commands
         public CommandHandlerWrapper(ICommandHandler<TCommand, TResult> decoratee)
             => _decoratee = decoratee ?? throw new ArgumentNullException($"{decoratee} : {nameof(TCommand)}.{nameof(TResult)}");
 
-        /// <summary>
-        /// Determines whether or not a an argument can be handled by the underlying context.
-        /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
-        /// The default behavior returns <see langword="true"/>.
-        /// </summary>
-        /// <param name="argument">The argument to handle.</param>
-        /// <returns><see langword="true"/> if the argument can be handled, otherwise <see langword="false"/></returns>
+        ///<inheritdoc/>
         public bool CanHandle(object argument) => _decoratee.CanHandle(argument);
 
-        /// <summary>
-        /// Asynchronously handles the specified command with the wrapped handler and returns the task result.
-        /// </summary>
-        /// <param name="command">The command to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        ///<inheritdoc/>
         public async Task<IOperationResult<TResult>> HandleAsync(ICommand<TResult> command, CancellationToken cancellationToken = default)
             => await _decoratee.HandleAsync((TCommand)command, cancellationToken).ConfigureAwait(false);
     }
