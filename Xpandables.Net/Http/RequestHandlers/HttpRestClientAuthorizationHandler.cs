@@ -27,17 +27,19 @@ namespace Xpandables.Net.Http.RequestHandlers
     /// Provides with a handler that can be used with <see cref="HttpClient"/> to add header authorization value
     /// before request execution.
     /// </summary>
-    public class HttpRestClientAuthorizationHandler : DelegatingHandler
+    public class HttpRestClientAuthorizationHandler : HttpClientHandler
     {
-        private readonly IHttpRestClientAuthorizationProvider _httprestClientAuthorizationProvider;
+        private readonly IHttpRestClientAuthorizationProvider _httpRestClientAuthorizationProvider;
 
         /// <summary>
         /// Initializes a new instance of <see cref="HttpRestClientAuthorizationHandler"/> class with the token accessor.
         /// </summary>
-        /// <param name="httprestClientAuthorizationProvider">The token provider to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="httprestClientAuthorizationProvider"/> is null.</exception>
-        public HttpRestClientAuthorizationHandler(IHttpRestClientAuthorizationProvider httprestClientAuthorizationProvider)
-            => _httprestClientAuthorizationProvider = httprestClientAuthorizationProvider ?? throw new ArgumentNullException(nameof(httprestClientAuthorizationProvider));
+        /// <param name="httpRestClientAuthorizationProvider">The token provider to act with.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientAuthorizationProvider"/> is null.</exception>
+        public HttpRestClientAuthorizationHandler(IHttpRestClientAuthorizationProvider httpRestClientAuthorizationProvider)
+        {
+            _httpRestClientAuthorizationProvider = httpRestClientAuthorizationProvider ?? throw new ArgumentNullException(nameof(httpRestClientAuthorizationProvider));
+        }
 
         /// <summary>
         /// Creates an instance of System.Net.Http.HttpResponseMessage based on the information
@@ -54,7 +56,7 @@ namespace Xpandables.Net.Http.RequestHandlers
             if (request.Headers.Authorization is not { Parameter: null } authorization)
                 return await base.SendAsync(request, cancellationToken);
 
-            var token = await _httprestClientAuthorizationProvider.ReadAuthorization() ?? throw new InvalidOperationException("Expected authorization not found.");
+            var token = await _httpRestClientAuthorizationProvider.ReadAuthorization() ?? throw new InvalidOperationException("Expected authorization not found.");
             request.Headers.Authorization = new AuthenticationHeaderValue(authorization.Scheme, token);
 
             return await base.SendAsync(request, cancellationToken);
