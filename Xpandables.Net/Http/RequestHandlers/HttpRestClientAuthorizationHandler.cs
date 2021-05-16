@@ -29,15 +29,15 @@ namespace Xpandables.Net.Http.RequestHandlers
     /// </summary>
     public class HttpRestClientAuthorizationHandler : DelegatingHandler
     {
-        private readonly IHttpHeaderAccessor _httpHeaderAccessor;
+        private readonly IHttpRestClientAuthorizationProvider _httprestClientAuthorizationProvider;
 
         /// <summary>
         /// Initializes a new instance of <see cref="HttpRestClientAuthorizationHandler"/> class with the token accessor.
         /// </summary>
-        /// <param name="httpHeaderAccessor">The token accessor to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="httpHeaderAccessor"/> is null.</exception>
-        public HttpRestClientAuthorizationHandler(IHttpHeaderAccessor httpHeaderAccessor)
-            => _httpHeaderAccessor = httpHeaderAccessor ?? throw new ArgumentNullException(nameof(httpHeaderAccessor));
+        /// <param name="httprestClientAuthorizationProvider">The token provider to act with.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="httprestClientAuthorizationProvider"/> is null.</exception>
+        public HttpRestClientAuthorizationHandler(IHttpRestClientAuthorizationProvider httprestClientAuthorizationProvider)
+            => _httprestClientAuthorizationProvider = httprestClientAuthorizationProvider ?? throw new ArgumentNullException(nameof(httprestClientAuthorizationProvider));
 
         /// <summary>
         /// Creates an instance of System.Net.Http.HttpResponseMessage based on the information
@@ -47,17 +47,17 @@ namespace Xpandables.Net.Http.RequestHandlers
         /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The token is not available. See inner exception.</exception>
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
             if (request.Headers.Authorization is not { Parameter: null } authorization)
-                return base.SendAsync(request, cancellationToken);
+                return await base.SendAsync(request, cancellationToken);
 
-            var token = _httpHeaderAccessor.Request.ReadValue("Authorization") ?? throw new InvalidOperationException("Expected authorization not found.");
+            var token = await _httprestClientAuthorizationProvider.ReadAuthorization() ?? throw new InvalidOperationException("Expected authorization not found.");
             request.Headers.Authorization = new AuthenticationHeaderValue(authorization.Scheme, token);
 
-            return base.SendAsync(request, cancellationToken);
+            return await base.SendAsync(request, cancellationToken);
         }
     }
 }

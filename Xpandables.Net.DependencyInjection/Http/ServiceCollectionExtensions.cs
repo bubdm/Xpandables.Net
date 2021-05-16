@@ -79,8 +79,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
-        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpHeaderAccessor"/> using
-        ///  the <see cref="AddXHttpHeaderAccessor{THttpHeaderAccessor}(IXpandableServiceBuilder)"/> method.
+        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpRestClientAuthorizationProvider"/> using
+        ///  the <see cref="AddXHttprestClientAuthorizationProvider{THttpRestClientAuthorizationProvider}(IXpandableServiceBuilder)"/> method.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
@@ -92,8 +92,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
-        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpHeaderAccessor"/> using
-        ///  the <see cref="AddXHttpHeaderAccessor{THttpHeaderAccessor}(IXpandableServiceBuilder)"/> method.
+        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpRestClientAuthorizationProvider"/> using
+        ///  the <see cref="AddXHttprestClientAuthorizationProvider{THttpRestClientAuthorizationProvider}(IXpandableServiceBuilder)"/> method.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
@@ -118,8 +118,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
-        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpHeaderAccessor"/> using
-        ///  the <see cref="AddXHttpHeaderAccessor{THttpHeaderAccessor}(IXpandableServiceBuilder)"/> method.
+        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpRestClientAuthorizationProvider"/> using
+        ///  the <see cref="AddXHttprestClientAuthorizationProvider{THttpRestClientAuthorizationProvider}(IXpandableServiceBuilder)"/> method.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
@@ -127,6 +127,21 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
         public static IXpandableServiceBuilder AddXHttpRestClientNewtonsoftHandlerWithAuthorizationTokenHandler(this IXpandableServiceBuilder services, Action<HttpClient> configureClient)
             => services.AddXHttpRestClientHandlerWithAuthorizationTokenHandler<HttpRestClientNewtonsoftRequestBuilder, HttpRestClientNewtonsoftResponseBuilder>(configureClient);
+
+        /// <summary>
+        /// Adds the specified HTTP Rest Client Authorization Provider that implements the <see cref="IHttpRestClientAuthorizationProvider"/>.
+        /// </summary>
+        /// <typeparam name="THttpRestClientAuthorizationProvider">The type that implements <see cref="IHttpRestClientAuthorizationProvider"/>.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXHttprestClientAuthorizationProvider<THttpRestClientAuthorizationProvider>(this IXpandableServiceBuilder services)
+            where THttpRestClientAuthorizationProvider : class, IHttpRestClientAuthorizationProvider
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<IHttpRestClientAuthorizationProvider, THttpRestClientAuthorizationProvider>();
+            return services;
+        }
 
         /// <summary>
         /// Adds the specified HTTP request header values accessor that implements the <see cref="IHttpHeaderAccessor"/>.
@@ -145,8 +160,8 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Adds a delegate that will be used to provide the authorization token before request execution
-        /// using an implementation of <see cref="IHttpHeaderAccessor"/>. You need to register the implementation using
-        /// the <see cref="AddXHttpHeaderAccessor{THttpHeaderAccessor}(IXpandableServiceBuilder)"/> or the default extension.
+        /// using an implementation of <see cref="IHttpRestClientAuthorizationProvider"/>. You need to register the implementation using
+        /// the <see cref="AddXHttprestClientAuthorizationProvider{THttpRestClientAuthorizationProvider}(IXpandableServiceBuilder)"/> or the default extension.
         /// </summary>
         /// <param name="builder">The Microsoft.Extensions.DependencyInjection.IHttpClientBuilder.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
@@ -156,8 +171,8 @@ namespace Xpandables.Net.DependencyInjection
 
             builder.ConfigurePrimaryHttpMessageHandler(provider =>
             {
-                var httpHeaderAccessor = provider.GetRequiredService<IHttpHeaderAccessor>();
-                return new HttpRestClientAuthorizationHandler(httpHeaderAccessor);
+                var httpRestClientAuthorizationProvider = provider.GetRequiredService<IHttpRestClientAuthorizationProvider>();
+                return new HttpRestClientAuthorizationHandler(httpRestClientAuthorizationProvider);
             });
 
             return builder;
