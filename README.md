@@ -4,8 +4,6 @@ The library is strongly-typed, which means it should be hard to make invalid req
 
 Feel free to fork this project, make your own changes and create a pull request.
 
-See [Samples](https://github.com/Francescolis/Xpandables.Net/tree/Net5.0/Samples/Xpandables.Net.Api) for more details.
-
 ## Model definition
 
 ```cs
@@ -53,7 +51,6 @@ public sealed class ContactModel : Entity
      protected override void OnModelCreating(ModelBuilder modelBuilder)
      {
          modelBuilder.Entity<ContactModel>().HasKey(new string[] { nameof(ContactModel.Id) });
-         modelBuilder.Entity<ContactModel>().HasIndex(new string[] { nameof(ContactModel.Id) }).IsUnique();
      }
      public DbSet<ContactModel> Contacts { get; set; } = default!;
  }
@@ -70,15 +67,16 @@ public sealed class ContactModel : Entity
 // actions because they are already included in the contracts, 
 // by implementing interfaces such as IPathStringLocationRequest, IFormUrlEncodedRequest,
 // IMultipartRequest...
-// RecordExpression{T} allows the derived class to be used for a where clause (for record).
-// You can use QueryExpression{T} for class definition or define Specifications.
+// QueryExpression{T} allows the derived class to be used for a where clause.
 
  [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = false, 
     IsNullable = true, In = ParameterLocation.Path)]
- public sealed record Select([Required] string Id) :
-    RecordExpression<ContactModel>, IQuery<Contact>, IHttpRestClientRequest<Contact>,
+ public sealed class Select([Required] string Id) :
+    QueryExpression<ContactModel>, IQuery<Contact>, IHttpRestClientRequest<Contact>,
     IPathStringLocationRequest, IInterceptorDecorator
  {
+     public Select(string id) => Id = id;
+     public string Id {get; init; }
      public override Expression<Func<ContactModel, bool>> GetExpression() 
         => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
         
@@ -121,21 +119,6 @@ public sealed class ContactValidators : OperationResultBase,
     
     ....
     
-    public async Task<IOperationResult> ValidateAsync(
-       Edit argument, CancellationToken cancellationToken = default)
-    {
-        if(await _dataContext
-           .TryFindAsync(argument, cancellationToken)
-           .ConfigureAwait(false) is not { } contact)
-           return NotFoundOperation(nameof(argument.Id), "Contact not found");
-
-        argument.Name = contact.Name;
-        argument.City = contact.City;
-        argument.Address = contact.Address;
-        argument.Country = contact.Country;
-
-        return argument.ApplyPatch(argument);
-    }
 }
 
 ```
@@ -144,9 +127,7 @@ public sealed class ContactValidators : OperationResultBase,
 
 ```cs
 
-public sealed class ContactHandlers : OperationResultBase,
-   IAsyncQueryHandler<SelectAll, Contact>, IQueryHandler<Select, Contact>, ICommandHandler<Add, string>, 
-   ICommandHandler<Delete>, ICommandHandler<Edit, Contact>
+public sealed class SelectQueryHandler : QueryHandler<Select, Contact>
 {
     private readonly IEntityAccessor<ContactModel> _entityAcessor;
     public ContactHandlers(
@@ -157,21 +138,11 @@ public sealed class ContactHandlers : OperationResultBase,
        Select query, CancellationToken cancellationToken = default)
         => OkOperation<Contact>(
                 await _entityAccessor
-                 .FindAsync(query,
+                 .TryFindAsync(query,
                   s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken));
                   
    ...
    
-   public async Task<IOperationResult<Contact>> HandleAsync(
-      Edit command, CancellationToken cancellationToken = default)
-   {
-       var toEdit = await _entityAccessor.FindAsync(command, cancellationToken).ConfigureAwait(false);
-       toEdit.Edit(command.Name, command.City, command.Address, command.Country);
-
-       await _entityAccessor.UpdateAsync(toEdit, cancellationToken).ConfigureAwait(false);
-       return OkOperation<Contact>(
-          new Contact(toEdit.Id, toEdit.Name, toEdit.City, toEdit.Address, toEdit.Country));
-   }
 }
 
 ```
@@ -218,19 +189,26 @@ public class ContactsController : ControllerBase
 ...
 
 [TestMethod]
-public async Task SelectAllTest()
+public async Task SelectTest()
 {
-   var selectAll = new SelectAll();
-   using var response = await httpRestClientHandler.HandleAsync(selectAll).ConfigureAwait(false);
+    Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+    var factory = new WebApplicationFactory<Program>(); // from the api
+    var client = factory.CreateClient();
+    using var httpRestClientHandler = new HttpRestClientHandler(new HttpRestClientNewtonsoftRequestBuilder(), new HttpRestClientNewtonsoftResponseBuilder(), client);
 
-   if (!response.IsValid())
-   {
-      Trace.WriteLine($"{response.StatusCode}");
+    var select = new Select("ADHK12JkDiKJD");
+    using var response = await httpRestClientHandler.HandleAsync(selectAll).ConfigureAwait(false);
+
+    if (!response.IsValid())
+    {
+         Trace.WriteLine($"{response.StatusCode}");
          return;
-   }
+    }
     else
-       await foreach (var contact in response.Result)
-         Trace.WriteLine($"{contact.Id} {contact.Name} {contact.City} {contact.Address} {contact.Country}");
+    {
+        var contact = response.Result;
+        Trace.WriteLine($"{contact.Id} {contact.Name} {contact.City} {contact.Address} {contact.Country}");
+    }
 }
 
 ...
@@ -250,7 +228,10 @@ In your api startup class
 public class Startup
 {
     ....
-    services.AddXServiceExport(Configuration, options => options.SearchPattern = "your-search-pattern-dll");
+    services
+        .AddXpandableServices()
+        .AddXServiceExport(Configuration, options => options.SearchPattern = "your-search-pattern-dll")
+        .Build();
     ...
 }
 
@@ -264,8 +245,11 @@ public sealed class RegisterServiceExport : IAddServiceExport
 {
     public void AddServices(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddXDispatcher();
-        services.AddXTokenEngine<TokenEngine>();
+        services
+            .AddXpandableServices()
+            .AddXDispatcher()
+            .AddXTokenEngine<TokenEngine>()
+            .Build();
         ....
     }
 }
@@ -297,16 +281,28 @@ Suppose you want to add logging for the Add command ...
 // The Add command definition
 
 [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
-public sealed record Add([Required] string Name, [Required] string City, [Required] string Address, [Required] string Country) :
-   RecordExpression<ContactModel>, ICommand<string>, IValidatorDecorator, IPersistenceDecorator, IInterceptorDecorator
+public sealed class Add() : QueryExpression<ContactModel>, ICommand<string>, IValidatorDecorator, IPersistenceDecorator, IInterceptorDecorator
 {
+    public Add(string name, string city, string address, string country)
+    {
+        Name = name;
+        City = city;
+        Address = address;
+        Country country;
+    }
+
+    public string Name { get; init; }
+    public string City { get; init; }
+    pubcli string Address { get; init; }
+    public string Country { get; init;}
+
     public override Expression<Func<ContactModel, bool>> GetExpression()
       => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
 }
 
 // The Add command handler
 
-public sealed class AddHandler : OperationResultBase, ICommandHandler<Add, string>
+public sealed class AddHandler : CommandHandler<Add, string>
 {
     public async Task<IOperationResult<string>> HandleAsync(
        Add command, CancellationToken cancellationToken = default)
@@ -366,14 +362,16 @@ public sealed class CommandLoggingDecorator<TCommand, TResult> : ICommandHandler
 
 services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));
 
-// or you can implement the ILoggingHandler interface and use the registration as follow
+// or You must provide with an implementation of "IOperationResultLogger" and use the registration as follow
 
-services.AddXHandlers(assemblyCollection, options=>
+services
+    .AddXpandableServices()
+    .AddXHandlers(assemblyCollection, options=>
     {
-        options.UseLoggingDecorator();
+        options.UseOperationResultLoggerDecorator();
     });
 
-// services.AddXHandlers will register all handlers (ICommandhandler{}, IQueryHandler{}) adding a decorator for each
+// .AddXHandlers will register all handlers (ICommandhandler{}, IQueryHandler{}, IAsyncQueryHandler{}) adding a decorator for each
 // handler, that will apply your implementation of ILoggingHandler for commands implementing ILoggingDecorator
 .
 ```
