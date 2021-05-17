@@ -35,11 +35,11 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IServiceCollection AddXLazyTransient(this IServiceCollection services)
+        public static IXpandableServiceBuilder AddXLazyTransient(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddTransient(typeof(Lazy<>), typeof(LazyResolved<>));
+            services.Services.AddTransient(typeof(Lazy<>), typeof(LazyResolved<>));
             return services;
         }
 
@@ -50,14 +50,14 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
         /// <param name="configuration">The configuration instance.</param>
         /// <returns> The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
-        public static IServiceCollection XConfigureOptions<TOptions>(this IServiceCollection services, IConfiguration configuration)
+        public static IXpandableServiceBuilder XConfigureOptions<TOptions>(this IXpandableServiceBuilder services, IConfiguration configuration)
             where TOptions : class
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
-            services.Configure<TOptions>(configuration.GetSection(typeof(TOptions).Name));
-            services.AddTransient(_ => configuration.GetSection(typeof(TOptions).Name).Get<TOptions>());
+            services.Services.Configure<TOptions>(configuration.GetSection(typeof(TOptions).Name));
+            services.Services.AddTransient(_ => configuration.GetSection(typeof(TOptions).Name).Get<TOptions>());
 
             return services;
         }
@@ -110,7 +110,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </typeparam>
         /// <param name="services">The collection of services to act on.</param>
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
-        public static IServiceCollection XTryDecorate<TService, TDecorator>(this IServiceCollection services)
+        public static IXpandableServiceBuilder XTryDecorate<TService, TDecorator>(this IXpandableServiceBuilder services)
             where TService : class
             where TDecorator : class, TService
         {
@@ -139,8 +139,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="decorator">The decorator function type that will be used to wrap the original service type.</param>
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="decorator"/> argument is <c>null</c>.</exception>
-        public static IServiceCollection XTryDecorate<TService>(
-            this IServiceCollection services,
+        public static IXpandableServiceBuilder XTryDecorate<TService>(
+            this IXpandableServiceBuilder services,
             Func<TService, IServiceProvider, TService> decorator)
             where TService : class
         {
@@ -172,8 +172,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="serviceType"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="decorator"/> argument is <c>null</c>.</exception>
-        public static IServiceCollection XTryDecorate(
-            this IServiceCollection services,
+        public static IXpandableServiceBuilder XTryDecorate(
+            this IXpandableServiceBuilder services,
             Type serviceType,
             Func<object, IServiceProvider, object> decorator)
         {
@@ -204,8 +204,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="decorator">The decorator function type that will be used to wrap the original service type.</param>
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="decorator"/> argument is <c>null</c>.</exception>
-        public static IServiceCollection XTryDecorate<TService>(
-            this IServiceCollection services,
+        public static IXpandableServiceBuilder XTryDecorate<TService>(
+            this IXpandableServiceBuilder services,
             Func<TService, TService> decorator)
             where TService : class
         {
@@ -237,8 +237,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="serviceType"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="decorator"/> argument is <c>null</c>.</exception>
-        public static IServiceCollection XTryDecorate(
-            this IServiceCollection services,
+        public static IXpandableServiceBuilder XTryDecorate(
+            this IXpandableServiceBuilder services,
             Type serviceType,
             Func<object, object> decorator)
         {
@@ -270,8 +270,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="serviceType"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="decoratorType"/> argument is <c>null</c>.</exception>
-        public static IServiceCollection XTryDecorate(
-            this IServiceCollection services,
+        public static IXpandableServiceBuilder XTryDecorate(
+            this IXpandableServiceBuilder services,
             Type serviceType,
             Type decoratorType)
         {
@@ -284,12 +284,12 @@ namespace Xpandables.Net.DependencyInjection
                 : services.DecorateDescriptors(serviceType, serviceDescriptor => serviceDescriptor.DecorateDescriptor(decoratorType));
         }
 
-        private static IServiceCollection DecorateOpenGenerics(
-            this IServiceCollection services,
+        private static IXpandableServiceBuilder DecorateOpenGenerics(
+            this IXpandableServiceBuilder services,
             Type serviceType,
             Type decoratorType)
         {
-            foreach (var argument in services.GetArgumentTypes(serviceType))
+            foreach (var argument in services.Services.GetArgumentTypes(serviceType))
             {
                 if (serviceType.TryMakeGenericType(out var closedServiceType, out _, argument)
                     && decoratorType.TryMakeGenericType(out var closedDecoratorType, out _, argument))
@@ -301,15 +301,15 @@ namespace Xpandables.Net.DependencyInjection
             return services;
         }
 
-        private static IServiceCollection DecorateDescriptors(
-            this IServiceCollection services,
+        private static IXpandableServiceBuilder DecorateDescriptors(
+            this IXpandableServiceBuilder services,
             Type serviceType,
             Func<ServiceDescriptor, ServiceDescriptor> decorator)
         {
-            foreach (var descriptor in services.GetServiceDescriptors(serviceType))
+            foreach (var descriptor in services.Services.GetServiceDescriptors(serviceType))
             {
-                var index = services.IndexOf(descriptor);
-                services[index] = decorator(descriptor);
+                var index = services.Services.IndexOf(descriptor);
+                services.Services[index] = decorator(descriptor);
             }
 
             return services;

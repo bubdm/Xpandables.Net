@@ -59,10 +59,10 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingDecorator<>));
-            services.Services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));
-            services.Services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryLoggingDecorator<,>));
-            services.Services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryLoggingDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryLoggingDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryLoggingDecorator<,>));
 
             return services;
         }
@@ -80,10 +80,10 @@ namespace Xpandables.Net.DependencyInjection
 
             services.AddXOperationResultLogger<TOperationResultLogger>();
 
-            services.Services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingDecorator<>));
-            services.Services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));
-            services.Services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryLoggingDecorator<,>));
-            services.Services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryLoggingDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryLoggingDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryLoggingDecorator<,>));
 
             return services;
         }

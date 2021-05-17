@@ -48,8 +48,8 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandPersistenceDecorator<>));
-            services.Services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandPersistenceDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandPersistenceDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandPersistenceDecorator<,>));
             return services;
         }
 
@@ -63,8 +63,8 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandAggregatePersistenceDecorator<>));
-            services.Services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandAggregatePersistenceDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandAggregatePersistenceDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandAggregatePersistenceDecorator<,>));
             return services;
         }
 
@@ -78,7 +78,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.XTryDecorate(typeof(INotificationHandler<>), typeof(NotificationPersistenceDecorator<>));
+            services.XTryDecorate(typeof(INotificationHandler<>), typeof(NotificationPersistenceDecorator<>));
             return services;
         }
 
@@ -129,8 +129,8 @@ namespace Xpandables.Net.DependencyInjection
                 throw new ArgumentNullException(nameof(services));
             }
 
-            services.Services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandTransactionDecorator<>));
-            services.Services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandTransactionDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandTransactionDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandTransactionDecorator<,>));
             return services;
         }
 
@@ -145,10 +145,10 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.Services.AddTransient(typeof(ICompositeValidator<>), typeof(CompositeValidator<>));
-            services.Services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandValidatorDecorator<>));
-            services.Services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandValidatorDecorator<,>));
-            services.Services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryValidatorDecorator<,>));
-            services.Services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryValidatorDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandValidatorDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandValidatorDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryValidatorDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryValidatorDecorator<,>));
             return services;
         }
 
@@ -166,10 +166,10 @@ namespace Xpandables.Net.DependencyInjection
             }
 
             services.Services.AddTransient(typeof(ICompositeVisitor<>), typeof(CompositeVisitor<>));
-            services.Services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandVisitorDecorator<>));
-            services.Services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandVisitorDecorator<,>));
-            services.Services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryVisitorDecorator<,>));
-            services.Services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryVisitorDecorator<,>));
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandVisitorDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandVisitorDecorator<,>));
+            services.XTryDecorate(typeof(IAsyncQueryHandler<,>), typeof(AsyncQueryVisitorDecorator<,>));
+            services.XTryDecorate(typeof(IQueryHandler<,>), typeof(QueryVisitorDecorator<,>));
             return services;
         }
 

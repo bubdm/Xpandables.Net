@@ -50,7 +50,7 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (!typeof(TInterface).IsInterface) throw new ArgumentException($"{typeof(TInterface).Name} must be an interface.");
 
-            services.Services.XTryDecorate<TInterface>((instance, provider) =>
+            services.XTryDecorate<TInterface>((instance, provider) =>
             {
                 var interceptor = provider.GetRequiredService<TInterceptor>();
                 return InterceptorFactory.CreateProxy(interceptor, instance);
@@ -81,7 +81,7 @@ namespace Xpandables.Net.DependencyInjection
             if (!typeof(IInterceptor).IsAssignableFrom(interceptorType))
                 throw new ArgumentException($"{nameof(interceptorType)} must implement {nameof(IInterceptor)}.");
 
-            services.Services.XTryDecorate(interfaceType, (instance, provider) =>
+            services.XTryDecorate(interfaceType, (instance, provider) =>
             {
                 var interceptor = (IInterceptor)provider.GetRequiredService(interceptorType);
                 return InterceptorFactory.CreateProxy(interfaceType, interceptor, instance);
@@ -130,7 +130,7 @@ namespace Xpandables.Net.DependencyInjection
                 {
                     foreach (var handlerInterface in handler.Interfaces)
                     {
-                        services.Services.XTryDecorate(handlerInterface, (instance, provider) =>
+                        services.XTryDecorate(handlerInterface, (instance, provider) =>
                          {
                              var interceptor = (IInterceptor)provider.GetRequiredService(interceptorType);
                              return InterceptorFactory.CreateProxy(handlerInterface, interceptor, instance);
