@@ -270,7 +270,7 @@ You can use the extension methods to apply the decorator pattern to your types.
 // that gets registered first, gets applied first, which means that the next registered decorator, 
 // will wrap the first decorator, which wraps the original service type.
 
- services.XTryDecorate<TService, TDecorator>();
+ services.AddXpandableServices().XTryDecorate<TService, TDecorator>();
    
 ```
 
@@ -333,7 +333,7 @@ public sealed class AddHandlerLoggingDecorator : ICommandHandler<Add, string>
 
 // Registration
 
-services.XtryDecorate<AddHandler, AddHandlerLoggingDecorator>();
+services.AddXpandableServices().XtryDecorate<AddHandler, AddHandlerLoggingDecorator>();
 
 // or you can define the generic model, for all commands that implement ICommand interface or something else.
 
