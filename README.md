@@ -270,7 +270,10 @@ You can use the extension methods to apply the decorator pattern to your types.
 // that gets registered first, gets applied first, which means that the next registered decorator, 
 // will wrap the first decorator, which wraps the original service type.
 
- services.AddXpandableServices().XTryDecorate<TService, TDecorator>();
+ services
+    .AddXpandableServices()
+    .XTryDecorate<TService, TDecorator>()
+    .Build();
    
 ```
 
@@ -333,7 +336,10 @@ public sealed class AddHandlerLoggingDecorator : ICommandHandler<Add, string>
 
 // Registration
 
-services.AddXpandableServices().XtryDecorate<AddHandler, AddHandlerLoggingDecorator>();
+services
+    .AddXpandableServices()
+    .XtryDecorate<AddHandler, AddHandlerLoggingDecorator>()
+    .Build();
 
 // or you can define the generic model, for all commands that implement ICommand interface or something else.
 
@@ -360,7 +366,10 @@ public sealed class CommandLoggingDecorator<TCommand, TResult> : ICommandHandler
 // The CommandLoggingDecorator will be applied to all command handlers whose commands meet the decorator's constraints : 
 // To be a class and implement ICommand{TResult} interface
 
-services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));
+services
+    .AddXpandableServices()
+    .XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>))
+    .Build();
 
 // or You must provide with an implementation of "IOperationResultLogger" and use the registration as follow
 
@@ -369,7 +378,8 @@ services
     .AddXHandlers(assemblyCollection, options=>
     {
         options.UseOperationResultLoggerDecorator();
-    });
+    })
+    .Build();
 
 // .AddXHandlers will register all handlers (ICommandhandler{}, IQueryHandler{}, IAsyncQueryHandler{}) adding a decorator for each
 // handler, that will apply your implementation of ILoggingHandler for commands implementing ILoggingDecorator
