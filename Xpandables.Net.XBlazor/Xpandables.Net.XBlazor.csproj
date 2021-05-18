@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <Platforms>AnyCPU</Platforms>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <Authors>Francis-Black EWANE</Authors>
+    <Product>Xpandables Net XBlazor</Product>
+    <Description>A utility library in .Net5.0 to add helpers to Blazor.</Description>
+    <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
+    <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
+    <title>Xpandables.Net.XBlazor</title>
+    <PackageIcon>Xpandables.Net.png</PackageIcon>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>5.5.0</Version>
+    <AssemblyVersion>5.5.0</AssemblyVersion>
+    <FileVersion>5.5.0</FileVersion>
+    <PackageVersion>5.5.0</PackageVersion>
+    <PackageReleaseNotes>Add InputTextOnInput</PackageReleaseNotes>
+    <PackageId>Xpandables.Net</PackageId>
+    <PackageTags>InputText</PackageTags>
+    <PackageOutputPath>..\Packages\</PackageOutputPath>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AssemblyName>Xpandables.Net.XBlazor</AssemblyName>
+    <RootNamespace>Xpandables.Net.XBlazor</RootNamespace>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <summary>A utility library in .Net5.0 to add helpers to Blazor.</summary>
+    <language>en-GB</language>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Xpandables.Net.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+    <Company>EFB Entreprises</Company>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningsAsErrors />
+    <NoWarn />
+    <OutputPath>bin\AnyCPU\Debug\</OutputPath>
+    <DocumentationFile>bin\AnyCPU\Debug\net5.0\Xpandables.Net.XBlazor.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningsAsErrors />
+    <NoWarn />
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <OutputPath>bin\AnyCPU\Release\</OutputPath>
+    <DocumentationFile>bin\AnyCPU\Release\net5.0\Xpandables.Net.XBlazor.xml</DocumentationFile>
+    <Optimize>false</Optimize>
+  </PropertyGroup> 
+
+  <ItemGroup>
+    <None Include="..\Xpandables.Net.png" Link="Xpandables.Net.png">
+      <PackagePath></PackagePath>
+      <Pack>True</Pack>
+    </None>
+  </ItemGroup>
+  
+
+
+</Project>
