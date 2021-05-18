@@ -4,8 +4,6 @@
     <TargetFramework>net5.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Platforms>AnyCPU</Platforms>
-    <PublishTrimmed>true</PublishTrimmed>
-    <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
@@ -23,7 +21,7 @@
     <FileVersion>5.5.0</FileVersion>
     <PackageVersion>5.5.0</PackageVersion>
     <PackageReleaseNotes>Add InputTextOnInput</PackageReleaseNotes>
-    <PackageId>Xpandables.Net</PackageId>
+    <PackageId>Xpandables.Net.XBlazor</PackageId>
     <PackageTags>InputText</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
