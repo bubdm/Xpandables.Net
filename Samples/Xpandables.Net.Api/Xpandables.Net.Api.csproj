@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Xpandables.Net.DependencyInjection\Xpandables.Net.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\Xpandables.Net.EntityFramework\Xpandables.Net.EntityFramework.csproj" />
   </ItemGroup>
 
