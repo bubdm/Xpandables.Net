@@ -35,13 +35,21 @@ namespace Xpandables.Net
     public static class TypeExtensions
     {
         /// <summary>
-        /// Casts the target object to the expected type.
+        /// Casts the current object to the specified type.
         /// </summary>
-        /// <typeparam name="T">The type to be casted.</typeparam>
+        /// <typeparam name="T">The type to be casted to.</typeparam>
         /// <param name="obj">The object to cast.</param>
         /// <returns>The casted object to <typeparamref name="T"/> type.</returns>
-        public static T As<T>(this object obj)
-            where T : class => (T)obj;
+        public static T As<T>(this object obj) => (T)obj;
+
+        /// <summary>
+        /// Casts the current object to the target type.
+        /// </summary>
+        /// <typeparam name="T">The type to be casted to.</typeparam>
+        /// <param name="obj">The object to cast.</param>
+        /// <param name="_">The target object to get its type.</param>
+        /// <returns>The casted object to <typeparamref name="T"/> type.</returns>
+        public static T As<T>(this object obj, T _) => (T)obj;
 
         /// <summary>
         /// Returns the description string attribute of the current <see cref="Enum"/> value type.
