@@ -6,12 +6,12 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
-    <Product>Xpandables Net XBlazor</Product>
+    <Product>Xpandables Net BlazorExtended</Product>
     <Description>A utility library in .Net5.0 to add helpers to Blazor.</Description>
     <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
     <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
-    <title>Xpandables.Net.XBlazor</title>
+    <title>Xpandables.Net.BlazorExtended</title>
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -20,13 +20,13 @@
     <FileVersion>5.5.0</FileVersion>
     <PackageVersion>5.5.0</PackageVersion>
     <PackageReleaseNotes>Add InputTextOnInput</PackageReleaseNotes>
-    <PackageId>Xpandables.Net.XBlazor</PackageId>
+    <PackageId>Xpandables.Net.BlazorExtended</PackageId>
     <PackageTags>InputText</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AssemblyName>Xpandables.Net.XBlazor</AssemblyName>
-    <RootNamespace>Xpandables.Net.XBlazor</RootNamespace>
+    <AssemblyName>Xpandables.Net.BlazorExtended</AssemblyName>
+    <RootNamespace>Xpandables.Net.BlazorExtended</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <summary>A utility library in .Net5.0 to add helpers to Blazor.</summary>
@@ -44,7 +44,7 @@
     <WarningsAsErrors />
     <NoWarn />
     <OutputPath>bin\AnyCPU\Debug\</OutputPath>
-    <DocumentationFile>bin\AnyCPU\Debug\net5.0\Xpandables.Net.XBlazor.xml</DocumentationFile>
+    <DocumentationFile>bin\AnyCPU\Debug\net5.0\Xpandables.Net.BlazorExtended.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
@@ -53,7 +53,7 @@
     <NoWarn />
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <OutputPath>bin\AnyCPU\Release\</OutputPath>
-    <DocumentationFile>bin\AnyCPU\Release\net5.0\Xpandables.Net.XBlazor.xml</DocumentationFile>
+    <DocumentationFile>bin\AnyCPU\Release\net5.0\Xpandables.Net.BlazorExtended.xml</DocumentationFile>
     <Optimize>false</Optimize>
   </PropertyGroup> 
 
@@ -66,6 +66,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.6" />
+  </ItemGroup> 
+
+  <ItemGroup>
+    <ProjectReference Include="..\Xpandables.Net.DependencyInjection\Xpandables.Net.DependencyInjection.csproj" />
   </ItemGroup>
   
 

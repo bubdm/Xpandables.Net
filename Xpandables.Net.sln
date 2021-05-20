@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Tests", "Sam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.AspNetCore", "Xpandables.Net.AspNetCore\Xpandables.Net.AspNetCore.csproj", "{6907542F-D6AB-412A-9741-7EF1EBFEC7A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.XBlazor", "Xpandables.Net.XBlazor\Xpandables.Net.XBlazor.csproj", "{91107337-9F92-4C19-B0E0-88D970F0FA88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.BlazorExtended", "Xpandables.Net.BlazorExtended\Xpandables.Net.BlazorExtended.csproj", "{91107337-9F92-4C19-B0E0-88D970F0FA88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

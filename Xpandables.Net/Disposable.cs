@@ -80,7 +80,6 @@ namespace Xpandables.Net
         /// </para>
         /// <para>Always use SuppressFinalize() in case a subclass of this type implements a finalizer.</para>
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "<Pending>")]
         public async ValueTask DisposeAsync()
         {
             await DisposeAsync(true).ConfigureAwait(false);
