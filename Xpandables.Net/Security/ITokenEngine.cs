@@ -33,8 +33,7 @@ namespace Xpandables.Net.Security
         /// <param name="claims">collection of claims to be used to build token string.</param>
         /// <returns>An instance of <see cref="AccessToken"/> token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="claims"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Unable to write token from claims. See inner exception.</exception>
-        AccessToken WriteToken(IEnumerable<Claim> claims);
+        IOperationResult<AccessToken> WriteToken(IEnumerable<Claim> claims);
 
         /// <summary>
         /// Uses the source object to build a string token. The default behavior returns an access token with non-usable values.
@@ -42,8 +41,7 @@ namespace Xpandables.Net.Security
         /// <param name="source">The source to be used.</param>
         /// <returns>An instance of string token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Unable to write token from source. See inner exception.</exception>
-        public virtual AccessToken WriteToken(object source) => new("TOKEN VALUE", "TOKEN TYPE", DateTime.UtcNow);
+        public virtual IOperationResult<AccessToken> WriteToken(object source) => new SuccessOperationResult<AccessToken>(new("TOKEN VALUE", "TOKEN TYPE", DateTime.UtcNow));
 
         /// <summary>
         /// Returns the collection of claims from the specified token.
@@ -51,15 +49,13 @@ namespace Xpandables.Net.Security
         /// <param name="token">The token string.</param>
         /// <returns>An collection of claims if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Unable to read claims from token. See inner exception.</exception>
-        IEnumerable<Claim> ReadToken(string token);
+        IOperationResult<IEnumerable<Claim>> ReadToken(string token);
 
         /// <summary>
         /// Returns the collection of claims from the specified token.
         /// </summary>
         /// <param name="token">The token string.</param>
         /// <returns>An collection of claims if OK.</returns>
-        /// <exception cref="InvalidOperationException">Unable to read claims from token object. See inner exception.</exception>
-        public virtual IEnumerable<Claim> ReadToken(AccessToken token) => ReadToken(token.Value);
+        public virtual IOperationResult<IEnumerable<Claim>> ReadToken(AccessToken token) => ReadToken(token.Value);
     }
 }
