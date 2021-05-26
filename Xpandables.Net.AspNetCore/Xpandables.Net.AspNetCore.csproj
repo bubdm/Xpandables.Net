@@ -17,10 +17,10 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.5.0</Version>
-    <AssemblyVersion>5.5.0</AssemblyVersion>
-    <FileVersion>5.5.0</FileVersion>
-    <PackageVersion>5.5.0</PackageVersion>
+    <Version>5.5.1</Version>
+    <AssemblyVersion>5.5.1</AssemblyVersion>
+    <FileVersion>5.5.1</FileVersion>
+    <PackageVersion>5.5.1</PackageVersion>
     <PackageReleaseNotes>Add Aggregate, Events, out-box</PackageReleaseNotes>
     <PackageId>Xpandables.Net.AspNetCore</PackageId>
     <PackageTags>Razor Blazor Internationalization</PackageTags>

@@ -15,10 +15,10 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.5.0</Version>
-    <AssemblyVersion>5.5.0</AssemblyVersion>
-    <FileVersion>5.5.0</FileVersion>
-    <PackageVersion>5.5.0</PackageVersion>
+    <Version>5.5.1</Version>
+    <AssemblyVersion>5.5.1</AssemblyVersion>
+    <FileVersion>5.5.1</FileVersion>
+    <PackageVersion>5.5.1</PackageVersion>
     <PackageReleaseNotes>Add InputTextOnInput</PackageReleaseNotes>
     <PackageId>Xpandables.Net.BlazorExtended</PackageId>
     <PackageTags>InputText</PackageTags>
