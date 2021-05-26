@@ -52,8 +52,40 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXHttpRestClientHandler(this IXpandableServiceBuilder services, Action<IServiceProvider, HttpClient> configureClient)
+            => services.AddXHttpRestClientHandler<HttpRestClientRequestBuilder, HttpRestClientResponseBuilder>(configureClient);
+
+        /// <summary>
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to the collection and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
+        ///  and a named <see cref="HttpClient"/>. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/>.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
         public static IXpandableServiceBuilder AddXHttpRestClientHandler<THttpRestClientRequestBuilder, THttpRestClientResponseBuilder>(
             this IXpandableServiceBuilder services, Action<HttpClient> configureClient)
+            where THttpRestClientRequestBuilder : class, IHttpRestClientRequestBuilder
+            where THttpRestClientResponseBuilder : class, IHttpRestClientResponseBuilder
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<IHttpRestClientRequestBuilder, THttpRestClientRequestBuilder>();
+            services.Services.AddScoped<IHttpRestClientResponseBuilder, THttpRestClientResponseBuilder>();
+            services.Services.AddHttpClient<IHttpRestClientHandler, HttpRestClientHandler>(configureClient);
+            return services;
+        }
+
+        /// <summary>
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to the collection and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
+        ///  and a named <see cref="HttpClient"/>. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/>.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXHttpRestClientHandler<THttpRestClientRequestBuilder, THttpRestClientResponseBuilder>(
+            this IXpandableServiceBuilder services, Action<IServiceProvider, HttpClient> configureClient)
             where THttpRestClientRequestBuilder : class, IHttpRestClientRequestBuilder
             where THttpRestClientResponseBuilder : class, IHttpRestClientResponseBuilder
         {
@@ -73,7 +105,9 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXHttpRestClientNewtonsoftHandler(this IXpandableServiceBuilder services, Action<HttpClient> configureClient)
+        public static IXpandableServiceBuilder AddXHttpRestClientNewtonsoftHandler(
+            this IXpandableServiceBuilder services,
+            Action<HttpClient> configureClient)
             => services.AddXHttpRestClientHandler<HttpRestClientNewtonsoftRequestBuilder, HttpRestClientNewtonsoftResponseBuilder>(configureClient);
 
         /// <summary>
@@ -86,7 +120,24 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXHttpRestClientHandlerWithAuthorizationTokenHandler(this IXpandableServiceBuilder services, Action<HttpClient> configureClient)
+        public static IXpandableServiceBuilder AddXHttpRestClientHandlerWithAuthorizationTokenHandler(
+            this IXpandableServiceBuilder services,
+            Action<HttpClient> configureClient)
+            => services.AddXHttpRestClientHandlerWithAuthorizationTokenHandler<HttpRestClientRequestBuilder, HttpRestClientResponseBuilder>(configureClient);
+
+        /// <summary>
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
+        ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
+        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpRestClientAuthorizationProvider"/> using
+        ///  the <see cref="AddXHttpRestClientAuthorizationProvider{THttpRestClientAuthorizationProvider}(IXpandableServiceBuilder)"/> method.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXHttpRestClientHandlerWithAuthorizationTokenHandler(
+            this IXpandableServiceBuilder services,
+            Action<IServiceProvider, HttpClient> configureClient)
             => services.AddXHttpRestClientHandlerWithAuthorizationTokenHandler<HttpRestClientRequestBuilder, HttpRestClientResponseBuilder>(configureClient);
 
         /// <summary>
@@ -126,7 +177,51 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXHttpRestClientNewtonsoftHandlerWithAuthorizationTokenHandler(this IXpandableServiceBuilder services, Action<HttpClient> configureClient)
+        public static IXpandableServiceBuilder AddXHttpRestClientHandlerWithAuthorizationTokenHandler<THttpRestClientRequestBuilder, THttpRestClientResponseBuilder>(
+            this IXpandableServiceBuilder services, Action<IServiceProvider, HttpClient> configureClient)
+            where THttpRestClientRequestBuilder : class, IHttpRestClientRequestBuilder
+            where THttpRestClientResponseBuilder : class, IHttpRestClientResponseBuilder
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<HttpRestClientAuthorizationHandler>();
+            services.Services.AddScoped<IHttpRestClientRequestBuilder, THttpRestClientRequestBuilder>();
+            services.Services.AddScoped<IHttpRestClientResponseBuilder, THttpRestClientResponseBuilder>();
+            services.Services
+                .AddHttpClient<IHttpRestClientHandler, HttpRestClientHandler>(configureClient)
+                .ConfigurePrimaryHttpMessageHandler<HttpRestClientAuthorizationHandler>();
+
+            return services;
+        }
+
+        /// <summary>
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
+        ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
+        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpRestClientAuthorizationProvider"/> using
+        ///  the <see cref="AddXHttpRestClientAuthorizationProvider{THttpRestClientAuthorizationProvider}(IXpandableServiceBuilder)"/> method.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXHttpRestClientNewtonsoftHandlerWithAuthorizationTokenHandler(
+            this IXpandableServiceBuilder services,
+            Action<HttpClient> configureClient)
+            => services.AddXHttpRestClientHandlerWithAuthorizationTokenHandler<HttpRestClientNewtonsoftRequestBuilder, HttpRestClientNewtonsoftResponseBuilder>(configureClient);
+
+        /// <summary>
+        ///  Adds the <see cref="IHttpClientFactory"/> and related services to <see cref="IServiceCollection"/> and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
+        ///  and a named <see cref="HttpClient"/>, and adds a delegate that will be used to configure the primary <see cref="HttpMessageHandler"/> for a named <see cref="HttpClient"/> for providing
+        ///  with authorization token. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/> and you need to register an implementation of <see cref="IHttpRestClientAuthorizationProvider"/> using
+        ///  the <see cref="AddXHttpRestClientAuthorizationProvider{THttpRestClientAuthorizationProvider}(IXpandableServiceBuilder)"/> method.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="configureClient">A delegate that is used to configure an <see cref="HttpClient"/>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="configureClient"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXHttpRestClientNewtonsoftHandlerWithAuthorizationTokenHandler(
+            this IXpandableServiceBuilder services,
+            Action<IServiceProvider, HttpClient> configureClient)
             => services.AddXHttpRestClientHandlerWithAuthorizationTokenHandler<HttpRestClientNewtonsoftRequestBuilder, HttpRestClientNewtonsoftResponseBuilder>(configureClient);
 
         /// <summary>
