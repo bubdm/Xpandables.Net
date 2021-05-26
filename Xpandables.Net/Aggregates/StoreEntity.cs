@@ -44,7 +44,7 @@ namespace Xpandables.Net.Aggregates
         public byte[] Data { get; }
 
         /// <summary>
-        /// Constructs anew instance of <see cref="NotificationEntity"/> from the specified event.
+        /// Constructs a new instance of <see cref="StoreEntity{TEntity}"/> from the specified data.
         /// </summary>
         /// <param name="type">the type of the content.</param>
         /// <param name="isJson">is JSON content or not.</param>
