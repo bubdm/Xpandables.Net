@@ -34,6 +34,18 @@ namespace Xpandables.Net.Http
     }
 
     /// <summary>
+    /// Provides with a method to retrieve the request patch content for <see cref="BodyFormat.String"/> type.
+    /// You may use the generic interface that provides with the Json Document type and make use of <see cref="ContentType.JsonPatch"/> as content type.
+    /// </summary>
+    public interface IPatchRequest
+    {
+        /// <summary>
+        /// Returns the patch document.
+        /// </summary>
+        object GetPatchDocument();
+    }
+
+    /// <summary>
     /// Provides with a method to retrieve the request content for <see cref="BodyFormat.ByteArray"/> type.
     /// </summary>
     public interface IByteArrayRequest

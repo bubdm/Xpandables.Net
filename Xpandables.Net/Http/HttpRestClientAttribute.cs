@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
+using static System.Net.Mime.MediaTypeNames;
+
 namespace Xpandables.Net.Http
 {
     /// <summary>
@@ -169,7 +171,7 @@ namespace Xpandables.Net.Http
     public enum ParameterLocation
     {
         /// <summary>
-        /// Used in the content of the request. You can use <see cref="IStringRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, 
+        /// Used in the content of the request. You can use <see cref="IStringRequest"/>, <see cref="IPatchRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, 
         /// <see cref="IMultipartRequest"/> or <see cref="IFormUrlEncodedRequest"/> to customize the body content, otherwise the whole class will be serialized.
         /// </summary>
         Body = 0x0,
@@ -202,7 +204,7 @@ namespace Xpandables.Net.Http
     {
         /// <summary>
         /// Body content matching the <see cref="StringContent"/>.
-        /// The target class should implement <see cref="IStringRequest"/>, otherwise the whole class will be serialized.
+        /// The target class should implement <see cref="IStringRequest"/>, <see cref="IPatchRequest"/>, otherwise the whole class will be serialized.
         /// </summary>
         String,
 
@@ -240,6 +242,11 @@ namespace Xpandables.Net.Http
         /// Returns the application json content type.
         /// </summary>
         public const string Json = "application/json";
+
+        /// <summary>
+        /// Returns the application json patch content type
+        /// </summary>
+        public const string JsonPatch = "application/json-patch+json";
 
         /// <summary>
         /// Returns the application XML content type.

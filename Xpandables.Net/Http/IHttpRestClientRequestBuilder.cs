@@ -139,7 +139,7 @@ namespace Xpandables.Net.Http
             where TSource : class;
 
         /// <summary>
-        /// Returns the source as string content using <see cref="IStringRequest.GetStringContent"/> if available, if not use the hole source.
+        /// Returns the source as string content using <see cref="IStringRequest.GetStringContent"/> or <see cref="IPatchRequest"/> if available, if not use the hole source.
         /// The default implementation used the <see cref="System.Text.Json"/> API.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
@@ -147,6 +147,17 @@ namespace Xpandables.Net.Http
         /// <param name="attribute">The target attribute.</param>
         /// <returns>A string content.</returns>
         HttpContent ReadStringContent<TSource>(TSource source, HttpRestClientAttribute attribute)
+            where TSource : class;
+
+        /// <summary>
+        /// Returns the source as string content using <see cref="IPatchRequest.GetPatchDocument"/>.
+        /// The default implementation used the <see cref="System.Text.Json"/> API.
+        /// </summary>
+        /// <typeparam name="TSource">The type of source object.</typeparam>
+        /// <param name="source">The source object instance.</param>
+        /// <param name="attribute">The target attribute.</param>
+        /// <returns>A string content.</returns>
+        HttpContent ReadPatchContent<TSource>(TSource source, HttpRestClientAttribute attribute)
             where TSource : class;
 
         /// <summary>

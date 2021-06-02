@@ -196,7 +196,7 @@ namespace Xpandables.Net.Http.RequestBuilders
         }
 
         /// <summary>
-        /// Returns the source as string content using <see cref="M:Xpandables.Net.Http.IStringRequest.GetStringContent" /> if available, if not use the hole source.
+        /// Returns the source as string content using <see cref="M:Xpandables.Net.Http.IStringRequest.GetStringContent" /> or <see cref="IPatchRequest"/> if available, if not use the hole source.
         /// The default implementation used the <see cref="N:System.Text.Json" /> API.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
@@ -208,6 +208,10 @@ namespace Xpandables.Net.Http.RequestBuilders
             ValidateInterfaceImplementation<IStringRequest>(source, true);
             if (source is IStringRequest stringRequest)
                 return new StringContent(JsonSerializer.Serialize(stringRequest.GetStringContent()), Encoding.UTF8, attribute.ContentType);
+
+            ValidateInterfaceImplementation<IPatchRequest>(source, true);
+            if (source is IPatchRequest patchRequest)
+                return new StringContent(JsonSerializer.Serialize(patchRequest.GetPatchDocument()), Encoding.UTF8, attribute.ContentType);
 
             return new StringContent(JsonSerializer.Serialize(source), Encoding.UTF8, attribute.ContentType);
         }

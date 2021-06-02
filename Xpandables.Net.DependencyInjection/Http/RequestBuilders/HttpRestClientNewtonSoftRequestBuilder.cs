@@ -44,7 +44,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             var memoryStream = new MemoryStream();
             await using var streamWriter = new StreamWriter(memoryStream, new UTF8Encoding(false), 1028, true);
             using var jsonTextWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.None };
-            Newtonsoft.Json.JsonSerializer.CreateDefault().Serialize(jsonTextWriter, streamContent);
+            JsonSerializer.CreateDefault().Serialize(jsonTextWriter, streamContent);
             await jsonTextWriter.FlushAsync().ConfigureAwait(false);
 
             memoryStream.Seek(0, SeekOrigin.Begin);
@@ -64,6 +64,10 @@ namespace Xpandables.Net.Http.RequestBuilders
             ValidateInterfaceImplementation<IStringRequest>(source, true);
             if (source is IStringRequest stringRequest)
                 return new StringContent(JsonConvert.SerializeObject(stringRequest.GetStringContent()), Encoding.UTF8, attribute.ContentType);
+
+            ValidateInterfaceImplementation<IPatchRequest>(source, true);
+            if (source is IPatchRequest patchRequest)
+                return new StringContent(JsonConvert.SerializeObject(patchRequest.GetPatchDocument()), Encoding.UTF8, attribute.ContentType);
 
             return new StringContent(JsonConvert.SerializeObject(source), Encoding.UTF8, attribute.ContentType);
         }
