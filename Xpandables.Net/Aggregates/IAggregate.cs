@@ -15,19 +15,19 @@
  *
 ************************************************************************************************************/
 
-using System;
-
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
     /// Aggregate is a pattern in Domain-Driven Design. A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
     /// </summary>
-    public interface IAggregate : ICommandQueryEvent
+    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
+    public interface IAggregate<TAggregateId> : ICommandQueryEvent
+        where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Gets the unique identifier of the aggregate.
         /// </summary>
-        public new Guid Guid { get; }
+        TAggregateId AggregateId { get; }
 
         /// <summary>
         ///   /// Gets the current version of the instance, the default value is -1.
@@ -38,6 +38,6 @@ namespace Xpandables.Net.Aggregates
         /// Determines whether or not the underlying instance is a empty one.
         /// </summary>
         /// <returns>Returns <see langword="true"/> if so, otherwise <see langword="false"/></returns>
-        public bool IsEmpty => Guid == Guid.Empty;
+        public bool IsEmpty => AggregateId.IsEmpty();
     }
 }

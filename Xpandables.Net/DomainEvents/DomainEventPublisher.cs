@@ -42,13 +42,18 @@ namespace Xpandables.Net.DomainEvents
             => _handlerAccessor = handlerAccessor ?? throw new ArgumentNullException(nameof(handlerAccessor));
 
         ///<inheritdoc/>
-        public virtual async Task PublishAsync(IDomainEvent @event, CancellationToken cancellationToken = default)
+        public virtual async Task PublishAsync(ICommandQueryEvent @event, CancellationToken cancellationToken = default)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            var genericHandlerType = typeof(IDomainEventHandler<>);
+            var genericInterface = @event.GetType().GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainEvent<>))
+                ?? throw new ArgumentException($"The type '{@event.GetType().Name}' must implement '{typeof(IDomainEvent<>).Name}' interface.");
+            var aggregateIdType = genericInterface.GetGenericArguments()[0];
 
-            if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, @event.GetType()))
+            var genericHandlerType = typeof(IDomainEventHandler<,>);
+
+            if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, aggregateIdType, @event.GetType()))
             {
                 WriteLineException(new InvalidOperationException("Building domain event Handler type failed.", typeException));
                 return;

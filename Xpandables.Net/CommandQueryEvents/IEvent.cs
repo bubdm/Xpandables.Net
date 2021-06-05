@@ -23,7 +23,7 @@ namespace Xpandables.Net
     /// Defines a marker interface to be used to mark an object to act as an event : Domain event or Integration event.
     /// The events can be raised using the differed approach described by "Jimmy Bogard"
     /// </summary>
-    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     public interface IEvent<TAggregateId> : ICommandQueryEvent
         where TAggregateId : notnull, IAggregateId
     {

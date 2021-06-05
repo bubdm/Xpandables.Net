@@ -24,7 +24,7 @@ namespace Xpandables.Net
     /// <summary>
     /// Represents a helper class that allows implementation of <see cref="IEvent{TAggreagate}"/> interface. 
     /// </summary>
-    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     [Serializable]
     public abstract class Event<TAggregateId> : CommandQueryEvent, IEvent<TAggregateId>
         where TAggregateId : notnull, AggregateId

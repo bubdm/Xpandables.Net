@@ -15,21 +15,22 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
 
 namespace Xpandables.Net.DomainEvents
 {
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as a event domain for <see cref="Aggregates.IAggregate"/>.
+    /// Defines a marker interface to be used to mark an object to act as a event domain for <see cref="IAggregate{TAggregateId}"/>.
     /// This kind of events are published before <see cref="IDataContextPersistence.SaveChangesAsync(System.Threading.CancellationToken)"/>.
     /// In case of exception in target event handlers, you can rollback the operation using transaction.
     /// </summary>
-    public interface IDomainEvent : IEvent
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
+    public interface IDomainEvent<TAggregateId> : IEvent<TAggregateId>
+        where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
-        /// Gets or sets the version of the related aggregate being saved.
+        /// Gets the version of the related aggregate being saved.
         /// </summary>
         long Version { get; }
 
@@ -39,6 +40,6 @@ namespace Xpandables.Net.DomainEvents
         /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="version">The aggregate version.</param>
         /// <returns>A new instance of the domain event.</returns>
-        IDomainEvent WithAggregate(Guid aggregateId, long version);
+        IDomainEvent<TAggregateId> WithAggregate(TAggregateId aggregateId, long version);
     }
 }

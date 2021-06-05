@@ -18,14 +18,18 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Aggregates;
+
 namespace Xpandables.Net.DomainEvents
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IDomainEventHandler{TEvent}"/> interface.
+    /// Represents a helper class that allows implementation of <see cref="IDomainEventHandler{TAggregateId, TEvent}"/> interface.
     /// </summary>
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TEvent">Type of event to act on.</typeparam>
-    public abstract class DomainEventHandler<TEvent> : IDomainEventHandler<TEvent>
-        where TEvent : class, IDomainEvent
+    public abstract class DomainEventHandler<TAggregateId, TEvent> : IDomainEventHandler<TAggregateId, TEvent>
+        where TEvent : class, IDomainEvent<TAggregateId>
+        where TAggregateId : notnull, AggregateId
     {
         ///<inheritdoc/>
         public abstract Task HandleAsync(TEvent domainEvent, CancellationToken cancellationToken = default);
