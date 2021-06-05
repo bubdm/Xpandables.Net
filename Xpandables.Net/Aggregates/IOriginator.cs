@@ -20,7 +20,7 @@ using System;
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// This interface is used for the Memento pattern to store and restore the internal state using a <see cref="ISnapShot"/>.
+    /// This interface is used for the Memento pattern to store and restore the internal state using a <see cref="ISnapShot{TAggregateId}"/>.
     /// </summary>
     public interface IOriginator
     {

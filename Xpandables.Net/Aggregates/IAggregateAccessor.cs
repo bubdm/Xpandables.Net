@@ -28,9 +28,11 @@ namespace Xpandables.Net.Aggregates
     /// Represents a set of methods to read/write aggregates from an event store.
     /// For persistence, decorate your command with <see cref="Decorators.IAggregatePersistenceDecorator"/> interface.
     /// </summary>
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public interface IAggregateAccessor<TAggregate>
-        where TAggregate : class, IAggregate
+    public interface IAggregateAccessor<TAggregateId, TAggregate>
+        where TAggregate : class, IAggregate<TAggregateId>
+        where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Asynchronously returns the <typeparamref name="TAggregate"/> aggregate that matches the specified aggregate identifier.
@@ -38,7 +40,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="aggregateId">The aggregate identifier to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TAggregate"/> type if found or null.</returns>
-        Task<TAggregate?> ReadAsync(Guid aggregateId, CancellationToken cancellationToken = default);
+        Task<TAggregate?> ReadAsync(TAggregateId aggregateId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously returns a collection of domain events where aggregate identifier matches the specified one.
@@ -46,8 +48,8 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         /// <param name="aggreagateId">The target aggregate identifier.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <see cref="IDomainEvent"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<IDomainEvent> ReadAllEventsAsync(Guid aggreagateId, CancellationToken cancellationToken = default);
+        /// <returns>An enumerator of <see cref="IDomainEvent{TAggregateId}"/> that can be asynchronously enumerated.</returns>
+        IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadAllEventsAsync(TAggregateId aggreagateId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously appends the specified <typeparamref name="TAggregate"/> aggregate to the event store.
@@ -64,7 +66,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="aggregateId">The aggregate identifier to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TAggregate"/> type if found or null.</returns>
-        Task<TAggregate?> ReadFromSnapShot(Guid aggregateId, CancellationToken cancellationToken = default);
+        Task<TAggregate?> ReadFromSnapShot(TAggregateId aggregateId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously returns a collection of domain events where aggregate identifier matches the specified one since last snapshot.
@@ -72,8 +74,8 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <see cref="IDomainEvent"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<IDomainEvent> ReadEventsSinceLastSnapShotAsync(Guid aggregateId, CancellationToken cancellationToken = default);
+        /// <returns>An enumerator of <see cref="IDomainEvent{TAggregateId}"/> that can be asynchronously enumerated.</returns>
+        IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadEventsSinceLastSnapShotAsync(TAggregateId aggregateId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously returns the number of events since the last snapshot.
@@ -81,7 +83,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the number of  events.</returns>
-        Task<int> ReadEventCountSinceLastSnapShot(Guid aggregateId, CancellationToken cancellationToken = default);
+        Task<int> ReadEventCountSinceLastSnapShot(TAggregateId aggregateId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously appends the specified aggregate as snapshot. The aggregate must implement <see cref="IOriginator"/> interface.
@@ -97,7 +99,7 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         /// <param name="aggreagteId">the aggregate id to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <see cref="ISnapShot"/>.</returns>
-        Task<ISnapShot?> GetSnapShotAsync(Guid aggreagteId, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an object of <see cref="ISnapShot{TAggregateId}"/>.</returns>
+        Task<ISnapShot<TAggregateId>?> GetSnapShotAsync(TAggregateId aggreagteId, CancellationToken cancellationToken = default);
     }
 }

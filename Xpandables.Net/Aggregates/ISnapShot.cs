@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +14,15 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
     /// Defines properties of a snapshot for an aggregate.
     /// </summary>
-    public interface ISnapShot
+    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
+    public interface ISnapShot<TAggregateId>
+        where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Gets the memento linked to the aggregate.
@@ -32,7 +32,7 @@ namespace Xpandables.Net.Aggregates
         /// <summary>
         /// Gets the target aggregate identifier.
         /// </summary>
-        Guid AggregateId { get; }
+        TAggregateId AggregateId { get; }
 
         /// <summary>
         /// Gets the version of the snapshot.

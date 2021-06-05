@@ -40,7 +40,8 @@ namespace Xpandables.Net.DomainEvents
         /// <summary>
         /// Constructs a new instance of <see cref="DomainEvent{TAggregateId}"/>.
         /// </summary>
-        /// <param name="version">The version of the related aggregate.</param>
+        /// <param name="version">The version of the related aggregate.
+        /// You may use the aggregate method <see cref="Aggregate{TAggregateId}.GetNewVersion()"/> to get a new version</param>
         /// <param name="aggregateId">The aggregate identifier.</param>
         /// <param name="occurredOn">When the event occurred.</param>
         /// <param name="createdBy">The user name.</param>

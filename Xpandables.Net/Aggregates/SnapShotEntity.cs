@@ -22,23 +22,25 @@ using System.Text.Json.Serialization;
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Represents a snapshot to be written.
+    /// Represents an aggregate snapshot to be written.
     /// </summary>
     [Serializable]
-    public class SnapShotEntity : StoreEntity<ISnapShot>
+    public class SnapShotEntity : StoreEntity
     {
         ///<inheritdoc/>
         [JsonConstructor]
-        public SnapShotEntity(Guid aggregateId, string type, long version, bool isJson, byte[] data)
+        public SnapShotEntity(string aggregateId, string type, long version, bool isJson, byte[] data)
             : base(type, isJson, data)
         {
             AggregateId = aggregateId;
             Version = version;
         }
 
-        ///<inheritdoc/>
+        /// <summary>
+        /// Gets the string representation of the aggregate related identifier.
+        /// </summary>
         [ConcurrencyCheck]
-        public Guid AggregateId { get; }
+        public string AggregateId { get; }
 
         /// <summary>
         /// Gets the version.

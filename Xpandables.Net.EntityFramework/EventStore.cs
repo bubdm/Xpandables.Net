@@ -28,7 +28,6 @@ using Microsoft.EntityFrameworkCore;
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
 using Xpandables.Net.DomainEvents;
-using Xpandables.Net.Entities;
 using Xpandables.Net.Notifications;
 
 namespace Xpandables.Net.EntityFramework
@@ -106,7 +105,7 @@ namespace Xpandables.Net.EntityFramework
 
         /// <inheritdoc/>
         public virtual IAsyncEnumerable<IDomainEvent> ReadAllEventsAsync(Guid aggreagateId, CancellationToken cancellationToken = default)
-            => _context.Set<EventEntity>()
+            => _context.Set<DomainEventEntity>()
                 .Where(w => w.AggregateId == aggreagateId)
                 .OrderBy(o => o.Version)
                 .Select(entity => (IDomainEvent)_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!))
@@ -118,7 +117,7 @@ namespace Xpandables.Net.EntityFramework
             var snapShot = await GetSnapShotAsync(aggregateId, cancellationToken).ConfigureAwait(false);
             var snapShotVersion = snapShot?.Version ?? -1;
 
-            await foreach (var entity in _context.FetchAllAsync<EventEntity, EventEntity>(
+            await foreach (var entity in _context.FetchAllAsync<DomainEventEntity, DomainEventEntity>(
                 e => e.Where(w => w.AggregateId == aggregateId && w.Version > snapShotVersion)
                 .OrderBy(o => o.Version),
                 cancellationToken)
@@ -134,7 +133,7 @@ namespace Xpandables.Net.EntityFramework
             var snapShot = await GetSnapShotAsync(aggregateId, cancellationToken).ConfigureAwait(false);
             var snapShotVersion = snapShot?.Version ?? 0;
 
-            return await _context.Set<EventEntity>()
+            return await _context.Set<DomainEventEntity>()
                 .CountAsync(c => c.AggregateId == aggregateId && c.Version > snapShotVersion,
                 cancellationToken)
                 .ConfigureAwait(false);

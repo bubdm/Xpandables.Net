@@ -19,6 +19,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Database;
 using Xpandables.Net.Notifications;
@@ -31,29 +32,31 @@ namespace Xpandables.Net.Decorators.Persistences
     /// The class decorates the target integration event handler with an implementation of <see cref="IDataContext"/> and executes the
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
-    /// <typeparam name="TIntegrationEvent">Type of integration event.</typeparam>
-    public sealed class NotificationPersistenceDecorator<TIntegrationEvent> : INotificationHandler<TIntegrationEvent>
-        where TIntegrationEvent : class, INotification, IPersistenceDecorator
+    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
+    /// <typeparam name="TNotification">Type of integration event.</typeparam>
+    public sealed class NotificationPersistenceDecorator<TAggregateId, TNotification> : INotificationHandler<TAggregateId, TNotification>
+        where TNotification : class, INotification<TAggregateId>, IPersistenceDecorator
+        where TAggregateId : notnull, IAggregateId
     {
         private readonly IDataContext _dataContext;
-        private readonly INotificationHandler<TIntegrationEvent> _decoratee;
+        private readonly INotificationHandler<TAggregateId, TNotification> _decoratee;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NotificationPersistenceDecorator{TIntegrationEvent}"/> class with
+        /// Initializes a new instance of the <see cref="NotificationPersistenceDecorator{TAggregateId, TNotification}"/> class with
         /// the decorated handler and the db context to act on.
         /// </summary>
         /// <param name="dataContext">The data context to act on.</param>
         /// <param name="decoratee">The decorated integration event handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public NotificationPersistenceDecorator(IDataContext dataContext, INotificationHandler<TIntegrationEvent> decoratee)
+        public NotificationPersistenceDecorator(IDataContext dataContext, INotificationHandler<TAggregateId, TNotification> decoratee)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
         ///<inheritdoc/>
-        public async Task<IOperationResult<ICommand?>> HandleAsync(TIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
+        public async Task<IOperationResult<ICommand?>> HandleAsync(TNotification integrationEvent, CancellationToken cancellationToken = default)
         {
             var resultState = await _decoratee.HandleAsync(integrationEvent, cancellationToken).ConfigureAwait(false);
             if (resultState.Succeeded)

@@ -15,6 +15,8 @@
  *
 ************************************************************************************************************/
 
+using System;
+
 using Xpandables.Net.Aggregates;
 
 namespace Xpandables.Net
@@ -31,5 +33,10 @@ namespace Xpandables.Net
         /// Gets the identifier of the target aggregate.
         /// </summary>
         TAggregateId AggregateId { get; }
+
+        /// <summary>
+        /// Gets the event identifier.
+        /// </summary>
+        Guid Guid { get; }
     }
 }

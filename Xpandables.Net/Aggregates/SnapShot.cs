@@ -23,17 +23,19 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Represents a snapshot to be read.
     /// </summary>
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     [Serializable]
-    public sealed class SnapShot : ISnapShot
+    public sealed class SnapShot<TAggregateId> : ISnapShot<TAggregateId>
+        where TAggregateId : notnull, AggregateId
     {
         /// <summary>
-        /// Constructs a new instance of <see cref="SnapShot"/>.
+        /// Constructs a new instance of <see cref="SnapShot{TAggregateId}"/>.
         /// </summary>
         /// <param name="memento">the expected memento instance.</param>
         /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="version">The version.</param>
         [JsonConstructor]
-        public SnapShot(IMemento memento, Guid aggregateId, long version)
+        public SnapShot(IMemento memento, TAggregateId aggregateId, long version)
         {
             Memento = memento ?? throw new ArgumentNullException(nameof(memento));
             AggregateId = aggregateId;
@@ -44,7 +46,7 @@ namespace Xpandables.Net.Aggregates
         public IMemento Memento { get; }
 
         ///<inheritdoc/>
-        public Guid AggregateId { get; }
+        public TAggregateId AggregateId { get; }
 
         ///<inheritdoc/>
         public long Version { get; }

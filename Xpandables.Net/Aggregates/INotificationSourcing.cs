@@ -24,7 +24,9 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Out-box pattern interface (notification).
     /// </summary>
-    internal interface INotificationSourcing
+    /// /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
+    internal interface INotificationSourcing<TAggregateId>
+        where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Marks all notifications as committed.
@@ -35,6 +37,6 @@ namespace Xpandables.Net.Aggregates
         /// Returns a collection of notifications.
         /// </summary>
         /// <returns>A list of notifications.</returns>
-        IOrderedEnumerable<INotification> GetNotifications();
+        IOrderedEnumerable<INotification<TAggregateId>> GetNotifications();
     }
 }

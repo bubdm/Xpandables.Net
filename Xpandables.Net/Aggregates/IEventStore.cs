@@ -27,7 +27,9 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Provides with methods to retrieve and persist events.
     /// </summary>
-    public interface IEventStore : ISnapShotStore
+    /// /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
+    public interface IEventStore<TAggregateId> : ISnapShotStore<TAggregateId>
+        where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Asynchronously returns a collection of domain events where aggregate identifier matches the specified one.
@@ -35,8 +37,8 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         /// <param name="aggreagateId">The target aggregate identifier.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <see cref="IDomainEvent"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<IDomainEvent> ReadAllEventsAsync(Guid aggreagateId, CancellationToken cancellationToken = default);
+        /// <returns>An enumerator of <see cref="IDomainEvent{TAggregateId}"/> that can be asynchronously enumerated.</returns>
+        IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadAllEventsAsync(TAggregateId aggreagateId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously appends the specified event.
@@ -45,6 +47,6 @@ namespace Xpandables.Net.Aggregates
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        Task AppendEventAsync(IEvent @event, CancellationToken cancellationToken = default);
+        Task AppendEventAsync(IEvent<TAggregateId> @event, CancellationToken cancellationToken = default);
     }
 }

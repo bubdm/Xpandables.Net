@@ -25,8 +25,7 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Represents a store entity to be written.
     /// </summary>
-    public abstract class StoreEntity<TEntity> : Entity
-        where TEntity : class
+    public abstract class StoreEntity : Entity
     {
         /// <summary>
         /// Gets the .Net Framework content type.
@@ -44,7 +43,7 @@ namespace Xpandables.Net.Aggregates
         public byte[] Data { get; }
 
         /// <summary>
-        /// Constructs a new instance of <see cref="StoreEntity{TEntity}"/> from the specified data.
+        /// Constructs a new instance of <see cref="StoreEntity"/> from the specified data.
         /// </summary>
         /// <param name="type">the type of the content.</param>
         /// <param name="isJson">is JSON content or not.</param>

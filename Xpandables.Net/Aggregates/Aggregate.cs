@@ -28,23 +28,23 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Aggregate is a pattern in Domain-Driven Design. A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
     /// </summary>
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     [Serializable]
-    [DebuggerDisplay("Guid = {" + nameof(Guid) + "} Version = {" + nameof(Version) + "}")]
-    public abstract class Aggregate : OperationResults, IAggregate, IEventSourcing, INotificationSourcing
+    [DebuggerDisplay("Guid = {" + nameof(AggregateId) + "} Version = {" + nameof(Version) + "}")]
+    public abstract class Aggregate<TAggregateId> : OperationResults, IAggregate<TAggregateId>, IDomainEventSourcing<TAggregateId>, INotificationSourcing<TAggregateId>
+        where TAggregateId : notnull, AggregateId
     {
-        private readonly ICollection<IDomainEvent> _events = new LinkedList<IDomainEvent>();
-        private readonly ICollection<INotification> _notifications = new LinkedList<INotification>();
-        private readonly IDictionary<Type, Action<IDomainEvent>> _eventHandlers = new Dictionary<Type, Action<IDomainEvent>>();
+        private readonly ICollection<IDomainEvent<TAggregateId>> _events = new LinkedList<IDomainEvent<TAggregateId>>();
+        private readonly ICollection<INotification<TAggregateId>> _notifications = new LinkedList<INotification<TAggregateId>>();
+        private readonly IDictionary<Type, Action<IDomainEvent<TAggregateId>>> _eventHandlers = new Dictionary<Type, Action<IDomainEvent<TAggregateId>>>();
 
         /// <summary>
         /// Gets the current version of the instance, the default value is -1.
         /// </summary>
         public long Version { get; protected set; } = -1;
 
-        /// <summary>
-        /// Gets the aggregate unique identifier. The default value is <see cref="Guid.Empty"/>.
-        /// </summary>
-        public Guid Guid { get; protected set; } = Guid.Empty;
+        ///<inheritdoc/>
+        public TAggregateId AggregateId { get; protected set; } = default!;
 
         /// <summary>
         /// Constructs the default instance of an aggregate root.
@@ -54,53 +54,53 @@ namespace Xpandables.Net.Aggregates
             RegisterEventHandlers();
         }
 
-        void INotificationSourcing.MarkNotificationsAsCommitted() => _notifications.Clear();
+        void INotificationSourcing<TAggregateId>.MarkNotificationsAsCommitted() => _notifications.Clear();
 
-        IOrderedEnumerable<INotification> INotificationSourcing.GetNotifications() => _notifications.OrderBy(o => o.OccurredOn);
+        IOrderedEnumerable<INotification<TAggregateId>> INotificationSourcing<TAggregateId>.GetNotifications() => _notifications.OrderBy(o => o.OccurredOn);
 
-        void IEventSourcing.MarkEventsAsCommitted() => _events.Clear();
+        void IDomainEventSourcing<TAggregateId>.MarkEventsAsCommitted() => _events.Clear();
 
-        IOrderedEnumerable<IDomainEvent> IEventSourcing.GetUncommittedEvents() => _events.OrderBy(o => o.Version);
+        IOrderedEnumerable<IDomainEvent<TAggregateId>> IDomainEventSourcing<TAggregateId>.GetUncommittedEvents() => _events.OrderBy(o => o.Version);
 
-        void IEventSourcing.LoadFromHistory(IOrderedEnumerable<IDomainEvent> events)
+        void IDomainEventSourcing<TAggregateId>.LoadFromHistory(IOrderedEnumerable<IDomainEvent<TAggregateId>> events)
         {
             _ = events ?? throw new ArgumentNullException(nameof(events));
 
             foreach (var @event in events)
             {
-                ((IEventSourcing)this).Mutate(@event);
+                ((IDomainEventSourcing<TAggregateId>)this).Mutate(@event);
                 Version = @event.Version;
             }
         }
 
-        void IEventSourcing.LoadFromHistory(IDomainEvent @event)
+        void IDomainEventSourcing<TAggregateId>.LoadFromHistory(IDomainEvent<TAggregateId> @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            ((IEventSourcing)this).Mutate(@event);
+            ((IDomainEventSourcing<TAggregateId>)this).Mutate(@event);
             Version = @event.Version;
         }
 
-        void IEventSourcing.Apply(IDomainEvent @event)
+        void IDomainEventSourcing<TAggregateId>.Apply(IDomainEvent<TAggregateId> @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
             if (!_events.Any(e => Equals(e.Guid, @event.Guid)))
-                ((IEventSourcing)this).Mutate(@event);
+                ((IDomainEventSourcing<TAggregateId>)this).Mutate(@event);
             else
                 return;
 
             _events.Add(@event);
         }
 
-        void IEventSourcing.Mutate(IDomainEvent @event)
+        void IDomainEventSourcing<TAggregateId>.Mutate(IDomainEvent<TAggregateId> @event)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
             if (!_eventHandlers.TryGetValue(@event.GetType(), out var eventHandler))
                 throw new InvalidOperationException($"The {@event.GetType().Name} requested handler is not registered.");
 
-            Guid = @event.AggregateId;
+            AggregateId = @event.AggregateId;
             eventHandler(@event);
         }
 
@@ -111,7 +111,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="notification">The notification to be added.</param>
         /// <exception cref=" ArgumentNullException">The <paramref name="notification"/> is null. </exception>
         /// <exception cref="InvalidOperationException">The target notification already exist in the collection.</exception>
-        protected void AddNotification(INotification notification)
+        protected void AddNotification(INotification<TAggregateId> notification)
         {
             _ = notification ?? throw new ArgumentNullException(nameof(notification));
 
@@ -128,11 +128,11 @@ namespace Xpandables.Net.Aggregates
         /// <param name="event">The event instance to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         protected void RaiseEvent<TEvent>(TEvent @event)
-            where TEvent : class, IDomainEvent
+            where TEvent : class, IDomainEvent<TAggregateId>
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            ((IEventSourcing)this).Apply(@event);
+            ((IDomainEventSourcing<TAggregateId>)this).Apply(@event);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="eventHandler">the target handler to register.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="eventHandler"/> is null.</exception>
         protected virtual void RegisterEventHandler<TEvent>(Action<TEvent> eventHandler)
-            where TEvent : class, IDomainEvent
+            where TEvent : class, IDomainEvent<TAggregateId>
         {
             _ = eventHandler ?? throw new ArgumentNullException(nameof(eventHandler));
             _eventHandlers.Add(typeof(TEvent), @event => eventHandler((TEvent)@event));

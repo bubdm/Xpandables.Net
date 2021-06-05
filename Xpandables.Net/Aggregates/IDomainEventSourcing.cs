@@ -25,12 +25,14 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Event-sourcing pattern interface.
     /// </summary>
-    public interface IEventSourcing
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
+    public interface IDomainEventSourcing<TAggregateId>
+        where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Gets the unique identifier of the aggregate.
         /// </summary>
-        Guid Guid { get; }
+        TAggregateId AggregateId { get; }
 
         /// <summary>
         /// Marks all the domain events as committed.
@@ -41,28 +43,28 @@ namespace Xpandables.Net.Aggregates
         /// Returns a collection of uncommitted events.
         /// </summary>
         /// <returns>A list of uncommitted events.</returns>
-        IOrderedEnumerable<IDomainEvent> GetUncommittedEvents();
+        IOrderedEnumerable<IDomainEvent<TAggregateId>> GetUncommittedEvents();
 
         /// <summary>
         /// Initializes the underlying aggregate with the specified history collection of events.
         /// </summary>
         /// <param name="events">The collection of events to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="events"/> is null.</exception>
-        void LoadFromHistory(IOrderedEnumerable<IDomainEvent> events);
+        void LoadFromHistory(IOrderedEnumerable<IDomainEvent<TAggregateId>> events);
 
         /// <summary>
         /// Applies the history specified domain event to the underlying aggregate.
         /// </summary>
         /// <param name="event">The event to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        void LoadFromHistory(IDomainEvent @event);
+        void LoadFromHistory(IDomainEvent<TAggregateId> @event);
 
         /// <summary>
         /// Applies the specified event to the current instance.
         /// </summary>
         /// <param name="event">The event to act with.</param>
         /// <exception cref="ArgumentException">The <paramref name="event"/> is null.</exception>
-        void Apply(IDomainEvent @event);
+        void Apply(IDomainEvent<TAggregateId> @event);
 
         /// <summary>
         /// Applies the mutation calling the handler that matches the specified event.
@@ -70,6 +72,6 @@ namespace Xpandables.Net.Aggregates
         /// <param name="event">The event to be applied.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The expected handler is not registered.</exception>
-        void Mutate(IDomainEvent @event);
+        void Mutate(IDomainEvent<TAggregateId> @event);
     }
 }

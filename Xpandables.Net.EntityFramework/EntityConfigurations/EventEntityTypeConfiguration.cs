@@ -19,17 +19,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Xpandables.Net.Entities;
+using Xpandables.Net.Aggregates;
 
 namespace Xpandables.Net.EntityFramework.EntityConfigurations
 {
     /// <summary>
-    /// EFCore configuration for <see cref="EventEntity"/>.
+    /// EFCore configuration for <see cref="DomainEventEntity"/>.
     /// </summary>
-    public sealed class EventEntityTypeConfiguration : IEntityTypeConfiguration<EventEntity>
+    public sealed class EventEntityTypeConfiguration : IEntityTypeConfiguration<DomainEventEntity>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<EventEntity> builder)
+        public void Configure(EntityTypeBuilder<DomainEventEntity> builder)
         {
             builder.HasKey(p => p.EventId);
             builder.HasIndex(p => new { p.AggregateId, p.Version })

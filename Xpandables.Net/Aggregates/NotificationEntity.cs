@@ -17,14 +17,12 @@
 ************************************************************************************************************/
 using System.Text.Json.Serialization;
 
-using Xpandables.Net.Notifications;
-
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
     /// Represents an out box (notification) message to be written.
     /// </summary>
-    public class NotificationEntity : StoreEntity<INotification>
+    public class NotificationEntity : StoreEntity
     {
         ///<inheritdoc/>
         [JsonConstructor]

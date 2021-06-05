@@ -19,7 +19,6 @@ using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
-using Xpandables.Net.Entities;
 using Xpandables.Net.EntityFramework.EntityConfigurations;
 
 namespace Xpandables.Net.EntityFramework
@@ -48,7 +47,7 @@ namespace Xpandables.Net.EntityFramework
         /// <summary>
         /// Gets the domain events collection. Read Only.
         /// </summary>
-        public DbSet<EventEntity> Events { get; set; } = default!;
+        public DbSet<DomainEventEntity> Events { get; set; } = default!;
 
         /// <summary>
         /// Gets the notifications collection. Read/Write

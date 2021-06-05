@@ -19,19 +19,16 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-using Xpandables.Net.Aggregates;
-using Xpandables.Net.DomainEvents;
-
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Aggregates
 {
     /// <summary>
     /// Represents a domain event to be written.
     /// </summary>
-    public class EventEntity : StoreEntity<IDomainEvent>
+    public class DomainEventEntity : StoreEntity
     {
         ///<inheritdoc/>
         [JsonConstructor]
-        public EventEntity(Guid eventId, Guid aggregateId, string type, long version, bool isJson, byte[] data)
+        public DomainEventEntity(Guid eventId, string aggregateId, string type, long version, bool isJson, byte[] data)
             : base(type, isJson, data)
         {
             EventId = eventId;
@@ -45,10 +42,10 @@ namespace Xpandables.Net.Entities
         public Guid EventId { get; }
 
         /// <summary>
-        /// Gets the aggregate related id.
+        /// Gets the string representation of the aggregate related identifier.
         /// </summary>
         [ConcurrencyCheck]
-        public Guid AggregateId { get; }
+        public string AggregateId { get; }
 
         /// <summary>
         /// Gets the version.

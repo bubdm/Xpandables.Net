@@ -48,5 +48,8 @@ namespace Xpandables.Net
 
         ///<inheritdoc/>
         public TAggregateId AggregateId { get; protected set; }
+
+        ///<inheritdoc/>
+        public Guid Guid { get; } = Guid.NewGuid();
     }
 }

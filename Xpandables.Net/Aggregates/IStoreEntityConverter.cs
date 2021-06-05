@@ -20,7 +20,7 @@ using System;
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Converter to be used with <see cref="StoreEntity{TEntity}"/>
+    /// Converter to be used with <see cref="StoreEntity"/>
     /// </summary>
     public interface IStoreEntityConverter
     {
