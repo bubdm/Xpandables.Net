@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Decorators;
 using Xpandables.Net.Decorators.Persistences;
@@ -54,7 +55,8 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds aggregate persistence behavior to commands and queries that are decorated with the <see cref="IAggregatePersistenceDecorator"/> to the services
+        /// Adds aggregate persistence behavior to commands and queries that are decorated with the <see cref="IAggregate"/> and
+        /// <see cref="IPersistenceDecorator"/> to the services
         /// with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -78,7 +80,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.XTryDecorate(typeof(INotificationHandler<>), typeof(NotificationPersistenceDecorator<>));
+            services.XTryDecorate(typeof(INotificationHandler<,>), typeof(NotificationPersistenceDecorator<,>));
             return services;
         }
 
