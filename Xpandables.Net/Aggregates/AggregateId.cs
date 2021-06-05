@@ -15,21 +15,25 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading;
-using System.Threading.Tasks;
+using System;
 
-using Xpandables.Net.Commands;
-
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="INotificationHandler{TEvent}"/> interface.
+    /// Represents a helper class to implement an identity for an aggregate type.
     /// </summary>
-    /// <typeparam name="TNotification">Type of notification to act on.</typeparam>
-    public abstract class NotificationHandler<TNotification> : OperationResults, INotificationHandler<TNotification>
-        where TNotification : class, INotification
+    public abstract class AggregateId : IdentityId<Guid>, IAggregateId
     {
-        ///<inheritdoc/>
-        public abstract Task<IOperationResult<ICommand?>> HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Returns the string representation of the target <see cref="AggregateId"/>.
+        /// </summary>
+        /// <param name="aggregateId">The aggregate to act on.</param>
+        public static implicit operator string(AggregateId aggregateId) => aggregateId.Value.ToString();
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="AggregateId"/> with the value identifier.
+        /// </summary>
+        /// <param name="value">The value identifier.</param>
+        protected AggregateId(Guid value) : base(value) { }
     }
 }

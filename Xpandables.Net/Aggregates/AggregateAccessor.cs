@@ -29,7 +29,7 @@ namespace Xpandables.Net.Aggregates
     /// You can derive from this class to customize its behaviors.
     /// </summary>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public class AggregateAccessor<TAggregate> : OperationResultBase, IAggregateAccessor<TAggregate>
+    public class AggregateAccessor<TAggregate> : OperationResults, IAggregateAccessor<TAggregate>
         where TAggregate : class, IAggregate
     {
         private readonly IEventStore _eventStore;

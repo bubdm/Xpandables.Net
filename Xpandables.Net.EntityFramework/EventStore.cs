@@ -37,7 +37,7 @@ namespace Xpandables.Net.EntityFramework
     /// The EFCore implementation of <see cref="IEventStore"/>.
     /// You can derived from this class to customize its behaviors.
     /// </summary>
-    public class EventStore : OperationResultBase, IEventStore
+    public class EventStore : OperationResults, IEventStore
     {
         private readonly IEventStoreContext _context;
         private readonly IStoreEntityConverter _converter;

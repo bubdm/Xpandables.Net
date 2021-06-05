@@ -26,7 +26,7 @@ using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class ContactHandlers : OperationResultBase,
+    public sealed class ContactHandlers : OperationResults,
          ICommandHandler<AddCommand, string>, IQueryHandler<SelectQuery, Contact>, ICommandHandler<EditCommand, Contact>,
         ICommandHandler<ContactNameChangedFailedCommand>
     {

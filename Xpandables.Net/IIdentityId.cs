@@ -15,21 +15,26 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading;
-using System.Threading.Tasks;
+using System;
 
-using Xpandables.Net.Commands;
-
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="INotificationHandler{TEvent}"/> interface.
+    /// Represents a property to implement an identity.
     /// </summary>
-    /// <typeparam name="TNotification">Type of notification to act on.</typeparam>
-    public abstract class NotificationHandler<TNotification> : OperationResults, INotificationHandler<TNotification>
-        where TNotification : class, INotification
+    /// <typeparam name="TId">The type of the identity.</typeparam>
+    public interface IIdentityId<TId>
+        where TId : notnull, IComparable
     {
-        ///<inheritdoc/>
-        public abstract Task<IOperationResult<ICommand?>> HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Gets the value of the identity.
+        /// </summary>
+        TId Value { get; }
+
+        /// <summary>
+        /// Returns a value that determine whether or not the identity is defined or empty.
+        /// </summary>
+        /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>
+        bool IsEmpty();
     }
 }

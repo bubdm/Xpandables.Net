@@ -25,7 +25,7 @@ namespace Xpandables.Net.Queries
     /// </summary>
     /// <typeparam name="TQuery">Type of argument to act on.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public abstract class QueryHandler<TQuery, TResult> : OperationResultBase, IQueryHandler<TQuery, TResult>
+    public abstract class QueryHandler<TQuery, TResult> : OperationResults, IQueryHandler<TQuery, TResult>
         where TQuery : class, IQuery<TResult>
     {
         /// <summary>

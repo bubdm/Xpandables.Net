@@ -24,10 +24,7 @@ namespace Xpandables.Net.Api.Migrations
                     IsJson = table.Column<bool>(type: "bit", nullable: false),
                     Data = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Events", x => x.EventId);
-                });
+                constraints: table => table.PrimaryKey("PK_Events", x => x.EventId));
 
             migrationBuilder.CreateTable(
                 name: "Notifications",
@@ -43,10 +40,7 @@ namespace Xpandables.Net.Api.Migrations
                     IsJson = table.Column<bool>(type: "bit", nullable: false),
                     Data = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Notifications", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_Notifications", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "SnapShots",
@@ -64,10 +58,7 @@ namespace Xpandables.Net.Api.Migrations
                     IsJson = table.Column<bool>(type: "bit", nullable: false),
                     Data = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SnapShots", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_SnapShots", x => x.Id));
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_AggregateId_Version",

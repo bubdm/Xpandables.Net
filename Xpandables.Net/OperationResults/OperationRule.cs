@@ -23,7 +23,7 @@ namespace Xpandables.Net
     /// Represents a helper class that allows implementation of the <see cref="IOperationRule{TArgument}"/>.
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument to be checked.</typeparam>
-    public abstract class OperationRule<TArgument> : OperationResultBase, IOperationRule<TArgument>
+    public abstract class OperationRule<TArgument> : OperationResults, IOperationRule<TArgument>
          where TArgument : notnull
     {
         /// <summary>

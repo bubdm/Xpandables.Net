@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +15,20 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 
-namespace Xpandables.Net.Services
+namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Provides with extension methods for application services responses.
+    /// Represents the unique identifier for an aggregate.
     /// </summary>
-    public abstract class ApplicationService : OperationResults, IApplicationService { }
+    public interface IAggregateId : IIdentityId<Guid>
+    {
+        /// <summary>
+        /// Returns a value that determine whether or not the aggregate identity is defined or empty.
+        /// </summary>
+        /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>
+        new bool IsEmpty() => Value == Guid.Empty;
+        bool IIdentityId<Guid>.IsEmpty() => IsEmpty();
+    }
 }

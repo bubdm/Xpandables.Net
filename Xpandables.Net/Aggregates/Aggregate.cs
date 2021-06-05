@@ -30,7 +30,7 @@ namespace Xpandables.Net.Aggregates
     /// </summary>
     [Serializable]
     [DebuggerDisplay("Guid = {" + nameof(Guid) + "} Version = {" + nameof(Version) + "}")]
-    public abstract class Aggregate : OperationResultBase, IAggregate, IEventSourcing, INotificationSourcing
+    public abstract class Aggregate : OperationResults, IAggregate, IEventSourcing, INotificationSourcing
     {
         private readonly ICollection<IDomainEvent> _events = new LinkedList<IDomainEvent>();
         private readonly ICollection<INotification> _notifications = new LinkedList<INotification>();
