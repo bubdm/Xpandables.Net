@@ -19,6 +19,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Database;
 
@@ -26,13 +27,13 @@ namespace Xpandables.Net.Decorators.Persistences
 {
     /// <summary>
     /// This class allows the application author to add persistence support to command control flow.
-    /// The target command should implement the <see cref="IAggregatePersistenceDecorator"/> interface in order to activate the behavior.
+    /// The target command should implement the <see cref="IAggregate"/> and <see cref="IPersistenceDecorator"/> interfaces in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IEventStoreContext"/> and executes the
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     public sealed class CommandAggregatePersistenceDecorator<TCommand> : ICommandHandler<TCommand>
-        where TCommand : class, ICommand, IAggregatePersistenceDecorator
+        where TCommand : class, ICommand, IAggregate, IPersistenceDecorator
     {
         private readonly IEventStoreContext _context;
         private readonly ICommandHandler<TCommand> _decoratee;
@@ -70,14 +71,14 @@ namespace Xpandables.Net.Decorators.Persistences
 
     /// <summary>
     /// This class allows the application author to add persistence support to command control flow.
-    /// The target command should implement the <see cref="IAggregatePersistenceDecorator"/> interface in order to activate the behavior.
+    /// The target command should implement the <see cref="IAggregate"/> and <see cref="IPersistenceDecorator"/> interfaces in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IEventStoreContext"/> and executes the
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
     public sealed class CommandAggregatePersistenceDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
-        where TCommand : class, ICommand<TResult>, IAggregatePersistenceDecorator
+        where TCommand : class, ICommand<TResult>, IAggregate, IPersistenceDecorator
     {
         private readonly IEventStoreContext _context;
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
