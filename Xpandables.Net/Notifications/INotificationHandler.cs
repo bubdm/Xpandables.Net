@@ -19,13 +19,14 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Commands;
 
 namespace Xpandables.Net.Notifications
 {
     /// <summary>
     /// Allows an application author to define a handler for notification.
-    /// The event must implement <see cref="INotification"/> interface.
+    /// The event must implement <see cref="INotification{TAggregateId}"/> interface.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     public interface INotificationHandler : ICanHandle
@@ -37,19 +38,21 @@ namespace Xpandables.Net.Notifications
         /// <param name="notification">The notification instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="notification"/> does not implement <see cref="INotification"/>.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="notification"/> does not implement <see cref="INotification{TAggregateId}"/>.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TCommand}"/>.</returns>
         Task<IOperationResult<ICommand?>> HandleAsync(object notification, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
     /// Allows an application author to define a handler for specific type notification.
-    /// The notification must implement <see cref="INotification"/> interface.
+    /// The notification must implement <see cref="INotification{TAggregateId}"/> interface.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TNotification">The notification type to be handled.</typeparam>
-    public interface INotificationHandler<in TNotification> : INotificationHandler, ICanHandle<TNotification>
-        where TNotification : class, INotification
+    public interface INotificationHandler<TAggregateId, in TNotification> : INotificationHandler, ICanHandle<TNotification>
+        where TNotification : class, INotification<TAggregateId>
+        where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Asynchronously handles the notification of specific type.
@@ -66,7 +69,7 @@ namespace Xpandables.Net.Notifications
             if (notification is TNotification instance)
                 return HandleAsync(instance, cancellationToken);
 
-            throw new ArgumentException($"The parameter does not implement {nameof(INotification)} interface.", nameof(notification));
+            throw new ArgumentException($"The parameter does not implement {nameof(INotification<TAggregateId>)} interface.", nameof(notification));
         }
     }
 }

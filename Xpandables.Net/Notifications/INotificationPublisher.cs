@@ -22,17 +22,18 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Notifications
 {
     /// <summary>
-    /// Defines a method to automatically publish <see cref="INotification"/> type.
+    /// Defines a method to automatically publish <see cref="INotification{TAggregateId}"/> type.
     /// </summary>
     public interface INotificationPublisher
     {
         /// <summary>
         /// Publishes notifications.
         /// </summary>
-        /// <param name="notification">The notification to be published.</param>
+        /// <param name="event">The notification to be published.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
-        Task PublishAsync(INotification notification, CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="event"/> must implement <see cref="INotification{TAggregateId}"/> interface.</exception>
+        Task PublishAsync(ICommandQueryEvent @event, CancellationToken cancellationToken = default);
     }
 }

@@ -46,31 +46,38 @@ namespace Xpandables.Net.Notifications
         }
 
         ///<inheritdoc/>
-        public virtual async Task PublishAsync(INotification notification, CancellationToken cancellationToken = default)
+        public virtual async Task PublishAsync(ICommandQueryEvent @event, CancellationToken cancellationToken = default)
         {
-            _ = notification ?? throw new ArgumentNullException(nameof(notification));
+            _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
-            var handlers = GetNotificationHandlers(notification);
+            var handlers = GetNotificationHandlers(@event);
             if (!handlers.Any()) return;
 
-            var tasks = handlers.Select(handler => handler.HandleAsync(notification, cancellationToken));
+            var tasks = handlers.Select(handler => handler.HandleAsync(@event, cancellationToken));
 
             var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 
             // TODO : think about thread pool
             foreach (var result in results.Where(r => r.HasValue))
             {
-                var command = result.Value!;
-                var handler = TryGetCommandHandler(command);
-                if (handler is not null)
-                    await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
+                if (result.Value is ICommand command)
+                {
+                    var handler = TryGetCommandHandler(command);
+                    if (handler is not null)
+                        await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
+                }
             }
         }
 
-        private IEnumerable<INotificationHandler> GetNotificationHandlers(INotification notification)
+        private IEnumerable<INotificationHandler> GetNotificationHandlers(ICommandQueryEvent @event)
         {
-            var genericHandlerType = typeof(INotificationHandler<>);
-            if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, notification.GetType()))
+            var genericInterface = @event.GetType().GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INotification<>))
+                ?? throw new ArgumentException($"The type '{@event.GetType().Name}' must implement '{typeof(INotification<>).Name}' interface.");
+            var aggregateIdType = genericInterface.GetGenericArguments()[0];
+
+            var genericHandlerType = typeof(INotificationHandler<,>);
+            if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, aggregateIdType, @event.GetType()))
             {
                 WriteLineException(new InvalidOperationException("Building notification Handler type failed.", typeException));
                 return Enumerable.Empty<INotificationHandler>();
@@ -78,7 +85,7 @@ namespace Xpandables.Net.Notifications
 
             if (!_handlerAccessor.TryGetHandlers(typeHandler, out var foundHandlers, out var ex))
             {
-                WriteLineException(new InvalidOperationException($"Matching notification handlers for {notification.GetType().Name} are missing.", ex));
+                WriteLineException(new InvalidOperationException($"Matching notification handlers for {@event.GetType().Name} are missing.", ex));
                 return Enumerable.Empty<INotificationHandler>();
             }
 

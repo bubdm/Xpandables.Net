@@ -18,16 +18,19 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Commands;
 
 namespace Xpandables.Net.Notifications
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="INotificationHandler{TEvent}"/> interface.
+    /// Represents a helper class that allows implementation of <see cref="INotificationHandler{TAggregateId, TNotification}"/> interface.
     /// </summary>
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TNotification">Type of notification to act on.</typeparam>
-    public abstract class NotificationHandler<TNotification> : OperationResults, INotificationHandler<TNotification>
-        where TNotification : class, INotification
+    public abstract class NotificationHandler<TAggregateId, TNotification> : OperationResults, INotificationHandler<TAggregateId, TNotification>
+        where TNotification : class, INotification<TAggregateId>
+        where TAggregateId : notnull, AggregateId
     {
         ///<inheritdoc/>
         public abstract Task<IOperationResult<ICommand?>> HandleAsync(TNotification notification, CancellationToken cancellationToken = default);

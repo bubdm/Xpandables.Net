@@ -15,28 +15,16 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Text.Json.Serialization;
-
-using Xpandables.Net.DomainEvents;
+using Xpandables.Net.Aggregates;
 
 namespace Xpandables.Net.Notifications
 {
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as a notification.
     /// </summary>
-    public interface INotification : IEvent { }
-
-    /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as notification holding a specific <see cref="IDomainEvent"/>.
-    /// </summary>
-    /// <typeparam name="TEvent">The type of target domain event.</typeparam>
-    public interface INotification<out TEvent> : INotification
-        where TEvent : notnull, IDomainEvent
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
+    public interface INotification<TAggregateId> : IEvent<TAggregateId>
+        where TAggregateId : notnull, IAggregateId
     {
-        /// <summary>
-        /// Gets the target domain event.
-        /// </summary>
-        [JsonIgnore]
-        TEvent DomainEvent { get; }
     }
 }

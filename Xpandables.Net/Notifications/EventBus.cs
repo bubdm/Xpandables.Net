@@ -85,7 +85,7 @@ namespace Xpandables.Net.Notifications
         {
             try
             {
-                if (_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!) is not INotification @event)
+                if (_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!) is not ICommandQueryEvent @event)
                     return false;
 
                 await _notificationPublisher.PublishAsync(@event).ConfigureAwait(false);
