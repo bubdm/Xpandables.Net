@@ -20,17 +20,16 @@ using System;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// Provides with shared implementation members for <see cref="ICommandQueryEvent"/>.
+    /// Represents a helper class that allows implementation of <see cref="ICommandQueryEvent"/> interface.
     /// </summary>
     public abstract class CommandQueryEvent : ICommandQueryEvent
     {
         /// <summary>
         /// Constructs a default instance of <see cref="CommandQueryEvent"/> class
-        /// that initializes <see cref="Guid"/>, <see cref="OccurredOn"/> and <see cref="CreatedBy"/> properties.
+        /// that initializes <see cref="OccurredOn"/> and <see cref="CreatedBy"/> properties.
         /// </summary>
         protected CommandQueryEvent()
         {
-            Guid = Guid.NewGuid();
             OccurredOn = DateTime.UtcNow;
             CreatedBy = Environment.UserName;
         }
@@ -38,18 +37,13 @@ namespace Xpandables.Net
         /// <summary>
         /// Constructs a new instance of <see cref="CommandQueryEvent"/> class with the specified information.
         /// </summary>
-        /// <param name="guid">The unique identifier.</param>
         /// <param name="occurredOn">When the event occurred.</param>
         /// <param name="createdBy">The user name running the instance.</param>
-        protected CommandQueryEvent(Guid guid, DateTimeOffset occurredOn, string createdBy)
+        protected CommandQueryEvent(DateTimeOffset occurredOn, string createdBy)
         {
-            Guid = guid;
             OccurredOn = occurredOn;
             CreatedBy = createdBy;
         }
-
-        ///<inheritdoc/>
-        public Guid Guid { get; protected set; }
 
         ///<inheritdoc/>
         public DateTimeOffset OccurredOn { get; protected set; }

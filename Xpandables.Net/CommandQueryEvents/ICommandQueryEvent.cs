@@ -25,11 +25,6 @@ namespace Xpandables.Net
     public interface ICommandQueryEvent
     {
         /// <summary>
-        /// Gets the unique identifier for the instance.
-        /// </summary>
-        public Guid Guid => Guid.NewGuid();
-
-        /// <summary>
         /// Gets When the event occurred.
         /// </summary>
         public DateTimeOffset OccurredOn => DateTimeOffset.Now;

@@ -17,33 +17,36 @@
 ************************************************************************************************************/
 using System;
 
+using Xpandables.Net.Aggregates;
+
 namespace Xpandables.Net
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IEvent"/> interface. 
+    /// Represents a helper class that allows implementation of <see cref="IEvent{TAggreagate}"/> interface. 
     /// </summary>
+    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
     [Serializable]
-    public abstract class Event : CommandQueryEvent, IEvent
+    public abstract class Event<TAggregateId> : CommandQueryEvent, IEvent<TAggregateId>
+        where TAggregateId : notnull, AggregateId
     {
         /// <summary>
-        /// Constructs a new instance of <see cref="Event"/> with its target aggregate id.
+        /// Constructs a new instance of <see cref="Event{TAggregateId}"/> with its target aggregate id.
         /// </summary>
         /// <param name="aggregateId">The target aggregate Id</param>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
-        protected Event(Guid aggregateId) : base() => AggregateId = aggregateId;
+        protected Event(TAggregateId aggregateId) : base() => AggregateId = aggregateId;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="Event"/> with the specified information.
+        /// Constructs a new instance of <see cref="Event{TAggregateId}"/> with the specified information.
         /// </summary>
         /// <param name="aggregateId">The aggregate id.</param>
-        /// <param name="guid">The event identifier.</param>
         /// <param name="occurredOn">When the event occurred.</param>
         /// <param name="createdBy">The user name.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
-        protected Event(Guid aggregateId, Guid guid, DateTimeOffset occurredOn, string createdBy)
-            : base(guid, occurredOn, createdBy) => AggregateId = aggregateId;
+        protected Event(TAggregateId aggregateId, DateTimeOffset occurredOn, string createdBy)
+            : base(occurredOn, createdBy) => AggregateId = aggregateId;
 
         ///<inheritdoc/>
-        public Guid AggregateId { get; protected set; }
+        public TAggregateId AggregateId { get; protected set; }
     }
 }
