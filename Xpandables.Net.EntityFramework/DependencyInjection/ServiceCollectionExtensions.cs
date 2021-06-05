@@ -33,14 +33,14 @@ namespace Xpandables.Net.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the default <see cref="IEventStore"/> implementation to the services with scope life time.
+        /// Adds the default <see cref="IEventStore{TAggregateId}"/> implementation to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXEventStore(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped<IEventStore, EventStore>();
+            services.Services.AddScoped(typeof(IEventStore<>), typeof(EventStore<>));
             return services;
         }
 

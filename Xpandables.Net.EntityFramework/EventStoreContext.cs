@@ -24,7 +24,7 @@ using Xpandables.Net.EntityFramework.EntityConfigurations;
 namespace Xpandables.Net.EntityFramework
 {
     /// <summary>
-    /// The <see cref="EventStore"/> data context definition.
+    /// The <see cref="EventStore{TAggregateId}"/> data context definition.
     /// </summary>
     public class EventStoreContext : DataContext, IEventStoreContext
     {
