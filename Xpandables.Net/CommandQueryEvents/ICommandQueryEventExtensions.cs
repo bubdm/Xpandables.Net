@@ -25,13 +25,6 @@ namespace Xpandables.Net
     public static class ICommandQueryEventExtensions
     {
         /// <summary>
-        /// Returns the <see cref="System.Guid"/> of the current object.
-        /// </summary>
-        /// <param name="this">The target object.</param>
-        /// <returns>A <see cref="System.Guid"/> value.</returns>
-        public static Guid Guid(this ICommandQueryEvent @this) => @this.Guid;
-
-        /// <summary>
         /// Returns the created date of the current object.
         /// </summary>
         /// <param name="this">The target object.</param>
