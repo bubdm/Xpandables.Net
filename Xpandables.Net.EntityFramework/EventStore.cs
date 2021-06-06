@@ -78,7 +78,7 @@ namespace Xpandables.Net.EntityFramework
             _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
 
             if (aggregate is not IOriginator originator)
-                throw new InvalidOperationException($"{aggregate.GetType().Name} expected");
+                throw new InvalidOperationException($"{aggregate.GetType().Name} must implement '{nameof(IOriginator)}' interface");
 
             var oldSnapShot = await _context.Set<SnapShotEntity>()
                 .Where(s => s.AggregateId == aggregate.AggregateId && s.Version == aggregate.Version)
@@ -90,8 +90,12 @@ namespace Xpandables.Net.EntityFramework
                     .Remove(oldSnapShot);
 
             var snapShot = new SnapShot<TAggregateId>(originator.CreateMemento(), aggregate.AggregateId, aggregate.Version);
-            var data = Encoding.UTF8.GetBytes(_converter.Serialize(snapShot, snapShot.GetType()));
-            var snapShotEnity = new SnapShotEntity(aggregate.AggregateId, snapShot.GetType().AssemblyQualifiedName!, snapShot.Version, true, data);
+
+            var snapShotTypeName = snapShot.GetType().AssemblyQualifiedName!;
+            var serialized = _converter.Serialize(snapShot, snapShot.GetType());
+            var data = Encoding.UTF8.GetBytes(serialized);
+
+            var snapShotEnity = new SnapShotEntity(aggregate.AggregateId, snapShotTypeName, snapShot.Version, true, data);
 
             await _context.InsertAsync(snapShotEnity, cancellationToken).ConfigureAwait(false);
         }
