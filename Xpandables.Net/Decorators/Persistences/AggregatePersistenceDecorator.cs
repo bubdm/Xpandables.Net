@@ -32,25 +32,22 @@ namespace Xpandables.Net.Decorators.Persistences
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
-    public sealed class CommandAggregatePersistenceDecorator<TCommand> : ICommandHandler<TCommand>
+    public sealed class AggregatePersistenceDecorator<TCommand> : PersistenceDecoratorBase, ICommandHandler<TCommand>
         where TCommand : class, ICommand, IAggregate, IPersistenceDecorator
     {
-        private readonly IEventStoreContext _context;
         private readonly ICommandHandler<TCommand> _decoratee;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandPersistenceDecorator{TCommand}"/> class with
         /// the decorated handler and the db context to act on.
         /// </summary>
-        /// <param name="dataContext">The data context to act on.</param>
+        /// <param name="eventStoreContext">The data context to act on.</param>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public CommandAggregatePersistenceDecorator(IEventStoreContext dataContext, ICommandHandler<TCommand> decoratee)
-        {
-            _context = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-        }
+        /// <exception cref="ArgumentNullException">The <paramref name="eventStoreContext"/> is null.</exception>
+        public AggregatePersistenceDecorator(IEventStoreContext eventStoreContext, ICommandHandler<TCommand> decoratee)
+            : base(eventStoreContext)
+            => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 
         /// <summary>
         /// Asynchronously handles the specified command and persists changes to database if there is no exception or error.
@@ -60,13 +57,7 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
-        {
-            var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            if (resultState.Succeeded)
-                await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-            return resultState;
-        }
+            => await HandleAsync(_decoratee.HandleAsync(command, cancellationToken), cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -77,25 +68,22 @@ namespace Xpandables.Net.Decorators.Persistences
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public sealed class CommandAggregatePersistenceDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+    public sealed class AggregatePersistenceDecorator<TCommand, TResult> : PersistenceDecoratorBase, ICommandHandler<TCommand, TResult>
         where TCommand : class, ICommand<TResult>, IAggregate, IPersistenceDecorator
     {
-        private readonly IEventStoreContext _context;
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandPersistenceDecorator{TCommand, TResult}"/> class with
         /// the decorated handler and the db context to act on.
         /// </summary>
-        /// <param name="dataContext">The data context to act on.</param>
+        /// <param name="eventStoreContext">The data context to act on.</param>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public CommandAggregatePersistenceDecorator(IEventStoreContext dataContext, ICommandHandler<TCommand, TResult> decoratee)
-        {
-            _context = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-        }
+        /// <exception cref="ArgumentNullException">The <paramref name="eventStoreContext"/> is null.</exception>
+        public AggregatePersistenceDecorator(IEventStoreContext eventStoreContext, ICommandHandler<TCommand, TResult> decoratee)
+            : base(eventStoreContext)
+            => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 
         /// <summary>
         /// Asynchronously handles the specified command and persists changes to database if there is no exception or error.
@@ -105,12 +93,6 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
         public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
-        {
-            var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            if (resultState.Succeeded)
-                await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-            return resultState;
-        }
+            => await HandleAsync(_decoratee.HandleAsync(command, cancellationToken), cancellationToken).ConfigureAwait(false);
     }
 }

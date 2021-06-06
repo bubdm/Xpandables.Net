@@ -26,7 +26,13 @@ using Xpandables.Net.Notifications;
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Aggregate is a pattern in Domain-Driven Design. A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
+    /// Represents a helper class that allows implementation of <see cref="IAggregate{TAggregateId}"/>.
+    /// It contains a collection of <see cref="IDomainEvent{TAggregateId}"/>, <see cref="INotification{TAggregateId}"/>,
+    /// and a dictionary of domain event handlers. You must register event handlers using the <see cref="RegisterEventHandler{TEvent}(Action{TEvent})"/>
+    /// method when overriding the <see cref="RegisterEventHandlers"/> method. You can add a notification using the <see cref="AddNotification(INotification{TAggregateId})"/>
+    /// method and you may use the <see cref="RaiseEvent{TEvent}(TEvent)"/> method to raise the specified event.
+    /// When creating an event (<see cref="IDomainEvent{TAggregateId}"/>), you may use of <see cref="GetNewVersion()"/> function to get the new version number according to
+    /// the event creation.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     [Serializable]
@@ -105,8 +111,8 @@ namespace Xpandables.Net.Aggregates
         }
 
         /// <summary>
-        /// Adds the specified notification to the entity collection of events.
-        /// This event will be published using the out-box pattern.
+        /// Adds the specified notification to the entity collection of notifications.
+        /// This notification will be published using the out-box pattern.
         /// </summary>
         /// <param name="notification">The notification to be added.</param>
         /// <exception cref=" ArgumentNullException">The <paramref name="notification"/> is null. </exception>
@@ -137,7 +143,7 @@ namespace Xpandables.Net.Aggregates
 
         /// <summary>
         /// Registers all required event handlers for the underlying aggregate.
-        /// You may use the <see cref="RegisterEventHandler{TEvent}(Action{TEvent})"/> method.
+        /// You may use the <see cref="RegisterEventHandler{TEvent}(Action{TEvent})"/> method for each event.
         /// </summary>
         protected abstract void RegisterEventHandlers();
 
@@ -155,7 +161,7 @@ namespace Xpandables.Net.Aggregates
         }
 
         /// <summary>
-        /// Returns the new version of the instance.
+        /// Returns the new version of the instance when creating an <see cref="IDomainEvent{TAggregateId}"/>.
         /// </summary>
         /// <returns>A <see cref="long"/> value that represents the new version of the instance</returns>
         protected long GetNewVersion() => ++Version;

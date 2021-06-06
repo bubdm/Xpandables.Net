@@ -33,22 +33,21 @@ namespace Xpandables.Net.Decorators.Correlations
     /// <see cref="ICorrelationEvent"/> interface in order to set the expected actions.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to be handled.</typeparam>
-    public sealed class CommandCorrelationDecorator<TCommand> : ICommandHandler<TCommand>
+    public sealed class CommandCorrelationDecorator<TCommand> : CommandCorrelationDecorator, ICommandHandler<TCommand>
         where TCommand : class, ICommand, ICorrelationDecorator
     {
         private readonly ICommandHandler<TCommand> _decoratee;
-        private readonly CorrelationEvent _correlationContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandCorrelationDecorator{TCommand}"/> class with the correlation context and the command handler to be decorated.
         /// </summary>
-        /// <param name="correlationContext">The correlation context.</param>
+        /// <param name="correlationEvent">The correlation context.</param>
         /// <param name="decoratee">The command handler to be decorated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
-        public CommandCorrelationDecorator(CorrelationEvent correlationContext, ICommandHandler<TCommand> decoratee)
+        /// <exception cref="ArgumentNullException">The <paramref name="correlationEvent"/> is null.</exception>
+        public CommandCorrelationDecorator(CorrelationEvent correlationEvent, ICommandHandler<TCommand> decoratee)
+            : base(correlationEvent)
         {
-            _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
@@ -61,19 +60,7 @@ namespace Xpandables.Net.Decorators.Correlations
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                await _correlationContext.OnPostEventAsync(resultState).ConfigureAwait(false);
-                return resultState;
-            }
-            catch (Exception exception) when (exception is not ArgumentNullException)
-            {
-                await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
-                throw;
-            }
-        }
+            => await HandleAsync(_decoratee.HandleAsync(command, cancellationToken)).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -86,22 +73,21 @@ namespace Xpandables.Net.Decorators.Correlations
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to be handled.</typeparam>
     /// <typeparam name="TResult">Type of the result of the command.</typeparam>
-    public sealed class CommandCorrelationDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+    public sealed class CommandCorrelationDecorator<TCommand, TResult> : CommandCorrelationDecorator, ICommandHandler<TCommand, TResult>
         where TCommand : class, ICommand<TResult>, ICorrelationDecorator
     {
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
-        private readonly CorrelationEvent _correlationContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandCorrelationDecorator{TCommand}"/> class with the correlation context and the command handler to be decorated.
         /// </summary>
-        /// <param name="correlationContext">The correlation context.</param>
+        /// <param name="correlationEvent">The correlation context.</param>
         /// <param name="decoratee">The command handler to be decorated.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="correlationContext"/> is null.</exception>
-        public CommandCorrelationDecorator(CorrelationEvent correlationContext, ICommandHandler<TCommand, TResult> decoratee)
+        /// <exception cref="ArgumentNullException">The <paramref name="correlationEvent"/> is null.</exception>
+        public CommandCorrelationDecorator(CorrelationEvent correlationEvent, ICommandHandler<TCommand, TResult> decoratee)
+            : base(correlationEvent)
         {
-            _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
         }
 
@@ -114,16 +100,34 @@ namespace Xpandables.Net.Decorators.Correlations
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
         public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+            => await HandleAsync(_decoratee.HandleAsync(command, cancellationToken)).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Provides with correlation event decorator implementation for command.
+    /// </summary>
+    public abstract class CommandCorrelationDecorator
+    {
+        private readonly CorrelationEvent _correlationEvent;
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="CommandCorrelationDecorator"/> with the <see cref="CorrelationEvent"/> instance.
+        /// </summary>
+        /// <param name="correlationEvent">The correlation event instance.</param>
+        protected CommandCorrelationDecorator(CorrelationEvent correlationEvent)
+            => _correlationEvent = correlationEvent ?? throw new ArgumentNullException(nameof(correlationEvent));
+
+        internal async Task<TOutput> HandleAsync<TOutput>(Task<TOutput> handler)
         {
             try
             {
-                var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                await _correlationContext.OnPostEventAsync(resultState).ConfigureAwait(false);
+                var resultState = await handler.ConfigureAwait(false);
+                await _correlationEvent.OnPostEventAsync(resultState).ConfigureAwait(false);
                 return resultState;
             }
             catch (Exception exception)
             {
-                await _correlationContext.OnRollbackEventAsync(exception).ConfigureAwait(false);
+                await _correlationEvent.OnRollbackEventAsync(exception).ConfigureAwait(false);
                 throw;
             }
         }

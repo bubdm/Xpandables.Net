@@ -31,10 +31,9 @@ namespace Xpandables.Net.Decorators.Persistences
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
-    public sealed class CommandPersistenceDecorator<TCommand> : ICommandHandler<TCommand>
+    public sealed class CommandPersistenceDecorator<TCommand> : PersistenceDecoratorBase, ICommandHandler<TCommand>
         where TCommand : class, ICommand, IPersistenceDecorator
     {
-        private readonly IDataContext _dataContext;
         private readonly ICommandHandler<TCommand> _decoratee;
 
         /// <summary>
@@ -46,10 +45,8 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
         public CommandPersistenceDecorator(IDataContext dataContext, ICommandHandler<TCommand> decoratee)
-        {
-            _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-        }
+            : base(dataContext)
+            => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 
         /// <summary>
         /// Asynchronously handles the specified command and persists changes to database if there is no exception or error.
@@ -59,13 +56,7 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
-        {
-            var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            if (resultState.Succeeded)
-                await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-            return resultState;
-        }
+            => await HandleAsync(_decoratee.HandleAsync(command, cancellationToken), cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -76,10 +67,9 @@ namespace Xpandables.Net.Decorators.Persistences
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public sealed class CommandPersistenceDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+    public sealed class CommandPersistenceDecorator<TCommand, TResult> : PersistenceDecoratorBase, ICommandHandler<TCommand, TResult>
         where TCommand : class, ICommand<TResult>, IPersistenceDecorator
     {
-        private readonly IDataContext _dataContext;
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
 
         /// <summary>
@@ -91,10 +81,8 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
         public CommandPersistenceDecorator(IDataContext dataContext, ICommandHandler<TCommand, TResult> decoratee)
-        {
-            _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-        }
+            : base(dataContext)
+            => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 
         /// <summary>
         /// Asynchronously handles the specified command and persists changes to database if there is no exception or error.
@@ -104,12 +92,6 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
         public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
-        {
-            var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            if (resultState.Succeeded)
-                await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-            return resultState;
-        }
+            => await HandleAsync(_decoratee.HandleAsync(command, cancellationToken), cancellationToken).ConfigureAwait(false);
     }
 }

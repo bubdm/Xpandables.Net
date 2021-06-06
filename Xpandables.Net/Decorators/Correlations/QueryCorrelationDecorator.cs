@@ -19,7 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Correlations;
-using Xpandables.Net.Decorators;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Decorators.Correlations

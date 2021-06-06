@@ -23,7 +23,8 @@ namespace Xpandables.Net.Commands
 {
     /// <summary>
     /// Provides with a method to asynchronously handle a command of specific type that implements <see cref="ICommand"/> interface.
-    /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the command can be handled. Its default behavior returns <see langword="true"/>.
+    /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the command can be handled.
+    /// Its default behavior returns <see langword="true"/>.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to act on.</typeparam>
@@ -42,7 +43,8 @@ namespace Xpandables.Net.Commands
 
     /// <summary>
     /// Provides with a method to asynchronously handle a command of specific type that implements <see cref="ICommand{TResult}"/> interface.
-    /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the command can be handled. Its default behavior returns <see langword="true"/>.
+    /// This interface inherits from <see cref="ICanHandle{TArgument}"/> that determines whether or not the command can be handled.
+    /// Its default behavior returns <see langword="true"/>.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to act on.</typeparam>

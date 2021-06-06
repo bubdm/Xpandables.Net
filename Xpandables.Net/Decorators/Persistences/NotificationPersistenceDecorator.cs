@@ -34,11 +34,10 @@ namespace Xpandables.Net.Decorators.Persistences
     /// </summary>
     /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
     /// <typeparam name="TNotification">Type of integration event.</typeparam>
-    public sealed class NotificationPersistenceDecorator<TAggregateId, TNotification> : INotificationHandler<TAggregateId, TNotification>
+    public sealed class NotificationPersistenceDecorator<TAggregateId, TNotification> : PersistenceDecoratorBase, INotificationHandler<TAggregateId, TNotification>
         where TNotification : class, INotification<TAggregateId>, IPersistenceDecorator
         where TAggregateId : notnull, IAggregateId
     {
-        private readonly IDataContext _dataContext;
         private readonly INotificationHandler<TAggregateId, TNotification> _decoratee;
 
         /// <summary>
@@ -50,19 +49,11 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
         public NotificationPersistenceDecorator(IDataContext dataContext, INotificationHandler<TAggregateId, TNotification> decoratee)
-        {
-            _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-        }
+            : base(dataContext)
+            => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 
         ///<inheritdoc/>
         public async Task<IOperationResult<ICommand?>> HandleAsync(TNotification integrationEvent, CancellationToken cancellationToken = default)
-        {
-            var resultState = await _decoratee.HandleAsync(integrationEvent, cancellationToken).ConfigureAwait(false);
-            if (resultState.Succeeded)
-                await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-            return resultState;
-        }
+            => await HandleAsync(_decoratee.HandleAsync(integrationEvent, cancellationToken), cancellationToken).ConfigureAwait(false);
     }
 }

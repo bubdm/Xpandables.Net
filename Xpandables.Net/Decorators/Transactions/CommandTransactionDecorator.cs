@@ -32,11 +32,10 @@ namespace Xpandables.Net.Decorators.Transactions
     /// if no transaction is returned, the execution is done normally. If operation is failed, do nothing.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command.</typeparam>
-    public sealed class CommandTransactionDecorator<TCommand> : ICommandHandler<TCommand>
+    public sealed class CommandTransactionDecorator<TCommand> : CommandTransactionDecorator, ICommandHandler<TCommand>
         where TCommand : class, ICommand, ITransactionDecorator
     {
         private readonly ICommandHandler<TCommand> _decoratee;
-        private readonly ITransactionScopeProvider _transactionScopeProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandTransactionDecorator{TCommand}"/> class
@@ -47,10 +46,8 @@ namespace Xpandables.Net.Decorators.Transactions
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="transactionScopeProvider"/> is null.</exception>
         public CommandTransactionDecorator(ICommandHandler<TCommand> decoratee, ITransactionScopeProvider transactionScopeProvider)
-        {
-            _transactionScopeProvider = transactionScopeProvider ?? throw new ArgumentNullException(nameof(transactionScopeProvider));
-            _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-        }
+            : base(transactionScopeProvider)
+            => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 
         /// <summary>
         /// Asynchronously handles the specified command applying a transaction scope if available and if there is no error.
@@ -60,21 +57,7 @@ namespace Xpandables.Net.Decorators.Transactions
         /// <exception cref="ArgumentNullException">The <paramref name="command" /> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
-        {
-            if (_transactionScopeProvider.GetTransactionScope(command) is { } transaction)
-            {
-                using var scope = transaction;
-                var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-                if (resultState.Succeeded)
-                    scope.Complete();
-
-                return resultState;
-            }
-            else
-            {
-                return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
-            }
-        }
+            => await HandleAsync(_decoratee.HandleAsync(command, cancellationToken), command).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -86,11 +69,10 @@ namespace Xpandables.Net.Decorators.Transactions
     /// </summary>
     /// <typeparam name="TCommand">Type of the command that will be used as argument.</typeparam>
     /// <typeparam name="TResult">Type of the result of the query.</typeparam>
-    public sealed class CommandTransactionDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+    public sealed class CommandTransactionDecorator<TCommand, TResult> : CommandTransactionDecorator, ICommandHandler<TCommand, TResult>
         where TCommand : class, ICommand<TResult>, ITransactionDecorator
     {
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
-        private readonly ITransactionScopeProvider _transactionScopeProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandTransactionDecorator{TCommand, TResult}"/> class
@@ -101,10 +83,8 @@ namespace Xpandables.Net.Decorators.Transactions
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="transactionScopeProvider"/> is null.</exception>
         public CommandTransactionDecorator(ICommandHandler<TCommand, TResult> decoratee, ITransactionScopeProvider transactionScopeProvider)
-        {
-            _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-            _transactionScopeProvider = transactionScopeProvider ?? throw new ArgumentNullException(nameof(transactionScopeProvider));
-        }
+            : base(transactionScopeProvider)
+            => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 
         /// <summary>
         /// Asynchronously handles the specified command applying a transaction scope if available, no error and returns the task result.
@@ -114,11 +94,31 @@ namespace Xpandables.Net.Decorators.Transactions
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
         public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+            => await HandleAsync(_decoratee.HandleAsync(command, cancellationToken), command).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Provides with Command Transaction decorator implementation for command.
+    /// </summary>
+    public abstract class CommandTransactionDecorator
+    {
+        private readonly ITransactionScopeProvider _transactionScopeProvider;
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="CommandTransactionDecorator"/> with the <see cref="ITransactionScopeProvider"/> instance.
+        /// </summary>
+        /// <param name="transactionScopeProvider">The transaction scope provider instance.</param>
+        protected CommandTransactionDecorator(ITransactionScopeProvider transactionScopeProvider)
+            => _transactionScopeProvider = transactionScopeProvider ?? throw new ArgumentNullException(nameof(transactionScopeProvider));
+
+        internal async Task<TOutput> HandleAsync<TOutput, TCommand>(Task<TOutput> handler, TCommand command)
+            where TOutput : IOperationResult
+            where TCommand : class, ITransactionDecorator
         {
             if (_transactionScopeProvider.GetTransactionScope(command) is { } transaction)
             {
                 using var scope = transaction;
-                var resultState = await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                var resultState = await handler.ConfigureAwait(false);
                 if (resultState.Succeeded)
                     scope.Complete();
 
@@ -126,7 +126,7 @@ namespace Xpandables.Net.Decorators.Transactions
             }
             else
             {
-                return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+                return await handler.ConfigureAwait(false);
             }
         }
     }

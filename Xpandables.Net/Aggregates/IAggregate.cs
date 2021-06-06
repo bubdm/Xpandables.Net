@@ -23,7 +23,9 @@ namespace Xpandables.Net.Aggregates
     public interface IAggregate { }
 
     /// <summary>
-    /// Aggregate is a pattern in Domain-Driven Design. A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
+    /// Defines base properties for an aggregate that is identified by a property of <typeparamref name="TAggregateId"/> type.
+    /// Aggregate is a pattern in Domain-Driven Design.
+    /// A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
     /// </summary>
     /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
     public interface IAggregate<TAggregateId> : ICommandQueryEvent
