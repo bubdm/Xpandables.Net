@@ -17,11 +17,11 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.5.1</Version>
-    <AssemblyVersion>5.5.1</AssemblyVersion>
-    <FileVersion>5.5.1</FileVersion>
-    <PackageVersion>5.5.1</PackageVersion>
-    <PackageReleaseNotes>Add Aggregate, Events, out-box</PackageReleaseNotes>    
+    <Version>5.6.0</Version>
+    <AssemblyVersion>5.6.0</AssemblyVersion>
+    <FileVersion>5.6.0</FileVersion>
+    <PackageVersion>5.6.0</PackageVersion>
+    <PackageReleaseNotes>Add AggregateId type</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
