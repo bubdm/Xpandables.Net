@@ -27,7 +27,7 @@ namespace Xpandables.Net.Api.Domains.Mementos
     public class ContactMemento : IMemento
     {
         [JsonConstructor]
-        public ContactMemento(Guid id, long version, string name, string city, string address, string country)
+        public ContactMemento(ContactId id, long version, string name, string city, string address, string country)
         {
             Id = id;
             Version = version;
@@ -37,7 +37,7 @@ namespace Xpandables.Net.Api.Domains.Mementos
             Country = country;
         }
 
-        internal Guid Id { get; }
+        internal ContactId Id { get; }
         internal long Version { get; }
         internal string Name { get; }
         internal string City { get; }

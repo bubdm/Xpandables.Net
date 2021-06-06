@@ -15,17 +15,15 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-
 using Xpandables.Net.Notifications;
 
 namespace Xpandables.Net.Api.Domains.Integrations
 {
-    public class ContactNameChangeIntegrationEvent : Notification
+    public class ContactNameChangeIntegrationEvent : Notification<ContactId>
     {
         public string Name { get; }
         public string OldName { get; }
-        public ContactNameChangeIntegrationEvent(string name, string oldName, Guid aggregateId) : base(aggregateId)
+        public ContactNameChangeIntegrationEvent(string name, string oldName, ContactId aggregateId) : base(aggregateId)
         {
             Name = name;
             OldName = oldName;

@@ -21,6 +21,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Api.Domains;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Decorators;
@@ -74,7 +75,8 @@ namespace Xpandables.Net.Api.Handlers
 
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
     public sealed class AddCommand :
-        QueryExpression<ContactAggregate>, ICommand<string>, IHttpRestClientRequest<string>, IValidatorDecorator, IAggregatePersistenceDecorator, IInterceptorDecorator, ILoggingDecorator
+        QueryExpression<ContactAggregate>, ICommand<string>, IHttpRestClientRequest<string>, IValidatorDecorator, IAggregate, 
+        IPersistenceDecorator, IInterceptorDecorator, ILoggingDecorator
     {
         public AddCommand(string name, string city, string address, string country)
         {
@@ -92,7 +94,8 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Delete, IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed class DeleteCommand : ICommand, IHttpRestClientRequest, IValidatorDecorator, IAggregatePersistenceDecorator, IPathStringLocationRequest, ILoggingDecorator
+    public sealed class DeleteCommand : ICommand, IHttpRestClientRequest, IValidatorDecorator, IAggregate, 
+        IPersistenceDecorator, IPathStringLocationRequest, ILoggingDecorator
     {
         public DeleteCommand(string id)
         {
@@ -119,7 +122,8 @@ namespace Xpandables.Net.Api.Handlers
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Put, IsSecured = false, IsNullable = false, In = ParameterLocation.Body | ParameterLocation.Path)]
     public sealed class EditCommand :
-        ICommand<Contact>, IHttpRestClientRequest<Contact>, IValidatorDecorator, IAggregatePersistenceDecorator, ILoggingDecorator, IPathStringLocationRequest, IStringRequest
+        ICommand<Contact>, IHttpRestClientRequest<Contact>, IValidatorDecorator, IAggregate, 
+        IPersistenceDecorator, ILoggingDecorator, IPathStringLocationRequest, IStringRequest
     {
         public string Id { get; set; } = null!;
         public string? Name { get; set; }

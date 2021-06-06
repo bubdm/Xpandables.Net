@@ -15,16 +15,14 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-
 using Xpandables.Net.DomainEvents;
 
 namespace Xpandables.Net.Api.Domains.Events
 {
-    public class ContactNameChangeCanceledEvent : DomainEvent
+    public class ContactNameChangeCanceledEvent : DomainEvent<ContactId>
     {
         public string OldName { get; }
-        public ContactNameChangeCanceledEvent(string oldName, Guid aggregateId, long version)
+        public ContactNameChangeCanceledEvent(string oldName, ContactId aggregateId, long version)
             : base(aggregateId, version)
         {
             OldName = oldName;

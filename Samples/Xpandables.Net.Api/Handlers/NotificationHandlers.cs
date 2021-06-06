@@ -20,12 +20,13 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Api.Domains;
 using Xpandables.Net.Api.Domains.Events;
 using Xpandables.Net.DomainEvents;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public sealed class ContactModelCreatedDomainEventHandler : DomainEventHandler<ContactCreatedEvent>
+    public sealed class ContactModelCreatedDomainEventHandler : DomainEventHandler<ContactId, ContactCreatedEvent>
     {
         public override async Task HandleAsync(ContactCreatedEvent domainEvent, CancellationToken cancellationToken = default)
         {

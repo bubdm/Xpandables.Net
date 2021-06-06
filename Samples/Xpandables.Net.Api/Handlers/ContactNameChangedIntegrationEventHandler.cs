@@ -19,6 +19,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Aggregates;
+using Xpandables.Net.Api.Domains;
 using Xpandables.Net.Api.Domains.Integrations;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Decorators;
@@ -26,19 +28,19 @@ using Xpandables.Net.Notifications;
 
 namespace Xpandables.Net.Api.Handlers
 {
-    public class ContactNameChangedFailedCommand : ICommand, IAggregatePersistenceDecorator
+    public class ContactNameChangedFailedCommand : ICommand, IAggregate, IPersistenceDecorator
     {
-        public ContactNameChangedFailedCommand(Guid aggregateId, string name)
+        public ContactNameChangedFailedCommand(ContactId aggregateId, string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             AggregateId = aggregateId;
         }
 
-        public Guid AggregateId { get; }
+        public ContactId AggregateId { get; }
         public string Name { get; }
     }
 
-    public class ContactNameChangedIntegrationEventHandler : NotificationHandler<ContactNameChangeIntegrationEvent>
+    public class ContactNameChangedIntegrationEventHandler : NotificationHandler<ContactId, ContactNameChangeIntegrationEvent>
     {
         public override async Task<IOperationResult<ICommand?>> HandleAsync(ContactNameChangeIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
         {

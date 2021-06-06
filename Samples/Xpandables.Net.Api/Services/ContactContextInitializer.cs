@@ -46,13 +46,13 @@ namespace Xpandables.Net.Api.Services
             await Task.Yield();
             using var service = _serviceScopeFactory.CreateScope();
             using var context = service.ServiceProvider.GetRequiredService<IEventStoreContext>();
-            var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateAccessor<ContactAggregate>>();
+            var aggregateAccessor = service.ServiceProvider.GetRequiredService<IAggregateAccessor<ContactId, ContactAggregate>>();
 
             if (context.Set<DomainEventEntity>().Any())
                 return;
 
             var contact = ContactAggregate.CreateNewContact("myName", "Paris", "Alexandre LeGrand 01", "France");
-            ContactAggregate.FirstGuidCreated = contact.Guid.ToString();
+            ContactAggregate.FirstGuidCreated = contact.AggregateId;
 
             await aggregateAccessor.AppendAsync(contact, cancellationToken).ConfigureAwait(false);
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

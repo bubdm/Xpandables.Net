@@ -35,5 +35,8 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         /// <param name="value">The value identifier.</param>
         protected AggregateId(Guid value) : base(value) { }
+        
+        ///<inheritdoc/>
+        public override bool IsEmpty() => Value == Guid.Empty;
     }
 }

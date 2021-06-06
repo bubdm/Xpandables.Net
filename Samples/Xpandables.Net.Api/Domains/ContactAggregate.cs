@@ -15,6 +15,8 @@
  *
 ************************************************************************************************************/
 
+using System;
+
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Api.Domains.Events;
 using Xpandables.Net.Api.Domains.Integrations;
@@ -23,7 +25,21 @@ using Xpandables.Net.Api.Domains.Mementos;
 namespace Xpandables.Net.Api.Domains
 {
 #pragma warning disable CS8618 
-    public sealed class ContactAggregate : Aggregate, IOriginator
+    public sealed class ContactId : AggregateId
+    {
+        public static ContactId NewContactId(Guid id) => new(id);
+        public static ContactId NewContactId(string value)
+        {
+            _ = value ?? throw new ArgumentNullException(nameof(value));
+            if (!Guid.TryParse(value, out var guid))
+                throw new ArgumentException($"The specified value '{value}' is can not be converted to '{nameof(Guid)}'");
+
+            return new(guid);
+        }
+        private ContactId(Guid value) : base(value) { }
+
+    }
+    public sealed class ContactAggregate : Aggregate<ContactId>, IOriginator
     {
         public static string FirstGuidCreated { get; set; } = string.Empty;
 
@@ -33,16 +49,16 @@ namespace Xpandables.Net.Api.Domains
         public ContactAggregate() : base() { }
         private ContactAggregate(string name, string city, string address, string country)
         {
-            RaiseEvent(new ContactCreatedEvent(name, city, address, country, Guid, GetNewVersion()));
+            RaiseEvent(new ContactCreatedEvent(name, city, address, country, AggregateId, GetNewVersion()));
         }
 
         IMemento IOriginator.CreateMemento()
-            => new ContactMemento(Guid, Version, Name, City, Address, Country);
+            => new ContactMemento(AggregateId, Version, Name, City, Address, Country);
 
         void IOriginator.SetMemento(IMemento memento)
         {
             var contactMemento = (ContactMemento)memento;
-            Guid = contactMemento.Id;
+            AggregateId = contactMemento.Id;
             Version = contactMemento.Version;
             Name = contactMemento.Name;
             City = contactMemento.City;
@@ -52,28 +68,28 @@ namespace Xpandables.Net.Api.Domains
 
         public void CancelNameChange(string oldName)
         {
-            RaiseEvent(new ContactNameChangeCanceledEvent(oldName, Guid, GetNewVersion()));
+            RaiseEvent(new ContactNameChangeCanceledEvent(oldName, AggregateId, GetNewVersion()));
         }
 
         public void ChangeContactName(string name)
         {
-            AddNotification(new ContactNameChangeIntegrationEvent(name, Name, Guid));
-            RaiseEvent(new ContactNameChangedEvent(name, Guid, GetNewVersion()));
+            AddNotification(new ContactNameChangeIntegrationEvent(name, Name, AggregateId));
+            RaiseEvent(new ContactNameChangedEvent(name, AggregateId, GetNewVersion()));
         }
 
         public void ChangeContactCity(string city)
         {
-            RaiseEvent(new ContactCityChangedEvent(city, Guid, GetNewVersion()));
+            RaiseEvent(new ContactCityChangedEvent(city, AggregateId, GetNewVersion()));
         }
 
         public void ChangeContactAddress(string address)
         {
-            RaiseEvent(new ContactAddressChangedEvent(address, Guid, GetNewVersion()));
+            RaiseEvent(new ContactAddressChangedEvent(address, AggregateId, GetNewVersion()));
         }
 
         public void ChangeContactCountry(string country)
         {
-            RaiseEvent(new ContactCountryChangedEvent(country, Guid, GetNewVersion()));
+            RaiseEvent(new ContactCountryChangedEvent(country, AggregateId, GetNewVersion()));
         }
 
         void On(ContactCreatedEvent createdEvent)

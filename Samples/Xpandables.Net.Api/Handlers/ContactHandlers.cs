@@ -30,15 +30,15 @@ namespace Xpandables.Net.Api.Handlers
          ICommandHandler<AddCommand, string>, IQueryHandler<SelectQuery, Contact>, ICommandHandler<EditCommand, Contact>,
         ICommandHandler<ContactNameChangedFailedCommand>
     {
-        private readonly IAggregateAccessor<ContactAggregate> _entityAccessor;
-        public ContactHandlers(IAggregateAccessor<ContactAggregate> entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
+        private readonly IAggregateAccessor<ContactId, ContactAggregate> _entityAccessor;
+        public ContactHandlers(IAggregateAccessor<ContactId, ContactAggregate> entityAccessor) => _entityAccessor = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
 
         public async Task<IOperationResult<Contact>> HandleAsync(SelectQuery query, CancellationToken cancellationToken = default)
         {
-            var found = await _entityAccessor.ReadAsync(Guid.Parse(query.Id), cancellationToken).ConfigureAwait(false);
+            var found = await _entityAccessor.ReadAsync(ContactId.NewContactId(query.Id), cancellationToken).ConfigureAwait(false);
             if (found is null)
                 return NotFoundOperation<Contact>();
-            return OkOperation(new Contact(found.Guid.ToString(), found.Name, found.City, found.Address, found.Country));
+            return OkOperation(new Contact(found.AggregateId, found.Name, found.City, found.Address, found.Country));
         }
 
         public async Task<IOperationResult<string>> HandleAsync(AddCommand command, CancellationToken cancellationToken = default)
@@ -46,12 +46,12 @@ namespace Xpandables.Net.Api.Handlers
             var newContact = ContactAggregate.CreateNewContact(command.Name, command.City, command.Address, command.Country);
             await _entityAccessor.AppendAsync(newContact, cancellationToken).ConfigureAwait(false);
 
-            return OkOperation(newContact.Guid.ToString());
+            return OkOperation(newContact.AggregateId.ToString()!);
         }
 
         public async Task<IOperationResult<Contact>> HandleAsync(EditCommand command, CancellationToken cancellationToken = default)
         {
-            var found = await _entityAccessor.ReadAsync(Guid.Parse(command.Id), cancellationToken).ConfigureAwait(false);
+            var found = await _entityAccessor.ReadAsync(ContactId.NewContactId(command.Id), cancellationToken).ConfigureAwait(false);
             if (found is null)
                 return NotFoundOperation<Contact>();
 
@@ -62,12 +62,12 @@ namespace Xpandables.Net.Api.Handlers
 
             await _entityAccessor.AppendAsync(found, cancellationToken).ConfigureAwait(false);
 
-            return OkOperation(new Contact(found.Guid.ToString(), found.Name, found.City, found.Address, found.Country));
+            return OkOperation(new Contact(found.AggregateId, found.Name, found.City, found.Address, found.Country));
         }
 
         public async Task<IOperationResult> HandleAsync(ContactNameChangedFailedCommand command, CancellationToken cancellationToken = default)
         {
-            var found = await _entityAccessor.ReadAsync(command.AggregateId, cancellationToken).ConfigureAwait(false);
+            var found = await _entityAccessor.ReadAsync(ContactId.NewContactId(command.AggregateId), cancellationToken).ConfigureAwait(false);
             if (found is null)
                 return NotFoundOperation();
 

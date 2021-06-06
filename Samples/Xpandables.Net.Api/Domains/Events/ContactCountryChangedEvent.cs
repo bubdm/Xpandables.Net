@@ -15,16 +15,14 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-
 using Xpandables.Net.DomainEvents;
 
 namespace Xpandables.Net.Api.Domains.Events
 {
-    public class ContactCountryChangedEvent : DomainEvent
+    public class ContactCountryChangedEvent : DomainEvent<ContactId>
     {
         public string Country { get; }
-        public ContactCountryChangedEvent(string country, Guid aggregateId, long version)
+        public ContactCountryChangedEvent(string country, ContactId aggregateId, long version)
             : base(aggregateId, version)
         {
             Country = country;

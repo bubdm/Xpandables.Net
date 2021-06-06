@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Xpandables.Net.Api.Migrations
+namespace Xpandables.Net.Api.Migrations.EventStore
 {
-    public partial class AddEvents : Migration
+    public partial class addEvents : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace Xpandables.Net.Api.Migrations
                 columns: table => new
                 {
                     EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AggregateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AggregateId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Version = table.Column<long>(type: "bigint", nullable: false),
                     Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
@@ -47,7 +47,7 @@ namespace Xpandables.Net.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    AggregateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AggregateId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Version = table.Column<long>(type: "bigint", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
