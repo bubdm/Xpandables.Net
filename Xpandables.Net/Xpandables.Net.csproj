@@ -23,7 +23,7 @@
     <PackageVersion>5.6.0</PackageVersion>
     <PackageReleaseNotes>Add AggregateId type</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
-    <PackageTags>ICommand IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>
+    <PackageTags>ICommand IAggregate{TAggregateId} IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>

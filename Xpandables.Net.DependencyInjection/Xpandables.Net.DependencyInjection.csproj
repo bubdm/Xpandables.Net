@@ -23,7 +23,7 @@
     <PackageVersion>5.6.0</PackageVersion>
     <PackageReleaseNotes>Add AggregateId type</PackageReleaseNotes>
     <PackageId>Xpandables.Net.DependencyInjection</PackageId>
-    <PackageTags>XTryDecorate, XRegister.</PackageTags>
+    <PackageTags>XTryDecorate AddXHandlers AddXQueries AddXDataContext</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
