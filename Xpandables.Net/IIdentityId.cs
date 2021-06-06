@@ -32,6 +32,12 @@ namespace Xpandables.Net
         TId Value { get; }
 
         /// <summary>
+        /// Returns the <see cref="string"/> representation of the identity value.
+        /// </summary>
+        /// <returns>A <see cref="string"/> value.</returns>
+        string AsString();
+
+        /// <summary>
         /// Returns a value that determine whether or not the identity is defined or empty.
         /// </summary>
         /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>

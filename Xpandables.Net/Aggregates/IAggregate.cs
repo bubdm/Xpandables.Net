@@ -43,6 +43,6 @@ namespace Xpandables.Net.Aggregates
         /// Determines whether or not the underlying instance is a empty one.
         /// </summary>
         /// <returns>Returns <see langword="true"/> if so, otherwise <see langword="false"/></returns>
-        public bool IsEmpty => AggregateId.IsEmpty();
+        public bool IsEmpty => AggregateId?.IsEmpty() ?? true;
     }
 }

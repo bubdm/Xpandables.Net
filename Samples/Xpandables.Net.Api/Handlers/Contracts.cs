@@ -61,7 +61,7 @@ namespace Xpandables.Net.Api.Handlers
     }
 
     [HttpRestClient(Path = "api/contacts/{id}", Method = HttpMethodVerbs.Get, IsSecured = true, IsNullable = true, In = ParameterLocation.Path)]
-    public sealed class SelectQuery : IQuery<Contact>, IHttpRestClientRequest<Contact>, IPathStringLocationRequest, IInterceptorDecorator, ILoggingDecorator
+    public sealed class SelectQuery : IQuery<Contact>, IHttpRestClientRequest<Contact>, IPathStringLocationRequest, ILoggingDecorator
     {
         public SelectQuery(string id)
         {
@@ -76,7 +76,7 @@ namespace Xpandables.Net.Api.Handlers
     [HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
     public sealed class AddCommand :
         QueryExpression<ContactAggregate>, ICommand<string>, IHttpRestClientRequest<string>, IValidatorDecorator, IAggregate, 
-        IPersistenceDecorator, IInterceptorDecorator, ILoggingDecorator
+        IPersistenceDecorator, ILoggingDecorator
     {
         public AddCommand(string name, string city, string address, string country)
         {

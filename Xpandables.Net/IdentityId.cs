@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Xpandables.Net
 {
@@ -37,6 +38,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="value">The value for the new instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
+        [JsonConstructor]
         protected IdentityId(TId value) => Value = value ?? throw new ArgumentNullException(nameof(value));
 
         ///<inheritdoc/>
@@ -62,6 +64,12 @@ namespace Xpandables.Net
         /// </summary>
         /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>
         public abstract bool IsEmpty();
+
+        /// <summary>
+        /// When overridden, this method should return the <see cref="string"/> representation of the identity value.
+        /// </summary>
+        /// <returns>A <see cref="string"/> value.</returns>
+        public abstract string AsString();
 
         ///<inheritdoc/>
         public static bool operator ==(IdentityId<TId> left, IdentityId<TId> right) => left?.Equals(right) ?? right is null;

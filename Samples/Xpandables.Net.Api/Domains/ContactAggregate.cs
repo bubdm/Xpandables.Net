@@ -17,6 +17,8 @@
 
 using System;
 
+using Newtonsoft.Json;
+
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Api.Domains.Events;
 using Xpandables.Net.Api.Domains.Integrations;
@@ -32,10 +34,12 @@ namespace Xpandables.Net.Api.Domains
         {
             _ = value ?? throw new ArgumentNullException(nameof(value));
             if (!Guid.TryParse(value, out var guid))
-                throw new ArgumentException($"The specified value '{value}' is can not be converted to '{nameof(Guid)}'");
+                throw new ArgumentException($"The specified value '{value}' can not be converted to '{nameof(Guid)}'");
 
             return new(guid);
         }
+
+        [JsonConstructor]
         private ContactId(Guid value) : base(value) { }
 
     }
@@ -49,6 +53,7 @@ namespace Xpandables.Net.Api.Domains
         public ContactAggregate() : base() { }
         private ContactAggregate(string name, string city, string address, string country)
         {
+            AggregateId = ContactId.NewContactId(Guid.NewGuid());
             RaiseEvent(new ContactCreatedEvent(name, city, address, country, AggregateId, GetNewVersion()));
         }
 

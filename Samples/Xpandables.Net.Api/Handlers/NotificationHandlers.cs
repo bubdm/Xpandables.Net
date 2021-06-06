@@ -30,7 +30,7 @@ namespace Xpandables.Net.Api.Handlers
     {
         public override async Task HandleAsync(ContactCreatedEvent domainEvent, CancellationToken cancellationToken = default)
         {
-            Trace.WriteLine($"A newly created contact with id : {domainEvent.Guid} : {DateTime.Now.Ticks}");
+            Trace.WriteLine($"A newly created contact with id : {domainEvent.AggregateId.AsString()} : {DateTime.Now.Ticks}");
             await Task.CompletedTask.ConfigureAwait(false);
         }
     }

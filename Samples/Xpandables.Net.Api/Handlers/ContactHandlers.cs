@@ -46,7 +46,7 @@ namespace Xpandables.Net.Api.Handlers
             var newContact = ContactAggregate.CreateNewContact(command.Name, command.City, command.Address, command.Country);
             await _entityAccessor.AppendAsync(newContact, cancellationToken).ConfigureAwait(false);
 
-            return OkOperation(newContact.AggregateId.ToString()!);
+            return OkOperation(newContact.AggregateId.AsString());
         }
 
         public async Task<IOperationResult<Contact>> HandleAsync(EditCommand command, CancellationToken cancellationToken = default)
@@ -67,7 +67,7 @@ namespace Xpandables.Net.Api.Handlers
 
         public async Task<IOperationResult> HandleAsync(ContactNameChangedFailedCommand command, CancellationToken cancellationToken = default)
         {
-            var found = await _entityAccessor.ReadAsync(ContactId.NewContactId(command.AggregateId), cancellationToken).ConfigureAwait(false);
+            var found = await _entityAccessor.ReadAsync(command.AggregateId, cancellationToken).ConfigureAwait(false);
             if (found is null)
                 return NotFoundOperation();
 
