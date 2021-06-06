@@ -44,17 +44,9 @@ namespace Xpandables.Net.Aggregates
         /// Returns anew instance of <see cref="AggregateId"/> from the specified string value.
         /// </summary>
         /// <param name="value">The string value to be converted to <see cref="Guid"/>.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="value"/> can not be converted to <see cref="Guid"/>.</exception>
         /// <returns>A new instance of <see cref="AggregateId"/>.</returns>
-        public static AggregateId NewAggregateId(string value)
-        {
-            _ = value ?? throw new ArgumentNullException(nameof(value));
-            if (!Guid.TryParse(value, out var guid))
-                throw new ArgumentException($"The specified value '{value}' can not be converted to '{nameof(Guid)}' type");
-
-            return new(guid);
-        }
+        public static AggregateId NewAggregateId(string value) => new(value);
 
         /// <summary>
         /// Constructs a new instance of <see cref="AggregateId"/> with the value identifier.
@@ -62,6 +54,15 @@ namespace Xpandables.Net.Aggregates
         /// <param name="value">The value identifier.</param>
         [JsonConstructor]
         protected AggregateId(Guid value) : base(value) { }
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="AggregateId"/> with the string value identifier.
+        /// </summary>
+        /// <param name="value">The value identifier.</param>
+        /// <exception cref="ArgumentException">The <paramref name="value"/> can not be converted to <see cref="Guid"/> type.</exception>
+        protected AggregateId(string value)
+            : base(Guid.TryParse(value, out var guid) ? guid : throw new ArgumentException($"The specified value '{value}' can not be converted to '{nameof(Guid)}' type"))
+        { }
 
         ///<inheritdoc/>
         public override bool IsEmpty() => Value == Guid.Empty;
