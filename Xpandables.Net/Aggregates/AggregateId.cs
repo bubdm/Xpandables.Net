@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace Xpandables.Net.Aggregates
@@ -23,6 +24,7 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Represents a helper class to implement an identity for an aggregate type.
     /// </summary>
+    [DebuggerDisplay("{" + nameof(Value) + "}")]
     public class AggregateId : IdentityId<Guid>, IAggregateId
     {
         /// <summary>
