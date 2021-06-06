@@ -140,7 +140,6 @@ namespace Xpandables.Net.Http
 
         /// <summary>
         /// Returns the source as string content using <see cref="IStringRequest.GetStringContent"/> or <see cref="IPatchRequest"/> if available, if not use the hole source.
-        /// The default implementation used the <see cref="System.Text.Json"/> API.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
@@ -151,7 +150,6 @@ namespace Xpandables.Net.Http
 
         /// <summary>
         /// Returns the source as stream content using <see cref="IStreamRequest.GetStreamContent"/> if available, if not use the hole source.
-        /// The default implementation used the <see cref="System.Text.Json"/> API.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>

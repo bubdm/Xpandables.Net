@@ -54,13 +54,7 @@ namespace Xpandables.Net.Razors
             _modelViews = modelViews ?? throw new ArgumentNullException(nameof(modelViews));
         }
 
-        /// <summary>
-        /// Returns a string of a rendered view that matches the specified model.
-        /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <param name="model">The model instance.</param>
-        /// <returns>A string that represents the rendered view.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="model" /> is null.</exception>
+        ///<inheritdoc/>
         public async Task<string> RenderFromModelToStringAsync<TModel>(TModel model)
         {
             foreach (var (modelType, identifier) in _modelViews)
@@ -72,14 +66,7 @@ namespace Xpandables.Net.Razors
             throw new InvalidOperationException($"Unable to find view from model {typeof(TModel).Name}");
         }
 
-        /// <summary>
-        /// Returns a string of a rendered view with the specified model.
-        /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <param name="viewName">The path for the view.</param>
-        /// <param name="model">The model instance.</param>
-        /// <returns>A string that represents the rendered view.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="viewName" /> is null.</exception>
+        ///<inheritdoc/>
         public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model)
         {
             using var scope = _serviceScopeFactory.CreateScope();

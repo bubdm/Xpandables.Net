@@ -38,12 +38,7 @@ namespace Xpandables.Net.Http.RequestLocations
             _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
         }
 
-        /// <summary>
-        /// Asynchronously gets the IPAddress Geo-location of the specified IPAddress request using http://api.ipstack.com.
-        /// </summary>
-        /// <param name="request">The request to act with.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
+        ///<inheritdoc/>
         public async Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(IPAddressLocationRequest request, CancellationToken cancellationToken = default)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));

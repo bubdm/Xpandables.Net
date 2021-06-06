@@ -37,7 +37,12 @@ namespace Xpandables.Net.BlazorExtended.Storage
         /// <summary>
         /// The action is a removing event.
         /// </summary>
-        Removing
+        Removing,
+
+        /// <summary>
+        /// The action is a removed event.
+        /// </summary>
+        Removed
     }
 
     /// <summary>

@@ -70,10 +70,7 @@ namespace Xpandables.Net.Http.RequestLocations
             _httpRestClientHandler = httpRestClientHandler ?? throw new ArgumentNullException(nameof(httpRestClientHandler));
         }
 
-        /// <summary>
-        /// Asynchronously gets the IPAddress of the current caller.
-        /// </summary>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        ///<inheritdoc/>
         public async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(CancellationToken cancellationToken = default)
         {
             var response = await _httpRestClientHandler.SendAsync(new IPAddressRequest(), cancellationToken).ConfigureAwait(false);

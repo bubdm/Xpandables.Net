@@ -47,9 +47,7 @@ namespace Xpandables.Net.Correlations
         /// </summary>
         public CorrelationCollection<string, object> Objects { get; }
 
-        /// <summary>
-        /// Gets the user identifier for the current context.
-        /// </summary>
+        ///<inheritdoc/>
         public string UserId => _httpContextAccessor
             .HttpContext!
             .User
@@ -57,26 +55,20 @@ namespace Xpandables.Net.Correlations
             .Single(u => u.Type == ClaimTypes.Sid)
             .Value;
 
-        /// <summary>
-        /// Gets a collection of claims for the current context.
-        /// </summary>
+        ///<inheritdoc/>
         public IEnumerable<Claim> Claims => _httpContextAccessor
             .HttpContext?
             .User?
             .Claims ?? Enumerable.Empty<Claim>();
 
-        /// <summary>
-        /// Gets the unique correlation identifier for the current context.
-        /// </summary>
+        ///<inheritdoc/>
         public string CorrelationId =>
             _httpContextAccessor
             .HttpContext!
             .Request
             .Headers[ICorrelationContext.DefaultHeader];
 
-        /// <summary>
-        /// Determines whether or not correlation properties are available.
-        /// </summary>
+        ///<inheritdoc/>
         public bool IsAvailable => Claims.Any();
     }
 }

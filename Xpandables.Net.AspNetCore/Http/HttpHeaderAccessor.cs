@@ -42,14 +42,10 @@ namespace Xpandables.Net.Http
             Response = new HttpHeaderProvider(httpContextAccessor.HttpContext.Response.Headers);
         }
 
-        /// <summary>
-        /// The HTTP request header accessor.
-        /// </summary>
+        ///<inheritdoc/>
         public IHttpHeaderProvider Request { get; }
 
-        /// <summary>
-        /// The HTTP response header accessor.
-        /// </summary>
+        ///<inheritdoc/>
         public IHttpHeaderProvider Response { get; }
     }
 }

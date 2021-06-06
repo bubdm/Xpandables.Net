@@ -36,14 +36,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
     /// </summary>
     public class HttpRestClientResponseBuilder : IHttpRestClientResponseBuilder
     {
-        /// <summary>
-        /// De-serializes a JSON string from stream.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the deserialized object.</typeparam>
-        /// <param name="stream">The stream to act on.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TResult" /> type.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="stream" /> is null.</exception>
-        /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception>
+        ///<inheritdoc/>
         public virtual async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream)
         {
             var result = await JsonSerializer.DeserializeAsync<TResult>(
@@ -52,12 +45,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
             return result!;
         }
 
-        /// <summary>
-        /// Returns an <see cref="HttpRestClientResponse" /> for bad response.
-        /// </summary>
-        /// <param name="badResponseBuilder">The bad response content builder.</param>
-        /// <param name="httpResponse">The target HTTP response.</param>
-        /// <returns>An instance of <see cref="HttpRestClientResponse" />.</returns>
+        ///<inheritdoc/>
         public virtual async Task<HttpRestClientResponse> WriteBadResultResponseAsync(Func<Exception, HttpStatusCode, HttpRestClientResponse> badResponseBuilder, HttpResponseMessage httpResponse)
         {
             var response = httpResponse.Content switch
@@ -78,13 +66,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
             }
         }
 
-        /// <summary>
-        /// Returns an <see cref="HttpRestClientResponse" /> for success response that contains an <see cref="IAsyncEnumerable{T}" />.
-        /// </summary>
-        /// <typeparam name="TResult">The response content type.</typeparam>
-        /// <param name="httpResponse">The target HTTP response.</param>
-        /// <param name="streamToResponseConverter">The converter to be used from stream to <typeparamref name="TResult" />.</param>
-        /// <returns>An instance of <see cref="HttpRestClientResponse" />.</returns>
+        ///<inheritdoc/>
         public virtual async Task<HttpRestClientResponse<TResult>> WriteSuccessAsyncEnumerableResponseAsync<TResult>(HttpResponseMessage httpResponse, Func<Stream, TResult> streamToResponseConverter)
         {
             try
@@ -116,13 +98,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
             }
         }
 
-        /// <summary>
-        /// Returns an <see cref="HttpRestClientResponse" /> for success response that contains a result of <typeparamref name="TResult" /> type.
-        /// </summary>
-        /// <typeparam name="TResult">The response content type.</typeparam>
-        /// <param name="httpResponse">The target HTTP response.</param>
-        /// <param name="streamToResponseConverter">The converter to be used from stream to <typeparamref name="TResult" />.</param>
-        /// <returns>An instance of <see cref="HttpRestClientResponse" />.</returns>
+        ///<inheritdoc/>
         public virtual async Task<HttpRestClientResponse<TResult>> WriteSuccessResultResponseAsync<TResult>(HttpResponseMessage httpResponse, Func<Stream, Task<TResult>> streamToResponseConverter)
         {
             try
@@ -154,11 +130,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
             }
         }
 
-        /// <summary>
-        /// Returns headers from the HTTP response when return <see cref="HttpRestClientResponse"/>.
-        /// </summary>
-        /// <param name="httpResponse">The response to act on.</param>
-        /// <returns>A collection of keys/values.</returns>
+        ///<inheritdoc/>
         public virtual NameValueCollection ReadHttpResponseHeaders(HttpResponseMessage httpResponse)
             => Enumerable
                 .Empty<(string Name, string Value)>()
@@ -184,13 +156,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
                     resultSelector: nvc => nvc
                     );
 
-        /// <summary>
-        /// Returns an async-enumerable from stream used for asynchronous result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="stream">The stream source to act on.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <typeparamref name="TResult" /> that can be asynchronously enumerated.</returns>
+        ///<inheritdoc/>
         public virtual async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(Stream stream, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using var blockingCollection = new BlockingCollection<TResult>();

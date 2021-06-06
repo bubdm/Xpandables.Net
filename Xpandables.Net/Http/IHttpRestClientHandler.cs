@@ -50,6 +50,7 @@ namespace Xpandables.Net.Http
 
         /// <summary>
         /// Sends the request that does not return a response.
+        /// Make use of <see langword="using"/> key work when call.
         /// </summary>
         /// <param name="request">The request to act with. The request must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
@@ -59,6 +60,7 @@ namespace Xpandables.Net.Http
 
         /// <summary>
         /// Sends the request that returns a response of <typeparamref name="TResult"/> type.
+        /// Make use of <see langword="using"/> key work when call.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="request">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>

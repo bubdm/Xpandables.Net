@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.BlazorExtended.Storage
 {
     /// <summary>
-    /// /// Provides with methods to access a browser storage.
+    /// Provides with methods to access a browser storage.
     /// </summary>
     public interface ILocalStorageProvider
     {

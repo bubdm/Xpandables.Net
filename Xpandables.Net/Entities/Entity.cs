@@ -42,62 +42,46 @@ namespace Xpandables.Net.Entities
         [Key]
         public string Id { get; protected set; }
 
-        /// <summary>
-        /// Gets a value indicating whether or not the underlying instance is marked as active.
-        /// </summary>
+        ///<inheritdoc/>
         public bool IsActive { get; protected set; } = true;
 
-        /// <summary>
-        /// Gets a value indicating whether or not the underlying instance is marked as deleted.
-        /// </summary>
+        ///<inheritdoc/>
         public bool IsDeleted { get; protected set; }
 
-        /// <summary>
-        /// Gets the creation date of the underlying instance. This property is automatically set by the context.
-        /// </summary>
+        ///<inheritdoc/>
         public DateTime CreatedOn { get; protected set; } = DateTime.UtcNow;
 
-        /// <summary>
-        /// Gets the last update date of the underlying instance if exist. This property is automatically set by the context.
-        /// </summary>
+        ///<inheritdoc/>
         public DateTime? UpdatedOn { get; protected set; }
 
-        /// <summary>
-        /// Gets the deleted date of the underlying instance if exist. This property is automatically set by the context.
-        /// </summary>
+        ///<inheritdoc/>
         public DateTime? DeletedOn { get; protected set; }
 
-        /// <summary>
-        /// Marks the underlying instance as deactivated.
-        /// </summary>
+        ///<inheritdoc/>
         public virtual void Deactivated()
         {
             IsActive = false;
             UpdatedOn = DateTime.UtcNow;
         }
 
-        /// <summary>
-        /// Activates the underlying instance.
-        /// </summary>
-        public virtual void Activated() => IsActive = true;
+        ///<inheritdoc/>
+        public virtual void Activated()
+        {
+            UpdatedOn = DateTime.UtcNow;
+            IsActive = true;
+        }
 
-        /// <summary>
-        /// Marks the underlying instance as deleted.
-        /// </summary>
+        ///<inheritdoc/>
         public virtual void Deleted()
         {
             IsDeleted = true;
             DeletedOn = DateTime.UtcNow;
         }
 
-        /// <summary>
-        /// Sets the creation date time for underlying instance.
-        /// </summary>
+        ///<inheritdoc/>
         public virtual void Created() => CreatedOn = DateTime.UtcNow;
 
-        /// <summary>
-        /// Sets the last update date time for underlying instance.
-        /// </summary>
+        ///<inheritdoc/>
         public void Updated() => UpdatedOn = DateTime.UtcNow;
 
         /// <summary>
@@ -116,11 +100,7 @@ namespace Xpandables.Net.Entities
             return $"{guid}{BitConverter.ToString(salt)}";
         }
 
-        /// <summary>
-        /// Determines whether the specified object is equal to the current object.
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns>true if the specified object is equal to the current object; otherwise, false.</returns>
+        ///<inheritdoc/>
         public override bool Equals(object? obj)
         {
             if (obj is not Entity other)
@@ -135,10 +115,7 @@ namespace Xpandables.Net.Entities
             return !string.IsNullOrWhiteSpace(Id) && !string.IsNullOrWhiteSpace(other.Id) && Id == other.Id;
         }
 
-        /// <summary>
-        /// Serves as the default hash function.
-        /// </summary>
-        /// <returns>A hash code for the current entity.</returns>
+        ///<inheritdoc/>
         public override int GetHashCode() => (GetType().ToString() + Id).GetHashCode(StringComparison.OrdinalIgnoreCase);
     }
 }

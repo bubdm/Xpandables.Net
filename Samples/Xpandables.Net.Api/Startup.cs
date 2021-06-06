@@ -62,7 +62,7 @@ namespace Xpandables.Net.Api
                 .AddXDataContext<ContactContext>(options => options.UseSqlServer(Configuration.GetConnectionString("xpandables"))
                 .EnableServiceProviderCaching())
                 .AddXEventStoreDataContext(options => options.UseSqlServer(Configuration.GetConnectionString("xpandables"), builder => builder.MigrationsAssembly("Xpandables.Net.Api"))
-                .EnableServiceProviderCaching())
+                    .EnableServiceProviderCaching())
                 .AddXDispatcher()
                 .AddXHandlerAccessor()
                 .AddXHandlers(new[] { typeof(ContactHandlers).Assembly }, options =>

@@ -36,14 +36,7 @@ namespace Xpandables.Net.Http.RequestBuilders
     /// </summary>
     public class HttpRestClientRequestBuilder : IHttpRestClientRequestBuilder
     {
-        /// <summary>
-        /// Appends the given path keys and values to the Uri.
-        /// </summary>
-        /// <param name="path">The base Uri.</param>
-        /// <param name="pathString">A collection of name value path pairs to append.</param>
-        /// <returns>The combined result.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="path" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="pathString" /> is null.</exception>
+        ///<inheritdoc/>
         public virtual string AddPathString(string path, IDictionary<string, string> pathString)
         {
             _ = path ?? throw new ArgumentNullException(nameof(path));
@@ -58,13 +51,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             return path;
         }
 
-        /// <summary>
-        /// Appends the given query keys and values to the Uri.
-        /// </summary>
-        /// <param name="path">The base Uri.</param>
-        /// <param name="queryString">A collection of name value query pairs to append.</param>
-        /// <returns>The combined result.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="path" /> is null.</exception>
+        ///<inheritdoc/>
         public virtual string AddQueryString(string path, IDictionary<string, string?>? queryString)
         {
             _ = path ?? throw new ArgumentNullException(nameof(path));
@@ -101,12 +88,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Returns the source as byte array content using <see cref="M:Xpandables.Net.Http.IByteArrayRequest.GetByteContent" />.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <returns>A byte array content.</returns>
+        ///<inheritdoc/>
         [return: MaybeNull]
         public virtual HttpContent ReadByteArrayContent<TSource>(TSource source) where TSource : class
         {
@@ -119,12 +101,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             return default;
         }
 
-        /// <summary>
-        /// Returns the source as URL encoded content using <see cref="M:Xpandables.Net.Http.IFormUrlEncodedRequest.GetFormContent" />.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <returns>An URL encoded content.</returns>
+        ///<inheritdoc/>
         [return: MaybeNull]
         public virtual HttpContent ReadFormUrlEncodedContent<TSource>(TSource source) where TSource : class
         {
@@ -137,14 +114,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             return default;
         }
 
-        /// <summary>
-        /// Returns the <see cref="HttpRestClientAttribute" /> found in the source as decorated attribute or <see cref="IHttpRestClientAttributeProvider" /> implementation.
-        /// If not found, throws an exception.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <returns>A <see cref="HttpRestClientAttribute" /> attribute.</returns>
-        /// <exception cref="ArgumentNullException"><see cref="HttpRestClientAttribute" /> expected or <see cref="IHttpRestClientAttributeProvider" /> implementation.</exception>
+        ///<inheritdoc/>
         public virtual HttpRestClientAttribute ReadHttpClientAttributeFromSource<TSource>(TSource source) where TSource : class
         {
             if (source is IHttpRestClientAttributeProvider httpRestClientAttributeProvider)
@@ -154,14 +124,7 @@ namespace Xpandables.Net.Http.RequestBuilders
                 ?? throw new ArgumentNullException($"{nameof(HttpRestClientAttribute)} excepted from : {source.GetType().Name}");
         }
 
-        /// <summary>
-        /// Returns the source as multi part content using <see cref="IMultipartRequest" /> interface.
-        /// The default implementation used <see cref="M:Xpandables.Net.Http.IHttpRestClientRequestBuilder.ReadByteArrayContent``1(``0)" /> and <see cref="M:Xpandables.Net.Http.IHttpRestClientRequestBuilder.ReadStringContent``1(``0,Xpandables.Net.Http.HttpRestClientAttribute)" />.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <param name="attribute">The target attribute.</param>
-        /// <returns>A multi part content.</returns>
+        ///<inheritdoc/>
         [return: MaybeNull]
         public virtual HttpContent ReadMultipartContent<TSource>(TSource source, HttpRestClientAttribute attribute) where TSource : class
         {
@@ -177,13 +140,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             return multipartContent;
         }
 
-        /// <summary>
-        /// Returns the source as stream content using <see cref="M:Xpandables.Net.Http.IStreamRequest.GetStreamContent" /> if available, if not use the hole source.
-        /// The default implementation used the <see cref="N:System.Text.Json" /> API.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <returns>A stream content.</returns>
+        ///<inheritdoc/>
         public virtual async Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source) where TSource : class
         {
             ValidateInterfaceImplementation<IStreamRequest>(source);
@@ -195,14 +152,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             return new StreamContent(memoryStream);
         }
 
-        /// <summary>
-        /// Returns the source as string content using <see cref="M:Xpandables.Net.Http.IStringRequest.GetStringContent" /> or <see cref="IPatchRequest"/> if available, if not use the hole source.
-        /// The default implementation used the <see cref="N:System.Text.Json" /> API.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <param name="attribute">The target attribute.</param>
-        /// <returns>A string content.</returns>
+        ///<inheritdoc/>
         public virtual HttpContent ReadStringContent<TSource>(TSource source, HttpRestClientAttribute attribute) where TSource : class
         {
             ValidateInterfaceImplementation<IStringRequest>(source, true);
@@ -216,15 +166,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             return new StringContent(JsonSerializer.Serialize(source), Encoding.UTF8, attribute.ContentType);
         }
 
-        /// <summary>
-        /// Builds the <see cref="HttpRequestMessage" /> from the attribute using the source.
-        /// </summary>
-        /// <typeparam name="TSource">the type of the source.</typeparam>
-        /// <param name="attribute">The <see cref="HttpRestClientAttribute" /> attribute to act on.</param>
-        /// <param name="source">The source of data.</param>
-        /// <param name="httpClient">The target HTTP client.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="source" /> is null.</exception>
-        /// <returns>A task that represents an <see cref="HttpRequestMessage" /> object.</returns>
+        ///<inheritdoc/>
         public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageFromAttributeAsync<TSource>(HttpRestClientAttribute attribute, TSource source, HttpClient httpClient) where TSource : class
         {
             _ = attribute ?? throw new ArgumentNullException(nameof(attribute));
@@ -267,26 +209,14 @@ namespace Xpandables.Net.Http.RequestBuilders
             return httpRequestMessage;
         }
 
-        /// <summary>
-        /// Returns an <see cref="HttpRequestMessage" /> from the source .
-        /// </summary>
-        /// <typeparam name="TSource">The type of the object.</typeparam>
-        /// <param name="source">The source object.</param>
-        /// <param name="httpClient">The target HTTP client.</param>
-        /// <returns>A task that represents an <see cref="HttpRequestMessage" /> object.</returns>
+        ///<inheritdoc/>
         public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageFromSourceAsync<TSource>(TSource source, HttpClient httpClient) where TSource : class
         {
             var attribute = ReadHttpClientAttributeFromSource(source);
             return await WriteHttpRequestMessageFromAttributeAsync(attribute, source, httpClient).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Writes location cookies (add elements to <see cref="P:System.Net.Http.HttpRequestMessage.Options" />) using <see cref="M:Xpandables.Net.Http.ICookieLocationRequest.GetCookieSource" />.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <param name="attribute">The target attribute.</param>
-        /// <param name="httpRequestMessage">The target request message.</param>
+        ///<inheritdoc/>
         public virtual void WriteLocationCookie<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage) where TSource : class
         {
             if ((attribute.In & ParameterLocation.Cookie) != ParameterLocation.Cookie) return;
@@ -298,13 +228,7 @@ namespace Xpandables.Net.Http.RequestBuilders
                 httpRequestMessage.Options.TryAdd(parameter.Key, parameter.Value);
         }
 
-        /// <summary>
-        /// Writes location headers using <see cref="M:Xpandables.Net.Http.IHeaderLocationRequest.GetHeadersSource" />.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <param name="attribute">The target attribute.</param>
-        /// <param name="httpRequestMessage">The target request message.</param>
+        ///<inheritdoc/>
         public virtual void WriteLocationHeader<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage) where TSource : class
         {
             if ((attribute.In & ParameterLocation.Header) != ParameterLocation.Header) return;
@@ -320,12 +244,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             }
         }
 
-        /// <summary>
-        /// Writes location path using <see cref="M:Xpandables.Net.Http.IHttpRestClientRequestBuilder.AddPathString(System.String,System.Collections.Generic.IDictionary{System.String,System.String})" /> and <see cref="M:Xpandables.Net.Http.IPathStringLocationRequest.GetPathStringSource" />.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <param name="attribute">The target attribute.</param>
+        ///<inheritdoc/>
         public virtual void WriteLocationPath<TSource>(TSource source, HttpRestClientAttribute attribute) where TSource : class
         {
             if ((attribute.In & ParameterLocation.Path) != ParameterLocation.Path) return;
@@ -337,12 +256,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             attribute.Path = AddPathString(attribute.Path!, pathString);
         }
 
-        /// <summary>
-        /// Writes location query using <see cref="M:Xpandables.Net.Http.IHttpRestClientRequestBuilder.AddQueryString(System.String,System.Collections.Generic.IDictionary{System.String,System.String})" /> and <see cref="M:Xpandables.Net.Http.IQueryStringLocationRequest.GetQueryStringSource" />.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <param name="attribute">The target attribute.</param>
+        ///<inheritdoc/>
         public virtual void WriteLocationQuery<TSource>(TSource source, HttpRestClientAttribute attribute) where TSource : class
         {
             if ((attribute.In & ParameterLocation.Query) != ParameterLocation.Query) return;

@@ -19,6 +19,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Newtonsoft.Json.Linq;
+
 namespace Xpandables.Net.BlazorExtended.Storage
 {
     internal partial class LocalStorageEngine : ILocalStorageEngine
@@ -71,7 +73,11 @@ namespace Xpandables.Net.BlazorExtended.Storage
             if (removeEventAgrs.IsCanceled)
                 return;
 
+            var oldValue = await _localStorageProvider.ReadAsync(key, cancellationToken);
+
             await _localStorageProvider.RemoveAsync(key, cancellationToken).ConfigureAwait(false);
+
+            RaiseStorageChangedEventArgs(key, oldValue, default, StorageAction.Removed);
         }
 
         public async Task WriteAsync<T>(string key, T value, CancellationToken cancellationToken = default)
@@ -112,6 +118,7 @@ namespace Xpandables.Net.BlazorExtended.Storage
                 return;
 
             var oldValue = await _localStorageProvider.ReadAsync(key, cancellationToken).ConfigureAwait(false);
+
             await _localStorageProvider.WriteAsync(key, value, cancellationToken).ConfigureAwait(false);
 
             RaiseStorageChangedEventArgs(key, oldValue, value, StorageAction.Written);

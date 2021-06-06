@@ -53,22 +53,10 @@ namespace Xpandables.Net.Http
             return ImmutableDictionary<string, IReadOnlyList<string>>.Empty;
         }
 
-        /// <summary>
-        /// Sets the HTTP header value for the current HTTP context matching the specified key.
-        /// </summary>
-        /// <param name="key">The key of the value to match.</param>
-        /// <param name="value">The value to be set.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="key" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="value" /> is null.</exception>
+        ///<inheritdoc/>
         public void WriteValue(string key, string value) => _headerDictionary.Add(key, value);
 
-        /// <summary>
-        /// Sets a collection of header values for the current HTTP content matching the specified key.
-        /// </summary>
-        /// <param name="key">The key of the value to set.</param>
-        /// <param name="values">The collection of values.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="key" /> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="values" /> is null.</exception>
+        ///<inheritdoc/>
         public void WriteValues(string key, string[] values) => _headerDictionary.Add(key, values);
     }
 }
