@@ -15,16 +15,14 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
-namespace Xpandables.Net.OperationResults
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+namespace Xpandables.Net
 {
     /// <summary>
     /// <see cref="IOperationResult"/> extensions.

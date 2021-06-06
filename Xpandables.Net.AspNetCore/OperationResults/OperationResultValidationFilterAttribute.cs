@@ -18,7 +18,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Xpandables.Net.OperationResults
+namespace Xpandables.Net
 {
     /// <summary>
     /// Applies validation filter attribute and returns a bad request result if necessary using <see cref="IOperationResult"/>.
