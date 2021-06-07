@@ -81,7 +81,7 @@ namespace Xpandables.Net.Notifications
                 ? new[] { aggregateIdType, @event.GetType() }
                 : new[] { aggregateIdType, genericInterfaceType.GetGenericArguments()[1], @event.GetType() };
 
-            var genericHandlerType = genericInterfaceType == typeof(INotification<>) ? typeof(INotificationHandler<,>) : typeof(INotificationHandler<,,>);
+            var genericHandlerType = genericInterfaceType.GetGenericTypeDefinition() == typeof(INotification<>) ? typeof(INotificationHandler<,>) : typeof(INotificationHandler<,,>);
 
             if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, aggregateIdType, @event.GetType()))
             {
