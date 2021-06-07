@@ -16,13 +16,15 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Text.Json.Serialization;
 
 using Xpandables.Net.Aggregates;
+using Xpandables.Net.DomainEvents;
 
 namespace Xpandables.Net.Notifications
 {
     /// <summary>
-    /// This is the <see langword="abstract"/> class that implements <see cref="INotification{TAggregateId}"/>.
+    /// Represents a helper class that allows implementation of <see cref="INotification{TAggregateId}"/> interface.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     [Serializable]
@@ -43,5 +45,44 @@ namespace Xpandables.Net.Notifications
         /// <param name="createdBy">The user name.</param>
         protected Notification(TAggregateId aggregateId, DateTimeOffset occurredOn, string createdBy)
             : base(aggregateId, occurredOn, createdBy) { }
+    }
+
+    /// <summary>
+    /// Represents a helper class that allows implementation of <see cref="INotification{TAggregateId, TEvent}"/> interface.
+    /// </summary>
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
+    /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
+    [Serializable]
+    public abstract class Notification<TAggregateId, TDomainEvent> : Notification<TAggregateId>, INotification<TAggregateId, TDomainEvent>
+        where TDomainEvent : notnull, IDomainEvent<TAggregateId>
+        where TAggregateId : notnull, AggregateId
+    {
+        /// <summary>
+        /// Initializes a default instance of the <see cref="Notification{TAggregateId, TEvent}"/>.
+        /// </summary>
+        /// <param name="aggregateId">The aggregate id.</param>
+        /// <param name="domainEvent">The target domain event.</param>
+        protected Notification(TAggregateId aggregateId, TDomainEvent domainEvent)
+            : base(aggregateId)
+        {
+            DomainEvent = domainEvent;
+        }
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="Notification{TAggregateId, TEvent}"/>.
+        /// </summary>
+        /// <param name="aggregateId">The aggregate identifier.</param>
+        /// <param name="domainEvent">The target domain event.</param>
+        /// <param name="occurredOn">When the event occurred.</param>
+        /// <param name="createdBy">The user name.</param>
+        protected Notification(TAggregateId aggregateId, TDomainEvent domainEvent, DateTimeOffset occurredOn, string createdBy)
+            : base(aggregateId, occurredOn, createdBy)
+        {
+            DomainEvent = domainEvent;
+        }
+
+        ///<inheritdoc/>
+        [JsonIgnore]
+        public TDomainEvent DomainEvent { get; }
     }
 }

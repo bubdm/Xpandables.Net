@@ -34,15 +34,15 @@ namespace Xpandables.Net.Notifications
     /// Defines a marker interface to be used to mark an object to act as notification holding a specific <see cref="IDomainEvent{TAggregateId}"/>.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    /// <typeparam name="TEvent">The type of target domain event.</typeparam>
-    public interface INotification<TAggregateId, out TEvent> : INotification<TAggregateId>
-        where TEvent : notnull, IDomainEvent<TAggregateId>
+    /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
+    public interface INotification<TAggregateId, out TDomainEvent> : INotification<TAggregateId>
+        where TDomainEvent : notnull, IDomainEvent<TAggregateId>
         where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Gets the target domain event.
         /// </summary>
         [JsonIgnore]
-        TEvent DomainEvent { get; }
+        TDomainEvent DomainEvent { get; }
     }
 }
