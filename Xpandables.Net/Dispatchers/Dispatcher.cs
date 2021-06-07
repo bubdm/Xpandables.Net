@@ -157,8 +157,6 @@ namespace Xpandables.Net.Dispatchers
         {
 #if DEBUG
             Debug.WriteLine(exception);
-#else
-            Trace.WriteLine(exception);
 #endif
         }
     }

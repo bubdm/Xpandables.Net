@@ -78,8 +78,6 @@ namespace Xpandables.Net.DomainEvents
         {
 #if DEBUG
             Debug.WriteLine(exception);
-#else
-            Trace.WriteLine(exception);
 #endif
         }
     }
