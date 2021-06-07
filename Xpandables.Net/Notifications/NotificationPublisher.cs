@@ -71,12 +71,18 @@ namespace Xpandables.Net.Notifications
 
         private IEnumerable<INotificationHandler> GetNotificationHandlers(ICommandQueryEvent @event)
         {
-            var genericInterface = @event.GetType().GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INotification<>))
-                ?? throw new ArgumentException($"The type '{@event.GetType().Name}' must implement '{typeof(INotification<>).Name}' interface.");
-            var aggregateIdType = genericInterface.GetGenericArguments()[0];
+            var genericInterfaceType = @event.GetType().GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && (i.GetGenericTypeDefinition() == typeof(INotification<>) || i.GetGenericTypeDefinition() == typeof(INotification<,>)))
+                ?? throw new ArgumentException($"The type '{@event.GetType().Name}' must implement one of '{typeof(INotification<>).Name}' interfaces.");
 
-            var genericHandlerType = typeof(INotificationHandler<,>);
+            var aggregateIdType = genericInterfaceType.GetGenericArguments()[0];
+
+            var types = genericInterfaceType == typeof(INotification<>) 
+                ? new[] { aggregateIdType, @event.GetType() }
+                : new[] { aggregateIdType, genericInterfaceType.GetGenericArguments()[1], @event.GetType() };
+
+            var genericHandlerType = genericInterfaceType == typeof(INotification<>) ? typeof(INotificationHandler<,>) : typeof(INotificationHandler<,,>);
+
             if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, aggregateIdType, @event.GetType()))
             {
                 WriteLineException(new InvalidOperationException("Building notification Handler type failed.", typeException));
@@ -108,8 +114,6 @@ namespace Xpandables.Net.Notifications
         {
 #if DEBUG
             Debug.WriteLine(exception);
-#else
-            Trace.WriteLine(exception);
 #endif
         }
     }

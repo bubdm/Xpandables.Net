@@ -33,7 +33,8 @@ namespace Xpandables.Net.Notifications
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="event"/> must implement <see cref="INotification{TAggregateId}"/> interface.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="event"/> must implement 
+        /// <see cref="INotification{TAggregateId}"/> or <see cref="INotification{TAggregateId, TDomainEvent}"/> interface.</exception>
         Task PublishAsync(ICommandQueryEvent @event, CancellationToken cancellationToken = default);
     }
 }
