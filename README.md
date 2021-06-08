@@ -4,216 +4,435 @@ The library is strongly-typed, which means it should be hard to make invalid req
 
 Feel free to fork this project, make your own changes and create a pull request.
 
-## Model definition
+Here are some examples of use :
+
+# Web Api using CQRS and EFCore
+
+Add the following nuget packages :
+    Xpandables.Net.AspNetCore
+    Xpandables.Net.EntityFramework
+
+## Model Definition
 
 ```cs
-// Entity is the domain object base implementation that provides with an identifier and a key generator for derived class.
-// You can use AggregateRoot if you're targeting DDD
+// Entity is the domain object base implementation that provides with an Id,
+// key generator for id and some useful state methods.
+// You can use Aggregate{TAggregateId} if you're targeting DDD.
 
-public sealed class ContactModel : Entity
+public sealed class Person : Entity
 {
-    public ContactModel(string name, string city, string address, string country)
-      => Update(name, city, address, country);
-      
-    [MemberNotNull(nameof(Name), nameof(City), nameof(Address), nameof(Country))]
-    public void Update(string name, string city, string address, string country)
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
+    
+    public static Person NewPerson(string firstName, string lastName)
     {
-        UpdateName(name);
-        UpdateCity(city);
-        UpdateAddress(address);
-        UpdateCountry(country);
-    }
-
-    public void Edit(string? name, string? city, string? address, string? country)
-    {
-        if (name is not null) UpdateName(name);
-        if (city is not null) UpdateCity(city);
-        if (address is not null) UpdateAddress(address);
-        if (country is not null) UpdateCountry(country);
+        // custom check
+        return new(fistName, lastname);
     }
     
-    ...
+    public void ChangeFirstName(string firstName)
+        => FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
     
+    public void ChangeLastName(string lastName)
+        => LastName = lastName ?? throw new ArgumentNullException(nameof(lastName));
+    
+    private Person(string firstName, string lastName)
+        => (FirstName, Lastname) = (firstName, lastName);
 }
+
 ```
 
-## Context definition
+## Contract definition
 
 ```cs
-
-// DataContext is the an abstract context class that inherits from DbContext (EFCore)
-// and implements the IDataContext interface.
-// IDataContext interface represents a set of commands to manage domain objects using EntityFrameworkCore.
-
- public sealed class ContactContext : DataContext
- {
-     public ContactContext(DbContextOptions<ContactContext> contextOptions) : base(contextOptions) { }
-     protected override void OnModelCreating(ModelBuilder modelBuilder)
-     {
-         modelBuilder.Entity<ContactModel>().HasKey(new string[] { nameof(ContactModel.Id) });
-     }
-     public DbSet<ContactModel> Contacts { get; set; } = default!;
- }
-    
-```
-
-## Contracts definition
-
-```cs
-
-// HttpRestClientAttribute describes the parameters for a request used with IHttpRestClientHandler.
-// IHttpRestClientHandler provides with methods to handle HTTP Rest client queries and commands 
-// using a typed client HTTP Client,  which allows, in a .Net environment, to no longer define client 
-// actions because they are already included in the contracts, 
+// Contract is decorated with HttpRestClientAttribute that describes the parameters for a request 
+// used with IHttpRestClientHandler, where IHttpRestClientHandler provides with methods to handle HTTP
+// Rest client queries and commands using a typed client HTTP Client. It also allows, in a .Net environment,
+// to no longer define client actions because they are already included in the contracts, 
 // by implementing interfaces such as IPathStringLocationRequest, IFormUrlEncodedRequest,
 // IMultipartRequest...
-// QueryExpression{T} allows the derived class to be used for a where clause.
 
- [HttpRestClient(Path = "api/contacts/{id}", Method = "Get", IsSecured = false, 
-    IsNullable = true, In = ParameterLocation.Path)]
- public sealed class Select([Required] string Id) :
-    QueryExpression<ContactModel>, IQuery<Contact>, IHttpRestClientRequest<Contact>,
-    IPathStringLocationRequest, IInterceptorDecorator
- {
-     public Select(string id) => Id = id;
-     public string Id {get; init; }
-     public override Expression<Func<ContactModel, bool>> GetExpression() 
-        => contact => contact.Id == Id && contact.IsActive && !contact.IsDeleted;
-        
-     public IDictionary<string, string> GetPathStringSource()
-        => new Dictionary<string, string> { { nameof(Id), Id } };
- }
- 
- ...
- 
+[HttpRestClient(Path = "api/person", Method = HttpMethodVerbs.Post, IsSecured = false)]
+public sealed class AddPersonRequest : IHttpRestClientRequest<CreatedPerson>
+{
+    [Required]
+    public string FirstName { get; init; }
+    [Required]
+    public string LastName { get; init; }    
+}
+
+public sealed record CreatedPerson(string Id);
+
 ```
 
-## Contracts Validation
+## Command and Handler definitions
 
 ```cs
 
-// IValidator{T} defines method contracts used to validate a type-specific argument using a decorator.
+// The command must implement the ICommand interface and others to enable thier behaviors.
+// Such as IValidatorDecorator to aply validation before processing the command,
+// IPersistenceDecorator to add persistence to the control flow
+// or IInterceptorDecorator to add interception of the command process...
+
+// You can derive from QueryExpression{TClass} to allow command to behave like an expression
+// when querying data, and override the target method.
+
+public sealed class AddPersonCommand : QueryExpression<Person>, ICommand<CreatedPerson>,
+    IValidatorDecorator, IPersistenceDecorator
+{
+    public string FirstName { get; }
+    public string LastName { get; }
+    
+    public override Expression<Func<Person>, bool>> GetExpression()
+        => person => person.FistName == FistName
+            && person.LastName == LastName;
+}
+
+// CommandHandler{TCommand} and CommandHandler{TCommand, TResult} are abstract classes
+// that implement ICommandHandler{TCommand} and ICommandHandler{TCommand, TResult}
+// and derive from OperationResults : a class that contains some usefull methods
+// to return response with HTTP status code.
+
+// IEntityAccessor{TEntity} is a generic interface that provides with methods to access
+// data from a storage.
+
+public sealed class AddPersonCommandHandler : CommandHandler<AddPersonCommand, CreatedPerson>
+{
+    private readonly IEntityAccessor<Person> _entityAccessor;
+    public AddPersonCommandHandler(IEntityAccessor<Person> entityAccessor)
+        => _entityAccessor = entityAccessor;
+    
+    public override async Task<IOperationResult<CreatedPerson>> HandleAsync(AddPersonCommand command, 
+        CancellationToken cancellationToken = default)
+    {
+        // You can check here for data validation or use a specific class for that
+        // (see AddPersonCommandValidationDecorator).
+        
+        var newPerson=Person.Newperson(
+            command.FirstName,
+            command.LastName);
+        
+        await _entityAccessor.InsertAsync(newPerson, cancellationToken).configureAwait(false);
+        
+        return OkOperation(new CreatedPerson(newPerson.Id))
+        
+        // Note that data will be saved at the end of the control flow
+        // if there is no error. You can add a decorator class to manage this error.
+    }
+}
+
+// When using validation decorator.
+// Validator{T} defines a method contract used to validate a type-specific argument using a decorator.
 // The validator get called during the control flow before the handler.
 // If the validator returns a failed operation result, the execution will be interrupted
 // and the result of the validator will be returned.
 // We consider as best practice to handle common conditions without throwing exceptions
 // and to design classes so that exceptions can be avoided.
 
-public sealed class ContactValidators : OperationResultBase,
-   IValidator<Select>, IValidator<Add>, IValidator<Delete>, IValidator<Edit>
+public sealed class AddPersonCommandValidationDecorator : Validator<AddPersonCommand>
 {
-    private readonly IEntityAccessor<ContactModel> _readEntityAccessor;
-    public ContactValidators(IEntityAccessor<ContactModel> readEntityAccessor) 
-      => _readEntityAccessor = readEntityAccessor ?? throw new ArgumentNullException(nameof(readEntityAccessor));
-
-    public async Task<IOperationResult> ValidateAsync(
-       Select argument, CancellationToken cancellationToken = default)
+    private ready IEntityAccessor<Person> _entityAccessor;
+    public AddPersonCommandValidationDecorator(IEntityAccessor<Person> entityAccessor)
+        => _entityAccessor = entityAccessor;
+    
+    public override asy Task<IOperationResult> ValidateAsync(AddPersonCommand argument, 
+        CancellationToken cancellationToken)
     {
-        if (await _readEntityAccessor
-           .TryFindAsync(argument, cancellationToken)
-           .ConfigureAwait(false) is null)
-            return NotFoundOperation(nameof(argument.Id), "Contact not found");
-               
-        return OkOperation();
+        return await _entityAccessor.TryFindAsync(argument, cancellationToken).configureAwait(false) switch
+        {
+            { } => BadOperation(nameof(argument.FirstName), "Already exist"),
+            null => OkOperation()
+        };
     }
     
-    ....
-    
+    // BadOperation and OkOperation are Http operation results
+    // found in the OperationResuls base class.
 }
 
 ```
 
-## Contracts Handlers
+## Context definition
 
 ```cs
 
-public sealed class SelectQueryHandler : QueryHandler<Select, Contact>
+// We are using EFCore
+
+public sealed class PersonEntityTypeConfiguration : IEntityTypeConfiguration<Person>
 {
-    private readonly IEntityAccessor<ContactModel> _entityAcessor;
-    public ContactHandlers(
-        IEntityAccessor<ContactModel> entityAccessor) 
-       => _entityAccessor = entityAccessor;
+    public void Configure(EntityTypeBuilder<Person> builder)
+    {
+        builder.HasKey(p => p.Id);
+        builder.Property(p => p.FirstName);
+        builder.Property(p => p.LastName);
+    }
+}
 
-    public async Task<IOperationResult<Contact>> HandleAsync(
-       Select query, CancellationToken cancellationToken = default)
-        => OkOperation<Contact>(
-                await _entityAccessor
-                 .TryFindAsync(query,
-                  s => new Contact(s.Id, s.Name, s.City, s.Address, s.Country), cancellationToken));
-                  
-   ...
-   
+// DataContext is the an abstract context class that inherits from DbContext (EFCore)
+// and implements the IDataContext interface.
+// IDataContext interface represents a set of commands to manage domain objects using EntityFrameworkCore.
+
+public sealed class PersonContext : DataContext
+{
+     public PersonContext(DbContextOptions<PersonContext> contextOptions)
+        : base(contextOptions) { }
+        
+     protected override void OnModelCreating(ModelBuilder modelBuilder)
+     {
+         modelBuilder.ApplyConfiguration(new PersonEntityTypeConfiguration());
+     }
+     
+     public DbSet<Person> People { get; set; } = default!;
 }
 
 ```
 
-## Controller
+## Controller definition
 
 ```cs
+// IDispatcher provides with methods to discover registered handlers.
 
 [Route("api/[controller]")]
 [ApiController]
 [AllowAnonymous]
-public class ContactsController : ControllerBase
+public class PersonController : ControllerBase
 {
     private readonly IDispatcher _dispatcher;
-    public ContactsController(IDispatcher dispatcher) 
+    
+    public PersonController(IDispatcher dispatcher) 
        => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
 
-    [Route("{id}", Name = "ContactLink")]
-    [HttpGet]
-    public async Task<IActionResult> SelectAsync(
-        [FromRoute] Select select, CancellationToken cancellationToken = default)
-        => Ok(await _dispatcher.FetchAsync(select, cancellationToken).ConfigureAwait(false));
-
-    ...
-        
-    [HttpPatch]
-    public async Task<IActionResult> EditAsync(
-      [FromRoute] string id, [FromBody] JsonPatchDocument<Edit> editPatch, CancellationToken cancellationToken = default)
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreatedPerson))]
+    public async Task<IActionResult> AddPersonAsync(
+        [FromBody] AddPersonRequest request, CancellationToken cancellationToken = default)
     {
-        var edit = new Edit { Id = id, ApplyPatch = value => ApplyJsonPatch(value, editPatch) };
-        return Ok(await _dispatcher.SendAsync(edit, cancellationToken).ConfigureAwait(false));
+        var command = new AddPersonCommand(request.FirstName, request.LastName);
+        return Ok(await _dispatcher.SendAsync(command, cancellationToken).ConfigureAwait(false));
     }
 
-    ...
+    // ...
         
+}
+
+// The startup class
+// We will register handlers, context, validators and decorators.
+
+public sealed class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // common registrations
+        
+        services.AddXpandableServices()
+            .AddXDataContext<PersonContext>(options => options.UseInMemoryDatabase(nameof(PersonContext))
+            .AddXDispatcher()
+            .AddXHandlerAccessor()
+            .AddXEntityAccessor()
+            .AddXOperationResultFilter()
+            .AddXHandlers(
+                new[] { typeof(AddPersonCommandHandler).Assembly },
+                options =>
+                {
+                    options.UsePersistenceDecorator();
+                    options.UseValidatorDecorator();
+                })
+            .Build();
+        
+        services
+            .AddControllers()
+            .AddMvcOptions(options => options.Filters.Add<OperationResultFilter>(int.MinValue));
+        
+        // AddXpandableServices() will make available methods for registration
+        // AddXDataContext{TContext} registers the TContext and make it available for IEntityAccessor as IDataContext
+        // AddXDispatcher() registers the dispatcher
+        // AddXHandlerAccessor() registers a handlers accessor using the IHandlerAccessor interface
+        // AddXEntityAccessor() register the IEntityAccessor{TEntity} interface.
+        // AddXOperationResultFilter() register the OperationResultFilter use with MvcOptions Filters.
+        // AddXHandlers(assemblies, options) registers all handlers and associated classes (validators, decorators...)
+        // according to the options set.
+        
+        // ...
+    }    
 }
 
 ```
 
-## Test class
+## Wep Api Test class
 
 ```cs
 
-...
-
 [TestMethod]
-public async Task SelectTest()
+[DataRow("My FirstName", "My LastName")
+public async Task AddPersonTest(string firstName, string lastName)
 {
+    // Build the api client
+    
     Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
     var factory = new WebApplicationFactory<Program>(); // from the api
     var client = factory.CreateClient();
-    using var httpRestClientHandler = new HttpRestClientHandler(new HttpRestClientNewtonsoftRequestBuilder(), new HttpRestClientNewtonsoftResponseBuilder(), client);
+    
+    // if you get serialization error (due to System.Text.Json), you can use
+    // the Newostonsoft version : HttpRestClientNewtonsoftRequestBuilder
+    // and HttpRestNewtonsoftResponseBuilder, which are classes used to build
+    // request and response
+    
+    using var httpRestClientHandler = new HttpRestClientHandler(
+        new HttpRestClientRequestBuilder(),
+        new HttpRestClientResponseBuilder(),
+        client);
 
-    var select = new Select("ADHK12JkDiKJD");
-    using var response = await httpRestClientHandler.HandleAsync(selectAll).ConfigureAwait(false);
+    var addPersonRequest = new AddPersonRequest(firstName, lastName);
+    using var response = await httpRestClientHandler.HandleAsync(addPersonRequest).ConfigureAwait(false);
 
     if (!response.IsValid())
     {
          Trace.WriteLine($"{response.StatusCode}");
+         var errors = response.GetBadOperationResult().Errors;
+         
+         foreach (var error in errors)         
+         {
+            Trace.WriteLine($"Key : {error.Key}");
+            Trace.WriteLine(error.ErrorMessages.StringJoin(";"));
+         }
+         
          return;
     }
     else
     {
-        var contact = response.Result;
-        Trace.WriteLine($"{contact.Id} {contact.Name} {contact.City} {contact.Address} {contact.Country}");
+        var person = response.Result;
+        Trace.WriteLine($"Added person : {person.Id}");
     }
 }
 
-...
+```
+
+# Blazor WebAss with Web Api using IHttpRestClientHandler
+
+## Blazor WebAss project
+
+Add the following nuget packages :
+    Xpandables.Net.BlazorExtended
+
+In the Program file, replace the default code with this.
+
+```cs
+
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+       var builder = WebAssemblyHostBuilder.CreateDefault(args);
+        builder.RootComponents.Add<App>("#app");
+        
+        builder.Services
+            .AddOptions()
+            .AddXpandableServices()
+                .AddXHttpRestClientHandler(httpClient =>
+                {
+                    httpClient.BaseAddress = new Uri("https://localhost:44396"); // The api uri must be different for you
+                    httpClient.DefaultRequestHeaders
+                        .Accept
+                        .Add(new MediaTypeWithQualityHeaderValue(ContentType.Json));
+                })
+            .Build();
+        
+        // AddXHttpRestClientHandler(httpClient) will add the IHttpRestClientHandler
+        // implementation using the HttpClient with your configuration.
+        // if you get errors with System.Text.Json, you can use the Newtonsoft version
+        // by calling the AddXHttpRestCientNewtonsoftHandler(...)
+        
+        // custom code
+        
+        await builder.Build().RunAsync();
+    }
+}
 
 ```
+
+## AddPerson.razor
+
+```html
+
+<EditForm Model="@model" OnValidSubmit="AddSubmitAsync">
+
+    <DataAnnotationsValidatorExtended @ref="@Validator" />
+
+    <div class="form-group">
+        <label for="FirstName" class="col-md-12 col-form-label">First Name</label>
+        <div class="col-md-12">
+            <InputTextOnInput @bind-Value="model.FirstName" type="text" class="form-control" />
+            <ValidationMessage For="@(() => model.FirstName)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="LastName" class="col-md-12 col-form-label">Last Name</label>
+        <div class="col-md-12">
+            <InputTextOnInput @bind-Value="model.LastName" type="text" class="form-control" />
+            <ValidationMessage For="@(() => model.LastName)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-12 text-center">
+            <button class="col-md-12 btn btn-primary">
+                Add
+            </button>
+        </div>
+    </div>
+
+</EditForm>
+
+```
+
+## AddPerson.razor.cs
+
+
+```cs
+
+public sealed class PersonModel
+{
+    [Required]
+    public string FirstName { get; set; } = default!;
+    [Required]
+    public string LastName { get; set; } = default!;
+}
+
+// Validator wil allow insertion of api errors.
+
+public partial class AddPerson
+{
+    [Inject]
+    protected DataAnnotationsValidatorExtended Validator { get; set; } = default!;
+    [Inject]
+    protected IHttpRestClientHandler HttpRestClientHandler { get; set; } = default!;
+    
+    private readonly PersonModel model = new();
+    
+    protected async Task AddSubmitAsync()
+    {
+        // You can use the AddPersonRequest from the api or create another class
+        
+        var addRequest = new AddPersonRequest(model.FirstName, model.LastName);
+        var addResponse = await HttpRestClientHandler.SendAsync(addRrequest).ConfigureAwait(false);
+
+        if (addResponse.Failed)
+        {
+            Validator.ValidateModel(addResponse);
+        }
+        else
+        {
+            // custom code like displaying the result
+        }
+
+        StateHasChanged();
+    }    
+}
+
+```
+
+
 ## Features
 Usually, when registering types, we are forced to reference the libraries concerned and we end up with a very coupled set.
 To avoid this, you can register these types by calling an export extension method, which uses **MEF: Managed Extensibility Framework**.
@@ -277,59 +496,33 @@ You can use the extension methods to apply the decorator pattern to your types.
    
 ```
 
-Suppose you want to add logging for the Add command ...
+Suppose you want to add logging for the AddPersonCommand ...
+(There is already a built in logging decorator if you want to use it)
 
 ```cs
 
-// The Add command definition
+// The AddPersonCommand decorator for logging
 
-[HttpRestClient(Path = "api/contacts", Method = "Post", IsSecured = false)]
-public sealed class Add() : QueryExpression<ContactModel>, ICommand<string>, IValidatorDecorator, IPersistenceDecorator, IInterceptorDecorator
+public sealed class AddPersonCommandHandlerLoggingDecorator : 
+    ICommandHandler<AddPersonCommand, CreatedPerson>
 {
-    public Add(string name, string city, string address, string country)
-    {
-        Name = name;
-        City = city;
-        Address = address;
-        Country country;
-    }
+    private readonly ICommandHandler<AddPersonCommand, CreatedPerson> _ decoratee;
+    private readonly ILogger<AddPersonCommandHandler> _logger;
+    
+    public AddPersonCommandHandlerLoggingDecorator(
+        ILogger<AddPersonCommandHandler> logger,
+        ICommandHandler<AddPersonCommand, CreatedPerson> decoratee)
+        => (_logger, _ decoratee) = (logger, decoratee);
 
-    public string Name { get; init; }
-    public string City { get; init; }
-    pubcli string Address { get; init; }
-    public string Country { get; init;}
-
-    public override Expression<Func<ContactModel, bool>> GetExpression()
-      => contact => contact.Name == Name && contact.City == City && contact.Country == Country;
-}
-
-// The Add command handler
-
-public sealed class AddHandler : CommandHandler<Add, string>
-{
-    public async Task<IOperationResult<string>> HandleAsync(
-       Add command, CancellationToken cancellationToken = default)
-    {
-        .....
-        return OkOperation<string>(...);
-    }
-}
-
-// The Add command decorator for logging
-
-public sealed class AddHandlerLoggingDecorator : ICommandHandler<Add, string>
-{
-    private readonly ICommandHandler<Add, string> _ decoratee;
-    private readonly ILogger<Add> _logger;
-    public AddHandlerLoggingDecorator(ILogger<Add> logger, ICommandHandler<Add, string> decoratee)
-      =>(_logger, _ decoratee) = (logger, decoratee);
-
-    public async Task<IOperationResult<string>> HandleAsync(
-        Add command, CancellationToken cancellationToken = default)
+    public async Task<IOperationResult<CreatedPerson>> HandleAsync(
+        AddPersonCommand command, CancellationToken cancellationToken = default)
     {
         _logger.Information(...);
+        
         var response = await _decoratee.HandleAsync(command, cancellationToken).configureAwait(false);
+        
         _logger.Information(...)
+        
         return response;
     }
 }
@@ -338,32 +531,38 @@ public sealed class AddHandlerLoggingDecorator : ICommandHandler<Add, string>
 
 services
     .AddXpandableServices()
-    .XtryDecorate<AddHandler, AddHandlerLoggingDecorator>()
+    .XtryDecorate<AddPersonCommandHandler, AddPersonCommandHandlerLoggingDecorator>()
     .Build();
 
-// or you can define the generic model, for all commands that implement ICommand interface or something else.
+// or you can define the generic model, for all commands that implement ICommand 
+// interface or something else.
 
 public sealed class CommandLoggingDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
-   where TCommand : class, ICommand<TResult> // you can add more constraints
+    where TCommand : class, ICommand<TResult> // you can add more constraints
 {
     private readonly ICommandHandler<TCommand, TResult> _ decoratee;
     private readonly ILogger<TCommand> _logger;
+    
     public CommandLoggingDecorator(ILogger<TCommand> logger, ICommandHandler<TCommand, TResult> decoratee)
-      =>(_logger, _ decoratee) = (logger, decoratee);
+        => (_logger, _ decoratee) = (logger, decoratee);
 
     public async Task<IOperationResult<TResult>> HandleAsync(
          TCommand command, CancellationToken cancellationToken = default)
     {
         _logger.Information(...);
+        
         var response = await _decoratee.HandleAsync(command, cancellationToken).configureAwait(false);
+        
         _logger.Information(...)
+        
         return response;
     }
 }
 
-// and register
+// and for registration
 
-// The CommandLoggingDecorator will be applied to all command handlers whose commands meet the decorator's constraints : 
+// The CommandLoggingDecorator will be applied to all command handlers whose commands meet 
+// the decorator's constraints : 
 // To be a class and implement ICommand{TResult} interface
 
 services
@@ -375,14 +574,18 @@ services
 
 services
     .AddXpandableServices()
-    .AddXHandlers(assemblyCollection, options=>
+    .AddXHandlers(assemblyCollection, options =>
     {
         options.UseOperationResultLoggerDecorator();
     })
     .Build();
 
-// .AddXHandlers will register all handlers (ICommandhandler{}, IQueryHandler{}, IAsyncQueryHandler{}) adding a decorator for each
+// .AddXHandlers will register all handlers (ICommandhandler{}, IQueryHandler{}, IAsyncQueryHandler{})
+// adding a decorator for each
 // handler, that will apply your implementation of ILoggingHandler for commands implementing ILoggingDecorator
 .
 ```
 
+# Others
+
+Librairies also provide with Aggregate model implementation using event sourcing and out-box pattern.
