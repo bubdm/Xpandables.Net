@@ -31,7 +31,7 @@ namespace Xpandables.Net.Validators
     /// The default behavior uses <see cref="Validator.TryValidateObject(object, ValidationContext, ICollection{ValidationResult}?, bool)"/>.
     /// </summary>
     /// <typeparam name="TArgument">Type of the argument.</typeparam>
-    public abstract class Validator<TArgument> : IValidator<TArgument>
+    public abstract class Validator<TArgument> : OperationResults, IValidator<TArgument>
         where TArgument : notnull
     {
         /// <summary>
@@ -70,10 +70,10 @@ namespace Xpandables.Net.Validators
                     }
                 }
 
-                return new FailureOperationResult(HttpStatusCode.BadRequest, errors);
+                return BadOperation(errors);
             }
 
-            return await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
+            return await Task.FromResult(OkOperation()).ConfigureAwait(false);
         }
     }
 }

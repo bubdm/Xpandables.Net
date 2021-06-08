@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 using Newtonsoft.Json;
 
@@ -63,6 +64,42 @@ namespace Xpandables.Net.Http
                 clientValidation = default;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Returns a bad operation from the <see cref="HttpRestClientResponse"/>.
+        /// You should take care of the fact that the response is invalid before calling this method.
+        /// </summary>
+        /// <param name="response">The response to act on.</param>
+        /// <returns>A bad <see cref="IOperationResult"/></returns>
+        /// <exception cref="ArgumentException">The <paramref name="response"/> must be invalid.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="response"/> is null.</exception>
+        public static IOperationResult GetBadOperationResult(this HttpRestClientResponse response)
+        {
+            _ = response ?? throw new ArgumentNullException(nameof(response));
+
+            if (response.IsValid())
+                throw new ArgumentException($"The response must be invalid !");
+
+            if (response.Exception is { } exception)
+            {
+                if (exception.IsHttpRestClientValidation(out var clientValidation, out _))
+                {
+                    var operationErrors = clientValidation.SelectMany(
+                        kvp => kvp.Value,
+                        (kvp, value) => new OperationError(kvp.Key, kvp.Value.ToArray()))
+                        .ToArray();
+
+                    return new FailureOperationResult(response.StatusCode, operationErrors);
+                }
+                else
+                {
+                    var errorMessage = exception.Message;
+                    return new FailureOperationResult(response.StatusCode, "error", errorMessage);
+                }
+            }
+
+            return new FailureOperationResult(response.StatusCode);
         }
     }
 }
