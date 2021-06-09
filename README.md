@@ -264,7 +264,7 @@ public sealed class Startup
 
 [TestMethod]
 [DataRow("My FirstName", "My LastName")
-public async Task AddPersonTest(string firstName, string lastName)
+public async Task AddPersonTestAsync(string firstName, string lastName)
 {
     // Build the api client
     
@@ -294,14 +294,12 @@ public async Task AddPersonTest(string firstName, string lastName)
          {
             Trace.WriteLine($"Key : {error.Key}");
             Trace.WriteLine(error.ErrorMessages.StringJoin(";"));
-         }
-         
-         return;
+         }         
     }
     else
     {
-        var person = response.Result;
-        Trace.WriteLine($"Added person : {person.Id}");
+        var createdPerson = response.Result;
+        Trace.WriteLine($"Added person : {createdPerson.Id}");
     }
 }
 
@@ -330,7 +328,7 @@ public class Program
             .AddXpandableServices()
                 .AddXHttpRestClientHandler(httpClient =>
                 {
-                    httpClient.BaseAddress = new Uri("https://localhost:44396"); // The api uri must be different for you
+                    httpClient.BaseAddress = new Uri("https://localhost:44396"); // your api url
                     httpClient.DefaultRequestHeaders
                         .Accept
                         .Add(new MediaTypeWithQualityHeaderValue(ContentType.Json));
@@ -399,11 +397,10 @@ public sealed class PersonModel
     public string LastName { get; set; } = default!;
 }
 
-// Validator wil allow insertion of api errors.
+// Validator will allow insertion of api errors.
 
 public partial class AddPerson
 {
-    [Inject]
     protected DataAnnotationsValidatorExtended Validator { get; set; } = default!;
     [Inject]
     protected IHttpRestClientHandler HttpRestClientHandler { get; set; } = default!;
@@ -434,12 +431,14 @@ public partial class AddPerson
 
 
 ## Features
+
 Usually, when registering types, we are forced to reference the libraries concerned and we end up with a very coupled set.
 To avoid this, you can register these types by calling an export extension method, which uses **MEF: Managed Extensibility Framework**.
 
 In your api startup class
 
 ```cs
+
 // AddXServiceExport(IConfiguration, Action{ExportServiceOptions}) adds and configures registration of services using 
 // the IAddServiceExport interface implementation found in the target libraries according to the export options.
 // You can use configuration file to set up the libraries to be scanned.
@@ -582,7 +581,7 @@ services
 
 // .AddXHandlers will register all handlers (ICommandhandler{}, IQueryHandler{}, IAsyncQueryHandler{})
 // adding a decorator for each
-// handler, that will apply your implementation of ILoggingHandler for commands implementing ILoggingDecorator
+// handler, that will apply your implementation of IOperationResultLogger for commands implementing ILoggingDecorator
 .
 ```
 
