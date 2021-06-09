@@ -63,6 +63,24 @@ namespace Xpandables.Net
                  _ => "Please refer to the errors property for additional details"
              };
 
+        /// <summary>
+        /// Returns the authentication scheme name.
+        /// </summary>
+        /// <param name="context">The current HTTP context.</param>
+        /// <returns>if found, the authentication scheme name or null.</returns>
+        protected virtual async Task<string?> GetAuthenticateSchemeAsync(HttpContext context)
+        {
+            if (context.RequestServices.GetService<IAuthenticationSchemeProvider>() is { } authenticationSchemeProvider)
+            {
+                var schemes = await authenticationSchemeProvider.GetRequestHandlerSchemesAsync().ConfigureAwait(false);
+
+                if (schemes.FirstOrDefault() is { } scheme)
+                    return scheme.Name;
+            }
+
+            return default;
+        }
+
         ///<inheritdoc/>
         public virtual async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
@@ -89,12 +107,9 @@ namespace Xpandables.Net
 
                 if (operationResult.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    if (context.HttpContext.RequestServices.GetService<IAuthenticationSchemeProvider>() is { } authenticationSchemeProvider)
+                    if (await GetAuthenticateSchemeAsync(context.HttpContext).ConfigureAwait(false) is { } scheme)
                     {
-                        var schemes = await authenticationSchemeProvider.GetRequestHandlerSchemesAsync().ConfigureAwait(false);
-
-                        if (schemes.FirstOrDefault() is { } scheme)
-                            context.HttpContext.Response.Headers.Append(HeaderNames.WWWAuthenticate, scheme.Name);
+                        context.HttpContext.Response.Headers.Append(HeaderNames.WWWAuthenticate, scheme);
                     }
                 }
             }
