@@ -60,7 +60,7 @@ namespace Xpandables.Net
         }
 
         /// <summary>
-        /// Serializes the current instance to JSON string.
+        /// Serializes the current instance to JSON string using <see cref="System.Text.Json"/>.
         /// </summary>
         /// <param name="source">The object to act on.</param>
         /// <param name="options">The serializer options to be applied.</param>
