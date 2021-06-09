@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 
 using Xpandables.Net.Aggregates;
 
-namespace Xpandables.Net.EntityFramework.EventStoreNewtonsoft
+namespace Xpandables.Net.Database.EventStoreNewtonsoft
 {
     /// <summary>
     /// Event Store converter using <see cref="Newtonsoft.Json"/>.

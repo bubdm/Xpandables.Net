@@ -15,7 +15,7 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.BlazorExtended.Shared
+namespace Xpandables.Net.Components
 {
     /// <summary>
     /// An input component for editing <see cref="string"/> values on input key.

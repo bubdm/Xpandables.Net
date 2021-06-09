@@ -18,10 +18,9 @@
 using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Aggregates;
-using Xpandables.Net.Database;
-using Xpandables.Net.EntityFramework.EntityConfigurations;
+using Xpandables.Net.Database.EntityConfigurations;
 
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.Database
 {
     /// <summary>
     /// The <see cref="EventStore{TAggregateId}"/> data context definition.

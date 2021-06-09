@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System;
 
-namespace Xpandables.Net.BlazorExtended.Storage
+namespace Xpandables.Net.Storage
 {
     /// <summary>
     /// Represents storage information after changes have been submitted.

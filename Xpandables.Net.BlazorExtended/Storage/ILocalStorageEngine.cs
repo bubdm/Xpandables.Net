@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.BlazorExtended.Storage
+namespace Xpandables.Net.Storage
 {
     /// <summary>
     /// Provides with methods to access a specific storage.

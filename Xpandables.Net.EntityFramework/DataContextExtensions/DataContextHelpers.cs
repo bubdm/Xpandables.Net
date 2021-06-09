@@ -15,18 +15,17 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
 using System;
 using System.Linq;
 using System.Reflection;
 
-using Xpandables.Net.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.Database
 {
     /// <summary>
     ///  Provides with methods used to extend <see cref="IDataContext"/>.

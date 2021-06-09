@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.Text.Json;
 
-namespace Xpandables.Net.BlazorExtended.Storage
+namespace Xpandables.Net.Storage
 {
     internal class DefaultSystemTextJsonLocalStorageSerializer : ILocalStorageSerializer
     {

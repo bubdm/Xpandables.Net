@@ -15,7 +15,7 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.BlazorExtended.Storage
+namespace Xpandables.Net.Storage
 {
     /// <summary>
     /// Provides with methods to de-serialize to/and from string.

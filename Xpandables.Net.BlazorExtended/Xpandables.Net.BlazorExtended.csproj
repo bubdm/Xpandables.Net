@@ -26,7 +26,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AssemblyName>Xpandables.Net.BlazorExtended</AssemblyName>
-    <RootNamespace>Xpandables.Net.BlazorExtended</RootNamespace>
+    <RootNamespace>Xpandables.Net</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <summary>A utility library in .Net5.0 to add helpers to Blazor.</summary>

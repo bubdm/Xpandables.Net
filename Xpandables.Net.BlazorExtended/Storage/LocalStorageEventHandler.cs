@@ -15,7 +15,7 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.BlazorExtended.Storage
+namespace Xpandables.Net.Storage
 {
     /// <summary>
     /// Represents a base class to handle <see cref="ILocalStorageEngine"/> events.

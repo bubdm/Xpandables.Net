@@ -25,10 +25,9 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
-using Xpandables.Net.Database;
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.Database
 {
     /// <summary>
     /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/>

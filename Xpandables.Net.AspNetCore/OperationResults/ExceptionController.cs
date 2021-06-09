@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// A controller used to return error before the target controller get called.
+    /// A controller used to return error happened before the target controller get called.
     /// </summary>
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]

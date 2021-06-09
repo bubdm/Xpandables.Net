@@ -30,7 +30,7 @@ namespace Xpandables.Net
         {
             if (!context.ModelState.IsValid)
             {
-                var operationResult = context.ModelState.GetFailedOperationResult();
+                var operationResult = context.ModelState.GetBadOperationResult();
                 context.Result = new BadRequestObjectResult(operationResult);
             }
         }

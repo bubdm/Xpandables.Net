@@ -44,13 +44,7 @@ namespace Xpandables.Net.Razors.TagHelpers
         /// <exception cref="ArgumentNullException">The <paramref name="localization"/> is null.</exception>
         public EnumerationTypeTagHelper(IStringLocalizer localization) => _localization = localization;
 
-        /// <summary>
-        /// When a set of <see cref="ITagHelper" />s are executed, their <see cref="M:Microsoft.AspNetCore.Razor.TagHelpers.TagHelper.Init(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext)" />'s
-        /// are first invoked in the specified <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelper.Order" />; then their
-        /// <see cref="M:Microsoft.AspNetCore.Razor.TagHelpers.TagHelper.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)" />'s are invoked in the specified
-        /// <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelper.Order" />. Lower values are executed first.
-        /// </summary>
-        /// <remarks>Default order is <c>0</c>.</remarks>
+        ///<inheritdoc/>
         public override int Order => int.MaxValue;
 
         /// <summary>
@@ -65,12 +59,7 @@ namespace Xpandables.Net.Razors.TagHelpers
         [ViewContext]
         public ViewContext ViewContext { get; set; } = default!;
 
-        /// <summary>
-        /// Synchronously executes the <see cref="TagHelper" /> with the given <paramref name="context" /> and
-        /// <paramref name="output" />.
-        /// </summary>
-        /// <param name="context">Contains information associated with the current HTML tag.</param>
-        /// <param name="output">A stateful HTML element used to generate an HTML tag.</param>
+        ///<inheritdoc/>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             await base.ProcessAsync(context, output).ConfigureAwait(false);

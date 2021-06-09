@@ -18,7 +18,7 @@
 
 using Newtonsoft.Json;
 
-namespace Xpandables.Net.BlazorExtended.Storage
+namespace Xpandables.Net.Storage
 {
     internal sealed class DefaultNewtonsoftLocalStorageSerializer : ILocalStorageSerializer
     {

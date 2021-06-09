@@ -19,9 +19,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Newtonsoft.Json.Linq;
-
-namespace Xpandables.Net.BlazorExtended.Storage
+namespace Xpandables.Net.Storage
 {
     internal partial class LocalStorageEngine : ILocalStorageEngine
     {

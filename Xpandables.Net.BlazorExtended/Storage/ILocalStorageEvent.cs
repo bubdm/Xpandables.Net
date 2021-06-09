@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System;
 
-namespace Xpandables.Net.BlazorExtended.Storage
+namespace Xpandables.Net.Storage
 {
     /// <summary>
     /// Defines the event action applying to the storage.

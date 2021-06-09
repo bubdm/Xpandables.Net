@@ -37,7 +37,7 @@ namespace Xpandables.Net
         /// <returns>A new instance of a <see cref="FailureOperationResult"/> that contains errors from model state.</returns>
         /// <exception cref="ArgumentException">The <paramref name="modelState"/> is valid.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="modelState"/> is null.</exception>
-        public static IOperationResult GetFailedOperationResult(this ModelStateDictionary modelState)
+        public static IOperationResult GetBadOperationResult(this ModelStateDictionary modelState)
         {
             _ = modelState ?? throw new ArgumentNullException(nameof(modelState));
             if (modelState.IsValid) throw new ArgumentException("Unable to retrieve a failed operation from a valid model state");

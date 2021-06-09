@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 using Microsoft.JSInterop;
 
-namespace Xpandables.Net.BlazorExtended.Storage
+namespace Xpandables.Net.Storage
 {
     internal class LocalStorageProvider : ILocalStorageProvider
     {

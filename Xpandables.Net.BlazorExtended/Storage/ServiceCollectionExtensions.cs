@@ -21,7 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Xpandables.Net.DependencyInjection;
 
-namespace Xpandables.Net.BlazorExtended.Storage
+namespace Xpandables.Net.Storage
 {
     /// <summary>
     /// Provides method to register services.

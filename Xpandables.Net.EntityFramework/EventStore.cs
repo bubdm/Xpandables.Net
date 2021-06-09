@@ -26,11 +26,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Aggregates;
-using Xpandables.Net.Database;
 using Xpandables.Net.DomainEvents;
 using Xpandables.Net.Notifications;
 
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.Database
 {
     /// <summary>
     /// The EFCore implementation of <see cref="IEventStore{TAggregateId}"/>.

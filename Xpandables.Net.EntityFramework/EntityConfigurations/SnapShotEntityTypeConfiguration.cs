@@ -20,7 +20,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Xpandables.Net.Aggregates;
 
-namespace Xpandables.Net.EntityFramework.EntityConfigurations
+namespace Xpandables.Net.Database.EntityConfigurations
 {
     /// <summary>
     /// EFCore configuration for <see cref="SnapShotEntity"/>.

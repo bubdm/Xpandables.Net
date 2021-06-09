@@ -20,7 +20,7 @@ using System;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace Xpandables.Net.BlazorExtended.Components
+namespace Xpandables.Net.Components
 {
     /// <summary>
     /// Adds <see cref="IOperationResult"/> Data Annotations validation support to an <see cref="EditContext"/>.

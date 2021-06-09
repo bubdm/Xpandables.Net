@@ -25,7 +25,7 @@ using System.Reflection;
 
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.EntityFramework
+namespace Xpandables.Net.Database
 {
     public abstract partial class DataContext : DbContext
     {
