@@ -19,9 +19,9 @@ using System;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Xpandables.Net.DependencyInjection;
+using Xpandables.Net.Storage;
 
-namespace Xpandables.Net.Storage
+namespace Xpandables.Net.DependencyInjection
 {
     /// <summary>
     /// Provides method to register services.
