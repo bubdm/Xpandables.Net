@@ -116,8 +116,8 @@ public sealed class GetPersonQuery : QueryExpression<Person>, IQuery<Person>
         => person => person.Id == Id;    
 }
 
-// CommandHandler{TCommand} and CommandHandler{TCommand, TResult} are abstract classes
-// that implement ICommandHandler{TCommand} and ICommandHandler{TCommand, TResult}
+// CommandHandler{TCommand}, CommandHandler{TCommand, TResult} and QueryHandler{TResult} are abstract classes
+// that implement ICommandHandler{TCommand}, ICommandHandler{TCommand, TResult} and IQueryHandler{TResult}
 // and derive from OperationResults : a class that contains some usefull methods
 // to return response with HTTP status code.
 
@@ -142,7 +142,7 @@ public sealed class AddPersonCommandHandler : CommandHandler<AddPersonCommand, C
         
         await _entityAccessor.InsertAsync(newPerson, cancellationToken).configureAwait(false);
         
-        return OkOperation(new CreatedPerson(newPerson.Id))
+        return OkOperation(new CreatedPerson(newPerson.Id));
         
         // Note that data will be saved at the end of the control flow
         // if there is no error. You can add a decorator class to manage this error.
@@ -166,7 +166,7 @@ public sealed class GetPersonQueryHandler : QueryHandler<GetPersonQuery, Person>
         return result switch
         {
             { } person => OkOperation(new Person(person.FirstName, person.LastName)),
-            _ => NotFoundOperation<Person>(nameof(query.Id), "Id not found.");
+            _ => NotFoundOperation<Person>(nameof(query.Id), "Id not found.")
         };
     }        
 }
