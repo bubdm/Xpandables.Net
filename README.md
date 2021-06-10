@@ -207,9 +207,9 @@ public sealed class AddPersonCommandValidationDecorator : Validator<AddPersonCom
 
 // We are using EFCore
 
-public sealed class PersonEntityTypeConfiguration : IEntityTypeConfiguration<Person>
+public sealed class PersonEntityTypeConfiguration : IEntityTypeConfiguration<PersonEntity>
 {
-    public void Configure(EntityTypeBuilder<Person> builder)
+    public void Configure(EntityTypeBuilder<PersonEntity> builder)
     {
         builder.HasKey(p => p.Id);
         builder.Property(p => p.FirstName);
@@ -231,7 +231,7 @@ public sealed class PersonContext : DataContext
          modelBuilder.ApplyConfiguration(new PersonEntityTypeConfiguration());
      }
      
-     public DbSet<Person> People { get; set; } = default!;
+     public DbSet<PersonEntity> People { get; set; } = default!;
 }
 
 ```
