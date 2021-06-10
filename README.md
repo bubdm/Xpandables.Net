@@ -568,15 +568,15 @@ Suppose you want to add logging for the AddPersonCommand ...
 public sealed class AddPersonCommandHandlerLoggingDecorator : 
     ICommandHandler<AddPersonCommand, CreatedPerson>
 {
-    private readonly ICommandHandler<AddPersonCommand, CreatedPerson> _ decoratee;
+    private readonly ICommandHandler<AddPersonCommand, CreatedId> _ decoratee;
     private readonly ILogger<AddPersonCommandHandler> _logger;
     
     public AddPersonCommandHandlerLoggingDecorator(
         ILogger<AddPersonCommandHandler> logger,
-        ICommandHandler<AddPersonCommand, CreatedPerson> decoratee)
+        ICommandHandler<AddPersonCommand, CreatedId> decoratee)
         => (_logger, _ decoratee) = (logger, decoratee);
 
-    public async Task<IOperationResult<CreatedPerson>> HandleAsync(
+    public async Task<IOperationResult<CreatedId>> HandleAsync(
         AddPersonCommand command, CancellationToken cancellationToken = default)
     {
         _logger.Information(...);
