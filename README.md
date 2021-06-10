@@ -78,7 +78,7 @@ public sealed class GetPersonRequest : IHttpRestClientRequest<Person>,
         => new Dictionary<string, string> { { nameof(Id), Id } };
 }
 
-public sealed reconrd Person(string FirstName, string LastName);
+public sealed record Person(string FirstName, string LastName);
 public sealed record CreatedPerson(string Id);
 
 ```
