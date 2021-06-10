@@ -53,7 +53,7 @@ public sealed class PersonEntity : Entity
 // IMultipartRequest...
 
 [HttpRestClient(Path = "api/person", Method = HttpMethodVerbs.Post, IsSecured = false)]
-public sealed class AddPersonRequest : IHttpRestClientRequest<CreatedPerson>
+public sealed class AddPersonRequest : IHttpRestClientRequest<CreatedId>
 {
     [Required]
     public string FirstName { get; init; }
@@ -79,7 +79,7 @@ public sealed class GetPersonRequest : IHttpRestClientRequest<Person>,
 }
 
 public sealed record Person(string FirstName, string LastName);
-public sealed record CreatedPerson(string Id);
+public sealed record CreatedId(string Id);
 
 ```
 
@@ -95,7 +95,7 @@ public sealed record CreatedPerson(string Id);
 // You can derive from QueryExpression{TClass} to allow command to behave like an expression
 // when querying data, and override the target method.
 
-public sealed class AddPersonCommand : QueryExpression<Person>, ICommand<CreatedPerson>,
+public sealed class AddPersonCommand : QueryExpression<Person>, ICommand<CreatedId>,
     IValidatorDecorator, IPersistenceDecorator
 {
     public string FirstName { get; }
@@ -124,13 +124,13 @@ public sealed class GetPersonQuery : QueryExpression<Person>, IQuery<Person>
 // IEntityAccessor{TEntity} is a generic interface that provides with methods to access
 // data from a storage.
 
-public sealed class AddPersonCommandHandler : CommandHandler<AddPersonCommand, CreatedPerson>
+public sealed class AddPersonCommandHandler : CommandHandler<AddPersonCommand, CreatedId>
 {
     private readonly IEntityAccessor<Person> _entityAccessor;
     public AddPersonCommandHandler(IEntityAccessor<Person> entityAccessor)
         => _entityAccessor = entityAccessor;
     
-    public override async Task<IOperationResult<CreatedPerson>> HandleAsync(AddPersonCommand command, 
+    public override async Task<IOperationResult<CreatedId>> HandleAsync(AddPersonCommand command, 
         CancellationToken cancellationToken = default)
     {
         // You can check here for data validation or use a specific class for that
@@ -142,10 +142,11 @@ public sealed class AddPersonCommandHandler : CommandHandler<AddPersonCommand, C
         
         await _entityAccessor.InsertAsync(newPerson, cancellationToken).configureAwait(false);
         
-        return OkOperation(new CreatedPerson(newPerson.Id));
+        return OkOperation(new CreatedId(newPerson.Id));
         
         // Note that data will be saved at the end of the control flow
-        // if there is no error. You can add a decorator class to manage this error.
+        // if there is no error. The OperationResultFilter will process the output message.
+        // You can add a decorator class to manage the exception.
     }
 }
 
@@ -253,7 +254,7 @@ public class PersonController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreatedPerson))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreatedId))]
     public async Task<IActionResult> AddPersonAsync(
         [FromBody] AddPersonRequest request, CancellationToken cancellationToken = default)
     {
@@ -359,8 +360,8 @@ public async Task AddPersonTestAsync(string firstName, string lastName)
     }
     else
     {
-        var createdPerson = response.Result;
-        Trace.WriteLine($"Added person : {createdPerson.Id}");
+        var createdId = response.Result;
+        Trace.WriteLine($"Added person : {createdId.Id}");
     }
 }
 
@@ -482,6 +483,7 @@ public partial class AddPerson
         else
         {
             // custom code like displaying the result
+            var createdId = addResponse.Result;
         }
 
         StateHasChanged();
