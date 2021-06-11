@@ -22,8 +22,8 @@ using System.Threading;
 namespace Xpandables.Net.Correlations
 {
     /// <summary>
-    /// Provides with a collection of objects that need to be shared across asynchronous control flows.
-    /// This collection implements <see cref="IAsyncEnumerable{T}"/>
+    /// Provides with a thread-safe collection of objects that need to be shared across asynchronous control flows.
+    /// This collection implements <see cref="IAsyncEnumerable{T}"/>.
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TValue">The type of the value.</typeparam>
