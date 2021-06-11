@@ -15,6 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,5 +32,18 @@ namespace Xpandables.Net
         /// <typeparam name="T">The type of the elements in the collection.</typeparam>
         /// <returns>An async-enumerable sequence with no elements.</returns>
         public static IAsyncEnumerable<T> Empty<T>() => new AsyncEnumerable<T>(Enumerable.Empty<T>());
+
+        /// <summary>
+        /// Converts the collection to exposes an enumerator that provides asynchronous iteration over values of <typeparamref name="T"/> type.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in the collection.</typeparam>
+        /// <param name="source">The collection of elements.</param>
+        /// <returns>An async-enumerable sequence.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        public static IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> source)
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            return new AsyncEnumerable<T>(source);
+        }
     }
 }
