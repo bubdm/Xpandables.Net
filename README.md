@@ -19,12 +19,12 @@ Add the following nuget packages :
 // key generator for id and some useful state methods.
 // You can use Aggregate{TAggregateId} if you're targeting DDD.
 
-public sealed class Person : Entity
+public sealed class PersonEntity : Entity
 {
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
     
-    public static Person NewPerson(string firstName, string lastName)
+    public static PersonEntity NewPerson(string firstName, string lastName)
     {
         // custom check
         return new(fistName, lastname);
@@ -36,7 +36,7 @@ public sealed class Person : Entity
     public void ChangeLastName(string lastName)
         => LastName = lastName ?? throw new ArgumentNullException(nameof(lastName));
     
-    private Person(string firstName, string lastName)
+    private PersonEntity(string firstName, string lastName)
         => (FirstName, Lastname) = (firstName, lastName);
 }
 
@@ -53,19 +53,37 @@ public sealed class Person : Entity
 // IMultipartRequest...
 
 [HttpRestClient(Path = "api/person", Method = HttpMethodVerbs.Post, IsSecured = false)]
-public sealed class AddPersonRequest : IHttpRestClientRequest<CreatedPerson>
+public sealed class AddPersonRequest : IHttpRestClientRequest<CreatedId>
 {
     [Required]
     public string FirstName { get; init; }
     [Required]
-    public string LastName { get; init; }    
+    public string LastName { get; init; } 
+    
+    public AddPersonRequest(string firstName, string lastName)
+        => (FirstName, LastName) = (firstName, lastName);
 }
 
-public sealed record CreatedPerson(string Id);
+[HttpRestClient(Path = "api/person/{id}", IsNullable = true, In = ParameterLocation.Path, 
+    Method = HttpMethodVerbs.Get, IsSecured = false)]
+public sealed class GetPersonRequest : IHttpRestClientRequest<Person>,
+    IPathStringLocationRequest
+{
+    public string Id { get; init;}
+    
+    public GetPersonRequest(string id)
+        => Id = id;
+    
+    public IDictionary<string, string> GetPathStringSource()
+        => new Dictionary<string, string> { { nameof(Id), Id } };
+}
+
+public sealed record Person(string FirstName, string LastName);
+public sealed record CreatedId(string Id);
 
 ```
 
-## Command and Handler definitions
+## Command/Query and Handler definitions
 
 ```cs
 
@@ -77,7 +95,7 @@ public sealed record CreatedPerson(string Id);
 // You can derive from QueryExpression{TClass} to allow command to behave like an expression
 // when querying data, and override the target method.
 
-public sealed class AddPersonCommand : QueryExpression<Person>, ICommand<CreatedPerson>,
+public sealed class AddPersonCommand : QueryExpression<Person>, ICommand<CreatedId>,
     IValidatorDecorator, IPersistenceDecorator
 {
     public string FirstName { get; }
@@ -88,37 +106,70 @@ public sealed class AddPersonCommand : QueryExpression<Person>, ICommand<Created
             && person.LastName == LastName;
 }
 
-// CommandHandler{TCommand} and CommandHandler{TCommand, TResult} are abstract classes
-// that implement ICommandHandler{TCommand} and ICommandHandler{TCommand, TResult}
+public sealed class GetPersonQuery : QueryExpression<Person>, IQuery<Person>
+{
+    public string Id { get; }
+    
+    public GetPersonQuery(string id) => Id= id;
+    
+    public override Expression<Func<Person>, bool>> GetExpression()
+        => person => person.Id == Id;    
+}
+
+// CommandHandler{TCommand}, CommandHandler{TCommand, TResult} and QueryHandler{TResult} are abstract classes
+// that implement ICommandHandler{TCommand}, ICommandHandler{TCommand, TResult} and IQueryHandler{TResult}
 // and derive from OperationResults : a class that contains some usefull methods
 // to return response with HTTP status code.
 
 // IEntityAccessor{TEntity} is a generic interface that provides with methods to access
 // data from a storage.
 
-public sealed class AddPersonCommandHandler : CommandHandler<AddPersonCommand, CreatedPerson>
+public sealed class AddPersonCommandHandler : CommandHandler<AddPersonCommand, CreatedId>
 {
     private readonly IEntityAccessor<Person> _entityAccessor;
     public AddPersonCommandHandler(IEntityAccessor<Person> entityAccessor)
         => _entityAccessor = entityAccessor;
     
-    public override async Task<IOperationResult<CreatedPerson>> HandleAsync(AddPersonCommand command, 
+    public override async Task<IOperationResult<CreatedId>> HandleAsync(AddPersonCommand command, 
         CancellationToken cancellationToken = default)
     {
         // You can check here for data validation or use a specific class for that
         // (see AddPersonCommandValidationDecorator).
         
-        var newPerson=Person.Newperson(
+        var newPerson = Person.Newperson(
             command.FirstName,
             command.LastName);
         
         await _entityAccessor.InsertAsync(newPerson, cancellationToken).configureAwait(false);
         
-        return OkOperation(new CreatedPerson(newPerson.Id))
+        return OkOperation(new CreatedId(newPerson.Id));
         
         // Note that data will be saved at the end of the control flow
-        // if there is no error. You can add a decorator class to manage this error.
+        // if there is no error. The OperationResultFilter will process the output message.
+        // You can add a decorator class to manage the exception.
     }
+}
+
+public sealed class GetPersonQueryHandler : QueryHandler<GetPersonQuery, Person>
+{
+    private readonly IEntityAccessor<Person> _entityAccessor;
+    public GetPersonQueryHandler(IEntityAccessor<Person> entityAccessor)
+        => _entityAccessor = entityAccessor;    
+    
+    public override async Task<IOperationResult<Person>> HandleAsync(GetPersonQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _entityAccessor.TryFindAsync(
+            query,
+            cancellationToken)
+            .configureAwait(false);
+        
+        return result switch
+        {
+            { } person => OkOperation(new Person(person.FirstName, person.LastName)),
+            _ => NotFoundOperation<Person>(nameof(query.Id), "Id not found.")
+        };
+    }        
 }
 
 // When using validation decorator.
@@ -145,7 +196,7 @@ public sealed class AddPersonCommandValidationDecorator : Validator<AddPersonCom
         };
     }
     
-    // BadOperation and OkOperation are Http operation results
+    // BadOperation, NotFoundOperation and OkOperation are Http operation results
     // found in the OperationResuls base class.
 }
 
@@ -157,9 +208,9 @@ public sealed class AddPersonCommandValidationDecorator : Validator<AddPersonCom
 
 // We are using EFCore
 
-public sealed class PersonEntityTypeConfiguration : IEntityTypeConfiguration<Person>
+public sealed class PersonEntityTypeConfiguration : IEntityTypeConfiguration<PersonEntity>
 {
-    public void Configure(EntityTypeBuilder<Person> builder)
+    public void Configure(EntityTypeBuilder<PersonEntity> builder)
     {
         builder.HasKey(p => p.Id);
         builder.Property(p => p.FirstName);
@@ -181,7 +232,7 @@ public sealed class PersonContext : DataContext
          modelBuilder.ApplyConfiguration(new PersonEntityTypeConfiguration());
      }
      
-     public DbSet<Person> People { get; set; } = default!;
+     public DbSet<PersonEntity> People { get; set; } = default!;
 }
 
 ```
@@ -203,13 +254,24 @@ public class PersonController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreatedPerson))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreatedId))]
     public async Task<IActionResult> AddPersonAsync(
         [FromBody] AddPersonRequest request, CancellationToken cancellationToken = default)
     {
         var command = new AddPersonCommand(request.FirstName, request.LastName);
         return Ok(await _dispatcher.SendAsync(command, cancellationToken).ConfigureAwait(false));
     }
+    
+    [HttpGet]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Person))]
+    public async Task<IActonResult> GetPersonAsync(
+        [FromRoute] GetPersonRequest request, cancellationToken cancellationToken = default)
+    {
+        var query = new GetPersonQuery(request.Id);
+        return Ok(await _dispatcher.FetchAsync(query, cancellationToken).ConfigureAwait(false));
+    }    
 
     // ...
         
@@ -298,8 +360,8 @@ public async Task AddPersonTestAsync(string firstName, string lastName)
     }
     else
     {
-        var createdPerson = response.Result;
-        Trace.WriteLine($"Added person : {createdPerson.Id}");
+        var createdId = response.Result;
+        Trace.WriteLine($"Added person : {createdId.Id}");
     }
 }
 
@@ -421,6 +483,7 @@ public partial class AddPerson
         else
         {
             // custom code like displaying the result
+            var createdId = addResponse.Result;
         }
 
         StateHasChanged();
@@ -505,15 +568,15 @@ Suppose you want to add logging for the AddPersonCommand ...
 public sealed class AddPersonCommandHandlerLoggingDecorator : 
     ICommandHandler<AddPersonCommand, CreatedPerson>
 {
-    private readonly ICommandHandler<AddPersonCommand, CreatedPerson> _ decoratee;
+    private readonly ICommandHandler<AddPersonCommand, CreatedId> _ decoratee;
     private readonly ILogger<AddPersonCommandHandler> _logger;
     
     public AddPersonCommandHandlerLoggingDecorator(
         ILogger<AddPersonCommandHandler> logger,
-        ICommandHandler<AddPersonCommand, CreatedPerson> decoratee)
+        ICommandHandler<AddPersonCommand, CreatedId> decoratee)
         => (_logger, _ decoratee) = (logger, decoratee);
 
-    public async Task<IOperationResult<CreatedPerson>> HandleAsync(
+    public async Task<IOperationResult<CreatedId>> HandleAsync(
         AddPersonCommand command, CancellationToken cancellationToken = default)
     {
         _logger.Information(...);
