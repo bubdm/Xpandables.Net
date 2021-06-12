@@ -15,6 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 using System.Net;
 
 namespace Xpandables.Net
@@ -103,6 +104,16 @@ namespace Xpandables.Net
             => new FailureOperationResult<TResult>(key, errorMessages);
 
         /// <summary>
+        /// Returns a <see cref="FailureOperationResult{TValue}"/> with <see cref="HttpStatusCode.BadRequest"/>, key and exception.
+        /// </summary>
+        /// <typeparam name="TResult">The type the result.</typeparam>
+        /// <param name="key">The key of the error.</param>
+        /// <param name="exception">The handled exception.</param>
+        /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
+        protected virtual IOperationResult<TResult> BadOperation<TResult>(string key, Exception exception)
+            => new FailureOperationResult<TResult>(key, exception);
+
+        /// <summary>
         /// Returns a <see cref="FailureOperationResult{TValue}"/> with <see cref="HttpStatusCode.BadRequest"/>,, key and error messages.
         /// </summary>
         /// <typeparam name="TResult">The type the result.</typeparam>
@@ -112,6 +123,17 @@ namespace Xpandables.Net
         /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
         protected virtual IOperationResult<TResult> BadOperation<TResult>(TResult result, string key, params string[] errorMessages)
             => new FailureOperationResult<TResult>(result, key, errorMessages);
+
+        /// <summary>
+        /// Returns a <see cref="FailureOperationResult{TValue}"/> with <see cref="HttpStatusCode.BadRequest"/>,, key and exception.
+        /// </summary>
+        /// <typeparam name="TResult">The type the result.</typeparam>
+        /// <param name="result">The operation result.</param>
+        /// <param name="key">The key of the error.</param>
+        /// <param name="exception">The handled exception.</param>
+        /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
+        protected virtual IOperationResult<TResult> BadOperation<TResult>(TResult result, string key, Exception exception)
+            => new FailureOperationResult<TResult>(result, key, exception);
 
         /// <summary>
         /// Returns a <see cref="FailureOperationResult{TValue}"/> with the <see cref="HttpStatusCode.BadRequest"/> status code.
@@ -144,6 +166,15 @@ namespace Xpandables.Net
         /// <returns>A <see cref="FailureOperationResult"/>.</returns>
         protected virtual IOperationResult BadOperation(string key, params string[] errorMessages)
             => new FailureOperationResult(key, errorMessages);
+
+        /// <summary>
+        /// Returns a <see cref="FailureOperationResult"/> with <see cref="HttpStatusCode.BadRequest"/>, key and exception.
+        /// </summary>
+        /// <param name="key">The key of the error.</param>
+        /// <param name="exception">The handled exception.</param>
+        /// <returns>A <see cref="FailureOperationResult"/>.</returns>
+        protected virtual IOperationResult BadOperation(string key, Exception exception)
+            => new FailureOperationResult(key, exception);
 
         /// <summary>
         /// Returns a <see cref="FailureOperationResult"/> with the <see cref="HttpStatusCode.NotFound"/> status code.
