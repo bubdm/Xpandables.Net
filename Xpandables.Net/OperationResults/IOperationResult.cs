@@ -70,6 +70,12 @@ namespace Xpandables.Net
         public bool HasValue => Value is not null;
 
         /// <summary>
+        /// Determines whether or not the current instance is generic.
+        /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+        /// </summary>
+        public bool IsGeneric => false;
+
+        /// <summary>
         /// Gets a value that indicates whether the operation is completed successfully and returns <see langword="true"/> if so, otherwise <see langword="false"/>.
         /// </summary>
         /// <returns><see langword="true"/> if the operation is completed successfully; otherwise, <see langword="false"/>.</returns>
@@ -110,6 +116,14 @@ namespace Xpandables.Net
         new TValue Value { get; }
 
         object? IOperationResult.Value => Value;
+
+        /// <summary>
+        /// Determines whether or not the current instance is generic.
+        /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+        /// </summary>
+        public new bool IsGeneric => true;
+
+        bool IOperationResult.IsGeneric => IsGeneric;
 
         /// <summary>
         /// Converts the current generic success operation instance to the non-generic success operation.
