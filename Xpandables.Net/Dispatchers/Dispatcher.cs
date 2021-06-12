@@ -17,8 +17,6 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,12 +26,14 @@ using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Dispatchers
 {
+    internal delegate TReturn CreateResult<TReturn>(bool isValid, string key, string errorMessage) where TReturn : IOperationResult;
+
     /// <summary>
     /// The implementation for <see cref="IDispatcher"/>.
     /// Implements methods to execute the <see cref="IAsyncQueryHandler{TQuery, TResult}"/>, <see cref="IQueryHandler{TQuery, TResult}"/> and
     /// <see cref="ICommandHandler{TCommand}"/> process dynamically.
     /// </summary>
-    public class Dispatcher : IDispatcher
+    public class Dispatcher : OperationResults, IDispatcher
     {
         private readonly IHandlerAccessor _handlerAccessor;
 
@@ -48,26 +48,19 @@ namespace Xpandables.Net.Dispatchers
         ///<inheritdoc/>
         public virtual IAsyncEnumerable<TResult> FetchAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         {
-            _ = query ?? throw new ArgumentNullException(nameof(query));
+            var handler = (IAsyncQueryHandlerWrapper<TResult>)GetHandler(typeof(AsyncQueryHandlerWrapper<,>), query.GetType(), typeof(TResult));
 
-            if (!typeof(AsyncQueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, query.GetType(), typeof(TResult)))
-            {
-                throw new InvalidOperationException("Building Query wrapper failed.", typeException);
-            }
+            IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
+                => isValid switch
+                {
+                    false => InternalErrorOperation<TResult>(key, errorMessage),
+                    _ => OkOperation<TResult>()
+                };
 
-            if (!_handlerAccessor.TryGetHandler(wrapperType, out var foundHandler, out var exception))
-            {
-                throw new InvalidOperationException(
-                      $"The matching query handler for {query.GetType().Name} is missing. Be sure the {typeof(AsyncQueryHandlerWrapper<,>).Name} and handler are registered.", exception);
-            }
+            var canHandleResult = CanHandle(CreateResult, handler, query);
 
-            var handler = (IAsyncQueryHandlerWrapper<TResult>)foundHandler;
-
-            if (!handler.CanHandle(query))
-            {
-                WriteLineException(new ArgumentException($"The wrapper {handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type. The target handler method 'CanHandle' returned false."));
+            if (canHandleResult.Failed)
                 return AsyncEnumerableExtensions.Empty<TResult>();
-            }
 
             return handler.HandleAsync(query, cancellationToken);
         }
@@ -77,25 +70,19 @@ namespace Xpandables.Net.Dispatchers
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            if (!typeof(QueryHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, query.GetType(), typeof(TResult)))
-            {
-                throw new InvalidOperationException("Building Query wrapper failed.", typeException);
-            }
+            var handler = (IQueryHandlerWrapper<TResult>)GetHandler(typeof(QueryHandlerWrapper<,>), query.GetType(), typeof(TResult));
 
-            if (!_handlerAccessor.TryGetHandler(wrapperType, out var foundHandler, out var ex))
-            {
-                throw new InvalidOperationException(
-                    $"The matching command handler for {query.GetType().Name} is missing. Be sure the {typeof(QueryHandlerWrapper<,>).Name} and handler are registered.", ex);
-            }
+            IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
+                => isValid switch
+                {
+                    false => InternalErrorOperation<TResult>(key, errorMessage),
+                    _ => OkOperation<TResult>()
+                };
 
-            var handler = (IQueryHandlerWrapper<TResult>)foundHandler;
+            var canHandleResult = CanHandle(CreateResult, handler, query);
 
-            if (!handler.CanHandle(query))
-            {
-                var exception = new ArgumentException($"The wrapper {handler.GetType().Name} is unable to handle argument of {query.GetType().Name} type. The target handler method 'CanHandle' returned false.");
-                WriteLineException(exception);
-                return new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(query), exception);
-            }
+            if (canHandleResult.Failed)
+                return canHandleResult;
 
             return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
         }
@@ -105,22 +92,19 @@ namespace Xpandables.Net.Dispatchers
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
-            if (!typeof(ICommandHandler<>).TryMakeGenericType(out var handlerType, out var typeException, command.GetType()))
-            {
-                throw new InvalidOperationException("Building command handler failed.", typeException);
-            }
+            dynamic handler = GetHandler(typeof(ICommandHandler<>), command.GetType());
 
-            if (!_handlerAccessor.TryGetHandler(handlerType, out dynamic? handler, out var ex))
-            {
-                throw new InvalidOperationException($"The matching command handler for {command.GetType().Name} is missing.", ex);
-            }
+            IOperationResult CreateResult(bool isValid, string key, string errorMessage)
+                => isValid switch
+                {
+                    false => InternalErrorOperation(key, errorMessage),
+                    _ => OkOperation()
+                };
 
-            if (!((ICanHandle)handler).CanHandle(command))
-            {
-                var exception = new ArgumentException($"The wrapper {handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type. The target handler method 'CanHandle' returned false.");
-                WriteLineException(exception);
-                return new FailureOperationResult(HttpStatusCode.BadRequest, nameof(command), exception);
-            }
+            var canHandleResult = CanHandle(CreateResult, (ICanHandle)handler, command);
+
+            if (canHandleResult.Failed)
+                return canHandleResult;
 
             return await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
         }
@@ -130,34 +114,45 @@ namespace Xpandables.Net.Dispatchers
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
 
-            if (!typeof(CommandHandlerWrapper<,>).TryMakeGenericType(out var wrapperType, out var typeException, command.GetType(), typeof(TResult)))
-            {
-                throw new InvalidOperationException("Building Command wrapper failed.", typeException);
-            }
+            var handler = (ICommandHandlerWrapper<TResult>)GetHandler(typeof(CommandHandlerWrapper<,>), command.GetType(), typeof(TResult));
 
-            if (!_handlerAccessor.TryGetHandler(wrapperType, out var foundHandler, out var ex))
-            {
-                throw new InvalidOperationException(
-                    $"The matching command handler for {command.GetType().Name} is missing. Be sure the {typeof(CommandHandlerWrapper<,>).Name} and handler are registered.", ex);
-            }
+            IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
+                => isValid switch
+                {
+                    false => InternalErrorOperation<TResult>(key, errorMessage),
+                    _ => OkOperation<TResult>()
+                };
 
-            var handler = (ICommandHandlerWrapper<TResult>)foundHandler;
+            var canHandleResult = CanHandle(CreateResult, handler, command);
 
-            if (!handler.CanHandle(command))
-            {
-                var exception = new ArgumentException($"The wrapper {handler.GetType().Name} is unable to handle argument of {command.GetType().Name} type. The target handler method 'CanHandler' returned false.");
-                WriteLineException(exception);
-                return new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, nameof(command), exception);
-            }
+            if (canHandleResult.Failed)
+                return canHandleResult;
 
             return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
         }
 
-        private static void WriteLineException(Exception exception)
+        private static TReturn CanHandle<TReturn>(CreateResult<TReturn> createResult, ICanHandle handler, object argument)
+            where TReturn : IOperationResult
         {
-#if DEBUG
-            Debug.WriteLine(exception);
-#endif
+            var errorMessage = $"The handler {handler.GetType().Name} is unable to handle argument of {argument.GetType().Name} type. " +
+                $"The target handler method 'CanHandler' returned false.";
+
+            return createResult(handler.CanHandle(argument), nameof(argument), errorMessage);
+        }
+
+        private object GetHandler(Type genericType, params Type[] types)
+        {
+            if (!genericType.TryMakeGenericType(out var handlerType, out var typeException, types))
+            {
+                throw new InvalidOperationException("Building handler failed.", typeException);
+            }
+
+            if (!_handlerAccessor.TryGetHandler(handlerType, out var foundHandler, out var handleException))
+            {
+                throw new InvalidOperationException($"The matching handler for '{types[1].Name}' is missing.", handleException);
+            }
+
+            return foundHandler;
         }
     }
 }
