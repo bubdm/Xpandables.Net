@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.ComponentModel;
 using System.Net;
 
 namespace Xpandables.Net
@@ -298,6 +299,15 @@ namespace Xpandables.Net
             => new FailureOperationResult(HttpStatusCode.InternalServerError, key, errorMessages);
 
         /// <summary>
+        /// Returns a <see cref="FailureOperationResult"/> with the <see cref="HttpStatusCode.InternalServerError"/> status code, key and exception.
+        /// </summary>
+        /// <param name="key">The key of the error.</param>
+        /// <param name="exception">The handled exception.</param>
+        /// <returns>A <see cref="FailureOperationResult"/>.</returns>
+        protected virtual IOperationResult InternalErroroperation(string key, Exception exception)
+            => new FailureOperationResult(HttpStatusCode.InternalServerError, key, exception);
+
+        /// <summary>
         /// Returns a <see cref="FailureOperationResult{TValue}"/> with the <see cref="HttpStatusCode.InternalServerError"/> status code.
         /// </summary>
         /// <typeparam name="TResult">The type the result.</typeparam>
@@ -322,6 +332,16 @@ namespace Xpandables.Net
         /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
         protected virtual IOperationResult<TResult> InternalErrorOperation<TResult>(string key, params string[] errorMessages)
             => new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, key, errorMessages);
+
+        /// <summary>
+        /// Returns a <see cref="FailureOperationResult{TValue}"/> with the <see cref="HttpStatusCode.InternalServerError"/> status code, key and exception.
+        /// </summary>
+        /// <typeparam name="TResult">The type the result.</typeparam>
+        /// <param name="key">The key of the error.</param>
+        /// <param name="exception">The handled exception.</param>
+        /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
+        protected virtual IOperationResult<TResult> InternalErrorOperation<TResult>(string key, Exception exception)
+            => new FailureOperationResult<TResult>(HttpStatusCode.InternalServerError, key, exception);
 
         /// <summary>
         /// Returns a <see cref="FailureOperationResult"/> with the specified status code.
