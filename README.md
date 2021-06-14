@@ -136,7 +136,7 @@ public sealed class AddPersonCommandHandler : CommandHandler<AddPersonCommand, C
         // You can check here for data validation or use a specific class for that
         // (see AddPersonCommandValidationDecorator).
         
-        var newPerson = Person.Newperson(
+        var newPerson = Person.NewPerson(
             command.FirstName,
             command.LastName);
         
