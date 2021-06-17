@@ -17,13 +17,60 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.DomainEvents;
+using Xpandables.Net.Expressions;
 
 namespace Xpandables.Net.Aggregates
 {
+    /// <summary>
+    /// Provides with criteria to search for store entities.
+    /// This class derive from <see cref="QueryExpression{TSource}"/>.
+    /// </summary>
+    /// <typeparam name="TStoreEntity">The type of the store entity to be returned.</typeparam>
+    public class StoreEntityCriteria<TStoreEntity> : QueryExpression<TStoreEntity>
+        where TStoreEntity : StoreEntity
+    {
+        /// <summary>
+        /// Gets the type name as <see cref="Regex"/> format. If null, all types will be returned.
+        /// </summary>
+        public string? TypeName { get; }
+
+        /// <summary>
+        /// Gets the date to start search. If null, starts from the beginning.
+        /// </summary>
+        public DateTime? Start { get; }
+
+        /// <summary>
+        /// Gets the date to end search.
+        /// </summary>
+        public DateTime? End { get; }
+
+        /// <summary>
+        /// Gets the number of entities to be returned.
+        /// The default value is 50.
+        /// </summary>
+        public int Count { get; } = 50;
+
+        ///<inheritdoc/>
+        public override Expression<Func<TStoreEntity, bool>> GetExpression()
+        {
+            var expression = QueryExpressionFactory.Create<TStoreEntity>();
+            if (TypeName is not null)
+                expression = expression.And(se => Regex.IsMatch(se.TypeName, TypeName));
+            if (Start is not null)
+                expression = expression.And(se => se.CreatedOn >= Start.Value);
+            if (End is not null)
+                expression = expression.And(se => se.CreatedOn <= End.Value);
+
+            return expression;
+        }
+    }
+
     /// <summary>
     /// Provides with methods to retrieve and persist events.
     /// </summary>
@@ -35,10 +82,25 @@ namespace Xpandables.Net.Aggregates
         /// Asynchronously returns a collection of domain events where aggregate identifier matches the specified one.
         /// if not found, returns an empty collection.
         /// </summary>
-        /// <param name="aggreagateId">The target aggregate identifier.</param>
+        /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An enumerator of <see cref="IDomainEvent{TAggregateId}"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadAllEventsAsync(TAggregateId aggreagateId, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadAllEventsAsync(TAggregateId aggregateId, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Asynchronously returns a collection of store entities where aggregate identifier matches the specified one 
+        /// and entities match the specified criteria.
+        /// </summary>
+        /// <typeparam name="TStoreEntity">The type of the store entity to be returned.</typeparam>
+        /// <param name="aggregateId">The target aggregate identifier.</param>
+        /// <param name="criteria">The criteria to be applied to entities.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>An enumerator of <typeparamref name="TStoreEntity"/> that can be asynchronously enumerated.</returns>
+        IAsyncEnumerable<TStoreEntity> ReadStoreEntitiesAsync<TStoreEntity>(
+            TAggregateId aggregateId,
+            StoreEntityCriteria<TStoreEntity> criteria,
+            CancellationToken cancellationToken = default)
+            where TStoreEntity : StoreEntity;
 
         /// <summary>
         /// Asynchronously appends the specified event.

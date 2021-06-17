@@ -103,6 +103,18 @@ namespace Xpandables.Net.Database
                 .AsAsyncEnumerable();
 
         ///<inheritdoc/>
+        public virtual IAsyncEnumerable<TStoreEntity> ReadStoreEntitiesAsync<TStoreEntity>(
+            TAggregateId aggregateId,
+            StoreEntityCriteria<TStoreEntity> criteria,
+            CancellationToken cancellationToken = default)
+            where TStoreEntity : StoreEntity
+            => _context.Set<TStoreEntity>()
+                .Where(criteria)
+                .OrderBy(o => o.CreatedOn)
+                .Take(criteria.Count)
+                .AsAsyncEnumerable();
+
+        ///<inheritdoc/>
         public async IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadEventsSinceLastSnapShotAsync(TAggregateId aggregateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var snapShot = await GetSnapShotAsync(aggregateId, cancellationToken).ConfigureAwait(false);
