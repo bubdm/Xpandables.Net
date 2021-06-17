@@ -16,19 +16,28 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Text.Json;
 
-namespace Xpandables.Net.Aggregates
+using Newtonsoft.Json;
+
+using Xpandables.Net.Aggregates;
+
+namespace Xpandables.Net.Database.EventStoreNewtonsoft
 {
     /// <summary>
-    /// Event Store entity converter using <see cref="System.Text.Json"/>.
+    /// Event Store converter using <see cref="Newtonsoft.Json"/>.
     /// </summary>
-    public sealed class StoreEntityConverter : IStoreEntityConverter
+    public sealed class EventStoreEntityTypeNewtonsoftConverter : IEventStoreEntityTypeConverter
     {
         ///<inheritdoc/>
-        public object Deserialize(string value, Type returnType) => JsonSerializer.Deserialize(value, returnType)!;
+        public object Deserialize(string value, Type returnType)
+        {
+            return JsonConvert.DeserializeObject(value, returnType)!;
+        }
 
         ///<inheritdoc/>
-        public string Serialize(object value, Type inputType) => JsonSerializer.Serialize(value, inputType);
+        public string Serialize(object value, Type inputType)
+        {
+            return JsonConvert.SerializeObject(value, inputType, null);
+        }
     }
 }

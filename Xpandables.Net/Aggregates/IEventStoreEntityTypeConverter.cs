@@ -20,9 +20,9 @@ using System;
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Converter to be used with <see cref="StoreEntity"/>
+    /// Converter to be used to de-serialize types for <see cref="StoreEntity"/> derived classes.
     /// </summary>
-    public interface IStoreEntityConverter
+    public interface IEventStoreEntityTypeConverter
     {
         /// <summary>
         /// Converts the value of a specified type into a JSON string.

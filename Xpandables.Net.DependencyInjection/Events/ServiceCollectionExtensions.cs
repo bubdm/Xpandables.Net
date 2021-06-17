@@ -161,25 +161,25 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEventStoreConverter(this IXpandableServiceBuilder services)
+        public static IXpandableServiceBuilder AddXEventStoreEntityTypeConverter(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddSingleton<IStoreEntityConverter, StoreEntityConverter>();
+            services.Services.AddSingleton<IEventStoreEntityTypeConverter, EventStoreEntityTypeConverter>();
             return services;
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TStoreEntityConverter"/> as <see cref="IStoreEntityConverter"/> event store entity converter 
+        /// Adds the <typeparamref name="TStoreEntityConverter"/> as <see cref="IEventStoreEntityTypeConverter"/> event store entity converter 
         /// implementation to the services with singleton life time.
         /// </summary>
         /// <typeparam name="TStoreEntityConverter">Type of the converter.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXEventStoreConverter<TStoreEntityConverter>(this IXpandableServiceBuilder services)
-            where TStoreEntityConverter : class, IStoreEntityConverter
+            where TStoreEntityConverter : class, IEventStoreEntityTypeConverter
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddSingleton<IStoreEntityConverter, TStoreEntityConverter>();
+            services.Services.AddSingleton<IEventStoreEntityTypeConverter, TStoreEntityConverter>();
             return services;
         }
 

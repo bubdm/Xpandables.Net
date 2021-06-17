@@ -48,10 +48,10 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEventStoreConverterNewtonsoft(this IXpandableServiceBuilder services)
+        public static IXpandableServiceBuilder AddXEventStoreEntityTypeNewtonsoftConverter(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddSingleton<IStoreEntityConverter, NewtonsoftStoreEntityConverter>();
+            services.Services.AddSingleton<IEventStoreEntityTypeConverter, EventStoreEntityTypeNewtonsoftConverter>();
             return services;
         }
 

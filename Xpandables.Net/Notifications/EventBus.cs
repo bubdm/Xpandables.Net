@@ -34,7 +34,7 @@ namespace Xpandables.Net.Notifications
     {
         private readonly INotificationPublisher _notificationPublisher;
         private readonly IEventStoreContext _context;
-        private readonly IStoreEntityConverter _converter;
+        private readonly IEventStoreEntityTypeConverter _converter;
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventBus"/>.
@@ -43,7 +43,7 @@ namespace Xpandables.Net.Notifications
         /// <param name="context">The data context.</param>
         /// <param name="converter">The converter.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="notificationPublisher"/> or <paramref name="context"/> is null.</exception>
-        public EventBus(INotificationPublisher notificationPublisher, IEventStoreContext context, IStoreEntityConverter converter)
+        public EventBus(INotificationPublisher notificationPublisher, IEventStoreContext context, IEventStoreEntityTypeConverter converter)
         {
             _notificationPublisher = notificationPublisher ?? throw new ArgumentNullException(nameof(notificationPublisher));
             _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -85,7 +85,7 @@ namespace Xpandables.Net.Notifications
         {
             try
             {
-                if (_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!) is not ICommandQueryEvent @event)
+                if (_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.TypeFullName)!) is not ICommandQueryEvent @event)
                     return false;
 
                 await _notificationPublisher.PublishAsync(@event).ConfigureAwait(false);

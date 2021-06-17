@@ -27,6 +27,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.DomainEvents;
+using Xpandables.Net.Entities;
 using Xpandables.Net.Notifications;
 
 namespace Xpandables.Net.Database
@@ -40,7 +41,7 @@ namespace Xpandables.Net.Database
         where TAggregateId : notnull, AggregateId
     {
         private readonly IEventStoreContext _context;
-        private readonly IStoreEntityConverter _converter;
+        private readonly IEventStoreEntityTypeConverter _converter;
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventStore{TAggregateId}"/>.
@@ -48,7 +49,7 @@ namespace Xpandables.Net.Database
         /// <param name="context">The context to be used.</param>
         /// <param name="converter">The converter.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public EventStore(IEventStoreContext context, IStoreEntityConverter converter)
+        public EventStore(IEventStoreContext context, IEventStoreEntityTypeConverter converter)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _converter = converter ?? throw new ArgumentNullException(nameof(converter));
@@ -57,18 +58,8 @@ namespace Xpandables.Net.Database
         ///<inheritdoc/>
         public virtual async Task AppendEventAsync(IEvent<TAggregateId> @event, CancellationToken cancellationToken = default)
         {
-            if (@event is IDomainEvent<TAggregateId> domainEvent)
-            {
-                var data = Encoding.UTF8.GetBytes(_converter.Serialize(domainEvent, domainEvent.GetType()));
-                var entityEvent = new DomainEventEntity(domainEvent.Guid, domainEvent.AggregateId, domainEvent.GetType().AssemblyQualifiedName!, domainEvent.Version, true, data);
-                await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
-            }
-            else if (@event is INotification<TAggregateId> integrationEvent)
-            {
-                var data = Encoding.UTF8.GetBytes(_converter.Serialize(integrationEvent, integrationEvent.GetType()));
-                var entityEvent = new NotificationEntity(integrationEvent.GetType().AssemblyQualifiedName!, true, data);
-                await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
-            }
+            var entityEvent = GetEventEntity(_converter, @event);
+            await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
@@ -89,12 +80,7 @@ namespace Xpandables.Net.Database
                     .Remove(oldSnapShot);
 
             var snapShot = new SnapShot<TAggregateId>(originator.CreateMemento(), aggregate.AggregateId, aggregate.Version);
-
-            var snapShotTypeName = snapShot.GetType().AssemblyQualifiedName!;
-            var serialized = _converter.Serialize(snapShot, snapShot.GetType());
-            var data = Encoding.UTF8.GetBytes(serialized);
-
-            var snapShotEnity = new SnapShotEntity(aggregate.AggregateId, snapShotTypeName, snapShot.Version, true, data);
+            var snapShotEnity = GetEventEntity(_converter, snapShot);
 
             await _context.InsertAsync(snapShotEnity, cancellationToken).ConfigureAwait(false);
         }
@@ -104,7 +90,7 @@ namespace Xpandables.Net.Database
             => await _context.Set<SnapShotEntity>()
                 .Where(w => w.AggregateId == aggreagteId && w.Version != -1)
                 .OrderByDescending(o => o.CreatedOn)
-                .Select(entity => (ISnapShot<TAggregateId>)_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!))
+                .Select(entity => (ISnapShot<TAggregateId>)_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.TypeFullName)!))
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
 
@@ -113,7 +99,7 @@ namespace Xpandables.Net.Database
             => _context.Set<DomainEventEntity>()
                 .Where(w => w.AggregateId == aggreagateId)
                 .OrderBy(o => o.Version)
-                .Select(entity => (IDomainEvent<TAggregateId>)_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!))
+                .Select(entity => (IDomainEvent<TAggregateId>)_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.TypeFullName)!))
                 .AsAsyncEnumerable();
 
         ///<inheritdoc/>
@@ -128,7 +114,7 @@ namespace Xpandables.Net.Database
                 cancellationToken)
                 .ConfigureAwait(false))
             {
-                yield return (IDomainEvent<TAggregateId>)_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.Type)!);
+                yield return (IDomainEvent<TAggregateId>)_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.TypeFullName)!);
             }
         }
 
@@ -142,6 +128,23 @@ namespace Xpandables.Net.Database
                 .CountAsync(c => c.AggregateId == aggregateId && c.Version > snapShotVersion,
                 cancellationToken)
                 .ConfigureAwait(false);
+        }
+
+        static IEntity GetEventEntity(IEventStoreEntityTypeConverter converter, object source)
+        {
+            var typeFullName = source.GetType().AssemblyQualifiedName!;
+            var typeName = source.GetType().GetNameWithoutGenericArity();
+            var isJson = true;
+            var json = converter.Serialize(source, source.GetType());
+            var data = Encoding.UTF8.GetBytes(json);
+
+            return source switch
+            {
+                IDomainEvent<TAggregateId> domain => new DomainEventEntity(domain.Guid, domain.AggregateId, typeFullName, typeName, domain.Version, isJson, data),
+                INotification<TAggregateId> => new NotificationEntity(typeFullName, typeName, isJson, data),
+                ISnapShot<TAggregateId> snapShot => new SnapShotEntity(snapShot.AggregateId, typeFullName, typeName, snapShot.Version, isJson, data),
+                _ => throw new ArgumentException($"'{source.GetType().Name}' Expected IDomainEvent, INotification or ISnapShot")
+            };
         }
     }
 }

@@ -16,6 +16,8 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Linq;
+using System.Text;
 using System.Text.Json.Serialization;
 
 using Xpandables.Net.Entities;
@@ -28,9 +30,14 @@ namespace Xpandables.Net.Aggregates
     public abstract class StoreEntity : Entity
     {
         /// <summary>
-        /// Gets the .Net Framework content type.
+        /// Gets the .Net Framework content type full name.
         /// </summary>
-        public string Type { get; }
+        public string TypeFullName { get; }
+
+        /// <summary>
+        /// Gets the .Net Framework content type name.
+        /// </summary>
+        public string TypeName { get; }
 
         /// <summary>
         /// Determines whether or not the data is JSON.
@@ -45,16 +52,36 @@ namespace Xpandables.Net.Aggregates
         /// <summary>
         /// Constructs a new instance of <see cref="StoreEntity"/> from the specified data.
         /// </summary>
-        /// <param name="type">the type of the content.</param>
+        /// <param name="typeFullName">the full type name of the content.</param>
+        /// <param name="typeName">The type name of the content.</param>
         /// <param name="isJson">is JSON content or not.</param>
         /// <param name="data">The content as array of bytes.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="type"/> or <paramref name="data"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="typeFullName"/> or <paramref name="data"/> is null.</exception>
         [JsonConstructor]
-        protected StoreEntity(string type, bool isJson, byte[] data)
+        protected StoreEntity(string typeFullName, string typeName, bool isJson, byte[] data)
         {
-            Type = type ?? throw new ArgumentNullException(nameof(type));
+            TypeFullName = typeFullName ?? throw new ArgumentNullException(nameof(typeFullName));
+            TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
             IsJson = isJson;
             Data = data ?? throw new ArgumentNullException(nameof(data));
+        }
+
+        ///<inheritdoc/>
+        protected override string KeyGenerator()
+        {
+            var stringBuilder = new StringBuilder();
+
+            Enumerable
+               .Range(65, 26)
+                .Select(e => ((char)e).ToString())
+                .Concat(Enumerable.Range(97, 26).Select(e => ((char)e).ToString()))
+                .Concat(Enumerable.Range(0, 10).Select(e => e.ToString()))
+                .OrderBy(_ => Guid.NewGuid())
+                .Take(16)
+                .ToList()
+                .ForEach(e => stringBuilder.Append(e));
+
+            return stringBuilder.ToString().ToUpperInvariant();
         }
     }
 }

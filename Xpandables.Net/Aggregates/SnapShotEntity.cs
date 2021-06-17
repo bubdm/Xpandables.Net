@@ -29,8 +29,8 @@ namespace Xpandables.Net.Aggregates
     {
         ///<inheritdoc/>
         [JsonConstructor]
-        public SnapShotEntity(string aggregateId, string type, long version, bool isJson, byte[] data)
-            : base(type, isJson, data)
+        public SnapShotEntity(string aggregateId, string typeFullName, string typeName, long version, bool isJson, byte[] data)
+            : base(typeFullName, typeName, isJson, data)
         {
             AggregateId = aggregateId;
             Version = version;
