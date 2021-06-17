@@ -19,6 +19,7 @@ namespace Xpandables.Net.Components
 {
     /// <summary>
     /// An input component for editing <see cref="string"/> values on input key.
+    /// Its also use the css style is-valid and is-invalid.
     /// </summary>
     public sealed partial class InputTextOnInput
     {

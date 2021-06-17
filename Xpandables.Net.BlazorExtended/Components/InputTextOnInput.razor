@@ -4,6 +4,6 @@
 
 @* Bind the oninput event *@
 <input @attributes="AdditionalAttributes"
-       class="@CssClass"
+       class="@CssClass.Replace(" valid", " is-valid").Replace(" invalid", " is-invalid")"
        value="@CurrentValue"
        @oninput="EventCallback.Factory.CreateBinder<string?>(this, __value => CurrentValueAsString = __value, CurrentValueAsString)" />
