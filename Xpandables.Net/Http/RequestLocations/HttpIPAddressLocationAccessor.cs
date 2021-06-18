@@ -24,7 +24,7 @@ namespace Xpandables.Net.Http.RequestLocations
     /// <summary>
     /// Default implementation for <see cref="IHttpIPAddressLocationAccessor"/>.
     /// </summary>
-    public sealed class HttpIPAddressLocationAccessor : IHttpIPAddressLocationAccessor
+    public class HttpIPAddressLocationAccessor : IHttpIPAddressLocationAccessor
     {
         private readonly IHttpRestClientHandler _httpRestClientHandler;
 
@@ -40,7 +40,7 @@ namespace Xpandables.Net.Http.RequestLocations
         }
 
         ///<inheritdoc/>
-        public async Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(
+        public virtual async Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(
             IPAddressLocationRequest request,
             CancellationToken cancellationToken = default)
         {
