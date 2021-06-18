@@ -218,6 +218,25 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the default <see cref="IAggregateAccessor{TAggregateId, TAggregate}"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="aggregateAccessorType">The generic aggregate accessor type that implements <see cref="IAggregate{TAggregateId}"/> interface.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="aggregateAccessorType"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXAggregateAccessor(this IXpandableServiceBuilder services, Type aggregateAccessorType)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = aggregateAccessorType ?? throw new ArgumentNullException(nameof(aggregateAccessorType));
+            if (!aggregateAccessorType.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAggregateAccessor<,>)))
+                throw new ArgumentException(
+                    $"the type '{nameof(aggregateAccessorType)}' must implement the '{typeof(IAggregateAccessor<,>).GetNameWithoutGenericArity()}' interface.");
+
+            services.Services.AddScoped(typeof(IAggregateAccessor<,>), aggregateAccessorType);
+            return services;
+        }
+
+        /// <summary>
         /// Adds the <see cref="IDomainEventPublisher"/> type implementation to the services with scope life time.
         /// </summary>
         /// <typeparam name="TDomainEventPublisher">The domain event publisher type implementation.</typeparam>
