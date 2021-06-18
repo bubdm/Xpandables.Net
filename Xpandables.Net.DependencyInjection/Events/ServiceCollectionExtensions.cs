@@ -169,17 +169,17 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TStoreEntityConverter"/> as <see cref="IEventStoreEntityTypeConverter"/> event store entity converter 
+        /// Adds the <typeparamref name="TEvtnStoreEntityTypeConverter"/> as <see cref="IEventStoreEntityTypeConverter"/> event store entity converter 
         /// implementation to the services with singleton life time.
         /// </summary>
-        /// <typeparam name="TStoreEntityConverter">Type of the converter.</typeparam>
+        /// <typeparam name="TEvtnStoreEntityTypeConverter">Type of the converter.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEventStoreConverter<TStoreEntityConverter>(this IXpandableServiceBuilder services)
-            where TStoreEntityConverter : class, IEventStoreEntityTypeConverter
+        public static IXpandableServiceBuilder AddXEventStoreEntityTypeConverter<TEvtnStoreEntityTypeConverter>(this IXpandableServiceBuilder services)
+            where TEvtnStoreEntityTypeConverter : class, IEventStoreEntityTypeConverter
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddSingleton<IEventStoreEntityTypeConverter, TStoreEntityConverter>();
+            services.Services.AddSingleton<IEventStoreEntityTypeConverter, TEvtnStoreEntityTypeConverter>();
             return services;
         }
 
