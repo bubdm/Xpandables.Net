@@ -34,6 +34,58 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
+        /// Adds the <see cref="IHttpRestClientRequestBuilder"/> default implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> services.</returns>
+        public static IXpandableServiceBuilder AddXHttpRestClientRequestBuilder(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.Services.AddScoped<IHttpRestClientRequestBuilder, HttpRestClientRequestBuilder>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IHttpRestClientResponseBuilder"/> default implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> services.</returns>
+        public static IXpandableServiceBuilder AddXHttpRestClientResponseBuilder(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.Services.AddScoped<IHttpRestClientResponseBuilder, HttpRestClientResponseBuilder>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IHttpRestClientRequestBuilder"/> Newtonsoft implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> services.</returns>
+        public static IXpandableServiceBuilder AddXHttpRestClientRequestNewtonsoftBuilder(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.Services.AddScoped<IHttpRestClientRequestBuilder, HttpRestClientNewtonsoftRequestBuilder>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IHttpRestClientResponseBuilder"/> Newtonsoft implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> services.</returns>
+        public static IXpandableServiceBuilder AddXHttpRestClientResponseNewtonsoftBuilder(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.Services.AddScoped<IHttpRestClientResponseBuilder, HttpRestClientNewtonsoftResponseBuilder>();
+            return services;
+        }
+
+        /// <summary>
         ///  Adds the <see cref="IHttpClientFactory"/> and related services to the collection and configures a binding between the default implementation of <see cref="IHttpRestClientHandler"/> type
         ///  and a named <see cref="HttpClient"/>. The client name will be set to the type name of <see cref="IHttpRestClientHandler"/>.
         /// </summary>
