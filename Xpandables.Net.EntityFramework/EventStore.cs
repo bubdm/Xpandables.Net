@@ -153,7 +153,7 @@ namespace Xpandables.Net.Database
             return source switch
             {
                 IDomainEvent<TAggregateId> domain => new DomainEventEntity(domain.Guid, domain.AggregateId, typeFullName, typeName, domain.Version, isJson, data),
-                INotification<TAggregateId> => new NotificationEntity(typeFullName, typeName, isJson, data),
+                INotification<TAggregateId> notifcation => new NotificationEntity(notifcation.AggregateId, typeFullName, typeName, isJson, data),
                 ISnapShot<TAggregateId> snapShot => new SnapShotEntity(snapShot.AggregateId, typeFullName, typeName, snapShot.Version, isJson, data),
                 _ => throw new ArgumentException($"'{source.GetType().Name}' Expected IDomainEvent, INotification or ISnapShot")
             };

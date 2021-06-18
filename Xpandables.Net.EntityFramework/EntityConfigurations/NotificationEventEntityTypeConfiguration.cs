@@ -35,6 +35,7 @@ namespace Xpandables.Net.Database.EntityConfigurations
             builder.HasIndex(p => p.Id)
                 .IsUnique();
 
+            builder.Property(p => p.AggregateId).IsConcurrencyToken();
             builder.Property(p => p.Data);
             builder.Property(p => p.IsJson);
             builder.Property(p => p.TypeFullName);

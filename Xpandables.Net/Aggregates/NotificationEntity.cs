@@ -26,7 +26,7 @@ namespace Xpandables.Net.Aggregates
     {
         ///<inheritdoc/>
         [JsonConstructor]
-        public NotificationEntity(string typeFullName, string typeName, bool isJson, byte[] data)
-            : base(typeFullName, typeName, isJson, data) { }
+        public NotificationEntity(string aggregateId, string typeFullName, string typeName, bool isJson, byte[] data)
+            : base(aggregateId, typeFullName, typeName, isJson, data) { }
     }
 }

@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -29,6 +30,12 @@ namespace Xpandables.Net.Aggregates
     /// </summary>
     public abstract class StoreEntity : Entity
     {
+        /// <summary>
+        /// Gets the string representation of the aggregate related identifier.
+        /// </summary>
+        [ConcurrencyCheck]
+        public string AggregateId { get; }
+
         /// <summary>
         /// Gets the .Net Framework content type full name.
         /// </summary>
@@ -52,14 +59,16 @@ namespace Xpandables.Net.Aggregates
         /// <summary>
         /// Constructs a new instance of <see cref="StoreEntity"/> from the specified data.
         /// </summary>
+        /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="typeFullName">the full type name of the content.</param>
         /// <param name="typeName">The type name of the content.</param>
         /// <param name="isJson">is JSON content or not.</param>
         /// <param name="data">The content as array of bytes.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="typeFullName"/> or <paramref name="data"/> is null.</exception>
         [JsonConstructor]
-        protected StoreEntity(string typeFullName, string typeName, bool isJson, byte[] data)
+        protected StoreEntity(string aggregateId, string typeFullName, string typeName, bool isJson, byte[] data)
         {
+            AggregateId = aggregateId ?? throw new ArgumentNullException(nameof(aggregateId));
             TypeFullName = typeFullName ?? throw new ArgumentNullException(nameof(typeFullName));
             TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
             IsJson = isJson;
