@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Linq;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -108,6 +109,26 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             services.Services.AddScoped(typeof(IEntityAccessor<>), typeof(EntityAccessor<>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IEntityAccessor{TEntity}"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="entityAccessorType">The generic entity accessor that implements <see cref="IEntityAccessor{TEntity}"/> interface.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="entityAccessorType"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXEntityAccessor(this IXpandableServiceBuilder services, Type entityAccessorType)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = entityAccessorType ?? throw new ArgumentNullException(nameof(entityAccessorType));
+
+            if (!entityAccessorType.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityAccessor<>)))
+                throw new ArgumentException(
+                    $"the type '{nameof(entityAccessorType)}' must implement the '{typeof(IEntityAccessor<>).GetNameWithoutGenericArity()}' interface.");
+
+            services.Services.AddScoped(typeof(IEntityAccessor<>), entityAccessorType);
             return services;
         }
 
