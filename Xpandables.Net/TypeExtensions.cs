@@ -40,6 +40,7 @@ namespace Xpandables.Net
         /// <typeparam name="T">The type to be casted to.</typeparam>
         /// <param name="obj">The object to cast.</param>
         /// <returns>The casted object to <typeparamref name="T"/> type.</returns>
+        /// <exception cref="InvalidCastException">Unable to cast <paramref name="obj"/> to <typeparamref name="T"/> type.</exception>
         public static T As<T>(this object obj) => (T)obj;
 
         /// <summary>
@@ -49,6 +50,7 @@ namespace Xpandables.Net
         /// <param name="obj">The object to cast.</param>
         /// <param name="_">The target object to get its type.</param>
         /// <returns>The casted object to <typeparamref name="T"/> type.</returns>
+        /// <exception cref="InvalidCastException">Unable to cast <paramref name="obj"/> to <typeparamref name="T"/> type.</exception>
         public static T As<T>(this object obj, T _) => (T)obj;
 
         /// <summary>
