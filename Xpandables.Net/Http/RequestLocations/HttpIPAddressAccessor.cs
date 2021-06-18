@@ -61,7 +61,8 @@ namespace Xpandables.Net.Http.RequestLocations
         private readonly IHttpRestClientHandler _httpRestClientHandler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpIPAddressAccessor"/> class that uses the https://ipinfo.io/ip to retrieve the user IP address.
+        /// Initializes a new instance of the <see cref="HttpIPAddressAccessor"/> class that 
+        /// uses the https://ipinfo.io/ip to retrieve the user IP address.
         /// </summary>
         /// <param name="httpRestClientHandler">The target handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientHandler"/> is null.</exception>

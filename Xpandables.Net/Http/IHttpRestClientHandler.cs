@@ -24,11 +24,15 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Http
 {
     /// <summary>
-    /// Provides with methods to handle <see cref="IHttpRestClientRequest"/> or <see cref="IHttpRestClientRequest{TResponse}"/> requests using a typed client HTTP Client.
+    /// Provides with methods to handle <see cref="IHttpRestClientRequest"/> 
+    /// or <see cref="IHttpRestClientRequest{TResponse}"/> requests using a typed client HTTP Client.
     /// The request should implement one of the following interfaces :
-    /// <see cref="IStringRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, <see cref="IFormUrlEncodedRequest"/>,
-    /// <see cref="IMultipartRequest"/>, <see cref="IQueryStringLocationRequest"/>, <see cref="ICookieLocationRequest"/>, <see cref="IHeaderLocationRequest"/>
-    /// or <see cref="IPathStringLocationRequest"/>, and must be decorated with <see cref="HttpRestClientAttribute"/> or implement <see cref="IHttpRestClientAttributeProvider"/>.
+    /// <see cref="IStringRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, 
+    /// <see cref="IFormUrlEncodedRequest"/>,
+    /// <see cref="IMultipartRequest"/>, <see cref="IQueryStringLocationRequest"/>, <see cref="ICookieLocationRequest"/>,
+    /// <see cref="IHeaderLocationRequest"/>
+    /// or <see cref="IPathStringLocationRequest"/>, and must be decorated with <see cref="HttpRestClientAttribute"/> 
+    /// or implement <see cref="IHttpRestClientAttributeProvider"/>.
     /// </summary>
     public interface IHttpRestClientHandler : IDisposable
     {
@@ -42,31 +46,40 @@ namespace Xpandables.Net.Http
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="request">The request to act with. The request must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="request">The request to act with. The request must be decorated with 
+        /// the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> SendAsync<TResult>(IHttpRestClientAsyncRequest<TResult> request, CancellationToken cancellationToken = default);
+        Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> SendAsync<TResult>(
+            IHttpRestClientAsyncRequest<TResult> request,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Sends the request that does not return a response.
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>
-        /// <param name="request">The request to act with. The request must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="request">The request to act with. The request must be decorated with t
+        /// he <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse> SendAsync(IHttpRestClientRequest request, CancellationToken cancellationToken = default);
+        Task<HttpRestClientResponse> SendAsync(
+            IHttpRestClientRequest request,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Sends the request that returns a response of <typeparamref name="TResult"/> type.
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="request">The query to act with. The query must be decorated with the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="request">The query to act with. The query must be decorated with t
+        /// he <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse<TResult>> SendAsync<TResult>(IHttpRestClientRequest<TResult> request, CancellationToken cancellationToken = default);
+        Task<HttpRestClientResponse<TResult>> SendAsync<TResult>(
+            IHttpRestClientRequest<TResult> request,
+            CancellationToken cancellationToken = default);
     }
 }

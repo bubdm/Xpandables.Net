@@ -29,7 +29,8 @@ namespace Xpandables.Net.Http.RequestLocations
         private readonly IHttpRestClientHandler _httpRestClientHandler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpIPAddressLocationAccessor"/> class that uses the http://api.ipstack.com to retrieve the user location.
+        /// Initializes a new instance of the <see cref="HttpIPAddressLocationAccessor"/> class 
+        /// that uses the http://api.ipstack.com to retrieve the user location.
         /// </summary>
         /// <param name="httpRestClientHandler">The target handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientHandler"/> is null.</exception>
@@ -39,7 +40,9 @@ namespace Xpandables.Net.Http.RequestLocations
         }
 
         ///<inheritdoc/>
-        public async Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(IPAddressLocationRequest request, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(
+            IPAddressLocationRequest request,
+            CancellationToken cancellationToken = default)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
             return await _httpRestClientHandler.SendAsync(request, cancellationToken).ConfigureAwait(false);

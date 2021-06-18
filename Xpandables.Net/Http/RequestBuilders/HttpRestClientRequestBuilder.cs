@@ -46,11 +46,15 @@ namespace Xpandables.Net.Http.RequestBuilders
                 return path;
 
             foreach (var parameter in pathString)
-                path = path.Replace($"{{{parameter.Key}}}", parameter.Value, StringComparison.InvariantCultureIgnoreCase);
+                path = path.Replace(
+                    $"{{{parameter.Key}}}",
+                    parameter.Value,
+                    StringComparison.InvariantCultureIgnoreCase);
 
             return path;
         }
 
+        // From internal code.
         ///<inheritdoc/>
         public virtual string AddQueryString(string path, IDictionary<string, string?>? queryString)
         {
@@ -93,7 +97,8 @@ namespace Xpandables.Net.Http.RequestBuilders
         public virtual HttpContent ReadByteArrayContent<TSource>(TSource source) where TSource : class
         {
             ValidateInterfaceImplementation<IByteArrayRequest>(source);
-            if (source is IByteArrayRequest byteArrayRequest && byteArrayRequest.GetByteContent() is { } byteContent)
+            if (source is IByteArrayRequest byteArrayRequest 
+                && byteArrayRequest.GetByteContent() is { } byteContent)
             {
                 return new ByteArrayContent(byteContent);
             }
@@ -106,7 +111,8 @@ namespace Xpandables.Net.Http.RequestBuilders
         public virtual HttpContent ReadFormUrlEncodedContent<TSource>(TSource source) where TSource : class
         {
             ValidateInterfaceImplementation<IFormUrlEncodedRequest>(source);
-            if (source is IFormUrlEncodedRequest formUrlEncodedRequest && formUrlEncodedRequest.GetFormContent() is { } formContent)
+            if (source is IFormUrlEncodedRequest formUrlEncodedRequest 
+                && formUrlEncodedRequest.GetFormContent() is { } formContent)
             {
                 return new FormUrlEncodedContent(formContent);
             }
@@ -115,18 +121,21 @@ namespace Xpandables.Net.Http.RequestBuilders
         }
 
         ///<inheritdoc/>
-        public virtual HttpRestClientAttribute ReadHttpClientAttributeFromSource<TSource>(TSource source) where TSource : class
+        public virtual HttpRestClientAttribute ReadHttpClientAttributeFromSource<TSource>(TSource source)
+            where TSource : class
         {
             if (source is IHttpRestClientAttributeProvider httpRestClientAttributeProvider)
                 return httpRestClientAttributeProvider.ReadHttpRestClientAttribute();
 
             return source.GetType().GetCustomAttribute<HttpRestClientAttribute>()
-                ?? throw new ArgumentNullException($"{nameof(HttpRestClientAttribute)} excepted from : {source.GetType().Name}");
+                ?? throw new ArgumentNullException(
+                    $"{nameof(HttpRestClientAttribute)} excepted from : {source.GetType().Name}");
         }
 
         ///<inheritdoc/>
         [return: MaybeNull]
-        public virtual HttpContent ReadMultipartContent<TSource>(TSource source, HttpRestClientAttribute attribute) where TSource : class
+        public virtual HttpContent ReadMultipartContent<TSource>(TSource source, HttpRestClientAttribute attribute)
+            where TSource : class
         {
             ValidateInterfaceImplementation<IMultipartRequest>(source);
             if (source is not IMultipartRequest multipartRequest) return default;
@@ -141,10 +150,13 @@ namespace Xpandables.Net.Http.RequestBuilders
         }
 
         ///<inheritdoc/>
-        public virtual async Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source) where TSource : class
+        public virtual async Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source)
+            where TSource : class
         {
             ValidateInterfaceImplementation<IStreamRequest>(source);
-            object streamContent = source is IStreamRequest streamRequest ? streamRequest.GetStreamContent() : source;
+            object streamContent = source is IStreamRequest streamRequest 
+                ? streamRequest.GetStreamContent()
+                : source;
 
             var memoryStream = new MemoryStream();
             await JsonSerializer.SerializeAsync(memoryStream, streamContent).ConfigureAwait(false);
@@ -153,22 +165,37 @@ namespace Xpandables.Net.Http.RequestBuilders
         }
 
         ///<inheritdoc/>
-        public virtual HttpContent ReadStringContent<TSource>(TSource source, HttpRestClientAttribute attribute) where TSource : class
+        public virtual HttpContent ReadStringContent<TSource>(TSource source, HttpRestClientAttribute attribute)
+            where TSource : class
         {
             ValidateInterfaceImplementation<IStringRequest>(source, true);
             if (source is IStringRequest stringRequest)
-                return new StringContent(JsonSerializer.Serialize(stringRequest.GetStringContent()), Encoding.UTF8, attribute.ContentType);
+            {
+                return new StringContent(
+                    JsonSerializer.Serialize(stringRequest.GetStringContent()),
+                    Encoding.UTF8,
+                    attribute.ContentType);
+            }
 
             ValidateInterfaceImplementation<IPatchRequest>(source, true);
             if (source is IPatchRequest patchRequest)
-                return new StringContent(JsonSerializer.Serialize(patchRequest.GetPatchDocument()), Encoding.UTF8, attribute.ContentType);
+            {
+                return new StringContent(
+                    JsonSerializer.Serialize(patchRequest.GetPatchDocument()),
+                    Encoding.UTF8,
+                    attribute.ContentType);
+            }
 
             return new StringContent(JsonSerializer.Serialize(source), Encoding.UTF8, attribute.ContentType);
         }
 
 
         ///<inheritdoc/>
-        public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageFromAttributeAsync<TSource>(HttpRestClientAttribute attribute, TSource source, HttpClient httpClient) where TSource : class
+        public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageFromAttributeAsync<TSource>(
+            HttpRestClientAttribute attribute,
+            TSource source,
+            HttpClient httpClient)
+            where TSource : class
         {
             _ = attribute ?? throw new ArgumentNullException(nameof(attribute));
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -205,24 +232,37 @@ namespace Xpandables.Net.Http.RequestBuilders
             }
 
             if (attribute.IsSecured)
-                httpRequestMessage.Headers.Authorization = httpClient.DefaultRequestHeaders.Authorization ?? new AuthenticationHeaderValue(attribute.Scheme);
+            {
+                httpRequestMessage.Headers.Authorization = 
+                    httpClient.DefaultRequestHeaders.Authorization ?? new AuthenticationHeaderValue(attribute.Scheme);
+            }
 
             return httpRequestMessage;
         }
 
         ///<inheritdoc/>
-        public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageFromSourceAsync<TSource>(TSource source, HttpClient httpClient) where TSource : class
+        public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageFromSourceAsync<TSource>(
+            TSource source,
+            HttpClient httpClient)
+            where TSource : class
         {
             var attribute = ReadHttpClientAttributeFromSource(source);
             return await WriteHttpRequestMessageFromAttributeAsync(attribute, source, httpClient).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
-        public virtual void WriteLocationCookie<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage) where TSource : class
+        public virtual void WriteLocationCookie<TSource>(
+            TSource source,
+            HttpRestClientAttribute attribute,
+            HttpRequestMessage httpRequestMessage)
+            where TSource : class
         {
-            if ((attribute.In & ParameterLocation.Cookie) != ParameterLocation.Cookie) return;
+            if ((attribute.In & ParameterLocation.Cookie) != ParameterLocation.Cookie)
+                return;
+
             ValidateInterfaceImplementation<ICookieLocationRequest>(source);
-            if (source is not ICookieLocationRequest cookieLocationRequest) return;
+            if (source is not ICookieLocationRequest cookieLocationRequest)
+                return;
 
             var cookieSource = cookieLocationRequest.GetCookieSource();
             foreach (var parameter in cookieSource)
@@ -230,7 +270,11 @@ namespace Xpandables.Net.Http.RequestBuilders
         }
 
         ///<inheritdoc/>
-        public virtual void WriteLocationHeader<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage) where TSource : class
+        public virtual void WriteLocationHeader<TSource>(
+            TSource source,
+            HttpRestClientAttribute attribute,
+            HttpRequestMessage httpRequestMessage)
+            where TSource : class
         {
             if ((attribute.In & ParameterLocation.Header) != ParameterLocation.Header) return;
 
@@ -246,23 +290,30 @@ namespace Xpandables.Net.Http.RequestBuilders
         }
 
         ///<inheritdoc/>
-        public virtual void WriteLocationPath<TSource>(TSource source, HttpRestClientAttribute attribute) where TSource : class
+        public virtual void WriteLocationPath<TSource>(TSource source, HttpRestClientAttribute attribute)
+            where TSource : class
         {
-            if ((attribute.In & ParameterLocation.Path) != ParameterLocation.Path) return;
+            if ((attribute.In & ParameterLocation.Path) != ParameterLocation.Path)
+                return;
 
             ValidateInterfaceImplementation<IPathStringLocationRequest>(source);
-            if (source is not IPathStringLocationRequest pathStringRequest) return;
+            if (source is not IPathStringLocationRequest pathStringRequest)
+                return;
 
             var pathString = pathStringRequest.GetPathStringSource();
             attribute.Path = AddPathString(attribute.Path!, pathString);
         }
 
         ///<inheritdoc/>
-        public virtual void WriteLocationQuery<TSource>(TSource source, HttpRestClientAttribute attribute) where TSource : class
+        public virtual void WriteLocationQuery<TSource>(TSource source, HttpRestClientAttribute attribute)
+            where TSource : class
         {
-            if ((attribute.In & ParameterLocation.Query) != ParameterLocation.Query) return;
+            if ((attribute.In & ParameterLocation.Query) != ParameterLocation.Query)
+                return;
+
             ValidateInterfaceImplementation<IQueryStringLocationRequest>(source);
-            if (source is not IQueryStringLocationRequest queryStringRequest) return;
+            if (source is not IQueryStringLocationRequest queryStringRequest)
+                return;
 
             var queryString = queryStringRequest.GetQueryStringSource();
             attribute.Path = AddQueryString(attribute.Path!, queryString);
@@ -274,12 +325,16 @@ namespace Xpandables.Net.Http.RequestBuilders
         /// </summary>
         /// <typeparam name="TInterface">The type interface to find.</typeparam>
         /// <param name="source">The source object to act on.</param>
-        /// <param name="implementationIsOptional">The value indicating whether or not the interface implementation is mandatory.</param>
-        /// <exception cref="ArgumentException">The <paramref name="source"/> must implement <typeparamref name="TInterface"/> interface.</exception>
+        /// <param name="implementationIsOptional">The value indicating whether 
+        /// or not the interface implementation is mandatory.</param>
+        /// <exception cref="ArgumentException">The <paramref name="source"/> 
+        /// must implement <typeparamref name="TInterface"/> interface.</exception>
         protected virtual void ValidateInterfaceImplementation<TInterface>(object source, bool implementationIsOptional = false)
         {
             if (!(source is TInterface) && !implementationIsOptional)
+            {
                 throw new ArgumentException($"{source.GetType().Name} must implement {typeof(TInterface).Name} interface");
+            }
         }
     }
 }

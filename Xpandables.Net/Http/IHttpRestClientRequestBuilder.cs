@@ -47,17 +47,22 @@ namespace Xpandables.Net.Http
         /// <param name="httpClient">The target HTTP client.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <returns>A task that represents an <see cref="HttpRequestMessage"/> object.</returns>
-        Task<HttpRequestMessage> WriteHttpRequestMessageFromAttributeAsync<TSource>(HttpRestClientAttribute attribute, TSource source, HttpClient httpClient)
+        Task<HttpRequestMessage> WriteHttpRequestMessageFromAttributeAsync<TSource>(
+            HttpRestClientAttribute attribute,
+            TSource source,
+            HttpClient httpClient)
             where TSource : class;
 
         /// <summary>
-        /// Returns the <see cref="HttpRestClientAttribute"/> found in the source as decorated attribute or <see cref="IHttpRestClientAttributeProvider"/> implementation.
+        /// Returns the <see cref="HttpRestClientAttribute"/> found in the source as decorated attribute 
+        /// or <see cref="IHttpRestClientAttributeProvider"/> implementation.
         /// If not found, throws an exception.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
         /// <returns>A <see cref="HttpRestClientAttribute"/> attribute.</returns>
-        /// <exception cref="ArgumentNullException"><see cref="HttpRestClientAttribute"/> expected or <see cref="IHttpRestClientAttributeProvider"/> implementation.</exception>
+        /// <exception cref="ArgumentNullException"><see cref="HttpRestClientAttribute"/> expected 
+        /// or <see cref="IHttpRestClientAttributeProvider"/> implementation.</exception>
         HttpRestClientAttribute ReadHttpClientAttributeFromSource<TSource>(TSource source)
             where TSource : class;
 
@@ -81,7 +86,8 @@ namespace Xpandables.Net.Http
         string AddQueryString(string path, IDictionary<string, string?>? queryString);
 
         /// <summary>
-        /// Writes location path using <see cref="AddPathString(string, IDictionary{string, string})"/> and <see cref="IPathStringLocationRequest.GetPathStringSource"/>.
+        /// Writes location path using <see cref="AddPathString(string, IDictionary{string, string})"/> 
+        /// and <see cref="IPathStringLocationRequest.GetPathStringSource"/>.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
@@ -90,7 +96,8 @@ namespace Xpandables.Net.Http
             where TSource : class;
 
         /// <summary>
-        /// Writes location query using <see cref="AddQueryString(string, IDictionary{string, string?}?)"/> and <see cref="IQueryStringLocationRequest.GetQueryStringSource"/>.
+        /// Writes location query using <see cref="AddQueryString(string, IDictionary{string, string?}?)"/> 
+        /// and <see cref="IQueryStringLocationRequest.GetQueryStringSource"/>.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
@@ -99,7 +106,8 @@ namespace Xpandables.Net.Http
             where TSource : class;
 
         /// <summary>
-        /// Writes location cookies (add elements to <see cref="HttpRequestMessage.Options"/>) using <see cref="ICookieLocationRequest.GetCookieSource"/>.
+        /// Writes location cookies (add elements to <see cref="HttpRequestMessage.Options"/>) 
+        /// using <see cref="ICookieLocationRequest.GetCookieSource"/>.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
@@ -139,7 +147,8 @@ namespace Xpandables.Net.Http
             where TSource : class;
 
         /// <summary>
-        /// Returns the source as string content using <see cref="IStringRequest.GetStringContent"/> or <see cref="IPatchRequest"/> if available, if not use the hole source.
+        /// Returns the source as string content using <see cref="IStringRequest.GetStringContent"/> 
+        /// or <see cref="IPatchRequest"/> if available, if not use the hole source.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
@@ -149,7 +158,8 @@ namespace Xpandables.Net.Http
             where TSource : class;
 
         /// <summary>
-        /// Returns the source as stream content using <see cref="IStreamRequest.GetStreamContent"/> if available, if not use the hole source.
+        /// Returns the source as stream content using <see cref="IStreamRequest.GetStreamContent"/> 
+        /// if available, if not use the hole source.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
@@ -159,7 +169,8 @@ namespace Xpandables.Net.Http
 
         /// <summary>
         /// Returns the source as multi part content using <see cref="IMultipartRequest"/> interface.
-        /// The default implementation used <see cref="ReadByteArrayContent{TSource}(TSource)"/> and <see cref="ReadStringContent{TSource}(TSource, HttpRestClientAttribute)"/>.
+        /// The implementation must use at least <see cref="ReadByteArrayContent{TSource}(TSource)"/> 
+        /// and <see cref="ReadStringContent{TSource}(TSource, HttpRestClientAttribute)"/>.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>

@@ -40,13 +40,20 @@ namespace Xpandables.Net.Http.ResponseBuilders
         public virtual async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream)
         {
             var result = await JsonSerializer.DeserializeAsync<TResult>(
-                   stream, new JsonSerializerOptions { AllowTrailingCommas = false, WriteIndented = false, PropertyNameCaseInsensitive = true })
+                   stream, new JsonSerializerOptions
+                   {
+                       AllowTrailingCommas = false,
+                       WriteIndented = false,
+                       PropertyNameCaseInsensitive = true
+                   })
                    .ConfigureAwait(false);
             return result!;
         }
 
         ///<inheritdoc/>
-        public virtual async Task<HttpRestClientResponse> WriteBadResultResponseAsync(Func<Exception, HttpStatusCode, HttpRestClientResponse> badResponseBuilder, HttpResponseMessage httpResponse)
+        public virtual async Task<HttpRestClientResponse> WriteBadResultResponseAsync(
+            Func<Exception, HttpStatusCode, HttpRestClientResponse> badResponseBuilder,
+            HttpResponseMessage httpResponse)
         {
             var response = httpResponse.Content switch
             {
@@ -67,7 +74,9 @@ namespace Xpandables.Net.Http.ResponseBuilders
         }
 
         ///<inheritdoc/>
-        public virtual async Task<HttpRestClientResponse<TResult>> WriteSuccessAsyncEnumerableResponseAsync<TResult>(HttpResponseMessage httpResponse, Func<Stream, TResult> streamToResponseConverter)
+        public virtual async Task<HttpRestClientResponse<TResult>> WriteSuccessAsyncEnumerableResponseAsync<TResult>(
+            HttpResponseMessage httpResponse,
+            Func<Stream, TResult> streamToResponseConverter)
         {
             try
             {
@@ -99,7 +108,9 @@ namespace Xpandables.Net.Http.ResponseBuilders
         }
 
         ///<inheritdoc/>
-        public virtual async Task<HttpRestClientResponse<TResult>> WriteSuccessResultResponseAsync<TResult>(HttpResponseMessage httpResponse, Func<Stream, Task<TResult>> streamToResponseConverter)
+        public virtual async Task<HttpRestClientResponse<TResult>> WriteSuccessResultResponseAsync<TResult>(
+            HttpResponseMessage httpResponse,
+            Func<Stream, Task<TResult>> streamToResponseConverter)
         {
             try
             {
@@ -157,12 +168,18 @@ namespace Xpandables.Net.Http.ResponseBuilders
                     );
 
         ///<inheritdoc/>
-        public virtual async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(Stream stream, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public virtual async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(
+            Stream stream,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using var blockingCollection = new BlockingCollection<TResult>();
-            await using var iterator = new AsyncEnumerable<TResult>(blockingCollection.GetConsumingEnumerable(cancellationToken)).GetAsyncEnumerator(cancellationToken);
+            await using var iterator = new AsyncEnumerable<TResult>(
+                blockingCollection.GetConsumingEnumerable(cancellationToken))
+                .GetAsyncEnumerator(cancellationToken);
 
-            var enumerateStreamElementToBlockingCollectionThread = new Thread(() => EnumerateStreamElementToBlockingCollection(stream, blockingCollection, cancellationToken));
+            var enumerateStreamElementToBlockingCollectionThread = new Thread(
+                () => EnumerateStreamElementToBlockingCollection(stream, blockingCollection, cancellationToken));
+
             enumerateStreamElementToBlockingCollectionThread.Start();
 
             while (await iterator.MoveNextAsync().ConfigureAwait(false))
@@ -177,18 +194,31 @@ namespace Xpandables.Net.Http.ResponseBuilders
         /// <param name="stream">The target stream.</param>
         /// <param name="resultCollection">The collection result.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        private static void EnumerateStreamElementToBlockingCollection<TResult>(Stream stream, BlockingCollection<TResult> resultCollection, CancellationToken cancellationToken)
+        private static void EnumerateStreamElementToBlockingCollection<TResult>(
+            Stream stream,
+            BlockingCollection<TResult> resultCollection,
+            CancellationToken cancellationToken)
         {
             using var jsonStreamReader = new Utf8JsonStreamReader(stream, 32 * 1024);
 
             jsonStreamReader.Read();
             while (jsonStreamReader.Read())
             {
-                if (cancellationToken.IsCancellationRequested) break;
+                if (cancellationToken.IsCancellationRequested)
+                    break;
+
                 if (jsonStreamReader.TokenType != JsonTokenType.StartObject)
                     continue;
-                if (jsonStreamReader.Deserialise<TResult>(new JsonSerializerOptions { AllowTrailingCommas = false, WriteIndented = false, PropertyNameCaseInsensitive = true }) is { } result)
+
+                if (jsonStreamReader.Deserialise<TResult>(new JsonSerializerOptions
+                {
+                    AllowTrailingCommas = false,
+                    WriteIndented = false,
+                    PropertyNameCaseInsensitive = true
+                }) is { } result)
+                {
                     resultCollection.Add(result, cancellationToken);
+                }
             }
 
             resultCollection.CompleteAdding();

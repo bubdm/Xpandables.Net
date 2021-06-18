@@ -38,7 +38,8 @@ namespace Xpandables.Net.Http.RequestHandlers
         /// <exception cref="ArgumentNullException">The <paramref name="httpRestClientAuthorizationProvider"/> is null.</exception>
         public HttpRestClientAuthorizationHandler(IHttpRestClientAuthorizationProvider httpRestClientAuthorizationProvider)
         {
-            _httpRestClientAuthorizationProvider = httpRestClientAuthorizationProvider ?? throw new ArgumentNullException(nameof(httpRestClientAuthorizationProvider));
+            _httpRestClientAuthorizationProvider = 
+                httpRestClientAuthorizationProvider ?? throw new ArgumentNullException(nameof(httpRestClientAuthorizationProvider));
         }
 
         /// <summary>
@@ -56,7 +57,9 @@ namespace Xpandables.Net.Http.RequestHandlers
             if (request.Headers.Authorization is not { Parameter: null } authorization)
                 return await base.SendAsync(request, cancellationToken);
 
-            var token = await _httpRestClientAuthorizationProvider.ReadAuthorization() ?? throw new InvalidOperationException("Expected authorization not found.");
+            var token = await _httpRestClientAuthorizationProvider.ReadAuthorization()
+                ?? throw new InvalidOperationException("Expected authorization not found.");
+
             request.Headers.Authorization = new AuthenticationHeaderValue(authorization.Scheme, token);
 
             return await base.SendAsync(request, cancellationToken);

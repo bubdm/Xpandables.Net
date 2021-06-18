@@ -56,23 +56,33 @@ namespace Xpandables.Net.Http.RequestHandlers
         }
 
         ///<inheritdoc/>
-        public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> SendAsync<TResult>(IHttpRestClientAsyncRequest<TResult> request, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> SendAsync<TResult>(
+            IHttpRestClientAsyncRequest<TResult> request,
+            CancellationToken cancellationToken = default)
         {
             try
             {
-                using var httpRequest = await _httpRestClientRequestBuilder.WriteHttpRequestMessageFromSourceAsync(request, HttpClient).ConfigureAwait(false);
+                using var httpRequest = await _httpRestClientRequestBuilder
+                    .WriteHttpRequestMessageFromSourceAsync(request, HttpClient)
+                    .ConfigureAwait(false);
 
                 // Due to the fact that the result is an IAsyncEnumerable, the response can not be disposed before.
-                var response = await HttpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                var response = await HttpClient.SendAsync(
+                    httpRequest,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken).ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
                 {
                     return await _httpRestClientResponseBuilder.WriteSuccessAsyncEnumerableResponseAsync(
                         response,
-                        stream => _httpRestClientResponseBuilder.AsyncEnumerableBuilderFromStreamAsync<TResult>(stream, cancellationToken)).ConfigureAwait(false);
+                        stream => _httpRestClientResponseBuilder.AsyncEnumerableBuilderFromStreamAsync<TResult>(
+                            stream,
+                            cancellationToken)).ConfigureAwait(false);
                 }
 
-                return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)await _httpRestClientResponseBuilder.WriteBadResultResponseAsync(
+                return (HttpRestClientResponse<IAsyncEnumerable<TResult>>)
+                    await _httpRestClientResponseBuilder.WriteBadResultResponseAsync(
                     HttpRestClientResponse<IAsyncEnumerable<TResult>>.Failure, response)
                     .ConfigureAwait(false);
             }
@@ -88,12 +98,19 @@ namespace Xpandables.Net.Http.RequestHandlers
         }
 
         ///<inheritdoc/>
-        public async Task<HttpRestClientResponse> SendAsync(IHttpRestClientRequest request, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse> SendAsync(
+            IHttpRestClientRequest request,
+            CancellationToken cancellationToken = default)
         {
             try
             {
-                using var httpRequest = await _httpRestClientRequestBuilder.WriteHttpRequestMessageFromSourceAsync(request, HttpClient).ConfigureAwait(false);
-                using var response = await HttpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+                using var httpRequest = await _httpRestClientRequestBuilder
+                    .WriteHttpRequestMessageFromSourceAsync(request, HttpClient)
+                    .ConfigureAwait(false);
+
+                using var response = await HttpClient
+                    .SendAsync(httpRequest, cancellationToken)
+                    .ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -104,7 +121,9 @@ namespace Xpandables.Net.Http.RequestHandlers
                         .AddReasonPhrase(response.ReasonPhrase);
                 }
 
-                return await _httpRestClientResponseBuilder.WriteBadResultResponseAsync(HttpRestClientResponse.Failure, response).ConfigureAwait(false);
+                return await _httpRestClientResponseBuilder
+                    .WriteBadResultResponseAsync(HttpRestClientResponse.Failure, response)
+                    .ConfigureAwait(false);
             }
             catch (Exception exception) when (exception is ArgumentNullException
                                             || exception is ArgumentException
@@ -118,11 +137,16 @@ namespace Xpandables.Net.Http.RequestHandlers
         }
 
         ///<inheritdoc/>
-        public async Task<HttpRestClientResponse<TResult>> SendAsync<TResult>(IHttpRestClientRequest<TResult> request, CancellationToken cancellationToken = default)
+        public async Task<HttpRestClientResponse<TResult>> SendAsync<TResult>(
+            IHttpRestClientRequest<TResult> request,
+            CancellationToken cancellationToken = default)
         {
             try
             {
-                using var httpRequest = await _httpRestClientRequestBuilder.WriteHttpRequestMessageFromSourceAsync(request, HttpClient).ConfigureAwait(false);
+                using var httpRequest = await _httpRestClientRequestBuilder
+                    .WriteHttpRequestMessageFromSourceAsync(request, HttpClient)
+                    .ConfigureAwait(false);
+
                 using var response = await HttpClient.SendAsync(
                     httpRequest,
                     HttpCompletionOption.ResponseHeadersRead,
@@ -133,10 +157,13 @@ namespace Xpandables.Net.Http.RequestHandlers
                 {
                     return await _httpRestClientResponseBuilder.WriteSuccessResultResponseAsync(
                         response,
-                        stream => _httpRestClientResponseBuilder.DeserializeJsonFromStreamAsync<TResult>(stream)).ConfigureAwait(false);
+                        stream => _httpRestClientResponseBuilder
+                        .DeserializeJsonFromStreamAsync<TResult>(stream))
+                        .ConfigureAwait(false);
                 }
 
-                return (HttpRestClientResponse<TResult>)await _httpRestClientResponseBuilder.WriteBadResultResponseAsync(
+                return (HttpRestClientResponse<TResult>)await _httpRestClientResponseBuilder
+                    .WriteBadResultResponseAsync(
                     HttpRestClientResponse<TResult>.Failure, response)
                     .ConfigureAwait(false);
             }
