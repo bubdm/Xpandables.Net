@@ -117,37 +117,44 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = interceptorType ?? throw new ArgumentNullException(nameof(interceptorType));
+
             if (!typeof(IInterceptor).IsAssignableFrom(interceptorType))
                 throw new ArgumentException($"{nameof(interceptorType)} must implement {nameof(IInterceptor)}.");
+
             if (assemblies.Length == 0) throw new ArgumentNullException(nameof(assemblies));
 
-            var genericInterfaceTypes = new[] { typeof(IQueryHandler<,>), typeof(ICommandHandler<>),
-                typeof(ICommandHandler<,>), typeof(IDomainEventHandler<,>), typeof(INotificationHandler<,>) };
-            foreach (var genericInterfaceType in genericInterfaceTypes)
-            {
-                foreach (var handler in assemblies.SelectMany(ass => ass.GetExportedTypes())
-                    .Where(type => !type.IsAbstract 
-                        && !type.IsInterface 
-                        && !type.IsGenericType 
-                        && type.GetInterfaces()
-                            .Any(inter => InterfaceCriteria(inter, genericInterfaceType)))
-                    .Select(type => new { Type = type, Interfaces = type.GetInterfaces()
-                        .Where(inter => InterfaceCriteria(inter, genericInterfaceType)) }))
+            var genericHandlerInterfaceTypes = new[] { typeof(IQueryHandler<,>), typeof(ICommandHandler<>),
+                typeof(ICommandHandler<,>), typeof(IDomainEventHandler<,>), typeof(INotificationHandler<,>),
+                typeof(INotificationHandler<,,>)};
+
+            var handlers = assemblies
+                .SelectMany(ass => ass.GetExportedTypes())
+                .Where(type => !type.IsAbstract
+                    && !type.IsInterface
+                    && !type.IsGenericType
+                    && type.GetInterfaces()
+                        .Any(i => i.IsGenericType
+                            && genericHandlerInterfaceTypes.Contains(i.GetGenericTypeDefinition())
+                            && i.GetGenericArguments().Any(a => typeof(IInterceptorDecorator).IsAssignableFrom(a))))
+                .Select(type => new
                 {
-                    foreach (var handlerInterface in handler.Interfaces)
+                    Type = type,
+                    Interfaces = type.GetInterfaces()
+                        .Where(i => i.IsGenericType
+                            && genericHandlerInterfaceTypes.Contains(i.GetGenericTypeDefinition()))
+                });
+
+            foreach (var hander in handlers)
+                foreach (var typeInterface in hander.Interfaces)
+                {
+                    services.XTryDecorate(typeInterface, (instance, provider) =>
                     {
-                        services.XTryDecorate(handlerInterface, (instance, provider) =>
-                         {
-                             var interceptor = (IInterceptor)provider.GetRequiredService(interceptorType);
-                             return InterceptorFactory.CreateProxy(handlerInterface, interceptor, instance);
-                         });
-                    }
+                        var interceptor = (IInterceptor)provider.GetRequiredService(interceptorType);
+                        return InterceptorFactory.CreateProxy(typeInterface, interceptor, instance);
+                    });
                 }
-            }
 
             return services;
-
-            static bool InterfaceCriteria(Type interfaceType, Type genericInterfaceType) => interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == genericInterfaceType && typeof(IInterceptorDecorator).IsAssignableFrom(interfaceType.GetGenericArguments()[0]);
         }
     }
 }
