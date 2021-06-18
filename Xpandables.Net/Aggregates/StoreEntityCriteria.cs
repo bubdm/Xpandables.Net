@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
@@ -32,25 +33,30 @@ namespace Xpandables.Net.Aggregates
         where TStoreEntity : StoreEntity
     {
         /// <summary>
+        /// Returns an of <see cref="StoreEntityCriteria{TStoreEntity}"/> with default values.
+        /// </summary>
+        public static StoreEntityCriteria<TStoreEntity> Default => new();
+
+        /// <summary>
         /// Gets the type name as <see cref="Regex"/> format. If null, all types will be returned.
         /// </summary>
-        public string? TypeName { get; }
+        public string? TypeName { get; init; }
 
         /// <summary>
         /// Gets the date to start search. If null, starts from the beginning.
         /// </summary>
-        public DateTime? Start { get; }
+        public DateTime? Start { get; init; }
 
         /// <summary>
         /// Gets the date to end search.
         /// </summary>
-        public DateTime? End { get; }
+        public DateTime? End { get; init; }
 
         /// <summary>
         /// Gets the number of entities to be returned.
         /// The default value is 50.
         /// </summary>
-        public int Count { get; } = 50;
+        public int Count { get; init; } = 50;
 
         ///<inheritdoc/>
         public override Expression<Func<TStoreEntity, bool>> GetExpression()
