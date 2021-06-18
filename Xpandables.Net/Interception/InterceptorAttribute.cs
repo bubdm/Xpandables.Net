@@ -20,7 +20,7 @@ using System;
 namespace Xpandables.Net.Interception
 {
     /// <summary>
-    /// Interceptors base attribute that allows developers to apply handlers to classes and class members directly.
+    /// Interceptors base attribute that allows developers to apply interceptor to classes and class members directly.
     /// </summary>
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public abstract class InterceptorAttribute : Attribute
