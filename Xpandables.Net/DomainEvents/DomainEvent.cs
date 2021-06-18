@@ -53,7 +53,15 @@ namespace Xpandables.Net.DomainEvents
         public long Version { get; protected set; }
 
         ///<inheritdoc/>
-        public bool Equals(DomainEvent<TAggregateId>? other) => other is not null && Equals(other);
+        public bool Equals(DomainEvent<TAggregateId>? other)
+        {
+            if (other is null)
+                return false;
+
+            return AggregateId.Equals(other.AggregateId)
+                && Guid.Equals(other.Guid)
+                && Version.Equals(other.Version);
+        }
 
         ///<inheritdoc/>
         public virtual IDomainEvent<TAggregateId> WithAggregate(TAggregateId aggregateId, long version)
@@ -67,6 +75,6 @@ namespace Xpandables.Net.DomainEvents
         public override bool Equals(object? obj) => obj is DomainEvent<TAggregateId> domainEvent && Equals(domainEvent);
 
         ///<inheritdoc/>
-        public override int GetHashCode() => HashCode.Combine(AggregateId.Value, Version);
+        public override int GetHashCode() => HashCode.Combine(AggregateId.Value, Guid, Version);
     }
 }
