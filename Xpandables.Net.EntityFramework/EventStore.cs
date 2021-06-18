@@ -28,6 +28,7 @@ using Microsoft.EntityFrameworkCore;
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.DomainEvents;
 using Xpandables.Net.Entities;
+using Xpandables.Net.Expressions;
 using Xpandables.Net.Notifications;
 
 namespace Xpandables.Net.Database
@@ -109,7 +110,7 @@ namespace Xpandables.Net.Database
             CancellationToken cancellationToken = default)
             where TStoreEntity : StoreEntity
             => _context.Set<TStoreEntity>()
-                .Where(criteria)
+                .Where(criteria.And(c => c.AggregateId == aggregateId))
                 .OrderBy(o => o.CreatedOn)
                 .Take(criteria.Count)
                 .AsAsyncEnumerable();
