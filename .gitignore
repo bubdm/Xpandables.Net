@@ -342,3 +342,4 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /Tests/Xpandables.Net5.Tests
+/Xpandables.Net.Tests
