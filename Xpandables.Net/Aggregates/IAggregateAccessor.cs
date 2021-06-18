@@ -52,6 +52,21 @@ namespace Xpandables.Net.Aggregates
         IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadAllEventsAsync(TAggregateId aggreagateId, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Asynchronously returns a collection of store entities where aggregate identifier matches the specified one 
+        /// and entities match the specified criteria.
+        /// </summary>
+        /// <typeparam name="TStoreEntity">The type of the store entity to be returned.</typeparam>
+        /// <param name="aggregateId">The target aggregate identifier.</param>
+        /// <param name="criteria">The criteria to be applied to entities.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>An enumerator of <typeparamref name="TStoreEntity"/> that can be asynchronously enumerated.</returns>
+        IAsyncEnumerable<TStoreEntity> ReadStoreEntitiesAsync<TStoreEntity>(
+            TAggregateId aggregateId,
+            StoreEntityCriteria<TStoreEntity> criteria,
+            CancellationToken cancellationToken = default)
+            where TStoreEntity : StoreEntity;
+
+        /// <summary>
         /// Asynchronously appends the specified <typeparamref name="TAggregate"/> aggregate to the event store.
         /// </summary>
         /// <param name="aggregate">The aggregate to act on.</param>

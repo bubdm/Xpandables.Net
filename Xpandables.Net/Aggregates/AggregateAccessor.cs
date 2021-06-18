@@ -83,7 +83,7 @@ namespace Xpandables.Net.Aggregates
         }
 
         ///<inheritdoc/>
-        public async Task<TAggregate?> ReadFromSnapShot(TAggregateId aggregateId, CancellationToken cancellationToken = default)
+        public virtual async Task<TAggregate?> ReadFromSnapShot(TAggregateId aggregateId, CancellationToken cancellationToken = default)
         {
             var aggregate = CreateInstance();
             if (aggregate is not IOriginator originator)
@@ -112,28 +112,36 @@ namespace Xpandables.Net.Aggregates
         }
 
         ///<inheritdoc/>
-        public async Task AppendAsSnapShotAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
+        public virtual async Task AppendAsSnapShotAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
         {
             _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
             await _eventStore.AppendSnapShotAsync(aggregate, cancellationToken);
         }
 
         ///<inheritdoc/>
-        public async Task<ISnapShot<TAggregateId>?> GetSnapShotAsync(TAggregateId aggreagteId, CancellationToken cancellationToken = default)
+        public virtual async Task<ISnapShot<TAggregateId>?> GetSnapShotAsync(TAggregateId aggreagteId, CancellationToken cancellationToken = default)
             => await _eventStore.GetSnapShotAsync(aggreagteId, cancellationToken).ConfigureAwait(false);
 
         ///<inheritdoc/>
-        public IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadAllEventsAsync(
+        public virtual IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadAllEventsAsync(
             TAggregateId aggreagateId, CancellationToken cancellationToken = default)
             => _eventStore.ReadAllEventsAsync(aggreagateId, cancellationToken);
 
         ///<inheritdoc/>
-        public IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadEventsSinceLastSnapShotAsync(
+        public virtual IAsyncEnumerable<TStoreEntity> ReadStoreEntitiesAsync<TStoreEntity>(
+            TAggregateId aggregateId,
+            StoreEntityCriteria<TStoreEntity> criteria,
+            CancellationToken cancellationToken = default)
+            where TStoreEntity : StoreEntity
+            => _eventStore.ReadStoreEntitiesAsync(aggregateId, criteria, cancellationToken);
+
+        ///<inheritdoc/>
+        public virtual IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadEventsSinceLastSnapShotAsync(
             TAggregateId aggregateId, CancellationToken cancellationToken = default)
             => _eventStore.ReadEventsSinceLastSnapShotAsync(aggregateId, cancellationToken);
 
         ///<inheritdoc/>
-        public async Task<int> ReadEventCountSinceLastSnapShot(TAggregateId aggregateId, CancellationToken cancellationToken = default)
+        public virtual async Task<int> ReadEventCountSinceLastSnapShot(TAggregateId aggregateId, CancellationToken cancellationToken = default)
             => await _eventStore.ReadEventCountSinceLastSnapShot(aggregateId, cancellationToken).ConfigureAwait(false);
 
         private TAggregate CreateInstance()
