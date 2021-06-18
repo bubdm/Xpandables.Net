@@ -168,7 +168,6 @@ namespace Xpandables.Net.Http.RequestBuilders
 
 
         ///<inheritdoc/>
-        [SuppressMessage("Usage", "SecurityIntelliSenseCS:MS Security rules violation", Justification = "<Pending>")]
         public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageFromAttributeAsync<TSource>(HttpRestClientAttribute attribute, TSource source, HttpClient httpClient) where TSource : class
         {
             _ = attribute ?? throw new ArgumentNullException(nameof(attribute));
