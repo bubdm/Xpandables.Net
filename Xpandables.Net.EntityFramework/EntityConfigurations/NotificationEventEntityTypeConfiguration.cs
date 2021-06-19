@@ -39,6 +39,7 @@ namespace Xpandables.Net.Database.EntityConfigurations
             builder.Property(p => p.Data);
             builder.Property(p => p.IsJson);
             builder.Property(p => p.TypeFullName);
+            builder.Property(p => p.TypeName);
         }
     }
 }

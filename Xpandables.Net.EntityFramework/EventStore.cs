@@ -60,7 +60,7 @@ namespace Xpandables.Net.Database
         public virtual async Task AppendEventAsync(IEvent<TAggregateId> @event, CancellationToken cancellationToken = default)
         {
             var entityEvent = GetEventEntity(_converter, @event);
-            await _context.InsertAsync(entityEvent, cancellationToken).ConfigureAwait(false);
+            await _context.InsertAsync((dynamic)entityEvent, (dynamic)cancellationToken).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
@@ -83,7 +83,7 @@ namespace Xpandables.Net.Database
             var snapShot = new SnapShot<TAggregateId>(originator.CreateMemento(), aggregate.AggregateId, aggregate.Version);
             var snapShotEnity = GetEventEntity(_converter, snapShot);
 
-            await _context.InsertAsync(snapShotEnity, cancellationToken).ConfigureAwait(false);
+            await _context.InsertAsync((dynamic)snapShotEnity, (dynamic)cancellationToken).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
@@ -143,7 +143,7 @@ namespace Xpandables.Net.Database
                 .ConfigureAwait(false);
         }
 
-        static IEntity GetEventEntity(IEventStoreEntityTypeConverter converter, object source)
+        static dynamic GetEventEntity(IEventStoreEntityTypeConverter converter, object source)
         {
             var typeFullName = source.GetType().AssemblyQualifiedName!;
             var typeName = source.GetType().GetNameWithoutGenericArity();

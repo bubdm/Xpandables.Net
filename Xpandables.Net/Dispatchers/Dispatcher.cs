@@ -149,7 +149,7 @@ namespace Xpandables.Net.Dispatchers
 
             if (!_handlerAccessor.TryGetHandler(handlerType, out var foundHandler, out var handleException))
             {
-                throw new InvalidOperationException($"The matching handler for '{types[1].Name}' is missing.", handleException);
+                throw new InvalidOperationException($"The matching handler for '{types[0].Name}' is missing.", handleException);
             }
 
             return foundHandler;

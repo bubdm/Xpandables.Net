@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.BlazorExtend
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.Tests", "Xpandables.Net.Tests\Xpandables.Net.Tests.csproj", "{49EA41BA-1F55-4F3E-AE1D-C588D024A311}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.GraphQL", "Xpandables.Net.GraphQL\Xpandables.Net.GraphQL.csproj", "{696869B7-F124-48F7-95B3-83AB9759EBE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.GraphQLApi", "Xpandables.Net.GraphQLApi\Xpandables.Net.GraphQLApi.csproj", "{C8307850-B10C-468F-B134-8037C9449A86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{49EA41BA-1F55-4F3E-AE1D-C588D024A311}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49EA41BA-1F55-4F3E-AE1D-C588D024A311}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49EA41BA-1F55-4F3E-AE1D-C588D024A311}.Release|Any CPU.Build.0 = Release|Any CPU
+		{696869B7-F124-48F7-95B3-83AB9759EBE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{696869B7-F124-48F7-95B3-83AB9759EBE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{696869B7-F124-48F7-95B3-83AB9759EBE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{696869B7-F124-48F7-95B3-83AB9759EBE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8307850-B10C-468F-B134-8037C9449A86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8307850-B10C-468F-B134-8037C9449A86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8307850-B10C-468F-B134-8037C9449A86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8307850-B10C-468F-B134-8037C9449A86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

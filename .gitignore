@@ -343,3 +343,5 @@ ASALocalRun/
 healthchecksdb
 /Tests/Xpandables.Net5.Tests
 /Xpandables.Net.Tests
+/Xpandables.Net.GraphQL
+/Xpandables.Net.GraphQLApi

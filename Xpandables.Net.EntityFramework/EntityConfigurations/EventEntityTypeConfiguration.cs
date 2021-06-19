@@ -41,6 +41,7 @@ namespace Xpandables.Net.Database.EntityConfigurations
             builder.Property(p => p.Version).IsConcurrencyToken();
             builder.Property(p => p.IsJson);
             builder.Property(p => p.TypeFullName);
+            builder.Property(p => p.TypeName);
         }
     }
 }
