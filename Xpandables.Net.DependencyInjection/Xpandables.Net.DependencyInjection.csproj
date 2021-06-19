@@ -39,6 +39,7 @@
     <DelaySign>false</DelaySign>
     <Company>EFB Entreprises</Company>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>preview</AnalysisLevel>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

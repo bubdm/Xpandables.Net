@@ -38,8 +38,10 @@
     <AssemblyOriginatorKeyFile>Xpandables.Net.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
     <Company>EFB Entreprises</Company>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <AnalysisLevel>preview</AnalysisLevel>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -60,6 +62,7 @@
   </PropertyGroup> 
 
   <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="..\Xpandables.Net.png" Link="Xpandables.Net.png">
       <PackagePath></PackagePath>
       <Pack>True</Pack>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30323.103
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31410.414
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net", "Xpandables.Net\Xpandables.Net.csproj", "{F750226E-B0C4-4C2D-8B43-BDA4CAAEFC52}"
 EndProject
@@ -13,11 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.AspNetCore",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.BlazorExtended", "Xpandables.Net.BlazorExtended\Xpandables.Net.BlazorExtended.csproj", "{91107337-9F92-4C19-B0E0-88D970F0FA88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.Tests", "Xpandables.Net.Tests\Xpandables.Net.Tests.csproj", "{49EA41BA-1F55-4F3E-AE1D-C588D024A311}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.GraphQL", "Xpandables.Net.GraphQL\Xpandables.Net.GraphQL.csproj", "{696869B7-F124-48F7-95B3-83AB9759EBE0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.GraphQLApi", "Xpandables.Net.GraphQLApi\Xpandables.Net.GraphQLApi.csproj", "{C8307850-B10C-468F-B134-8037C9449A86}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CA1CAAA4-A8C6-45C4-8612-04F5CAFE6DCE}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,18 +44,6 @@ Global
 		{91107337-9F92-4C19-B0E0-88D970F0FA88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91107337-9F92-4C19-B0E0-88D970F0FA88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91107337-9F92-4C19-B0E0-88D970F0FA88}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49EA41BA-1F55-4F3E-AE1D-C588D024A311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49EA41BA-1F55-4F3E-AE1D-C588D024A311}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49EA41BA-1F55-4F3E-AE1D-C588D024A311}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49EA41BA-1F55-4F3E-AE1D-C588D024A311}.Release|Any CPU.Build.0 = Release|Any CPU
-		{696869B7-F124-48F7-95B3-83AB9759EBE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{696869B7-F124-48F7-95B3-83AB9759EBE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{696869B7-F124-48F7-95B3-83AB9759EBE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{696869B7-F124-48F7-95B3-83AB9759EBE0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8307850-B10C-468F-B134-8037C9449A86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8307850-B10C-468F-B134-8037C9449A86}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8307850-B10C-468F-B134-8037C9449A86}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8307850-B10C-468F-B134-8037C9449A86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
