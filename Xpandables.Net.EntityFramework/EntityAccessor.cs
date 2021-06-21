@@ -61,14 +61,7 @@ namespace Xpandables.Net.Database
             _entities = Context.Set<TEntity>();
         }
 
-        /// <summary>
-        /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria.
-        /// If not found, returns the <see langword="default"/> value of the type.
-        /// </summary>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TEntity"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
+        ///<inheritdoc/>
         public virtual async Task<TEntity?> TryFindAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
             => await Context.TryFindAsync<TEntity, TEntity>(_ =>
                 Entities
@@ -77,15 +70,7 @@ namespace Xpandables.Net.Database
                 cancellationToken)
             .ConfigureAwait(false);
 
-        /// <summary>
-        /// Tries to return an entity converted to the <typeparamref name="TResult"/> type that matches the criteria using the <paramref name="select"/>.
-        /// If not found, returns the <see langword="default"/> value of the <typeparamref name="TResult"/> type.
-        /// </summary>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="select">Defines the expression to convert n entity to the expected result.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TResult"/> type that meets the criteria or <see langword="default"/> if not found.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
+        ///<inheritdoc/>
         public virtual async Task<TResult?> TryFindAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
             Expression<Func<TEntity, TResult>> select, CancellationToken cancellationToken = default)
             => await Context.TryFindAsync<TEntity, TResult>(_ =>
@@ -95,17 +80,7 @@ namespace Xpandables.Net.Database
                 cancellationToken)
             .ConfigureAwait(false);
 
-        /// <summary>
-        /// Returns an enumerable of <typeparamref name="TResult"/> type that match the criteria and that can be asynchronously enumerated.
-        /// If no result found, returns an empty enumerable.
-        /// </summary>
-        /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
-        /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
-        /// <param name="select">Defines the expression to convert n entity to the expected result.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="select"/> is null.</exception>
+        ///<inheritdoc/>
         public virtual IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
             Expression<Func<TEntity, TResult>> select, CancellationToken cancellationToken = default)
             => Context.FetchAllAsync<TEntity, TResult>(_ =>
@@ -114,39 +89,29 @@ namespace Xpandables.Net.Database
                     .Select(select),
                 cancellationToken);
 
-        /// <summary>
-        /// Marks the specified entity to be inserted into the database when <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)" /> is called.
-        /// </summary>
-        /// <param name="entity">The entity to be added and persisted.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an  asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
+        ///<inheritdoc/>
+        public virtual async Task<int> CountAsync(
+            Expression<Func<TEntity, bool>> predicate,
+            CancellationToken cancellationToken = default)
+            => await Entities
+                .CountAsync(predicate, cancellationToken)
+                .ConfigureAwait(false);
+
+        ///<inheritdoc/>
         public virtual async Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
             => await Context.InsertAsync(
                 entity,
                 cancellationToken)
             .ConfigureAwait(false);
 
-        /// <summary>
-        /// Marks the specified entity to be updated into the database when <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)" /> is called.
-        /// </summary>
-        /// <param name="entity">The entity to be updated and persisted.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an  asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
+        ///<inheritdoc/>
         public virtual async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
             => await Context.UpdateAsync(
                 entity,
                 cancellationToken)
             .ConfigureAwait(false);
 
-        /// <summary>
-        /// Marks the domain objects matching the predicate as deleted and will be removed when <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)" /> is called.
-        /// </summary>
-        /// <param name="predicate">Defines a set of criteria that entity should meet to be deleted.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an  asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        ///<inheritdoc/>
         public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
             => await Context.DeleteAsync(predicate, cancellationToken).ConfigureAwait(false);
 

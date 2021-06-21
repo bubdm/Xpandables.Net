@@ -69,6 +69,16 @@ namespace Xpandables.Net.Database
             Expression<Func<TEntity, TResult>> select, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Asynchronously returns the number of elements in a sequence that satisfy a condition.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns> A task that represents the asynchronous operation. The task result contains the 
+        /// number of elements in the sequence that satisfy the condition in the predicate function.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Marks the specified entity to be inserted to the data storage on persistence according to the database provider/ORM.
         /// </summary>
         /// <param name="entity">The entity to be added and persisted.</param>
