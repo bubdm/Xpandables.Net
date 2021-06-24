@@ -36,15 +36,6 @@ namespace Xpandables.Net.Notifications
         /// </summary>
         /// <param name="aggregateId">The aggregate id.</param>
         protected Notification(TAggregateId aggregateId) : base(aggregateId) { }
-
-        /// <summary>
-        /// Constructs a new instance of <see cref="Notification{TAggregateId}"/>.
-        /// </summary>
-        /// <param name="aggregateId">The aggregate identifier.</param>
-        /// <param name="occurredOn">When the event occurred.</param>
-        /// <param name="createdBy">The user name.</param>
-        protected Notification(TAggregateId aggregateId, DateTimeOffset occurredOn, string createdBy)
-            : base(aggregateId, occurredOn, createdBy) { }
     }
 
     /// <summary>
@@ -64,19 +55,6 @@ namespace Xpandables.Net.Notifications
         /// <param name="domainEvent">The target domain event.</param>
         protected Notification(TAggregateId aggregateId, TDomainEvent domainEvent)
             : base(aggregateId)
-        {
-            DomainEvent = domainEvent;
-        }
-
-        /// <summary>
-        /// Constructs a new instance of <see cref="Notification{TAggregateId, TEvent}"/>.
-        /// </summary>
-        /// <param name="aggregateId">The aggregate identifier.</param>
-        /// <param name="domainEvent">The target domain event.</param>
-        /// <param name="occurredOn">When the event occurred.</param>
-        /// <param name="createdBy">The user name.</param>
-        protected Notification(TAggregateId aggregateId, TDomainEvent domainEvent, DateTimeOffset occurredOn, string createdBy)
-            : base(aggregateId, occurredOn, createdBy)
         {
             DomainEvent = domainEvent;
         }

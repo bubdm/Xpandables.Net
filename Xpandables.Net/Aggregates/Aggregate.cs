@@ -47,7 +47,7 @@ namespace Xpandables.Net.Aggregates
         /// <summary>
         /// Gets the current version of the instance, the default value is -1.
         /// </summary>
-        public long Version { get; protected set; } = -1;
+        public AggregateVersion Version { get; protected set; } = -1;
 
         ///<inheritdoc/>
         public TAggregateId AggregateId { get; protected set; } = default!;
@@ -163,7 +163,7 @@ namespace Xpandables.Net.Aggregates
         /// <summary>
         /// Returns the new version of the instance when creating an <see cref="IDomainEvent{TAggregateId}"/>.
         /// </summary>
-        /// <returns>A <see cref="long"/> value that represents the new version of the instance</returns>
-        protected long GetNewVersion() => ++Version;
+        /// <returns>A <see cref="AggregateVersion"/> value that represents the new version of the instance</returns>
+        protected AggregateVersion GetNewVersion() => ++Version;
     }
 }

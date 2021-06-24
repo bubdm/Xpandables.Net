@@ -34,17 +34,6 @@ namespace Xpandables.Net
             CreatedBy = Environment.UserName;
         }
 
-        /// <summary>
-        /// Constructs a new instance of <see cref="CommandQueryEvent"/> class with the specified information.
-        /// </summary>
-        /// <param name="occurredOn">When the event occurred.</param>
-        /// <param name="createdBy">The user name running the instance.</param>
-        protected CommandQueryEvent(DateTimeOffset occurredOn, string createdBy)
-        {
-            OccurredOn = occurredOn;
-            CreatedBy = createdBy;
-        }
-
         ///<inheritdoc/>
         public DateTimeOffset OccurredOn { get; protected set; }
 

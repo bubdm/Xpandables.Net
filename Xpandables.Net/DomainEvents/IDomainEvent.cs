@@ -32,7 +32,7 @@ namespace Xpandables.Net.DomainEvents
         /// <summary>
         /// Gets the version of the related aggregate being saved.
         /// </summary>
-        long Version { get; }
+        AggregateVersion Version { get; }
 
         /// <summary>
         /// Returns a new instance of the domain event with appropriate values.
@@ -40,6 +40,6 @@ namespace Xpandables.Net.DomainEvents
         /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="version">The aggregate version.</param>
         /// <returns>A new instance of the domain event.</returns>
-        IDomainEvent<TAggregateId> WithAggregate(TAggregateId aggregateId, long version);
+        IDomainEvent<TAggregateId> WithAggregate(TAggregateId aggregateId, AggregateVersion version);
     }
 }

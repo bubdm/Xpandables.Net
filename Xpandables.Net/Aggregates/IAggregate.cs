@@ -39,7 +39,7 @@ namespace Xpandables.Net.Aggregates
         /// <summary>
         ///   /// Gets the current version of the instance, the default value is -1.
         /// </summary>
-        long Version { get; }
+        AggregateVersion Version { get; }
 
         /// <summary>
         /// Determines whether or not the underlying instance is a empty one.

@@ -36,16 +36,6 @@ namespace Xpandables.Net
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
         protected Event(TAggregateId aggregateId) : base() => AggregateId = aggregateId;
 
-        /// <summary>
-        /// Constructs a new instance of <see cref="Event{TAggregateId}"/> with the specified information.
-        /// </summary>
-        /// <param name="aggregateId">The aggregate id.</param>
-        /// <param name="occurredOn">When the event occurred.</param>
-        /// <param name="createdBy">The user name.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
-        protected Event(TAggregateId aggregateId, DateTimeOffset occurredOn, string createdBy)
-            : base(occurredOn, createdBy) => AggregateId = aggregateId;
-
         ///<inheritdoc/>
         public TAggregateId AggregateId { get; protected set; }
 

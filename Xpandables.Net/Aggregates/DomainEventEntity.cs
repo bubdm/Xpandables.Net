@@ -28,7 +28,14 @@ namespace Xpandables.Net.Aggregates
     {
         ///<inheritdoc/>
         [JsonConstructor]
-        public DomainEventEntity(Guid eventId, string aggregateId, string typeFullName, string typeName, long version, bool isJson, byte[] data)
+        public DomainEventEntity(
+            Guid eventId,
+            string aggregateId,
+            string typeFullName,
+            string typeName,
+            long version,
+            bool isJson,
+            byte[] data)
             : base(aggregateId, typeFullName, typeName, isJson, data)
         {
             EventId = eventId;

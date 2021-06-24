@@ -35,22 +35,10 @@ namespace Xpandables.Net.DomainEvents
         /// <param name="aggregateId">The aggregate identifier.</param>
         /// <param name="version">The version of the  related aggregate.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
-        protected DomainEvent(TAggregateId aggregateId, long version) : base(aggregateId) => Version = version;
-
-        /// <summary>
-        /// Constructs a new instance of <see cref="DomainEvent{TAggregateId}"/>.
-        /// </summary>
-        /// <param name="version">The version of the related aggregate.
-        /// You may use the aggregate method <see cref="Aggregate{TAggregateId}.GetNewVersion()"/> to get a new version</param>
-        /// <param name="aggregateId">The aggregate identifier.</param>
-        /// <param name="occurredOn">When the event occurred.</param>
-        /// <param name="createdBy">The user name.</param>
-        protected DomainEvent(long version, TAggregateId aggregateId, DateTimeOffset occurredOn, string createdBy)
-            : base(aggregateId, occurredOn, createdBy)
-            => Version = version;
+        protected DomainEvent(TAggregateId aggregateId, AggregateVersion version) : base(aggregateId) => Version = version;
 
         ///<inheritdoc/>
-        public long Version { get; protected set; }
+        public AggregateVersion Version { get; protected set; }
 
         ///<inheritdoc/>
         public bool Equals(DomainEvent<TAggregateId>? other)
@@ -64,7 +52,7 @@ namespace Xpandables.Net.DomainEvents
         }
 
         ///<inheritdoc/>
-        public virtual IDomainEvent<TAggregateId> WithAggregate(TAggregateId aggregateId, long version)
+        public virtual IDomainEvent<TAggregateId> WithAggregate(TAggregateId aggregateId, AggregateVersion version)
         {
             AggregateId = aggregateId;
             Version = version;
