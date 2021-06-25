@@ -20,7 +20,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
-using Xpandables.Net.Commands;
 using Xpandables.Net.Database;
 using Xpandables.Net.Notifications;
 
@@ -34,7 +33,8 @@ namespace Xpandables.Net.Decorators.Persistences
     /// </summary>
     /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
     /// <typeparam name="TNotification">Type of integration event.</typeparam>
-    public sealed class NotificationPersistenceDecorator<TAggregateId, TNotification> : PersistenceDecoratorBase, INotificationHandler<TAggregateId, TNotification>
+    public sealed class NotificationPersistenceDecorator<TAggregateId, TNotification> 
+        : PersistenceDecoratorBase, INotificationHandler<TAggregateId, TNotification>
         where TNotification : class, INotification<TAggregateId>, IPersistenceDecorator
         where TAggregateId : notnull, IAggregateId
     {
@@ -53,7 +53,7 @@ namespace Xpandables.Net.Decorators.Persistences
             => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 
         ///<inheritdoc/>
-        public async Task<IOperationResult<ICommand?>> HandleAsync(TNotification integrationEvent, CancellationToken cancellationToken = default)
+        public async Task HandleAsync(TNotification integrationEvent, CancellationToken cancellationToken = default)
             => await HandleAsync(_decoratee.HandleAsync(integrationEvent, cancellationToken), cancellationToken).ConfigureAwait(false);
     }
 }

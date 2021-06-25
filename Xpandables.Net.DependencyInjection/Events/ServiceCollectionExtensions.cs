@@ -142,42 +142,6 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IDomainEventAccessor{TAggregateId, TAggregate}"/> implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXDomainEventAccessor(this IXpandableServiceBuilder services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped(typeof(IDomainEventAccessor<,>), typeof(DomainEventAccessor<,>));
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the <see cref="INotificationEventAccessor{TAggregateId, TAggregate}"/> implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationEventAccessor(this IXpandableServiceBuilder services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped(typeof(INotificationEventAccessor<,>), typeof(NotificationEventAccessor<,>));
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the <see cref="INotificationEventAccessor{TAggregateId, TAggregate}"/> implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXSnapShotAccessor(this IXpandableServiceBuilder services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped(typeof(ISnapShotAccessor<,>), typeof(SnapShotAccessor<,>));
-            return services;
-        }
-
-        /// <summary>
         /// Adds the <see cref="IEventBus"/> implementation to the services with singleton life time.
         /// </summary>
         /// <typeparam name="TEventBus">The type that implements <see cref="IEventBus"/></typeparam>
@@ -188,26 +152,6 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             services.Services.AddScoped<IEventBus, TEventBus>();
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the default <see cref="IEventBus"/> implementation to the services with singleton life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEventBus(this IXpandableServiceBuilder services)
-            => services.AddXEventBus<EventBus>();
-
-        /// <summary>
-        /// Adds the default <see cref="IAggregateAccessor{TAggregateId, TAggregate}"/> implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXAggregateAccessor(this IXpandableServiceBuilder services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped(typeof(IAggregateAccessor<,>), typeof(AggregateAccessor<,>));
             return services;
         }
 

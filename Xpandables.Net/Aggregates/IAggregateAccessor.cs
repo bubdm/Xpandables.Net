@@ -19,9 +19,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Aggregates;
+using Xpandables.Net.Database;
 
-namespace Xpandables.Net.Database
+namespace Xpandables.Net.Aggregates
 {
     /// <summary>
     /// Represents a set of methods to read/write aggregates from an event store.
@@ -31,7 +31,8 @@ namespace Xpandables.Net.Database
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
     public interface IAggregateAccessor<TAggregateId, TAggregate> :
-        ISnapShotAccessor<TAggregateId, TAggregate>, IDomainEventAccessor<TAggregateId, TAggregate>
+        ISnapShotAccessor<TAggregateId, TAggregate>, IDomainEventAccessor<TAggregateId, TAggregate>,
+        INotificationEventAccessor<TAggregateId, TAggregate>
         where TAggregate : class, IAggregate<TAggregateId>
         where TAggregateId : notnull, IAggregateId
     {

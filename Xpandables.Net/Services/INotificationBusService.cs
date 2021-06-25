@@ -15,10 +15,10 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Database
+namespace Xpandables.Net.Services
 {
     /// <summary>
-    /// Represents a set of commands to manage data context for notification events.
+    /// Defines the out-box (notifications) host service.
     /// </summary>
-    public interface INotificationEventStoreContext : IDataContext { }
+    public interface INotificationBusService : IBackgroundService { }
 }

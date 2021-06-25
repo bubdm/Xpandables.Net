@@ -40,14 +40,10 @@ namespace Xpandables.Net.Decorators.Persistences
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        internal async Task<TOutput> HandleAsync<TOutput>(Task<TOutput> handler, CancellationToken cancellationToken)
-            where TOutput : IOperationResult
-{
-            var resultState = await handler.ConfigureAwait(false);
-            if (resultState.Succeeded)
-                await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-            return resultState;
+        internal async Task HandleAsync(Task handler, CancellationToken cancellationToken)
+        {
+            await handler.ConfigureAwait(false);
+            await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

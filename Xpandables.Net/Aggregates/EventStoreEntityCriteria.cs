@@ -20,7 +20,6 @@ using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-using Xpandables.Net.Database;
 using Xpandables.Net.Expressions;
 
 namespace Xpandables.Net.Aggregates

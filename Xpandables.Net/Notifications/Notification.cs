@@ -44,7 +44,8 @@ namespace Xpandables.Net.Notifications
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
     [Serializable]
-    public abstract class Notification<TAggregateId, TDomainEvent> : Notification<TAggregateId>, INotification<TAggregateId, TDomainEvent>
+    public abstract class Notification<TAggregateId, TDomainEvent> 
+        : Notification<TAggregateId>, INotification<TAggregateId, TDomainEvent>
         where TDomainEvent : notnull, IDomainEvent<TAggregateId>
         where TAggregateId : notnull, AggregateId
     {

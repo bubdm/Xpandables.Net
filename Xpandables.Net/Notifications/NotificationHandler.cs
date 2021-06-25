@@ -19,26 +19,28 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
-using Xpandables.Net.Commands;
 using Xpandables.Net.DomainEvents;
 
 namespace Xpandables.Net.Notifications
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="INotificationHandler{TAggregateId, TNotification}"/> interface.
+    /// Represents a helper class that allows implementation of
+    /// <see cref="INotificationHandler{TAggregateId, TNotification}"/> interface.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TNotification">Type of notification to act on.</typeparam>
-    public abstract class NotificationHandler<TAggregateId, TNotification> : OperationResults, INotificationHandler<TAggregateId, TNotification>
+    public abstract class NotificationHandler<TAggregateId, TNotification>
+        : OperationResults, INotificationHandler<TAggregateId, TNotification>
         where TNotification : class, INotification<TAggregateId>
         where TAggregateId : notnull, AggregateId
     {
         ///<inheritdoc/>
-        public abstract Task<IOperationResult<ICommand?>> HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
+        public abstract Task HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="INotificationHandler{TAggregateId, TDomainEvent, TNotification}"/> interface.
+    /// Represents a helper class that allows implementation 
+    /// of <see cref="INotificationHandler{TAggregateId, TDomainEvent, TNotification}"/> interface.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
@@ -50,6 +52,6 @@ namespace Xpandables.Net.Notifications
         where TAggregateId : notnull, AggregateId
     {
         ///<inheritdoc/>
-        public abstract Task<IOperationResult<ICommand?>> HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
+        public abstract Task HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
     }
 }

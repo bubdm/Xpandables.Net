@@ -20,7 +20,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
-using Xpandables.Net.Commands;
 using Xpandables.Net.DomainEvents;
 
 namespace Xpandables.Net.Notifications
@@ -34,14 +33,14 @@ namespace Xpandables.Net.Notifications
     {
         /// <summary>
         ///  Asynchronously handle the notification.
-        ///  Returns an optional command to be processed.
         /// </summary>
         /// <param name="notification">The notification instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="notification"/> does not implement <see cref="INotification{TAggregateId}"/>.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult{TCommand}"/>.</returns>
-        Task<IOperationResult<ICommand?>> HandleAsync(object notification, CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentException">The <paramref name="notification"/> does 
+        /// not implement <see cref="INotification{TAggregateId}"/>.</exception>
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task HandleAsync(object notification, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -51,26 +50,27 @@ namespace Xpandables.Net.Notifications
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TNotification">The notification type to be handled.</typeparam>
-    public interface INotificationHandler<TAggregateId, in TNotification> : INotificationHandler, ICanHandle<TNotification>
+    public interface INotificationHandler<TAggregateId, in TNotification> 
+        : INotificationHandler, ICanHandle<TNotification>
         where TNotification : class, INotification<TAggregateId>
         where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Asynchronously handles the notification of specific type.
-        ///  Returns an optional command to be processed.
         /// </summary>
         /// <param name="notification">The notification instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult{TCommand}"/>.</returns>
-        Task<IOperationResult<ICommand?>> HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
 
-        Task<IOperationResult<ICommand?>> INotificationHandler.HandleAsync(object notification, CancellationToken cancellationToken)
+        Task INotificationHandler.HandleAsync(object notification, CancellationToken cancellationToken)
         {
             if (notification is TNotification instance)
                 return HandleAsync(instance, cancellationToken);
 
-            throw new ArgumentException($"The parameter does not implement {nameof(INotification<TAggregateId>)} interface.", nameof(notification));
+            throw new ArgumentException($"The parameter does not " +
+                $"implement {nameof(INotification<TAggregateId>)} interface.", nameof(notification));
         }
     }
 
@@ -82,7 +82,8 @@ namespace Xpandables.Net.Notifications
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
     /// <typeparam name="TNotification">The notification type to be handled.</typeparam>
-    public interface INotificationHandler<TAggregateId, out TDomainEvent, in TNotification> : INotificationHandler, ICanHandle<TNotification>
+    public interface INotificationHandler<TAggregateId, out TDomainEvent, in TNotification> 
+        : INotificationHandler, ICanHandle<TNotification>
         where TNotification : class, INotification<TAggregateId, TDomainEvent>
         where TDomainEvent : class, IDomainEvent<TAggregateId>
         where TAggregateId : notnull, IAggregateId
@@ -94,15 +95,16 @@ namespace Xpandables.Net.Notifications
         /// <param name="notification">The notification instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
-        /// <returns>A task that represents an object of <see cref="IOperationResult{TCommand}"/>.</returns>
-        Task<IOperationResult<ICommand?>> HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
 
-        Task<IOperationResult<ICommand?>> INotificationHandler.HandleAsync(object notification, CancellationToken cancellationToken)
+        Task INotificationHandler.HandleAsync(object notification, CancellationToken cancellationToken)
         {
             if (notification is TNotification instance)
                 return HandleAsync(instance, cancellationToken);
 
-            throw new ArgumentException($"The parameter does not implement {nameof(INotification<TAggregateId, TDomainEvent>)} interface.", nameof(notification));
+            throw new ArgumentException($"The parameter does not " +
+                $"implement {nameof(INotification<TAggregateId, TDomainEvent>)} interface.", nameof(notification));
         }
     }
 }

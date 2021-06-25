@@ -20,9 +20,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Aggregates;
-
-namespace Xpandables.Net.Database
+namespace Xpandables.Net.Aggregates
 {
     /// <summary>
     /// Provides with methods to retrieve and persist event store entities.

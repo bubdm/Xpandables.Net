@@ -16,51 +16,37 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Aggregates;
-
-using Xpandables.Net.Notifications;
-
-namespace Xpandables.Net.Database
+namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Provides with methods to retrieve and persist notifications (out-box).
+    /// Provides with methods to retrieve and persist <see cref="ISnapShot{TAggregateId}"/>.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public interface INotificationEventAccessor<TAggregateId, TAggregate>
+    public interface ISnapShotAccessor<TAggregateId, TAggregate>
         where TAggregateId : notnull, IAggregateId
         where TAggregate : notnull, IAggregate<TAggregateId>
     {
         /// <summary>
-        /// Asynchronously returns a collection of notification events matching the criteria.
-        /// if not found, returns an empty collection.
+        /// Asynchronously returns the snapshot matching the specified aggregate identifier or null if not found.
         /// </summary>
-        /// <param name="criteria">The criteria to be applied to entities.</param>
+        /// <param name="aggreagteId">the aggregate id to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <see cref="INotification{TAggregateId}"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<INotification<TAggregateId>> ReadAllNotificationsAsync(
-            EventStoreEntityCriteria criteria,
+        /// <returns>A task that represents an object of <see cref="ISnapShot{TAggregateId}"/>.</returns>
+        Task<ISnapShot<TAggregateId>?> GetSnapShotAsync(
+            TAggregateId aggreagteId,
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Asynchronously appends the specified notification event.
+        /// Asynchronously appends the specified aggregate as snapshot.
         /// </summary>
-        /// <param name="event">Then target notification to be appended.</param>
+        /// <param name="aggregate">The aggregate to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        Task AppendEventAsync(INotification<TAggregateId> @event, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Asynchronously returns the number of notification events matching the criteria.
-        /// </summary>
-        /// <param name="criteria">The criteria to be applied to entities.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the number of notifications  events.</returns>
-        Task<int> CountEventsAsync(EventStoreEntityCriteria criteria, CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
+        Task AppendAsSnapShotAsync(TAggregate aggregate, CancellationToken cancellationToken = default);
     }
 }

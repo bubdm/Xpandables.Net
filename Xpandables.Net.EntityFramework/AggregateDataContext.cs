@@ -17,22 +17,24 @@
 ************************************************************************************************************/
 using Microsoft.EntityFrameworkCore;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database.EntityConfigurations;
 
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// The <see cref="DomainEventStoreContext"/> data context definition.
+    /// The <see cref="AggregateDataContext"/> data context definition.
     /// </summary>
-    public class DomainEventStoreContext : DataContext, IDomainEventStoreContext
+    public class AggregateDataContext : DataContext, IAggregateDataContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DomainEventStoreContext"/> class
+        /// Initializes a new instance of the <see cref="AggregateDataContext"/> class
         /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
         /// method will still be called to allow further configuration of the options.
         /// </summary>
         /// <param name="contextOptions">The options for this context.</param>
-        public DomainEventStoreContext(DbContextOptions contextOptions) : base(contextOptions) { }
+        public AggregateDataContext(DbContextOptions contextOptions)
+            : base(contextOptions) { }
 
         ///<inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,5 +46,15 @@ namespace Xpandables.Net.Database
         /// Gets the domain events collection. Read Only.
         /// </summary>
         public DbSet<EventStoreEntity> DomainEvents { get; set; } = default!;
+
+        /// <summary>
+        /// Gets the notifications collection. Read/Write
+        /// </summary>
+        public DbSet<EventStoreEntity> Notifications { get; set; } = default!;
+
+        /// <summary>
+        /// Gets the snapShots collection. Read/Write
+        /// </summary>
+        public DbSet<EventStoreEntity> SnapShots { get; set; } = default!;
     }
 }

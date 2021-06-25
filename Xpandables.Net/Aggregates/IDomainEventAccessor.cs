@@ -16,39 +16,51 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
 
+using Xpandables.Net.DomainEvents;
+
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Provides with methods to retrieve and persist <see cref="ISnapShot{TAggregateId}"/>.
+    /// Provides with methods to retrieve and persist domain events.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public interface ISnapShotAccessor<TAggregateId, TAggregate>
-        where TAggregateId : notnull, IAggregateId
+    public interface IDomainEventAccessor<TAggregateId, TAggregate>
         where TAggregate : notnull, IAggregate<TAggregateId>
+        where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
-        /// Asynchronously returns the snapshot matching the specified aggregate identifier or null if not found.
+        /// Asynchronously returns a collection of domain events matching the criteria.
+        /// if not found, returns an empty collection.
         /// </summary>
-        /// <param name="aggreagteId">the aggregate id to search for.</param>
+        /// <param name="criteria">The criteria to be applied to entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <see cref="ISnapShot{TAggregateId}"/>.</returns>
-        Task<ISnapShot<TAggregateId>?> GetSnapShotAsync(
-            TAggregateId aggreagteId,
+        /// <returns>An enumerator of <see cref="IDomainEvent{TAggregateId}"/> that can be asynchronously enumerated.</returns>
+        IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadAllDomainEventsAsync(
+            EventStoreEntityCriteria criteria,
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Asynchronously appends the specified aggregate as snapshot.
+        /// Asynchronously appends the specified domain event.
         /// </summary>
-        /// <param name="aggregate">The aggregate to act on.</param>
+        /// <param name="event">Then target domain event to be appended.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
-        Task AppendAsSnapShotAsync(TAggregate aggregate, CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        Task AppendEventAsync(IDomainEvent<TAggregateId> @event, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Asynchronously returns the number of domain events matching the criteria.
+        /// </summary>
+        /// <param name="criteria">The criteria to be applied to entities.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the number of domain  events.</returns>
+        Task<int> CountDomainEventsAsync(EventStoreEntityCriteria criteria, CancellationToken cancellationToken = default);
     }
 }

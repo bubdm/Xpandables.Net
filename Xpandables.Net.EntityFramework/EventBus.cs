@@ -15,6 +15,8 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,20 +34,19 @@ namespace Xpandables.Net.Notifications
     public sealed class EventBus : IEventBus
     {
         private readonly INotificationPublisher _notificationPublisher;
-        private readonly INotificationEventStoreContext _notificationContext;
+        private readonly AggregateDataContext _context;
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventBus"/>.
         /// </summary>
         /// <param name="notificationPublisher">The notification publisher.</param>
-        /// <param name="notificationContext">The data context.</param>
+        /// <param name="context">The data context.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="notificationPublisher"/>
-        /// or <paramref name="notificationContext"/> is null.</exception>
-        public EventBus(INotificationPublisher notificationPublisher,
-                        INotificationEventStoreContext notificationContext)
+        /// or <paramref name="context"/> is null.</exception>
+        public EventBus(INotificationPublisher notificationPublisher, IAggregateDataContext context)
         {
             _notificationPublisher = notificationPublisher ?? throw new ArgumentNullException(nameof(notificationPublisher));
-            _notificationContext = notificationContext ?? throw new ArgumentNullException(nameof(notificationContext));
+            _context = (AggregateDataContext)context;
         }
 
         ///<inheritdoc/>
@@ -61,22 +62,25 @@ namespace Xpandables.Net.Notifications
             }
 
             if (updatedNotifications.Count > 0)
-                await _notificationContext.SaveChangesAsync().ConfigureAwait(false);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         async Task<List<EventStoreEntity>> FetchPendingNotifications()
         {
-            var results = new List<EventStoreEntity>();
-            var criteria = new EventStoreEntityCriteria() { IsDeleted = false, IsActive = true, Count = 50 };
+            var criteria = new EventStoreEntityCriteria()
+            {
+                IsDeleted = false,
+                IsActive = true,
+                Count = 50
+            };
 
-            await foreach (var entity in _notificationContext.FetchAllAsync<EventStoreEntity, EventStoreEntity>(
-                           entity => entity
-                               .Where(criteria)
-                               .OrderBy(o => o.CreatedOn)
-                               .Take(criteria.Count.Value)))
-                results.Add(entity);
-
-            return results;
+            return await _context.Notifications
+                    .AsNoTracking()
+                    .Where(criteria)
+                    .OrderBy(o => o.CreatedOn)
+                    .Take(criteria.Count.Value)
+                    .ToListAsync()
+                    .ConfigureAwait(false);
         }
 
         async Task<bool> TryPushAsync(EventStoreEntity entity)
@@ -95,7 +99,7 @@ namespace Xpandables.Net.Notifications
                 entity.Deactivated();
                 entity.Deleted();
 
-                await _notificationContext.UpdateAsync(entity).ConfigureAwait(false);
+                _context.Notifications.Update(entity);
 
                 return true;
             }

@@ -22,10 +22,9 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Xpandables.Net.Aggregates;
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.Database
+namespace Xpandables.Net.Aggregates
 {
     /// <summary>
     /// Represents an event entity to be written.

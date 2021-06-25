@@ -18,7 +18,7 @@
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Represents a set of commands to manage data context for snapshots.
+    /// Represents a set of commands to manage data context for aggregate.
     /// </summary>
-    public interface ISnapShotStoreContext : IDataContext { }
+    public interface IAggregateDataContext : IDataContext { }
 }

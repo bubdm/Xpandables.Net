@@ -22,7 +22,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Commands;
 using Xpandables.Net.Handlers;
 
 namespace Xpandables.Net.Notifications
@@ -57,25 +56,14 @@ namespace Xpandables.Net.Notifications
 
             var tasks = handlers.Select(handler => handler.HandleAsync(@event, cancellationToken));
 
-            var results = await Task.WhenAll(tasks).ConfigureAwait(false);
-
-            // TODO : think about thread pool
-            foreach (var result in results.Where(r => r.HasValue))
-            {
-                if (result.Value is ICommand command)
-                {
-                    var handler = TryGetCommandHandler(command);
-                    if (handler is not null)
-                        await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
-                }
-            }
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
         private IEnumerable<INotificationHandler> GetNotificationHandlers(IEvent @event)
         {
             var genericInterfaceType = @event.GetType().GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType 
-                    && (i.GetGenericTypeDefinition() == typeof(INotification<>) 
+                .FirstOrDefault(i => i.IsGenericType
+                    && (i.GetGenericTypeDefinition() == typeof(INotification<>)
                     || i.GetGenericTypeDefinition() == typeof(INotification<,>)))
                 ?? throw new ArgumentException($"The type '{@event.GetType().Name}' must " +
                 $"implement one of '{typeof(INotification<>).Name}' interfaces.");
@@ -105,18 +93,6 @@ namespace Xpandables.Net.Notifications
             }
 
             return (IEnumerable<INotificationHandler>)foundHandlers;
-        }
-
-        private dynamic? TryGetCommandHandler(ICommand command)
-        {
-            var genericHandlerType = typeof(ICommandHandler<>);
-            if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out _, command.GetType()))
-                return default;
-
-            if (!_handlerAccessor.TryGetHandler(typeHandler, out var foundHandler, out _))
-                return default;
-
-            return foundHandler;
         }
 
         private static void WriteLineException(Exception exception)

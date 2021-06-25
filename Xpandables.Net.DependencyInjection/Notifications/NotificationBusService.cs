@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
 using Xpandables.Net.DependencyInjection;
+using Xpandables.Net.Services;
 
 namespace Xpandables.Net.Notifications
 {
