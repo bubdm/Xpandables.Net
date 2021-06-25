@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,20 +14,11 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Text.Json;
 
-namespace Xpandables.Net.Aggregates
+namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Event Store entity converter using <see cref="System.Text.Json"/>.
+    /// Represents a set of commands to manage data context for domain events.
     /// </summary>
-    public sealed class EventStoreEntityTypeConverter : IEventStoreEntityTypeConverter
-    {
-        ///<inheritdoc/>
-        public object Deserialize(string value, Type returnType) => JsonSerializer.Deserialize(value, returnType)!;
-
-        ///<inheritdoc/>
-        public string Serialize(object value, Type inputType) => JsonSerializer.Serialize(value, inputType);
-    }
+    public interface IDomainEventStoreContext : IDataContext { }
 }

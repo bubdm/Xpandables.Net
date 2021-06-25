@@ -26,7 +26,7 @@ namespace Xpandables.Net.Aggregates
     /// Event-sourcing pattern interface.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    public interface IDomainEventSourcing<TAggregateId>
+    internal interface IDomainEventSourcing<TAggregateId>
         where TAggregateId : notnull, IAggregateId
     {
         /// <summary>

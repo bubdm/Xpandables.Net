@@ -92,5 +92,17 @@ namespace Xpandables.Net.Database
         /// <returns>A task that represents an asynchronous operation.</returns>
         Task UpdateAsync<T>(T updatedEntity, CancellationToken cancellationToken = default)
             where T : class, IEntity;
+
+        /// <summary>
+        /// Asynchronously returns the number of elements in a sequence that satisfy a condition.
+        /// </summary>
+        /// <typeparam name="T">The Domain object type.</typeparam>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns> A task that represents the asynchronous operation. The task result contains the 
+        /// number of elements in the sequence that satisfy the condition in the predicate function.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="predicate"/> is null.</exception>
+        Task<int> CountAsync<T>(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+            where T : class, IEntity;
     }
 }

@@ -17,45 +17,32 @@
 ************************************************************************************************************/
 using Microsoft.EntityFrameworkCore;
 
-using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database.EntityConfigurations;
 
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// The <see cref="EventStore{TAggregateId}"/> data context definition.
+    /// The <see cref="DomainEventStoreContext"/> data context definition.
     /// </summary>
-    public class EventStoreContext : DataContext, IEventStoreContext
+    public class DomainEventStoreContext : DataContext, IDomainEventStoreContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EventStoreContext"/> class
+        /// Initializes a new instance of the <see cref="DomainEventStoreContext"/> class
         /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
         /// method will still be called to allow further configuration of the options.
         /// </summary>
         /// <param name="contextOptions">The options for this context.</param>
-        public EventStoreContext(DbContextOptions contextOptions) : base(contextOptions) { }
+        public DomainEventStoreContext(DbContextOptions contextOptions) : base(contextOptions) { }
 
         ///<inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new EventEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new NotificationEventEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new SnapShotEntityTypeConfiguration());
         }
 
         /// <summary>
         /// Gets the domain events collection. Read Only.
         /// </summary>
-        public DbSet<DomainEventEntity> Events { get; set; } = default!;
-
-        /// <summary>
-        /// Gets the notifications collection. Read/Write
-        /// </summary>
-        public DbSet<NotificationEntity> Notifications { get; set; } = default!;
-
-        /// <summary>
-        /// Gets the snapShots collection. Read/Write
-        /// </summary>
-        public DbSet<SnapShotEntity> SnapShots { get; set; } = default!;
+        public DbSet<EventStoreEntity> DomainEvents { get; set; } = default!;
     }
 }

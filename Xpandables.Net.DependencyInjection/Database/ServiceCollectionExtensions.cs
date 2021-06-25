@@ -45,17 +45,17 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TEventStoreDataContext"/> type class reference implementation as <see cref="IEventStoreContext"/> to the services with scoped life time.
+        /// Adds the <typeparamref name="TEventStoreDataContext"/> type class reference implementation as <see cref="IDomainEventStoreContext"/> to the services with scoped life time.
         /// </summary>
-        /// <typeparam name="TEventStoreDataContext">The type of the data context that implements <see cref="IEventStoreContext"/>.</typeparam>
+        /// <typeparam name="TEventStoreDataContext">The type of the data context that implements <see cref="IDomainEventStoreContext"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXEventStoreDataContext<TEventStoreDataContext>(this IXpandableServiceBuilder services)
-            where TEventStoreDataContext : class, IEventStoreContext
+            where TEventStoreDataContext : class, IDomainEventStoreContext
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddScoped<IEventStoreContext, TEventStoreDataContext>();
+            services.Services.AddScoped<IDomainEventStoreContext, TEventStoreDataContext>();
             return services;
         }
 

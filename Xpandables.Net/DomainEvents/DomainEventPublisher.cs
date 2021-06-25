@@ -42,7 +42,7 @@ namespace Xpandables.Net.DomainEvents
             => _handlerAccessor = handlerAccessor ?? throw new ArgumentNullException(nameof(handlerAccessor));
 
         ///<inheritdoc/>
-        public virtual async Task PublishAsync(ICommandQueryEvent @event, CancellationToken cancellationToken = default)
+        public virtual async Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 

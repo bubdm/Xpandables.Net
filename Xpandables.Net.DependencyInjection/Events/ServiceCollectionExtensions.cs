@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 
 using Xpandables.Net.Aggregates;
+using Xpandables.Net.Database;
 using Xpandables.Net.DomainEvents;
 using Xpandables.Net.Notifications;
 
@@ -141,45 +142,38 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IEventStore{TAggregateId}"/> implementation to the services with scope life time.
+        /// Adds the <see cref="IDomainEventAccessor{TAggregateId, TAggregate}"/> implementation to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TAggregateId">The type of the aggregate identifier.</typeparam>
-        /// <typeparam name="TEventStore">The type that implements <see cref="IEventStore{TAggregateId}"/></typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEventStore<TAggregateId, TEventStore>(this IXpandableServiceBuilder services)
-            where TEventStore : class, IEventStore<TAggregateId>
-            where TAggregateId : notnull, IAggregateId
+        public static IXpandableServiceBuilder AddXDomainEventAccessor(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped<IEventStore<TAggregateId>, TEventStore>();
+            services.Services.AddScoped(typeof(IDomainEventAccessor<,>), typeof(DomainEventAccessor<,>));
             return services;
         }
 
         /// <summary>
-        /// Adds the <see cref="System.Text.Json"/> event store entity converter implementation to the services with singleton life time.
+        /// Adds the <see cref="INotificationEventAccessor{TAggregateId, TAggregate}"/> implementation to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEventStoreEntityTypeConverter(this IXpandableServiceBuilder services)
+        public static IXpandableServiceBuilder AddXNotificationEventAccessor(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddSingleton<IEventStoreEntityTypeConverter, EventStoreEntityTypeConverter>();
+            services.Services.AddScoped(typeof(INotificationEventAccessor<,>), typeof(NotificationEventAccessor<,>));
             return services;
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TEvtnStoreEntityTypeConverter"/> as <see cref="IEventStoreEntityTypeConverter"/> event store entity converter 
-        /// implementation to the services with singleton life time.
+        /// Adds the <see cref="INotificationEventAccessor{TAggregateId, TAggregate}"/> implementation to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TEvtnStoreEntityTypeConverter">Type of the converter.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEventStoreEntityTypeConverter<TEvtnStoreEntityTypeConverter>(this IXpandableServiceBuilder services)
-            where TEvtnStoreEntityTypeConverter : class, IEventStoreEntityTypeConverter
+        public static IXpandableServiceBuilder AddXSnapShotAccessor(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddSingleton<IEventStoreEntityTypeConverter, TEvtnStoreEntityTypeConverter>();
+            services.Services.AddScoped(typeof(ISnapShotAccessor<,>), typeof(SnapShotAccessor<,>));
             return services;
         }
 

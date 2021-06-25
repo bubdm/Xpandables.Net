@@ -25,7 +25,7 @@ namespace Xpandables.Net.Aggregates
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     [Serializable]
-    public sealed class SnapShot<TAggregateId> : ISnapShot<TAggregateId>
+    public sealed class SnapShot<TAggregateId> : Event<TAggregateId>, ISnapShot<TAggregateId>
         where TAggregateId : notnull, AggregateId
     {
         /// <summary>
@@ -36,17 +36,14 @@ namespace Xpandables.Net.Aggregates
         /// <param name="version">The version.</param>
         [JsonConstructor]
         public SnapShot(IMemento memento, TAggregateId aggregateId, long version)
+            : base(aggregateId)
         {
             Memento = memento ?? throw new ArgumentNullException(nameof(memento));
-            AggregateId = aggregateId;
             Version = version;
         }
 
         ///<inheritdoc/>
         public IMemento Memento { get; }
-
-        ///<inheritdoc/>
-        public TAggregateId AggregateId { get; }
 
         ///<inheritdoc/>
         public long Version { get; }

@@ -34,6 +34,7 @@ namespace Xpandables.Net.DomainEvents
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="event"/> must implement <see cref="IDomainEvent{TAggregateId}"/> interface.</exception>
-        Task PublishAsync(ICommandQueryEvent @event, CancellationToken cancellationToken = default);
+        /// <exception cref="InvalidOperationException">Publishing the event failed. See inner exception.</exception>
+        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
     }
 }

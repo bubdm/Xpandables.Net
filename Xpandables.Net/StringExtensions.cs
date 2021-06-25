@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -34,11 +35,13 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="value">The format string.</param>
         /// <param name="args">The object to be formatted.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="value"/> is null or <paramref name="args"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> is null or
+        /// <paramref name="args"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="args"/> is null or empty.</exception>
         /// <exception cref="FormatException">The format is invalid.</exception>
         /// <returns>value <see cref="string"/> filled with <paramref name="args"/>.</returns>
-        public static string StringFormat(this string value, params object[] args) => value.StringFormat(CultureInfo.InvariantCulture, args);
+        public static string StringFormat(this string value, params object[] args)
+            => value.StringFormat(CultureInfo.InvariantCulture, args);
 
         /// <summary>
         /// Replaces the argument object into the current text equivalent <see cref="string"/> using the specified culture.
@@ -65,8 +68,94 @@ namespace Xpandables.Net
         /// <param name="source">The object to act on.</param>
         /// <param name="options">The serializer options to be applied.</param>
         /// <returns>A JSOn string representation of the object.</returns>
-        /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter for TValue or its serializable members.</exception>
-        public static string ToJsonString<T>(this T source, JsonSerializerOptions? options = default) => JsonSerializer.Serialize(source, options);
+        /// <exception cref="NotSupportedException">There is no compatible 
+        /// System.Text.Json.Serialization.JsonConverter for TValue or its serializable members.</exception>
+        public static string ToJsonString<T>(this T source, JsonSerializerOptions? options = default)
+            => JsonSerializer.Serialize(source, options);
+
+        /// <summary>
+        /// Deserializes the current JSON element to an object of specified <typeparamref name="T"/> type.
+        /// </summary>
+        /// <typeparam name="T">The target type of the UTF-8 encoded text.</typeparam>
+        /// <param name="element">The JSON text to parse.</param>
+        /// <param name="options">Options to control the behavior during parsing.</param>
+        /// <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
+        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        public static T? ToObject<T>(this JsonElement element, JsonSerializerOptions? options = default)
+        {
+            try
+            {
+                var bufferWriter = new ArrayBufferWriter<byte>();
+                using var writer = new Utf8JsonWriter(bufferWriter);
+                element.WriteTo(writer);
+                writer.Flush();
+
+                return JsonSerializer.Deserialize<T>(bufferWriter.WrittenSpan, options);
+            }
+            catch (Exception exception) when (exception is not InvalidOperationException)
+            {
+                throw new InvalidOperationException("Unable to parse element.", exception);
+            }
+        }
+
+        /// <summary>
+        /// Deserializes the current JSON element to an object of specified type.
+        /// </summary>
+        /// <param name="element">The JSON text to parse.</param>
+        /// <param name="returnType">The type of the object to convert to and return.</param>
+        /// <param name="options">Options to control the behavior during parsing.</param>
+        /// <returns>A returnType representation of the JSON value.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="returnType"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        public static object? ToObject(this JsonElement element, Type returnType, JsonSerializerOptions? options = default)
+        {
+            _ = returnType ?? throw new ArgumentNullException(nameof(returnType));
+
+            try
+            {
+                var bufferWriter = new ArrayBufferWriter<byte>();
+                using var writer = new Utf8JsonWriter(bufferWriter);
+                element.WriteTo(writer);
+                writer.Flush();
+
+                return JsonSerializer.Deserialize(bufferWriter.WrittenSpan, returnType, options);
+            }
+            catch (Exception exception) when (exception is not InvalidOperationException)
+            {
+                throw new InvalidOperationException("Unable to parse element.", exception);
+            }
+        }
+
+        /// <summary>
+        /// Deserializes the current JSON document to an object of specified <typeparamref name="T"/> type.
+        /// </summary>
+        /// <typeparam name="T">The target type of the UTF-8 encoded text.</typeparam>
+        /// <param name="document">The JSON document to parse.</param>
+        /// <param name="options">Options to control the behavior during parsing.</param>
+        /// <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="document"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        public static T? ToObject<T>(this JsonDocument document, JsonSerializerOptions? options = default)
+        {
+            _ = document ?? throw new ArgumentNullException(nameof(document));
+            return document.RootElement.ToObject<T>(options);
+        }
+
+        /// <summary>
+        /// Deserializes the current JSON document to an object of specified type.
+        /// </summary>
+        /// <param name="document">The JSON document to parse.</param>
+        /// <param name="returnType">The type of the object to convert to and return.</param>
+        /// <param name="options">Options to control the behavior during parsing.</param>
+        /// <returns>A returnType representation of the JSON value.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="returnType"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="document"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        public static object? ToObject(this JsonDocument document, Type returnType, JsonSerializerOptions? options = default)
+        {
+            _ = document ?? throw new ArgumentNullException(nameof(document));
+            return document.RootElement.ToObject(returnType, options);
+        }
 
         /// <summary>
         /// Concatenates all the elements of an <see cref="IEnumerable{T}"/>,
@@ -79,8 +168,10 @@ namespace Xpandables.Net
         /// <returns>A string that consists of the elements in value delimited by the separator string.
         /// If value is an empty array, the method returns String.Empty.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
-        /// <exception cref="OutOfMemoryException">The length of the resulting string overflows the maximum allowed length (<see cref="int.MaxValue"/>).</exception>
-        public static string StringJoin<TSource>(this IEnumerable<TSource> collection, string separator) => string.Join(separator, collection);
+        /// <exception cref="OutOfMemoryException">The length of the resulting string overflows 
+        /// the maximum allowed length (<see cref="int.MaxValue"/>).</exception>
+        public static string StringJoin<TSource>(this IEnumerable<TSource> collection, string separator)
+            => string.Join(separator, collection);
 
         /// <summary>
         /// Concatenates all the elements of an <see cref="IEnumerable{T}"/>,
@@ -93,8 +184,10 @@ namespace Xpandables.Net
         /// <returns>A string that consists of the elements in value delimited by the separator string.
         /// If value is an empty array, the method returns String.Empty.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
-        /// <exception cref="OutOfMemoryException">The length of the resulting string overflows the maximum allowed length (<see cref="int.MaxValue"/>).</exception>
-        public static string StringJoin<TSource>(this IEnumerable<TSource> collection, char separator) => string.Join(separator.ToString(CultureInfo.InvariantCulture), collection);
+        /// <exception cref="OutOfMemoryException">The length of the resulting string overflows the 
+        /// maximum allowed length (<see cref="int.MaxValue"/>).</exception>
+        public static string StringJoin<TSource>(this IEnumerable<TSource> collection, char separator)
+            => string.Join(separator.ToString(CultureInfo.InvariantCulture), collection);
 
         /// <summary>
         /// Tries to convert a string to the specified value type.

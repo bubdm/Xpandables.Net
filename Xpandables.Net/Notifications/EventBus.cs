@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
@@ -33,72 +32,78 @@ namespace Xpandables.Net.Notifications
     public sealed class EventBus : IEventBus
     {
         private readonly INotificationPublisher _notificationPublisher;
-        private readonly IEventStoreContext _context;
-        private readonly IEventStoreEntityTypeConverter _converter;
+        private readonly INotificationEventStoreContext _notificationContext;
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventBus"/>.
         /// </summary>
         /// <param name="notificationPublisher">The notification publisher.</param>
-        /// <param name="context">The data context.</param>
-        /// <param name="converter">The converter.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="notificationPublisher"/> or <paramref name="context"/> is null.</exception>
-        public EventBus(INotificationPublisher notificationPublisher, IEventStoreContext context, IEventStoreEntityTypeConverter converter)
+        /// <param name="notificationContext">The data context.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="notificationPublisher"/>
+        /// or <paramref name="notificationContext"/> is null.</exception>
+        public EventBus(INotificationPublisher notificationPublisher,
+                        INotificationEventStoreContext notificationContext)
         {
             _notificationPublisher = notificationPublisher ?? throw new ArgumentNullException(nameof(notificationPublisher));
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _converter = converter ?? throw new ArgumentNullException(nameof(converter));
+            _notificationContext = notificationContext ?? throw new ArgumentNullException(nameof(notificationContext));
         }
 
         ///<inheritdoc/>
         public async Task PushAsync()
         {
-            var updatedNotifications = new List<NotificationEntity>();
+            var updatedNotifications = new List<EventStoreEntity>();
             var notifications = await FetchPendingNotifications().ConfigureAwait(false);
 
             foreach (var entity in notifications)
             {
-                if (!await TryPushAsync(entity).ConfigureAwait(false))
-                    break;
-                else
+                if (await TryPushAsync(entity).ConfigureAwait(false))
                     updatedNotifications.Add(entity);
             }
 
             if (updatedNotifications.Count > 0)
-                await _context.SaveChangesAsync().ConfigureAwait(false);
+                await _notificationContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        async Task<List<NotificationEntity>> FetchPendingNotifications()
+        async Task<List<EventStoreEntity>> FetchPendingNotifications()
         {
-            var results = new List<NotificationEntity>();
-            await foreach (var entity in _context.FetchAllAsync<NotificationEntity, NotificationEntity>(
+            var results = new List<EventStoreEntity>();
+            var criteria = new EventStoreEntityCriteria() { IsDeleted = false, IsActive = true, Count = 50 };
+
+            await foreach (var entity in _notificationContext.FetchAllAsync<EventStoreEntity, EventStoreEntity>(
                            entity => entity
-                               .Where(w => !w.IsDeleted && w.IsActive)
+                               .Where(criteria)
                                .OrderBy(o => o.CreatedOn)
-                               .Take(50)))
+                               .Take(criteria.Count.Value)))
                 results.Add(entity);
 
             return results;
         }
 
-        async Task<bool> TryPushAsync(NotificationEntity entity)
+        async Task<bool> TryPushAsync(EventStoreEntity entity)
         {
             try
             {
-                if (_converter.Deserialize(Encoding.UTF8.GetString(entity.Data), Type.GetType(entity.TypeFullName)!) is not ICommandQueryEvent @event)
+                var type = Type.GetType(entity.EventTypeFullName);
+                if (type is null)
+                    return false;
+
+                if (entity.To(type) is not IEvent @event)
                     return false;
 
                 await _notificationPublisher.PublishAsync(@event).ConfigureAwait(false);
 
                 entity.Deactivated();
                 entity.Deleted();
-                await _context.UpdateAsync(entity).ConfigureAwait(false);
+
+                await _notificationContext.UpdateAsync(entity).ConfigureAwait(false);
 
                 return true;
             }
             catch (Exception exception)
             {
+#if DEBUG
                 Trace.WriteLine(exception);
+#endif
                 return false;
             }
         }

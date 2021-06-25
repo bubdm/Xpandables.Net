@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,23 +14,11 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Text.Json.Serialization;
 
-namespace Xpandables.Net.Aggregates
+namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Represents an out box (notification) message to be written.
+    /// Represents a set of commands to manage data context for snapshots.
     /// </summary>
-    public class NotificationEntity : StoreEntity
-    {
-        ///<inheritdoc/>
-        [JsonConstructor]
-        public NotificationEntity(
-            string aggregateId,
-            string typeFullName,
-            string typeName,
-            bool isJson,
-            byte[] data)
-            : base(aggregateId, typeFullName, typeName, isJson, data) { }
-    }
+    public interface ISnapShotStoreContext : IDataContext { }
 }

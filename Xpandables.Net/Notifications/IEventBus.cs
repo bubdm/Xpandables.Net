@@ -20,12 +20,12 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Notifications
 {
     /// <summary>
-    /// Defines an interface to subscribe and publish notifications.
+    /// Defines an interface to publish notifications.
     /// </summary>
     public interface IEventBus
     {
         /// <summary>
-        /// Asynchronously pushes notifications to any subscribers.
+        /// Asynchronously pushes notifications to any subscribers (<see cref="INotificationHandler"/>).
         /// </summary>
         /// <returns>a task that represents an asynchronous operation.</returns>
         Task PushAsync();

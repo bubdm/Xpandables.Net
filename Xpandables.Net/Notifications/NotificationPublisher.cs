@@ -46,7 +46,9 @@ namespace Xpandables.Net.Notifications
         }
 
         ///<inheritdoc/>
-        public virtual async Task PublishAsync(ICommandQueryEvent @event, CancellationToken cancellationToken = default)
+        public virtual async Task PublishAsync(
+            IEvent @event,
+            CancellationToken cancellationToken = default)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
@@ -69,11 +71,14 @@ namespace Xpandables.Net.Notifications
             }
         }
 
-        private IEnumerable<INotificationHandler> GetNotificationHandlers(ICommandQueryEvent @event)
+        private IEnumerable<INotificationHandler> GetNotificationHandlers(IEvent @event)
         {
             var genericInterfaceType = @event.GetType().GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType && (i.GetGenericTypeDefinition() == typeof(INotification<>) || i.GetGenericTypeDefinition() == typeof(INotification<,>)))
-                ?? throw new ArgumentException($"The type '{@event.GetType().Name}' must implement one of '{typeof(INotification<>).Name}' interfaces.");
+                .FirstOrDefault(i => i.IsGenericType 
+                    && (i.GetGenericTypeDefinition() == typeof(INotification<>) 
+                    || i.GetGenericTypeDefinition() == typeof(INotification<,>)))
+                ?? throw new ArgumentException($"The type '{@event.GetType().Name}' must " +
+                $"implement one of '{typeof(INotification<>).Name}' interfaces.");
 
             var aggregateIdType = genericInterfaceType.GetGenericArguments()[0];
 
@@ -81,17 +86,21 @@ namespace Xpandables.Net.Notifications
                 ? new[] { aggregateIdType, @event.GetType() }
                 : new[] { aggregateIdType, genericInterfaceType.GetGenericArguments()[1], @event.GetType() };
 
-            var genericHandlerType = genericInterfaceType.GetGenericTypeDefinition() == typeof(INotification<>) ? typeof(INotificationHandler<,>) : typeof(INotificationHandler<,,>);
+            var genericHandlerType = genericInterfaceType.GetGenericTypeDefinition() == typeof(INotification<>)
+                ? typeof(INotificationHandler<,>) : typeof(INotificationHandler<,,>);
 
-            if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, aggregateIdType, @event.GetType()))
+            if (!genericHandlerType
+                .TryMakeGenericType(out var typeHandler, out var typeException, aggregateIdType, @event.GetType()))
             {
-                WriteLineException(new InvalidOperationException("Building notification Handler type failed.", typeException));
+                WriteLineException(
+                    new InvalidOperationException("Building notification Handler type failed.", typeException));
                 return Enumerable.Empty<INotificationHandler>();
             }
 
             if (!_handlerAccessor.TryGetHandlers(typeHandler, out var foundHandlers, out var ex))
             {
-                WriteLineException(new InvalidOperationException($"Matching notification handlers for {@event.GetType().Name} are missing.", ex));
+                WriteLineException(new InvalidOperationException($"Matching notification handlers " +
+                    $"for {@event.GetType().Name} are missing.", ex));
                 return Enumerable.Empty<INotificationHandler>();
             }
 

@@ -21,18 +21,13 @@ namespace Xpandables.Net.Aggregates
     /// Defines properties of a snapshot for an aggregate.
     /// </summary>
     /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
-    public interface ISnapShot<TAggregateId>
+    public interface ISnapShot<TAggregateId> : IEvent<TAggregateId>
         where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Gets the memento linked to the aggregate.
         /// </summary>
         IMemento Memento { get; }
-
-        /// <summary>
-        /// Gets the target aggregate identifier.
-        /// </summary>
-        TAggregateId AggregateId { get; }
 
         /// <summary>
         /// Gets the version of the snapshot.

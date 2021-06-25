@@ -35,6 +35,6 @@ namespace Xpandables.Net.Notifications
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="event"/> must implement 
         /// <see cref="INotification{TAggregateId}"/> or <see cref="INotification{TAggregateId, TDomainEvent}"/> interface.</exception>
-        Task PublishAsync(ICommandQueryEvent @event, CancellationToken cancellationToken = default);
+        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
     }
 }

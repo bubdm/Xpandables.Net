@@ -24,7 +24,8 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// The aggregate version.
     /// </summary>
-    public sealed class AggregateVersion : IEqualityComparer<AggregateVersion>, IEquatable<AggregateVersion>, IComparable<AggregateVersion>
+    public sealed class AggregateVersion :
+        IEqualityComparer<AggregateVersion>, IEquatable<AggregateVersion>, IComparable<AggregateVersion>
     {
         /// <summary>
         /// Gets the current value of the version.

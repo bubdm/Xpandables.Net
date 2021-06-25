@@ -28,21 +28,29 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Represents a helper class that allows implementation of <see cref="IAggregate{TAggregateId}"/>.
     /// It contains a collection of <see cref="IDomainEvent{TAggregateId}"/>, <see cref="INotification{TAggregateId}"/>,
-    /// and a dictionary of domain event handlers. You must register event handlers using the <see cref="RegisterEventHandler{TEvent}(Action{TEvent})"/>
-    /// method when overriding the <see cref="RegisterEventHandlers"/> method. You can add a notification using the <see cref="AddNotification(INotification{TAggregateId})"/>
+    /// and a dictionary of domain event handlers. You must register event handlers using 
+    /// the <see cref="RegisterEventHandler{TEvent}(Action{TEvent})"/>
+    /// method when overriding the <see cref="RegisterEventHandlers"/> method. 
+    /// You can add a notification using the <see cref="AddNotification(INotification{TAggregateId})"/>
     /// method and you may use the <see cref="RaiseEvent{TEvent}(TEvent)"/> method to raise the specified event.
-    /// When creating an event (<see cref="IDomainEvent{TAggregateId}"/>), you may use of <see cref="GetNewVersion()"/> function to get the new version number according to
+    /// When creating an event (<see cref="IDomainEvent{TAggregateId}"/>), you may use of <see cref="GetNewVersion()"/> 
+    /// function to get the new version number according to
     /// the event creation.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     [Serializable]
     [DebuggerDisplay("Guid = {" + nameof(AggregateId) + "} Version = {" + nameof(Version) + "}")]
-    public abstract class Aggregate<TAggregateId> : OperationResults, IAggregate<TAggregateId>, IDomainEventSourcing<TAggregateId>, INotificationSourcing<TAggregateId>
+    public abstract class Aggregate<TAggregateId> : 
+        OperationResults, IAggregate<TAggregateId>, IDomainEventSourcing<TAggregateId>, 
+        INotificationSourcing<TAggregateId>
         where TAggregateId : notnull, AggregateId
     {
-        private readonly ICollection<IDomainEvent<TAggregateId>> _events = new LinkedList<IDomainEvent<TAggregateId>>();
-        private readonly ICollection<INotification<TAggregateId>> _notifications = new LinkedList<INotification<TAggregateId>>();
-        private readonly IDictionary<Type, Action<IDomainEvent<TAggregateId>>> _eventHandlers = new Dictionary<Type, Action<IDomainEvent<TAggregateId>>>();
+        private readonly ICollection<IDomainEvent<TAggregateId>> _events 
+            = new LinkedList<IDomainEvent<TAggregateId>>();
+        private readonly ICollection<INotification<TAggregateId>> _notifications 
+            = new LinkedList<INotification<TAggregateId>>();
+        private readonly IDictionary<Type, Action<IDomainEvent<TAggregateId>>> _eventHandlers 
+            = new Dictionary<Type, Action<IDomainEvent<TAggregateId>>>();
 
         /// <summary>
         /// Gets the current version of the instance, the default value is -1.
@@ -62,11 +70,13 @@ namespace Xpandables.Net.Aggregates
 
         void INotificationSourcing<TAggregateId>.MarkNotificationsAsCommitted() => _notifications.Clear();
 
-        IOrderedEnumerable<INotification<TAggregateId>> INotificationSourcing<TAggregateId>.GetNotifications() => _notifications.OrderBy(o => o.OccurredOn);
+        IOrderedEnumerable<INotification<TAggregateId>> INotificationSourcing<TAggregateId>.GetNotifications()
+            => _notifications.OrderBy(o => o.OccurredOn);
 
         void IDomainEventSourcing<TAggregateId>.MarkEventsAsCommitted() => _events.Clear();
 
-        IOrderedEnumerable<IDomainEvent<TAggregateId>> IDomainEventSourcing<TAggregateId>.GetUncommittedEvents() => _events.OrderBy(o => o.Version);
+        IOrderedEnumerable<IDomainEvent<TAggregateId>> IDomainEventSourcing<TAggregateId>.GetUncommittedEvents()
+            => _events.OrderBy(o => o.Version);
 
         void IDomainEventSourcing<TAggregateId>.LoadFromHistory(IOrderedEnumerable<IDomainEvent<TAggregateId>> events)
         {

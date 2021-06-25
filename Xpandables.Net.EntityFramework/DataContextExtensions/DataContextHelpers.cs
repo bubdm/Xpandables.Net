@@ -38,13 +38,26 @@ namespace Xpandables.Net.Database
         /// </summary>
         /// <typeparam name="TEntity">The type of entity being operated on by this set.</typeparam>
         /// <param name="dataContext">The target instance of db context.</param>
+        /// <param name="name"></param>
         /// <returns>An instance of <see cref="DbSet{TEntity}"/> for the specific type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public static DbSet<TEntity> Set<TEntity>(this IDataContext dataContext)
+        public static DbSet<TEntity> Set<TEntity>(this IDataContext dataContext, string? name = default)
             where TEntity : class, IEntity
         {
             _ = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            return ((DataContext)dataContext).Set<TEntity>();
+            return name is null ? ((DataContext)dataContext).Set<TEntity>() : ((DataContext)dataContext).Set<TEntity>(name);
+        }
+
+        /// <summary>
+        /// Represents the EFCore <see cref="DataContext"/>.
+        /// </summary>
+        /// <param name="dataContext">The target instance of db context.</param>
+        /// <returns>An instance of <see cref="DataContext"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
+        public static DataContext Context(this IDataContext dataContext)
+        {
+            _ = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            return (DataContext)dataContext;
         }
 
         /// <summary>

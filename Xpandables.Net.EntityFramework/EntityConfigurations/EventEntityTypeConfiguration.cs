@@ -19,29 +19,25 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Xpandables.Net.Aggregates;
-
 namespace Xpandables.Net.Database.EntityConfigurations
 {
     /// <summary>
-    /// EFCore configuration for <see cref="DomainEventEntity"/>.
+    /// EFCore configuration for <see cref="EventStoreEntity"/>.
     /// </summary>
-    public sealed class EventEntityTypeConfiguration : IEntityTypeConfiguration<DomainEventEntity>
+    public sealed class EventEntityTypeConfiguration : IEntityTypeConfiguration<EventStoreEntity>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<DomainEventEntity> builder)
+        public void Configure(EntityTypeBuilder<EventStoreEntity> builder)
         {
-            builder.HasKey(p => p.EventId);
-            builder.HasIndex(p => new { p.AggregateId, p.Version })
+            builder.HasKey(p => p.Id);
+            builder.HasIndex(p => new { p.AggregateId })
                 .IsUnique();
 
             builder.Property(p => p.AggregateId).IsConcurrencyToken();
-            builder.Property(p => p.Data);
-            builder.Property(p => p.EventId);
-            builder.Property(p => p.Version).IsConcurrencyToken();
-            builder.Property(p => p.IsJson);
-            builder.Property(p => p.TypeFullName);
-            builder.Property(p => p.TypeName);
+            builder.Property(p => p.AggregateTypeName);
+            builder.Property(p => p.EventData);
+            builder.Property(p => p.EventTypeFullName);
+            builder.Property(p => p.EventTypeName);
         }
     }
 }

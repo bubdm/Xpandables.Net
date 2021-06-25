@@ -16,20 +16,21 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.DomainEvents;
+using Xpandables.Net.Aggregates;
 
-namespace Xpandables.Net.Aggregates
+namespace Xpandables.Net.Database
 {
     /// <summary>
     /// Provides with methods to retrieve and persist <see cref="ISnapShot{TAggregateId}"/>.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    public interface ISnapShotStore<TAggregateId>
+    /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
+    public interface ISnapShotAccessor<TAggregateId, TAggregate>
         where TAggregateId : notnull, IAggregateId
+        where TAggregate : notnull, IAggregate<TAggregateId>
     {
         /// <summary>
         /// Asynchronously returns the snapshot matching the specified aggregate identifier or null if not found.
@@ -37,7 +38,9 @@ namespace Xpandables.Net.Aggregates
         /// <param name="aggreagteId">the aggregate id to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <see cref="ISnapShot{TAggregateId}"/>.</returns>
-        Task<ISnapShot<TAggregateId>?> GetSnapShotAsync(TAggregateId aggreagteId, CancellationToken cancellationToken = default);
+        Task<ISnapShot<TAggregateId>?> GetSnapShotAsync(
+            TAggregateId aggreagteId,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously appends the specified aggregate as snapshot.
@@ -46,23 +49,6 @@ namespace Xpandables.Net.Aggregates
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
-        Task AppendSnapShotAsync(IAggregate<TAggregateId> aggregate, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Asynchronously returns a collection of domain events where aggregate identifier matches the specified one since last snapshot.
-        /// if not found, returns an empty collection.
-        /// </summary>
-        /// <param name="aggregateId">The target aggregate identifier.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <see cref="IDomainEvent{TAggregateId}"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadEventsSinceLastSnapShotAsync(TAggregateId aggregateId, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Asynchronously returns the number of events since the last snapshot.
-        /// </summary>
-        /// <param name="aggregateId">The target aggregate identifier.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the number of  events.</returns>
-        Task<int> ReadEventCountSinceLastSnapShot(TAggregateId aggregateId, CancellationToken cancellationToken = default);
+        Task AppendAsSnapShotAsync(TAggregate aggregate, CancellationToken cancellationToken = default);
     }
 }

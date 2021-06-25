@@ -28,7 +28,7 @@ namespace Xpandables.Net.Decorators.Persistences
     /// <summary>
     /// This class allows the application author to add persistence support to command control flow.
     /// The target command should implement the <see cref="IAggregate"/> and <see cref="IPersistenceDecorator"/> interfaces in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="IEventStoreContext"/> and executes the
+    /// The class decorates the target command handler with an implementation of <see cref="IDomainEventStoreContext"/> and executes the
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
@@ -45,7 +45,7 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="eventStoreContext"/> is null.</exception>
-        public AggregatePersistenceDecorator(IEventStoreContext eventStoreContext, ICommandHandler<TCommand> decoratee)
+        public AggregatePersistenceDecorator(IDomainEventStoreContext eventStoreContext, ICommandHandler<TCommand> decoratee)
             : base(eventStoreContext)
             => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 
@@ -63,7 +63,7 @@ namespace Xpandables.Net.Decorators.Persistences
     /// <summary>
     /// This class allows the application author to add persistence support to command control flow.
     /// The target command should implement the <see cref="IAggregate"/> and <see cref="IPersistenceDecorator"/> interfaces in order to activate the behavior.
-    /// The class decorates the target command handler with an implementation of <see cref="IEventStoreContext"/> and executes the
+    /// The class decorates the target command handler with an implementation of <see cref="IDomainEventStoreContext"/> and executes the
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
@@ -81,7 +81,7 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="eventStoreContext"/> is null.</exception>
-        public AggregatePersistenceDecorator(IEventStoreContext eventStoreContext, ICommandHandler<TCommand, TResult> decoratee)
+        public AggregatePersistenceDecorator(IDomainEventStoreContext eventStoreContext, ICommandHandler<TCommand, TResult> decoratee)
             : base(eventStoreContext)
             => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 

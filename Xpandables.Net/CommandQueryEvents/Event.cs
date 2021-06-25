@@ -41,5 +41,7 @@ namespace Xpandables.Net
 
         ///<inheritdoc/>
         public Guid Guid { get; } = Guid.NewGuid();
+
+        IAggregateId IEvent.AggregateId => AggregateId;
     }
 }
