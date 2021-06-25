@@ -345,3 +345,5 @@ healthchecksdb
 /Xpandables.Net.Tests
 /Xpandables.Net.GraphQL
 /Xpandables.Net.GraphQLApi
+/Xpandables.Net.Api
+/Xpandables.Net.StateTest
