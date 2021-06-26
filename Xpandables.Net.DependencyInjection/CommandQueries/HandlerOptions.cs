@@ -43,7 +43,7 @@ namespace Xpandables.Net.DependencyInjection
         public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
 
         /// <summary>
-        /// Enables aggregate persistence behavior to commands that are decorated with the <see cref="IAggregate"/> and <see cref="IPersistenceDecorator"/> .
+        /// Enables aggregate persistence behavior to commands that are decorated with the <see cref="IAggregatePersistenceDecorator"/>.
         /// </summary>
         public HandlerOptions UseAggregatePersistenceDecorator() => this.With(cq => cq.IsAggregatePersistenceEnabled = true);
 

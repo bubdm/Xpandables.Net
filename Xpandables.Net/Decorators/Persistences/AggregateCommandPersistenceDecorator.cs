@@ -19,34 +19,33 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Aggregates;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Database;
 
 namespace Xpandables.Net.Decorators.Persistences
 {
     /// <summary>
-    /// This class allows the application author to add persistence support to command control flow.
-    /// The target command should implement the <see cref="IAggregate"/> and <see cref="IPersistenceDecorator"/> interfaces in order to activate the behavior.
+    /// This class allows the application author to add persistence support to command control flow with aggregate.
+    /// The target command should implement the <see cref="IAggregatePersistenceDecorator"/> interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IAggregateDataContext"/> and executes the
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
-    public sealed class AggregatePersistenceDecorator<TCommand> : ICommandHandler<TCommand>
-        where TCommand : class, ICommand, IAggregate, IPersistenceDecorator
+    public sealed class AggregateCommandPersistenceDecorator<TCommand> : ICommandHandler<TCommand>
+        where TCommand : class, ICommand, IAggregatePersistenceDecorator
     {
         private readonly ICommandHandler<TCommand> _decoratee;
         private readonly IAggregateDataContext _context;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandPersistenceDecorator{TCommand}"/> class with
+        /// Initializes a new instance of the <see cref="AggregateCommandPersistenceDecorator{TCommand}"/> class with
         /// the decorated handler and the db context to act on.
         /// </summary>
         /// <param name="context">The data context to act on.</param>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public AggregatePersistenceDecorator(IAggregateDataContext context, ICommandHandler<TCommand> decoratee)
+        public AggregateCommandPersistenceDecorator(IAggregateDataContext context, ICommandHandler<TCommand> decoratee)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
@@ -70,9 +69,9 @@ namespace Xpandables.Net.Decorators.Persistences
     }
 
     /// <summary>
-    /// This class allows the application author to add persistence support to command control flow.
-    /// The target command should implement the <see cref="IAggregate"/> and <see cref="IPersistenceDecorator"/> 
-    /// interfaces in order to activate the behavior.
+    /// This class allows the application author to add persistence support to command control flow with aggregate.
+    /// The target command should implement the <see cref="IAggregatePersistenceDecorator"/>
+    /// interface in order to activate the behavior.
     /// The class decorates the target command handler with an implementation of <see cref="IAggregateDataContext"/> 
     /// and executes the
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> 
@@ -80,21 +79,21 @@ namespace Xpandables.Net.Decorators.Persistences
     /// </summary>
     /// <typeparam name="TCommand">Type of command.</typeparam>
     /// <typeparam name="TResult">Type of the result.</typeparam>
-    public sealed class AggregatePersistenceDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
-        where TCommand : class, ICommand<TResult>, IAggregate, IPersistenceDecorator
+    public sealed class AggregateCommandPersistenceDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+        where TCommand : class, ICommand<TResult>, IAggregatePersistenceDecorator
     {
         private readonly ICommandHandler<TCommand, TResult> _decoratee;
         private readonly IAggregateDataContext _context;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandPersistenceDecorator{TCommand, TResult}"/> class with
+        /// Initializes a new instance of the <see cref="AggregateCommandPersistenceDecorator{TCommand, TResult}"/> class with
         /// the decorated handler and the db context to act on.
         /// </summary>
         /// <param name="context">The data context to act on.</param>
         /// <param name="decoratee">The decorated command handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public AggregatePersistenceDecorator(IAggregateDataContext context, ICommandHandler<TCommand, TResult> decoratee)
+        public AggregateCommandPersistenceDecorator(IAggregateDataContext context, ICommandHandler<TCommand, TResult> decoratee)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));

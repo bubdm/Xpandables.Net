@@ -50,7 +50,7 @@ namespace Xpandables.Net.DomainEvents
     /// <typeparam name="TEvent">The event type to be handled.</typeparam>
     public interface IDomainEventHandler<TAggregateId, in TEvent> : IDomainEventHandler, ICanHandle<TEvent>
         where TEvent : class, IDomainEvent<TAggregateId>
-        where TAggregateId : notnull, AggregateId
+        where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Asynchronously handles the domain event.

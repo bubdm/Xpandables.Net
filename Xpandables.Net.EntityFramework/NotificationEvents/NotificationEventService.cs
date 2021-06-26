@@ -106,7 +106,7 @@ namespace Xpandables.Net.NotificationEvents
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        protected async Task PublishPendingNotificationEventsAsync(CancellationToken cancellationToken)
+        protected virtual async Task PublishPendingNotificationEventsAsync(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -143,7 +143,7 @@ namespace Xpandables.Net.NotificationEvents
         /// </summary>
         /// <param name="context">The data context to act on.</param>
         /// <returns>A collection of <see cref="EventStoreEntity"/> matching the criteria.</returns>
-        protected async Task<List<EventStoreEntity>> FetchPendingNotificationsAsync(AggregateDataContext context)
+        protected virtual async Task<List<EventStoreEntity>> FetchPendingNotificationsAsync(AggregateDataContext context)
         {
             var criteria = GetEventStoreEntityCriteria();
 
@@ -164,8 +164,7 @@ namespace Xpandables.Net.NotificationEvents
         /// <param name="notificationEventPublisher">The notification event publisher to act with.</param>
         /// <param name="context">The data context to act on.</param>
         /// <returns>A task that represents an asynchronous boolean operation.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
-        protected async Task<bool> TryPublishAsync(
+        protected virtual async Task<bool> TryPublishAsync(
             EventStoreEntity entity,
             INotificationEventPublisher notificationEventPublisher,
             AggregateDataContext context)

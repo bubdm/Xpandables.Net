@@ -20,13 +20,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Database;
+using Xpandables.Net.Decorators;
 
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
     /// Represents a set of methods to read/write aggregates from an event store.
-    /// For persistence, decorate your command with <see cref="IAggregate"/> and 
-    /// <see cref="Decorators.IPersistenceDecorator"/> interface.
+    /// For persistence, decorate your command/event with <see cref="IAggregatePersistenceDecorator"/> interface.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>

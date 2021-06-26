@@ -43,5 +43,15 @@ namespace Xpandables.Net.Services
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
         Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Returns the status of the service.
+        /// </summary>
+        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        public virtual async Task<IOperationResult<string>> StatusServiceAsync()
+        {
+            var response = IsRunning ? "Is Up" : "Is Down";
+            return await Task.FromResult(new SuccessOperationResult<string>(response)).ConfigureAwait(false);
+        }
     }
 }

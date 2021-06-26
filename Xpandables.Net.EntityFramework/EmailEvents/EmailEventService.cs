@@ -91,8 +91,7 @@ namespace Xpandables.Net.EmailEvents
         /// Returns the criteria to search for pending notification events.
         /// </summary>
         /// <returns>An instance of <see cref="EventStoreEntityCriteria"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
-        protected EventStoreEntityCriteria GetEventStoreEntityCriteria()
+        protected virtual EventStoreEntityCriteria GetEventStoreEntityCriteria()
             => new()
             {
                 IsDeleted = false,
@@ -105,7 +104,7 @@ namespace Xpandables.Net.EmailEvents
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        protected async Task SendPendingEmailEventsAsync(CancellationToken cancellationToken)
+        protected virtual async Task SendPendingEmailEventsAsync(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -142,7 +141,7 @@ namespace Xpandables.Net.EmailEvents
         /// </summary>
         /// <param name="context">The data context to act on.</param>
         /// <returns>A collection of <see cref="EventStoreEntity"/> matching the criteria.</returns>
-        protected async Task<List<EventStoreEntity>> FetchPendingEmailEventsAsync(AggregateDataContext context)
+        protected virtual async Task<List<EventStoreEntity>> FetchPendingEmailEventsAsync(AggregateDataContext context)
         {
             var criteria = GetEventStoreEntityCriteria();
 
@@ -163,8 +162,7 @@ namespace Xpandables.Net.EmailEvents
         /// <param name="emailSender">The email sender to act with.</param>
         /// <param name="context">The data context to act on.</param>
         /// <returns>A task that represents an asynchronous boolean operation.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
-        protected async Task<bool> TrySendEmailAsync(
+        protected virtual async Task<bool> TrySendEmailAsync(
             EventStoreEntity entity,
             IEmailSender emailSender,
             AggregateDataContext context)

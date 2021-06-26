@@ -29,6 +29,12 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         public EventOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
 
+        /// <summary>
+        /// Enables persistence behavior to events that are decorated with the <see cref="IAggregatePersistenceDecorator"/> .
+        /// </summary>
+        public EventOptions UseAggregatePersistenceDecorator() => this.With(cq => cq.IsAggregatePersistenceEnabled = true);
+
         internal bool IsPersistenceEnabled { get; private set; }
+        internal bool IsAggregatePersistenceEnabled { get; private set; }
     }
 }

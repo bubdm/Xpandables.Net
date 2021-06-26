@@ -136,7 +136,10 @@ namespace Xpandables.Net.DependencyInjection
             configureOptions.Invoke(definedOptions);
 
             if (definedOptions.IsPersistenceEnabled)
-                services.AddXNotificationPersistenceDecorator();
+                services.AddXPersistenceDecorator();
+
+            if (definedOptions.IsAggregatePersistenceEnabled)
+                services.AddXAggregatePersistenceDecorator();
 
             return services;
         }

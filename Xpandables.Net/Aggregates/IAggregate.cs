@@ -18,11 +18,6 @@
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Identifies a command that targets an aggregate. In association with <see cref="Decorators.IPersistenceDecorator"/>, allows aggregate events persistence.
-    /// </summary>
-    public interface IAggregate { }
-
-    /// <summary>
     /// Defines base properties for an aggregate that is identified by a property of <typeparamref name="TAggregateId"/> type.
     /// Aggregate is a pattern in Domain-Driven Design.
     /// A DDD aggregate is a cluster of domain objects that can be treated as a single unit.

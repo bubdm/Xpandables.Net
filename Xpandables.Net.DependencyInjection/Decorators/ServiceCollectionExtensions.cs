@@ -19,13 +19,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-using Xpandables.Net.Aggregates;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Decorators;
 using Xpandables.Net.Decorators.Persistences;
 using Xpandables.Net.Decorators.Transactions;
 using Xpandables.Net.Decorators.Validators;
 using Xpandables.Net.Decorators.Visitors;
+using Xpandables.Net.DomainEvents;
 using Xpandables.Net.NotificationEvents;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
@@ -40,7 +40,7 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds persistence behavior to commands and queries that are decorated with the <see cref="IPersistenceDecorator"/> to the services
+        /// Adds persistence behavior to commands/events that are decorated with the <see cref="IPersistenceDecorator"/> to the services
         /// with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -51,13 +51,14 @@ namespace Xpandables.Net.DependencyInjection
 
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandPersistenceDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandPersistenceDecorator<,>));
+            services.XTryDecorate(typeof(IDomainEventHandler<,>), typeof(DomainEventPersistenceDecorator<,>));
+            services.XTryDecorate(typeof(INotificationEventHandler<,>), typeof(NotificationPersistenceDecorator<,>));
             return services;
         }
 
         /// <summary>
-        /// Adds aggregate persistence behavior to commands and queries that are decorated with the <see cref="IAggregate"/> and
-        /// <see cref="IPersistenceDecorator"/> to the services
-        /// with transient life time.
+        /// Adds aggregate persistence behavior to commands/events that are decorated with the <see cref="IAggregatePersistenceDecorator"/>
+        /// to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -65,24 +66,13 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.XTryDecorate(typeof(ICommandHandler<>), typeof(AggregatePersistenceDecorator<>));
-            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(AggregatePersistenceDecorator<,>));
-            return services;
-        }
+            services.XTryDecorate(typeof(ICommandHandler<>), typeof(AggregateCommandPersistenceDecorator<>));
+            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(AggregateCommandPersistenceDecorator<,>));
+            services.XTryDecorate(typeof(IDomainEventHandler<,>), typeof(AggregateDomainEventPersistenceDecorator<,>));
+            services.XTryDecorate(typeof(INotificationEventHandler<,>), typeof(AggregateNotificationPersistenceDecorator<,>));
 
-        /// <summary>
-        /// Adds aggregate persistence behavior to integration events that are decorated with the <see cref="IPersistenceDecorator"/> to the services
-        /// with transient life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationPersistenceDecorator(this IXpandableServiceBuilder services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.XTryDecorate(typeof(INotificationEventHandler<,>), typeof(NotificationPersistenceDecorator<,>));
             return services;
-        }
+        }   
 
         /// <summary>
         /// Adds the transaction type provider to the services.
@@ -132,7 +122,7 @@ namespace Xpandables.Net.DependencyInjection
             }
 
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandTransactionDecorator<>));
-            services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandTransactionDecorator<,>));
+
             return services;
         }
 
