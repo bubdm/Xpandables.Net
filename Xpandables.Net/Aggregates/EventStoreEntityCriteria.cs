@@ -28,12 +28,13 @@ namespace Xpandables.Net.Aggregates
     /// Provides with criteria to search for store entities.
     /// This class derives from <see cref="QueryExpression{TSource}"/>.
     /// </summary>
-    public sealed class EventStoreEntityCriteria : QueryExpression<EventStoreEntity>
+    public sealed class EventStoreEntityCriteria<TEventStoreEntity> : QueryExpression<TEventStoreEntity>
+        where TEventStoreEntity : EventStoreEntity
     {
         /// <summary>
-        /// Returns an of <see cref="EventStoreEntityCriteria"/> with default values.
+        /// Returns an of <see cref="EventStoreEntityCriteria{TEventStoreEntity}"/> with default values.
         /// </summary>
-        public static EventStoreEntityCriteria Default => new();
+        public static EventStoreEntityCriteria<TEventStoreEntity> Default => new();
 
         /// <summary>
         /// Gets the string representation of the aggregate identifier.
@@ -91,9 +92,9 @@ namespace Xpandables.Net.Aggregates
         public int? Count { get; init; }
 
         ///<inheritdoc/>
-        public override Expression<Func<EventStoreEntity, bool>> GetExpression()
+        public override Expression<Func<TEventStoreEntity, bool>> GetExpression()
         {
-            var expression = QueryExpressionFactory.Create<EventStoreEntity>();
+            var expression = QueryExpressionFactory.Create<TEventStoreEntity>();
 
             if (EventTypeName is not null)
                 expression = expression.And(entity => Regex.IsMatch(entity.EventTypeName, EventTypeName));

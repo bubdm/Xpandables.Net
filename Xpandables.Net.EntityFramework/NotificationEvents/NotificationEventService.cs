@@ -91,9 +91,9 @@ namespace Xpandables.Net.NotificationEvents
         /// <summary>
         /// Returns the criteria to search for pending notification events.
         /// </summary>
-        /// <returns>An instance of <see cref="EventStoreEntityCriteria"/>.</returns>
+        /// <returns>An instance of <see cref="EventStoreEntityCriteria{TEventStoreEntity}"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
-        protected EventStoreEntityCriteria GetEventStoreEntityCriteria()
+        protected EventStoreEntityCriteria<NotificationEventStoreEntity> GetNotificationEventStoreEntityCriteria()
             => new()
             {
                 IsDeleted = false,
@@ -139,13 +139,13 @@ namespace Xpandables.Net.NotificationEvents
         }
 
         /// <summary>
-        /// Fetches pending notification events matching the <see cref="GetEventStoreEntityCriteria"/>.
+        /// Fetches pending notification events matching the <see cref="GetNotificationEventStoreEntityCriteria"/>.
         /// </summary>
         /// <param name="context">The data context to act on.</param>
         /// <returns>A collection of <see cref="EventStoreEntity"/> matching the criteria.</returns>
-        protected virtual async Task<List<EventStoreEntity>> FetchPendingNotificationsAsync(AggregateDataContext context)
+        protected virtual async Task<List<NotificationEventStoreEntity>> FetchPendingNotificationsAsync(AggregateDataContext context)
         {
-            var criteria = GetEventStoreEntityCriteria();
+            var criteria = GetNotificationEventStoreEntityCriteria();
 
             return await context.NotificationEvents
                     .AsNoTracking()
@@ -165,7 +165,7 @@ namespace Xpandables.Net.NotificationEvents
         /// <param name="context">The data context to act on.</param>
         /// <returns>A task that represents an asynchronous boolean operation.</returns>
         protected virtual async Task<bool> TryPublishAsync(
-            EventStoreEntity entity,
+            NotificationEventStoreEntity entity,
             INotificationEventPublisher notificationEventPublisher,
             AggregateDataContext context)
         {

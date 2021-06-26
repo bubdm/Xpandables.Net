@@ -16,31 +16,14 @@
  *
 ************************************************************************************************************/
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 using Xpandables.Net.Aggregates;
 
 namespace Xpandables.Net.Database.EntityConfigurations
 {
     /// <summary>
-    /// EFCore configuration for <see cref="EventStoreEntity"/>.
+    /// EFCore configuration for <see cref="EmailEventStoreEntity"/>.
     /// </summary>
-    public abstract class EventEntityTypeConfiguration<TEventType> : IEntityTypeConfiguration<TEventType>
-        where TEventType : EventStoreEntity
+    public sealed class EmailEventEntityTypeConfiguration : EventEntityTypeConfiguration<EmailEventStoreEntity>
     {
-        ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<TEventType> builder)
-        {
-            builder.HasKey(p => p.Id);
-            builder.HasIndex(p => new { p.AggregateId })
-                .IsUnique();
-
-            builder.Property(p => p.AggregateId).IsConcurrencyToken();
-            builder.Property(p => p.AggregateTypeName);
-            builder.Property(p => p.EventData);
-            builder.Property(p => p.EventTypeFullName);
-            builder.Property(p => p.EventTypeName);
-        }
     }
 }

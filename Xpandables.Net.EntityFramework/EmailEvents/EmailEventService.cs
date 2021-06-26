@@ -90,8 +90,8 @@ namespace Xpandables.Net.EmailEvents
         /// <summary>
         /// Returns the criteria to search for pending notification events.
         /// </summary>
-        /// <returns>An instance of <see cref="EventStoreEntityCriteria"/>.</returns>
-        protected virtual EventStoreEntityCriteria GetEventStoreEntityCriteria()
+        /// <returns>An instance of <see cref="EventStoreEntityCriteria{TEventStoreEntity}"/>.</returns>
+        protected virtual EventStoreEntityCriteria<EmailEventStoreEntity> GetEmailEventStoreEntityCriteria()
             => new()
             {
                 IsDeleted = false,
@@ -137,13 +137,13 @@ namespace Xpandables.Net.EmailEvents
         }
 
         /// <summary>
-        /// Fetches pending email events matching the <see cref="GetEventStoreEntityCriteria"/>.
+        /// Fetches pending email events matching the <see cref="GetEmailEventStoreEntityCriteria"/>.
         /// </summary>
         /// <param name="context">The data context to act on.</param>
         /// <returns>A collection of <see cref="EventStoreEntity"/> matching the criteria.</returns>
-        protected virtual async Task<List<EventStoreEntity>> FetchPendingEmailEventsAsync(AggregateDataContext context)
+        protected virtual async Task<List<EmailEventStoreEntity>> FetchPendingEmailEventsAsync(AggregateDataContext context)
         {
-            var criteria = GetEventStoreEntityCriteria();
+            var criteria = GetEmailEventStoreEntityCriteria();
 
             return await context.EmailEvents
                     .AsNoTracking()
@@ -163,7 +163,7 @@ namespace Xpandables.Net.EmailEvents
         /// <param name="context">The data context to act on.</param>
         /// <returns>A task that represents an asynchronous boolean operation.</returns>
         protected virtual async Task<bool> TrySendEmailAsync(
-            EventStoreEntity entity,
+            EmailEventStoreEntity entity,
             IEmailSender emailSender,
             AggregateDataContext context)
         {

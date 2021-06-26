@@ -39,27 +39,30 @@ namespace Xpandables.Net.Database
         ///<inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new EventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new DomainEventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationEventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new SnapShotEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new EmailEventEntityTypeConfiguration());
         }
 
         /// <summary>
         /// Gets the domain events collection. Read Only.
         /// </summary>
-        public DbSet<EventStoreEntity> DomainEvents { get; set; } = default!;
+        public DbSet<DomainEventStoreEntity> DomainEvents { get; set; } = default!;
 
         /// <summary>
         /// Gets the notifications collection. Read/Write
         /// </summary>
-        public DbSet<EventStoreEntity> NotificationEvents { get; set; } = default!;
+        public DbSet<NotificationEventStoreEntity> NotificationEvents { get; set; } = default!;
 
         /// <summary>
         /// Gets the snapShots collection. Read/Write
         /// </summary>
-        public DbSet<EventStoreEntity> SnapShotEvents { get; set; } = default!;
+        public DbSet<SnapShotStoreEntity> SnapShotEvents { get; set; } = default!;
 
         /// <summary>
         /// Gets the snapShots collection. Read/Write
         /// </summary>
-        public DbSet<EventStoreEntity> EmailEvents { get; set; } = default!;
+        public DbSet<EmailEventStoreEntity> EmailEvents { get; set; } = default!;
     }
 }

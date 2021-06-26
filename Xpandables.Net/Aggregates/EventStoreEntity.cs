@@ -29,18 +29,20 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Represents an event entity to be written.
     /// </summary>
-    public sealed class EventStoreEntity : Entity, IDisposable
+    public abstract class EventStoreEntity : Entity, IDisposable
     {
         /// <summary>
         /// Creates a new instance of <see cref="EventStoreEntity"/> from the event of aggregate.
         /// </summary>
         /// <typeparam name="TAggregateId">The type of the target aggregate id.</typeparam>
         /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
+        /// <typeparam name="TEventStoreEntity"></typeparam>
         /// <param name="event">The event o act on.</param>
         /// <returns>A new instance of <see cref="EventStoreEntity"/>.</returns>
-        public static EventStoreEntity From<TAggregateId, TAggregate>(IEvent @event)
+        public static TEventStoreEntity From<TAggregateId, TAggregate, TEventStoreEntity>(IEvent @event)
             where TAggregate : class, IAggregate<TAggregateId>
             where TAggregateId : class, IAggregateId
+            where TEventStoreEntity : EventStoreEntity, new()
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
@@ -51,40 +53,42 @@ namespace Xpandables.Net.Aggregates
             var eventString = JsonSerializer.Serialize(@event, @event.GetType());
             var eventData = JsonDocument.Parse(eventString);
 
-            return new(
-                aggregateId,
-                aggregateTypeName,
-                eventTypeFullName,
-                eventTypeName,
-                eventData);
+            return new()
+            {
+                AggregateId = aggregateId,
+                AggregateTypeName = aggregateTypeName,
+                EventTypeFullName = eventTypeFullName,
+                EventTypeName = eventTypeName,
+                EventData = eventData
+            };
         }
 
         /// <summary>
         /// Gets the string representation of the aggregate related identifier.
         /// </summary>
         [ConcurrencyCheck]
-        public string AggregateId { get; }
+        public string AggregateId { get; internal init; }
 
         /// <summary>
         /// Gets the string representation of the aggregate type.
         /// </summary>
-        public string AggregateTypeName { get; }
+        public string AggregateTypeName { get; internal init; }
 
         /// <summary>
         /// Gets the string representation of the .Net Framework event type full name.
         /// </summary>
-        public string EventTypeFullName { get; }
+        public string EventTypeFullName { get; internal init; }
 
         /// <summary>
         /// Gets the string representation of the .Net Framework event type name
         /// (Without name space).
         /// </summary>
-        public string EventTypeName { get; }
+        public string EventTypeName { get; internal init; }
 
         /// <summary>
         /// Gets the string representation of the content of the event as <see cref="JsonDocument"/>.
         /// </summary>
-        public JsonDocument EventData { get; }
+        public JsonDocument EventData { get; internal init; }
 
         /// <summary>
         /// Deserializes the data to the specified type.
@@ -132,6 +136,15 @@ namespace Xpandables.Net.Aggregates
             EventData = eventData ?? throw new ArgumentNullException(nameof(eventData));
         }
 
+        internal EventStoreEntity()
+        {
+            AggregateId = default!;
+            AggregateTypeName = default!;
+            EventTypeFullName = default!;
+            EventTypeName = default!;
+            EventData = default!;
+        }
+
         ///<inheritdoc/>
         protected override string KeyGenerator()
         {
@@ -151,6 +164,10 @@ namespace Xpandables.Net.Aggregates
         }
 
         ///<inheritdoc/>
-        public void Dispose() => EventData?.Dispose();
+        public void Dispose()
+        {
+            EventData?.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }
