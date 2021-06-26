@@ -15,6 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 using System.Text.Json.Serialization;
 
 using Xpandables.Net.Aggregates;
@@ -22,26 +23,27 @@ using Xpandables.Net.Aggregates;
 namespace Xpandables.Net.EmailEvents
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IEmailEvent{TAggregateId, TEmail}"/> interface.
+    /// Represents a helper class that allows implementation of <see cref="IEmailEvent{ TEmail}"/> interface.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TEmailMessage">the type of the email.</typeparam>
-    public abstract class EmailEvent<TAggregateId, TEmailMessage> : Event<TAggregateId>, IEmailEvent<TAggregateId, TEmailMessage>
+    public abstract class EmailEvent<TAggregateId, TEmailMessage> : Event<TAggregateId>, IEmailEvent<TEmailMessage>
         where TAggregateId : notnull, AggregateId
+        where TEmailMessage : notnull
     {
         /// <summary>
         /// Initializes a default instance of the <see cref="EmailEvent{TAggregateId, TEmail}"/>.
         /// </summary>
         /// <param name="aggregateId">The aggregate id.</param>
         /// <param name="email">The target domain event.</param>
-        protected EmailEvent(TAggregateId aggregateId, TEmailMessage? email = default)
+        [JsonConstructor]
+        protected EmailEvent(TAggregateId aggregateId, TEmailMessage email)
             : base(aggregateId)
-            => Email = email;
+            => EmailMessage = email ?? throw new ArgumentNullException(nameof(email));
 
         ///<inheritdoc/>
-        [JsonIgnore]
-        public TEmailMessage? Email { get; }
+        public TEmailMessage EmailMessage { get; }
 
-        object? IEmailEvent<TAggregateId>.Email => Email;
+        object IEmailEvent.EmailMessage => EmailMessage;
     }
 }

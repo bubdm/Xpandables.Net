@@ -37,20 +37,24 @@ namespace Xpandables.Net.Aggregates
         /// Asynchronously returns a collection of email events matching the criteria.
         /// if not found, returns an empty collection.
         /// </summary>
+        /// <typeparam name="TEmailMessage">the type of the message.</typeparam>
         /// <param name="criteria">The criteria to be applied to entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <see cref="IEmailEvent{TAggregateId, TAggregate}"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<IEmailEvent<TAggregateId>> ReadAllEmailEventsAsync(
+        /// <returns>An enumerator of <see cref="IEmailEvent{TEmailMessage}"/> that can be asynchronously enumerated.</returns>
+        IAsyncEnumerable<IEmailEvent<TEmailMessage>> ReadAllEmailEventsAsync<TEmailMessage>(
             EventStoreEntityCriteria criteria,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default)
+            where TEmailMessage : notnull;
 
         /// <summary>
         /// Asynchronously appends the specified email event.
         /// </summary>
+        /// <typeparam name="TEmailMessage">the type of the message.</typeparam>
         /// <param name="event">Then target email to be appended.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        Task AppendEmailAsync(IEmailEvent<TAggregateId> @event, CancellationToken cancellationToken = default);
+        Task AppendEmailAsync<TEmailMessage>(IEmailEvent<TEmailMessage> @event, CancellationToken cancellationToken = default)
+            where TEmailMessage : notnull;
     }
 }

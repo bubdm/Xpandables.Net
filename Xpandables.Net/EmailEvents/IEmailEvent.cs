@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +14,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Text.Json.Serialization;
-
-using Xpandables.Net.Aggregates;
 
 namespace Xpandables.Net.EmailEvents
 {
@@ -25,30 +21,25 @@ namespace Xpandables.Net.EmailEvents
     /// Defines a marker interface to be used to mark an object to act as email event holding 
     /// a message type.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    public interface IEmailEvent<TAggregateId> : IEvent<TAggregateId>
-        where TAggregateId : notnull, IAggregateId
+    public interface IEmailEvent : IEvent
     {
         /// <summary>
-        /// Gets the target email.
+        /// Gets the target email message.
         /// </summary>
-        [JsonIgnore]
-        object? Email { get; }
+        object EmailMessage { get; }
     }
 
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as email event holding 
     /// a specific <typeparamref name="TEmailMessage"/> type.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TEmailMessage">the type of the email.</typeparam>
-    public interface IEmailEvent<TAggregateId, out TEmailMessage> : IEmailEvent<TAggregateId>
-        where TAggregateId : notnull, IAggregateId
+    public interface IEmailEvent<out TEmailMessage> : IEmailEvent
+        where TEmailMessage : notnull
     {
         /// <summary>
-        /// Gets the target email.
+        /// Gets the target email message.
         /// </summary>
-        [JsonIgnore]
-        new TEmailMessage? Email { get; }
+        new TEmailMessage EmailMessage { get; }
     }
 }

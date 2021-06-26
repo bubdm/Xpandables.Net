@@ -299,9 +299,10 @@ namespace Xpandables.Net.Database
         }
 
         ///<inheritdoc/>
-        public virtual async IAsyncEnumerable<IEmailEvent<TAggregateId>> ReadAllEmailEventsAsync(
+        public virtual async IAsyncEnumerable<IEmailEvent<TEmailMessage>> ReadAllEmailEventsAsync<TEmailMessage>(
              EventStoreEntityCriteria criteria,
              [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            where TEmailMessage : notnull
         {
             _ = criteria ?? throw new ArgumentNullException(nameof(criteria));
 
@@ -314,14 +315,15 @@ namespace Xpandables.Net.Database
             {
                 if (Type.GetType(entity.EventTypeFullName) is { } type)
                 {
-                    if (entity.EventData.ToObject(type) is IEmailEvent<TAggregateId> @event)
+                    if (entity.EventData.ToObject(type) is IEmailEvent<TEmailMessage> @event)
                         yield return @event;
                 }
             }
         }
 
         ///<inheritdoc/>
-        public virtual async Task AppendEmailAsync(IEmailEvent<TAggregateId> @event, CancellationToken cancellationToken = default)
+        public virtual async Task AppendEmailAsync<TEmailMessage>(IEmailEvent<TEmailMessage> @event, CancellationToken cancellationToken = default)
+            where TEmailMessage : notnull
         {
             var entity = EventStoreEntity.From<TAggregateId, TAggregate>(@event);
             await _context.EmailEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);

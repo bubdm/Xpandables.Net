@@ -28,10 +28,27 @@ namespace Xpandables.Net.EmailEvents
         /// <summary>
         /// Asynchronously sends the specified message via mail.
         /// </summary>
-        /// <typeparam name="TEmailMessage">The type of the message.</typeparam>
         /// <param name="message">The message instance.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task SendEmailAsync<TEmailMessage>(TEmailMessage message, CancellationToken cancellationToken = default);
+        Task SendEmailAsync(IEmailEvent message, CancellationToken cancellationToken = default);
+    }
+
+    /// <summary>
+    /// Provides with a method to send emails.
+    /// </summary>
+    /// <typeparam name="TEmailMessage">The type of the email  message content.</typeparam>
+    public interface IEmailSender<TEmailMessage> : IEmailSender
+        where TEmailMessage : notnull
+    {
+        /// <summary>
+        /// Asynchronously sends the specified message via mail.
+        /// </summary>
+        /// <param name="message">The message instance.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task SendEmailAsync(IEmailEvent<TEmailMessage> message, CancellationToken cancellationToken = default);
+        Task IEmailSender.SendEmailAsync(IEmailEvent message, CancellationToken cancellationToken)
+            => SendEmailAsync((IEmailEvent<TEmailMessage>)message, cancellationToken);
     }
 }
