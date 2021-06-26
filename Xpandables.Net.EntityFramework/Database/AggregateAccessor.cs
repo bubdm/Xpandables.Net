@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.DomainEvents;
+using Xpandables.Net.EmailEvents;
 using Xpandables.Net.NotificationEvents;
 
 namespace Xpandables.Net.Database
@@ -86,7 +87,7 @@ namespace Xpandables.Net.Database
                 foreach (var @event in aggregateOutbox.GetNotifications())
                 {
                     var entity = EventStoreEntity.From<TAggregateId, TAggregate>(@event);
-                    await _context.Notifications.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+                    await _context.NotificationEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);
                 }
 
                 aggregateOutbox.MarkNotificationsAsCommitted();
@@ -157,7 +158,7 @@ namespace Xpandables.Net.Database
                 EventDataCriteria = data => data.RootElement.GetProperty("Version").GetInt64() != -1
             };
 
-            var result = await _context.SnapShots
+            var result = await _context.SnapShotEvents
                 .AsNoTracking()
                 .Where(criteria)
                 .OrderBy(o => o.EventData.RootElement.GetProperty("Version").GetInt64())
@@ -204,17 +205,17 @@ namespace Xpandables.Net.Database
                 EventDataCriteria = data => data.RootElement.GetProperty("Version").GetInt64() == aggregate.Version
             };
 
-            var oldSnapShot = await _context.SnapShots
+            var oldSnapShot = await _context.SnapShotEvents
                 .Where(criteria)
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
 
             if (oldSnapShot is not null)
-                _context.SnapShots.Remove(oldSnapShot);
+                _context.SnapShotEvents.Remove(oldSnapShot);
 
             var snapShot = new SnapShot<TAggregateId>(originator.CreateMemento(), aggregate.AggregateId, aggregate.Version);
             var entity = EventStoreEntity.From<TAggregateId, TAggregate>(snapShot);
-            await _context.SnapShots.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            await _context.SnapShotEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
@@ -267,12 +268,12 @@ namespace Xpandables.Net.Database
                 .ConfigureAwait(false);
 
         ///<inheritdoc/>
-        public virtual async Task AppendEventAsync(
+        public virtual async Task AppendNotificationAsync(
             INotificationEvent<TAggregateId> @event,
             CancellationToken cancellationToken = default)
         {
             var entity = EventStoreEntity.From<TAggregateId, TAggregate>(@event);
-            await _context.Notifications.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            await _context.NotificationEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
@@ -284,8 +285,8 @@ namespace Xpandables.Net.Database
 
             IQueryable<EventStoreEntity> selector
                 = criteria.Count is not null
-                    ? _context.Notifications.Where(criteria).OrderBy(o => o.CreatedOn).Take(criteria.Count.Value)
-                    : _context.Notifications.Where(criteria).OrderBy(o => o.CreatedOn);
+                    ? _context.NotificationEvents.Where(criteria).OrderBy(o => o.CreatedOn).Take(criteria.Count.Value)
+                    : _context.NotificationEvents.Where(criteria).OrderBy(o => o.CreatedOn);
 
             await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
             {
@@ -295,6 +296,35 @@ namespace Xpandables.Net.Database
                         yield return @event;
                 }
             }
+        }
+
+        ///<inheritdoc/>
+        public virtual async IAsyncEnumerable<IEmailEvent<TAggregateId>> ReadAllEmailEventsAsync(
+             EventStoreEntityCriteria criteria,
+             [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            _ = criteria ?? throw new ArgumentNullException(nameof(criteria));
+
+            IQueryable<EventStoreEntity> selector
+                = criteria.Count is not null
+                    ? _context.EmailEvents.Where(criteria).OrderBy(o => o.CreatedOn).Take(criteria.Count.Value)
+                    : _context.EmailEvents.Where(criteria).OrderBy(o => o.CreatedOn);
+
+            await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
+            {
+                if (Type.GetType(entity.EventTypeFullName) is { } type)
+                {
+                    if (entity.EventData.ToObject(type) is IEmailEvent<TAggregateId> @event)
+                        yield return @event;
+                }
+            }
+        }
+
+        ///<inheritdoc/>
+        public virtual async Task AppendEmailAsync(IEmailEvent<TAggregateId> @event, CancellationToken cancellationToken = default)
+        {
+            var entity = EventStoreEntity.From<TAggregateId, TAggregate>(@event);
+            await _context.EmailEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         private TAggregate CreateInstance()

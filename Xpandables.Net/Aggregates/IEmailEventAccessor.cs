@@ -20,45 +20,37 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.NotificationEvents;
+using Xpandables.Net.EmailEvents;
 
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Provides with methods to retrieve and persist notifications (out-box).
+    /// Provides with methods to retrieve and persist email events.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public interface INotificationEventAccessor<TAggregateId, TAggregate>
+    public interface IEmailEventAccessor<TAggregateId, TAggregate>
         where TAggregateId : notnull, IAggregateId
         where TAggregate : notnull, IAggregate<TAggregateId>
     {
         /// <summary>
-        /// Asynchronously returns a collection of notification events matching the criteria.
+        /// Asynchronously returns a collection of email events matching the criteria.
         /// if not found, returns an empty collection.
         /// </summary>
         /// <param name="criteria">The criteria to be applied to entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <see cref="INotificationEvent{TAggregateId}"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<INotificationEvent<TAggregateId>> ReadAllNotificationsAsync(
+        /// <returns>An enumerator of <see cref="IEmailEvent{TAggregateId, TAggregate}"/> that can be asynchronously enumerated.</returns>
+        IAsyncEnumerable<IEmailEvent<TAggregateId>> ReadAllEmailEventsAsync(
             EventStoreEntityCriteria criteria,
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Asynchronously appends the specified notification event.
+        /// Asynchronously appends the specified email event.
         /// </summary>
-        /// <param name="event">Then target notification to be appended.</param>
+        /// <param name="event">Then target email to be appended.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        Task AppendNotificationAsync(INotificationEvent<TAggregateId> @event, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Asynchronously returns the number of notification events matching the criteria.
-        /// </summary>
-        /// <param name="criteria">The criteria to be applied to entities.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the number of notifications  events.</returns>
-        Task<int> CountDomainEventsAsync(EventStoreEntityCriteria criteria, CancellationToken cancellationToken = default);
+        Task AppendEmailAsync(IEmailEvent<TAggregateId> @event, CancellationToken cancellationToken = default);
     }
 }

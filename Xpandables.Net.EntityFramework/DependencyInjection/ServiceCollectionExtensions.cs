@@ -23,7 +23,9 @@ using System.Linq;
 
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
+using Xpandables.Net.EmailEvents;
 using Xpandables.Net.NotificationEvents;
+using Xpandables.Net.Services;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -40,6 +42,15 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXNotificationEventService(this IXpandableServiceBuilder services)
             => services.AddXNotificationEventService<NotificationEventService>();
+
+        /// <summary>
+        /// Adds the default <see cref="IEmailEventService"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXEmailEventService(this IXpandableServiceBuilder services)
+            => services.AddXEmailEventService<EmailEventService>();
 
         /// <summary>
         /// Adds the default <see cref="IAggregateAccessor{TAggregateId, TAggregate}"/> implementation 

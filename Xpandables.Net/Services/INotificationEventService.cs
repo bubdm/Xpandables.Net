@@ -15,9 +15,7 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Services;
-
-namespace Xpandables.Net.NotificationEvents
+namespace Xpandables.Net.Services
 {
     /// <summary>
     /// Defines the out-box (notifications) host service.

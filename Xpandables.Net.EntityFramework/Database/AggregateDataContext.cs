@@ -50,11 +50,16 @@ namespace Xpandables.Net.Database
         /// <summary>
         /// Gets the notifications collection. Read/Write
         /// </summary>
-        public DbSet<EventStoreEntity> Notifications { get; set; } = default!;
+        public DbSet<EventStoreEntity> NotificationEvents { get; set; } = default!;
 
         /// <summary>
         /// Gets the snapShots collection. Read/Write
         /// </summary>
-        public DbSet<EventStoreEntity> SnapShots { get; set; } = default!;
+        public DbSet<EventStoreEntity> SnapShotEvents { get; set; } = default!;
+
+        /// <summary>
+        /// Gets the snapShots collection. Read/Write
+        /// </summary>
+        public DbSet<EventStoreEntity> EmailEvents { get; set; } = default!;
     }
 }

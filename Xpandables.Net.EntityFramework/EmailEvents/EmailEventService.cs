@@ -30,21 +30,21 @@ using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
 using Xpandables.Net.Services;
 
-namespace Xpandables.Net.NotificationEvents
+namespace Xpandables.Net.EmailEvents
 {
     /// <summary>
-    /// The default implementation of <see cref="INotificationEventService"/>.
+    /// The default implementation of <see cref="IEmailEventService"/>.
     /// You can derive from this class to customize its behaviors or implement your own.
     /// </summary>
-    public class NotificationEventService : BackgroundService, INotificationEventService
+    public class EmailEventService : BackgroundService, IEmailEventService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="NotificationEventService"/>.
+        /// Constructs a new instance of <see cref="EmailEventService"/>.
         /// </summary>
         /// <param name="serviceScopeFactory">the scope factory.</param>
-        public NotificationEventService(IServiceScopeFactory serviceScopeFactory)
+        public EmailEventService(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
         }
@@ -56,7 +56,7 @@ namespace Xpandables.Net.NotificationEvents
         public virtual async Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default)
         {
             if (IsRunning)
-                return new FailureOperationResult("status", $"{nameof(NotificationEventService)} is already up.");
+                return new FailureOperationResult("status", $"{nameof(EmailEventService)} is already up.");
 
             IsRunning = true;
             await StartAsync(cancellationToken).ConfigureAwait(false);
@@ -67,7 +67,7 @@ namespace Xpandables.Net.NotificationEvents
         public virtual async Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default)
         {
             if (!IsRunning)
-                return new FailureOperationResult("status", $"{nameof(NotificationEventService)} is already down.");
+                return new FailureOperationResult("status", $"{nameof(EmailEventService)} is already down.");
 
             await StopAsync(cancellationToken).ConfigureAwait(false);
             IsRunning = false;
@@ -77,7 +77,7 @@ namespace Xpandables.Net.NotificationEvents
         ///<inheritdoc/>
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            return PublishPendingNotificationEventsAsync(stoppingToken);
+            return SendPendingEmailEventsAsync(stoppingToken);
         }
 
         /// <summary>
@@ -86,7 +86,6 @@ namespace Xpandables.Net.NotificationEvents
         /// </summary>
         /// <returns>A 60s timespan.</returns>
         protected virtual TimeSpan GetTimeSpanDelay() => TimeSpan.FromSeconds(60);
-
 
         /// <summary>
         /// Returns the criteria to search for pending notification events.
@@ -102,11 +101,11 @@ namespace Xpandables.Net.NotificationEvents
             };
 
         /// <summary>
-        /// Publishes pending notification events.
+        /// Sends pending email events.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        protected async Task PublishPendingNotificationEventsAsync(CancellationToken cancellationToken)
+        protected async Task SendPendingEmailEventsAsync(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -114,16 +113,16 @@ namespace Xpandables.Net.NotificationEvents
                 using var scope = _serviceScopeFactory.CreateScope();
 
                 var aggregateDataContext = scope.ServiceProvider.GetRequiredService<AggregateDataContext>();
-                var notificationEventPublisher = scope.ServiceProvider.GetRequiredService<INotificationEventPublisher>();
+                var emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
 
                 var count = 0;
-                var notificationEvents = await FetchPendingNotificationsAsync(aggregateDataContext).ConfigureAwait(false);
+                var emailEvents = await FetchPendingEmailEventsAsync(aggregateDataContext).ConfigureAwait(false);
 
-                foreach (var notificationEvent in notificationEvents)
+                foreach (var emailEvent in emailEvents)
                 {
-                    if (await TryPublishAsync(
-                        notificationEvent,
-                        notificationEventPublisher,
+                    if (await TrySendEmailAsync(
+                        emailEvent,
+                        emailSender,
                         aggregateDataContext)
                         .ConfigureAwait(false))
                     {
@@ -139,15 +138,15 @@ namespace Xpandables.Net.NotificationEvents
         }
 
         /// <summary>
-        /// Fetches pending notification events matching the <see cref="GetEventStoreEntityCriteria"/>.
+        /// Fetches pending email events matching the <see cref="GetEventStoreEntityCriteria"/>.
         /// </summary>
         /// <param name="context">The data context to act on.</param>
         /// <returns>A collection of <see cref="EventStoreEntity"/> matching the criteria.</returns>
-        protected async Task<List<EventStoreEntity>> FetchPendingNotificationsAsync(AggregateDataContext context)
+        protected async Task<List<EventStoreEntity>> FetchPendingEmailEventsAsync(AggregateDataContext context)
         {
             var criteria = GetEventStoreEntityCriteria();
 
-            return await context.NotificationEvents
+            return await context.EmailEvents
                     .AsNoTracking()
                     .Where(criteria)
                     .OrderBy(o => o.CreatedOn)
@@ -158,16 +157,16 @@ namespace Xpandables.Net.NotificationEvents
 
 
         /// <summary>
-        /// Tries to publish the notification found in the entity.
+        /// Tries to send the email found in the entity.
         /// </summary>
         /// <param name="entity">The target entity to act on.</param>
-        /// <param name="notificationEventPublisher">The notification event publisher to act with.</param>
+        /// <param name="emailSender">The email sender to act with.</param>
         /// <param name="context">The data context to act on.</param>
         /// <returns>A task that represents an asynchronous boolean operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
-        protected async Task<bool> TryPublishAsync(
+        protected async Task<bool> TrySendEmailAsync(
             EventStoreEntity entity,
-            INotificationEventPublisher notificationEventPublisher,
+            IEmailSender emailSender,
             AggregateDataContext context)
         {
             try
@@ -179,13 +178,12 @@ namespace Xpandables.Net.NotificationEvents
                 if (entity.To(type) is not IEvent @event)
                     return false;
 
-                // you can use an event bus or other
-                await notificationEventPublisher.PublishAsync(@event).ConfigureAwait(false);
+                await emailSender.SendEmailAsync(@event).ConfigureAwait(false);
 
                 entity.Deactivated();
                 entity.Deleted();
 
-                context.NotificationEvents.Update(entity);
+                context.EmailEvents.Update(entity);
 
                 return true;
             }
