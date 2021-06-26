@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Notifications;
+using Xpandables.Net.NotificationEvents;
 
 namespace Xpandables.Net.Aggregates
 {
@@ -39,8 +39,8 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         /// <param name="criteria">The criteria to be applied to entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <see cref="INotification{TAggregateId}"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<INotification<TAggregateId>> ReadAllNotificationsAsync(
+        /// <returns>An enumerator of <see cref="INotificationEvent{TAggregateId}"/> that can be asynchronously enumerated.</returns>
+        IAsyncEnumerable<INotificationEvent<TAggregateId>> ReadAllNotificationsAsync(
             EventStoreEntityCriteria criteria,
             CancellationToken cancellationToken = default);
 
@@ -51,7 +51,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        Task AppendEventAsync(INotification<TAggregateId> @event, CancellationToken cancellationToken = default);
+        Task AppendEventAsync(INotificationEvent<TAggregateId> @event, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously returns the number of notification events matching the criteria.

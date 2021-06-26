@@ -20,13 +20,13 @@ using System.Text.Json.Serialization;
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.DomainEvents;
 
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.NotificationEvents
 {
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as a notification.
+    /// Defines a marker interface to be used to mark an object to act as a notification event.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    public interface INotification<TAggregateId> : IEvent<TAggregateId>
+    public interface INotificationEvent<TAggregateId> : IEvent<TAggregateId>
         where TAggregateId : notnull, IAggregateId
     { }
 
@@ -35,7 +35,7 @@ namespace Xpandables.Net.Notifications
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
-    public interface INotification<TAggregateId, out TDomainEvent> : INotification<TAggregateId>
+    public interface INotificationEvent<TAggregateId, out TDomainEvent> : INotificationEvent<TAggregateId>
         where TDomainEvent : notnull, IDomainEvent<TAggregateId>
         where TAggregateId : notnull, IAggregateId
     {

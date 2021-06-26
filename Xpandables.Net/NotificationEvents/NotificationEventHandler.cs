@@ -21,37 +21,37 @@ using System.Threading.Tasks;
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.DomainEvents;
 
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.NotificationEvents
 {
     /// <summary>
     /// Represents a helper class that allows implementation of
-    /// <see cref="INotificationHandler{TAggregateId, TNotification}"/> interface.
+    /// <see cref="INotificationEventHandler{TAggregateId, TNotification}"/> interface.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    /// <typeparam name="TNotification">Type of notification to act on.</typeparam>
-    public abstract class NotificationHandler<TAggregateId, TNotification>
-        : OperationResults, INotificationHandler<TAggregateId, TNotification>
-        where TNotification : class, INotification<TAggregateId>
+    /// <typeparam name="TNotificationEvent">Type of notification to act on.</typeparam>
+    public abstract class NotificationEventHandler<TAggregateId, TNotificationEvent>
+        : OperationResults, INotificationEventHandler<TAggregateId, TNotificationEvent>
+        where TNotificationEvent : class, INotificationEvent<TAggregateId>
         where TAggregateId : notnull, AggregateId
     {
         ///<inheritdoc/>
-        public abstract Task HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
+        public abstract Task HandleAsync(TNotificationEvent notification, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
     /// Represents a helper class that allows implementation 
-    /// of <see cref="INotificationHandler{TAggregateId, TDomainEvent, TNotification}"/> interface.
+    /// of <see cref="INotificationEventHandler{TAggregateId, TDomainEvent, TNotification}"/> interface.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
-    /// <typeparam name="TNotification">Type of notification to act on.</typeparam>
-    public abstract class NotificationHandler<TAggregateId, TDomainEvent, TNotification> :
-        OperationResults, INotificationHandler<TAggregateId, TDomainEvent, TNotification>
-        where TNotification : class, INotification<TAggregateId, TDomainEvent>
+    /// <typeparam name="TNotificationEvent">Type of notification to act on.</typeparam>
+    public abstract class NotificationEventHandler<TAggregateId, TDomainEvent, TNotificationEvent> :
+        OperationResults, INotificationEventHandler<TAggregateId, TDomainEvent, TNotificationEvent>
+        where TNotificationEvent : class, INotificationEvent<TAggregateId, TDomainEvent>
         where TDomainEvent : class, IDomainEvent<TAggregateId>
         where TAggregateId : notnull, AggregateId
     {
         ///<inheritdoc/>
-        public abstract Task HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
+        public abstract Task HandleAsync(TNotificationEvent notification, CancellationToken cancellationToken = default);
     }
 }

@@ -24,22 +24,22 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Handlers;
 
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.NotificationEvents
 {
     /// <summary>
-    /// The default implementation of <see cref="INotificationPublisher"/>.
+    /// The default implementation of <see cref="INotificationEventPublisher"/>.
     /// You can derive from this class in order to customize its behaviors.
     /// </summary>
-    public class NotificationPublisher : INotificationPublisher
+    public class NotificationEventPublisher : INotificationEventPublisher
     {
         private readonly IHandlerAccessor _handlerAccessor;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="NotificationPublisher"/>.
+        /// Constructs a new instance of <see cref="NotificationEventPublisher"/>.
         /// </summary>
         /// <param name="handlerAccessor">The handler accessor.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="handlerAccessor"/> is null.</exception>
-        public NotificationPublisher(IHandlerAccessor handlerAccessor)
+        public NotificationEventPublisher(IHandlerAccessor handlerAccessor)
         {
             _handlerAccessor = handlerAccessor ?? throw new ArgumentNullException(nameof(handlerAccessor));
         }
@@ -59,40 +59,40 @@ namespace Xpandables.Net.Notifications
             await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
-        private IEnumerable<INotificationHandler> GetNotificationHandlers(IEvent @event)
+        private IEnumerable<INotificationEventHandler> GetNotificationHandlers(IEvent @event)
         {
             var genericInterfaceType = @event.GetType().GetInterfaces()
                 .FirstOrDefault(i => i.IsGenericType
-                    && (i.GetGenericTypeDefinition() == typeof(INotification<>)
-                    || i.GetGenericTypeDefinition() == typeof(INotification<,>)))
+                    && (i.GetGenericTypeDefinition() == typeof(INotificationEvent<>)
+                    || i.GetGenericTypeDefinition() == typeof(INotificationEvent<,>)))
                 ?? throw new ArgumentException($"The type '{@event.GetType().Name}' must " +
-                $"implement one of '{typeof(INotification<>).Name}' interfaces.");
+                $"implement one of '{typeof(INotificationEvent<>).Name}' interfaces.");
 
             var aggregateIdType = genericInterfaceType.GetGenericArguments()[0];
 
-            var types = genericInterfaceType.GetGenericTypeDefinition() == typeof(INotification<>)
+            var types = genericInterfaceType.GetGenericTypeDefinition() == typeof(INotificationEvent<>)
                 ? new[] { aggregateIdType, @event.GetType() }
                 : new[] { aggregateIdType, genericInterfaceType.GetGenericArguments()[1], @event.GetType() };
 
-            var genericHandlerType = genericInterfaceType.GetGenericTypeDefinition() == typeof(INotification<>)
-                ? typeof(INotificationHandler<,>) : typeof(INotificationHandler<,,>);
+            var genericHandlerType = genericInterfaceType.GetGenericTypeDefinition() == typeof(INotificationEvent<>)
+                ? typeof(INotificationEventHandler<,>) : typeof(INotificationEventHandler<,,>);
 
             if (!genericHandlerType
                 .TryMakeGenericType(out var typeHandler, out var typeException, aggregateIdType, @event.GetType()))
             {
                 WriteLineException(
                     new InvalidOperationException("Building notification Handler type failed.", typeException));
-                return Enumerable.Empty<INotificationHandler>();
+                return Enumerable.Empty<INotificationEventHandler>();
             }
 
             if (!_handlerAccessor.TryGetHandlers(typeHandler, out var foundHandlers, out var ex))
             {
                 WriteLineException(new InvalidOperationException($"Matching notification handlers " +
                     $"for {@event.GetType().Name} are missing.", ex));
-                return Enumerable.Empty<INotificationHandler>();
+                return Enumerable.Empty<INotificationEventHandler>();
             }
 
-            return (IEnumerable<INotificationHandler>)foundHandlers;
+            return (IEnumerable<INotificationEventHandler>)foundHandlers;
         }
 
         private static void WriteLineException(Exception exception)

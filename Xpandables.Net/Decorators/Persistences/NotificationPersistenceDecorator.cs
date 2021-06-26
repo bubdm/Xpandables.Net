@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
-using Xpandables.Net.Notifications;
+using Xpandables.Net.NotificationEvents;
 
 namespace Xpandables.Net.Decorators.Persistences
 {
@@ -34,11 +34,11 @@ namespace Xpandables.Net.Decorators.Persistences
     /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
     /// <typeparam name="TNotification">Type of integration event.</typeparam>
     public sealed class NotificationPersistenceDecorator<TAggregateId, TNotification> 
-        : PersistenceDecoratorBase, INotificationHandler<TAggregateId, TNotification>
-        where TNotification : class, INotification<TAggregateId>, IPersistenceDecorator
+        : PersistenceDecoratorBase, INotificationEventHandler<TAggregateId, TNotification>
+        where TNotification : class, INotificationEvent<TAggregateId>, IPersistenceDecorator
         where TAggregateId : notnull, IAggregateId
     {
-        private readonly INotificationHandler<TAggregateId, TNotification> _decoratee;
+        private readonly INotificationEventHandler<TAggregateId, TNotification> _decoratee;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationPersistenceDecorator{TAggregateId, TNotification}"/> class with
@@ -48,7 +48,7 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <param name="decoratee">The decorated integration event handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public NotificationPersistenceDecorator(IDataContext dataContext, INotificationHandler<TAggregateId, TNotification> decoratee)
+        public NotificationPersistenceDecorator(IDataContext dataContext, INotificationEventHandler<TAggregateId, TNotification> decoratee)
             : base(dataContext)
             => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 

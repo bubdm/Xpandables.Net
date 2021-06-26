@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
+using Xpandables.Net.NotificationEvents;
 
 namespace Xpandables.Net.Notifications
 {
@@ -33,7 +34,7 @@ namespace Xpandables.Net.Notifications
     /// </summary>
     public sealed class EventBus : IEventBus
     {
-        private readonly INotificationPublisher _notificationPublisher;
+        private readonly INotificationEventPublisher _notificationPublisher;
         private readonly AggregateDataContext _context;
 
         /// <summary>
@@ -43,7 +44,7 @@ namespace Xpandables.Net.Notifications
         /// <param name="context">The data context.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="notificationPublisher"/>
         /// or <paramref name="context"/> is null.</exception>
-        public EventBus(INotificationPublisher notificationPublisher, IAggregateDataContext context)
+        public EventBus(INotificationEventPublisher notificationPublisher, IAggregateDataContext context)
         {
             _notificationPublisher = notificationPublisher ?? throw new ArgumentNullException(nameof(notificationPublisher));
             _context = (AggregateDataContext)context;

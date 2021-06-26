@@ -19,12 +19,12 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.NotificationEvents
 {
     /// <summary>
-    /// Defines a method to automatically publish <see cref="INotification{TAggregateId}"/> type.
+    /// Defines a method to automatically publish <see cref="INotificationEvent{TAggregateId}"/> type.
     /// </summary>
-    public interface INotificationPublisher
+    public interface INotificationEventPublisher
     {
         /// <summary>
         /// Publishes notifications.
@@ -34,7 +34,7 @@ namespace Xpandables.Net.Notifications
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="event"/> must implement 
-        /// <see cref="INotification{TAggregateId}"/> or <see cref="INotification{TAggregateId, TDomainEvent}"/> interface.</exception>
+        /// <see cref="INotificationEvent{TAggregateId}"/> or <see cref="INotificationEvent{TAggregateId, TDomainEvent}"/> interface.</exception>
         Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
     }
 }

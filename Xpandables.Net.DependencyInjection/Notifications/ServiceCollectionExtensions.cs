@@ -19,6 +19,7 @@ using Microsoft.Extensions.Hosting;
 
 using System;
 
+using Xpandables.Net.NotificationEvents;
 using Xpandables.Net.Notifications;
 using Xpandables.Net.Services;
 
@@ -56,28 +57,28 @@ namespace Xpandables.Net.DependencyInjection
             => services.AddXNotificationBusService<NotificationBusService>();
 
         /// <summary>
-        /// Adds the <see cref="INotificationPublisher"/> type implementation to the services with scope life time.
+        /// Adds the <see cref="INotificationEventPublisher"/> type implementation to the services with scope life time.
         /// </summary>
         /// <typeparam name="TNotificationPublisher">The notification publisher type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXNotificationPublisher<TNotificationPublisher>(this IXpandableServiceBuilder services)
-            where TNotificationPublisher : class, INotificationPublisher
+            where TNotificationPublisher : class, INotificationEventPublisher
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddScoped<INotificationPublisher, TNotificationPublisher>();
+            services.Services.AddScoped<INotificationEventPublisher, TNotificationPublisher>();
             return services;
         }
 
         /// <summary>
-        /// Adds the default <see cref="INotificationPublisher"/> type implementation to the services with scope life time.
+        /// Adds the default <see cref="INotificationEventPublisher"/> type implementation to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXNotificationPublisher(this IXpandableServiceBuilder services)
-            => services.AddXNotificationPublisher<NotificationPublisher>();
+            => services.AddXNotificationPublisher<NotificationEventPublisher>();
     }
 }

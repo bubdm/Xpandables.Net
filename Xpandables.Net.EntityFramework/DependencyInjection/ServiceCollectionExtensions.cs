@@ -23,6 +23,7 @@ using System.Linq;
 
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
+using Xpandables.Net.NotificationEvents;
 using Xpandables.Net.Notifications;
 
 namespace Xpandables.Net.DependencyInjection

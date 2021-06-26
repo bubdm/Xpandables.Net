@@ -26,7 +26,7 @@ using Xpandables.Net.Decorators.Persistences;
 using Xpandables.Net.Decorators.Transactions;
 using Xpandables.Net.Decorators.Validators;
 using Xpandables.Net.Decorators.Visitors;
-using Xpandables.Net.Notifications;
+using Xpandables.Net.NotificationEvents;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
 using Xpandables.Net.Validators;
@@ -80,7 +80,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.XTryDecorate(typeof(INotificationHandler<,>), typeof(NotificationPersistenceDecorator<,>));
+            services.XTryDecorate(typeof(INotificationEventHandler<,>), typeof(NotificationPersistenceDecorator<,>));
             return services;
         }
 

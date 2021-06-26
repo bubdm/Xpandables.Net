@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.DomainEvents;
-using Xpandables.Net.Notifications;
+using Xpandables.Net.NotificationEvents;
 
 namespace Xpandables.Net.Database
 {
@@ -268,7 +268,7 @@ namespace Xpandables.Net.Database
 
         ///<inheritdoc/>
         public virtual async Task AppendEventAsync(
-            INotification<TAggregateId> @event,
+            INotificationEvent<TAggregateId> @event,
             CancellationToken cancellationToken = default)
         {
             var entity = EventStoreEntity.From<TAggregateId, TAggregate>(@event);
@@ -276,7 +276,7 @@ namespace Xpandables.Net.Database
         }
 
         ///<inheritdoc/>
-        public virtual async IAsyncEnumerable<INotification<TAggregateId>> ReadAllNotificationsAsync(
+        public virtual async IAsyncEnumerable<INotificationEvent<TAggregateId>> ReadAllNotificationsAsync(
             EventStoreEntityCriteria criteria,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -291,7 +291,7 @@ namespace Xpandables.Net.Database
             {
                 if (Type.GetType(entity.EventTypeFullName) is { } type)
                 {
-                    if (entity.EventData.ToObject(type) is INotification<TAggregateId> @event)
+                    if (entity.EventData.ToObject(type) is INotificationEvent<TAggregateId> @event)
                         yield return @event;
                 }
             }

@@ -24,7 +24,7 @@ using System.Reflection;
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
 using Xpandables.Net.DomainEvents;
-using Xpandables.Net.Notifications;
+using Xpandables.Net.NotificationEvents;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -76,7 +76,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="INotificationHandler{TAggregateId, TNotification}"/> implementations to the services with scope life time.
+        /// Adds the <see cref="INotificationEventHandler{TAggregateId, TNotification}"/> implementations to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -96,13 +96,13 @@ namespace Xpandables.Net.DependencyInjection
                     && !type.IsGenericType
                     && type.GetInterfaces()
                         .Any(inter => inter.IsGenericType
-                            && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<,>)))
+                            && inter.GetGenericTypeDefinition() == typeof(INotificationEventHandler<,>)))
                 .Select(type => new
                 {
                     Type = type,
                     Interfaces = type.GetInterfaces()
                     .Where(inter => inter.IsGenericType
-                    && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<,>))
+                    && inter.GetGenericTypeDefinition() == typeof(INotificationEventHandler<,>))
                 })
                 .ToList();
 
@@ -118,7 +118,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds and configures the <see cref="INotificationHandler{TAggregateId, TNotification}"/> implementations to the services with scope life time.
+        /// Adds and configures the <see cref="INotificationEventHandler{TAggregateId, TNotification}"/> implementations to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>

@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.NotificationEvents
 {
     /// <summary>
     /// Defines an interface to publish notifications.
@@ -25,7 +25,7 @@ namespace Xpandables.Net.Notifications
     public interface IEventBus
     {
         /// <summary>
-        /// Asynchronously pushes notifications to any subscribers (<see cref="INotificationHandler"/>).
+        /// Asynchronously pushes notifications to any subscribers (<see cref="INotificationEventHandler"/>).
         /// </summary>
         /// <returns>a task that represents an asynchronous operation.</returns>
         Task PushAsync();
