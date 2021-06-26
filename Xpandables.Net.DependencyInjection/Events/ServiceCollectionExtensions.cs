@@ -142,20 +142,6 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IEventBus"/> implementation to the services with singleton life time.
-        /// </summary>
-        /// <typeparam name="TEventBus">The type that implements <see cref="IEventBus"/></typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEventBus<TEventBus>(this IXpandableServiceBuilder services)
-            where TEventBus : class, IEventBus
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped<IEventBus, TEventBus>();
-            return services;
-        }
-
-        /// <summary>
         /// Adds the default <see cref="IAggregateAccessor{TAggregateId, TAggregate}"/> implementation to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>

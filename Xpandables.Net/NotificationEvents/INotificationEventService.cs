@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,19 +14,13 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading.Tasks;
+
+using Xpandables.Net.Services;
 
 namespace Xpandables.Net.NotificationEvents
 {
     /// <summary>
-    /// Defines an interface to publish notifications.
+    /// Defines the out-box (notifications) host service.
     /// </summary>
-    public interface IEventBus
-    {
-        /// <summary>
-        /// Asynchronously pushes notifications to any subscribers (<see cref="INotificationEventHandler"/>).
-        /// </summary>
-        /// <returns>a task that represents an asynchronous operation.</returns>
-        Task PushAsync();
-    }
+    public interface INotificationEventService : IBackgroundService { }
 }

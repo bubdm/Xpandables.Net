@@ -24,7 +24,6 @@ using System.Linq;
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
 using Xpandables.Net.NotificationEvents;
-using Xpandables.Net.Notifications;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -34,12 +33,13 @@ namespace Xpandables.Net.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the default <see cref="IEventBus"/> implementation to the services with singleton life time.
+        /// Adds the default <see cref="INotificationEventService"/> type implementation to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEventBus(this IXpandableServiceBuilder services)
-            => services.AddXEventBus<EventBus>();
+        public static IXpandableServiceBuilder AddXNotificationEventService(this IXpandableServiceBuilder services)
+            => services.AddXNotificationEventService<NotificationEventService>();
 
         /// <summary>
         /// Adds the default <see cref="IAggregateAccessor{TAggregateId, TAggregate}"/> implementation 

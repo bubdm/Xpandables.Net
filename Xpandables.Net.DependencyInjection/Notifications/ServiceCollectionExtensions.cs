@@ -20,8 +20,6 @@ using Microsoft.Extensions.Hosting;
 using System;
 
 using Xpandables.Net.NotificationEvents;
-using Xpandables.Net.Notifications;
-using Xpandables.Net.Services;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -31,30 +29,21 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="INotificationBusService"/> type implementation to the services with scope life time.
+        /// Adds the <see cref="INotificationEventService"/> type implementation to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TNotificationBusService">The notification bus service type implementation.</typeparam>
+        /// <typeparam name="TNotificationEventService">The notification event service type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationBusService<TNotificationBusService>(this IXpandableServiceBuilder services)
-            where TNotificationBusService : class, IHostedService, INotificationBusService
+        public static IXpandableServiceBuilder AddXNotificationEventService<TNotificationEventService>(this IXpandableServiceBuilder services)
+            where TNotificationEventService : class, IHostedService, INotificationEventService
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddSingleton<INotificationBusService, TNotificationBusService>();
-            services.Services.AddHostedService(provider => provider.GetRequiredService<INotificationBusService>() as TNotificationBusService);
+            services.Services.AddSingleton<INotificationEventService, TNotificationEventService>();
+            services.Services.AddHostedService(provider => provider.GetRequiredService<INotificationEventService>() as TNotificationEventService);
             return services;
         }
-
-        /// <summary>
-        /// Adds the default <see cref="INotificationBusService"/> type implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationBusService(this IXpandableServiceBuilder services)
-            => services.AddXNotificationBusService<NotificationBusService>();
 
         /// <summary>
         /// Adds the <see cref="INotificationEventPublisher"/> type implementation to the services with scope life time.
