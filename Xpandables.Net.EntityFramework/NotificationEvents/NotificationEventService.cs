@@ -178,6 +178,7 @@ namespace Xpandables.Net.NotificationEvents
                 if (entity.To(type) is not IEvent @event)
                     return false;
 
+                // you can use an event bus or other
                 await notificationEventPublisher.PublishAsync(@event).ConfigureAwait(false);
 
                 entity.Deactivated();
