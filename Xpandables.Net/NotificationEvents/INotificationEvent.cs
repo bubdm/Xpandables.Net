@@ -43,6 +43,6 @@ namespace Xpandables.Net.NotificationEvents
         /// Gets the target domain event.
         /// </summary>
         [JsonIgnore]
-        TDomainEvent DomainEvent { get; }
+        TDomainEvent? DomainEvent { get; }
     }
 }

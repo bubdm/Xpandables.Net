@@ -54,7 +54,7 @@ namespace Xpandables.Net.NotificationEvents
         /// </summary>
         /// <param name="aggregateId">The aggregate id.</param>
         /// <param name="domainEvent">The target domain event.</param>
-        protected NotificationEvent(TAggregateId aggregateId, TDomainEvent domainEvent)
+        protected NotificationEvent(TAggregateId aggregateId, TDomainEvent? domainEvent = default)
             : base(aggregateId)
         {
             DomainEvent = domainEvent;
@@ -62,6 +62,6 @@ namespace Xpandables.Net.NotificationEvents
 
         ///<inheritdoc/>
         [JsonIgnore]
-        public TDomainEvent DomainEvent { get; }
+        public TDomainEvent? DomainEvent { get; }
     }
 }
