@@ -59,7 +59,7 @@ namespace Xpandables.Net.Dispatchers
 
             var canHandleResult = CanHandle(CreateResult, handler, query);
 
-            if (canHandleResult.Failed)
+            if (canHandleResult.IsFailed)
                 return AsyncEnumerableExtensions.Empty<TResult>();
 
             return handler.HandleAsync(query, cancellationToken);
@@ -81,7 +81,7 @@ namespace Xpandables.Net.Dispatchers
 
             var canHandleResult = CanHandle(CreateResult, handler, query);
 
-            if (canHandleResult.Failed)
+            if (canHandleResult.IsFailed)
                 return canHandleResult;
 
             return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
@@ -103,7 +103,7 @@ namespace Xpandables.Net.Dispatchers
 
             var canHandleResult = CanHandle(CreateResult, (ICanHandle)handler, command);
 
-            if (canHandleResult.Failed)
+            if (canHandleResult.IsFailed)
                 return canHandleResult;
 
             return await handler.HandleAsync((dynamic)command, (dynamic)cancellationToken).ConfigureAwait(false);
@@ -125,7 +125,7 @@ namespace Xpandables.Net.Dispatchers
 
             var canHandleResult = CanHandle(CreateResult, handler, command);
 
-            if (canHandleResult.Failed)
+            if (canHandleResult.IsFailed)
                 return canHandleResult;
 
             return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);

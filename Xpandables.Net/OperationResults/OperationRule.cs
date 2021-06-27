@@ -45,7 +45,7 @@ namespace Xpandables.Net
         public bool IsSatisfiedBy(TArgument argument)
         {
             ApplyRule(argument);
-            return Result.Succeeded;
+            return Result.IsSucceeded;
         }
 
         /// <summary>

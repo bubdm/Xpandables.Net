@@ -62,7 +62,7 @@ namespace Xpandables.Net.Decorators.Validators
         public async Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             var resultState = await _validator.ValidateAsync(command, cancellationToken).ConfigureAwait(false);
-            if (resultState.Succeeded)
+            if (resultState.IsSucceeded)
                 return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
 
             return resultState;
@@ -108,7 +108,7 @@ namespace Xpandables.Net.Decorators.Validators
         public async Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
             var resultState = await _validator.ValidateAsync(command, cancellationToken).ConfigureAwait(false);
-            if (resultState.Succeeded)
+            if (resultState.IsSucceeded)
                 return await _decoratee.HandleAsync(command, cancellationToken).ConfigureAwait(false);
 
             return resultState.ToFailureOperationResult<TResult>();

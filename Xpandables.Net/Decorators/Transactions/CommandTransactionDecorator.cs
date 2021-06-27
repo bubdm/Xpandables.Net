@@ -119,7 +119,7 @@ namespace Xpandables.Net.Decorators.Transactions
             {
                 using var scope = transaction;
                 var resultState = await handler.ConfigureAwait(false);
-                if (resultState.Succeeded)
+                if (resultState.IsSucceeded)
                     scope.Complete();
 
                 return resultState;

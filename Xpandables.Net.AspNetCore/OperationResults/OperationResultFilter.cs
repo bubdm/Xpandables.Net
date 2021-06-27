@@ -84,7 +84,7 @@ namespace Xpandables.Net
         ///<inheritdoc/>
         public virtual async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
-            if (context.Result is ObjectResult objectResult && objectResult.Value is IOperationResult operationResult && operationResult.Failed)
+            if (context.Result is ObjectResult objectResult && objectResult.Value is IOperationResult operationResult && operationResult.IsFailed)
             {
                 var controller = (ControllerBase)context.Controller;
                 if (controller is null)

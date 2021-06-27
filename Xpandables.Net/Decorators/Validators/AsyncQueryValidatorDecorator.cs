@@ -68,7 +68,7 @@ namespace Xpandables.Net.Decorators.Validators
         public async IAsyncEnumerable<TResult> HandleAsync(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var resultState = await _validator.ValidateAsync(query, cancellationToken).ConfigureAwait(false);
-            if (resultState.Failed)
+            if (resultState.IsFailed)
             {
                 Trace.WriteLine(resultState.Errors.ToArray().ToJsonString());
                 yield break;

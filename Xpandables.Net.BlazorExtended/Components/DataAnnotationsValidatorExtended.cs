@@ -52,7 +52,7 @@ namespace Xpandables.Net.Components
         {
             _ = result ?? throw new ArgumentNullException(nameof(result));
 
-            if (result.Succeeded)
+            if (result.IsSucceeded)
                 return;
 
             foreach (var error in result.Errors)

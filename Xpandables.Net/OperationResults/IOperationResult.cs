@@ -38,7 +38,7 @@ namespace Xpandables.Net
     }
 
     /// <summary>
-    /// Represents the status of an operation. The result contains <see cref="Succeeded"/> and <see cref="Failed"/> which determines operation exit state,
+    /// Represents the status of an operation. The result contains <see cref="IsSucceeded"/> and <see cref="IsFailed"/> which determines operation exit state,
     /// <see cref="StatusCode"/> that returns the HTTP status code and <see cref="Errors"/> which shows errors for failing operation execution.
     /// </summary>
     public interface IOperationResult
@@ -79,13 +79,13 @@ namespace Xpandables.Net
         /// Gets a value that indicates whether the operation is completed successfully and returns <see langword="true"/> if so, otherwise <see langword="false"/>.
         /// </summary>
         /// <returns><see langword="true"/> if the operation is completed successfully; otherwise, <see langword="false"/>.</returns>
-        public sealed bool Succeeded => Status == OperationStatus.Success;
+        public sealed bool IsSucceeded => Status == OperationStatus.Success;
 
         /// <summary>
         /// Gets a value that indicates whether the operation is failed and returns <see langword="true"/> if so, otherwise <see langword="false"/>.
         /// </summary>
         /// <returns><see langword="true"/> if the operation is failed; otherwise, <see langword="true"/>.</returns>
-        public sealed bool Failed => Status == OperationStatus.Failure;
+        public sealed bool IsFailed => Status == OperationStatus.Failure;
 
         /// <summary>
         /// Converts the current success operation instance to the generic success operation with the specified value.
@@ -104,7 +104,7 @@ namespace Xpandables.Net
 
     /// <summary>
     /// Represents the status of an operation that contains a return value of <typeparamref name="TValue"/> type.
-    /// The result contains <see cref="IOperationResult.Succeeded"/> and <see cref="IOperationResult.Failed"/> which determines operation exit state,
+    /// The result contains <see cref="IOperationResult.IsSucceeded"/> and <see cref="IOperationResult.IsFailed"/> which determines operation exit state,
     /// <see cref="IOperationResult.StatusCode"/> that returns the HTTP status code and <see cref="IOperationResult.Errors"/> which shows errors for failing operation execution.
     /// </summary>
     /// <typeparam name="TValue">The type of the return value.</typeparam>

@@ -62,7 +62,7 @@ namespace Xpandables.Net.Decorators.Validators
         public async Task<IOperationResult<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
             var resultState = await _validator.ValidateAsync(query, cancellationToken).ConfigureAwait(false);
-            if (resultState.Failed)
+            if (resultState.IsFailed)
                 return resultState.ToFailureOperationResult<TResult>();
 
             return await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
