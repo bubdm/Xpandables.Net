@@ -20,5 +20,6 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// The Memento interface used as a marker for objects that need to restore their previous state (stores internal state of an <see cref="IOriginator"/> object).
     /// </summary>
+    [JsonInterfaceConverter(typeof(JsonInterfaceConverter<IMemento>))]
     public interface IMemento { }
 }

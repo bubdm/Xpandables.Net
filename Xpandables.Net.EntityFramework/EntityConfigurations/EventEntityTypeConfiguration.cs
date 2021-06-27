@@ -33,10 +33,9 @@ namespace Xpandables.Net.Database.EntityConfigurations
         public void Configure(EntityTypeBuilder<TEventType> builder)
         {
             builder.HasKey(p => p.Id);
-            builder.HasIndex(p => new { p.AggregateId })
-                .IsUnique();
+            builder.HasIndex(p => new { p.Id, p.AggregateId });
 
-            builder.Property(p => p.AggregateId).IsConcurrencyToken();
+            builder.Property(p => p.AggregateId);
             builder.Property(p => p.AggregateTypeName);
             builder.Property(p => p.EventData);
             builder.Property(p => p.EventTypeFullName);

@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Xpandables.Net.Aggregates
 {
@@ -36,6 +37,7 @@ namespace Xpandables.Net.Aggregates
         /// Constructs a new instance with the specified value.
         /// </summary>
         /// <param name="value">The value to be used.</param>
+        [JsonConstructor]
         public AggregateVersion(long value) => Value = value;
 
         ///<inheritdoc/>

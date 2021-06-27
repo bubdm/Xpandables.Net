@@ -106,9 +106,14 @@ namespace Xpandables.Net.Database
                 throw new InvalidOperationException($"{typeof(TAggregate).Name} " +
                     $"must implement {nameof(Aggregate<TAggregateId>)}");
 
-            await foreach (var @event in ReadAllDomainEventsAsync(
-                new() { AggregateId = aggregateId },
-                cancellationToken))
+            var criteria = new EventStoreEntityCriteria<DomainEventStoreEntity>
+            {
+                AggregateId = aggregateId.AsString()
+            };
+
+            var domainEvents = ReadAllDomainEventsAsync(criteria, cancellationToken);
+
+            await foreach (var @event in domainEvents.ConfigureAwait(false))
             {
                 aggregateEventSourcing.LoadFromHistory(@event);
             }
@@ -132,7 +137,7 @@ namespace Xpandables.Net.Database
             {
                 if (Type.GetType(entity.EventTypeFullName) is { } type)
                 {
-                    if (entity.EventData.ToObject(type) is IDomainEvent<TAggregateId> @event)
+                    if (entity.To(type) is IDomainEvent<TAggregateId> @event)
                         yield return @event;
                 }
             }
@@ -148,25 +153,25 @@ namespace Xpandables.Net.Database
         }
 
         ///<inheritdoc/>
-        public virtual async Task<ISnapShot<TAggregateId>?> GetSnapShotAsync(
+        public virtual async Task<ISnapShot<TAggregateId>?> ReadSnapShotAsync(
             TAggregateId aggreagteId,
             CancellationToken cancellationToken = default)
         {
             var criteria = new EventStoreEntityCriteria<SnapShotStoreEntity>()
             {
                 AggregateId = aggreagteId,
-                EventDataCriteria = data => data.RootElement.GetProperty("Version").GetInt64() != -1
+                EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() != -1
             };
 
             var result = await _context.SnapShotEvents
                 .AsNoTracking()
                 .Where(criteria)
-                .OrderBy(o => o.EventData.RootElement.GetProperty("Version").GetInt64())
+                .OrderBy(o => o.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64())
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
 
             var type = Type.GetType(result.EventTypeFullName);
-            return type is not null ? result.EventData.ToObject(type) as ISnapShot<TAggregateId> : default;
+            return type is not null ? result.To(type) as ISnapShot<TAggregateId> : default;
         }
 
         ///<inheritdoc/>
@@ -179,7 +184,7 @@ namespace Xpandables.Net.Database
                 throw new ArgumentException($"{typeof(TAggregate).Name} must " +
                     $"implement {typeof(IOriginator).Name}");
 
-            var snapShot = await GetSnapShotAsync(aggregateId, cancellationToken)
+            var snapShot = await ReadSnapShotAsync(aggregateId, cancellationToken)
                     .ConfigureAwait(false);
 
             if (snapShot is not null)
@@ -199,10 +204,11 @@ namespace Xpandables.Net.Database
                 throw new InvalidOperationException($"{aggregate.GetType().Name} must " +
                     $"implement '{nameof(IOriginator)}' interface");
 
+            long version = aggregate.Version;
             var criteria = new EventStoreEntityCriteria<SnapShotStoreEntity>
             {
                 AggregateId = aggregate.AggregateId,
-                EventDataCriteria = data => data.RootElement.GetProperty("Version").GetInt64() == aggregate.Version
+                EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() == version
             };
 
             var oldSnapShot = await _context.SnapShotEvents
@@ -222,15 +228,15 @@ namespace Xpandables.Net.Database
         public virtual async IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadDomainEventsSinceLastSnapShotAsync(
             TAggregateId aggregateId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var snapShot = await GetSnapShotAsync(aggregateId, cancellationToken)
+            var snapShot = await ReadSnapShotAsync(aggregateId, cancellationToken)
                 .ConfigureAwait(false);
 
-            var snapShotVersion = snapShot?.Version ?? -1;
+            long snapShotVersion = snapShot?.Version ?? -1;
 
             var criteria = new EventStoreEntityCriteria<DomainEventStoreEntity>
             {
                 AggregateId = aggregateId,
-                EventDataCriteria = data => data.RootElement.GetProperty("Version").GetInt64() > snapShotVersion
+                EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() > snapShotVersion
             };
 
             await foreach (var domainEvent in ReadAllDomainEventsAsync(criteria, cancellationToken)
@@ -244,14 +250,14 @@ namespace Xpandables.Net.Database
             TAggregateId aggregateId,
             CancellationToken cancellationToken = default)
         {
-            var snapShot = await GetSnapShotAsync(aggregateId, cancellationToken)
+            var snapShot = await ReadSnapShotAsync(aggregateId, cancellationToken)
                 .ConfigureAwait(false);
-            var snapShotVersion = snapShot?.Version ?? 0;
+            long snapShotVersion = snapShot?.Version ?? 0;
 
             var criteria = new EventStoreEntityCriteria<DomainEventStoreEntity>
             {
                 AggregateId = aggregateId,
-                EventDataCriteria = data => data.RootElement.GetProperty("Version").GetInt64() > snapShotVersion
+                EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() > snapShotVersion
             };
 
             return await _context.DomainEvents
@@ -300,7 +306,7 @@ namespace Xpandables.Net.Database
             {
                 if (Type.GetType(entity.EventTypeFullName) is { } type)
                 {
-                    if (entity.EventData.ToObject(type) is INotificationEvent<TAggregateId> @event)
+                    if (entity.To(type) is INotificationEvent<TAggregateId> @event)
                         yield return @event;
                 }
             }
@@ -323,7 +329,7 @@ namespace Xpandables.Net.Database
             {
                 if (Type.GetType(entity.EventTypeFullName) is { } type)
                 {
-                    if (entity.EventData.ToObject(type) is IEmailEvent<TEmailMessage> @event)
+                    if (entity.To(type) is IEmailEvent<TEmailMessage> @event)
                         yield return @event;
                 }
             }

@@ -32,14 +32,19 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the specified <see cref="IEmailSender{TEmailMessage}"/> implementation 
         /// to the services with scope life time.
         /// </summary>
+        /// <typeparam name="TEmailMessage">the type of message.</typeparam>
+        /// <typeparam name="TEmailSender">The type of the email sender.</typeparam>
         /// <param name="services">The collection of services.</param>
-        /// <param name="emailSenderType">The email sender implementation type.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEmailSender(this IXpandableServiceBuilder services, Type emailSenderType)
+        public static IXpandableServiceBuilder AddXEmailSender<TEmailMessage, TEmailSender>(
+            this IXpandableServiceBuilder services)
+            where TEmailMessage : notnull
+            where TEmailSender : class, IEmailSender<TEmailMessage>
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            _ = emailSenderType ?? throw new ArgumentNullException(nameof(emailSenderType));
-            services.Services.AddScoped(typeof(IEmailSender<>), emailSenderType);
+
+            services.Services.AddScoped<IEmailSender<TEmailMessage>, TEmailSender>();
+            services.Services.AddScoped(provider => (IEmailSender)provider.GetRequiredService<IEmailSender<TEmailMessage>>());
             return services;
         }
     }

@@ -111,7 +111,7 @@ namespace Xpandables.Net.EmailEvents
                 await Task.Yield();
                 using var scope = _serviceScopeFactory.CreateScope();
 
-                var aggregateDataContext = scope.ServiceProvider.GetRequiredService<AggregateDataContext>();
+                var aggregateDataContext = (AggregateDataContext)scope.ServiceProvider.GetRequiredService<IAggregateDataContext>();
                 var emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
 
                 var count = 0;

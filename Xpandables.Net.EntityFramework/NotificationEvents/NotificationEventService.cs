@@ -113,7 +113,7 @@ namespace Xpandables.Net.NotificationEvents
                 await Task.Yield();
                 using var scope = _serviceScopeFactory.CreateScope();
 
-                var aggregateDataContext = scope.ServiceProvider.GetRequiredService<AggregateDataContext>();
+                var aggregateDataContext =(AggregateDataContext) scope.ServiceProvider.GetRequiredService<IAggregateDataContext>();
                 var notificationEventPublisher = scope.ServiceProvider.GetRequiredService<INotificationEventPublisher>();
 
                 var count = 0;

@@ -36,7 +36,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="aggreagteId">the aggregate id to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <see cref="ISnapShot{TAggregateId}"/>.</returns>
-        Task<ISnapShot<TAggregateId>?> GetSnapShotAsync(
+        Task<ISnapShot<TAggregateId>?> ReadSnapShotAsync(
             TAggregateId aggreagteId,
             CancellationToken cancellationToken = default);
 

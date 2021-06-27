@@ -32,7 +32,7 @@ namespace Xpandables.Net.Aggregates
         TAggregateId AggregateId { get; }
 
         /// <summary>
-        ///   /// Gets the current version of the instance, the default value is -1.
+        /// Gets the current version of the instance, the default value is -1.
         /// </summary>
         AggregateVersion Version { get; }
 

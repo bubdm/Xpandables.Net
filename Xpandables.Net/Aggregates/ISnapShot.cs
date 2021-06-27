@@ -32,6 +32,6 @@ namespace Xpandables.Net.Aggregates
         /// <summary>
         /// Gets the version of the snapshot.
         /// </summary>
-        long Version { get; }
+        AggregateVersion Version { get; }
     }
 }

@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using System;
 using System.Linq.Expressions;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 
 using Xpandables.Net.Expressions;
@@ -37,54 +36,59 @@ namespace Xpandables.Net.Aggregates
         public static EventStoreEntityCriteria<TEventStoreEntity> Default => new();
 
         /// <summary>
-        /// Gets the string representation of the aggregate identifier.
+        /// Gets or sets the string representation of the aggregate identifier.
         /// </summary>
         public string? AggregateId { get; init; }
 
         /// <summary>
-        /// Gets the string representation of the aggregate type name.
+        /// Gets or sets the string representation of the aggregate type name.
         /// </summary>
         public string? AggregateTypeName { get; init; }
 
         /// <summary>
-        /// Gets the type name as <see cref="Regex"/> format. If null, all types will be returned.
+        /// Gets or sets the type name as <see cref="Regex"/> format. If null, all types will be returned.
         /// </summary>
         public string? EventTypeName { get; init; }
 
         /// <summary>
-        /// Determines whether to check for active record or not.
+        /// Gets or sets whether to check for active record or not.
         /// </summary>
         public bool? IsActive { get; init; }
 
         /// <summary>
-        /// Determines whether or not to check for deleted record or not.
+        /// Gets or sets whether or not to check for deleted record or not.
         /// </summary>
         public bool? IsDeleted { get; init; }
 
         /// <summary>
-        /// Gets the date to start search on created date. If null, starts from the beginning.
+        /// Gets or sets the date to start search on created date. If null, starts from the beginning.
         /// </summary>
         public DateTime? StartCreatedOn { get; init; }
 
         /// <summary>
-        /// Gets the date to end search on created date.
+        /// Gets or sets the date to end search on created date.
         /// </summary>
         public DateTime? EndCreatedOn { get; init; }
 
         /// <summary>
-        /// Gets the date to start search on updated date.
+        /// Gets or sets the date to start search on updated date.
         /// </summary>
         public DateTime? StartUpdatedOn { get; init; }
 
         /// <summary>
-        /// Gets the date to end search on updated date.
+        /// Gets or sets the date to end search on updated date.
         /// </summary>
         public DateTime? EndUpdatedOn { get; init; }
 
         /// <summary>
-        /// Gets the predicate to apply to the event data.
+        /// Gets or sets the predicate applied to the event data.
         /// </summary>
-        public Predicate<JsonDocument>? EventDataCriteria { get; init; }
+        /// <remarks>
+        /// For example :
+        /// EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() == version
+        /// This is because Version is parsed as "Version": { "Value": 1 }
+        /// </remarks>
+        public Expression<Func<TEventStoreEntity, bool>>? EventDataCriteria { get; init; }
 
         /// <summary>
         /// Gets the number of entities to be returned.
@@ -97,25 +101,25 @@ namespace Xpandables.Net.Aggregates
             var expression = QueryExpressionFactory.Create<TEventStoreEntity>();
 
             if (EventTypeName is not null)
-                expression = expression.And(entity => Regex.IsMatch(entity.EventTypeName, EventTypeName));
+                expression = expression.And(x => Regex.IsMatch(x.EventTypeName, EventTypeName));
             if (AggregateId is not null)
-                expression = expression.And(entity => entity.AggregateId == AggregateId);
+                expression = expression.And(x => x.AggregateId == AggregateId);
             if (AggregateTypeName is not null)
-                expression = expression.And(entity => Regex.IsMatch(entity.AggregateTypeName, AggregateTypeName));
+                expression = expression.And(x => Regex.IsMatch(x.AggregateTypeName, AggregateTypeName));
             if (StartCreatedOn is not null)
-                expression = expression.And(entity => entity.CreatedOn >= StartCreatedOn.Value);
+                expression = expression.And(x => x.CreatedOn >= StartCreatedOn.Value);
             if (EndCreatedOn is not null)
-                expression = expression.And(entity => entity.CreatedOn <= EndCreatedOn.Value);
+                expression = expression.And(x => x.CreatedOn <= EndCreatedOn.Value);
             if (StartUpdatedOn is not null)
-                expression = expression.And(entity => entity.UpdatedOn.HasValue && entity.UpdatedOn >= StartUpdatedOn.Value);
+                expression = expression.And(x => x.UpdatedOn.HasValue && x.UpdatedOn >= StartUpdatedOn.Value);
             if (EndUpdatedOn is not null)
-                expression = expression.And(entity => entity.UpdatedOn.HasValue && entity.UpdatedOn <= EndUpdatedOn.Value);
+                expression = expression.And(x => x.UpdatedOn.HasValue && x.UpdatedOn <= EndUpdatedOn.Value);
             if (IsActive is not null)
-                expression = expression.And(entity => entity.IsActive == IsActive.Value);
+                expression = expression.And(x => x.IsActive == IsActive.Value);
             if (IsDeleted is not null)
-                expression = expression.And(entity => entity.IsDeleted == IsDeleted.Value);
+                expression = expression.And(x => x.IsDeleted == IsDeleted.Value);
             if (EventDataCriteria is not null)
-                expression = expression.And(entity => EventDataCriteria(entity.EventData));
+                expression = expression.And(EventDataCriteria);
 
             return expression;
         }

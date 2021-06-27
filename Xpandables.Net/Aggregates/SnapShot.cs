@@ -35,7 +35,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="version">The version.</param>
         [JsonConstructor]
-        public SnapShot(IMemento memento, TAggregateId aggregateId, long version)
+        public SnapShot(IMemento memento, TAggregateId aggregateId, AggregateVersion version)
             : base(aggregateId)
         {
             Memento = memento ?? throw new ArgumentNullException(nameof(memento));
@@ -46,6 +46,6 @@ namespace Xpandables.Net.Aggregates
         public IMemento Memento { get; }
 
         ///<inheritdoc/>
-        public long Version { get; }
+        public AggregateVersion Version { get; }
     }
 }
