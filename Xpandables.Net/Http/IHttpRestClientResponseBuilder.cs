@@ -15,11 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -33,62 +29,30 @@ namespace Xpandables.Net.Http
     public interface IHttpRestClientResponseBuilder
     {
         /// <summary>
-        /// Returns an <see cref="HttpRestClientResponse"/> for success response that contains an <see cref="IAsyncEnumerable{T}"/>.
+        /// The main method to build an <see cref="HttpRestClientResponse"/> for response 
+        /// that contains an <see cref="IAsyncEnumerable{T}"/>.
         /// </summary>
         /// <typeparam name="TResult">The response content type.</typeparam>
         /// <param name="httpResponse">The target HTTP response.</param>
-        /// <param name="streamToResponseConverter">The converter to be used from stream to <typeparamref name="TResult"/>.</param>
-        /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
-        Task<HttpRestClientResponse<TResult>> WriteSuccessAsyncEnumerableResponseAsync<TResult>(
-            HttpResponseMessage httpResponse, Func<Stream, TResult> streamToResponseConverter);
-
-        /// <summary>
-        /// Returns an <see cref="HttpRestClientResponse"/> for success response that contains a result of <typeparamref name="TResult"/> type.
-        /// </summary>
-        /// <typeparam name="TResult">The response content type.</typeparam>
-        /// <param name="httpResponse">The target HTTP response.</param>
-        /// <param name="streamToResponseConverter">The converter to be used from stream to <typeparamref name="TResult"/>.</param>
-        /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
-        Task<HttpRestClientResponse<TResult>> WriteSuccessResultResponseAsync<TResult>(
-            HttpResponseMessage httpResponse, Func<Stream, Task<TResult>> streamToResponseConverter);
-
-        /// <summary>
-        /// Returns an <see cref="HttpRestClientResponse"/> for bad response.
-        /// </summary>
-        /// <param name="badResponseBuilder">The bad response content builder.</param>
-        /// <param name="httpResponse">The target HTTP response.</param>
-        /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
-        Task<HttpRestClientResponse> WriteBadResultResponseAsync(
-            Func<Exception, HttpStatusCode, HttpRestClientResponse> badResponseBuilder, HttpResponseMessage httpResponse);
-
-        /// <summary>
-        /// Returns headers from the HTTP response when return <see cref="HttpRestClientResponse"/>.
-        /// </summary>
-        /// <param name="httpResponse">The response to act on.</param>
-        /// <returns>A collection of keys/values.</returns>
-        NameValueCollection ReadHttpResponseHeaders(HttpResponseMessage httpResponse);
-
-        /// <summary>
-        /// De-serializes a JSON string from stream.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the deserialized object.</typeparam>
-        /// <param name="stream">The stream to act on.</param>
-        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TResult"/> type.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="stream"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception>
-        Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream, JsonSerializerOptions? serializerOptions = default);
-
-        /// <summary>
-        /// Returns an async-enumerable from stream used for asynchronous result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="stream">The stream source to act on.</param>
         /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(
-            Stream stream,
+        /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
+        Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> WriteAsyncEnumerableResponseAsync<TResult>(
+            HttpResponseMessage httpResponse,
+            JsonSerializerOptions? serializerOptions = default,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// The main method to build an <see cref="HttpRestClientResponse"/> for success response 
+        /// that contains a result of <typeparamref name="TResult"/> type.
+        /// </summary>
+        /// <typeparam name="TResult">The response content type.</typeparam>
+        /// <param name="httpResponse">The target HTTP response.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
+        Task<HttpRestClientResponse<TResult>> WriteSuccessResultResponseAsync<TResult>(
+            HttpResponseMessage httpResponse,
             JsonSerializerOptions? serializerOptions = default,
             CancellationToken cancellationToken = default);
     }

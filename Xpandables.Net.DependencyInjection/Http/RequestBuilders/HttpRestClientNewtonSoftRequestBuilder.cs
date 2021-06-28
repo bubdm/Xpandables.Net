@@ -30,14 +30,7 @@ namespace Xpandables.Net.Http.RequestBuilders
     /// </summary>
     public class HttpRestClientNewtonsoftRequestBuilder : HttpRestClientRequestBuilder
     {
-        /// <summary>
-        /// Returns the source as stream content using <see cref="M:Xpandables.Net.Http.IStreamRequest.GetStreamContent" /> if available, if not use the hole source.
-        /// The default implementation used the <see cref="N:System.Text.Json" /> API.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
-        /// <returns>A stream content.</returns>
+        ///<inheritdoc/>
         public override async Task<HttpContent?> ReadStreamContentAsync<TSource>(
             TSource source, JsonSerializerOptions? serializerOptions = default)
             where TSource : class
@@ -55,15 +48,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             return new StreamContent(memoryStream);
         }
 
-        /// <summary>
-        /// Returns the source as string content using <see cref="M:Xpandables.Net.Http.IStringRequest.GetStringContent" /> if available, if not use the hole source.
-        /// The default implementation used the <see cref="N:System.Text.Json" /> API.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <param name="attribute">The target attribute.</param>
-        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
-        /// <returns>A string content.</returns>
+        ///<inheritdoc/>
         public override HttpContent ReadStringContent<TSource>(
             TSource source,
             HttpRestClientAttribute attribute,

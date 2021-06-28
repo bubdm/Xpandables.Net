@@ -169,7 +169,7 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <param name="result">The result instance.</param>
         /// <param name="statusCode">The status response code.</param>
-        internal static HttpRestClientResponse<TResult> Success(TResult result, HttpStatusCode statusCode = HttpStatusCode.OK)
+        internal static HttpRestClientResponse<TResult> Success([AllowNull] TResult result, HttpStatusCode statusCode = HttpStatusCode.OK)
             => new(result, statusCode);
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <param name="result">The result instance.</param>
         /// <param name="statusCode">The status code of the response.</param>
-        protected HttpRestClientResponse(TResult result, HttpStatusCode statusCode)
+        protected HttpRestClientResponse([AllowNull] TResult result, HttpStatusCode statusCode)
             : base(statusCode) => Result = result;
 
         /// <summary>
@@ -268,9 +268,9 @@ namespace Xpandables.Net.Http
         internal new HttpRestClientResponse<TResult> AddVersion(Version version) => this.With(h => h.Version = version);
 
         private bool _isDisposed;
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+        ///<inheritdoc/>
         protected override void Dispose(bool disposing)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (!_isDisposed)
             {
@@ -285,9 +285,8 @@ namespace Xpandables.Net.Http
             }
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        ///<inheritdoc/>
         protected override async ValueTask DisposeAsync(bool disposing)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (!_isDisposed)
             {

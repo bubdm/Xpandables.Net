@@ -37,6 +37,68 @@ namespace Xpandables.Net.Http.RequestBuilders
     public class HttpRestClientRequestBuilder : IHttpRestClientRequestBuilder
     {
         ///<inheritdoc/>
+        public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageAsync<TSource>(
+            TSource source,
+            HttpClient httpClient,
+            JsonSerializerOptions? serializerOptions = default)
+            where TSource : class
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+
+            var attribute = ReadHttpRestClientAttribute(source);
+
+            attribute.Path ??= "/";
+
+            if (attribute.In is ParameterLocation.Path or ParameterLocation.Query)
+            {
+                WriteLocationPath(source, attribute);
+                WriteLocationQuery(source, attribute);
+            }
+
+            attribute.Uri = new Uri(attribute.Path, UriKind.Relative);
+            var httpRequestMessage = new HttpRequestMessage(new HttpMethod(attribute.Method), attribute.Uri);
+            httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(attribute.Accept));
+            httpRequestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(Thread.CurrentThread.CurrentCulture.Name));
+
+            WriteLocationCookie(source, attribute, httpRequestMessage);
+            WriteLocationHeader(source, attribute, httpRequestMessage);
+
+            if (!attribute.IsNullable && (attribute.In & ParameterLocation.Body) == ParameterLocation.Body)
+            {
+                httpRequestMessage.Content = attribute.BodyFormat switch
+                {
+                    BodyFormat.ByteArray => ReadByteArrayContent(source),
+                    BodyFormat.FormUrlEncoded => ReadFormUrlEncodedContent(source),
+                    BodyFormat.Multipart => ReadMultipartContent(source, attribute),
+                    BodyFormat.Stream => await ReadStreamContentAsync(source, serializerOptions).ConfigureAwait(false),
+                    _ => ReadStringContent(source, attribute, serializerOptions)
+                };
+
+                if (httpRequestMessage.Content is not null)
+                    httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue(attribute.ContentType);
+            }
+
+            if (attribute.IsSecured)
+            {
+                httpRequestMessage.Headers.Authorization =
+                    httpClient.DefaultRequestHeaders.Authorization ?? new AuthenticationHeaderValue(attribute.Scheme);
+            }
+
+            return httpRequestMessage;
+
+            static HttpRestClientAttribute ReadHttpRestClientAttribute(TSource source)
+            {
+                if (source is IHttpRestClientAttributeProvider httpRestClientAttributeProvider)
+                    return httpRestClientAttributeProvider.ReadHttpRestClientAttribute();
+
+                return source.GetType().GetCustomAttribute<HttpRestClientAttribute>()
+                    ?? throw new ArgumentNullException(
+                        $"{nameof(HttpRestClientAttribute)} excepted from : {source.GetType().Name}");
+            }
+        }
+
+        ///<inheritdoc/>
         public virtual string AddPathString(string path, IDictionary<string, string> pathString)
         {
             _ = path ?? throw new ArgumentNullException(nameof(path));
@@ -194,74 +256,6 @@ namespace Xpandables.Net.Http.RequestBuilders
                 JsonSerializer.Serialize(source, serializerOptions),
                 Encoding.UTF8,
                 attribute.ContentType);
-        }
-
-
-        ///<inheritdoc/>
-        public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageFromAttributeAsync<TSource>(
-            HttpRestClientAttribute attribute,
-            TSource source,
-            HttpClient httpClient,
-            JsonSerializerOptions? serializerOptions = default)
-            where TSource : class
-        {
-            _ = attribute ?? throw new ArgumentNullException(nameof(attribute));
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-
-            attribute.Path ??= "/";
-
-            if (attribute.In is ParameterLocation.Path or ParameterLocation.Query)
-            {
-                WriteLocationPath(source, attribute);
-                WriteLocationQuery(source, attribute);
-            }
-
-            attribute.Uri = new Uri(attribute.Path, UriKind.Relative);
-            var httpRequestMessage = new HttpRequestMessage(new HttpMethod(attribute.Method), attribute.Uri);
-            httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(attribute.Accept));
-            httpRequestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(Thread.CurrentThread.CurrentCulture.Name));
-
-            WriteLocationCookie(source, attribute, httpRequestMessage);
-            WriteLocationHeader(source, attribute, httpRequestMessage);
-
-            if (!attribute.IsNullable && (attribute.In & ParameterLocation.Body) == ParameterLocation.Body)
-            {
-                httpRequestMessage.Content = attribute.BodyFormat switch
-                {
-                    BodyFormat.ByteArray => ReadByteArrayContent(source),
-                    BodyFormat.FormUrlEncoded => ReadFormUrlEncodedContent(source),
-                    BodyFormat.Multipart => ReadMultipartContent(source, attribute),
-                    BodyFormat.Stream => await ReadStreamContentAsync(source, serializerOptions).ConfigureAwait(false),
-                    _ => ReadStringContent(source, attribute, serializerOptions)
-                };
-
-                httpRequestMessage.Content!.Headers.ContentType = new MediaTypeHeaderValue(attribute.ContentType);
-            }
-
-            if (attribute.IsSecured)
-            {
-                httpRequestMessage.Headers.Authorization =
-                    httpClient.DefaultRequestHeaders.Authorization ?? new AuthenticationHeaderValue(attribute.Scheme);
-            }
-
-            return httpRequestMessage;
-        }
-
-        ///<inheritdoc/>
-        public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageFromSourceAsync<TSource>(
-            TSource source,
-            HttpClient httpClient,
-            JsonSerializerOptions? serializerOptions = default)
-            where TSource : class
-        {
-            var attribute = ReadHttpClientAttributeFromSource(source);
-            return await WriteHttpRequestMessageFromAttributeAsync(
-                attribute,
-                source,
-                httpClient,
-                serializerOptions)
-                .ConfigureAwait(false);
         }
 
         ///<inheritdoc/>

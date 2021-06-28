@@ -18,10 +18,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -43,95 +40,123 @@ namespace Xpandables.Net.Http.ResponseBuilders
         //               PropertyNameCaseInsensitive = true
         //           }
 
-    ///<inheritdoc/>
-    public virtual async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(
-            Stream stream, JsonSerializerOptions? serializerOptions = default)
-        {
-            var result = await JsonSerializer.DeserializeAsync<TResult>(
-                   stream, serializerOptions)
-                   .ConfigureAwait(false);
-
-            return result!;
-        }
-
         ///<inheritdoc/>
-        public virtual async Task<HttpRestClientResponse> WriteBadResultResponseAsync(
-            Func<Exception, HttpStatusCode, HttpRestClientResponse> badResponseBuilder,
-            HttpResponseMessage httpResponse)
-        {
-            var response = httpResponse.Content switch
-            {
-                { } => await WriteBadResponseContentAsync().ConfigureAwait(false),
-                null => badResponseBuilder(new HttpRestClientException(), httpResponse.StatusCode)
-            };
-
-            return response
-                .AddHeaders(ReadHttpResponseHeaders(httpResponse))
-                .AddVersion(httpResponse.Version)
-                .AddReasonPhrase(httpResponse.ReasonPhrase);
-
-            async Task<HttpRestClientResponse> WriteBadResponseContentAsync()
-            {
-                var content = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return badResponseBuilder(new HttpRestClientException(content), httpResponse.StatusCode);
-            }
-        }
-
-        ///<inheritdoc/>
-        public virtual async Task<HttpRestClientResponse<TResult>> WriteSuccessAsyncEnumerableResponseAsync<TResult>(
+        public virtual async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>>
+            WriteAsyncEnumerableResponseAsync<TResult>(
             HttpResponseMessage httpResponse,
-            Func<Stream, TResult> streamToResponseConverter)
+            JsonSerializerOptions? serializerOptions = default,
+            CancellationToken cancellationToken = default)
         {
             try
             {
-                var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                var stream = await httpResponse.Content
+                    .ReadAsStreamAsync(cancellationToken)
+                    .ConfigureAwait(false);
+
                 if (stream is null)
                 {
-                    return HttpRestClientResponse<TResult>
-                        .Success(httpResponse.StatusCode)
-                        .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                    return HttpRestClientResponse<IAsyncEnumerable<TResult>>
+                        .Success(AsyncEnumerableExtensions.Empty<TResult>(), httpResponse.StatusCode)
+                        .AddHeaders(httpResponse.ReadHttpResponseHeaders())
                         .AddVersion(httpResponse.Version)
                         .AddReasonPhrase(httpResponse.ReasonPhrase);
                 }
 
-                var results = streamToResponseConverter(stream);
-                return HttpRestClientResponse<TResult>
+                var results = AsyncEnumerableBuilderAsync(stream, serializerOptions, cancellationToken);
+
+                return HttpRestClientResponse<IAsyncEnumerable<TResult>>
                     .Success(results, httpResponse.StatusCode)
-                    .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                    .AddHeaders(httpResponse.ReadHttpResponseHeaders())
                     .AddVersion(httpResponse.Version)
                     .AddReasonPhrase(httpResponse.ReasonPhrase);
             }
             catch (Exception exception)
             {
-                return HttpRestClientResponse<TResult>
+                return HttpRestClientResponse<IAsyncEnumerable<TResult>>
                     .Failure(exception)
-                    .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                    .AddHeaders(httpResponse.ReadHttpResponseHeaders())
                     .AddVersion(httpResponse.Version)
                     .AddReasonPhrase(httpResponse.ReasonPhrase);
+            }
+
+            async static IAsyncEnumerable<TResult> AsyncEnumerableBuilderAsync(
+                Stream stream,
+                JsonSerializerOptions? serializerOptions = default,
+                [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                using var blockingCollection = new BlockingCollection<TResult>();
+                await using var blockingCollectionIterator = new AsyncEnumerable<TResult>(
+                    blockingCollection.GetConsumingEnumerable(cancellationToken))
+                    .GetAsyncEnumerator(cancellationToken);
+
+                var enumerateStreamElementToBlockingCollectionThread = new Thread(
+                    () => EnumerateStreamElementToBlockingCollection(
+                        stream,
+                        blockingCollection,
+                        serializerOptions,
+                        cancellationToken));
+
+                enumerateStreamElementToBlockingCollectionThread.Start();
+
+                while (await blockingCollectionIterator.MoveNextAsync().ConfigureAwait(false))
+                    yield return blockingCollectionIterator.Current;
+            }
+
+            static void EnumerateStreamElementToBlockingCollection(
+                Stream stream,
+                BlockingCollection<TResult> resultCollection,
+                JsonSerializerOptions? serializerOptions = default,
+                CancellationToken cancellationToken = default)
+            {
+                using var jsonStreamReader = new Utf8JsonStreamReader(stream, 32 * 1024);
+
+                jsonStreamReader.Read();
+                while (jsonStreamReader.Read())
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                        break;
+
+                    if (jsonStreamReader.TokenType != JsonTokenType.StartObject)
+                        continue;
+
+                    if (jsonStreamReader.Deserialise<TResult>(serializerOptions) is { } result)
+                    {
+                        resultCollection.Add(result, cancellationToken);
+                    }
+                }
+
+                resultCollection.CompleteAdding();
             }
         }
 
         ///<inheritdoc/>
         public virtual async Task<HttpRestClientResponse<TResult>> WriteSuccessResultResponseAsync<TResult>(
             HttpResponseMessage httpResponse,
-            Func<Stream, Task<TResult>> streamToResponseConverter)
+            JsonSerializerOptions? serializerOptions = default,
+            CancellationToken cancellationToken = default)
         {
             try
             {
-                var stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                var stream = await httpResponse.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+
                 if (stream is null)
                 {
                     return HttpRestClientResponse<TResult>
                         .Success(httpResponse.StatusCode)
-                        .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                        .AddHeaders(httpResponse.ReadHttpResponseHeaders())
                         .AddVersion(httpResponse.Version)
                         .AddReasonPhrase(httpResponse.ReasonPhrase);
                 }
 
-                var results = await streamToResponseConverter(stream).ConfigureAwait(false);
+                var result = await JsonSerializer.DeserializeAsync<TResult>(
+                    stream,
+                    serializerOptions,
+                    cancellationToken)
+                    .ConfigureAwait(false);
+
                 return HttpRestClientResponse<TResult>
-                    .Success(results, httpResponse.StatusCode)
-                    .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                    .Success(result, httpResponse.StatusCode)
+                    .AddHeaders(httpResponse.ReadHttpResponseHeaders())
                     .AddVersion(httpResponse.Version)
                     .AddReasonPhrase(httpResponse.ReasonPhrase);
             }
@@ -139,92 +164,10 @@ namespace Xpandables.Net.Http.ResponseBuilders
             {
                 return HttpRestClientResponse<TResult>
                     .Failure(exception)
-                    .AddHeaders(ReadHttpResponseHeaders(httpResponse))
+                    .AddHeaders(httpResponse.ReadHttpResponseHeaders())
                     .AddVersion(httpResponse.Version)
                     .AddReasonPhrase(httpResponse.ReasonPhrase);
             }
-        }
-
-        ///<inheritdoc/>
-        public virtual NameValueCollection ReadHttpResponseHeaders(HttpResponseMessage httpResponse)
-            => Enumerable
-                .Empty<(string Name, string Value)>()
-                .Concat(
-                    httpResponse.Headers
-                        .SelectMany(kvp => kvp.Value
-                            .Select(v => (Name: kvp.Key, Value: v))
-                            )
-                        )
-                .Concat(
-                    httpResponse.Content.Headers
-                        .SelectMany(kvp => kvp.Value
-                            .Select(v => (Name: kvp.Key, Value: v))
-                        )
-                        )
-                .Aggregate(
-                    seed: new NameValueCollection(),
-                    func: (nvc, pair) =>
-                    {
-                        var (name, value) = pair;
-                        nvc.Add(name, value); return nvc;
-                    },
-                    resultSelector: nvc => nvc
-                    );
-
-        ///<inheritdoc/>
-        public virtual async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(
-            Stream stream,
-            JsonSerializerOptions? serializerOptions = default,
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            using var blockingCollection = new BlockingCollection<TResult>();
-            await using var iterator = new AsyncEnumerable<TResult>(
-                blockingCollection.GetConsumingEnumerable(cancellationToken))
-                .GetAsyncEnumerator(cancellationToken);
-
-            var enumerateStreamElementToBlockingCollectionThread = new Thread(
-                () => EnumerateStreamElementToBlockingCollection(
-                    stream, blockingCollection, serializerOptions, cancellationToken));
-
-            enumerateStreamElementToBlockingCollectionThread.Start();
-
-            while (await iterator.MoveNextAsync().ConfigureAwait(false))
-                yield return iterator.Current;
-        }
-
-        /// <summary>
-        /// Enumerates the stream content to the blocking collection used to return <see cref="IAsyncEnumerable{T}"/>.
-        /// the method makes use of <see cref="Utf8JsonStreamReader"/>.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the collection item.</typeparam>
-        /// <param name="stream">The target stream.</param>
-        /// <param name="resultCollection">The collection result.</param>
-        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        private static void EnumerateStreamElementToBlockingCollection<TResult>(
-            Stream stream,
-            BlockingCollection<TResult> resultCollection,
-            JsonSerializerOptions? serializerOptions = default,
-            CancellationToken cancellationToken = default)
-        {
-            using var jsonStreamReader = new Utf8JsonStreamReader(stream, 32 * 1024);
-
-            jsonStreamReader.Read();
-            while (jsonStreamReader.Read())
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    break;
-
-                if (jsonStreamReader.TokenType != JsonTokenType.StartObject)
-                    continue;
-
-                if (jsonStreamReader.Deserialise<TResult>(serializerOptions) is { } result)
-                {
-                    resultCollection.Add(result, cancellationToken);
-                }
-            }
-
-            resultCollection.CompleteAdding();
         }
     }
 }

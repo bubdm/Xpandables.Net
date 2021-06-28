@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
@@ -32,46 +33,98 @@ namespace Xpandables.Net.Http.ResponseBuilders
     /// </summary>
     public class HttpRestClientNewtonsoftResponseBuilder : HttpRestClientResponseBuilder
     {
-        /// <summary>
-        /// De-serializes a JSON string from stream.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the deserialized object.</typeparam>
-        /// <param name="stream">The stream to act on.</param>
-        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
-        /// <returns>A task that represents an object of <typeparamref name="TResult" /> type.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="stream" /> is null.</exception>
-        /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception>
-        public override async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(
-            Stream stream, JsonSerializerOptions? serializerOptions = default)
+        ///<inheritdoc/>
+        public override async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>>
+             WriteAsyncEnumerableResponseAsync<TResult>(
+             HttpResponseMessage httpResponse,
+             JsonSerializerOptions? serializerOptions = default,
+             CancellationToken cancellationToken = default)
         {
-            using var streamReader = new StreamReader(stream);
-            using var jsonTextReader = new JsonTextReader(streamReader);
+            try
+            {
+                var stream = await httpResponse.Content
+                    .ReadAsStreamAsync(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var result = Newtonsoft.Json.JsonSerializer.CreateDefault().Deserialize<TResult>(jsonTextReader);
-            return await Task.FromResult(result!).ConfigureAwait(false);
+                if (stream is null)
+                {
+                    return HttpRestClientResponse<IAsyncEnumerable<TResult>>
+                        .Success(AsyncEnumerableExtensions.Empty<TResult>(), httpResponse.StatusCode)
+                        .AddHeaders(httpResponse.ReadHttpResponseHeaders())
+                        .AddVersion(httpResponse.Version)
+                        .AddReasonPhrase(httpResponse.ReasonPhrase);
+                }
+
+                var results = AsyncEnumerableBuilderAsync(stream, serializerOptions, cancellationToken);
+
+                return HttpRestClientResponse<IAsyncEnumerable<TResult>>
+                    .Success(results, httpResponse.StatusCode)
+                    .AddHeaders(httpResponse.ReadHttpResponseHeaders())
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
+            }
+            catch (Exception exception)
+            {
+                return HttpRestClientResponse<IAsyncEnumerable<TResult>>
+                    .Failure(exception)
+                    .AddHeaders(httpResponse.ReadHttpResponseHeaders())
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
+            }
+
+            async static IAsyncEnumerable<TResult> AsyncEnumerableBuilderAsync(
+                Stream stream,
+                JsonSerializerOptions? serializerOptions = default,
+                [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                var jsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault();
+                using var streamReader = new StreamReader(stream);
+                using var jsonTextReader = new JsonTextReader(streamReader);
+                while (await jsonTextReader.ReadAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    if (jsonTextReader.TokenType != JsonToken.StartObject) continue;
+                    if (jsonSerializer.Deserialize<TResult>(jsonTextReader) is { } result)
+                        yield return result;
+                }
+            }
         }
 
-        /// <summary>
-        /// Returns an async-enumerable from stream used for asynchronous result.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="stream">The stream source to act on.</param>
-        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <typeparamref name="TResult" /> that can be asynchronously enumerated.</returns>
-        public override async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(
-            Stream stream,
+        ///<inheritdoc/>
+        public override async Task<HttpRestClientResponse<TResult>> WriteSuccessResultResponseAsync<TResult>(
+            HttpResponseMessage httpResponse,
             JsonSerializerOptions? serializerOptions = default,
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
-            var jsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault();
-            using var streamReader = new StreamReader(stream);
-            using var jsonTextReader = new JsonTextReader(streamReader);
-            while (await jsonTextReader.ReadAsync(cancellationToken).ConfigureAwait(false))
+            try
             {
-                if (jsonTextReader.TokenType != JsonToken.StartObject) continue;
-                if (jsonSerializer.Deserialize<TResult>(jsonTextReader) is { } result)
-                    yield return result;
+                var stream = await httpResponse.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+                if (stream is null)
+                {
+                    return HttpRestClientResponse<TResult>
+                        .Success(httpResponse.StatusCode)
+                        .AddHeaders(httpResponse.ReadHttpResponseHeaders())
+                        .AddVersion(httpResponse.Version)
+                        .AddReasonPhrase(httpResponse.ReasonPhrase);
+                }
+
+                using var streamReader = new StreamReader(stream);
+                using var jsonTextReader = new JsonTextReader(streamReader);
+
+                var result = Newtonsoft.Json.JsonSerializer.CreateDefault().Deserialize<TResult>(jsonTextReader);
+
+                return HttpRestClientResponse<TResult>
+                    .Success(result, httpResponse.StatusCode)
+                    .AddHeaders(httpResponse.ReadHttpResponseHeaders())
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
+            }
+            catch (Exception exception)
+            {
+                return HttpRestClientResponse<TResult>
+                    .Failure(exception)
+                    .AddHeaders(httpResponse.ReadHttpResponseHeaders())
+                    .AddVersion(httpResponse.Version)
+                    .AddReasonPhrase(httpResponse.ReasonPhrase);
             }
         }
     }

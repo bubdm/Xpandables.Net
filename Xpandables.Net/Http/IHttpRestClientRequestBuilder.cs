@@ -30,47 +30,21 @@ namespace Xpandables.Net.Http
     public interface IHttpRestClientRequestBuilder
     {
         /// <summary>
-        /// Returns an <see cref="HttpRequestMessage"/> from the source .
+        /// The main method use to construct an <see cref="HttpRequestMessage"/> from the source .
         /// </summary>
         /// <typeparam name="TSource">The type of the object.</typeparam>
         /// <param name="source">The source object.</param>
         /// <param name="httpClient">The target HTTP client.</param>
         /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <returns>A task that represents an <see cref="HttpRequestMessage"/> object.</returns>
-        Task<HttpRequestMessage> WriteHttpRequestMessageFromSourceAsync<TSource>(
-            TSource source,
-            HttpClient httpClient,
-            JsonSerializerOptions? serializerOptions = default)
-            where TSource : class;
-
-        /// <summary>
-        /// Builds the <see cref="HttpRequestMessage"/> from the attribute using the source.
-        /// </summary>
-        /// <typeparam name="TSource">the type of the source.</typeparam>
-        /// <param name="attribute">The <see cref="HttpRestClientAttribute"/> attribute to act on.</param>
-        /// <param name="source">The source of data.</param>
-        /// <param name="httpClient">The target HTTP client.</param>
-        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        /// <returns>A task that represents an <see cref="HttpRequestMessage"/> object.</returns>
-        Task<HttpRequestMessage> WriteHttpRequestMessageFromAttributeAsync<TSource>(
-            HttpRestClientAttribute attribute,
+        /// <exception cref="ArgumentNullException">The <paramref name="httpClient"/> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="source"/> must be decorated with
+        /// <see cref="HttpRestClientAttribute"/> or implement <see cref="IHttpRestClientAttributeProvider"/>.</exception>
+        Task<HttpRequestMessage> WriteHttpRequestMessageAsync<TSource>(
             TSource source,
             HttpClient httpClient,
             JsonSerializerOptions? serializerOptions = default)
-            where TSource : class;
-
-        /// <summary>
-        /// Returns the <see cref="HttpRestClientAttribute"/> found in the source as decorated attribute 
-        /// or <see cref="IHttpRestClientAttributeProvider"/> implementation.
-        /// If not found, throws an exception.
-        /// </summary>
-        /// <typeparam name="TSource">The type of source object.</typeparam>
-        /// <param name="source">The source object instance.</param>
-        /// <returns>A <see cref="HttpRestClientAttribute"/> attribute.</returns>
-        /// <exception cref="ArgumentNullException"><see cref="HttpRestClientAttribute"/> expected 
-        /// or <see cref="IHttpRestClientAttributeProvider"/> implementation.</exception>
-        HttpRestClientAttribute ReadHttpClientAttributeFromSource<TSource>(TSource source)
             where TSource : class;
 
         /// <summary>
@@ -79,6 +53,7 @@ namespace Xpandables.Net.Http
         /// <param name="path">The base Uri.</param>
         /// <param name="pathString">A collection of name value path pairs to append.</param>
         /// <returns>The combined result.</returns>
+        /// <remarks>Used by <see cref="WriteHttpRequestMessageAsync{TSource}(TSource, HttpClient, JsonSerializerOptions?)"/></remarks>
         /// <exception cref="ArgumentNullException">The <paramref name="path"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="pathString"/> is null.</exception>
         string AddPathString(string path, IDictionary<string, string> pathString);
@@ -89,6 +64,7 @@ namespace Xpandables.Net.Http
         /// <param name="path">The base Uri.</param>
         /// <param name="queryString">A collection of name value query pairs to append.</param>
         /// <returns>The combined result.</returns>
+        /// <remarks>Used by <see cref="WriteHttpRequestMessageAsync{TSource}(TSource, HttpClient, JsonSerializerOptions?)"/></remarks>
         /// <exception cref="ArgumentNullException">The <paramref name="path"/> is null.</exception>
         string AddQueryString(string path, IDictionary<string, string?>? queryString);
 
@@ -99,6 +75,7 @@ namespace Xpandables.Net.Http
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
+        /// <remarks>Used by <see cref="WriteHttpRequestMessageAsync{TSource}(TSource, HttpClient, JsonSerializerOptions?)"/></remarks>
         void WriteLocationPath<TSource>(TSource source, HttpRestClientAttribute attribute)
             where TSource : class;
 
@@ -109,6 +86,7 @@ namespace Xpandables.Net.Http
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
+        /// <remarks>Used by <see cref="WriteHttpRequestMessageAsync{TSource}(TSource, HttpClient, JsonSerializerOptions?)"/></remarks>
         void WriteLocationQuery<TSource>(TSource source, HttpRestClientAttribute attribute)
             where TSource : class;
 
@@ -120,7 +98,11 @@ namespace Xpandables.Net.Http
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
         /// <param name="httpRequestMessage">The target request message.</param>
-        void WriteLocationCookie<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage)
+        /// <remarks>Used by <see cref="WriteHttpRequestMessageAsync{TSource}(TSource, HttpClient, JsonSerializerOptions?)"/></remarks>
+        void WriteLocationCookie<TSource>(
+            TSource source,
+            HttpRestClientAttribute attribute,
+            HttpRequestMessage httpRequestMessage)
               where TSource : class;
 
         /// <summary>
@@ -130,7 +112,11 @@ namespace Xpandables.Net.Http
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
         /// <param name="httpRequestMessage">The target request message.</param>
-        void WriteLocationHeader<TSource>(TSource source, HttpRestClientAttribute attribute, HttpRequestMessage httpRequestMessage)
+        /// <remarks>Used by <see cref="WriteHttpRequestMessageAsync{TSource}(TSource, HttpClient, JsonSerializerOptions?)"/></remarks>
+        void WriteLocationHeader<TSource>(
+            TSource source, 
+            HttpRestClientAttribute attribute, 
+            HttpRequestMessage httpRequestMessage)
             where TSource : class;
 
         /// <summary>
@@ -139,6 +125,7 @@ namespace Xpandables.Net.Http
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
         /// <returns>A byte array content.</returns>
+        /// <remarks>Used by <see cref="WriteHttpRequestMessageAsync{TSource}(TSource, HttpClient, JsonSerializerOptions?)"/></remarks>
         [return: MaybeNull]
         HttpContent ReadByteArrayContent<TSource>(TSource source)
             where TSource : class;
@@ -149,6 +136,7 @@ namespace Xpandables.Net.Http
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
         /// <returns>An URL encoded content.</returns>
+        /// <remarks>Used by <see cref="WriteHttpRequestMessageAsync{TSource}(TSource, HttpClient, JsonSerializerOptions?)"/></remarks>
         [return: MaybeNull]
         HttpContent ReadFormUrlEncodedContent<TSource>(TSource source)
             where TSource : class;
@@ -162,6 +150,7 @@ namespace Xpandables.Net.Http
         /// <param name="attribute">The target attribute.</param>
         /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <returns>A string content.</returns>
+        /// <remarks>Used by <see cref="WriteHttpRequestMessageAsync{TSource}(TSource, HttpClient, JsonSerializerOptions?)"/></remarks>
         HttpContent ReadStringContent<TSource>(
             TSource source,
             HttpRestClientAttribute attribute,
@@ -176,18 +165,22 @@ namespace Xpandables.Net.Http
         /// <param name="source">The source object instance.</param>
         /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <returns>A stream content.</returns>
-        Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source, JsonSerializerOptions? serializerOptions = default)
+        /// <remarks>Used by <see cref="WriteHttpRequestMessageAsync{TSource}(TSource, HttpClient, JsonSerializerOptions?)"/></remarks>
+        Task<HttpContent?> ReadStreamContentAsync<TSource>(
+            TSource source,
+            JsonSerializerOptions? serializerOptions = default)
           where TSource : class;
 
         /// <summary>
-        /// Returns the source as multi part content using <see cref="IMultipartRequest"/> interface.
-        /// The implementation must use at least <see cref="ReadByteArrayContent{TSource}(TSource)"/> 
+        /// Returns the source as multi part content using <see cref="IMultipartRequest"/> interface,
+        /// using <see cref="ReadByteArrayContent{TSource}(TSource)"/> 
         /// and <see cref="ReadStringContent{TSource}(TSource, HttpRestClientAttribute, JsonSerializerOptions)"/>.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
         /// <returns>A multi part content.</returns>
+        /// <remarks>Used by <see cref="WriteHttpRequestMessageAsync{TSource}(TSource, HttpClient, JsonSerializerOptions?)"/></remarks>
         [return: MaybeNull]
         HttpContent ReadMultipartContent<TSource>(TSource source, HttpRestClientAttribute attribute)
             where TSource : class;
