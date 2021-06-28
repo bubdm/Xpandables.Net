@@ -97,7 +97,7 @@ namespace Xpandables.Net.Http.RequestBuilders
         public virtual HttpContent ReadByteArrayContent<TSource>(TSource source) where TSource : class
         {
             ValidateInterfaceImplementation<IByteArrayRequest>(source);
-            if (source is IByteArrayRequest byteArrayRequest 
+            if (source is IByteArrayRequest byteArrayRequest
                 && byteArrayRequest.GetByteContent() is { } byteContent)
             {
                 return new ByteArrayContent(byteContent);
@@ -111,7 +111,7 @@ namespace Xpandables.Net.Http.RequestBuilders
         public virtual HttpContent ReadFormUrlEncodedContent<TSource>(TSource source) where TSource : class
         {
             ValidateInterfaceImplementation<IFormUrlEncodedRequest>(source);
-            if (source is IFormUrlEncodedRequest formUrlEncodedRequest 
+            if (source is IFormUrlEncodedRequest formUrlEncodedRequest
                 && formUrlEncodedRequest.GetFormContent() is { } formContent)
             {
                 return new FormUrlEncodedContent(formContent);
@@ -150,29 +150,33 @@ namespace Xpandables.Net.Http.RequestBuilders
         }
 
         ///<inheritdoc/>
-        public virtual async Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source)
+        public virtual async Task<HttpContent?> ReadStreamContentAsync<TSource>(
+            TSource source, JsonSerializerOptions? serializerOptions = default)
             where TSource : class
         {
             ValidateInterfaceImplementation<IStreamRequest>(source);
-            object streamContent = source is IStreamRequest streamRequest 
+            object streamContent = source is IStreamRequest streamRequest
                 ? streamRequest.GetStreamContent()
                 : source;
 
             var memoryStream = new MemoryStream();
-            await JsonSerializer.SerializeAsync(memoryStream, streamContent).ConfigureAwait(false);
+            await JsonSerializer.SerializeAsync(memoryStream, streamContent, serializerOptions).ConfigureAwait(false);
             memoryStream.Seek(0, SeekOrigin.Begin);
             return new StreamContent(memoryStream);
         }
 
         ///<inheritdoc/>
-        public virtual HttpContent ReadStringContent<TSource>(TSource source, HttpRestClientAttribute attribute)
+        public virtual HttpContent ReadStringContent<TSource>(
+            TSource source,
+            HttpRestClientAttribute attribute,
+            JsonSerializerOptions? serializerOptions = default)
             where TSource : class
         {
             ValidateInterfaceImplementation<IStringRequest>(source, true);
             if (source is IStringRequest stringRequest)
             {
                 return new StringContent(
-                    JsonSerializer.Serialize(stringRequest.GetStringContent()),
+                    JsonSerializer.Serialize(stringRequest.GetStringContent(), serializerOptions),
                     Encoding.UTF8,
                     attribute.ContentType);
             }
@@ -181,12 +185,15 @@ namespace Xpandables.Net.Http.RequestBuilders
             if (source is IPatchRequest patchRequest)
             {
                 return new StringContent(
-                    JsonSerializer.Serialize(patchRequest.GetPatchDocument()),
+                    JsonSerializer.Serialize(patchRequest.GetPatchDocument(), serializerOptions),
                     Encoding.UTF8,
                     attribute.ContentType);
             }
 
-            return new StringContent(JsonSerializer.Serialize(source), Encoding.UTF8, attribute.ContentType);
+            return new StringContent(
+                JsonSerializer.Serialize(source, serializerOptions),
+                Encoding.UTF8,
+                attribute.ContentType);
         }
 
 
@@ -194,7 +201,8 @@ namespace Xpandables.Net.Http.RequestBuilders
         public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageFromAttributeAsync<TSource>(
             HttpRestClientAttribute attribute,
             TSource source,
-            HttpClient httpClient)
+            HttpClient httpClient,
+            JsonSerializerOptions? serializerOptions = default)
             where TSource : class
         {
             _ = attribute ?? throw new ArgumentNullException(nameof(attribute));
@@ -224,8 +232,8 @@ namespace Xpandables.Net.Http.RequestBuilders
                     BodyFormat.ByteArray => ReadByteArrayContent(source),
                     BodyFormat.FormUrlEncoded => ReadFormUrlEncodedContent(source),
                     BodyFormat.Multipart => ReadMultipartContent(source, attribute),
-                    BodyFormat.Stream => await ReadStreamContentAsync(source).ConfigureAwait(false),
-                    _ => ReadStringContent(source, attribute)
+                    BodyFormat.Stream => await ReadStreamContentAsync(source, serializerOptions).ConfigureAwait(false),
+                    _ => ReadStringContent(source, attribute, serializerOptions)
                 };
 
                 httpRequestMessage.Content!.Headers.ContentType = new MediaTypeHeaderValue(attribute.ContentType);
@@ -233,7 +241,7 @@ namespace Xpandables.Net.Http.RequestBuilders
 
             if (attribute.IsSecured)
             {
-                httpRequestMessage.Headers.Authorization = 
+                httpRequestMessage.Headers.Authorization =
                     httpClient.DefaultRequestHeaders.Authorization ?? new AuthenticationHeaderValue(attribute.Scheme);
             }
 
@@ -243,11 +251,17 @@ namespace Xpandables.Net.Http.RequestBuilders
         ///<inheritdoc/>
         public virtual async Task<HttpRequestMessage> WriteHttpRequestMessageFromSourceAsync<TSource>(
             TSource source,
-            HttpClient httpClient)
+            HttpClient httpClient,
+            JsonSerializerOptions? serializerOptions = default)
             where TSource : class
         {
             var attribute = ReadHttpClientAttributeFromSource(source);
-            return await WriteHttpRequestMessageFromAttributeAsync(attribute, source, httpClient).ConfigureAwait(false);
+            return await WriteHttpRequestMessageFromAttributeAsync(
+                attribute,
+                source,
+                httpClient,
+                serializerOptions)
+                .ConfigureAwait(false);
         }
 
         ///<inheritdoc/>

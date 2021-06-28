@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,10 +43,15 @@ namespace Xpandables.Net.Http.RequestLocations
         ///<inheritdoc/>
         public virtual async Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(
             IPAddressLocationRequest request,
+            JsonSerializerOptions? serializerOptions = default,
             CancellationToken cancellationToken = default)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
-            return await _httpRestClientHandler.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            return await _httpRestClientHandler.SendAsync(
+                request,
+                serializerOptions,
+                cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 }

@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Http.RequestBuilders
@@ -35,8 +36,11 @@ namespace Xpandables.Net.Http.RequestBuilders
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <returns>A stream content.</returns>
-        public override async Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source) where TSource : class
+        public override async Task<HttpContent?> ReadStreamContentAsync<TSource>(
+            TSource source, JsonSerializerOptions? serializerOptions = default)
+            where TSource : class
         {
             ValidateInterfaceImplementation<IStreamRequest>(source);
             object streamContent = source is IStreamRequest streamRequest ? streamRequest.GetStreamContent() : source;
@@ -44,7 +48,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             var memoryStream = new MemoryStream();
             await using var streamWriter = new StreamWriter(memoryStream, new UTF8Encoding(false), 1028, true);
             using var jsonTextWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.None };
-            JsonSerializer.CreateDefault().Serialize(jsonTextWriter, streamContent);
+            Newtonsoft.Json.JsonSerializer.CreateDefault().Serialize(jsonTextWriter, streamContent);
             await jsonTextWriter.FlushAsync().ConfigureAwait(false);
 
             memoryStream.Seek(0, SeekOrigin.Begin);
@@ -58,8 +62,13 @@ namespace Xpandables.Net.Http.RequestBuilders
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <returns>A string content.</returns>
-        public override HttpContent ReadStringContent<TSource>(TSource source, HttpRestClientAttribute attribute) where TSource : class
+        public override HttpContent ReadStringContent<TSource>(
+            TSource source,
+            HttpRestClientAttribute attribute,
+            JsonSerializerOptions? serializerOptions = default)
+            where TSource : class
         {
             ValidateInterfaceImplementation<IStringRequest>(source, true);
             if (source is IStringRequest stringRequest)

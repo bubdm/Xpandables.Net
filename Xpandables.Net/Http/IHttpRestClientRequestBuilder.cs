@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Http
@@ -34,8 +35,12 @@ namespace Xpandables.Net.Http
         /// <typeparam name="TSource">The type of the object.</typeparam>
         /// <param name="source">The source object.</param>
         /// <param name="httpClient">The target HTTP client.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <returns>A task that represents an <see cref="HttpRequestMessage"/> object.</returns>
-        Task<HttpRequestMessage> WriteHttpRequestMessageFromSourceAsync<TSource>(TSource source, HttpClient httpClient)
+        Task<HttpRequestMessage> WriteHttpRequestMessageFromSourceAsync<TSource>(
+            TSource source,
+            HttpClient httpClient,
+            JsonSerializerOptions? serializerOptions = default)
             where TSource : class;
 
         /// <summary>
@@ -45,12 +50,14 @@ namespace Xpandables.Net.Http
         /// <param name="attribute">The <see cref="HttpRestClientAttribute"/> attribute to act on.</param>
         /// <param name="source">The source of data.</param>
         /// <param name="httpClient">The target HTTP client.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         /// <returns>A task that represents an <see cref="HttpRequestMessage"/> object.</returns>
         Task<HttpRequestMessage> WriteHttpRequestMessageFromAttributeAsync<TSource>(
             HttpRestClientAttribute attribute,
             TSource source,
-            HttpClient httpClient)
+            HttpClient httpClient,
+            JsonSerializerOptions? serializerOptions = default)
             where TSource : class;
 
         /// <summary>
@@ -153,8 +160,12 @@ namespace Xpandables.Net.Http
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
         /// <param name="attribute">The target attribute.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <returns>A string content.</returns>
-        HttpContent ReadStringContent<TSource>(TSource source, HttpRestClientAttribute attribute)
+        HttpContent ReadStringContent<TSource>(
+            TSource source,
+            HttpRestClientAttribute attribute,
+            JsonSerializerOptions? serializerOptions = default)
             where TSource : class;
 
         /// <summary>
@@ -163,14 +174,15 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <returns>A stream content.</returns>
-        Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source)
+        Task<HttpContent?> ReadStreamContentAsync<TSource>(TSource source, JsonSerializerOptions? serializerOptions = default)
           where TSource : class;
 
         /// <summary>
         /// Returns the source as multi part content using <see cref="IMultipartRequest"/> interface.
         /// The implementation must use at least <see cref="ReadByteArrayContent{TSource}(TSource)"/> 
-        /// and <see cref="ReadStringContent{TSource}(TSource, HttpRestClientAttribute)"/>.
+        /// and <see cref="ReadStringContent{TSource}(TSource, HttpRestClientAttribute, JsonSerializerOptions)"/>.
         /// </summary>
         /// <typeparam name="TSource">The type of source object.</typeparam>
         /// <param name="source">The source object instance.</param>

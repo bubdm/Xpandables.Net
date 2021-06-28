@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,8 +31,12 @@ namespace Xpandables.Net.Http
         /// Asynchronously gets the IPAddress Geo-location of the specified IPAddress request using http://api.ipstack.com.
         /// </summary>
         /// <param name="request">The request to act with.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
-        Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(IPAddressLocationRequest request, CancellationToken cancellationToken = default);
+        Task<HttpRestClientResponse<IPAddressLocation>> ReadLocationAsync(
+            IPAddressLocationRequest request,
+            JsonSerializerOptions? serializerOptions = default,
+            CancellationToken cancellationToken = default);
     }
 }

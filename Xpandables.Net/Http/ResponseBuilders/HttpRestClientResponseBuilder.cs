@@ -36,17 +36,21 @@ namespace Xpandables.Net.Http.ResponseBuilders
     /// </summary>
     public class HttpRestClientResponseBuilder : IHttpRestClientResponseBuilder
     {
-        ///<inheritdoc/>
-        public virtual async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream)
+        //new JsonSerializerOptions
+        //           {
+        //               AllowTrailingCommas = false,
+        //               WriteIndented = false,
+        //               PropertyNameCaseInsensitive = true
+        //           }
+
+    ///<inheritdoc/>
+    public virtual async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(
+            Stream stream, JsonSerializerOptions? serializerOptions = default)
         {
             var result = await JsonSerializer.DeserializeAsync<TResult>(
-                   stream, new JsonSerializerOptions
-                   {
-                       AllowTrailingCommas = false,
-                       WriteIndented = false,
-                       PropertyNameCaseInsensitive = true
-                   })
+                   stream, serializerOptions)
                    .ConfigureAwait(false);
+
             return result!;
         }
 
@@ -170,6 +174,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
         ///<inheritdoc/>
         public virtual async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(
             Stream stream,
+            JsonSerializerOptions? serializerOptions = default,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using var blockingCollection = new BlockingCollection<TResult>();
@@ -178,7 +183,8 @@ namespace Xpandables.Net.Http.ResponseBuilders
                 .GetAsyncEnumerator(cancellationToken);
 
             var enumerateStreamElementToBlockingCollectionThread = new Thread(
-                () => EnumerateStreamElementToBlockingCollection(stream, blockingCollection, cancellationToken));
+                () => EnumerateStreamElementToBlockingCollection(
+                    stream, blockingCollection, serializerOptions, cancellationToken));
 
             enumerateStreamElementToBlockingCollectionThread.Start();
 
@@ -193,11 +199,13 @@ namespace Xpandables.Net.Http.ResponseBuilders
         /// <typeparam name="TResult">The type of the collection item.</typeparam>
         /// <param name="stream">The target stream.</param>
         /// <param name="resultCollection">The collection result.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         private static void EnumerateStreamElementToBlockingCollection<TResult>(
             Stream stream,
             BlockingCollection<TResult> resultCollection,
-            CancellationToken cancellationToken)
+            JsonSerializerOptions? serializerOptions = default,
+            CancellationToken cancellationToken = default)
         {
             using var jsonStreamReader = new Utf8JsonStreamReader(stream, 32 * 1024);
 
@@ -210,12 +218,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
                 if (jsonStreamReader.TokenType != JsonTokenType.StartObject)
                     continue;
 
-                if (jsonStreamReader.Deserialise<TResult>(new JsonSerializerOptions
-                {
-                    AllowTrailingCommas = false,
-                    WriteIndented = false,
-                    PropertyNameCaseInsensitive = true
-                }) is { } result)
+                if (jsonStreamReader.Deserialise<TResult>(serializerOptions) is { } result)
                 {
                     resultCollection.Add(result, cancellationToken);
                 }

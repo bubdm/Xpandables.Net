@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -58,6 +59,7 @@ namespace Xpandables.Net.Http.RequestHandlers
         ///<inheritdoc/>
         public async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> SendAsync<TResult>(
             IHttpRestClientAsyncRequest<TResult> request,
+            JsonSerializerOptions? serializerOptions = default,
             CancellationToken cancellationToken = default)
         {
             try
@@ -78,6 +80,7 @@ namespace Xpandables.Net.Http.RequestHandlers
                         response,
                         stream => _httpRestClientResponseBuilder.AsyncEnumerableBuilderFromStreamAsync<TResult>(
                             stream,
+                            serializerOptions,
                             cancellationToken)).ConfigureAwait(false);
                 }
 
@@ -100,12 +103,13 @@ namespace Xpandables.Net.Http.RequestHandlers
         ///<inheritdoc/>
         public async Task<HttpRestClientResponse> SendAsync(
             IHttpRestClientRequest request,
+            JsonSerializerOptions? serializerOptions = default,
             CancellationToken cancellationToken = default)
         {
             try
             {
                 using var httpRequest = await _httpRestClientRequestBuilder
-                    .WriteHttpRequestMessageFromSourceAsync(request, HttpClient)
+                    .WriteHttpRequestMessageFromSourceAsync(request, HttpClient, serializerOptions)
                     .ConfigureAwait(false);
 
                 using var response = await HttpClient
@@ -139,12 +143,13 @@ namespace Xpandables.Net.Http.RequestHandlers
         ///<inheritdoc/>
         public async Task<HttpRestClientResponse<TResult>> SendAsync<TResult>(
             IHttpRestClientRequest<TResult> request,
+            JsonSerializerOptions? serializerOptions = default,
             CancellationToken cancellationToken = default)
         {
             try
             {
                 using var httpRequest = await _httpRestClientRequestBuilder
-                    .WriteHttpRequestMessageFromSourceAsync(request, HttpClient)
+                    .WriteHttpRequestMessageFromSourceAsync(request, HttpClient, serializerOptions)
                     .ConfigureAwait(false);
 
                 using var response = await HttpClient.SendAsync(
@@ -158,7 +163,7 @@ namespace Xpandables.Net.Http.RequestHandlers
                     return await _httpRestClientResponseBuilder.WriteSuccessResultResponseAsync(
                         response,
                         stream => _httpRestClientResponseBuilder
-                        .DeserializeJsonFromStreamAsync<TResult>(stream))
+                        .DeserializeJsonFromStreamAsync<TResult>(stream, serializerOptions))
                         .ConfigureAwait(false);
                 }
 

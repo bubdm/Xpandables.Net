@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System.Net;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,7 +30,9 @@ namespace Xpandables.Net.Http
         /// <summary>
         /// Asynchronously gets the IPAddress of the current caller.
         /// </summary>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(CancellationToken cancellationToken = default);
+        Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(
+            JsonSerializerOptions? serializerOptions = default, CancellationToken cancellationToken = default);
     }
 }

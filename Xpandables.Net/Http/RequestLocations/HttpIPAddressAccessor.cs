@@ -20,6 +20,7 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -72,9 +73,16 @@ namespace Xpandables.Net.Http.RequestLocations
         }
 
         ///<inheritdoc/>
-        public virtual async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(
+            JsonSerializerOptions? serializerOptions = default,
+            CancellationToken cancellationToken = default)
         {
-            var response = await _httpRestClientHandler.SendAsync(new IPAddressRequest(), cancellationToken).ConfigureAwait(false);
+            var response = await _httpRestClientHandler.SendAsync(
+                new IPAddressRequest(),
+                serializerOptions,
+                cancellationToken)
+                .ConfigureAwait(false);
+
             return response.ConvertTo(IPAddress.TryParse(response.Result, out var ipAddress) ? ipAddress : IPAddress.None);
         }
     }

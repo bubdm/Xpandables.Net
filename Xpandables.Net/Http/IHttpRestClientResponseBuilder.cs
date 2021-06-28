@@ -21,6 +21,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,7 +39,8 @@ namespace Xpandables.Net.Http
         /// <param name="httpResponse">The target HTTP response.</param>
         /// <param name="streamToResponseConverter">The converter to be used from stream to <typeparamref name="TResult"/>.</param>
         /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
-        Task<HttpRestClientResponse<TResult>> WriteSuccessAsyncEnumerableResponseAsync<TResult>(HttpResponseMessage httpResponse, Func<Stream, TResult> streamToResponseConverter);
+        Task<HttpRestClientResponse<TResult>> WriteSuccessAsyncEnumerableResponseAsync<TResult>(
+            HttpResponseMessage httpResponse, Func<Stream, TResult> streamToResponseConverter);
 
         /// <summary>
         /// Returns an <see cref="HttpRestClientResponse"/> for success response that contains a result of <typeparamref name="TResult"/> type.
@@ -47,7 +49,8 @@ namespace Xpandables.Net.Http
         /// <param name="httpResponse">The target HTTP response.</param>
         /// <param name="streamToResponseConverter">The converter to be used from stream to <typeparamref name="TResult"/>.</param>
         /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
-        Task<HttpRestClientResponse<TResult>> WriteSuccessResultResponseAsync<TResult>(HttpResponseMessage httpResponse, Func<Stream, Task<TResult>> streamToResponseConverter);
+        Task<HttpRestClientResponse<TResult>> WriteSuccessResultResponseAsync<TResult>(
+            HttpResponseMessage httpResponse, Func<Stream, Task<TResult>> streamToResponseConverter);
 
         /// <summary>
         /// Returns an <see cref="HttpRestClientResponse"/> for bad response.
@@ -55,7 +58,8 @@ namespace Xpandables.Net.Http
         /// <param name="badResponseBuilder">The bad response content builder.</param>
         /// <param name="httpResponse">The target HTTP response.</param>
         /// <returns>An instance of <see cref="HttpRestClientResponse"/>.</returns>
-        Task<HttpRestClientResponse> WriteBadResultResponseAsync(Func<Exception, HttpStatusCode, HttpRestClientResponse> badResponseBuilder, HttpResponseMessage httpResponse);
+        Task<HttpRestClientResponse> WriteBadResultResponseAsync(
+            Func<Exception, HttpStatusCode, HttpRestClientResponse> badResponseBuilder, HttpResponseMessage httpResponse);
 
         /// <summary>
         /// Returns headers from the HTTP response when return <see cref="HttpRestClientResponse"/>.
@@ -69,18 +73,23 @@ namespace Xpandables.Net.Http
         /// </summary>
         /// <typeparam name="TResult">The type of the deserialized object.</typeparam>
         /// <param name="stream">The stream to act on.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult"/> type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="stream"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception>
-        Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream);
+        Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream, JsonSerializerOptions? serializerOptions = default);
 
         /// <summary>
         /// Returns an async-enumerable from stream used for asynchronous result.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="stream">The stream source to act on.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(Stream stream, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(
+            Stream stream,
+            JsonSerializerOptions? serializerOptions = default,
+            CancellationToken cancellationToken = default);
     }
 }

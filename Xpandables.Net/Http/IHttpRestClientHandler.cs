@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,24 +49,28 @@ namespace Xpandables.Net.Http
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="request">The request to act with. The request must be decorated with 
         /// the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
         Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> SendAsync<TResult>(
             IHttpRestClientAsyncRequest<TResult> request,
+            JsonSerializerOptions? serializerOptions = default,
             CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Sends the request that does not return a response.
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>
-        /// <param name="request">The request to act with. The request must be decorated with t
-        /// he <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="request">The request to act with. The request must be decorated with 
+        /// the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
         Task<HttpRestClientResponse> SendAsync(
             IHttpRestClientRequest request,
+            JsonSerializerOptions? serializerOptions = default,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -73,13 +78,15 @@ namespace Xpandables.Net.Http
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="request">The query to act with. The query must be decorated with t
-        /// he <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="request">The query to act with. The query must be decorated with
+        /// the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
         Task<HttpRestClientResponse<TResult>> SendAsync<TResult>(
             IHttpRestClientRequest<TResult> request,
+            JsonSerializerOptions? serializerOptions = default,
             CancellationToken cancellationToken = default);
     }
 }

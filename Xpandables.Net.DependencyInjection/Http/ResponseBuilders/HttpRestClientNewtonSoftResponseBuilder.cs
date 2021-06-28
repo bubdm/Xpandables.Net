@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,15 +37,17 @@ namespace Xpandables.Net.Http.ResponseBuilders
         /// </summary>
         /// <typeparam name="TResult">The type of the deserialized object.</typeparam>
         /// <param name="stream">The stream to act on.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <returns>A task that represents an object of <typeparamref name="TResult" /> type.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="stream" /> is null.</exception>
         /// <exception cref="InvalidOperationException">Reading stream failed. See inner exception.</exception>
-        public override async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(Stream stream)
+        public override async Task<TResult> DeserializeJsonFromStreamAsync<TResult>(
+            Stream stream, JsonSerializerOptions? serializerOptions = default)
         {
             using var streamReader = new StreamReader(stream);
             using var jsonTextReader = new JsonTextReader(streamReader);
 
-            var result = JsonSerializer.CreateDefault().Deserialize<TResult>(jsonTextReader);
+            var result = Newtonsoft.Json.JsonSerializer.CreateDefault().Deserialize<TResult>(jsonTextReader);
             return await Task.FromResult(result!).ConfigureAwait(false);
         }
 
@@ -53,11 +56,15 @@ namespace Xpandables.Net.Http.ResponseBuilders
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="stream">The stream source to act on.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An enumerator of <typeparamref name="TResult" /> that can be asynchronously enumerated.</returns>
-        public override async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(Stream stream, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public override async IAsyncEnumerable<TResult> AsyncEnumerableBuilderFromStreamAsync<TResult>(
+            Stream stream,
+            JsonSerializerOptions? serializerOptions = default,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var jsonSerializer = JsonSerializer.CreateDefault();
+            var jsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault();
             using var streamReader = new StreamReader(stream);
             using var jsonTextReader = new JsonTextReader(streamReader);
             while (await jsonTextReader.ReadAsync(cancellationToken).ConfigureAwait(false))
