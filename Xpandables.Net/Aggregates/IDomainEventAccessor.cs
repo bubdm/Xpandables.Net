@@ -53,7 +53,7 @@ namespace Xpandables.Net.Database
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        Task AppendEventAsync(IDomainEvent<TAggregateId> @event, CancellationToken cancellationToken = default);
+        Task AppendDomainEventAsync(IDomainEvent<TAggregateId> @event, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously returns the number of domain events matching the criteria.

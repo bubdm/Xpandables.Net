@@ -38,11 +38,11 @@ namespace Xpandables.Net.Decorators.Logging
         /// with the handler to be decorated and the handler logger.
         /// </summary>
         /// <param name="decoratee">The command handler to be decorated.</param>
-        /// <param name="operationResultLogger">The operation result logger instance.</param>
+        /// <param name="commandQueryLogger">The operation result logger instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="operationResultLogger"/> is null.</exception>
-        public CommandLoggingDecorator(ICommandHandler<TCommand> decoratee, IOperationResultLogger operationResultLogger)
-            : base(operationResultLogger)
+        /// <exception cref="ArgumentNullException">The <paramref name="commandQueryLogger"/> is null.</exception>
+        public CommandLoggingDecorator(ICommandHandler<TCommand> decoratee, ICommandQueryLogger commandQueryLogger)
+            : base(commandQueryLogger)
             => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 
         /// <summary>
@@ -72,11 +72,11 @@ namespace Xpandables.Net.Decorators.Logging
         /// with the handler to be decorated and the handler logger.
         /// </summary>
         /// <param name="decoratee">The command handler to be decorated.</param>
-        /// <param name="operationResultLogger">The handler logger instance.</param>
+        /// <param name="commandQueryLogger">The handler logger instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="operationResultLogger"/> is null.</exception>
-        public CommandLoggingDecorator(ICommandHandler<TCommand, TResult> decoratee, IOperationResultLogger operationResultLogger)
-            : base(operationResultLogger)
+        /// <exception cref="ArgumentNullException">The <paramref name="commandQueryLogger"/> is null.</exception>
+        public CommandLoggingDecorator(ICommandHandler<TCommand, TResult> decoratee, ICommandQueryLogger commandQueryLogger)
+            : base(commandQueryLogger)
             => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 
         /// <summary>
@@ -95,37 +95,37 @@ namespace Xpandables.Net.Decorators.Logging
     /// </summary>
     public abstract class CommandLoggingDecorator
     {
-        private readonly IOperationResultLogger _operationResultLogger;
+        private readonly ICommandQueryLogger _commandQueryLogger;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="CommandLoggingDecorator"/> with the <see cref="IOperationResultLogger"/> instance.
+        /// Constructs a new instance of <see cref="CommandLoggingDecorator"/> with the <see cref="ICommandQueryLogger"/> instance.
         /// </summary>
-        /// <param name="operationResultLogger">The operation result logger instance.</param>
-        protected CommandLoggingDecorator(IOperationResultLogger operationResultLogger)
-            => _operationResultLogger = operationResultLogger ?? throw new ArgumentNullException(nameof(operationResultLogger));
+        /// <param name="commandQueryLogger">The operation result logger instance.</param>
+        protected CommandLoggingDecorator(ICommandQueryLogger commandQueryLogger)
+            => _commandQueryLogger = commandQueryLogger ?? throw new ArgumentNullException(nameof(commandQueryLogger));
 
         internal async Task<TOutput> HandleAsync<TOutput>(Task<TOutput> handler, object decoratee, object command)
             where TOutput : IOperationResult
         {
-            _operationResultLogger.OnEntry(new(decoratee, command, default, default));
+            await _commandQueryLogger.OnEntryAsync(new(decoratee, command, default, default));
             TOutput? result = default;
             Exception? handledException = default;
 
             try
             {
                 result = await handler.ConfigureAwait(false);
-                _operationResultLogger.OnSuccess(new(decoratee, command, result, default));
+                await _commandQueryLogger.OnSuccessAsync(new(decoratee, command, result, default));
                 return result;
             }
             catch (Exception exception)
             {
                 handledException = exception;
-                _operationResultLogger.OnException(new(decoratee, command, default, exception));
+                await _commandQueryLogger.OnExceptionAsync(new(decoratee, command, default, exception));
                 throw;
             }
             finally
             {
-                _operationResultLogger.OnExit(new(decoratee, command, result, handledException));
+                await _commandQueryLogger.OnExitAsync(new(decoratee, command, result, handledException));
             }
         }
     }

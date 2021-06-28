@@ -38,10 +38,10 @@ namespace Xpandables.Net.Middlewares
         /// <returns>A <see cref="Task" /> that represents the execution of this middleware.</returns>
         public virtual async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (context.GetEndpoint() is { } endpoint && endpoint.Metadata.GetMetadata<DataContextTenantAttribute>() is { } dataContextFactoryAttribute)
+            if (context.GetEndpoint() is { } endpoint && endpoint.Metadata.GetMetadata<DataContextTenantAttribute>() is { } dataContextTenantAttribute)
             {
                 var dataContextTenantAccessor = context.RequestServices.GetRequiredService<IDataContextTenantAccessor>();
-                dataContextTenantAccessor.SetTenantName(dataContextFactoryAttribute.TenantName);
+                dataContextTenantAccessor.SetTenantName(dataContextTenantAttribute.TenantName);
             }
 
             await next(context).ConfigureAwait(false);

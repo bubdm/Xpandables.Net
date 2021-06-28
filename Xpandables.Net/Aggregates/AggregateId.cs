@@ -61,7 +61,9 @@ namespace Xpandables.Net.Aggregates
         /// <param name="value">The value identifier.</param>
         /// <exception cref="ArgumentException">The <paramref name="value"/> can not be converted to <see cref="Guid"/> type.</exception>
         protected AggregateId(string value)
-            : base(Guid.TryParse(value, out var guid) ? guid : throw new ArgumentException($"The specified value '{value}' can not be converted to '{nameof(Guid)}' type"))
+            : base(Guid.TryParse(value, out var guid)
+                  ? guid 
+                  : throw new ArgumentException($"The specified value '{value}' can not be converted to '{nameof(Guid)}' type"))
         { }
 
         ///<inheritdoc/>

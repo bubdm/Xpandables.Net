@@ -34,28 +34,28 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// Adds the operation result logging type to the services.
         /// </summary>
-        /// <typeparam name="TOperationResultLogger">The operation result logger type.</typeparam>
+        /// <typeparam name="TCommandQueryLogger">The command query logger type.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXOperationResultLogger<TOperationResultLogger>(this IXpandableServiceBuilder services)
-            where TOperationResultLogger : class, IOperationResultLogger
+        public static IXpandableServiceBuilder AddXCommandQueryLogger<TCommandQueryLogger>(this IXpandableServiceBuilder services)
+            where TCommandQueryLogger : class, ICommandQueryLogger
         {
             if (services is null)
             {
                 throw new ArgumentNullException(nameof(services));
             }
 
-            services.Services.AddScoped<IOperationResultLogger, TOperationResultLogger>();
+            services.Services.AddScoped<ICommandQueryLogger, TCommandQueryLogger>();
             return services;
         }
 
         /// <summary>
         /// Adds operation result logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/> to the services.
-        /// You need to register your implementation of <see cref="IOperationResultLogger"/> separately.
+        /// You need to register your implementation of <see cref="ICommandQueryLogger"/> separately.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXOperationResultLoggerDecorator(this IXpandableServiceBuilder services)
+        public static IXpandableServiceBuilder AddXCommandQueryLoggerDecorator(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
@@ -70,15 +70,15 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// Adds operation result logging behavior to commands and queries that are decorated with the <see cref="ILoggingDecorator"/> to the services.
         /// </summary>
-        /// <typeparam name="TOperationResultLogger">The operation result logger type.</typeparam>
+        /// <typeparam name="TCommandQueryLogger">The command query logger type.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXOperationResultLoggerDecorator<TOperationResultLogger>(this IXpandableServiceBuilder services)
-            where TOperationResultLogger : class, IOperationResultLogger
+        public static IXpandableServiceBuilder AddXCommandQueryLoggerDecorator<TCommandQueryLogger>(this IXpandableServiceBuilder services)
+            where TCommandQueryLogger : class, ICommandQueryLogger
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.AddXOperationResultLogger<TOperationResultLogger>();
+            services.AddXCommandQueryLogger<TCommandQueryLogger>();
 
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandLoggingDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>));

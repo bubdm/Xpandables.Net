@@ -41,7 +41,8 @@ namespace Xpandables.Net.Security
         /// <param name="source">The source to be used.</param>
         /// <returns>An instance of string token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public virtual IOperationResult<AccessToken> WriteToken(object source) => new SuccessOperationResult<AccessToken>(new("TOKEN VALUE", "TOKEN TYPE", DateTime.UtcNow));
+        public virtual IOperationResult<AccessToken> WriteToken(object source)
+            => new FailureOperationResult<AccessToken>(new AccessToken("TOKEN VALUE", "TOKEN TYPE", DateTime.UtcNow));
 
         /// <summary>
         /// Returns the collection of claims from the specified token.
@@ -56,6 +57,7 @@ namespace Xpandables.Net.Security
         /// </summary>
         /// <param name="token">The token string.</param>
         /// <returns>An collection of claims if OK.</returns>
-        public virtual IOperationResult<IEnumerable<Claim>> ReadToken(AccessToken token) => ReadToken(token.Value);
+        public virtual IOperationResult<IEnumerable<Claim>> ReadToken(AccessToken token)
+            => ReadToken(token.Value);
     }
 }

@@ -34,13 +34,21 @@ namespace Xpandables.Net.Aggregates
     {
         /// <summary>
         /// Creates a new instance of <see cref="EventStoreEntity"/> from the event of aggregate.
+        /// The method will serialize the specified argument to <see cref="JsonDocument"/>.
         /// </summary>
         /// <typeparam name="TAggregateId">The type of the target aggregate id.</typeparam>
         /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
         /// <typeparam name="TEventStoreEntity"></typeparam>
-        /// <param name="event">The event o act on.</param>
+        /// <param name="event">The event to act on.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
+        /// <param name="documentOptions">Options to control the reader behavior during parsing.</param>
         /// <returns>A new instance of <see cref="EventStoreEntity"/>.</returns>
-        public static TEventStoreEntity From<TAggregateId, TAggregate, TEventStoreEntity>(IEvent @event)
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">Serialization of the event failed. See inner exception</exception>
+        public static TEventStoreEntity From<TAggregateId, TAggregate, TEventStoreEntity>(
+            IEvent @event,
+            JsonSerializerOptions? serializerOptions = default,
+            JsonDocumentOptions documentOptions = default)
             where TAggregate : class, IAggregate<TAggregateId>
             where TAggregateId : class, IAggregateId
             where TEventStoreEntity : EventStoreEntity, new()
@@ -50,9 +58,20 @@ namespace Xpandables.Net.Aggregates
             var aggregateId = @event.AggregateId.AsString();
             var aggregateTypeName = typeof(TAggregate).GetNameWithoutGenericArity();
             var eventTypeFullName = @event.GetType().AssemblyQualifiedName!;
-            var eventTypeName = @event.GetType().Name;
-            var eventString = JsonSerializer.Serialize(@event, @event.GetType());
-            var eventData = JsonDocument.Parse(eventString);
+            var eventTypeName = @event.GetType().GetNameWithoutGenericArity();
+
+            string eventString;
+            JsonDocument eventData;
+
+            try
+            {
+                eventString = JsonSerializer.Serialize(@event, @event.GetType(), serializerOptions);
+                eventData = JsonDocument.Parse(eventString, documentOptions);
+            }
+            catch (Exception exception) when (exception is ArgumentException or NotSupportedException or JsonException)
+            {
+                throw new InvalidOperationException("Serialization of the event failed. See inner exception.", exception);
+            }
 
             return new()
             {
@@ -96,43 +115,20 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         /// <typeparam name="T">The target type of the UTF-8 encoded text.</typeparam>
         /// <param name="options">Options to control the behavior during parsing.</param>
-        /// <returns>A <typeparamref name="T"/> representation of the JSON value or null if exception.</returns>
+        /// <returns>A <typeparamref name="T"/> representation of the JSON value or null.</returns>
+        /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
         public T? To<T>(JsonSerializerOptions? options = default)
-            where T : class
-        {
-            try
-            {
-                return EventData.ToObject<T>(options);
-            }
-            catch (Exception exception)
-            {
-#if DEBUG
-                Debug.WriteLine(exception);
-#endif
-                return default;
-            }
-        }
+            where T : class => EventData.ToObject<T>(options);
 
         /// <summary>
         /// Deserializes the content of <see cref="EventData"/> to the specified type.
         /// </summary>
         /// <param name="returnType">The type of the object to convert to and return.</param>
         /// <param name="options">Options to control the behavior during parsing.</param>
-        /// <returns>A returnType representation of the JSON value of null if exception.</returns>
+        /// <returns>A returnType representation of the JSON value or null if exception.</returns>
+        /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
         public object? To(Type returnType, JsonSerializerOptions? options = default)
-        {
-            try
-            {
-                return EventData.ToObject(returnType, options);
-            }
-            catch (Exception exception)
-            {
-#if DEBUG
-                Debug.WriteLine(exception);
-#endif
-                return default;
-            }
-        }
+            => EventData.ToObject(returnType, options);
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventStoreEntity"/> with the specified properties.

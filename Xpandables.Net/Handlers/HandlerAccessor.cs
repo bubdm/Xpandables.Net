@@ -50,7 +50,10 @@ namespace Xpandables.Net.Handlers
         /// Returns all the handlers of the specified type.
         /// </summary>
         /// <param name="handlerType">An object that specifies the type of handler object to get.</param>
-        /// <returns>A collection of handlers of the <paramref name="handlerType"/> -or- empty collection if there is no handler of <paramref name="handlerType"/>.</returns>
-        public IEnumerable<object> GetHandlers(Type handlerType) => _serviceProvider.GetService(typeof(IEnumerable<>).MakeGenericType(handlerType)) as IEnumerable<object> ?? Enumerable.Empty<object>();
+        /// <returns>A collection of handlers of the <paramref name="handlerType"/> -or- 
+        /// empty collection if there is no handler of <paramref name="handlerType"/>.</returns>
+        public IEnumerable<object> GetHandlers(Type handlerType)
+            => _serviceProvider.GetService(typeof(IEnumerable<>).MakeGenericType(handlerType)) as IEnumerable<object> 
+            ?? Enumerable.Empty<object>();
     }
 }

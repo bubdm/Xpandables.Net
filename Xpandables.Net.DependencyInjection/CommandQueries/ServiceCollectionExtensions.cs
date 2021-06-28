@@ -156,7 +156,7 @@ namespace Xpandables.Net.DependencyInjection
 
             if (definedOptions.IsLoggingEnabled)
             {
-                services.AddXOperationResultLoggerDecorator();
+                services.AddXCommandQueryLoggerDecorator();
             }
 
             return services;

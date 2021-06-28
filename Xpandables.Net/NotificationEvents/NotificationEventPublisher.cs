@@ -82,6 +82,7 @@ namespace Xpandables.Net.NotificationEvents
             {
                 WriteLineException(
                     new InvalidOperationException("Building notification Handler type failed.", typeException));
+
                 return Enumerable.Empty<INotificationEventHandler>();
             }
 
@@ -89,6 +90,7 @@ namespace Xpandables.Net.NotificationEvents
             {
                 WriteLineException(new InvalidOperationException($"Matching notification handlers " +
                     $"for {@event.GetType().Name} are missing.", ex));
+
                 return Enumerable.Empty<INotificationEventHandler>();
             }
 

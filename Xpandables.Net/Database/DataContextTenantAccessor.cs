@@ -54,7 +54,8 @@ namespace Xpandables.Net.Database
                 return factory.Factory();
 
             throw new InvalidOperationException(
-                $"The '{TenantName}' factory has not been registered. Use services.AddXDataContextTenant<{TenantName}>() to register the target factory.");
+                $"The '{TenantName}' factory has not been registered. " +
+                $"Use services.AddXDataContextTenant<{TenantName}>() to register the target factory.");
         }
 
         /// <summary>

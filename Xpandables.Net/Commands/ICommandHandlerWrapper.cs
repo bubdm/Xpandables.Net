@@ -22,7 +22,8 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Commands
 {
     /// <summary>
-    /// Represents a wrapper interface that avoids use of C# dynamics with command pattern and allows type inference for <see cref="ICommandHandler{TCommand, TResult}"/>.
+    /// Represents a wrapper interface that avoids use of C# dynamics with command pattern 
+    /// and allows type inference for <see cref="ICommandHandler{TCommand, TResult}"/>.
     /// </summary>
     /// <typeparam name="TResult">Type of the result.</typeparam>
     public interface ICommandHandlerWrapper<TResult> : ICanHandle

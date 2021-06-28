@@ -15,37 +15,43 @@
  *
 ************************************************************************************************************/
 
+using System.Threading.Tasks;
+
 using Xpandables.Net.Decorators;
 
 namespace Xpandables.Net
 {
     /// <summary>
-    /// Represents a type used to perform operation results logging for classes implementing the <see cref="ILoggingDecorator"/> .
+    /// Represents a type used to perform logging for command/query classes implementing the <see cref="ILoggingDecorator"/> .
     /// </summary>
-    public interface IOperationResultLogger
+    public interface ICommandQueryLogger
     {
         /// <summary>
         /// Method executed before the decorated handler to which the decorator is applied.
         /// </summary>
         /// <param name="argument">The arguments with which the handler has been invoked.</param>
-        void OnEntry(LoggerArgument argument);
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task OnEntryAsync(LoggerArgument argument);
 
         /// <summary>
         /// Method executed after the decorated handler to which the decorator is applied, even when the handler exists with an exception (this method is invoked from the finally block).
         /// </summary>
         /// <param name="argument">The arguments with which the handler has been invoked.</param>
-        void OnExit(LoggerArgument argument);
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task OnExitAsync(LoggerArgument argument);
 
         /// <summary>
         /// Method executed after the decorated handler to which the decorator is applied, but only when the handler successfully returns (i.e. when no exception flies out the handler).
         /// </summary>
         /// <param name="argument">The arguments with which the handler has been invoked.</param>
-        void OnSuccess(LoggerArgument argument);
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task OnSuccessAsync(LoggerArgument argument);
 
         /// <summary>
         /// Method executed after the decorated handler to which the decorator is applied, in case that the handler resulted with an exception.
         /// </summary>
         /// <param name="argument">The arguments with which the handler has been invoked.</param>
-        void OnException(LoggerArgument argument);
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task OnExceptionAsync(LoggerArgument argument);
     }
 }

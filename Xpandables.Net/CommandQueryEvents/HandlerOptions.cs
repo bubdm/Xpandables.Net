@@ -15,7 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Xpandables.Net.Aggregates;
 using Xpandables.Net.Decorators;
 using Xpandables.Net.Transactions;
 using Xpandables.Net.Visitors;
@@ -49,9 +48,9 @@ namespace Xpandables.Net.DependencyInjection
 
         /// <summary>
         /// Enables logging behavior to commands/queries that are decorated with the <see cref="ILoggingDecorator"/> .
-        /// You must provide with an implementation of <see cref="IOperationResultLogger"/>.
+        /// You must provide with an implementation of <see cref="ICommandQueryLogger"/>.
         /// </summary>
-        public HandlerOptions UseOperationResultLoggerDecorator() => this.With(cq => cq.IsLoggingEnabled = true);
+        public HandlerOptions UseCommandQueryLoggerDecorator() => this.With(cq => cq.IsLoggingEnabled = true);
 
         /// <summary>
         /// Enables correlation behavior to operations that are decorated with the <see cref="ICorrelationDecorator"/>.

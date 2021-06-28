@@ -24,6 +24,7 @@ namespace Xpandables.Net
     /// Defines a marker interface for state pattern that allows an object to alter 
     /// its behavior when its internal state changes.
     /// </summary>
+    /// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
     public interface IState : INotifyPropertyChanged
     {
         /// <summary>
@@ -35,11 +36,12 @@ namespace Xpandables.Net
     }
 
     /// <summary>
-    /// Defines a marker interface for state pattern that allows an object to alter 
+    /// Defines a generic marker interface for state pattern that allows an object to alter 
     /// its behavior when its internal state changes for specific type.
     /// </summary>
     /// <typeparam name="TState">The type of the state.</typeparam>
     /// <typeparam name="TStateContext">The type of the state context.</typeparam>
+    /// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
     public interface IState<TState, TStateContext> : IState
         where TState : class, IState
         where TStateContext : class, IStateContext

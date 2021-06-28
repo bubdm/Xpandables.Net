@@ -25,7 +25,7 @@ namespace Xpandables.Net.Aggregates
     public interface IAggregateId : IIdentityId<Guid>
     {
         /// <summary>
-        /// Returns a value that determine whether or not the aggregate identity is defined or empty.
+        /// Returns a value that determines whether or not the aggregate identity is defined or empty.
         /// </summary>
         /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>
         new bool IsEmpty() => Value == Guid.Empty;

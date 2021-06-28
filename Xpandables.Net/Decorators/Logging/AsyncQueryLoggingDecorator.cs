@@ -34,7 +34,7 @@ namespace Xpandables.Net.Decorators.Logging
         where TQuery : class, IAsyncQuery<TResult>, ILoggingDecorator
     {
         private readonly IAsyncQueryHandler<TQuery, TResult> _decoratee;
-        private readonly IOperationResultLogger _operationResultLogger;
+        private readonly ICommandQueryLogger _operationResultLogger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncQueryLoggingDecorator{TQuery, TResult}"/> class with
@@ -44,7 +44,7 @@ namespace Xpandables.Net.Decorators.Logging
         /// <param name="operationResultLogger">The operation result logger to apply</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="operationResultLogger"/> is null.</exception>
-        public AsyncQueryLoggingDecorator(IAsyncQueryHandler<TQuery, TResult> decoratee, IOperationResultLogger operationResultLogger)
+        public AsyncQueryLoggingDecorator(IAsyncQueryHandler<TQuery, TResult> decoratee, ICommandQueryLogger operationResultLogger)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _operationResultLogger = operationResultLogger ?? throw new ArgumentNullException(nameof(operationResultLogger));
@@ -61,7 +61,7 @@ namespace Xpandables.Net.Decorators.Logging
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            _operationResultLogger.OnEntry(new(_decoratee, query, default, default));
+            await _operationResultLogger.OnEntryAsync(new(_decoratee, query, default, default));
             Exception? handledException = default;
 
             await using var asyncEnumerator = _decoratee.HandleAsync(query, cancellationToken).GetAsyncEnumerator(cancellationToken);
@@ -75,17 +75,18 @@ namespace Xpandables.Net.Decorators.Logging
                 {
                     resultExist = false;
                     handledException = exception;
-                    _operationResultLogger.OnException(new(_decoratee, query, default, exception));
+                    await _operationResultLogger.OnExceptionAsync(new(_decoratee, query, default, exception));
                     throw;
                 }
                 finally
                 {
-                    _operationResultLogger.OnExit(new(_decoratee, query, default, handledException));
+                    await _operationResultLogger.OnExitAsync(new(_decoratee, query, default, handledException));
                 }
 
                 if (resultExist)
                 {
-                    _operationResultLogger.OnSuccess(new(_decoratee, query, new SuccessOperationResult<TResult>(asyncEnumerator.Current), default));
+                    await _operationResultLogger.OnSuccessAsync(
+                        new(_decoratee, query, new SuccessOperationResult<TResult>(asyncEnumerator.Current), default));
                     yield return asyncEnumerator.Current;
                 }
                 else

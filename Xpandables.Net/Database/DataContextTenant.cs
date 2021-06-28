@@ -31,19 +31,15 @@ namespace Xpandables.Net.Database
 
         /// <summary>
         /// Initializes a new instance of <see cref="DataContextTenant{TDataContext}"/> class with the factory of the target type.
-        /// The unique identifier or the tenant will be the name of the type.
+        /// The unique identifier of the tenant will be the name of the type.
         /// </summary>
         /// <param name="factory">The factory for <typeparamref name="TDataContext"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="factory"/> is null.</exception>
         public DataContextTenant(Func<TDataContext> factory)
-        {
-            Factory = factory ?? throw new ArgumentNullException(nameof(factory));
-            Name = typeof(TDataContext).Name;
-        }
+            : this(typeof(TDataContext).Name, factory) { }
 
         /// <summary>
         /// Initializes a new instance of <see cref="DataContextTenant{TDataContext}"/> class with the factory of the target type.
-        /// The unique identifier or the tenant will be the name of the type.
         /// </summary>
         /// <param name="name">The unique identifier of the tenant.</param>
         /// <param name="factory">The factory for <typeparamref name="TDataContext"/>.</param>

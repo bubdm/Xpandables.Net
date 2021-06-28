@@ -173,7 +173,7 @@ namespace Xpandables.Net.DependencyInjection
             try
             {
                 using var directoryCatalog = options.SearchSubDirectories
-                    ? new UseRecursiveDirectoryCatalog(options.Path, options.SearchPattern)
+                    ? new RecursiveDirectoryCatalog(options.Path, options.SearchPattern)
                     : (ComposablePartCatalog)new DirectoryCatalog(options.Path, options.SearchPattern);
 
                 var importDefinition = BuildUseImportDefinition();

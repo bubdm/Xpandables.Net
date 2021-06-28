@@ -27,6 +27,7 @@ namespace Xpandables.Net
     /// </summary>
     /// <typeparam name="TState">The type of the state.</typeparam>
     /// <typeparam name="TStateContext">The type of the context.</typeparam>
+    /// <remarks>Derives from <see cref="NotifyPropertyChanged{T}"/> where T is <typeparamref name="TState"/>.</remarks>
     public abstract class State<TState, TStateContext> :
         NotifyPropertyChanged<TState>, IState<TState, TStateContext>
         where TState : class, IState

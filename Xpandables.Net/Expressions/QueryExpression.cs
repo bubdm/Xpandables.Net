@@ -32,7 +32,6 @@ namespace Xpandables.Net.Expressions
         /// <summary>
         /// Gets the expression tree for the underlying instance.
         /// </summary>
-        [return: NotNull]
         public abstract Expression<Func<TSource, TResult>> GetExpression();
 
         /// <summary>

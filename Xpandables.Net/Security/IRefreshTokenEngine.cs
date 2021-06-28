@@ -38,7 +38,8 @@ namespace Xpandables.Net.Security
         /// <param name="source">The source to be used.</param>
         /// <returns>An instance of refresh token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public virtual IOperationResult<RefreshToken> WriteToken(object source) => new SuccessOperationResult<RefreshToken>(new("REFRESH TOKEN VALUE", DateTime.UtcNow));
+        public virtual IOperationResult<RefreshToken> WriteToken(object source)
+            => new FailureOperationResult<RefreshToken>(new RefreshToken("REFRESH TOKEN VALUE", DateTime.UtcNow));
 
         /// <summary>
         /// Returns the collection of claims from the expired token.

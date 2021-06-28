@@ -26,7 +26,7 @@ namespace Xpandables.Net.EmailEvents
     /// Represents a helper class that allows implementation of <see cref="IEmailEvent{ TEmail}"/> interface.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    /// <typeparam name="TEmailMessage">the type of the email.</typeparam>
+    /// <typeparam name="TEmailMessage">the type of the email message. The type must be serializable.</typeparam>
     public abstract class EmailEvent<TAggregateId, TEmailMessage> : Event<TAggregateId>, IEmailEvent<TEmailMessage>
         where TAggregateId : notnull, AggregateId
         where TEmailMessage : notnull
@@ -35,11 +35,11 @@ namespace Xpandables.Net.EmailEvents
         /// Initializes a default instance of the <see cref="EmailEvent{TAggregateId, TEmail}"/>.
         /// </summary>
         /// <param name="aggregateId">The aggregate id.</param>
-        /// <param name="email">The target domain event.</param>
+        /// <param name="emailMessage">The target email event.</param>
         [JsonConstructor]
-        protected EmailEvent(TAggregateId aggregateId, TEmailMessage email)
+        protected EmailEvent(TAggregateId aggregateId, TEmailMessage emailMessage)
             : base(aggregateId)
-            => EmailMessage = email ?? throw new ArgumentNullException(nameof(email));
+            => EmailMessage = emailMessage ?? throw new ArgumentNullException(nameof(emailMessage));
 
         ///<inheritdoc/>
         public TEmailMessage EmailMessage { get; }

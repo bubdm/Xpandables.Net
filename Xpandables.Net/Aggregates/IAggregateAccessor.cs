@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,6 +38,16 @@ namespace Xpandables.Net.Aggregates
         where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
+        /// Gets or sets the current <see cref="JsonSerializerOptions"/> to be used for serialization.
+        /// </summary>
+        JsonSerializerOptions? SerializerOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current <see cref="JsonDocumentOptions"/> to be used for <see cref="JsonDocument"/> parsing.
+        /// </summary>
+        JsonDocumentOptions DocumentOptions { get; set; }
+
+        /// <summary>
         /// Asynchronously returns the <typeparamref name="TAggregate"/> aggregate that matches the 
         /// specified aggregate identifier.
         /// </summary>
@@ -52,6 +63,8 @@ namespace Xpandables.Net.Aggregates
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="aggregate"/> must 
+        /// implement <see cref="IDomainEventSourcing{TAggregateId}"/> interface.</exception>
         Task AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default);
 
         /// <summary>

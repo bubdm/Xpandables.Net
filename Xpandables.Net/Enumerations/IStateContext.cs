@@ -24,6 +24,7 @@ namespace Xpandables.Net
     /// Defines the context interface for state pattern that allows an object to alter 
     /// its behavior when its internal state changes.
     /// </summary>
+    /// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
     public interface IStateContext : INotifyPropertyChanged
     {
         /// <summary>
@@ -40,9 +41,10 @@ namespace Xpandables.Net
     }
 
     /// <summary>
-    /// Defines the context interface for state pattern that allows an object to alter 
+    /// Defines the generic context interface for state pattern that allows an object to alter 
     /// its behavior when its internal state changes.
     /// </summary>
+    /// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
     public interface IStateContext<TState, TStateContext> : IStateContext
         where TState : class, IState<TState, TStateContext>
         where TStateContext : class, IStateContext

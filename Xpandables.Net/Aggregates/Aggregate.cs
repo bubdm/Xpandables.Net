@@ -34,22 +34,21 @@ namespace Xpandables.Net.Aggregates
     /// You can add a notification using the <see cref="AddNotification(INotificationEvent{TAggregateId})"/>
     /// method and you may use the <see cref="RaiseEvent{TEvent}(TEvent)"/> method to raise the specified event.
     /// When creating an event (<see cref="IDomainEvent{TAggregateId}"/>), you may use of <see cref="GetNewVersion()"/> 
-    /// function to get the new version number according to
-    /// the event creation.
+    /// function to get the new version number according to the event creation.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     [Serializable]
     [DebuggerDisplay("Guid = {" + nameof(AggregateId) + "} Version = {" + nameof(Version) + "}")]
-    public abstract class Aggregate<TAggregateId> : 
-        OperationResults, IAggregate<TAggregateId>, IDomainEventSourcing<TAggregateId>, 
+    public abstract class Aggregate<TAggregateId> :
+        OperationResults, IAggregate<TAggregateId>, IDomainEventSourcing<TAggregateId>,
         INotificationSourcing<TAggregateId>
         where TAggregateId : notnull, AggregateId
     {
-        private readonly ICollection<IDomainEvent<TAggregateId>> _events 
+        private readonly ICollection<IDomainEvent<TAggregateId>> _events
             = new LinkedList<IDomainEvent<TAggregateId>>();
-        private readonly ICollection<INotificationEvent<TAggregateId>> _notifications 
+        private readonly ICollection<INotificationEvent<TAggregateId>> _notifications
             = new LinkedList<INotificationEvent<TAggregateId>>();
-        private readonly IDictionary<Type, Action<IDomainEvent<TAggregateId>>> _eventHandlers 
+        private readonly IDictionary<Type, Action<IDomainEvent<TAggregateId>>> _eventHandlers
             = new Dictionary<Type, Action<IDomainEvent<TAggregateId>>>();
 
         /// <summary>
@@ -163,11 +162,15 @@ namespace Xpandables.Net.Aggregates
         /// <typeparam name="TEvent">The type of the event.</typeparam>
         /// <param name="eventHandler">the target handler to register.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="eventHandler"/> is null.</exception>
-        protected virtual void RegisterEventHandler<TEvent>(Action<TEvent> eventHandler)
+        /// <exception cref="ArgumentException">An element with the same key already exist in the collection.</exception>
+        protected void RegisterEventHandler<TEvent>(Action<TEvent> eventHandler)
             where TEvent : class, IDomainEvent<TAggregateId>
         {
             _ = eventHandler ?? throw new ArgumentNullException(nameof(eventHandler));
-            _eventHandlers.Add(typeof(TEvent), @event => eventHandler((TEvent)@event));
+
+            if (!_eventHandlers.TryAdd(typeof(TEvent), @event => eventHandler((TEvent)@event)))
+                throw new ArgumentException($"An element with the same key '{typeof(TEvent).GetNameWithoutGenericArity()}' " +
+                    $"already exists in the collection");
         }
 
         /// <summary>

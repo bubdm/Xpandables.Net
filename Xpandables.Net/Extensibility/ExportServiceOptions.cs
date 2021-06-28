@@ -20,7 +20,7 @@ using System.Reflection;
 namespace Xpandables.Net.DependencyInjection
 {
     /// <summary>
-    /// Defines options to configure export service.
+    /// Defines options to configure export services.
     /// </summary>
     public sealed class ExportServiceOptions
     {

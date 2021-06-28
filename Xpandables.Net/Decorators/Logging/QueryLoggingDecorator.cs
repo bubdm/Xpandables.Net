@@ -32,7 +32,7 @@ namespace Xpandables.Net.Decorators.Logging
         where TQuery : class, IQuery<TResult>, ILoggingDecorator
     {
         private readonly IQueryHandler<TQuery, TResult> _decoratee;
-        private readonly IOperationResultLogger _operationResultLogger;
+        private readonly ICommandQueryLogger _operationResultLogger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryLoggingDecorator{TQuery, TResult}"/> class with
@@ -42,7 +42,7 @@ namespace Xpandables.Net.Decorators.Logging
         /// <param name="operationResultLogger">The handler logger to apply</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="operationResultLogger"/> is null.</exception>
-        public QueryLoggingDecorator(IQueryHandler<TQuery, TResult> decoratee, IOperationResultLogger operationResultLogger)
+        public QueryLoggingDecorator(IQueryHandler<TQuery, TResult> decoratee, ICommandQueryLogger operationResultLogger)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _operationResultLogger = operationResultLogger ?? throw new ArgumentNullException(nameof(operationResultLogger));
@@ -59,25 +59,25 @@ namespace Xpandables.Net.Decorators.Logging
         {
             _ = query ?? throw new ArgumentNullException(nameof(query));
 
-            _operationResultLogger.OnEntry(new(_decoratee, query, default, default));
+            await _operationResultLogger.OnEntryAsync(new(_decoratee, query, default, default));
             IOperationResult<TResult>? result = default;
             Exception? handledException = default;
 
             try
             {
                 result = await _decoratee.HandleAsync(query, cancellationToken).ConfigureAwait(false);
-                _operationResultLogger.OnSuccess(new(_decoratee, query, result, default));
+                await _operationResultLogger.OnSuccessAsync(new(_decoratee, query, result, default));
                 return result;
             }
             catch (Exception exception)
             {
                 handledException = exception;
-                _operationResultLogger.OnException(new(_decoratee, query, default, exception));
+                await _operationResultLogger.OnExceptionAsync(new(_decoratee, query, default, exception));
                 throw;
             }
             finally
             {
-                _operationResultLogger.OnExit(new(_decoratee, query, result, handledException));
+                await _operationResultLogger.OnExitAsync(new(_decoratee, query, result, handledException));
             }
         }
     }
