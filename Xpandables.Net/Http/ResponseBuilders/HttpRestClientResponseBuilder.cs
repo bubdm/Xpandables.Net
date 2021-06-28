@@ -32,14 +32,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
     /// You must derive from this class in order to customize its behaviors.
     /// </summary>
     public class HttpRestClientResponseBuilder : IHttpRestClientResponseBuilder
-    {
-        //new JsonSerializerOptions
-        //           {
-        //               AllowTrailingCommas = false,
-        //               WriteIndented = false,
-        //               PropertyNameCaseInsensitive = true
-        //           }
-
+    { 
         ///<inheritdoc/>
         public virtual async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>>
             WriteAsyncEnumerableResponseAsync<TResult>(
@@ -137,7 +130,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
         {
             try
             {
-                var stream = await httpResponse.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+                using var stream = await httpResponse.Content.ReadAsStreamAsync(cancellationToken);
 
                 if (stream is null)
                 {
@@ -149,8 +142,8 @@ namespace Xpandables.Net.Http.ResponseBuilders
                 }
 
                 var result = await JsonSerializer.DeserializeAsync<TResult>(
-                    stream,
-                    serializerOptions,
+                    stream, 
+                    serializerOptions, 
                     cancellationToken)
                     .ConfigureAwait(false);
 

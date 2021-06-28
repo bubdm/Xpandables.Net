@@ -253,7 +253,7 @@ namespace Xpandables.Net.Http.RequestBuilders
             }
 
             return new StringContent(
-                JsonSerializer.Serialize(source, serializerOptions),
+                JsonSerializer.Serialize(source, source.GetType(), serializerOptions),
                 Encoding.UTF8,
                 attribute.ContentType);
         }

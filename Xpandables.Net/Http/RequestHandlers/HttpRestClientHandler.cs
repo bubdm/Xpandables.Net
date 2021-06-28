@@ -111,7 +111,8 @@ namespace Xpandables.Net.Http.RequestHandlers
                     .ConfigureAwait(false);
 
                 using var response = await HttpClient
-                    .SendAsync(httpRequest, cancellationToken)
+                    .SendAsync(httpRequest,
+                    cancellationToken)
                     .ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
