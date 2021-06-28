@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -63,7 +64,7 @@ namespace Xpandables.Net.Storage
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <remarks>The value will be serialized before writing.</remarks>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
-        Task WriteAsync<T>(string key, T value, CancellationToken cancellationToken = default);
+        Task WriteAsync<T>(string key, [DisallowNull] T value, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Reads the information matching the specified key from local storage.
@@ -82,7 +83,7 @@ namespace Xpandables.Net.Storage
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
-        Task WriteAsync(string key, string value, CancellationToken cancellationToken = default);
+        Task WriteAsync(string key, [DisallowNull] string value, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Removes the value matching the specified key.

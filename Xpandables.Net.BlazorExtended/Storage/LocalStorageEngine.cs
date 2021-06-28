@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -78,7 +79,7 @@ namespace Xpandables.Net.Storage
             RaiseStorageChangedEventArgs(key, oldValue, default, StorageAction.Removed);
         }
 
-        public async Task WriteAsync<T>(string key, T value, CancellationToken cancellationToken = default)
+        public async Task WriteAsync<T>(string key, [DisallowNull] T value, CancellationToken cancellationToken = default)
         {
             _ = key ?? throw new ArgumentNullException(nameof(key));
 
@@ -103,7 +104,7 @@ namespace Xpandables.Net.Storage
             RaiseStorageChangedEventArgs(key, oldValue, value, StorageAction.Written);
         }
 
-        public async Task WriteAsync(string key, string value, CancellationToken cancellationToken = default)
+        public async Task WriteAsync(string key, [DisallowNull] string value, CancellationToken cancellationToken = default)
         {
             _ = key ?? throw new ArgumentNullException(nameof(key));
 

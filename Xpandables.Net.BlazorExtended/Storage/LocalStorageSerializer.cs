@@ -15,14 +15,15 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace Xpandables.Net.Storage
 {
-    internal class DefaultSystemTextJsonLocalStorageSerializer : ILocalStorageSerializer
+    internal class LocalStorageSerializer : ILocalStorageSerializer
     {
         public T? Deserialize<T>(string json) => JsonSerializer.Deserialize<T>(json);
 
-        public string? Serialize<T>(T value) => JsonSerializer.Serialize<T>(value);
+        public string? Serialize<T>([DisallowNull] T value) => JsonSerializer.Serialize(value, value.GetType());
     }
 }

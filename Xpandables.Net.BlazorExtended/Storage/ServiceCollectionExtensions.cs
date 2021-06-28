@@ -41,7 +41,7 @@ namespace Xpandables.Net.DependencyInjection
             services.Services
                 .AddScoped<ILocalStorageEngine, LocalStorageEngine>()
                 .AddScoped<ILocalStorageProvider, LocalStorageProvider>()
-                .AddScoped<ILocalStorageSerializer, DefaultNewtonsoftLocalStorageSerializer>();
+                .AddScoped<ILocalStorageSerializer, LocalStorageSerializer>();
 
             return services;
         }
@@ -56,7 +56,7 @@ namespace Xpandables.Net.DependencyInjection
         public static IXpandableServiceBuilder AddXLocalStorage<TLocalStorageEventHandler>(this IXpandableServiceBuilder services)
             where TLocalStorageEventHandler : LocalStorageEventHandler
         {
-            return services.AddXLocalStorage<DefaultNewtonsoftLocalStorageSerializer, TLocalStorageEventHandler>();
+            return services.AddXLocalStorage<LocalStorageSerializer, TLocalStorageEventHandler>();
         }
 
         /// <summary>

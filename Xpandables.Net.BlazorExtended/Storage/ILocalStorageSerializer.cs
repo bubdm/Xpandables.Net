@@ -15,6 +15,8 @@
  *
 ************************************************************************************************************/
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Xpandables.Net.Storage
 {
     /// <summary>
@@ -28,7 +30,7 @@ namespace Xpandables.Net.Storage
         /// <typeparam name="T">The type of the source object.</typeparam>
         /// <param name="value">The instance object to serialize.</param>
         /// <returns>A string that is a json representation of the value object or null.</returns>
-        string? Serialize<T>(T value);
+        string? Serialize<T>([DisallowNull] T value);
 
         /// <summary>
         /// Deserializes the specified json string to the target type <typeparamref name="T"/>.
