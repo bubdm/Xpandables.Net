@@ -20,7 +20,11 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Text.Json.Serialization;
 
 namespace Xpandables.Net
 {
@@ -63,6 +67,45 @@ namespace Xpandables.Net
         }
 
         /// <summary>
+        /// Parses the text representing a single JSON value into an instance of the 
+        /// anonymous type specified by a generic type parameter.
+        /// </summary>
+        /// <typeparam name="T">The anonymous type.</typeparam>
+        /// <param name="json">The JSON data to parse.</param>
+        /// <param name="_">The anonymous instance.</param>
+        /// <param name="options">Options to control the behavior during parsing.</param>
+        /// <returns> A T representation of the JSON value.</returns>
+        /// <exception cref="JsonException">The JSON is invalid or T is not compatible with the JSON or 
+        /// There is remaining data in the string beyond a single JSON value.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible <see cref="JsonConverter"/> 
+        /// for T or its serializable members.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="json"/> is null.</exception>
+        public static T? DeserializeAnonymousType<T>(this string json, T _, JsonSerializerOptions? options = default)
+             => JsonSerializer.Deserialize<T>(json, options);
+
+        /// <summary>
+        /// Asynchronously reads the UTF-8 encoded text representing a single JSON value into an instance of 
+        /// an anonymous type specified by a generic type parameter. The stream will be read to completion.
+        /// </summary>
+        /// <typeparam name="T">The anonymous type.</typeparam>
+        /// <param name="stream">The JSON data to parse.</param>
+        /// <param name="_">The anonymous instance.</param>
+        /// <param name="options">Options to control the behavior during parsing.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns> A T representation of the JSON value.</returns>
+        /// <exception cref="JsonException">The JSON is invalid or T is not compatible with the JSON or 
+        /// There is remaining data in the stream.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible <see cref="JsonConverter"/> 
+        /// for T or its serializable members.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="stream"/> is null.</exception>
+        public static ValueTask<T?> DeserializeAnonymousTypeAsync<T>(
+            this Stream stream,
+            T _,
+            JsonSerializerOptions? options = default,
+            CancellationToken cancellationToken = default)
+            => JsonSerializer.DeserializeAsync<T>(stream, options, cancellationToken);
+
+        /// <summary>
         /// Serializes the current instance to JSON string using <see cref="System.Text.Json"/>.
         /// </summary>
         /// <param name="source">The object to act on.</param>
@@ -70,8 +113,12 @@ namespace Xpandables.Net
         /// <returns>A JSOn string representation of the object.</returns>
         /// <exception cref="NotSupportedException">There is no compatible 
         /// System.Text.Json.Serialization.JsonConverter for TValue or its serializable members.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public static string ToJsonString<T>(this T source, JsonSerializerOptions? options = default)
-            => JsonSerializer.Serialize(source, options);
+        {
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            return JsonSerializer.Serialize(source, source.GetType(), options);
+        }
 
         /// <summary>
         /// Deserializes the current JSON element to an object of specified <typeparamref name="T"/> type.
