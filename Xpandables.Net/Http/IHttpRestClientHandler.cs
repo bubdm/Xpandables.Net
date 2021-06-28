@@ -31,7 +31,7 @@ namespace Xpandables.Net.Http
     /// <see cref="IStringRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, 
     /// <see cref="IFormUrlEncodedRequest"/>,
     /// <see cref="IMultipartRequest"/>, <see cref="IQueryStringLocationRequest"/>, <see cref="ICookieLocationRequest"/>,
-    /// <see cref="IHeaderLocationRequest"/>
+    /// <see cref="IHeaderLocationRequest"/>, or <see cref="IPatchRequest"/>
     /// or <see cref="IPathStringLocationRequest"/>, and must be decorated with <see cref="HttpRestClientAttribute"/> 
     /// or implement <see cref="IHttpRestClientAttributeProvider"/>.
     /// </summary>

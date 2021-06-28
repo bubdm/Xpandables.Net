@@ -31,7 +31,8 @@ namespace Xpandables.Net.Http
     public interface IHttpRestClientRequest<TResponse> { }
 
     /// <summary>
-    /// This interface is used as a marker for request when using the asynchronous query pattern that contains a <see cref="IAsyncEnumerable{TResult}"/> of specific-type result.
+    /// This interface is used as a marker for request when using the asynchronous query pattern
+    /// that contains a <see cref="IAsyncEnumerable{TResult}"/> of specific-type result.
     /// </summary>
     /// <typeparam name="TResponse">Type of the result of the request.</typeparam>
     public interface IHttpRestClientAsyncRequest<TResponse> { }
