@@ -32,7 +32,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
     /// You must derive from this class in order to customize its behaviors.
     /// </summary>
     public class HttpRestClientResponseBuilder : IHttpRestClientResponseBuilder
-    { 
+    {
         ///<inheritdoc/>
         public virtual async Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>>
             WriteAsyncEnumerableResponseAsync<TResult>(
@@ -82,14 +82,12 @@ namespace Xpandables.Net.Http.ResponseBuilders
                     blockingCollection.GetConsumingEnumerable(cancellationToken))
                     .GetAsyncEnumerator(cancellationToken);
 
-                var enumerateStreamElementToBlockingCollectionThread = new Thread(
-                    () => EnumerateStreamElementToBlockingCollection(
+                await Task.Run(() =>
+                    EnumerateStreamElementToBlockingCollection(
                         stream,
                         blockingCollection,
                         serializerOptions,
-                        cancellationToken));
-
-                enumerateStreamElementToBlockingCollectionThread.Start();
+                        cancellationToken), cancellationToken);
 
                 while (await blockingCollectionIterator.MoveNextAsync().ConfigureAwait(false))
                     yield return blockingCollectionIterator.Current;
@@ -142,8 +140,8 @@ namespace Xpandables.Net.Http.ResponseBuilders
                 }
 
                 var result = await JsonSerializer.DeserializeAsync<TResult>(
-                    stream, 
-                    serializerOptions, 
+                    stream,
+                    serializerOptions,
                     cancellationToken)
                     .ConfigureAwait(false);
 

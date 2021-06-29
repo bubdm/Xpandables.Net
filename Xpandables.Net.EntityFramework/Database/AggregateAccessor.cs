@@ -50,7 +50,7 @@ namespace Xpandables.Net.Database
         private readonly IInstanceCreator _instanceCreator;
 
         ///<inheritdoc/>
-        public JsonSerializerOptions? SerializerOptions { get; set; }
+        public JsonSerializerOptions? SerializerOptions { get; set; } = new() { PropertyNameCaseInsensitive = true };
 
         ///<inheritdoc/>
         public JsonDocumentOptions DocumentOptions { get; set; } = default;

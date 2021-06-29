@@ -43,6 +43,11 @@ namespace Xpandables.Net.Http
         HttpClient HttpClient { get; }
 
         /// <summary>
+        /// Gets or sets the current <see cref="JsonSerializerOptions"/> to be used for serialization.
+        /// </summary>
+        JsonSerializerOptions? SerializerOptions { get; set; }
+
+        /// <summary>
         /// Sends the request that returns a collection that can be async-enumerated.
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>
@@ -78,7 +83,7 @@ namespace Xpandables.Net.Http
         /// Make use of <see langword="using"/> key work when call.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="request">The query to act with. The query must be decorated with
+        /// <param name="request">The request to act with. The request must be decorated with
         /// the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
         /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>

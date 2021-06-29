@@ -16,12 +16,14 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Http
@@ -31,6 +33,106 @@ namespace Xpandables.Net.Http
     /// </summary>
     public static class HttpRestClientExtensions
     {
+        /// <summary>
+        /// Sends the request that returns a collection that can be async-enumerated.
+        /// Make use of <see langword="using"/> key work when call.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="httpRestClientHandler">the current handler instance.</param>
+        /// <param name="request">The request to act with. The request must be decorated with 
+        /// the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
+        public static Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> SendAsync<TResult>(
+            this IHttpRestClientHandler httpRestClientHandler,
+            IHttpRestClientAsyncRequest<TResult> request,
+            CancellationToken cancellationToken)
+            => httpRestClientHandler.SendAsync(request, cancellationToken: cancellationToken);
+
+        /// <summary>
+        /// Sends the request that returns a collection that can be async-enumerated.
+        /// Make use of <see langword="using"/> key work when call.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="httpRestClientHandler">the current handler instance.</param>
+        /// <param name="request">The request to act with. The request must be decorated with 
+        /// the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
+        /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
+        public static Task<HttpRestClientResponse<IAsyncEnumerable<TResult>>> SendAsync<TResult>(
+            this IHttpRestClientHandler httpRestClientHandler,
+            IHttpRestClientAsyncRequest<TResult> request,
+            JsonSerializerOptions serializerOptions)
+            => httpRestClientHandler.SendAsync(request, serializerOptions: serializerOptions);
+
+        /// <summary>
+        /// Sends the request that does not return a response.
+        /// Make use of <see langword="using"/> key work when call.
+        /// </summary>
+        /// <param name="httpRestClientHandler">the current handler instance.</param>
+        /// <param name="request">The request to act with. The request must be decorated with 
+        /// the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
+        public static Task<HttpRestClientResponse> SendAsync(
+            this IHttpRestClientHandler httpRestClientHandler,
+            IHttpRestClientRequest request,
+            CancellationToken cancellationToken)
+            => httpRestClientHandler.SendAsync(request, cancellationToken: cancellationToken);
+
+        /// <summary>
+        /// Sends the request that does not return a response.
+        /// Make use of <see langword="using"/> key work when call.
+        /// </summary>
+        /// <param name="httpRestClientHandler">the current handler instance.</param>
+        /// <param name="request">The request to act with. The request must be decorated with 
+        /// the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
+        /// <returns>Returns a task <see cref="HttpRestClientResponse"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
+        public static Task<HttpRestClientResponse> SendAsync(
+            this IHttpRestClientHandler httpRestClientHandler,
+            IHttpRestClientRequest request,
+            JsonSerializerOptions serializerOptions)
+            => httpRestClientHandler.SendAsync(request, serializerOptions: serializerOptions);
+
+        /// <summary>
+        /// Sends the request that returns a response of <typeparamref name="TResult"/> type.
+        /// Make use of <see langword="using"/> key work when call.
+        /// </summary>
+        /// <param name="httpRestClientHandler">the current handler instance.</param>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="request">The request to act with. The request must be decorated with
+        /// the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
+        public static Task<HttpRestClientResponse<TResult>> SendAsync<TResult>(
+            this IHttpRestClientHandler httpRestClientHandler,
+            IHttpRestClientRequest<TResult> request,
+            CancellationToken cancellationToken)
+            => httpRestClientHandler.SendAsync(request, cancellationToken: cancellationToken);
+
+        /// <summary>
+        /// Sends the request that returns a response of <typeparamref name="TResult"/> type.
+        /// Make use of <see langword="using"/> key work when call.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="httpRestClientHandler">the current handler instance.</param>
+        /// <param name="request">The request to act with. The request must be decorated with
+        /// the <see cref="HttpRestClientAttribute"/> or implements the <see cref="IHttpRestClientAttributeProvider"/> interface.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
+        /// <returns>Returns a task <see cref="HttpRestClientResponse{TResult}"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="request"/> is null.</exception>
+        public static Task<HttpRestClientResponse<TResult>> SendAsync<TResult>(
+            this IHttpRestClientHandler httpRestClientHandler,
+            IHttpRestClientRequest<TResult> request,
+            JsonSerializerOptions serializerOptions)
+            => httpRestClientHandler.SendAsync(request, serializerOptions: serializerOptions);
+
         /// <summary>
         /// Returns the headers found in the specified response.
         /// </summary>
