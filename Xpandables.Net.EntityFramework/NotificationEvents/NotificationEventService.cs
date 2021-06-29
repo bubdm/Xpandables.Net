@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 using System;
 using System.Collections.Generic;
@@ -36,7 +35,7 @@ namespace Xpandables.Net.NotificationEvents
     /// The default implementation of <see cref="INotificationEventService"/>.
     /// You can derive from this class to customize its behaviors or implement your own.
     /// </summary>
-    public class NotificationEventService : BackgroundService, INotificationEventService
+    public class NotificationEventService : BackgroundServiceBase<NotificationEventService>, INotificationEventService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
@@ -47,31 +46,6 @@ namespace Xpandables.Net.NotificationEvents
         public NotificationEventService(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
-        }
-
-        ///<inheritdoc/>
-        public bool IsRunning { get; private set; }
-
-        ///<inheritdoc/>
-        public virtual async Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default)
-        {
-            if (IsRunning)
-                return new FailureOperationResult("status", $"{nameof(NotificationEventService)} is already up.");
-
-            IsRunning = true;
-            await StartAsync(cancellationToken).ConfigureAwait(false);
-            return new SuccessOperationResult();
-        }
-
-        ///<inheritdoc/>
-        public virtual async Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default)
-        {
-            if (!IsRunning)
-                return new FailureOperationResult("status", $"{nameof(NotificationEventService)} is already down.");
-
-            await StopAsync(cancellationToken).ConfigureAwait(false);
-            IsRunning = false;
-            return new SuccessOperationResult();
         }
 
         ///<inheritdoc/>
