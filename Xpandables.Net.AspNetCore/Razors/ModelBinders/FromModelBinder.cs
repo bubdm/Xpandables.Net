@@ -19,12 +19,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-using Newtonsoft.Json;
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Razors.ModelBinders
@@ -70,8 +69,8 @@ namespace Xpandables.Net.Razors.ModelBinders
                 var attributeValue = RequestAttributeModelReader[new TAttribute()](bindingContext.HttpContext, modelName);
                 if (attributeValue is not null)
                 {
-                    bindingContext.Model = JsonConvert.DeserializeObject(attributeValue, modelType)!;
-                    bindingContext.Result = ModelBindingResult.Success(bindingContext.Model);
+                    var model = JsonSerializer.Deserialize(attributeValue, modelType, new(JsonSerializerDefaults.Web));
+                    bindingContext.Result = ModelBindingResult.Success(model);
                 }
             }
             else
@@ -83,9 +82,9 @@ namespace Xpandables.Net.Razors.ModelBinders
                     dictionary.Add(property.Name, attributeValue);
                 }
 
-                var dictString = JsonConvert.SerializeObject(dictionary);
-                bindingContext.Model = JsonConvert.DeserializeObject(dictString, modelType)!;
-                bindingContext.Result = ModelBindingResult.Success(bindingContext.Model);
+                var dictString = JsonSerializer.Serialize(dictionary);
+                var model = JsonSerializer.Deserialize(dictString, modelType, new(JsonSerializerDefaults.Web));
+                bindingContext.Result = ModelBindingResult.Success(model);
             }
 
             return Task.CompletedTask;

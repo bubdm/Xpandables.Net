@@ -73,10 +73,6 @@
   </ItemGroup> 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="5.0.7" />
-  </ItemGroup> 
-
-  <ItemGroup>
     <ProjectReference Include="..\Xpandables.Net.DependencyInjection\Xpandables.Net.DependencyInjection.csproj" />
   </ItemGroup>  
 

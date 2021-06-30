@@ -15,22 +15,24 @@
  *
 ************************************************************************************************************/
 
-using Microsoft.AspNetCore.JsonPatch;
+//using Microsoft.AspNetCore.JsonPatch;
+
+// Waiting for migration to System.Text.Json
 
 namespace Xpandables.Net.Http
 {
-    /// <summary>
+    /// <summary>    
     /// Provides with a method to retrieve the request patch content for <see cref="BodyFormat.String"/> type.
     /// You may use <see cref="ContentType.JsonPatch"/> as content type.
     /// </summary>
     /// <typeparam name="TDocument">The target object type.</typeparam>
-    public interface IPatchRequest<TDocument> : IPatchRequest
+    internal interface IPatchRequest<TDocument> : IPatchRequest
         where TDocument : class, new()
     {
-        /// <summary>
-        /// Returns the patch document.
-        /// </summary>
-        new JsonPatchDocument<TDocument> GetPatchDocument();
+        ///// <summary>
+        ///// Returns the patch document.
+        ///// </summary>
+        //new JsonPatchDocument<TDocument> GetPatchDocument();
 
         object IPatchRequest.GetPatchDocument() => GetPatchDocument();
     }
