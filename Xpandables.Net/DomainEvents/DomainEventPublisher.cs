@@ -55,13 +55,13 @@ namespace Xpandables.Net.DomainEvents
 
             if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, aggregateIdType, @event.GetType()))
             {
-                WriteLineException(new InvalidOperationException("Building domain event Handler type failed.", typeException));
+                Trace.WriteLine(new InvalidOperationException("Building domain event Handler type failed.", typeException));
                 return;
             }
 
             if (!_handlerAccessor.TryGetHandlers(typeHandler, out var foundHandlers, out var ex))
             {
-                WriteLineException(new InvalidOperationException($"Matching domain event handlers for {@event.GetType().Name} are missing.", ex));
+                Trace.WriteLine(new InvalidOperationException($"Matching domain event handlers for {@event.GetType().Name} are missing.", ex));
                 return;
             }
 
@@ -72,13 +72,6 @@ namespace Xpandables.Net.DomainEvents
             var tasks = handlers.Select(handler => handler.HandleAsync(@event, cancellationToken));
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
-        }
-
-        private static void WriteLineException(Exception exception)
-        {
-#if DEBUG
-            Debug.WriteLine(exception);
-#endif
         }
     }
 }

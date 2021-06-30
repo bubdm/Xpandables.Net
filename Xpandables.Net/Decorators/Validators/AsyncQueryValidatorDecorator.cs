@@ -70,7 +70,6 @@ namespace Xpandables.Net.Decorators.Validators
             var resultState = await _validator.ValidateAsync(query, cancellationToken).ConfigureAwait(false);
             if (resultState.IsFailed)
             {
-                Trace.WriteLine(resultState.Errors.ToArray().ToJsonString());
                 yield break;
             }
 

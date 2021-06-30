@@ -161,9 +161,7 @@ namespace Xpandables.Net.EmailEvents
             }
             catch (Exception exception)
             {
-#if DEBUG
                 Trace.WriteLine(exception);
-#endif
                 return false;
             }
         }

@@ -80,7 +80,7 @@ namespace Xpandables.Net.NotificationEvents
             if (!genericHandlerType
                 .TryMakeGenericType(out var typeHandler, out var typeException, aggregateIdType, @event.GetType()))
             {
-                WriteLineException(
+                Trace.WriteLine(
                     new InvalidOperationException("Building notification Handler type failed.", typeException));
 
                 return Enumerable.Empty<INotificationEventHandler>();
@@ -88,20 +88,13 @@ namespace Xpandables.Net.NotificationEvents
 
             if (!_handlerAccessor.TryGetHandlers(typeHandler, out var foundHandlers, out var ex))
             {
-                WriteLineException(new InvalidOperationException($"Matching notification handlers " +
+                Trace.WriteLine(new InvalidOperationException($"Matching notification handlers " +
                     $"for {@event.GetType().Name} are missing.", ex));
 
                 return Enumerable.Empty<INotificationEventHandler>();
             }
 
             return (IEnumerable<INotificationEventHandler>)foundHandlers;
-        }
-
-        private static void WriteLineException(Exception exception)
-        {
-#if DEBUG
-            Debug.WriteLine(exception);
-#endif
         }
     }
 }

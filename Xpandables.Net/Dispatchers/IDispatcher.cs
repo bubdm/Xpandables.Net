@@ -41,7 +41,6 @@ namespace Xpandables.Net.Dispatchers
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
         IAsyncEnumerable<TResult> FetchAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -52,7 +51,6 @@ namespace Xpandables.Net.Dispatchers
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
         Task<IOperationResult<TResult>> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -62,7 +60,6 @@ namespace Xpandables.Net.Dispatchers
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
         Task<IOperationResult> SendAsync(ICommand command, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -73,7 +70,6 @@ namespace Xpandables.Net.Dispatchers
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        /// <remarks>if errors, see Debug or Trace.</remarks>
         Task<IOperationResult<TResult>> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default);
     }
 }

@@ -164,9 +164,7 @@ namespace Xpandables.Net.NotificationEvents
             }
             catch (Exception exception)
             {
-#if DEBUG
                 Trace.WriteLine(exception);
-#endif
                 return false;
             }
         }
