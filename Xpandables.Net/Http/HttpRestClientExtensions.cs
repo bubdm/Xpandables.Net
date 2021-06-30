@@ -241,10 +241,13 @@ namespace Xpandables.Net.Http
         /// You should take care of the fact that the response is invalid before calling this method.
         /// </summary>
         /// <param name="response">The response to act on.</param>
+        /// <param name="serializerOptions">The optional settings for serializer.</param>
         /// <returns>A bad <see cref="IOperationResult"/></returns>
         /// <exception cref="ArgumentException">The <paramref name="response"/> must be invalid.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="response"/> is null.</exception>
-        public static IOperationResult GetBadOperationResult(this HttpRestClientResponse response)
+        public static IOperationResult GetBadOperationResult(
+            this HttpRestClientResponse response,
+            JsonSerializerOptions? serializerOptions = default)
         {
             _ = response ?? throw new ArgumentNullException(nameof(response));
 
@@ -253,7 +256,7 @@ namespace Xpandables.Net.Http
 
             if (response.Exception is { } exception)
             {
-                if (exception.IsHttpRestClientValidation(out var clientValidation, out _))
+                if (exception.IsHttpRestClientValidation(out var clientValidation, out _, serializerOptions))
                 {
                     var operationErrors = clientValidation.SelectMany(
                         kvp => kvp.Value,

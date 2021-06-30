@@ -31,19 +31,22 @@ namespace Xpandables.Net
     {
         /// <summary>
         /// Returns a <see cref="FailureOperationResult"/> from the specified model state.
-        /// The model state must be in a invalid state.
+        /// The model state must be in an invalid state.
         /// </summary>
         /// <param name="modelState">the target model state to act on.</param>
+        /// <param name="statusCode">The status code to apply to the result. The default is <see cref="HttpStatusCode.BadRequest"/>.</param>
         /// <returns>A new instance of a <see cref="FailureOperationResult"/> that contains errors from model state.</returns>
         /// <exception cref="ArgumentException">The <paramref name="modelState"/> is valid.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="modelState"/> is null.</exception>
-        public static IOperationResult GetBadOperationResult(this ModelStateDictionary modelState)
+        public static IOperationResult GetBadOperationResult(
+            this ModelStateDictionary modelState, 
+            HttpStatusCode statusCode = HttpStatusCode.BadRequest)
         {
             _ = modelState ?? throw new ArgumentNullException(nameof(modelState));
             if (modelState.IsValid) throw new ArgumentException("Unable to retrieve a failed operation from a valid model state");
 
             return new FailureOperationResult(
-                HttpStatusCode.BadRequest,
+                statusCode,
                 modelState
                     .Keys
                     .Where(key => modelState[key].Errors.Count > 0)

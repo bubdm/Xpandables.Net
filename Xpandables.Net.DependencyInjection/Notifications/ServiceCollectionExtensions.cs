@@ -66,16 +66,16 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// Adds the <see cref="INotificationEventPublisher"/> type implementation to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TNotificationPublisher">The notification publisher type implementation.</typeparam>
+        /// <typeparam name="TNotificationEventPublisher">The notification publisher type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationPublisher<TNotificationPublisher>(this IXpandableServiceBuilder services)
-            where TNotificationPublisher : class, INotificationEventPublisher
+        public static IXpandableServiceBuilder AddXNotificationEventPublisher<TNotificationEventPublisher>(this IXpandableServiceBuilder services)
+            where TNotificationEventPublisher : class, INotificationEventPublisher
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddScoped<INotificationEventPublisher, TNotificationPublisher>();
+            services.Services.AddScoped<INotificationEventPublisher, TNotificationEventPublisher>();
             return services;
         }
 
@@ -85,7 +85,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationPublisher(this IXpandableServiceBuilder services)
-            => services.AddXNotificationPublisher<NotificationEventPublisher>();
+        public static IXpandableServiceBuilder AddXNotificationEventPublisher(this IXpandableServiceBuilder services)
+            => services.AddXNotificationEventPublisher<NotificationEventPublisher>();
     }
 }
