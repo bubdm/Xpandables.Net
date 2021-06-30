@@ -31,7 +31,7 @@ using Microsoft.Net.Http.Headers;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// When used as a filter, it'll automatically convert bad operation result to MVC Core equivalent.
+    /// When used as a filter, it'll automatically convert bad operation result to MVC Core <see cref="ValidationProblemDetails"/>.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
     public class OperationResultFilter : IAsyncAlwaysRunResultFilter

@@ -33,10 +33,8 @@ namespace Xpandables.Net
     /// <param name="Extension">The picture file format of this picture.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="Title"/> is null.</exception>
     /// <exception cref="ArgumentNullException">The <paramref name="Content"/> is null.</exception>
-    /// <exception cref="ArgumentNullException">The <paramref name="Height"/> is null.</exception>
-    /// <exception cref="ArgumentNullException">The <paramref name="Width"/> is null.</exception>
     /// <exception cref="ArgumentNullException">The <paramref name="Extension"/> is null.</exception>
-    public sealed record ValuePicture([Required] string Title, byte[] Content, int Height, int Width, [Required] string Extension)
+    public sealed record ValuePicture([Required] string Title, byte[] Content, uint Height, uint Width, [Required] string Extension)
     {
         /// <summary>
         /// Creates a <see cref="ValuePicture"/> with the default image content.
@@ -66,6 +64,12 @@ namespace Xpandables.Net
         /// </summary>
         /// <returns>The current instance without content.</returns>
         public void Clear() => Array.Clear(Content, 0, Content.Length);
+
+        /// <summary>
+        /// Convert the picture content to base64 string.
+        /// </summary>
+        /// <returns>The string representation, in base 64, of the content.</returns>
+        public string ConvertToBase64String() => Convert.ToBase64String(Content);
 
         /// <summary>
         /// Returns the UTF8 encoded string of the image.
