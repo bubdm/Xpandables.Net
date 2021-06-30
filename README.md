@@ -290,7 +290,11 @@ public sealed class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        // common registrations
+        services.AddOptions();
+        services.AddSingleton<IConfigureOptions<JsonOptions>, OperationResultConfigureJsonOptions>();
+        services.AddSingleton<IConfigureOptions<MvcOptions>, OperationResultConfigureMvcOptions>();    
+        
+        // common registrations...
         
         services.AddXpandableServices()
             .AddXDataContext<PersonContext>(options => options.UseInMemoryDatabase(nameof(PersonContext))
