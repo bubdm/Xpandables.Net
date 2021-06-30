@@ -291,17 +291,16 @@ public sealed class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddOptions();
-        services.AddSingleton<IConfigureOptions<JsonOptions>, OperationResultConfigureJsonOptions>();
-        services.AddSingleton<IConfigureOptions<MvcOptions>, OperationResultConfigureMvcOptions>();    
         
         // common registrations...
         
         services.AddXpandableServices()
+            .AddXOperationResultConfigureJsonOptions()
+            .AddXOperationResultConfigureMvcOptions()
             .AddXDataContext<PersonContext>(options => options.UseInMemoryDatabase(nameof(PersonContext))
             .AddXDispatcher()
             .AddXHandlerAccessor()
             .AddXEntityAccessor()
-            .AddXOperationResultFilter()
             .AddXHandlers(
                 new[] { typeof(AddPersonCommandHandler).Assembly },
                 options =>
@@ -309,18 +308,16 @@ public sealed class Startup
                     options.UsePersistenceDecorator();
                     options.UseValidatorDecorator();
                 })
-            .Build();
-        
-        services
-            .AddControllers()
-            .AddMvcOptions(options => options.Filters.Add<OperationResultFilter>(int.MinValue));
-        
+            .Build()
+            .AddControllers();
+                
+        // AddXOperationResultConfigureJsonOptions() will add operation result converters
+        // AddXOperationResultConfigureMvcOptions() will add operation result filers
         // AddXpandableServices() will make available methods for registration
         // AddXDataContext{TContext} registers the TContext and make it available for IEntityAccessor as IDataContext
         // AddXDispatcher() registers the dispatcher
         // AddXHandlerAccessor() registers a handlers accessor using the IHandlerAccessor interface
         // AddXEntityAccessor() register the IEntityAccessor{TEntity} interface.
-        // AddXOperationResultFilter() register the OperationResultFilter use with MvcOptions Filters.
         // AddXHandlers(assemblies, options) registers all handlers and associated classes (validators, decorators...)
         // according to the options set.
         
