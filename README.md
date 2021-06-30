@@ -348,7 +348,7 @@ public async Task AddPersonTestAsync(string firstName, string lastName)
         client);
 
     var addPersonRequest = new AddPersonRequest(firstName, lastName);
-    using var response = await httpRestClientHandler.HandleAsync(addPersonRequest).ConfigureAwait(false);
+    using var response = await httpRestClientHandler.SendAsync(addPersonRequest).ConfigureAwait(false);
 
     if (!response.IsValid())
     {
@@ -476,15 +476,16 @@ public partial class AddPerson
     protected async Task AddSubmitAsync()
     {
         // You can use the AddPersonRequest from the api or create another class
-        // We do not specifiy the action there because the AddPersonRequest definition
+        // We do not specifiy the action here because the AddPersonRequest definition
         // already hold all the necessary information.
         
         var addRequest = new AddPersonRequest(model.FirstName, model.LastName);
-        var addResponse = await HttpRestClientHandler.SendAsync(addRrequest).ConfigureAwait(false);
+        using var addResponse = await HttpRestClientHandler.SendAsync(addRrequest).ConfigureAwait(false);
 
-        if (addResponse.Failed)
+        if (!addResponse.IsValid())
         {
-            Validator.ValidateModel(addResponse);
+            var operationResult = addResponse.GetBadOperationResult();
+            Validator.ValidateModel(operationResult);
         }
         else
         {
