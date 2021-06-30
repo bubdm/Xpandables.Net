@@ -8,9 +8,12 @@ Here are some examples of use :
 
 # Web Api using CQRS and EFCore
 
-Add the following nuget packages :
-    Xpandables.Net.AspNetCore
-    Xpandables.Net.EntityFramework
+Add the following nuget packages to your project :
+
+**Xpandables.Net.AspNetCore**
+
+**Xpandables.Net.EntityFramework**
+
 
 ## Model Definition
 
@@ -325,6 +328,10 @@ public sealed class Startup
 
 ## Wep Api Test class
 
+We are using the MSTest template project. You can use another one.
+Add this package to your test project : **Microsoft.AspNetCore.Mvc.Testing**
+Reference your api project.
+
 ```cs
 
 [TestMethod]
@@ -377,8 +384,7 @@ public async Task AddPersonTestAsync(string firstName, string lastName)
 
 ## Blazor WebAss project
 
-Add the following nuget packages :
-    Xpandables.Net.BlazorExtended
+Add the following nuget packages : **Xpandables.Net.BlazorExtended**
 
 In the Program file, replace the default code with this.
 
@@ -406,9 +412,9 @@ public class Program
         // AddXHttpRestClientHandler(httpClient) will add the IHttpRestClientHandler
         // implementation using the HttpClient with your configuration.
         // if you get errors with System.Text.Json, you can use IHttpRestClientHandler.SerializerOptions
-        // property to globally set the serializer options or use extension methods.
+        // property to globally set the serializer options or use extension methods in your code.
                 
-        // custom code
+        // custom code...
         
         await builder.Build().RunAsync();
     }
