@@ -32,6 +32,7 @@ namespace Xpandables.Net
 {
     /// <summary>
     /// When used as a filter, it'll automatically convert bad operation result to MVC Core <see cref="ValidationProblemDetails"/>.
+    /// And exceptionally, convert <see cref="IOperationResult{TValue}"/> where TValue is <see cref="ValuePicture"/> to <see cref="FileContentResult"/>.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
     public class OperationResultFilter : IAsyncAlwaysRunResultFilter
@@ -81,35 +82,64 @@ namespace Xpandables.Net
             return default;
         }
 
+        /// <summary>
+        /// Executes the result operation for a <see cref="ValuePicture"/> content.
+        /// </summary>
+        /// <param name="context">The context to act with.</param>
+        /// <param name="operationResult">The operation result that contains the picture.</param>
+        /// <returns>A task that represents the asynchronous picture execute operation.</returns>
+        protected virtual async Task PictureExecuteAsync(ActionContext context, IOperationResult<ValuePicture> operationResult)
+        {
+            var pictureResult = new FileContentResult(
+                operationResult.Value.Content,
+                new MediaTypeHeaderValue($"image/{operationResult.Value.Extension.ToLowerInvariant()}"))
+            {
+                FileDownloadName = operationResult.Value.Title
+            };
+
+            await pictureResult.ExecuteResultAsync(context).ConfigureAwait(false);
+        }
+
         ///<inheritdoc/>
         public virtual async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
-            if (context.Result is ObjectResult objectResult && objectResult.Value is IOperationResult operationResult && operationResult.IsFailed)
+            if (context.Result is ObjectResult objectResult && objectResult.Value is IOperationResult operationResult)
             {
-                var controller = (ControllerBase)context.Controller;
-                if (controller is null)
+                if (operationResult.IsFailed)
                 {
-                    controller = context.HttpContext.RequestServices.GetRequiredService<ExceptionController>();
-                    controller.ControllerContext = new ControllerContext(
-                        new ActionContext(
-                            context.HttpContext,
-                            context.HttpContext.GetRouteData(),
-                            new ControllerActionDescriptor()));
-                }
-
-                var statusCode = operationResult.StatusCode;
-                context.Result = controller.ValidationProblem(
-                    GetValidationProblemDetail(statusCode),
-                    context.HttpContext.Request.Path,
-                    (int)statusCode,
-                    GetValidationProblemTitle(statusCode),
-                    modelStateDictionary: operationResult.Errors.GetModelStateDictionary());
-
-                if (operationResult.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    if (await GetAuthenticateSchemeAsync(context.HttpContext).ConfigureAwait(false) is { } scheme)
+                    var controller = (ControllerBase)context.Controller;
+                    if (controller is null)
                     {
-                        context.HttpContext.Response.Headers.Append(HeaderNames.WWWAuthenticate, scheme);
+                        controller = context.HttpContext.RequestServices.GetRequiredService<ExceptionController>();
+                        controller.ControllerContext = new ControllerContext(
+                            new ActionContext(
+                                context.HttpContext,
+                                context.HttpContext.GetRouteData(),
+                                new ControllerActionDescriptor()));
+                    }
+
+                    var statusCode = operationResult.StatusCode;
+                    context.Result = controller.ValidationProblem(
+                        GetValidationProblemDetail(statusCode),
+                        context.HttpContext.Request.Path,
+                        (int)statusCode,
+                        GetValidationProblemTitle(statusCode),
+                        modelStateDictionary: operationResult.Errors.GetModelStateDictionary());
+
+                    if (operationResult.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        if (await GetAuthenticateSchemeAsync(context.HttpContext).ConfigureAwait(false) is { } scheme)
+                        {
+                            context.HttpContext.Response.Headers.Append(HeaderNames.WWWAuthenticate, scheme);
+                        }
+                    }
+                }
+                else
+                {
+                    if (operationResult is IOperationResult<ValuePicture> valuePicture)
+                    {
+                        await PictureExecuteAsync(context, valuePicture).ConfigureAwait(false);
+                        return;
                     }
                 }
             }

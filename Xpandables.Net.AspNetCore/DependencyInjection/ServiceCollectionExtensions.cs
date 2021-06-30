@@ -23,7 +23,9 @@ using System.Reflection;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 using Xpandables.Net.Correlations;
 using Xpandables.Net.Extensibility;
@@ -46,6 +48,52 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
         public static IXpandableApplicationBuilder UseXpandableApplications(this IApplicationBuilder builder)
             => new XpandableApplicationBuilder(builder);
+
+        /// <summary>
+        /// Adds the default <see cref="OperationResultConfigureJsonOptions"/> to the services.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXOperationResultConfigureJsonOptions(this IXpandableServiceBuilder services)
+            => services.AddXOperationResultConfigureJsonOptions<OperationResultConfigureJsonOptions>();
+
+        /// <summary>
+        /// Adds the specified <typeparamref name="TOperationResultConfigureJsonOptions"/> to the services.
+        /// </summary>
+        /// <typeparam name="TOperationResultConfigureJsonOptions">the type of operation result JSON configure.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXOperationResultConfigureJsonOptions<TOperationResultConfigureJsonOptions>(this IXpandableServiceBuilder services)
+            where TOperationResultConfigureJsonOptions : OperationResultConfigureJsonOptions
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddSingleton<IConfigureOptions<JsonOptions>, TOperationResultConfigureJsonOptions>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="OperationResultConfigureMvcOptions"/> to the services.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXOperationResultConfigureMvcOptions(this IXpandableServiceBuilder services)
+            => services.AddXOperationResultConfigureMvcOptions<OperationResultConfigureMvcOptions>();
+
+        /// <summary>
+        /// Adds the specified <typeparamref name="TOperationResultConfigureMvcOptions"/> to the services.
+        /// </summary>
+        /// <typeparam name="TOperationResultConfigureMvcOptions">the type of operation result MVC configure.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXOperationResultConfigureMvcOptions<TOperationResultConfigureMvcOptions>(this IXpandableServiceBuilder services)
+            where TOperationResultConfigureMvcOptions : OperationResultConfigureMvcOptions
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddSingleton<IConfigureOptions<MvcOptions>, TOperationResultConfigureMvcOptions>();
+            return services;
+        }
 
         /// <summary>
         /// Adds the default correlation context implementation type to the services with scoped life time.
@@ -87,16 +135,15 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="OperationResultFilter"/> to the services.
-        /// You may use it when calling AddMvcOptions(options => options.Filters.Add{<see cref="OperationResultFilter"/>}(<see cref="int.MinValue"/>).
+        /// Adds the <see cref="ExceptionController"/> to the services.
+        /// This controller is used to handle exceptions before target controller get called.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXOperationResultFilter(this IXpandableServiceBuilder services)
+        public static IXpandableServiceBuilder AddXOperationResultExceptionController(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddTransient<OperationResultFilter>();
             services.Services.AddScoped<ExceptionController>();
             return services;
         }

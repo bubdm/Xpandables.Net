@@ -21,7 +21,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Text.Json.Serialization;
 
-namespace Xpandables.Net.OperationResults
+namespace Xpandables.Net
 {
     /// <summary>
     /// Add <see cref="IOperationResult"/>/<see cref="IOperationResult{TValue}"/> converters

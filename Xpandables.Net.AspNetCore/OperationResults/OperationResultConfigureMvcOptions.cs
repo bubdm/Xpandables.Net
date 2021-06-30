@@ -22,7 +22,7 @@ using System;
 
 using Xpandables.Net.Razors.ModelBinders;
 
-namespace Xpandables.Net.OperationResults
+namespace Xpandables.Net
 {
     /// <summary>
     /// Adds <see cref="IOperationResult"/>/<see cref="IOperationResult{TValue}"/> filters to <see cref="MvcOptions"/>.
