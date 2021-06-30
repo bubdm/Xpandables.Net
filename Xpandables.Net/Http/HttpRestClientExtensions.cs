@@ -218,6 +218,7 @@ namespace Xpandables.Net.Http
             JsonSerializerOptions? serializerOptions = default)
         {
             _ = httpRestClientException ?? throw new ArgumentNullException(nameof(httpRestClientException));
+            serializerOptions ??= new() { PropertyNameCaseInsensitive = true };
 
             try
             {
@@ -250,6 +251,7 @@ namespace Xpandables.Net.Http
             JsonSerializerOptions? serializerOptions = default)
         {
             _ = response ?? throw new ArgumentNullException(nameof(response));
+            serializerOptions ??= new() { PropertyNameCaseInsensitive = true };
 
             if (response.IsValid())
                 throw new ArgumentException($"The response must be invalid !");
