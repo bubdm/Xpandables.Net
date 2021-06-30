@@ -456,6 +456,7 @@ public class Program
 ```
 
 **InputTextOnInput** is a component that allows text to be validated on input.
+
 **DataAnnotationsValidatorExtended** is a DataAnnotationsValidator derived class that allows
 insertion of external errors to the edit context.
 
