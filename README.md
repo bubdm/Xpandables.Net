@@ -50,11 +50,13 @@ public sealed class PersonEntity : Entity
 // Rest client queries and commands using a typed client HTTP Client. It also allows, in a .Net environment,
 // to no longer define client actions because they are already included in the contracts, 
 // by implementing interfaces such as IPathStringLocationRequest, IFormUrlEncodedRequest,
-// IMultipartRequest...
+// IMultipartRequest, IStringRequest, IStreamRequest...
+// Without the use of one of those interfaces, the whole class will be serialized.
+
 
 [HttpRestClient(Path = "api/person", Method = HttpMethodVerbs.Post, IsSecured = false)]
 public sealed class AddPersonRequest : IHttpRestClientRequest<CreatedId>
-{
+{    
     [Required]
     public string FirstName { get; init; }
     [Required]
@@ -87,8 +89,8 @@ public sealed record CreatedId(string Id);
 
 ```cs
 
-// The command must implement the ICommand interface and others to enable thier behaviors.
-// Such as IValidatorDecorator to aply validation before processing the command,
+// The command must implement the ICommand interface and others to enable their behaviors.
+// Such as IValidatorDecorator to apply validation before processing the command,
 // IPersistenceDecorator to add persistence to the control flow
 // or IInterceptorDecorator to add interception of the command process...
 
@@ -145,7 +147,7 @@ public sealed class AddPersonCommandHandler : CommandHandler<AddPersonCommand, C
         return OkOperation(new CreatedId(newPerson.Id));
         
         // Note that data will be saved at the end of the control flow
-        // if there is no error. The OperationResultFilter will process the output message.
+        // if there is no error. The OperationResultFilter will process the output message format.
         // You can add a decorator class to manage the exception.
     }
 }
@@ -186,7 +188,7 @@ public sealed class AddPersonCommandValidationDecorator : Validator<AddPersonCom
     public AddPersonCommandValidationDecorator(IEntityAccessor<Person> entityAccessor)
         => _entityAccessor = entityAccessor;
     
-    public override asy Task<IOperationResult> ValidateAsync(AddPersonCommand argument, 
+    public override async Task<IOperationResult> ValidateAsync(AddPersonCommand argument, 
         CancellationToken cancellationToken)
     {
         return await _entityAccessor.TryFindAsync(argument, cancellationToken).configureAwait(false) switch
@@ -240,7 +242,8 @@ public sealed class PersonContext : DataContext
 ## Controller definition
 
 ```cs
-// IDispatcher provides with methods to discover registered handlers.
+// IDispatcher provides with methods to discover registered handlers at runtime.
+// We consider as best practice to return ValidationProblemDetails/ProblemDetails in case of errors
 
 [Route("api/[controller]")]
 [ApiController]
@@ -253,7 +256,7 @@ public class PersonController : ControllerBase
        => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreatedId))]
     public async Task<IActionResult> AddPersonAsync(
         [FromBody] AddPersonRequest request, CancellationToken cancellationToken = default)
@@ -264,7 +267,7 @@ public class PersonController : ControllerBase
     
     [HttpGet]
     [Route("{id}")]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ValidationProblemDetails))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Person))]
     public async Task<IActonResult> GetPersonAsync(
         [FromRoute] GetPersonRequest request, cancellationToken cancellationToken = default)
@@ -334,10 +337,10 @@ public async Task AddPersonTestAsync(string firstName, string lastName)
     var factory = new WebApplicationFactory<Program>(); // from the api
     var client = factory.CreateClient();
     
-    // if you get serialization error (due to System.Text.Json), you can use
-    // the Newostonsoft version : HttpRestClientNewtonsoftRequestBuilder
-    // and HttpRestNewtonsoftResponseBuilder, which are classes used to build
-    // request and response
+    // if you get serialization error (due to System.Text.Json), you can
+    // set the serialization options by using an extension method or by globally
+    // setting the IHttpRestClientHandler.SerializerOptions property.
+    // By default, the options are set to Web definition.
     
     using var httpRestClientHandler = new HttpRestClientHandler(
         new HttpRestClientRequestBuilder(),
@@ -351,6 +354,9 @@ public async Task AddPersonTestAsync(string firstName, string lastName)
     {
          Trace.WriteLine($"{response.StatusCode}");
          var errors = response.GetBadOperationResult().Errors;
+         
+         // GetBadOperationResult() is an extension method for HttpRestClientResponse that returns
+         // a failed IOperationResult from the response.
          
          foreach (var error in errors)         
          {
@@ -399,9 +405,9 @@ public class Program
         
         // AddXHttpRestClientHandler(httpClient) will add the IHttpRestClientHandler
         // implementation using the HttpClient with your configuration.
-        // if you get errors with System.Text.Json, you can use the Newtonsoft version
-        // by calling the AddXHttpRestCientNewtonsoftHandler(...)
-        
+        // if you get errors with System.Text.Json, you can use IHttpRestClientHandler.SerializerOptions
+        // property to globally set the serializer options or use extension methods.
+                
         // custom code
         
         await builder.Build().RunAsync();
@@ -419,19 +425,15 @@ public class Program
     <DataAnnotationsValidatorExtended @ref="@Validator" />
 
     <div class="form-group">
-        <label for="FirstName" class="col-md-12 col-form-label">First Name</label>
-        <div class="col-md-12">
-            <InputTextOnInput @bind-Value="model.FirstName" type="text" class="form-control" />
-            <ValidationMessage For="@(() => model.FirstName)" />
-        </div>
+        <label for="FirstName" class="-form-label">First Name</label>
+        <InputTextOnInput @bind-Value="model.FirstName" type="text" class="form-control" />
+        <ValidationMessage For="@(() => model.FirstName)" />
     </div>
 
     <div class="form-group">
-        <label for="LastName" class="col-md-12 col-form-label">Last Name</label>
-        <div class="col-md-12">
-            <InputTextOnInput @bind-Value="model.LastName" type="text" class="form-control" />
-            <ValidationMessage For="@(() => model.LastName)" />
-        </div>
+        <label for="LastName" class="col-form-label">Last Name</label>
+        <InputTextOnInput @bind-Value="model.LastName" type="text" class="form-control" />
+        <ValidationMessage For="@(() => model.LastName)" />
     </div>
 
     <div class="form-group">
@@ -446,6 +448,10 @@ public class Program
 
 ```
 
+**InputTextOnInput** is a component that allows text to be validated on input.
+**DataAnnotationsValidatorExtended** is a DataAnnotationsValidator derived class that allows
+insertion of external errors to the edit context.
+
 ## AddPerson.razor.cs
 
 
@@ -459,8 +465,6 @@ public sealed class PersonModel
     public string LastName { get; set; } = default!;
 }
 
-// Validator will allow insertion of api errors.
-
 public partial class AddPerson
 {
     protected DataAnnotationsValidatorExtended Validator { get; set; } = default!;
@@ -472,6 +476,8 @@ public partial class AddPerson
     protected async Task AddSubmitAsync()
     {
         // You can use the AddPersonRequest from the api or create another class
+        // We do not specifiy the action there because the AddPersonRequest definition
+        // already hold all the necessary information.
         
         var addRequest = new AddPersonRequest(model.FirstName, model.LastName);
         var addResponse = await HttpRestClientHandler.SendAsync(addRrequest).ConfigureAwait(false);
@@ -632,19 +638,19 @@ services
     .XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandLoggingDecorator<,>))
     .Build();
 
-// or You must provide with an implementation of "IOperationResultLogger" and use the registration as follow
+// or You must provide with an implementation of "ICommandQueryLogger" and use the registration as follow
 
 services
     .AddXpandableServices()
     .AddXHandlers(assemblyCollection, options =>
     {
-        options.UseOperationResultLoggerDecorator();
+        options.UseCommandQueryLoggerDecorator();
     })
     .Build();
 
-// .AddXHandlers will register all handlers (ICommandhandler{}, IQueryHandler{}, IAsyncQueryHandler{})
-// adding a decorator for each
-// handler, that will apply your implementation of IOperationResultLogger for commands implementing ILoggingDecorator
+// .AddXHandlers will register all handlers (ICommandhandler{}, IQueryHandler{}, IAsyncQueryHandler{}...)
+// adding a decorator for each  handler, and will apply your implementation of ICommandQueryLogger
+// for commands/queries implementing ILoggingDecorator
 .
 ```
 
