@@ -132,6 +132,26 @@ namespace Xpandables.Net.Aggregates
             => EventData.ToObject(returnType, options);
 
         /// <summary>
+        /// Deserializes the content of <see cref="EventData"/> to the <see cref="EventTypeFullName"/> type.
+        /// </summary>
+        /// <param name="options">Options to control the behavior during parsing.</param>
+        /// <returns>A returnType representation of the JSON value or null if exception.</returns>
+        /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
+        public object? To(JsonSerializerOptions? options = default)
+            => GetEventDataType() is { } returnType ? EventData.ToObject(returnType, options) : default;
+
+        /// <summary>
+        /// Returns the type that matches the <see cref="EventTypeFullName"/>.
+        /// </summary>
+        /// <param name="throwOnError"><see langword="true"/> to throw an exception if the type cannot be found; <see langword="false"/> to return null. 
+        /// Specifying false also suppresses some other exception conditions, but not all of them. See the Exceptions section.</param>
+        /// <returns>The type with the <see cref="EventTypeFullName"/> name. If the type is not found, the <paramref name="throwOnError"/> parameter 
+        /// specifies whether null is returned or an exception is thrown.
+        /// In some cases, an exception is thrown regardless of the value of <paramref name="throwOnError"/>.
+        /// .</returns>
+        public Type? GetEventDataType(bool throwOnError = false) => Type.GetType(EventTypeFullName, throwOnError);
+
+        /// <summary>
         /// Constructs a new instance of <see cref="EventStoreEntity"/> with the specified properties.
         /// </summary>
         /// <param name="aggregateId">The aggregate identifier.</param>
