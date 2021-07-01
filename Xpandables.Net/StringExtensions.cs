@@ -129,21 +129,7 @@ namespace Xpandables.Net
         /// <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
         /// <exception cref="InvalidOperationException">See inner exception.</exception>
         public static T? ToObject<T>(this JsonElement element, JsonSerializerOptions? options = default)
-        {
-            try
-            {
-                var bufferWriter = new ArrayBufferWriter<byte>();
-                using var writer = new Utf8JsonWriter(bufferWriter);
-                element.WriteTo(writer);
-                writer.Flush();
-
-                return JsonSerializer.Deserialize<T>(bufferWriter.WrittenSpan, options);
-            }
-            catch (Exception exception) when (exception is not InvalidOperationException)
-            {
-                throw new InvalidOperationException("Unable to parse element.", exception);
-            }
-        }
+            => ToObject(element, typeof(T), options) is { } result ? (T)result : default;
 
         /// <summary>
         /// Deserializes the current JSON element to an object of specified type.
