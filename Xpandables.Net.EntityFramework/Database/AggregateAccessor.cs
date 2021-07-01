@@ -183,6 +183,9 @@ namespace Xpandables.Net.Database
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
 
+            if (result is null)
+                return default;
+
             var type = Type.GetType(result.EventTypeFullName);
 
             return type is not null

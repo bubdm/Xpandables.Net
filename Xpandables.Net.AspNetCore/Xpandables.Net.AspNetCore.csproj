@@ -17,11 +17,11 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.6.1</Version>
-    <AssemblyVersion>5.6.1</AssemblyVersion>
-    <FileVersion>5.6.1</FileVersion>
-    <PackageVersion>5.6.1</PackageVersion>
-    <PackageReleaseNotes>Add AggregateId type</PackageReleaseNotes>
+    <Version>6.0.0</Version>
+    <AssemblyVersion>6.0.0</AssemblyVersion>
+    <FileVersion>6.0.0</FileVersion>
+    <PackageVersion>6.0.0-preview.1</PackageVersion>
+    <PackageReleaseNotes>Migration to .Net6.0</PackageReleaseNotes>
     <PackageId>Xpandables.Net.AspNetCore</PackageId>
     <PackageTags>Razor Blazor</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
