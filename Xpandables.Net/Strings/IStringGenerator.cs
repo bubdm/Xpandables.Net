@@ -58,7 +58,7 @@ namespace Xpandables.Net
             if (string.IsNullOrWhiteSpace(lookupCharacters)) throw new ArgumentNullException(nameof(lookupCharacters));
 
             var stringResult = new StringBuilder(length);
-            using var random = new RNGCryptoServiceProvider();
+            using var random = RandomNumberGenerator.Create();
             var count = (int)Math.Ceiling(Math.Log(lookupCharacters.Length, 2) / 8.0);
             System.Diagnostics.Debug.Assert(count <= sizeof(uint));
 
@@ -93,7 +93,7 @@ namespace Xpandables.Net
             try
             {
                 var salt = new byte[length];
-                using var random = new RNGCryptoServiceProvider();
+                using var random = RandomNumberGenerator.Create();
                 random.GetNonZeroBytes(salt);
 
                 return Convert.ToBase64String(salt);

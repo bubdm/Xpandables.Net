@@ -49,7 +49,7 @@ namespace Xpandables.Net.Http.ResponseBuilders
                 if (stream is null)
                 {
                     return HttpRestClientResponse<IAsyncEnumerable<TResult>>
-                        .Success(AsyncEnumerableExtensions.Empty<TResult>(), httpResponse.StatusCode)
+                        .Success(AsyncEnumerable<TResult>.Empty(), httpResponse.StatusCode)
                         .AddHeaders(httpResponse.ReadHttpResponseHeaders())
                         .AddVersion(httpResponse.Version)
                         .AddReasonPhrase(httpResponse.ReasonPhrase);

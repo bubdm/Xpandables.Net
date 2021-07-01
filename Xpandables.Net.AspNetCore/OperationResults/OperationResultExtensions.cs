@@ -49,8 +49,8 @@ namespace Xpandables.Net
                 statusCode,
                 modelState
                     .Keys
-                    .Where(key => modelState[key].Errors.Count > 0)
-                    .Select(key => new OperationError(key, modelState[key].Errors.Select(error => error.ErrorMessage).ToArray()))
+                    .Where(key => modelState[key]!.Errors.Count > 0)
+                    .Select(key => new OperationError(key, modelState[key]!.Errors.Select(error => error.ErrorMessage).ToArray()))
                     .ToList());
         }
 

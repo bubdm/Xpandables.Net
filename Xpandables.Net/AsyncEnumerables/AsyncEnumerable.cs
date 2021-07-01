@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace Xpandables.Net
@@ -28,6 +29,12 @@ namespace Xpandables.Net
     /// <typeparam name="T">The type of the elements in the collection.</typeparam>
     public sealed class AsyncEnumerable<T> : IAsyncEnumerable<T>
     {
+        /// <summary>
+        /// Returns an empty async-enumerable.
+        /// </summary>
+        /// <returns>An async-enumerable sequence with no elements.</returns>
+        public static IAsyncEnumerable<T> Empty() => new AsyncEnumerable<T>(Enumerable.Empty<T>());
+
         private readonly Func<CancellationToken, IAsyncEnumerator<T>> _asyncEnumerator;
 
         /// <summary>

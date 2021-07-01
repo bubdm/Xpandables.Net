@@ -37,6 +37,6 @@ namespace Xpandables.Net.Queries
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
         public virtual IAsyncEnumerable<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
-            => AsyncEnumerableExtensions.Empty<TResult>();
+            => AsyncEnumerable<TResult>.Empty();
     }
 }
