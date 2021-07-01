@@ -143,11 +143,7 @@ namespace Xpandables.Net.EmailEvents
         {
             try
             {
-                var type = Type.GetType(entity.EventTypeFullName);
-                if (type is null)
-                    return false;
-
-                if (entity.To(type) is not IEmailEvent @event)
+                if (entity.To() is not IEmailEvent @event)
                     return false;
 
                 await emailSender.SendEmailAsync(@event).ConfigureAwait(false);

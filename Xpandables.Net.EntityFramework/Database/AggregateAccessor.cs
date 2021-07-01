@@ -146,11 +146,8 @@ namespace Xpandables.Net.Database
 
             await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
             {
-                if (Type.GetType(entity.EventTypeFullName) is { } type)
-                {
-                    if (entity.To(type, SerializerOptions) is IDomainEvent<TAggregateId> @event)
-                        yield return @event;
-                }
+                if (entity.To(SerializerOptions) is IDomainEvent<TAggregateId> @event)
+                    yield return @event;
             }
         }
 
@@ -183,11 +180,7 @@ namespace Xpandables.Net.Database
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            var type = Type.GetType(result.EventTypeFullName);
-
-            return type is not null
-                ? result.To(type, SerializerOptions) as ISnapShot<TAggregateId>
-                : default;
+            return result is not null ? result.To(SerializerOptions) as ISnapShot<TAggregateId> : default;
         }
 
         ///<inheritdoc/>
@@ -327,11 +320,8 @@ namespace Xpandables.Net.Database
 
             await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
             {
-                if (Type.GetType(entity.EventTypeFullName) is { } type)
-                {
-                    if (entity.To(type, SerializerOptions) is INotificationEvent<TAggregateId> @event)
-                        yield return @event;
-                }
+                if (entity.To(SerializerOptions) is INotificationEvent<TAggregateId> @event)
+                    yield return @event;
             }
         }
 
@@ -350,11 +340,8 @@ namespace Xpandables.Net.Database
 
             await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
             {
-                if (Type.GetType(entity.EventTypeFullName) is { } type)
-                {
-                    if (entity.To(type, SerializerOptions) is IEmailEvent<TEmailMessage> @event)
-                        yield return @event;
-                }
+                if (entity.To(SerializerOptions) is IEmailEvent<TEmailMessage> @event)
+                    yield return @event;
             }
         }
 

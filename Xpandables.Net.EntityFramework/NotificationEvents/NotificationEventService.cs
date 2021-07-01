@@ -87,7 +87,7 @@ namespace Xpandables.Net.NotificationEvents
                 await Task.Yield();
                 using var scope = _serviceScopeFactory.CreateScope();
 
-                var aggregateDataContext =(AggregateDataContext) scope.ServiceProvider.GetRequiredService<IAggregateDataContext>();
+                var aggregateDataContext = (AggregateDataContext)scope.ServiceProvider.GetRequiredService<IAggregateDataContext>();
                 var notificationEventPublisher = scope.ServiceProvider.GetRequiredService<INotificationEventPublisher>();
 
                 var count = 0;
@@ -145,11 +145,7 @@ namespace Xpandables.Net.NotificationEvents
         {
             try
             {
-                var type = Type.GetType(entity.EventTypeFullName);
-                if (type is null)
-                    return false;
-
-                if (entity.To(type) is not IEvent @event)
+                if (entity.To() is not IEvent @event)
                     return false;
 
                 // you can use an event bus or other
