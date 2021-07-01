@@ -25,6 +25,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace Xpandables.Net
 {
@@ -129,21 +130,22 @@ namespace Xpandables.Net
         /// <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
         /// <exception cref="InvalidOperationException">See inner exception.</exception>
         public static T? ToObject<T>(this JsonElement element, JsonSerializerOptions? options = default)
-        {
-            try
-            {
-                var bufferWriter = new ArrayBufferWriter<byte>();
-                using var writer = new Utf8JsonWriter(bufferWriter);
-                element.WriteTo(writer);
-                writer.Flush();
+            => ToObject(element, typeof(T), options) is { } result ? (T)result : default;
 
-                return JsonSerializer.Deserialize<T>(bufferWriter.WrittenSpan, options);
-            }
-            catch (Exception exception) when (exception is not InvalidOperationException)
-            {
-                throw new InvalidOperationException("Unable to parse element.", exception);
-            }
-        }
+        /// <summary>
+        /// Asynchronously deserializes the current JSON element to an object of specified <typeparamref name="T"/> type.
+        /// </summary>
+        /// <typeparam name="T">The target type of the UTF-8 encoded text.</typeparam>
+        /// <param name="element">The JSON text to parse.</param>
+        /// <param name="options">Options to control the behavior during parsing.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
+        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        public static async ValueTask<T?> ToObjectAsync<T>(
+            this JsonElement element,
+            JsonSerializerOptions? options = default,
+            CancellationToken cancellationToken = default)
+            => await ToObjectAsync(element, typeof(T), options, cancellationToken) is { } result ? (T)result : default;
 
         /// <summary>
         /// Deserializes the current JSON element to an object of specified type.
@@ -189,6 +191,25 @@ namespace Xpandables.Net
         }
 
         /// <summary>
+        /// Asynchronously deserializes the current JSON document to an object of specified <typeparamref name="T"/> type.
+        /// </summary>
+        /// <typeparam name="T">The target type of the UTF-8 encoded text.</typeparam>
+        /// <param name="document">The JSON document to parse.</param>
+        /// <param name="options">Options to control the behavior during parsing.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="document"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        public static ValueTask<T?> ToObjectAsync<T>(
+            this JsonDocument document,
+            JsonSerializerOptions? options = default,
+            CancellationToken cancellationToken = default)
+        {
+            _ = document ?? throw new ArgumentNullException(nameof(document));
+            return document.RootElement.ToObjectAsync<T>(options, cancellationToken);
+        }
+
+        /// <summary>
         /// Deserializes the current JSON document to an object of specified type.
         /// </summary>
         /// <param name="document">The JSON document to parse.</param>
@@ -202,6 +223,36 @@ namespace Xpandables.Net
         {
             _ = document ?? throw new ArgumentNullException(nameof(document));
             return document.RootElement.ToObject(returnType, options);
+        }
+
+        /// <summary>
+        /// Asynchronously deserializes the current JSON element to an object of specified <paramref name="returnType"/> type.
+        /// </summary>
+        /// <param name="element">The JSON text to parse.</param>
+        /// <param name="returnType">The type of the object to convert to and return.</param>
+        /// <param name="options">Options to control the behavior during parsing.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A returnType representation of the JSON value.</returns>
+        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        public static ValueTask<object?> ToObjectAsync(
+            this JsonElement element,
+            Type returnType,
+            JsonSerializerOptions? options = default,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var memoryStream = new MemoryStream();
+                using var writer = new Utf8JsonWriter(memoryStream);
+                element.WriteTo(writer);
+                writer.Flush();
+
+                return JsonSerializer.DeserializeAsync(memoryStream, returnType, options, cancellationToken);
+            }
+            catch (Exception exception) when (exception is not InvalidOperationException)
+            {
+                throw new InvalidOperationException("Unable to parse element.", exception);
+            }
         }
 
         /// <summary>
