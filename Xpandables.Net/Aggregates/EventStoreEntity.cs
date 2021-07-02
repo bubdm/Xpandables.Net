@@ -19,7 +19,9 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -149,7 +151,19 @@ namespace Xpandables.Net.Aggregates
         /// specifies whether null is returned or an exception is thrown.
         /// In some cases, an exception is thrown regardless of the value of <paramref name="throwOnError"/>.
         /// .</returns>
-        public Type? GetEventDataType(bool throwOnError = false) => Type.GetType(EventTypeFullName, throwOnError);
+        /// <exception cref="InvalidOperationException">Unable to find the type. See inner exception</exception>
+        public Type? GetEventDataType(bool throwOnError = true)
+        {
+            try
+            {
+                return Type.GetType(EventTypeFullName, throwOnError);
+            }
+            catch (Exception exception) when (exception is TargetInvocationException or TypeLoadException or ArgumentException or FileNotFoundException or FileLoadException or BadImageFormatException)
+            {
+                throw new InvalidOperationException($"Unable to find the '{EventTypeFullName}' type. See inner exception.", exception);
+            }
+
+        }
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventStoreEntity"/> with the specified properties.
