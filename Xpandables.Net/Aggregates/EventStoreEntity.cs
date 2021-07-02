@@ -17,7 +17,9 @@
 ************************************************************************************************************/
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -116,7 +118,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A <typeparamref name="T"/> representation of the JSON value or null.</returns>
         /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
-        public T? To<T>(JsonSerializerOptions? options = default)
+        public T? ToObject<T>(JsonSerializerOptions? options = default)
             where T : class => EventData.ToObject<T>(options);
 
         /// <summary>
@@ -126,7 +128,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A returnType representation of the JSON value or null if exception.</returns>
         /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
-        public object? To(Type returnType, JsonSerializerOptions? options = default)
+        public object? ToObject(Type returnType, JsonSerializerOptions? options = default)
             => EventData.ToObject(returnType, options);
 
         /// <summary>
@@ -135,7 +137,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A returnType representation of the JSON value or null if exception.</returns>
         /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
-        public object? To(JsonSerializerOptions? options = default)
+        public object? ToObject(JsonSerializerOptions? options = default)
             => GetEventDataType() is { } returnType ? EventData.ToObject(returnType, options) : default;
 
         /// <summary>
@@ -147,7 +149,18 @@ namespace Xpandables.Net.Aggregates
         /// specifies whether null is returned or an exception is thrown.
         /// In some cases, an exception is thrown regardless of the value of <paramref name="throwOnError"/>.
         /// .</returns>
-        public Type? GetEventDataType(bool throwOnError = false) => Type.GetType(EventTypeFullName, throwOnError);
+        /// <exception cref="InvalidOperationException">Unable to find the type. See inner exception.</exception>
+        public Type? GetEventDataType(bool throwOnError = true)
+        {
+            try
+            {
+                return Type.GetType(EventTypeFullName, throwOnError);
+            }
+            catch (Exception exception) when(exception is TargetInvocationException or TypeLoadException or ArgumentException or FileNotFoundException or FileLoadException or BadImageFormatException)
+            {
+                throw new InvalidOperationException($"Unable to find the '{EventTypeFullName}' type. See inner exception.", exception);
+            }
+        }
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventStoreEntity"/> with the specified properties.

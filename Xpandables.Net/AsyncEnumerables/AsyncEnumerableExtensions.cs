@@ -17,7 +17,6 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Xpandables.Net
 {
@@ -26,13 +25,6 @@ namespace Xpandables.Net
     /// </summary>
     public static partial class AsyncEnumerableExtensions
     {
-        /// <summary>
-        /// Returns an empty async-enumerable.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the collection.</typeparam>
-        /// <returns>An async-enumerable sequence with no elements.</returns>
-        public static IAsyncEnumerable<T> Empty<T>() => new AsyncEnumerable<T>(Enumerable.Empty<T>());
-
         /// <summary>
         /// Converts the collection to exposes an enumerator that provides asynchronous iteration over values of <typeparamref name="T"/> type.
         /// </summary>

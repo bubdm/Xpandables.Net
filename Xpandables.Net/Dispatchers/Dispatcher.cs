@@ -60,7 +60,7 @@ namespace Xpandables.Net.Dispatchers
             var canHandleResult = CanHandle(CreateResult, handler, query);
 
             if (canHandleResult.IsFailed)
-                return AsyncEnumerableExtensions.Empty<TResult>();
+                return AsyncEnumerable<TResult>.Empty();
 
             return handler.HandleAsync(query, cancellationToken);
         }
