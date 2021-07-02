@@ -146,7 +146,7 @@ namespace Xpandables.Net.Database
 
             await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
             {
-                if (entity.To(SerializerOptions) is IDomainEvent<TAggregateId> @event)
+                if (entity.ToObject(SerializerOptions) is IDomainEvent<TAggregateId> @event)
                     yield return @event;
             }
         }
@@ -180,7 +180,7 @@ namespace Xpandables.Net.Database
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            return result is not null ? result.To(SerializerOptions) as ISnapShot<TAggregateId> : default;
+            return result is not null ? result.ToObject(SerializerOptions) as ISnapShot<TAggregateId> : default;
         }
 
         ///<inheritdoc/>
@@ -320,7 +320,7 @@ namespace Xpandables.Net.Database
 
             await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
             {
-                if (entity.To(SerializerOptions) is INotificationEvent<TAggregateId> @event)
+                if (entity.ToObject(SerializerOptions) is INotificationEvent<TAggregateId> @event)
                     yield return @event;
             }
         }
@@ -340,7 +340,7 @@ namespace Xpandables.Net.Database
 
             await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
             {
-                if (entity.To(SerializerOptions) is IEmailEvent<TEmailMessage> @event)
+                if (entity.ToObject(SerializerOptions) is IEmailEvent<TEmailMessage> @event)
                     yield return @event;
             }
         }

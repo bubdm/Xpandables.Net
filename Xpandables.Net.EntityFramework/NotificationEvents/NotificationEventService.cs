@@ -149,7 +149,7 @@ namespace Xpandables.Net.NotificationEvents
                 if (type is null)
                     return false;
 
-                if (entity.To(type) is not IEvent @event)
+                if (entity.ToObject(type) is not IEvent @event)
                     return false;
 
                 // you can use an event bus or other

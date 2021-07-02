@@ -118,7 +118,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A <typeparamref name="T"/> representation of the JSON value or null.</returns>
         /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
-        public T? To<T>(JsonSerializerOptions? options = default)
+        public T? ToObject<T>(JsonSerializerOptions? options = default)
             where T : class => EventData.ToObject<T>(options);
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A returnType representation of the JSON value or null if exception.</returns>
         /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
-        public object? To(Type returnType, JsonSerializerOptions? options = default)
+        public object? ToObject(Type returnType, JsonSerializerOptions? options = default)
             => EventData.ToObject(returnType, options);
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A returnType representation of the JSON value or null if exception.</returns>
         /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
-        public object? To(JsonSerializerOptions? options = default)
+        public object? ToObject(JsonSerializerOptions? options = default)
             => GetEventDataType() is { } returnType ? EventData.ToObject(returnType, options) : default;
 
         /// <summary>
