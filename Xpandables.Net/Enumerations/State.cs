@@ -25,12 +25,10 @@ namespace Xpandables.Net
     /// associated with the State. This back reference can be used by States to
     /// transition the Context to another State.
     /// </summary>
-    /// <typeparam name="TState">The type of the state.</typeparam>
     /// <typeparam name="TStateContext">The type of the context.</typeparam>
-    /// <remarks>Derives from <see cref="NotifyPropertyChanged{T}"/> where T is <typeparamref name="TState"/>.</remarks>
-    public abstract class State<TState, TStateContext> :
-        NotifyPropertyChanged<TState>, IState<TState, TStateContext>
-        where TState : class, IState
+    /// <remarks>Derives from <see cref="NotifyPropertyChanged{T}"/>.</remarks>
+    public abstract class State<TStateContext> :
+        NotifyPropertyChanged<State<TStateContext>>, IState<TStateContext>
         where TStateContext : class, IStateContext
     {
         /// <summary>

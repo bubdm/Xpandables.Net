@@ -20,16 +20,14 @@ using System;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// The <see cref="StateContext{TState, TStateContext}"/> maintains a reference to an instance 
+    /// The <see cref="StateContext{TState}"/> maintains a reference to an instance 
     /// of a State subclass, which represents the current state of the Context.
     /// </summary>
     /// <typeparam name="TState">The type of the state.</typeparam>
-    /// <typeparam name="TStateContext">The type of the context.</typeparam>
-    /// <remarks>Derives from <see cref="NotifyPropertyChanged{T}"/> where T is <typeparamref name="TStateContext"/>.</remarks>
-    public abstract class StateContext<TState, TStateContext> :
-        NotifyPropertyChanged<TStateContext>, IStateContext<TState, TStateContext>
-        where TState : class, IState<TState, TStateContext>
-        where TStateContext : class, IStateContext
+    /// <remarks>Derives from <see cref="NotifyPropertyChanged{T}"/></remarks>
+    public abstract class StateContext<TState> :
+        NotifyPropertyChanged<StateContext<TState>>, IStateContext<TState>
+        where TState : class, IState
     {
         ///<inheritdoc/>
         public TState CurrentState { get; protected set; } = default!;
