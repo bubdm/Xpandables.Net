@@ -34,12 +34,15 @@ namespace Xpandables.Net.Aggregates
         /// <param name="memento">the expected memento instance.</param>
         /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="version">The version.</param>
+        /// <exception cref="ArgumentException">The <paramref name="memento"/> is null.</exception>
+        /// /// <exception cref="ArgumentException">The <paramref name="aggregateId"/> is null.</exception>
+        /// /// <exception cref="ArgumentException">The <paramref name="version"/> is null.</exception>
         [JsonConstructor]
         public SnapShot(IMemento memento, TAggregateId aggregateId, AggregateVersion version)
             : base(aggregateId)
         {
             Memento = memento ?? throw new ArgumentNullException(nameof(memento));
-            Version = version;
+            Version = version ?? throw new ArgumentNullException(nameof(version));
         }
 
         ///<inheritdoc/>
