@@ -45,7 +45,10 @@ namespace Xpandables.Net.Aggregates
         /// <param name="documentOptions">Options to control the reader behavior during parsing.</param>
         /// <returns>A new instance of <see cref="EventStoreEntity"/>.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Serialization of the event failed. See inner exception</exception>
+        /// <exception cref="ArgumentException">The type of <paramref name="event"/> is not compatible with its value 
+        /// or JsonDocument options contains unsupported options.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible JsonConverter for inputType or its serializable members.</exception>
+        /// <exception cref="JsonException">The json does not represent a valid single JSON value.</exception>
         public static TEventStoreEntity From<TAggregateId, TAggregate, TEventStoreEntity>(
             IEvent @event,
             JsonSerializerOptions? serializerOptions = default,
@@ -64,15 +67,8 @@ namespace Xpandables.Net.Aggregates
             string eventString;
             JsonDocument eventData;
 
-            try
-            {
-                eventString = JsonSerializer.Serialize(@event, @event.GetType(), serializerOptions);
-                eventData = JsonDocument.Parse(eventString, documentOptions);
-            }
-            catch (Exception exception) when (exception is ArgumentException or NotSupportedException or JsonException)
-            {
-                throw new InvalidOperationException("Serialization of the event failed. See inner exception.", exception);
-            }
+            eventString = JsonSerializer.Serialize(@event, @event.GetType(), serializerOptions);
+            eventData = JsonDocument.Parse(eventString, documentOptions);
 
             return new()
             {
@@ -117,7 +113,12 @@ namespace Xpandables.Net.Aggregates
         /// <typeparam name="T">The target type of the UTF-8 encoded text.</typeparam>
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A <typeparamref name="T"/> representation of the JSON value or null.</returns>
-        /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
+        /// <exception cref="InvalidOperationException">The JsonElement.ValueKind of this value is System.Text.Json.JsonValueKind.Undefined.</exception>
+        /// <exception cref="ObjectDisposedException">The parent System.Text.Json.JsonDocument has been disposed.</exception>
+        /// <exception cref="JsonException">The JSON is invalid. -or- returnType is not compatible with the JSON. -or- 
+        /// There is remaining data in the span beyond a single JSON value.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter 
+        /// for returnType or its serializable members.</exception>
         public T? ToObject<T>(JsonSerializerOptions? options = default)
             where T : class => EventData.ToObject<T>(options);
 
@@ -127,7 +128,12 @@ namespace Xpandables.Net.Aggregates
         /// <param name="returnType">The type of the object to convert to and return.</param>
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A returnType representation of the JSON value or null if exception.</returns>
-        /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
+        /// <exception cref="InvalidOperationException">The JsonElement.ValueKind of this value is System.Text.Json.JsonValueKind.Undefined.</exception>
+        /// <exception cref="ObjectDisposedException">The parent System.Text.Json.JsonDocument has been disposed.</exception>
+        /// <exception cref="JsonException">The JSON is invalid. -or- returnType is not compatible with the JSON. -or- 
+        /// There is remaining data in the span beyond a single JSON value.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter 
+        /// for returnType or its serializable members.</exception>
         public object? ToObject(Type returnType, JsonSerializerOptions? options = default)
             => EventData.ToObject(returnType, options);
 
@@ -136,32 +142,20 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A returnType representation of the JSON value or null if exception.</returns>
-        /// <exception cref="InvalidOperationException">The deserialization failed. See inner exception.</exception>
+        /// <exception cref="InvalidOperationException">The JsonElement.ValueKind of this value is System.Text.Json.JsonValueKind.Undefined.</exception>
+        /// <exception cref="ObjectDisposedException">The parent System.Text.Json.JsonDocument has been disposed.</exception>
+        /// <exception cref="JsonException">The JSON is invalid. -or- returnType is not compatible with the JSON. -or- 
+        /// There is remaining data in the span beyond a single JSON value.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter 
+        /// for returnType or its serializable members.</exception>
+        /// <exception cref="TargetInvocationException"></exception>
+        /// <exception cref="TypeLoadException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="FileLoadException"></exception>
+        /// <exception cref="BadImageFormatException"></exception>
         public object? ToObject(JsonSerializerOptions? options = default)
-            => GetEventDataType() is { } returnType ? EventData.ToObject(returnType, options) : default;
-
-        /// <summary>
-        /// Returns the type that matches the <see cref="EventTypeFullName"/>.
-        /// </summary>
-        /// <param name="throwOnError"><see langword="true"/> to throw an exception if the type cannot be found; <see langword="false"/> to return null. 
-        /// Specifying false also suppresses some other exception conditions, but not all of them. See the Exceptions section.</param>
-        /// <returns>The type with the <see cref="EventTypeFullName"/> name. If the type is not found, the <paramref name="throwOnError"/> parameter 
-        /// specifies whether null is returned or an exception is thrown.
-        /// In some cases, an exception is thrown regardless of the value of <paramref name="throwOnError"/>.
-        /// .</returns>
-        /// <exception cref="InvalidOperationException">Unable to find the type. See inner exception</exception>
-        public Type? GetEventDataType(bool throwOnError = true)
-        {
-            try
-            {
-                return Type.GetType(EventTypeFullName, throwOnError);
-            }
-            catch (Exception exception) when (exception is TargetInvocationException or TypeLoadException or ArgumentException or FileNotFoundException or FileLoadException or BadImageFormatException)
-            {
-                throw new InvalidOperationException($"Unable to find the '{EventTypeFullName}' type. See inner exception.", exception);
-            }
-
-        }
+            => Type.GetType(EventTypeFullName, true) is { } returnType ? EventData.ToObject(returnType, options) : default;
 
         /// <summary>
         /// Constructs a new instance of <see cref="EventStoreEntity"/> with the specified properties.

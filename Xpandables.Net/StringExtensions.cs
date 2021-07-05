@@ -114,6 +114,9 @@ namespace Xpandables.Net
         /// <exception cref="NotSupportedException">There is no compatible 
         /// System.Text.Json.Serialization.JsonConverter for TValue or its serializable members.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentException">inputType is not compatible with value.</exception>
+        /// <exception cref="NotSupportedException"> There is no compatible System.Text.Json.Serialization.JsonConverter 
+        /// for inputType or its serializable members.</exception>
         public static string ToJsonString<T>(this T source, JsonSerializerOptions? options = default)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
@@ -127,7 +130,13 @@ namespace Xpandables.Net
         /// <param name="element">The JSON text to parse.</param>
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
-        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">The JsonElement.ValueKind of this value is System.Text.Json.JsonValueKind.Undefined.</exception>
+        /// <exception cref="ObjectDisposedException">The parent System.Text.Json.JsonDocument has been disposed.</exception>
+        /// <exception cref="JsonException">The JSON is invalid. -or- returnType is not compatible with the JSON. -or- 
+        /// There is remaining data in the span beyond a single JSON value.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter 
+        /// for returnType or its serializable members.</exception>
         public static T? ToObject<T>(this JsonElement element, JsonSerializerOptions? options = default)
             => ToObject(element, typeof(T), options) is { } result ? (T)result : default;
 
@@ -154,24 +163,22 @@ namespace Xpandables.Net
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A returnType representation of the JSON value.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="returnType"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        /// <exception cref="InvalidOperationException">The JsonElement.ValueKind of this value is System.Text.Json.JsonValueKind.Undefined.</exception>
+        /// <exception cref="ObjectDisposedException">The parent System.Text.Json.JsonDocument has been disposed.</exception>
+        /// <exception cref="JsonException">The JSON is invalid. -or- returnType is not compatible with the JSON. -or- 
+        /// There is remaining data in the span beyond a single JSON value.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter 
+        /// for returnType or its serializable members.</exception>
         public static object? ToObject(this JsonElement element, Type returnType, JsonSerializerOptions? options = default)
         {
             _ = returnType ?? throw new ArgumentNullException(nameof(returnType));
 
-            try
-            {
-                var bufferWriter = new ArrayBufferWriter<byte>();
-                using var writer = new Utf8JsonWriter(bufferWriter);
-                element.WriteTo(writer);
-                writer.Flush();
+            var bufferWriter = new ArrayBufferWriter<byte>();
+            using var writer = new Utf8JsonWriter(bufferWriter);
+            element.WriteTo(writer);
+            writer.Flush();
 
-                return JsonSerializer.Deserialize(bufferWriter.WrittenSpan, returnType, options);
-            }
-            catch (Exception exception) when (exception is not InvalidOperationException)
-            {
-                throw new InvalidOperationException("Unable to parse element.", exception);
-            }
+            return JsonSerializer.Deserialize(bufferWriter.WrittenSpan, returnType, options);
         }
 
         /// <summary>
@@ -182,7 +189,12 @@ namespace Xpandables.Net
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="document"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        /// <exception cref="InvalidOperationException">The JsonElement.ValueKind of this value is System.Text.Json.JsonValueKind.Undefined.</exception>
+        /// <exception cref="ObjectDisposedException">The parent System.Text.Json.JsonDocument has been disposed.</exception>
+        /// <exception cref="JsonException">The JSON is invalid. -or- returnType is not compatible with the JSON. -or- 
+        /// There is remaining data in the span beyond a single JSON value.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter 
+        /// for returnType or its serializable members.</exception>
         public static T? ToObject<T>(this JsonDocument document, JsonSerializerOptions? options = default)
         {
             _ = document ?? throw new ArgumentNullException(nameof(document));
@@ -217,7 +229,12 @@ namespace Xpandables.Net
         /// <returns>A returnType representation of the JSON value.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="returnType"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="document"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        /// <exception cref="InvalidOperationException">The JsonElement.ValueKind of this value is System.Text.Json.JsonValueKind.Undefined.</exception>
+        /// <exception cref="ObjectDisposedException">The parent System.Text.Json.JsonDocument has been disposed.</exception>
+        /// <exception cref="JsonException">The JSON is invalid. -or- returnType is not compatible with the JSON. -or- 
+        /// There is remaining data in the span beyond a single JSON value.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter 
+        /// for returnType or its serializable members.</exception>
         public static object? ToObject(this JsonDocument document, Type returnType, JsonSerializerOptions? options = default)
         {
             _ = document ?? throw new ArgumentNullException(nameof(document));
@@ -232,26 +249,26 @@ namespace Xpandables.Net
         /// <param name="options">Options to control the behavior during parsing.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A returnType representation of the JSON value.</returns>
-        /// <exception cref="InvalidOperationException">See inner exception.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="returnType"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="element"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">The JsonElement.ValueKind of this value is System.Text.Json.JsonValueKind.Undefined.</exception>
+        /// <exception cref="ObjectDisposedException">The parent System.Text.Json.JsonDocument has been disposed.</exception>
+        /// <exception cref="JsonException">The JSON is invalid. -or- returnType is not compatible with the JSON. -or- 
+        /// There is remaining data in the span beyond a single JSON value.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter 
+        /// for returnType or its serializable members.</exception>
         public static ValueTask<object?> ToObjectAsync(
             this JsonElement element,
             Type returnType,
             JsonSerializerOptions? options = default,
             CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var memoryStream = new MemoryStream();
-                using var writer = new Utf8JsonWriter(memoryStream);
-                element.WriteTo(writer);
-                writer.Flush();
+            var memoryStream = new MemoryStream();
+            using var writer = new Utf8JsonWriter(memoryStream);
+            element.WriteTo(writer);
+            writer.Flush();
 
-                return JsonSerializer.DeserializeAsync(memoryStream, returnType, options, cancellationToken);
-            }
-            catch (Exception exception) when (exception is not InvalidOperationException)
-            {
-                throw new InvalidOperationException("Unable to parse element.", exception);
-            }
+            return JsonSerializer.DeserializeAsync(memoryStream, returnType, options, cancellationToken);
         }
 
         /// <summary>
@@ -313,86 +330,6 @@ namespace Xpandables.Net
             {
                 valueTypeException = exception;
                 result = default;
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Converts string date to <see cref="DateTime"/> type.
-        /// If error, returns an exception.
-        /// </summary>
-        /// <param name="source">A string containing a date and time to convert.</param>
-        /// <param name="provider">An object that supplies culture-specific format information about string.</param>
-        /// <param name="styles"> A bitwise combination of enumeration values that indicates the permitted format
-        /// of string. A typical value to specify is System.Globalization.DateTimeStyles.None.</param>
-        /// <param name="result">An object that is equivalent to the date and time contained in <paramref name="source"/> as specified
-        /// by formats, provider, and style.</param>
-        /// <param name="dateTimeException">The handled exception during conversion.</param>
-        /// <param name="formats">An array of allowable formats of strings.</param>
-        /// <returns>Returns <see langword="true"/> if conversion OK and <see langword="false"/> otherwise.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="provider"/> is null.</exception>
-        public static bool TryToDateTime(
-            this string source,
-            IFormatProvider provider,
-            DateTimeStyles styles,
-            [MaybeNullWhen(returnValue: false)] out DateTime result,
-            [MaybeNullWhen(returnValue: true)] out Exception dateTimeException,
-            params string[] formats)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            _ = provider ?? throw new ArgumentNullException(nameof(provider));
-
-            try
-            {
-                dateTimeException = default;
-                result = DateTime.ParseExact(source, formats, provider, styles);
-                return true;
-            }
-            catch (Exception exception) when (exception is ArgumentException || exception is FormatException)
-            {
-                dateTimeException = exception;
-                result = default;
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Tries to deserialize the JSON string to the specified type.
-        /// The default implementation used the <see cref="System.Text.Json"/> API.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the object to deserialize to.</typeparam>
-        /// <param name="value">The JSON to deserialize.</param>
-        /// <param name="result">The deserialized object from the JSON string.</param>
-        /// <param name="deserializerException">The exception.</param>
-        /// <param name="options">The JSON serializer options.</param>
-        /// <returns><see langword="true"/> if OK, otherwise <see langword="false"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
-        public static bool TryDeserialize<TResult>(this
-            string value,
-            [MaybeNullWhen(false)] out TResult result,
-            [MaybeNullWhen(true)] out Exception deserializerException,
-            JsonSerializerOptions? options = default)
-            where TResult : class
-        {
-            _ = value ?? throw new ArgumentNullException(nameof(value));
-            result = default;
-            deserializerException = default;
-
-            try
-            {
-                result = JsonSerializer.Deserialize<TResult>(value, options);
-                if (result is null)
-                {
-                    deserializerException = new ArgumentNullException(nameof(value), "No result from deserialization.");
-                    return false;
-                }
-
-                return true;
-            }
-            catch (Exception exception) when (exception is JsonException || exception is NotSupportedException)
-            {
-                deserializerException = exception;
                 return false;
             }
         }
