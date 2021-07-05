@@ -40,6 +40,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="criteria">The criteria to be applied to entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An enumerator of <see cref="INotificationEvent{TAggregateId}"/> that can be asynchronously enumerated.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         IAsyncEnumerable<INotificationEvent<TAggregateId>> ReadAllNotificationEventsAsync(
             EventStoreEntityCriteria<NotificationEventStoreEntity> criteria,
             CancellationToken cancellationToken = default);
@@ -59,6 +60,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="criteria">The criteria to be applied to entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the number of notifications  events.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         Task<int> CountNotificationEventsAsync(EventStoreEntityCriteria<NotificationEventStoreEntity> criteria, CancellationToken cancellationToken = default);
     }
 }

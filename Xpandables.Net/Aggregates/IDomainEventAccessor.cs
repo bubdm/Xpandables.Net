@@ -42,6 +42,7 @@ namespace Xpandables.Net.Database
         /// <param name="criteria">The criteria to be applied to entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An enumerator of <see cref="IDomainEvent{TAggregateId}"/> that can be asynchronously enumerated.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadAllDomainEventsAsync(
             EventStoreEntityCriteria<DomainEventStoreEntity> criteria,
             CancellationToken cancellationToken = default);
@@ -61,6 +62,7 @@ namespace Xpandables.Net.Database
         /// <param name="criteria">The criteria to be applied to entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the number of domain  events.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         Task<int> CountDomainEventsAsync(EventStoreEntityCriteria<DomainEventStoreEntity> criteria, CancellationToken cancellationToken = default);
     }
 }

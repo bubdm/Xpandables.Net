@@ -41,6 +41,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="criteria">The criteria to be applied to entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>An enumerator of <see cref="IEmailEvent{TEmailMessage}"/> that can be asynchronously enumerated.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         IAsyncEnumerable<IEmailEvent<TEmailMessage>> ReadAllEmailEventsAsync<TEmailMessage>(
             EventStoreEntityCriteria<EmailEventStoreEntity> criteria,
             CancellationToken cancellationToken = default)

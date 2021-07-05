@@ -54,6 +54,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="aggregateId">The aggregate identifier to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TAggregate"/> type if found or null.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
         Task<TAggregate?> ReadAsync(TAggregateId aggregateId, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -74,6 +75,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="aggregateId">The aggregate identifier to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <typeparamref name="TAggregateId"/> type if found or null.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
         Task<TAggregate?> ReadFromSnapShot(TAggregateId aggregateId, CancellationToken cancellationToken = default);
     }
 }

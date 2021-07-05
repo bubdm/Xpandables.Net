@@ -33,11 +33,12 @@ namespace Xpandables.Net.Aggregates
         /// <summary>
         /// Asynchronously returns the snapshot matching the specified aggregate identifier or null if not found.
         /// </summary>
-        /// <param name="aggreagteId">the aggregate id to search for.</param>
+        /// <param name="aggregateId">the aggregate id to search for.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an object of <see cref="ISnapShot{TAggregateId}"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
         Task<ISnapShot<TAggregateId>?> ReadSnapShotAsync(
-            TAggregateId aggreagteId,
+            TAggregateId aggregateId,
             CancellationToken cancellationToken = default);
 
         /// <summary>
