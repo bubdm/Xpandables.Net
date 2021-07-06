@@ -19,13 +19,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
-using System.Linq;
 
-using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
-using Xpandables.Net.EmailEvents;
-using Xpandables.Net.NotificationEvents;
-using Xpandables.Net.Services;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -35,58 +30,14 @@ namespace Xpandables.Net.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the default <see cref="INotificationEventService"/> type implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationEventService(this IXpandableServiceBuilder services)
-            => services.AddXNotificationEventService<NotificationEventService>();
-
-        /// <summary>
-        /// Adds the default <see cref="IEmailEventService"/> type implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEmailEventService(this IXpandableServiceBuilder services)
-            => services.AddXEmailEventService<EmailEventService>();
-
-        /// <summary>
-        /// Adds the default <see cref="IAggregateAccessor{TAggregateId, TAggregate}"/> implementation 
-        /// to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXAggregateAccessor(this IXpandableServiceBuilder services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped(typeof(IAggregateAccessor<,>), typeof(AggregateAccessor<,>));
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the default <see cref="IEmailEventAccessor{TAggregateId, TAggregate}"/> implementation 
-        /// to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEmailEventAccessor(this IXpandableServiceBuilder services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped(typeof(IEmailEventAccessor<,>), typeof(EmailEventAccessor<,>));
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the default <see cref="IAggregateDataContext"/> implementation to the services with scoped life time.
+        /// Adds the default <see cref="IDomainEventDataContext"/> implementation to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
         /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
         /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXAggregateDataContext(
+        public static IXpandableServiceBuilder AddXDomainEventDataContext(
             this IXpandableServiceBuilder services,
             Action<DbContextOptionsBuilder>? optionsAction = null,
             ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
@@ -94,8 +45,29 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddDbContext<AggregateDataContext>(optionsAction, contextLifetime, optionsLifetime);
-            services.Services.AddScoped<IAggregateDataContext, AggregateDataContext>();
+            services.Services.AddDbContext<DomainEventDataContext>(optionsAction, contextLifetime, optionsLifetime);
+            services.Services.AddScoped<IDomainEventDataContext, DomainEventDataContext>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="INotificationEventDataContext"/> implementation to the services with scoped life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
+        /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
+        /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXNotificationEventDataContext(
+            this IXpandableServiceBuilder services,
+            Action<DbContextOptionsBuilder>? optionsAction = null,
+            ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
+            ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddDbContext<NotificationEventDataContext>(optionsAction, contextLifetime, optionsLifetime);
+            services.Services.AddScoped<INotificationEventDataContext, NotificationEventDataContext>();
             return services;
         }
 
@@ -121,26 +93,47 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <typeparamref name="TAggregateDataContext"/> type as <see cref="IAggregateDataContext"/> 
-        /// implementation to the services with scoped life time.
+        /// Adds the default <see cref="ISnapShotDataContext"/> implementation to the services with scoped life time.
         /// </summary>
-        /// <typeparam name="TAggregateDataContext">The type of the event store data context.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
         /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
         /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXAggregateDataContext<TAggregateDataContext>(
+        public static IXpandableServiceBuilder AddXSnapShotDataContext(
             this IXpandableServiceBuilder services,
             Action<DbContextOptionsBuilder>? optionsAction = null,
             ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
             ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
-            where TAggregateDataContext : AggregateDataContext
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddDbContext<TAggregateDataContext>(optionsAction, contextLifetime, optionsLifetime);
-            services.Services.AddScoped<IAggregateDataContext, TAggregateDataContext>();
+            services.Services.AddDbContext<SnapShotDataContext>(optionsAction, contextLifetime, optionsLifetime);
+            services.Services.AddScoped<ISnapShotDataContext, SnapShotDataContext>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <typeparamref name="TDomainEventDataContext"/> type as <see cref="IDomainEventDataContext"/> 
+        /// implementation to the services with scoped life time.
+        /// </summary>
+        /// <typeparam name="TDomainEventDataContext">The type of the event store data context.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
+        /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
+        /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXDomainEventDataContext<TDomainEventDataContext>(
+            this IXpandableServiceBuilder services,
+            Action<DbContextOptionsBuilder>? optionsAction = null,
+            ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
+            ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
+            where TDomainEventDataContext : DomainEventDataContext
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddDbContext<TDomainEventDataContext>(optionsAction, contextLifetime, optionsLifetime);
+            services.Services.AddScoped<IDomainEventDataContext, TDomainEventDataContext>();
             return services;
         }
 
@@ -169,34 +162,50 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the default <see cref="IEntityAccessor{TEntity}"/> implementation to the services with scope life time.
+        /// Adds the <typeparamref name="TNotificationEventDataContext"/> type as <see cref="INotificationEventDataContext"/> 
+        /// implementation to the services with scoped life time.
         /// </summary>
+        /// <typeparam name="TNotificationEventDataContext">The type of the event store data context.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
+        /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
+        /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEntityAccessor(this IXpandableServiceBuilder services)
+        public static IXpandableServiceBuilder AddXNotificationEventDataContext<TNotificationEventDataContext>(
+            this IXpandableServiceBuilder services,
+            Action<DbContextOptionsBuilder>? optionsAction = null,
+            ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
+            ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
+            where TNotificationEventDataContext : NotificationEventDataContext
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped(typeof(IEntityAccessor<>), typeof(EntityAccessor<>));
+
+            services.Services.AddDbContext<TNotificationEventDataContext>(optionsAction, contextLifetime, optionsLifetime);
+            services.Services.AddScoped<INotificationEventDataContext, TNotificationEventDataContext>();
             return services;
         }
 
         /// <summary>
-        /// Adds the default <see cref="IEntityAccessor{TEntity}"/> implementation to the services with scope life time.
+        /// Adds the <typeparamref name="TSnapShotDataContext"/> type as <see cref="ISnapShotDataContext"/> 
+        /// implementation to the services with scoped life time.
         /// </summary>
+        /// <typeparam name="TSnapShotDataContext">The type of the event store data context.</typeparam>
         /// <param name="services">The collection of services.</param>
-        /// <param name="entityAccessorType">The generic entity accessor that implements <see cref="IEntityAccessor{TEntity}"/> interface.</param>
+        /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
+        /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
+        /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="entityAccessorType"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEntityAccessor(this IXpandableServiceBuilder services, Type entityAccessorType)
+        public static IXpandableServiceBuilder AddXSnapShotDataContext<TSnapShotDataContext>(
+            this IXpandableServiceBuilder services,
+            Action<DbContextOptionsBuilder>? optionsAction = null,
+            ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
+            ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
+            where TSnapShotDataContext : SnapShotDataContext
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
-            _ = entityAccessorType ?? throw new ArgumentNullException(nameof(entityAccessorType));
 
-            if (!entityAccessorType.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityAccessor<>)))
-                throw new ArgumentException(
-                    $"the type '{nameof(entityAccessorType)}' must implement the '{typeof(IEntityAccessor<>).GetNameWithoutGenericArity()}' interface.");
-
-            services.Services.AddScoped(typeof(IEntityAccessor<>), entityAccessorType);
+            services.Services.AddDbContext<TSnapShotDataContext>(optionsAction, contextLifetime, optionsLifetime);
+            services.Services.AddScoped<ISnapShotDataContext, TSnapShotDataContext>();
             return services;
         }
 

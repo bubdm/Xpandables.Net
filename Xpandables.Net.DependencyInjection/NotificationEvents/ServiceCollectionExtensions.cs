@@ -30,6 +30,15 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
+        /// Adds the default <see cref="INotificationEventService"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXNotificationEventService(this IXpandableServiceBuilder services)
+            => services.AddXNotificationEventService<NotificationEventService>();
+
+        /// <summary>
         /// Adds the <see cref="INotificationEventService"/> type implementation to the services with scope life time.
         /// </summary>
         /// <typeparam name="TNotificationEventService">The notification event service type implementation.</typeparam>
@@ -43,23 +52,6 @@ namespace Xpandables.Net.DependencyInjection
 
             services.Services.AddSingleton<INotificationEventService, TNotificationEventService>();
             services.Services.AddHostedService(provider => provider.GetRequiredService<INotificationEventService>() as TNotificationEventService);
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the <see cref="IEmailEventService"/> type implementation to the services with scope life time.
-        /// </summary>
-        /// <typeparam name="TEmailEventService">The email event service type implementation.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEmailEventService<TEmailEventService>(this IXpandableServiceBuilder services)
-            where TEmailEventService : class, IHostedService, IEmailEventService
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.Services.AddSingleton<IEmailEventService, TEmailEventService>();
-            services.Services.AddHostedService(provider => provider.GetRequiredService<IEmailEventService>() as TEmailEventService);
             return services;
         }
 

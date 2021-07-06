@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +15,23 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Text.Json;
 
-namespace Xpandables.Net.Database
+namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Represents a set of commands to manage events for aggregate.
+    /// Represents a set of methods to read/write aggregates from an event store.
     /// </summary>
-    public interface IAggregateDataContext : IDataContext { }
+    public interface IEventAccessor
+    {
+        /// <summary>
+        /// Gets or sets the current <see cref="JsonSerializerOptions"/> to be used for serialization.
+        /// </summary>
+        JsonSerializerOptions? SerializerOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current <see cref="JsonDocumentOptions"/> to be used for <see cref="JsonDocument"/> parsing.
+        /// </summary>
+        JsonDocumentOptions DocumentOptions { get; set; }
+    }
 }

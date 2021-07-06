@@ -23,28 +23,30 @@ using Xpandables.Net.Database.EntityConfigurations;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// The <see cref="EmailEventDataContext"/> data context definition.
+    /// The <see cref="DomainEventDataContext"/> data context definition.
     /// </summary>
-    public class EmailEventDataContext : DataContext, IEmailEventDataContext
+    public class DomainEventDataContext : DataContext, IDomainEventDataContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmailEventDataContext"/> class
+        /// Initializes a new instance of the <see cref="DomainEventDataContext"/> class
         /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
         /// method will still be called to allow further configuration of the options.
         /// </summary>
         /// <param name="contextOptions">The options for this context.</param>
-        public EmailEventDataContext(DbContextOptions contextOptions)
+        public DomainEventDataContext(DbContextOptions contextOptions)
             : base(contextOptions) { }
 
         ///<inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new EmailEventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new DomainEventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationEventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new SnapShotEntityTypeConfiguration());
         }
 
         /// <summary>
-        /// Gets the snapShots collection. Read/Write
+        /// Gets the domain events collection. Read Only.
         /// </summary>
-        public DbSet<EventStoreEntity> EmailEvents { get; set; } = default!;
+        public DbSet<EventStoreEntity> DomainEvents { get; set; } = default!;
     }
 }

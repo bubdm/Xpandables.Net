@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,14 +15,17 @@
  *
 ************************************************************************************************************/
 
-using Xpandables.Net.Aggregates;
-
-namespace Xpandables.Net.Database.EntityConfigurations
+namespace Xpandables.Net
 {
     /// <summary>
-    /// EFCore configuration for notification event.
+    /// The base interface type for an error message.
     /// </summary>
-    public sealed class NotificationEventEntityTypeConfiguration : EventEntityTypeConfiguration<EventStoreEntity>
+    public interface IErrorMessage
     {
+        /// <summary>
+        /// Gets or sets the error message content.
+        /// </summary>
+        string Error { get; set; }
     }
 }
+

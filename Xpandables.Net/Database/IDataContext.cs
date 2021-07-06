@@ -34,6 +34,13 @@ namespace Xpandables.Net.Database
     public interface IDataContext : IDisposable, IAsyncDisposable, IDataContextPersistence
     {
         /// <summary>
+        /// Returns a source of <typeparamref name="T"/> type that can be evaluated against a data source.
+        /// </summary>
+        /// <typeparam name="T">The type of the source.</typeparam>
+        /// <returns></returns>
+        IQueryable<T> Query<T>() where T : class, IEntity;
+
+        /// <summary>
         /// Tries to return an entity of the <typeparamref name="TResult"/> type specified by the selector.
         /// If not found, returns the <see langword="default"/> value of the type.
         /// </summary>

@@ -16,10 +16,12 @@
  *
 ************************************************************************************************************/
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using System;
 
 using Xpandables.Net.EmailEvents;
+using Xpandables.Net.Services;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -28,6 +30,32 @@ namespace Xpandables.Net.DependencyInjection
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds the default <see cref="IEmailEventService"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXEmailEventService(this IXpandableServiceBuilder services)
+            => services.AddXEmailEventService<EmailEventService>();
+
+        /// <summary>
+        /// Adds the <see cref="IEmailEventService"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TEmailEventService">The notification event service type implementation.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXEmailEventService<TEmailEventService>(this IXpandableServiceBuilder services)
+            where TEmailEventService : class, IHostedService, IEmailEventService
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddSingleton<IEmailEventService, TEmailEventService>();
+            services.Services.AddHostedService(provider => provider.GetRequiredService<IEmailEventService>() as TEmailEventService);
+            return services;
+        }
+
         /// <summary>
         /// Adds the specified <see cref="IEmailSender{TEmailMessage}"/> implementation 
         /// to the services with scope life time.

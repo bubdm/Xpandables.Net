@@ -29,7 +29,7 @@ namespace Xpandables.Net.Aggregates
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public interface IEmailEventAccessor<TAggregateId, TAggregate>
+    public interface IEmailEventAccessor<TAggregateId, TAggregate> : IEventAccessor
         where TAggregateId : notnull, IAggregateId
         where TAggregate : notnull, IAggregate<TAggregateId>
     {
@@ -43,7 +43,7 @@ namespace Xpandables.Net.Aggregates
         /// <returns>An enumerator of <see cref="IEmailEvent{TEmailMessage}"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         IAsyncEnumerable<IEmailEvent<TEmailMessage>> ReadAllEmailEventsAsync<TEmailMessage>(
-            EventStoreEntityCriteria<EmailEventStoreEntity> criteria,
+            EventStoreEntityCriteria<EventStoreEntity> criteria,
             CancellationToken cancellationToken = default)
             where TEmailMessage : notnull;
 

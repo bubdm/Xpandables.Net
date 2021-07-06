@@ -21,9 +21,9 @@ using Xpandables.Net.Aggregates;
 namespace Xpandables.Net.Database.EntityConfigurations
 {
     /// <summary>
-    /// EFCore configuration for <see cref="DomainEventStoreEntity"/>.
+    /// EFCore configuration for domain event.
     /// </summary>
-    public sealed class DomainEventEntityTypeConfiguration : EventEntityTypeConfiguration<DomainEventStoreEntity>
+    public sealed class DomainEventEntityTypeConfiguration : EventEntityTypeConfiguration<EventStoreEntity>
     {
     }
 }

@@ -29,7 +29,7 @@ namespace Xpandables.Net.Decorators.Persistences
     /// This class allows the application author to add persistence support to integration event control flow with aggreate.
     /// The target event should implement the <see cref="IAggregatePersistenceDecorator"/>
     /// interface in order to activate the behavior.
-    /// The class decorates the target integration event handler with an implementation of <see cref="IAggregateDataContext"/> and executes the
+    /// The class decorates the target integration event handler with an implementation of <see cref="IDomainEventDataContext"/> and executes the
     /// the <see cref="IDataContextPersistence.SaveChangesAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
@@ -49,7 +49,7 @@ namespace Xpandables.Net.Decorators.Persistences
         /// <param name="decoratee">The decorated integration event handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="dataContext"/> is null.</exception>
-        public AggregateDomainEventPersistenceDecorator(IAggregateDataContext dataContext, IDomainEventHandler<TAggregateId, TDomainEvent> decoratee)
+        public AggregateDomainEventPersistenceDecorator(IDomainEventDataContext dataContext, IDomainEventHandler<TAggregateId, TDomainEvent> decoratee)
             : base(dataContext)
             => _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
 

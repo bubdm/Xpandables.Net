@@ -29,7 +29,7 @@ namespace Xpandables.Net.Aggregates
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public interface INotificationEventAccessor<TAggregateId, TAggregate>
+    public interface INotificationEventAccessor<TAggregateId, TAggregate> : IEventAccessor
         where TAggregateId : notnull, IAggregateId
         where TAggregate : notnull, IAggregate<TAggregateId>
     {
@@ -42,7 +42,7 @@ namespace Xpandables.Net.Aggregates
         /// <returns>An enumerator of <see cref="INotificationEvent{TAggregateId}"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         IAsyncEnumerable<INotificationEvent<TAggregateId>> ReadAllNotificationEventsAsync(
-            EventStoreEntityCriteria<NotificationEventStoreEntity> criteria,
+            EventStoreEntityCriteria<EventStoreEntity> criteria,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -61,6 +61,6 @@ namespace Xpandables.Net.Aggregates
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the number of notifications  events.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        Task<int> CountNotificationEventsAsync(EventStoreEntityCriteria<NotificationEventStoreEntity> criteria, CancellationToken cancellationToken = default);
+        Task<int> CountNotificationEventsAsync(EventStoreEntityCriteria<EventStoreEntity> criteria, CancellationToken cancellationToken = default);
     }
 }

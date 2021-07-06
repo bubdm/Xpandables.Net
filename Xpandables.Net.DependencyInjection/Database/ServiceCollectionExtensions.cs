@@ -18,7 +18,9 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
+using System.Linq;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
 
 namespace Xpandables.Net.DependencyInjection
@@ -28,6 +30,64 @@ namespace Xpandables.Net.DependencyInjection
     /// </summary>
     public static partial class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds the default <see cref="IAggregateAccessor{TAggregateId, TAggregate}"/> implementation 
+        /// to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXAggregateAccessor(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.Services.AddScoped(typeof(IAggregateAccessor<,>), typeof(AggregateAccessor<,>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IEmailEventAccessor{TAggregateId, TAggregate}"/> implementation 
+        /// to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXEmailEventAccessor(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.Services.AddScoped(typeof(IEmailEventAccessor<,>), typeof(EmailEventAccessor<,>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IEntityAccessor{TEntity}"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXEntityAccessor(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.Services.AddScoped(typeof(IEntityAccessor<>), typeof(EntityAccessor<>));
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IEntityAccessor{TEntity}"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="entityAccessorType">The generic entity accessor that implements <see cref="IEntityAccessor{TEntity}"/> interface.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="entityAccessorType"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXEntityAccessor(this IXpandableServiceBuilder services, Type entityAccessorType)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            _ = entityAccessorType ?? throw new ArgumentNullException(nameof(entityAccessorType));
+
+            if (!entityAccessorType.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityAccessor<>)))
+                throw new ArgumentException(
+                    $"the type '{nameof(entityAccessorType)}' must implement the '{typeof(IEntityAccessor<>).GetNameWithoutGenericArity()}' interface.");
+
+            services.Services.AddScoped(typeof(IEntityAccessor<>), entityAccessorType);
+            return services;
+        }
+
         /// <summary>
         /// Adds the <typeparamref name="TDataContext"/> type class reference implementation as <see cref="IDataContext"/> to the services with scoped life time.
         /// Caution : Do not use with multi-tenancy.

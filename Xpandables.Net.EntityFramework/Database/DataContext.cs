@@ -36,6 +36,9 @@ namespace Xpandables.Net.Database
     public abstract partial class DataContext : IDataContext
     {
         ///<inheritdoc/>
+        public virtual IQueryable<T> Query<T>() where T : class, IEntity => Set<T>();
+
+        ///<inheritdoc/>
         public virtual async Task<TResult?> TryFindAsync<T, TResult>(
             Func<IQueryable<T>, IQueryable<TResult>> selector,
             CancellationToken cancellationToken = default)

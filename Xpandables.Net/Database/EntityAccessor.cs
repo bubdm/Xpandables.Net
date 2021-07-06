@@ -22,8 +22,6 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Microsoft.EntityFrameworkCore;
-
 using Xpandables.Net.Entities;
 using Xpandables.Net.Expressions;
 
@@ -37,34 +35,24 @@ namespace Xpandables.Net.Database
     public class EntityAccessor<TEntity> : IEntityAccessor<TEntity>
         where TEntity : class, IEntity
     {
-        /// <summary>
-        /// Gets the current data context.
-        /// </summary>
-        protected readonly DataContext Context;
-
-        /// <summary>
-        /// Gets the current DbSet of the entity type.
-        /// </summary>
-        protected IQueryable<TEntity> Entities { get; set; }
-
-        internal readonly DbSet<TEntity> _entities;
+        private readonly IDataContext _context;
+        private readonly IQueryable<TEntity> _queryable;
 
         /// <summary>
         /// Initializes a new instance of <see cref="EntityAccessor{TEntity}"/> with the context to act on.
         /// </summary>
-        /// <param name="dataContext">The data context to act on.</param>
-        /// <exception cref="ArgumentException">The <paramref name="dataContext"/> must derive from <see cref="EntityAccessor{TEntity}"/>.</exception>
-        public EntityAccessor(IDataContext dataContext)
+        /// <param name="context">The data context to act on.</param>
+        /// <exception cref="ArgumentException">The <paramref name="context"/> must derive from <see cref="EntityAccessor{TEntity}"/>.</exception>
+        public EntityAccessor(IDataContext context)
         {
-            Context = dataContext as DataContext ?? throw new ArgumentException($"Derived {nameof(DataContext)} expected.");
-            Entities = Context.Set<TEntity>();
-            _entities = Context.Set<TEntity>();
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _queryable= _context.Query<TEntity>();
         }
 
         ///<inheritdoc/>
         public virtual async Task<TEntity?> TryFindAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
-            => await Context.TryFindAsync<TEntity, TEntity>(_ =>
-                Entities
+            => await _context.TryFindAsync<TEntity, TEntity>(_ =>
+                _queryable
                     .Where(criteria)
                     .Select(s => s),
                 cancellationToken)
@@ -73,8 +61,8 @@ namespace Xpandables.Net.Database
         ///<inheritdoc/>
         public virtual async Task<TResult?> TryFindAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
             Expression<Func<TEntity, TResult>> select, CancellationToken cancellationToken = default)
-            => await Context.TryFindAsync<TEntity, TResult>(_ =>
-                Entities
+            => await _context.TryFindAsync<TEntity, TResult>(_ =>
+                _queryable
                     .Where(criteria)
                     .Select(select),
                 cancellationToken)
@@ -83,8 +71,8 @@ namespace Xpandables.Net.Database
         ///<inheritdoc/>
         public virtual IAsyncEnumerable<TResult> FetchAllAsync<TResult>(Expression<Func<TEntity, bool>> criteria,
             Expression<Func<TEntity, TResult>> select, CancellationToken cancellationToken = default)
-            => Context.FetchAllAsync<TEntity, TResult>(_ =>
-                _entities
+            => _context.FetchAllAsync<TEntity, TResult>(_ =>
+                _queryable
                     .Where(criteria)
                     .Select(select),
                 cancellationToken);
@@ -93,27 +81,27 @@ namespace Xpandables.Net.Database
         public virtual async Task<int> CountAsync(
             Expression<Func<TEntity, bool>> predicate,
             CancellationToken cancellationToken = default)
-            => await Entities
+            => await _context
                 .CountAsync(predicate, cancellationToken)
                 .ConfigureAwait(false);
 
         ///<inheritdoc/>
         public virtual async Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
-            => await Context.InsertAsync(
+            => await _context.InsertAsync(
                 entity,
                 cancellationToken)
             .ConfigureAwait(false);
 
         ///<inheritdoc/>
         public virtual async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
-            => await Context.UpdateAsync(
+            => await _context.UpdateAsync(
                 entity,
                 cancellationToken)
             .ConfigureAwait(false);
 
         ///<inheritdoc/>
         public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-            => await Context.DeleteAsync(predicate, cancellationToken).ConfigureAwait(false);
+            => await _context.DeleteAsync(predicate, cancellationToken).ConfigureAwait(false);
 
         private bool _disposedValue;
 

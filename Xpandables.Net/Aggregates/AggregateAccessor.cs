@@ -15,8 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.EntityFrameworkCore;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +31,7 @@ using Xpandables.Net.NotificationEvents;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// The EFCore implementation of <see cref="IAggregateAccessor{TAggregateId, TAggregate}"/>.
+    /// The implementation of <see cref="IAggregateAccessor{TAggregateId, TAggregate}"/>.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
@@ -44,7 +42,10 @@ namespace Xpandables.Net.Database
         where TAggregateId : notnull, AggregateId
     {
 
-        private readonly AggregateDataContext _context;
+        private readonly IDomainEventDataContext _domainEventContext;
+        private readonly INotificationEventDataContext _notificationEventContext;
+        private readonly ISnapShotDataContext _snapShotDataContext;
+
         private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly IInstanceCreator _instanceCreator;
 
@@ -57,16 +58,21 @@ namespace Xpandables.Net.Database
         /// <summary>
         /// Constructs a new instance of <see cref="AggregateAccessor{TAggregateId, TAggregate}"/>.
         /// </summary>
-        /// <param name="context">The target aggregate context.</param>
+        /// <param name="domainEventContext">The target domain event context.</param>
+        /// <param name="notificationEventContext">The target notification event context.</param>
+        /// <param name="snapShotDataContext">The target snapShot context.</param>
         /// <param name="domainEventPublisher">The target domain event publisher.</param>
         /// <param name="instanceCreator">The instance creator.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
         public AggregateAccessor(
-            IAggregateDataContext context,
+            IDomainEventDataContext domainEventContext,
+            INotificationEventDataContext notificationEventContext,
+            ISnapShotDataContext snapShotDataContext,
             IDomainEventPublisher domainEventPublisher,
             IInstanceCreator instanceCreator)
         {
-            _context = (AggregateDataContext)context;
+            _domainEventContext = domainEventContext ?? throw new ArgumentNullException(nameof(domainEventContext));
+            _notificationEventContext = notificationEventContext ?? throw new ArgumentNullException(nameof(notificationEventContext));
+            _snapShotDataContext = snapShotDataContext ?? throw new ArgumentNullException(nameof(snapShotDataContext));
             _domainEventPublisher = domainEventPublisher ?? throw new ArgumentNullException(nameof(domainEventPublisher));
             _instanceCreator = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
         }
@@ -78,14 +84,13 @@ namespace Xpandables.Net.Database
 
             if (aggregate is not IDomainEventSourcing<TAggregateId> aggregateEventSourcing)
                 throw new ArgumentException($"{typeof(TAggregate).Name} must " +
-                    $"implement {nameof(Aggregate<TAggregateId>)}");
+                    $"implement {nameof(IDomainEventSourcing<TAggregateId>)}");
 
             foreach (var @event in aggregateEventSourcing.GetUncommittedEvents())
             {
-                var entity = EventStoreEntity.From<TAggregateId, TAggregate, DomainEventStoreEntity>(
-                    @event, SerializerOptions, DocumentOptions);
+                var entity = EventStoreEntity.From<TAggregateId, TAggregate>(@event, SerializerOptions, DocumentOptions);
 
-                await _context.DomainEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+                await _domainEventContext.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
 
                 await _domainEventPublisher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
             }
@@ -94,10 +99,9 @@ namespace Xpandables.Net.Database
             {
                 foreach (var @event in aggregateOutbox.GetNotifications())
                 {
-                    var entity = EventStoreEntity.From<TAggregateId, TAggregate, NotificationEventStoreEntity>(
-                        @event, SerializerOptions, DocumentOptions);
+                    var entity = EventStoreEntity.From<TAggregateId, TAggregate>(@event, SerializerOptions, DocumentOptions);
 
-                    await _context.NotificationEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+                    await _notificationEventContext.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
                 }
 
                 aggregateOutbox.MarkNotificationsAsCommitted();
@@ -114,9 +118,9 @@ namespace Xpandables.Net.Database
             var aggregate = CreateInstance();
             if (aggregate is not IDomainEventSourcing<TAggregateId> aggregateEventSourcing)
                 throw new InvalidOperationException($"{typeof(TAggregate).Name} " +
-                    $"must implement {nameof(Aggregate<TAggregateId>)}");
+                    $"must implement {nameof(IDomainEventSourcing<TAggregateId>)}");
 
-            var criteria = new EventStoreEntityCriteria<DomainEventStoreEntity>
+            var criteria = new EventStoreEntityCriteria<EventStoreEntity>
             {
                 AggregateId = aggregateId.AsString()
             };
@@ -133,17 +137,17 @@ namespace Xpandables.Net.Database
 
         ///<inheritdoc/>
         public virtual async IAsyncEnumerable<IDomainEvent<TAggregateId>> ReadAllDomainEventsAsync(
-             EventStoreEntityCriteria<DomainEventStoreEntity> criteria,
+             EventStoreEntityCriteria<EventStoreEntity> criteria,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             _ = criteria ?? throw new ArgumentNullException(nameof(criteria));
 
-            IQueryable<DomainEventStoreEntity> selector
+            IQueryable<EventStoreEntity> selector
                 = criteria.Count is not null
-                    ? _context.DomainEvents.Where(criteria).OrderBy(o => o.CreatedOn).Take(criteria.Count.Value)
-                    : _context.DomainEvents.Where(criteria).OrderBy(o => o.CreatedOn);
+                    ? _domainEventContext.Query<EventStoreEntity>().Where(criteria).OrderBy(o => o.CreatedOn).Take(criteria.Count.Value)
+                    : _domainEventContext.Query<EventStoreEntity>().Where(criteria).OrderBy(o => o.CreatedOn);
 
-            await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
+            await foreach (var entity in _domainEventContext.FetchAllAsync<EventStoreEntity, EventStoreEntity>(_ => selector, cancellationToken))
             {
                 if (entity.ToObject(SerializerOptions) is IDomainEvent<TAggregateId> @event)
                     yield return @event;
@@ -155,10 +159,9 @@ namespace Xpandables.Net.Database
             IDomainEvent<TAggregateId> @event,
             CancellationToken cancellationToken = default)
         {
-            var entity = EventStoreEntity.From<TAggregateId, TAggregate, DomainEventStoreEntity>(
-                @event, SerializerOptions, DocumentOptions);
+            var entity = EventStoreEntity.From<TAggregateId, TAggregate>(@event, SerializerOptions, DocumentOptions);
 
-            await _context.DomainEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            await _domainEventContext.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
@@ -166,17 +169,16 @@ namespace Xpandables.Net.Database
             TAggregateId aggreagteId,
             CancellationToken cancellationToken = default)
         {
-            var criteria = new EventStoreEntityCriteria<SnapShotStoreEntity>()
+            var criteria = new EventStoreEntityCriteria<EventStoreEntity>()
             {
                 AggregateId = aggreagteId,
                 EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() != -1
             };
 
-            var result = await _context.SnapShotEvents
-                .AsNoTracking()
-                .Where(criteria)
-                .OrderBy(o => o.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64())
-                .FirstOrDefaultAsync(cancellationToken)
+            var result = await _snapShotDataContext.TryFindAsync((IQueryable<EventStoreEntity> query) =>
+                 query.Where(criteria)
+                 .OrderBy(o => o.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64())
+                 .Select(entity => entity), cancellationToken)
                 .ConfigureAwait(false);
 
             return result is not null ? result.ToObject(SerializerOptions) as ISnapShot<TAggregateId> : default;
@@ -213,27 +215,28 @@ namespace Xpandables.Net.Database
                     $"implement '{nameof(IOriginator)}' interface");
 
             long version = aggregate.Version;
-            var criteria = new EventStoreEntityCriteria<SnapShotStoreEntity>
+            var criteria = new EventStoreEntityCriteria<EventStoreEntity>
             {
                 AggregateId = aggregate.AggregateId,
                 EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() == version
             };
 
-            var oldSnapShot = await _context.SnapShotEvents
+            var oldSnapShot = await _snapShotDataContext.TryFindAsync((IQueryable<EventStoreEntity> query) =>
+                query
                 .Where(criteria)
-                .FirstOrDefaultAsync(cancellationToken)
+                .Select(entity => entity), cancellationToken)
                 .ConfigureAwait(false);
 
             if (oldSnapShot is not null)
-                _context.SnapShotEvents.Remove(oldSnapShot);
+                await _snapShotDataContext.DeleteAsync<EventStoreEntity>(entity => entity.Id == oldSnapShot.Id, cancellationToken)
+                    .ConfigureAwait(false);
 
             var snapShot = new SnapShot<TAggregateId>(
                 originator.CreateMemento(), aggregate.AggregateId, aggregate.Version);
 
-            var entity = EventStoreEntity.From<TAggregateId, TAggregate, SnapShotStoreEntity>(
-                snapShot, SerializerOptions, DocumentOptions);
+            var entity = EventStoreEntity.From<TAggregateId, TAggregate>(snapShot, SerializerOptions, DocumentOptions);
 
-            await _context.SnapShotEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            await _snapShotDataContext.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
@@ -245,7 +248,7 @@ namespace Xpandables.Net.Database
 
             long snapShotVersion = snapShot?.Version ?? -1;
 
-            var criteria = new EventStoreEntityCriteria<DomainEventStoreEntity>
+            var criteria = new EventStoreEntityCriteria<EventStoreEntity>
             {
                 AggregateId = aggregateId,
                 EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() > snapShotVersion
@@ -267,31 +270,31 @@ namespace Xpandables.Net.Database
 
             long snapShotVersion = snapShot?.Version ?? 0;
 
-            var criteria = new EventStoreEntityCriteria<DomainEventStoreEntity>
+            var criteria = new EventStoreEntityCriteria<EventStoreEntity>
             {
                 AggregateId = aggregateId,
                 EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() > snapShotVersion
             };
 
-            return await _context.DomainEvents
-                .CountAsync(criteria, cancellationToken)
+            return await _domainEventContext
+                .CountAsync<EventStoreEntity>(criteria, cancellationToken)
                 .ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
         public virtual async Task<int> CountDomainEventsAsync(
-            EventStoreEntityCriteria<DomainEventStoreEntity> criteria,
+            EventStoreEntityCriteria<EventStoreEntity> criteria,
             CancellationToken cancellationToken = default)
-            => await _context.DomainEvents
-                .CountAsync(criteria, cancellationToken)
+            => await _domainEventContext
+                .CountAsync<EventStoreEntity>(criteria, cancellationToken)
                 .ConfigureAwait(false);
 
         ///<inheritdoc/>
         public virtual async Task<int> CountNotificationEventsAsync(
-            EventStoreEntityCriteria<NotificationEventStoreEntity> criteria,
+            EventStoreEntityCriteria<EventStoreEntity> criteria,
             CancellationToken cancellationToken = default)
-            => await _context.NotificationEvents
-                .CountAsync(criteria, cancellationToken)
+            => await _notificationEventContext
+                .CountAsync<EventStoreEntity>(criteria, cancellationToken)
                 .ConfigureAwait(false);
 
         ///<inheritdoc/>
@@ -299,25 +302,24 @@ namespace Xpandables.Net.Database
             INotificationEvent<TAggregateId> @event,
             CancellationToken cancellationToken = default)
         {
-            var entity = EventStoreEntity.From<TAggregateId, TAggregate, NotificationEventStoreEntity>(
-                @event, SerializerOptions, DocumentOptions);
+            var entity = EventStoreEntity.From<TAggregateId, TAggregate>(@event, SerializerOptions, DocumentOptions);
 
-            await _context.NotificationEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            await _notificationEventContext.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
         public virtual async IAsyncEnumerable<INotificationEvent<TAggregateId>> ReadAllNotificationEventsAsync(
-            EventStoreEntityCriteria<NotificationEventStoreEntity> criteria,
+            EventStoreEntityCriteria<EventStoreEntity> criteria,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             _ = criteria ?? throw new ArgumentNullException(nameof(criteria));
 
             IQueryable<EventStoreEntity> selector
                 = criteria.Count is not null
-                    ? _context.NotificationEvents.Where(criteria).OrderBy(o => o.CreatedOn).Take(criteria.Count.Value)
-                    : _context.NotificationEvents.Where(criteria).OrderBy(o => o.CreatedOn);
+                    ? _notificationEventContext.Query<EventStoreEntity>().Where(criteria).OrderBy(o => o.CreatedOn).Take(criteria.Count.Value)
+                    : _notificationEventContext.Query<EventStoreEntity>().Where(criteria).OrderBy(o => o.CreatedOn);
 
-            await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
+            await foreach (var entity in _notificationEventContext.FetchAllAsync<EventStoreEntity, EventStoreEntity>(_ => selector, cancellationToken))
             {
                 if (entity.ToObject(SerializerOptions) is INotificationEvent<TAggregateId> @event)
                     yield return @event;

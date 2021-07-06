@@ -21,9 +21,9 @@ using Xpandables.Net.Aggregates;
 namespace Xpandables.Net.Database.EntityConfigurations
 {
     /// <summary>
-    /// EFCore configuration for <see cref="EmailEventStoreEntity"/>.
+    /// EFCore configuration for email event.
     /// </summary>
-    public sealed class EmailEventEntityTypeConfiguration : EventEntityTypeConfiguration<EmailEventStoreEntity>
+    public sealed class EmailEventEntityTypeConfiguration : EventEntityTypeConfiguration<EventStoreEntity>
     {
     }
 }

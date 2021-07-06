@@ -15,7 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
@@ -25,25 +24,26 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net;
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Database;
 using Xpandables.Net.Services;
 
-namespace Xpandables.Net.EmailEvents
+namespace Xpandables.Net.NotificationEvents
 {
     /// <summary>
-    /// The default implementation of <see cref="IEmailEventService"/>.
+    /// The default implementation of <see cref="INotificationEventService"/>.
     /// You can derive from this class to customize its behaviors or implement your own.
     /// </summary>
-    public class EmailEventService : BackgroundServiceBase<EmailEventService>, IEmailEventService
+    public class NotificationEventService : BackgroundServiceBase<NotificationEventService>, INotificationEventService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="EmailEventService"/>.
+        /// Constructs a new instance of <see cref="NotificationEventService"/>.
         /// </summary>
         /// <param name="serviceScopeFactory">the scope factory.</param>
-        public EmailEventService(IServiceScopeFactory serviceScopeFactory)
+        public NotificationEventService(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
         }
@@ -51,7 +51,7 @@ namespace Xpandables.Net.EmailEvents
         ///<inheritdoc/>
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            return SendPendingEmailEventsAsync(stoppingToken);
+            return PublishPendingNotificationEventsAsync(stoppingToken);
         }
 
         /// <summary>
@@ -61,11 +61,13 @@ namespace Xpandables.Net.EmailEvents
         /// <returns>A 60s timespan.</returns>
         protected virtual TimeSpan GetTimeSpanDelay() => TimeSpan.FromSeconds(60);
 
+
         /// <summary>
         /// Returns the criteria to search for pending notification events.
         /// </summary>
         /// <returns>An instance of <see cref="EventStoreEntityCriteria{TEventStoreEntity}"/>.</returns>
-        protected virtual EventStoreEntityCriteria<EmailEventStoreEntity> GetEmailEventStoreEntityCriteria()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
+        protected EventStoreEntityCriteria<EventStoreEntity> GetNotificationEventStoreEntityCriteria()
             => new()
             {
                 IsDeleted = false,
@@ -74,29 +76,29 @@ namespace Xpandables.Net.EmailEvents
             };
 
         /// <summary>
-        /// Sends pending email events.
+        /// Publishes pending notification events.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        protected virtual async Task SendPendingEmailEventsAsync(CancellationToken cancellationToken)
+        protected virtual async Task PublishPendingNotificationEventsAsync(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
                 await Task.Yield();
                 using var scope = _serviceScopeFactory.CreateScope();
 
-                var emailDataContext = (EmailEventDataContext)scope.ServiceProvider.GetRequiredService<IEmailEventDataContext>();
-                var emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
+                var notificationDataContext = scope.ServiceProvider.GetRequiredService<INotificationEventDataContext>();
+                var notificationEventPublisher = scope.ServiceProvider.GetRequiredService<INotificationEventPublisher>();
 
                 var count = 0;
-                var emailEvents = await FetchPendingEmailEventsAsync(emailDataContext).ConfigureAwait(false);
+                var notificationEvents = await FetchPendingNotificationsAsync(notificationDataContext).ConfigureAwait(false);
 
-                foreach (var emailEvent in emailEvents)
+                foreach (var notificationEvent in notificationEvents)
                 {
-                    if (await TrySendEmailAsync(
-                        emailEvent,
-                        emailSender,
-                        emailDataContext)
+                    if (await TryPublishAsync(
+                        notificationEvent,
+                        notificationEventPublisher,
+                        notificationDataContext)
                         .ConfigureAwait(false))
                     {
                         count++;
@@ -104,42 +106,45 @@ namespace Xpandables.Net.EmailEvents
                 }
 
                 if (count > 0)
-                    await emailDataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                    await notificationDataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
                 await Task.Delay(GetTimeSpanDelay(), cancellationToken).ConfigureAwait(false);
             }
         }
 
         /// <summary>
-        /// Fetches pending email events matching the <see cref="GetEmailEventStoreEntityCriteria"/>.
+        /// Fetches pending notification events matching the <see cref="GetNotificationEventStoreEntityCriteria"/>.
         /// </summary>
         /// <param name="context">The data context to act on.</param>
         /// <returns>A collection of <see cref="EventStoreEntity"/> matching the criteria.</returns>
-        protected virtual async Task<List<EmailEventStoreEntity>> FetchPendingEmailEventsAsync(EmailEventDataContext context)
+        protected virtual async Task<List<EventStoreEntity>> FetchPendingNotificationsAsync(INotificationEventDataContext context)
         {
-            var criteria = GetEmailEventStoreEntityCriteria();
+            var criteria = GetNotificationEventStoreEntityCriteria();
+            var results = new List<EventStoreEntity>();
 
-            return await context.EmailEvents
-                    .AsNoTracking()
+            await foreach (var entity in context.FetchAllAsync((IQueryable<EventStoreEntity> query) =>
+                    query
                     .Where(criteria)
                     .OrderBy(o => o.CreatedOn)
-                    .Take(criteria.Count ?? 0)
-                    .ToListAsync()
-                    .ConfigureAwait(false);
+                    .Take(criteria.Count ?? 50))
+                   .ConfigureAwait(false))
+                results.Add(entity);
+
+            return results;
         }
 
 
         /// <summary>
-        /// Tries to send the email found in the entity.
+        /// Tries to publish the notification found in the entity.
         /// </summary>
         /// <param name="entity">The target entity to act on.</param>
-        /// <param name="emailSender">The email sender to act with.</param>
+        /// <param name="notificationEventPublisher">The notification event publisher to act with.</param>
         /// <param name="context">The data context to act on.</param>
         /// <returns>A task that represents an asynchronous boolean operation.</returns>
-        protected virtual async Task<bool> TrySendEmailAsync(
-            EmailEventStoreEntity entity,
-            IEmailSender emailSender,
-            EmailEventDataContext context)
+        protected virtual async Task<bool> TryPublishAsync(
+            EventStoreEntity entity,
+            INotificationEventPublisher notificationEventPublisher,
+            INotificationEventDataContext context)
         {
             try
             {
@@ -147,15 +152,16 @@ namespace Xpandables.Net.EmailEvents
                 if (type is null)
                     return false;
 
-                if (entity.ToObject(type) is not IEmailEvent @event)
+                if (entity.ToObject(type) is not IEvent @event)
                     return false;
 
-                await emailSender.SendEmailAsync(@event).ConfigureAwait(false);
+                // you can use an event bus or other
+                await notificationEventPublisher.PublishAsync(@event).ConfigureAwait(false);
 
                 entity.Deactivated();
                 entity.Deleted();
 
-                context.EmailEvents.Update(entity);
+                await context.UpdateAsync(entity).ConfigureAwait(false);
 
                 return true;
             }

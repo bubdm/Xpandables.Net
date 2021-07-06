@@ -15,8 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Microsoft.EntityFrameworkCore;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +29,7 @@ using Xpandables.Net.EmailEvents;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// The EFCore implementation of <see cref="IEmailEventAccessor{TAggregateId, TAggregate}"/>.
+    /// The implementation of <see cref="IEmailEventAccessor{TAggregateId, TAggregate}"/>.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
@@ -42,7 +40,7 @@ namespace Xpandables.Net.Database
         where TAggregateId : notnull, AggregateId
     {
 
-        private readonly EmailEventDataContext _context;
+        private readonly IEmailEventDataContext _context;
 
         ///<inheritdoc/>
         public JsonSerializerOptions? SerializerOptions { get; set; } = new() { PropertyNameCaseInsensitive = true };
@@ -51,15 +49,15 @@ namespace Xpandables.Net.Database
         public JsonDocumentOptions DocumentOptions { get; set; } = default;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="AggregateAccessor{TAggregateId, TAggregate}"/>.
+        /// Constructs a new instance of <see cref="EmailEventAccessor{TAggregateId, TAggregate}"/>.
         /// </summary>
         /// <param name="context">The target aggregate context.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public EmailEventAccessor(IAggregateDataContext context) => _context = (EmailEventDataContext)context;
+        public EmailEventAccessor(IEmailEventDataContext context) => _context = context;
 
         ///<inheritdoc/>
         public virtual async IAsyncEnumerable<IEmailEvent<TEmailMessage>> ReadAllEmailEventsAsync<TEmailMessage>(
-             EventStoreEntityCriteria<EmailEventStoreEntity> criteria,
+             EventStoreEntityCriteria<EventStoreEntity> criteria,
              [EnumeratorCancellation] CancellationToken cancellationToken = default)
             where TEmailMessage : notnull
         {
@@ -67,10 +65,10 @@ namespace Xpandables.Net.Database
 
             IQueryable<EventStoreEntity> selector
                 = criteria.Count is not null
-                    ? _context.EmailEvents.Where(criteria).OrderBy(o => o.CreatedOn).Take(criteria.Count.Value)
-                    : _context.EmailEvents.Where(criteria).OrderBy(o => o.CreatedOn);
+                    ? _context.Query<EventStoreEntity>().Where(criteria).OrderBy(o => o.CreatedOn).Take(criteria.Count.Value)
+                    : _context.Query<EventStoreEntity>().Where(criteria).OrderBy(o => o.CreatedOn);
 
-            await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
+            await foreach (var entity in _context.FetchAllAsync<EventStoreEntity, EventStoreEntity>(_ => selector, cancellationToken))
             {
                 if (entity.ToObject(SerializerOptions) is IEmailEvent<TEmailMessage> @event)
                     yield return @event;
@@ -82,10 +80,10 @@ namespace Xpandables.Net.Database
             IEmailEvent<TEmailMessage> @event, CancellationToken cancellationToken = default)
             where TEmailMessage : notnull
         {
-            var entity = EventStoreEntity.From<TAggregateId, TAggregate, EmailEventStoreEntity>(
+            var entity = EventStoreEntity.From<TAggregateId, TAggregate>(
                 @event, SerializerOptions, DocumentOptions);
 
-            await _context.EmailEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            await _context.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
         }
     }
 }

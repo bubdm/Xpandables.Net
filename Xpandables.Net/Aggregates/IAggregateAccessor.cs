@@ -31,21 +31,11 @@ namespace Xpandables.Net.Aggregates
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public interface IAggregateAccessor<TAggregateId, TAggregate> :
+    public interface IAggregateAccessor<TAggregateId, TAggregate> : IEventAccessor,
         ISnapShotAccessor<TAggregateId, TAggregate>, IDomainEventAccessor<TAggregateId, TAggregate>, INotificationEventAccessor<TAggregateId, TAggregate>
         where TAggregate : class, IAggregate<TAggregateId>
         where TAggregateId : notnull, IAggregateId
     {
-        /// <summary>
-        /// Gets or sets the current <see cref="JsonSerializerOptions"/> to be used for serialization.
-        /// </summary>
-        JsonSerializerOptions? SerializerOptions { get; set; }
-
-        /// <summary>
-        /// Gets or sets the current <see cref="JsonDocumentOptions"/> to be used for <see cref="JsonDocument"/> parsing.
-        /// </summary>
-        JsonDocumentOptions DocumentOptions { get; set; }
-
         /// <summary>
         /// Asynchronously returns the <typeparamref name="TAggregate"/> aggregate that matches the 
         /// specified aggregate identifier.

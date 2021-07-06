@@ -61,21 +61,6 @@ namespace Xpandables.Net.Database
         }
 
         /// <summary>
-        /// Represents a <see cref="DbSet{TEntity}"/> that can be used to query and save instances of <typeparamref name="TEntity"/>.
-        /// LINQ queries against a <see cref="DbSet{TEntity}"/> will be translated into queries against the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of entity being operated on by this set.</typeparam>
-        /// <param name="entityAccessor">The target instance of entity accessor.</param>
-        /// <returns>An instance of <see cref="DbSet{TEntity}"/> for the specific type.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="entityAccessor"/> is null.</exception>
-        public static DbSet<TEntity> Set<TEntity>(this IEntityAccessor<TEntity> entityAccessor)
-            where TEntity : class, IEntity
-        {
-            _ = entityAccessor ?? throw new ArgumentNullException(nameof(entityAccessor));
-            return ((EntityAccessor<TEntity>)entityAccessor)._entities;
-        }
-
-        /// <summary>
         /// Specifies the converter to be used for the generic property type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The generic target <typeparamref name="T"/> to act on.</typeparam>

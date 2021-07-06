@@ -23,28 +23,28 @@ using Xpandables.Net.Database.EntityConfigurations;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// The <see cref="EmailEventDataContext"/> data context definition.
+    /// The <see cref="SnapShotDataContext"/> data context definition.
     /// </summary>
-    public class EmailEventDataContext : DataContext, IEmailEventDataContext
+    public class SnapShotDataContext : DataContext, ISnapShotDataContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmailEventDataContext"/> class
+        /// Initializes a new instance of the <see cref="SnapShotDataContext"/> class
         /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
         /// method will still be called to allow further configuration of the options.
         /// </summary>
         /// <param name="contextOptions">The options for this context.</param>
-        public EmailEventDataContext(DbContextOptions contextOptions)
+        public SnapShotDataContext(DbContextOptions contextOptions)
             : base(contextOptions) { }
 
         ///<inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new EmailEventEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new SnapShotEntityTypeConfiguration());
         }
 
         /// <summary>
         /// Gets the snapShots collection. Read/Write
         /// </summary>
-        public DbSet<EventStoreEntity> EmailEvents { get; set; } = default!;
+        public DbSet<EventStoreEntity> SnapShotEvents { get; set; } = default!;
     }
 }

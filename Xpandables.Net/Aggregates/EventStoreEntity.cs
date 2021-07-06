@@ -31,15 +31,14 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Represents an event entity to be written.
     /// </summary>
-    public abstract class EventStoreEntity : Entity, IDisposable
+    public class EventStoreEntity : Entity, IDisposable
     {
         /// <summary>
         /// Creates a new instance of <see cref="EventStoreEntity"/> from the event of aggregate.
-        /// The method will serialize the specified argument to <see cref="JsonDocument"/>.
+        /// The method will serialize the specified event to <see cref="JsonDocument"/>.
         /// </summary>
         /// <typeparam name="TAggregateId">The type of the target aggregate id.</typeparam>
         /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-        /// <typeparam name="TEventStoreEntity"></typeparam>
         /// <param name="event">The event to act on.</param>
         /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
         /// <param name="documentOptions">Options to control the reader behavior during parsing.</param>
@@ -49,13 +48,12 @@ namespace Xpandables.Net.Aggregates
         /// or JsonDocument options contains unsupported options.</exception>
         /// <exception cref="NotSupportedException">There is no compatible JsonConverter for inputType or its serializable members.</exception>
         /// <exception cref="JsonException">The json does not represent a valid single JSON value.</exception>
-        public static TEventStoreEntity From<TAggregateId, TAggregate, TEventStoreEntity>(
+        public static EventStoreEntity From<TAggregateId, TAggregate>(
             IEvent @event,
             JsonSerializerOptions? serializerOptions = default,
             JsonDocumentOptions documentOptions = default)
             where TAggregate : class, IAggregate<TAggregateId>
             where TAggregateId : class, IAggregateId
-            where TEventStoreEntity : EventStoreEntity, new()
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
@@ -64,20 +62,10 @@ namespace Xpandables.Net.Aggregates
             var eventTypeFullName = @event.GetType().AssemblyQualifiedName!;
             var eventTypeName = @event.GetType().GetNameWithoutGenericArity();
 
-            string eventString;
-            JsonDocument eventData;
+            var eventString = JsonSerializer.Serialize(@event, @event.GetType(), serializerOptions);
+            var eventData = JsonDocument.Parse(eventString, documentOptions);
 
-            eventString = JsonSerializer.Serialize(@event, @event.GetType(), serializerOptions);
-            eventData = JsonDocument.Parse(eventString, documentOptions);
-
-            return new()
-            {
-                AggregateId = aggregateId,
-                AggregateTypeName = aggregateTypeName,
-                EventTypeFullName = eventTypeFullName,
-                EventTypeName = eventTypeName,
-                EventData = eventData
-            };
+            return new(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
         }
 
         /// <summary>
@@ -183,15 +171,6 @@ namespace Xpandables.Net.Aggregates
             EventTypeFullName = eventTypeFullName ?? throw new ArgumentNullException(nameof(eventTypeFullName));
             EventTypeName = eventTypeName ?? throw new ArgumentNullException(nameof(eventTypeName));
             EventData = eventData ?? throw new ArgumentNullException(nameof(eventData));
-        }
-
-        internal EventStoreEntity()
-        {
-            AggregateId = default!;
-            AggregateTypeName = default!;
-            EventTypeFullName = default!;
-            EventTypeName = default!;
-            EventData = default!;
         }
 
         ///<inheritdoc/>

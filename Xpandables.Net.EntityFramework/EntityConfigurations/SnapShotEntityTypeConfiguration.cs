@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +20,9 @@ using Xpandables.Net.Aggregates;
 namespace Xpandables.Net.Database.EntityConfigurations
 {
     /// <summary>
-    /// EFCore configuration for <see cref="SnapShotStoreEntity"/>.
+    /// EFCore configuration for snapShot entity.
     /// </summary>
-    public sealed class SnapShotEntityTypeConfiguration : EventEntityTypeConfiguration<SnapShotStoreEntity>
+    public sealed class SnapShotEntityTypeConfiguration : EventEntityTypeConfiguration<EventStoreEntity>
     {
     }
 }
