@@ -66,6 +66,19 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the default <see cref="IEmailEventAccessor{TAggregateId, TAggregate}"/> implementation 
+        /// to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXEmailEventAccessor(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+            services.Services.AddScoped(typeof(IEmailEventAccessor<,>), typeof(EmailEventAccessor<,>));
+            return services;
+        }
+
+        /// <summary>
         /// Adds the default <see cref="IAggregateDataContext"/> implementation to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -83,6 +96,27 @@ namespace Xpandables.Net.DependencyInjection
 
             services.Services.AddDbContext<AggregateDataContext>(optionsAction, contextLifetime, optionsLifetime);
             services.Services.AddScoped<IAggregateDataContext, AggregateDataContext>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IEmailEventDataContext"/> implementation to the services with scoped life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
+        /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
+        /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXEmailEventDataContext(
+            this IXpandableServiceBuilder services,
+            Action<DbContextOptionsBuilder>? optionsAction = null,
+            ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
+            ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddDbContext<EmailEventDataContext>(optionsAction, contextLifetime, optionsLifetime);
+            services.Services.AddScoped<IEmailEventDataContext, EmailEventDataContext>();
             return services;
         }
 
@@ -107,6 +141,30 @@ namespace Xpandables.Net.DependencyInjection
 
             services.Services.AddDbContext<TAggregateDataContext>(optionsAction, contextLifetime, optionsLifetime);
             services.Services.AddScoped<IAggregateDataContext, TAggregateDataContext>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <typeparamref name="TEmailEventDataContext"/> type as <see cref="IEmailEventDataContext"/> 
+        /// implementation to the services with scoped life time.
+        /// </summary>
+        /// <typeparam name="TEmailEventDataContext">The type of the event store data context.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
+        /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
+        /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXEmailEventDataContext<TEmailEventDataContext>(
+            this IXpandableServiceBuilder services,
+            Action<DbContextOptionsBuilder>? optionsAction = null,
+            ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
+            ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
+            where TEmailEventDataContext : EmailEventDataContext
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddDbContext<TEmailEventDataContext>(optionsAction, contextLifetime, optionsLifetime);
+            services.Services.AddScoped<IEmailEventDataContext, TEmailEventDataContext>();
             return services;
         }
 

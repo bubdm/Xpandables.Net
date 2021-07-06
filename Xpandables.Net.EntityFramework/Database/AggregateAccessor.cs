@@ -28,7 +28,6 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.DomainEvents;
-using Xpandables.Net.EmailEvents;
 using Xpandables.Net.NotificationEvents;
 
 namespace Xpandables.Net.Database
@@ -323,37 +322,6 @@ namespace Xpandables.Net.Database
                 if (entity.ToObject(SerializerOptions) is INotificationEvent<TAggregateId> @event)
                     yield return @event;
             }
-        }
-
-        ///<inheritdoc/>
-        public virtual async IAsyncEnumerable<IEmailEvent<TEmailMessage>> ReadAllEmailEventsAsync<TEmailMessage>(
-             EventStoreEntityCriteria<EmailEventStoreEntity> criteria,
-             [EnumeratorCancellation] CancellationToken cancellationToken = default)
-            where TEmailMessage : notnull
-        {
-            _ = criteria ?? throw new ArgumentNullException(nameof(criteria));
-
-            IQueryable<EventStoreEntity> selector
-                = criteria.Count is not null
-                    ? _context.EmailEvents.Where(criteria).OrderBy(o => o.CreatedOn).Take(criteria.Count.Value)
-                    : _context.EmailEvents.Where(criteria).OrderBy(o => o.CreatedOn);
-
-            await foreach (var entity in selector.AsNoTracking().AsAsyncEnumerable())
-            {
-                if (entity.ToObject(SerializerOptions) is IEmailEvent<TEmailMessage> @event)
-                    yield return @event;
-            }
-        }
-
-        ///<inheritdoc/>
-        public virtual async Task AppendEmailEventAsync<TEmailMessage>(
-            IEmailEvent<TEmailMessage> @event, CancellationToken cancellationToken = default)
-            where TEmailMessage : notnull
-        {
-            var entity = EventStoreEntity.From<TAggregateId, TAggregate, EmailEventStoreEntity>(
-                @event, SerializerOptions, DocumentOptions);
-
-            await _context.EmailEvents.AddAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         private TAggregate CreateInstance()

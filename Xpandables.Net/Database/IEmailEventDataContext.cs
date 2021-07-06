@@ -18,7 +18,7 @@
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Represents a set of commands to manage events for aggregate.
+    /// Represents a set of commands to manage email events for aggregate.
     /// </summary>
-    public interface IAggregateDataContext : IDataContext { }
+    public interface IEmailEventDataContext : IDataContext { }
 }

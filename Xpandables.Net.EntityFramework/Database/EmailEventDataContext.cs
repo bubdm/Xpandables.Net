@@ -23,40 +23,28 @@ using Xpandables.Net.Database.EntityConfigurations;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// The <see cref="AggregateDataContext"/> data context definition.
+    /// The <see cref="EmailEventDataContext"/> data context definition.
     /// </summary>
-    public class AggregateDataContext : DataContext, IAggregateDataContext
+    public class EmailEventDataContext : DataContext, IEmailEventDataContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AggregateDataContext"/> class
+        /// Initializes a new instance of the <see cref="EmailEventDataContext"/> class
         /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
         /// method will still be called to allow further configuration of the options.
         /// </summary>
         /// <param name="contextOptions">The options for this context.</param>
-        public AggregateDataContext(DbContextOptions contextOptions)
+        public EmailEventDataContext(DbContextOptions contextOptions)
             : base(contextOptions) { }
 
         ///<inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new DomainEventEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new NotificationEventEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new SnapShotEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new EmailEventEntityTypeConfiguration());
         }
-
-        /// <summary>
-        /// Gets the domain events collection. Read Only.
-        /// </summary>
-        public DbSet<DomainEventStoreEntity> DomainEvents { get; set; } = default!;
-
-        /// <summary>
-        /// Gets the notifications collection. Read/Write
-        /// </summary>
-        public DbSet<NotificationEventStoreEntity> NotificationEvents { get; set; } = default!;
 
         /// <summary>
         /// Gets the snapShots collection. Read/Write
         /// </summary>
-        public DbSet<SnapShotStoreEntity> SnapShotEvents { get; set; } = default!;
+        public DbSet<EmailEventStoreEntity> EmailEvents { get; set; } = default!;
     }
 }

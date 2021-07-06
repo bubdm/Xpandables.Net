@@ -32,8 +32,7 @@ namespace Xpandables.Net.Aggregates
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
     public interface IAggregateAccessor<TAggregateId, TAggregate> :
-        ISnapShotAccessor<TAggregateId, TAggregate>, IDomainEventAccessor<TAggregateId, TAggregate>,
-        INotificationEventAccessor<TAggregateId, TAggregate>, IEmailEventAccessor<TAggregateId, TAggregate>
+        ISnapShotAccessor<TAggregateId, TAggregate>, IDomainEventAccessor<TAggregateId, TAggregate>, INotificationEventAccessor<TAggregateId, TAggregate>
         where TAggregate : class, IAggregate<TAggregateId>
         where TAggregateId : notnull, IAggregateId
     {

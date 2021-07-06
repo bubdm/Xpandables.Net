@@ -85,18 +85,18 @@ namespace Xpandables.Net.EmailEvents
                 await Task.Yield();
                 using var scope = _serviceScopeFactory.CreateScope();
 
-                var aggregateDataContext = (AggregateDataContext)scope.ServiceProvider.GetRequiredService<IAggregateDataContext>();
+                var emailDataContext = (EmailEventDataContext)scope.ServiceProvider.GetRequiredService<IEmailEventDataContext>();
                 var emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
 
                 var count = 0;
-                var emailEvents = await FetchPendingEmailEventsAsync(aggregateDataContext).ConfigureAwait(false);
+                var emailEvents = await FetchPendingEmailEventsAsync(emailDataContext).ConfigureAwait(false);
 
                 foreach (var emailEvent in emailEvents)
                 {
                     if (await TrySendEmailAsync(
                         emailEvent,
                         emailSender,
-                        aggregateDataContext)
+                        emailDataContext)
                         .ConfigureAwait(false))
                     {
                         count++;
@@ -104,7 +104,7 @@ namespace Xpandables.Net.EmailEvents
                 }
 
                 if (count > 0)
-                    await aggregateDataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                    await emailDataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
                 await Task.Delay(GetTimeSpanDelay(), cancellationToken).ConfigureAwait(false);
             }
@@ -115,7 +115,7 @@ namespace Xpandables.Net.EmailEvents
         /// </summary>
         /// <param name="context">The data context to act on.</param>
         /// <returns>A collection of <see cref="EventStoreEntity"/> matching the criteria.</returns>
-        protected virtual async Task<List<EmailEventStoreEntity>> FetchPendingEmailEventsAsync(AggregateDataContext context)
+        protected virtual async Task<List<EmailEventStoreEntity>> FetchPendingEmailEventsAsync(EmailEventDataContext context)
         {
             var criteria = GetEmailEventStoreEntityCriteria();
 
@@ -139,7 +139,7 @@ namespace Xpandables.Net.EmailEvents
         protected virtual async Task<bool> TrySendEmailAsync(
             EmailEventStoreEntity entity,
             IEmailSender emailSender,
-            AggregateDataContext context)
+            EmailEventDataContext context)
         {
             try
             {
