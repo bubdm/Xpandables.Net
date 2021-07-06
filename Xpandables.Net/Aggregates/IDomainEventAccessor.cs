@@ -31,7 +31,7 @@ namespace Xpandables.Net.Database
     /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public interface IDomainEventAccessor<TAggregateId, TAggregate>
+    public interface IDomainEventAccessor<TAggregateId, TAggregate> : IEventAccessor
         where TAggregate : notnull, IAggregate<TAggregateId>
         where TAggregateId : notnull, IAggregateId
     {
