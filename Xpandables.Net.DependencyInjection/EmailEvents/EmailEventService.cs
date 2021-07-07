@@ -102,8 +102,8 @@ namespace Xpandables.Net.EmailEvents
                     }
                 }
 
-                if (count > 0)
-                    await emailDataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                if (count > 0 && emailDataContext is IDataContextPersistence persistence)
+                    await persistence.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
                 await Task.Delay(GetTimeSpanDelay(), cancellationToken).ConfigureAwait(false);
             }

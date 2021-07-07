@@ -33,7 +33,7 @@ namespace Xpandables.Net.Database
     /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/>
     /// and implements <see cref="IDataContext"/> and <see cref="IDataContextPersistence"/>.
     /// </summary>
-    public abstract partial class DataContext : IDataContext
+    public abstract partial class DataContext : IDataContext, IDataContextPersistence
     {
         ///<inheritdoc/>
         public virtual IQueryable<T> Query<T>() where T : class, IEntity => Set<T>();

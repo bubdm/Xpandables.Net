@@ -105,8 +105,8 @@ namespace Xpandables.Net.NotificationEvents
                     }
                 }
 
-                if (count > 0)
-                    await notificationDataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                if (count > 0 && notificationDataContext is IDataContextPersistence persistence)
+                    await persistence.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
                 await Task.Delay(GetTimeSpanDelay(), cancellationToken).ConfigureAwait(false);
             }

@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Database
 {
     /// <summary>
-    /// Provides with a method to persist domain objects using <see cref="IDataContext"/>.
+    /// Provides with a method to persist objects.
     /// </summary>
     public interface IDataContextPersistence
     {

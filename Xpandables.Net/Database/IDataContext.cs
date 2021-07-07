@@ -31,7 +31,7 @@ namespace Xpandables.Net.Database
     /// When argument is null, an <see cref="ArgumentNullException"/> will be thrown.
     /// When a value is not found, a default value of the expected type should be returned or an empty collection if necessary.
     /// </summary>
-    public interface IDataContext : IDisposable, IAsyncDisposable, IDataContextPersistence
+    public interface IDataContext : IDisposable, IAsyncDisposable
     {
         /// <summary>
         /// Returns a source of <typeparamref name="T"/> type that can be evaluated against a data source.

@@ -43,7 +43,8 @@ namespace Xpandables.Net.Decorators.Persistences
         internal async Task HandleAsync(Task handler, CancellationToken cancellationToken)
         {
             await handler.ConfigureAwait(false);
-            await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            if (_context is IDataContextPersistence persistence)
+                await persistence.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }
