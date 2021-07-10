@@ -22,6 +22,7 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Represents the unique identifier for an aggregate.
     /// </summary>
+    [JsonInterfaceConverter(typeof(JsonInterfaceConverter<IAggregateId>))]
     public interface IAggregateId : IIdentityId<Guid>
     {
         /// <summary>
