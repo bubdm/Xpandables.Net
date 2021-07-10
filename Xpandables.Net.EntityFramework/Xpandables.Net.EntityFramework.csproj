@@ -72,8 +72,4 @@
     <ProjectReference Include="..\Xpandables.Net.DependencyInjection\Xpandables.Net.DependencyInjection.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
-
 </Project>
