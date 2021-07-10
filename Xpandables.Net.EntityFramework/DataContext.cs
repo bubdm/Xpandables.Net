@@ -38,14 +38,14 @@ namespace Xpandables.Net
         {
             ChangeTracker.Tracked += (sender, e) =>
             {
-                if (e.FromQuery || e.Entry.State != EntityState.Added || e.Entry.Entity is not Entity entity) return;
+                if (e.FromQuery || e.Entry.State != EntityState.Added || e.Entry.Entity is not IEntity entity) return;
 
                 entity.Created();
             };
 
             ChangeTracker.StateChanged += (sender, e) =>
             {
-                if (e.NewState != EntityState.Modified || e.Entry.Entity is not Entity entity) return;
+                if (e.NewState != EntityState.Modified || e.Entry.Entity is not IEntity entity) return;
 
                 entity.Updated();
 

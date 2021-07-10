@@ -4,45 +4,37 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.DomainEvents;
 using Xpandables.Net.Entities;
 using Xpandables.Net.NotificationEvents;
-using Xpandables.Net.UnitOfWorks;
 
-namespace Xpandables.Net.Aggregates
+namespace Xpandables.Net.UnitOfWorks
 {
     /// <summary>
-    /// Represents the EFCore implementation of <see cref="IAggregateRepository"/>.
+    /// Represents the EFCore implementation of <see cref="IAggregateRepository{TAggregate}"/>.
     /// </summary>
-    public class AggregateRepository : Repository<DomainEventStoreEntity>, IAggregateRepository
+    /// <typeparam name="TAggregate">The type of the aggregate.</typeparam>
+    public class AggregateRepository<TAggregate> : Repository<TAggregate>, IAggregateRepository<TAggregate>
+        where TAggregate : class, IAggregate, new()
     {
         /// <summary>
         /// Gets the instance creator.
         /// </summary>
         protected static readonly IInstanceCreator InstanceCreator = new InstanceCreator();
 
-        ///<inheritdoc/>
-        protected override AggregateDataContext Context { get; }
-
-        ///<inheritdoc/>
-        public JsonSerializerOptions? SerializerOptions { get; set; } = new() { PropertyNameCaseInsensitive = true };
-
-        ///<inheritdoc/>
-        public JsonDocumentOptions DocumentOptions { get; set; } = default;
-
         /// <summary>
-        /// Constructs a new instance of <see cref="AggregateRepository"/>.
+        /// Constructs a new instance of <see cref="AggregateRepository{Taggregate}"/>.
         /// </summary>
         /// <param name="context">The db context to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public AggregateRepository(AggregateDataContext context) : base(context) => Context = context;
+        public AggregateRepository(DataContext context) : base(context) { }
 
         ///<inheritdoc/>
-        public virtual async Task AppendAsync(IAggregate aggregate, CancellationToken cancellationToken = default)
+        public virtual async Task AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
         {
             _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
 
@@ -60,7 +52,7 @@ namespace Xpandables.Net.Aggregates
                 var eventData = GetJsonDocument(@event, SerializerOptions, DocumentOptions);
                 var entity = new DomainEventStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
 
-                await Context.Events.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+                await Context.Set<DomainEventStoreEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
             }
 
             if (aggregate is INotificationSourcing aggregateOutbox)
@@ -73,7 +65,7 @@ namespace Xpandables.Net.Aggregates
                     var eventData = GetJsonDocument(@event, SerializerOptions, DocumentOptions);
                     var entity = new NotificationEventStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData, default);
 
-                    await Context.Notifications.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+                    await Context.Set<NotificationEventStoreEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
                 }
 
                 aggregateOutbox.MarkNotificationsAsCommitted();
@@ -83,8 +75,7 @@ namespace Xpandables.Net.Aggregates
         }
 
         ///<inheritdoc/>
-        public virtual async Task AppendNotificationAsync<TAggregate>(INotificationEvent @event, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate
+        public virtual async Task AppendNotificationAsync(INotificationEvent @event, CancellationToken cancellationToken = default)
         {
             var aggregateId = @event.AggregateId.AsString();
             var aggregateTypeName = typeof(TAggregate).GetNameWithoutGenericArity();
@@ -94,7 +85,7 @@ namespace Xpandables.Net.Aggregates
             var eventData = GetJsonDocument(@event, SerializerOptions, DocumentOptions);
             var entity = new NotificationEventStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
 
-            await Context.Notifications.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            await Context.Set<NotificationEventStoreEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
@@ -107,10 +98,9 @@ namespace Xpandables.Net.Aggregates
                 .ConfigureAwait(false);
 
         ///<inheritdoc/>
-        public virtual async Task<TAggregate?> ReadAsync<TAggregate>(IAggregateId aggregateId, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate, new()
+        public virtual async Task<TAggregate?> ReadAsync(IAggregateId aggregateId, CancellationToken cancellationToken = default)
         {
-            var aggregate = CreateInstance<TAggregate>();
+            var aggregate = CreateInstance();
             if (aggregate is not IDomainEventSourcing aggregateEventSourcing)
                 throw new InvalidOperationException($"{typeof(TAggregate).Name} must implement {nameof(IDomainEventSourcing)}");
 
@@ -119,7 +109,7 @@ namespace Xpandables.Net.Aggregates
                 AggregateId = aggregateId.AsString()
             };
 
-            await foreach (var @event in Context.Events.Where(criteria).AsNoTracking().AsAsyncEnumerable().ConfigureAwait(false))
+            await foreach (var @event in Context.Set<DomainEventStoreEntity>().Where(criteria).AsNoTracking().AsAsyncEnumerable().ConfigureAwait(false))
             {
                 if (@event.ToObject(SerializerOptions) is IDomainEvent domainEvent)
                     aggregateEventSourcing.LoadFromHistory(domainEvent);
@@ -147,10 +137,9 @@ namespace Xpandables.Net.Aggregates
         }
 
         ///<inheritdoc/>
-        public virtual async Task<TAggregate?> ReadFromSnapShot<TAggregate>(IAggregateId aggregateId, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate, new()
+        public virtual async Task<TAggregate?> ReadFromSnapShot(IAggregateId aggregateId, CancellationToken cancellationToken = default)
         {
-            var aggregate = CreateInstance<TAggregate>();
+            var aggregate = CreateInstance();
 
             if (aggregate is not IOriginator originator)
                 throw new ArgumentException($"{typeof(TAggregate).Name} must implement {typeof(IOriginator).Name}");
@@ -161,7 +150,7 @@ namespace Xpandables.Net.Aggregates
                 EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() != -1
             };
 
-            var result = await Context.SnapShots
+            var result = await Context.Set<SnapShotStoreEntity>()
                 .AsNoTracking()
                 .Where(criteria)
                 .OrderBy(o => o.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64())
@@ -176,7 +165,7 @@ namespace Xpandables.Net.Aggregates
         }
 
         ///<inheritdoc/>
-        public virtual async Task AppendAsSnapShotAsync(IAggregate aggregate, CancellationToken cancellationToken = default)
+        public virtual async Task AppendAsSnapShotAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
         {
             _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
 
@@ -190,7 +179,7 @@ namespace Xpandables.Net.Aggregates
                 EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() == version
             };
 
-            var oldSnapShot = await Context.SnapShots
+            var oldSnapShot = await Context.Set<SnapShotStoreEntity>()
                 .Where(criteria)
                 .FirstOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
@@ -198,7 +187,7 @@ namespace Xpandables.Net.Aggregates
             if (oldSnapShot is not null)
             {
                 oldSnapShot.Deleted();
-                Context.SnapShots.Remove(oldSnapShot);
+                Context.Set<SnapShotStoreEntity>().Remove(oldSnapShot);
             }
 
             var snapShot = new SnapShot(originator.CreateMemento(), aggregate.AggregateId, aggregate.Version);
@@ -211,32 +200,14 @@ namespace Xpandables.Net.Aggregates
             var eventData = GetJsonDocument(snapShot, SerializerOptions, DocumentOptions);
             var entity = new SnapShotStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
 
-            await Context.SnapShots.AddAsync(entity, cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Returns the <see cref="JsonDocument"/> from the specified document.
-        /// </summary>
-        /// <typeparam name="TDocument">The type of document.</typeparam>
-        /// <param name="document">An instance of document to parse.</param>
-        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
-        /// <param name="documentOptions">Options to control the reader behavior during parsing.</param>
-        /// <returns>An instance of <see cref="JsonDocument"/>.</returns>
-        protected virtual JsonDocument GetJsonDocument<TDocument>(
-            TDocument document,
-            JsonSerializerOptions? serializerOptions,
-            JsonDocumentOptions documentOptions)
-        {
-            var eventString = JsonSerializer.Serialize(document, documentOptions.GetType(), serializerOptions);
-            return JsonDocument.Parse(eventString, documentOptions);
-        }
+            await Context.Set<SnapShotStoreEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
+        } 
 
         /// <summary>
         /// Creates a new instance of <typeparamref name="TAggregate"/>.
         /// </summary>
         /// <returns>An instance of <typeparamref name="TAggregate"/> type or throws exception.</returns>
-        protected virtual TAggregate CreateInstance<TAggregate>()
-            where TAggregate : class, IAggregate, new()
+        protected virtual TAggregate CreateInstance()
         {
             var instanceCreatorException = default(ExceptionDispatchInfo?);
             InstanceCreator.OnException = ex => instanceCreatorException = ex;

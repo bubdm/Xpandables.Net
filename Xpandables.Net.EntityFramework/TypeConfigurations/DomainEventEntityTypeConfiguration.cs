@@ -19,15 +19,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Xpandables.Net.EmailEvents
+using Xpandables.Net.DomainEvents;
+
+namespace Xpandables.Net.TypeConfigurations
 {
     /// <summary>
-    /// EFCore configuration for email event.
+    /// EFCore configuration for domain event.
     /// </summary>
-    public sealed class EmailEventEntityTypeConfiguration : IEntityTypeConfiguration<EmailEventStoreEntity>
+    public sealed class DomainEventEntityTypeConfiguration : IEntityTypeConfiguration<DomainEventStoreEntity>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<EmailEventStoreEntity> builder)
+        public void Configure(EntityTypeBuilder<DomainEventStoreEntity> builder)
         {
             builder.HasKey(p => p.Id);
             builder.HasIndex(p => new { p.Id, p.AggregateId });
@@ -37,9 +39,6 @@ namespace Xpandables.Net.EmailEvents
             builder.Property(p => p.EventData);
             builder.Property(p => p.EventTypeFullName);
             builder.Property(p => p.EventTypeName);
-            builder.Property(p => p.ExceptionTypeFullName);
-            builder.Property(p => p.Exception);
-            builder.Property(p => p.State);
         }
     }
 }

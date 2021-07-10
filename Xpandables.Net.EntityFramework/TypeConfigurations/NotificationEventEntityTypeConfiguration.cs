@@ -1,4 +1,5 @@
-﻿/************************************************************************************************************
+﻿
+/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,15 +19,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Xpandables.Net.Aggregates
+using Xpandables.Net.NotificationEvents;
+
+namespace Xpandables.Net.TypeConfigurations
 {
     /// <summary>
-    /// EFCore configuration for snapShot entity.
+    /// EFCore configuration for notification event.
     /// </summary>
-    public sealed class SnapShotEntityTypeConfiguration : IEntityTypeConfiguration<SnapShotStoreEntity>
+    public sealed class NotificationEventEntityTypeConfiguration : IEntityTypeConfiguration<NotificationEventStoreEntity>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<SnapShotStoreEntity> builder)
+        public void Configure(EntityTypeBuilder<NotificationEventStoreEntity> builder)
         {
             builder.HasKey(p => p.Id);
             builder.HasIndex(p => new { p.Id, p.AggregateId });
@@ -36,6 +39,8 @@ namespace Xpandables.Net.Aggregates
             builder.Property(p => p.EventData);
             builder.Property(p => p.EventTypeFullName);
             builder.Property(p => p.EventTypeName);
+            builder.Property(p => p.ExceptionTypeFullName);
+            builder.Property(p => p.Exception);
         }
     }
 }

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,6 +37,12 @@ namespace Xpandables.Net.UnitOfWorks
     public abstract class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class
     {
+        ///<inheritdoc/>
+        public JsonSerializerOptions? SerializerOptions { get; set; } = new() { PropertyNameCaseInsensitive = true };
+
+        ///<inheritdoc/>
+        public JsonDocumentOptions DocumentOptions { get; set; } = default;
+
         /// <summary>
         /// Gets the current context instance.
         /// </summary>
@@ -94,6 +101,23 @@ namespace Xpandables.Net.UnitOfWorks
         {
             await foreach (var entity in Context.Set<TEntity>().Where(predicate).AsAsyncEnumerable())
                 Context.Set<TEntity>().Remove(entity);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="JsonDocument"/> from the specified document.
+        /// </summary>
+        /// <typeparam name="TDocument">The type of document.</typeparam>
+        /// <param name="document">An instance of document to parse.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
+        /// <param name="documentOptions">Options to control the reader behavior during parsing.</param>
+        /// <returns>An instance of <see cref="JsonDocument"/>.</returns>
+        protected virtual JsonDocument GetJsonDocument<TDocument>(
+            TDocument document,
+            JsonSerializerOptions? serializerOptions,
+            JsonDocumentOptions documentOptions)
+        {
+            var eventString = JsonSerializer.Serialize(document, documentOptions.GetType(), serializerOptions);
+            return JsonDocument.Parse(eventString, documentOptions);
         }
     }
 }

@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,6 +31,16 @@ namespace Xpandables.Net.UnitOfWorks
     public interface IRepository<TEntity>
         where TEntity : class
     {
+        /// <summary>
+        /// Gets or sets the current <see cref="JsonSerializerOptions"/> to be used for serialization.
+        /// </summary>
+        JsonSerializerOptions? SerializerOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current <see cref="JsonDocumentOptions"/> to be used for <see cref="JsonDocument"/> parsing.
+        /// </summary>
+        JsonDocumentOptions DocumentOptions { get; set; }
+
         /// <summary>
         /// Tries to return an entity of the <typeparamref name="TEntity"/> type that matches the criteria.
         /// If not found, returns the <see langword="default"/> value of the type.
