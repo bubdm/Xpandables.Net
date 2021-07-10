@@ -60,7 +60,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXDataContextMultiTenancy<TDataContext>(this IXpandableServiceBuilder services)
-            where TDataContext : DataContext
+            where TDataContext : class, IDataContext
         {
             var serviceDescriptor = new ServiceDescriptor(
                 typeof(IDataContextMultiTenancy),
@@ -79,7 +79,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="name">The unique identifier of the tenant.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXDataContextMultiTenancy<TDataContext>(this IXpandableServiceBuilder services, string name)
-            where TDataContext : DataContext
+            where TDataContext :class, IDataContext
         {
             _ = name ?? throw new ArgumentNullException(nameof(name));
 

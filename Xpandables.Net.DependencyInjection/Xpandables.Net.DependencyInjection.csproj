@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
     <Product>Xpandables Net Dependency Injection</Product>
-    <Description>A utility library in .Net5.0 that adds dependency injection to Xpandables.Net.</Description>
+    <Description>A utility library in .Net6.0 that adds dependency injection to Xpandables.Net.</Description>
     <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
     <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
@@ -29,7 +29,7 @@
     <RootNamespace>Xpandables.Net</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <summary>A utility library in .Net5.0 that adds dependency injection to Xpandables.Net.</summary>
+    <summary>A utility library in .Net6.0 that adds dependency injection to Xpandables.Net.</summary>
     <language>en-GB</language>
     <NeutralLanguage>en-GB</NeutralLanguage>
     <SignAssembly>true</SignAssembly>
@@ -44,7 +44,7 @@
     <WarningsAsErrors />
     <NoWarn>1701;1702;SecurityIntelliSenseCS;CA1307;CA1062;CA1801;IDE0060;CA1819;</NoWarn>
     <OutputPath>bin\AnyCPU\Debug\</OutputPath>
-    <DocumentationFile>bin\AnyCPU\Debug\net5.0\Xpandables.Net.DependencyInjection.xml</DocumentationFile>
+    <DocumentationFile>bin\AnyCPU\Debug\net6.0\Xpandables.Net.DependencyInjection.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
@@ -53,7 +53,7 @@
     <NoWarn>1701;1702;SecurityIntelliSenseCS;CA1307;CA1062;CA1801;IDE0060;CA1819;</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <OutputPath>bin\AnyCPU\Release\</OutputPath>
-    <DocumentationFile>bin\AnyCPU\Release\net5.0\Xpandables.Net.DependencyInjection.xml</DocumentationFile>
+    <DocumentationFile>bin\AnyCPU\Release\net6.0\Xpandables.Net.DependencyInjection.xml</DocumentationFile>
     <Optimize>false</Optimize>
   </PropertyGroup>
 
