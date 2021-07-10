@@ -20,32 +20,32 @@ using System;
 namespace Xpandables.Net.UnitOfWorks
 {
     /// <summary>
-    /// Implementation of <see cref="IUnitOfWorkMultiTenancy{TUnitOfWork}"/> for multi-tenancy.
+    /// Implementation of <see cref="IDataContextMultiTenancy{TDataContext}"/> for multi-tenancy.
     /// </summary>
-    /// <typeparam name="TUnitOfWork">The type of unit of work.</typeparam>
-    public sealed class UnitOfWorkMultiTenancy<TUnitOfWork> : IUnitOfWorkMultiTenancy<TUnitOfWork>
-        where TUnitOfWork : class, IUnitOfWork
+    /// <typeparam name="TDataContext">The type of data context.</typeparam>
+    public sealed class DataContextMultiTenancy<TDataContext> : IDataContextMultiTenancy<TDataContext>
+        where TDataContext : DataContext
     {
         ///<inheritdoc/>
-        public Func<TUnitOfWork> Factory { get; }
+        public Func<TDataContext> Factory { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="UnitOfWorkMultiTenancy{TUnitOfWork}"/> class with the factory of the target type.
+        /// Initializes a new instance of <see cref="DataContextMultiTenancy{TDataContext}"/> class with the factory of the target type.
         /// The unique identifier of the tenant will be the name of the type.
         /// </summary>
-        /// <param name="factory">The factory for <typeparamref name="TUnitOfWork"/>.</param>
+        /// <param name="factory">The factory for <typeparamref name="TDataContext"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="factory"/> is null.</exception>
-        public UnitOfWorkMultiTenancy(Func<TUnitOfWork> factory)
-            : this(typeof(TUnitOfWork).Name, factory) { }
+        public DataContextMultiTenancy(Func<TDataContext> factory)
+            : this(typeof(TDataContext).Name, factory) { }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="UnitOfWorkMultiTenancy{TUnitOfWork}"/> class with the factory of the target type.
+        /// Initializes a new instance of <see cref="DataContextMultiTenancy{TDataContext}"/> class with the factory of the target type.
         /// </summary>
         /// <param name="name">The unique identifier of the tenant.</param>
-        /// <param name="factory">The factory for <typeparamref name="TUnitOfWork"/>.</param>
+        /// <param name="factory">The factory for <typeparamref name="TDataContext"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="factory"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="name"/> is null.</exception>
-        public UnitOfWorkMultiTenancy(string name, Func<TUnitOfWork> factory)
+        public DataContextMultiTenancy(string name, Func<TDataContext> factory)
         {
             Factory = factory ?? throw new ArgumentNullException(nameof(factory));
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -54,6 +54,6 @@ namespace Xpandables.Net.UnitOfWorks
         ///<inheritdoc/>
         public string Name { get; }
 
-        Func<IUnitOfWork> IUnitOfWorkMultiTenancy.Factory => () => Factory();
+        Func<DataContext> IDataContextMultiTenancy.Factory => () => Factory();
     }
 }

@@ -25,30 +25,30 @@ using Xpandables.Net;
 namespace Xpandables.Net.UnitOfWorks
 {
     /// <summary>
-    /// Implementation of <see cref="IUnitOfWorkMultiTenancyAccessor"/>.
+    /// Implementation of <see cref="IDataContextMultiTenancyAccessor"/>.
     /// </summary>
-    public sealed class UnitOfWorkMultiTenancyAccessor : IUnitOfWorkMultiTenancyAccessor
+    public sealed class DataContextMultiTenancyAccessor : IDataContextMultiTenancyAccessor
     {
-        private readonly IDictionary<string, IUnitOfWorkMultiTenancy> _entityUnitOfWorkFactories;
+        private readonly IDictionary<string, IDataContextMultiTenancy> _entityUnitOfWorkFactories;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="UnitOfWorkMultiTenancyAccessor"/> class with all the tenant factories.
+        /// Initializes a new instance of <see cref="DataContextMultiTenancyAccessor"/> class with all the tenant factories.
         /// </summary>
-        /// <param name="entityUnitOfWorkFactories">The collection of unit of work factories.</param>
-        public UnitOfWorkMultiTenancyAccessor(IEnumerable<IUnitOfWorkMultiTenancy> entityUnitOfWorkFactories)
+        /// <param name="entityUnitOfWorkFactories">The collection of data context factories.</param>
+        public DataContextMultiTenancyAccessor(IEnumerable<IDataContextMultiTenancy> entityUnitOfWorkFactories)
         {
-            _entityUnitOfWorkFactories = entityUnitOfWorkFactories?.ToDictionary(d => d.Name, d => d) ?? new Dictionary<string, IUnitOfWorkMultiTenancy>();
+            _entityUnitOfWorkFactories = entityUnitOfWorkFactories?.ToDictionary(d => d.Name, d => d) ?? new Dictionary<string, IDataContextMultiTenancy>();
         }
 
         ///<inheritdoc/>
-        public IUnitOfWork? this[string name] =>
+        public DataContext? this[string name] =>
             _entityUnitOfWorkFactories.TryGetValue(name, out var factory) ? factory.Factory() : default;
 
         ///<inheritdoc/>
         public string? TenantName { get; private set; }
 
         ///<inheritdoc/>
-        public IUnitOfWork GetUnitOfWork()
+        public DataContext GetDataContext()
         {
             _ = TenantName ?? throw new ArgumentException("The tenant name has not been set.");
 
@@ -57,22 +57,22 @@ namespace Xpandables.Net.UnitOfWorks
 
             throw new InvalidOperationException(
                 $"The '{TenantName}' factory has not been registered. " +
-                $"Use services.AddXUnitOfWorkMultiTenancy<{TenantName}>() to register the target factory.");
+                $"Use services.AddXDataContextMultiTenancy<{TenantName}>() to register the target factory.");
         }
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
-        public IEnumerator<KeyValuePair<string, IUnitOfWorkMultiTenancy>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, IDataContextMultiTenancy>> GetEnumerator()
         {
             foreach (var pair in _entityUnitOfWorkFactories)
                 yield return pair;
         }
 
         ///<inheritdoc/>
-        public void SetTenantName<TUnitOfWork>()
-            where TUnitOfWork : class, IUnitOfWork => TenantName = typeof(TUnitOfWork).Name;
+        public void SetTenantName<TDataContext>()
+            where TDataContext : DataContext => TenantName = typeof(TDataContext).Name;
 
         ///<inheritdoc/>
         public void SetTenantName(string name) => TenantName = name ?? throw new ArgumentNullException(nameof(name));

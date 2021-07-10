@@ -21,9 +21,9 @@ using System.Collections.Generic;
 namespace Xpandables.Net.UnitOfWorks
 {
     /// <summary>
-    /// Allows use of multiple unit of work that need to be shared across asynchronous control flows.
+    /// Allows use of multiple data context that need to be shared across asynchronous control flows.
     /// </summary>
-    public interface IUnitOfWorkMultiTenancyAccessor : IEnumerable<KeyValuePair<string, IUnitOfWorkMultiTenancy>>
+    public interface IDataContextMultiTenancyAccessor : IEnumerable<KeyValuePair<string, IDataContextMultiTenancy>>
     {
         /// <summary>
         /// Gets the unique identifier of the ambient tenant.
@@ -31,25 +31,25 @@ namespace Xpandables.Net.UnitOfWorks
         string? TenantName { get; }
 
         /// <summary>
-        /// Returns an instance of the ambient unit of work matching the <see cref="TenantName"/> for the current scope.
+        /// Returns an instance of the ambient data context matching the <see cref="TenantName"/> for the current scope.
         /// </summary>
         /// <returns><see cref="IUnitOfWork"/> derived class.</returns>
-        /// <exception cref="InvalidOperationException">The unit of work tenant matching the current name has not been registered.</exception>
+        /// <exception cref="InvalidOperationException">The data context tenant matching the current name has not been registered.</exception>
         /// <exception cref="ArgumentException">The tenant name is null.</exception>
-        IUnitOfWork GetUnitOfWork();
+        DataContext GetDataContext();
 
         /// <summary>
-        /// Returns the unit of work matching the specified tenant name. If not found returns null.
+        /// Returns the data context matching the specified tenant name. If not found returns null.
         /// </summary>
         /// <param name="name">The tenant name to search for.</param>
-        /// <returns>The requested unit of work or null if not present.</returns>
-        IUnitOfWork? this[string name] { get; }
+        /// <returns>The requested data context or null if not present.</returns>
+        DataContext? this[string name] { get; }
 
         /// <summary>
         /// Sets the ambient tenant name from the specified type name for the current scope.
         /// </summary>
-        /// <typeparam name="TUnitOfWork">The type of the unit of work.</typeparam>
-        void SetTenantName<TUnitOfWork>() where TUnitOfWork : class, IUnitOfWork;
+        /// <typeparam name="TDataContext">The type of the data context.</typeparam>
+        void SetTenantName<TDataContext>() where TDataContext : DataContext;
 
         /// <summary>
         /// Sets the ambient tenant name for the current scope.

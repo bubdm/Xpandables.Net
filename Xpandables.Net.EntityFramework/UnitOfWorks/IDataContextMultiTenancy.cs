@@ -22,12 +22,12 @@ namespace Xpandables.Net.UnitOfWorks
     /// <summary>
     /// Provides with method for creating derived <see cref="IUnitOfWork"/> in multi-tenancy.
     /// </summary>
-    public interface IUnitOfWorkMultiTenancy
+    public interface IDataContextMultiTenancy
     {
         /// <summary>
-        /// The factory used to retrieve an implementation of <see cref="IUnitOfWork"/>.
+        /// The factory used to retrieve an implementation of <see cref="DataContext"/>.
         /// </summary>
-        Func<IUnitOfWork> Factory { get; }
+        Func<DataContext> Factory { get; }
 
         /// <summary>
         /// Gets the unique identifier for the tenant.
@@ -36,15 +36,15 @@ namespace Xpandables.Net.UnitOfWorks
     }
 
     /// <summary>
-    /// Provides with method for creating <typeparamref name="TUnitOfWork"/> in multi-tenancy.
+    /// Provides with method for creating <typeparamref name="TDataContext"/> in multi-tenancy.
     /// </summary>
-    /// <typeparam name="TUnitOfWork">The type of the data context.</typeparam>
-    public interface IUnitOfWorkMultiTenancy<out TUnitOfWork> : IUnitOfWorkMultiTenancy
-        where TUnitOfWork : class, IUnitOfWork
+    /// <typeparam name="TDataContext">The type of the data context.</typeparam>
+    public interface IDataContextMultiTenancy<out TDataContext> : IDataContextMultiTenancy
+        where TDataContext : DataContext
     {
         /// <summary>
-        /// The factory used to retrieve an instance of <typeparamref name="TUnitOfWork"/>.
+        /// The factory used to retrieve an instance of <typeparamref name="TDataContext"/>.
         /// </summary>
-        new Func<TUnitOfWork> Factory { get; }
+        new Func<TDataContext> Factory { get; }
     }
 }

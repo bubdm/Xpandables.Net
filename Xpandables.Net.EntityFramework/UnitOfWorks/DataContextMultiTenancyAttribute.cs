@@ -23,14 +23,14 @@ namespace Xpandables.Net.UnitOfWorks
     /// Specifies the name of the tenant.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class UnitOfWorkMultiTenancyAttribute : Attribute
+    public class DataContextMultiTenancyAttribute : Attribute
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="UnitOfWorkMultiTenancyAttribute"/> with the tenant name.
+        /// Initializes a new instance of <see cref="DataContextMultiTenancyAttribute"/> with the tenant name.
         /// </summary>
         /// <param name="tenantName">The tenant name.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="tenantName"/> is null.</exception>
-        public UnitOfWorkMultiTenancyAttribute(string tenantName)
+        public DataContextMultiTenancyAttribute(string tenantName)
         {
             TenantName = tenantName ?? throw new ArgumentNullException(nameof(tenantName));
         }
