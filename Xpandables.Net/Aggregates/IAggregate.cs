@@ -18,18 +18,16 @@
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Defines base properties for an aggregate that is identified by a property of <typeparamref name="TAggregateId"/> type.
+    /// Defines base properties for an aggregate that is identified by a property of <see cref="IAggregateId"/> type.
     /// Aggregate is a pattern in Domain-Driven Design.
     /// A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
-    public interface IAggregate<TAggregateId> : ICommandQueryEvent
-        where TAggregateId : notnull, IAggregateId
+    public interface IAggregate : ICommandQueryEvent
     {
         /// <summary>
         /// Gets the unique identifier of the aggregate.
         /// </summary>
-        TAggregateId AggregateId { get; }
+        IAggregateId AggregateId { get; }
 
         /// <summary>
         /// Gets the current version of the instance, the default value is -1.
@@ -41,5 +39,22 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         /// <returns>Returns <see langword="true"/> if so, otherwise <see langword="false"/></returns>
         public virtual bool IsEmpty => AggregateId?.IsEmpty() ?? true;
+    }
+
+    /// <summary>
+    /// Defines base properties for an aggregate that is identified by a property of <typeparamref name="TAggregateId"/> type.
+    /// Aggregate is a pattern in Domain-Driven Design.
+    /// A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
+    /// </summary>
+    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
+    public interface IAggregate<TAggregateId> : IAggregate
+        where TAggregateId : class, IAggregateId
+    {
+        /// <summary>
+        /// Gets the unique identifier of the aggregate.
+        /// </summary>
+        new TAggregateId AggregateId { get; }
+
+        IAggregateId IAggregate.AggregateId => AggregateId;
     }
 }

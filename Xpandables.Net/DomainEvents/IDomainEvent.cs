@@ -20,12 +20,10 @@ using Xpandables.Net.Aggregates;
 namespace Xpandables.Net.DomainEvents
 {
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as a event domain for <see cref="IAggregate{TAggregateId}"/>.
+    /// Defines a marker interface to be used to mark an object to act as a event domain for <see cref="IAggregate"/>.
     /// In case of exception in target event handlers, you can rollback the operation using transaction.
-    /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    public interface IDomainEvent<TAggregateId> : IEvent<TAggregateId>
-        where TAggregateId : notnull, IAggregateId
+    /// </summary>   
+    public interface IDomainEvent : IEvent
     {
         /// <summary>
         /// Gets the version of the related aggregate being saved.
@@ -38,6 +36,26 @@ namespace Xpandables.Net.DomainEvents
         /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="version">The aggregate version.</param>
         /// <returns>A new instance of the domain event.</returns>
+        IDomainEvent WithAggregate(IAggregateId aggregateId, AggregateVersion version);
+    }
+
+    /// <summary>
+    /// Defines a marker interface to be used to mark an object to act as a event domain for <see cref="IAggregate{TAggregateId}"/>.
+    /// In case of exception in target event handlers, you can rollback the operation using transaction.
+    /// </summary>
+    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
+    public interface IDomainEvent<TAggregateId> : IDomainEvent, IEvent<TAggregateId>
+        where TAggregateId : notnull, IAggregateId
+    {
+        /// <summary>
+        /// Returns a new instance of the domain event with appropriate values.
+        /// </summary>
+        /// <param name="aggregateId">The target aggregate identifier.</param>
+        /// <param name="version">The aggregate version.</param>
+        /// <returns>A new instance of the domain event.</returns>
         IDomainEvent<TAggregateId> WithAggregate(TAggregateId aggregateId, AggregateVersion version);
+
+        IDomainEvent IDomainEvent.WithAggregate(IAggregateId aggregateId, AggregateVersion version)
+            => WithAggregate((TAggregateId)aggregateId, version);
     }
 }

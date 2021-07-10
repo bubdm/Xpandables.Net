@@ -50,5 +50,7 @@ namespace Xpandables.Net
         /// Gets the identifier of the target aggregate.
         /// </summary>
         new TAggregateId AggregateId { get; }
+
+        IAggregateId IEvent.AggregateId => AggregateId;
     }
 }

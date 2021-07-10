@@ -25,8 +25,13 @@ namespace Xpandables.Net.NotificationEvents
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as a notification event.
     /// </summary>
+    public interface INotificationEvent : IEvent { }
+
+    /// <summary>
+    /// Defines a marker interface to be used to mark an object to act as a notification event.
+    /// </summary>
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    public interface INotificationEvent<TAggregateId> : IEvent<TAggregateId>
+    public interface INotificationEvent<TAggregateId> : INotificationEvent, IEvent<TAggregateId>
         where TAggregateId : notnull, IAggregateId
     { }
 

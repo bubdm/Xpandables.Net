@@ -67,12 +67,12 @@ namespace Xpandables.Net.Aggregates
             RegisterEventHandlers();
         }
 
-        void INotificationSourcing<TAggregateId>.MarkNotificationsAsCommitted() => _notifications.Clear();
+        void INotificationSourcing.MarkNotificationsAsCommitted() => _notifications.Clear();
 
         IOrderedEnumerable<INotificationEvent<TAggregateId>> INotificationSourcing<TAggregateId>.GetNotifications()
             => _notifications.OrderBy(o => o.OccurredOn);
 
-        void IDomainEventSourcing<TAggregateId>.MarkEventsAsCommitted() => _events.Clear();
+        void IDomainEventSourcing.MarkEventsAsCommitted() => _events.Clear();
 
         IOrderedEnumerable<IDomainEvent<TAggregateId>> IDomainEventSourcing<TAggregateId>.GetUncommittedEvents()
             => _events.OrderBy(o => o.Version);
