@@ -109,14 +109,14 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the default <see cref="DataContextTenantMiddleware"/> type to the application's request pipeline.
+        /// Adds the default <see cref="UnitOfWorkMultiTenancyMiddleware"/> type to the application's request pipeline.
         /// </summary>
         /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
         /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
-        public static IXpandableApplicationBuilder UseXDataContextTenantMiddleware(this IXpandableApplicationBuilder builder)
+        public static IXpandableApplicationBuilder UseXUnitOfWorkMultiTenancyMiddleware(this IXpandableApplicationBuilder builder)
         {
             _ = builder ?? throw new ArgumentNullException(nameof(builder));
-            builder.Builder.UseMiddleware<DataContextTenantMiddleware>();
+            builder.Builder.UseMiddleware<UnitOfWorkMultiTenancyMiddleware>();
 
             return builder;
         }

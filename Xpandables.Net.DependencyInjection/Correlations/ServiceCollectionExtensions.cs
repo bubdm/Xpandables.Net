@@ -21,8 +21,7 @@ using System;
 
 using Xpandables.Net.Commands;
 using Xpandables.Net.Correlations;
-using Xpandables.Net.Decorators;
-using Xpandables.Net.Decorators.Correlations;
+using Xpandables.Net.Correlations.Decorators;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.DependencyInjection

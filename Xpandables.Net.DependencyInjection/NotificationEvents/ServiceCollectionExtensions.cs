@@ -30,15 +30,6 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the default <see cref="INotificationEventService"/> type implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationEventService(this IXpandableServiceBuilder services)
-            => services.AddXNotificationEventService<NotificationEventService>();
-
-        /// <summary>
         /// Adds the <see cref="INotificationEventService"/> type implementation to the services with scope life time.
         /// </summary>
         /// <typeparam name="TNotificationEventService">The notification event service type implementation.</typeparam>

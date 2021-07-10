@@ -53,7 +53,7 @@ namespace Xpandables.Net.NotificationEvents
     public interface INotificationEventHandler<TAggregateId, in TNotificationEvent>
         : INotificationEventHandler, ICanHandle<TNotificationEvent>
         where TNotificationEvent : class, INotificationEvent<TAggregateId>
-        where TAggregateId : notnull, IAggregateId
+        where TAggregateId : class, IAggregateId
     {
         /// <summary>
         /// Asynchronously handles the notification of specific type.
@@ -86,7 +86,7 @@ namespace Xpandables.Net.NotificationEvents
         : INotificationEventHandler, ICanHandle<TNotificationEvent>
         where TNotificationEvent : class, INotificationEvent<TAggregateId, TDomainEvent>
         where TDomainEvent : class, IDomainEvent<TAggregateId>
-        where TAggregateId : notnull, IAggregateId
+        where TAggregateId : class, IAggregateId
     {
         /// <summary>
         /// Asynchronously handles the notification of specific type.

@@ -27,7 +27,7 @@ namespace Xpandables.Net
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     [Serializable]
     public abstract class Event<TAggregateId> : CommandQueryEvent, IEvent<TAggregateId>
-        where TAggregateId : notnull, AggregateId
+        where TAggregateId : notnull, IAggregateId
     {
         /// <summary>
         /// Constructs a new instance of <see cref="Event{TAggregateId}"/> with its target aggregate id.

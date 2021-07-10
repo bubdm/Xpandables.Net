@@ -45,7 +45,7 @@ namespace Xpandables.Net.Security
             => new FailureOperationResult<AccessToken>(new AccessToken("TOKEN VALUE", "TOKEN TYPE", DateTime.UtcNow));
 
         /// <summary>
-        /// Returns the collection of claims from the specified token.
+        /// Returns after validation the collection of claims from the specified token.
         /// </summary>
         /// <param name="token">The token string.</param>
         /// <returns>An collection of claims if OK.</returns>
@@ -53,7 +53,15 @@ namespace Xpandables.Net.Security
         IOperationResult<IEnumerable<Claim>> ReadToken(string token);
 
         /// <summary>
-        /// Returns the collection of claims from the specified token.
+        /// Returns without validation the collection of claims from the specified token.
+        /// </summary>
+        /// <param name="token">The token string.</param>
+        /// <returns>An collection of claims if OK.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
+        IOperationResult<IEnumerable<Claim>> ReadUnsafeToken(string token);
+
+        /// <summary>
+        /// Returns after validation the collection of claims from the specified token.
         /// </summary>
         /// <param name="token">The token string.</param>
         /// <returns>An collection of claims if OK.</returns>
