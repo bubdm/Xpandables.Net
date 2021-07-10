@@ -19,7 +19,7 @@ using System;
 
 using Xpandables.Net.Aggregates;
 
-namespace Xpandables.Net.DomainEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
     /// This is the <see langword="abstract"/> class that implements <see cref="IDomainEvent{TAggregateId}"/>.

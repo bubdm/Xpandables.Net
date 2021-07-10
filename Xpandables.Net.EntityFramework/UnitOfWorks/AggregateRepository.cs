@@ -8,9 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
-using Xpandables.Net.DomainEvents;
 using Xpandables.Net.Entities;
-using Xpandables.Net.NotificationEvents;
+using Xpandables.Net.Events;
 
 namespace Xpandables.Net.UnitOfWorks
 {

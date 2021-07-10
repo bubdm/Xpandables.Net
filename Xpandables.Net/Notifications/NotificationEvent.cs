@@ -19,9 +19,8 @@ using System;
 using System.Text.Json.Serialization;
 
 using Xpandables.Net.Aggregates;
-using Xpandables.Net.DomainEvents;
 
-namespace Xpandables.Net.NotificationEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Represents a helper class that allows implementation of <see cref="INotificationEvent{TAggregateId}"/> interface.

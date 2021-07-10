@@ -19,7 +19,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Xpandables.Net.NotificationEvents;
+using Xpandables.Net.Events;
 
 namespace Xpandables.Net.TypeConfigurations
 {

@@ -20,7 +20,7 @@ using System.Text.Json.Serialization;
 
 using Xpandables.Net.Aggregates;
 
-namespace Xpandables.Net.EmailEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Represents a helper class that allows implementation of <see cref="IEmailEvent{TEmail}"/> interface.

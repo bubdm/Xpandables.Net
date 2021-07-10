@@ -22,9 +22,8 @@ using System.Linq;
 using System.Reflection;
 
 using Xpandables.Net.Commands;
-using Xpandables.Net.DomainEvents;
+using Xpandables.Net.Events;
 using Xpandables.Net.Interception;
-using Xpandables.Net.NotificationEvents;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.DependencyInjection

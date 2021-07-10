@@ -18,9 +18,8 @@
 using System.Text.Json.Serialization;
 
 using Xpandables.Net.Aggregates;
-using Xpandables.Net.DomainEvents;
 
-namespace Xpandables.Net.NotificationEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as a notification event.

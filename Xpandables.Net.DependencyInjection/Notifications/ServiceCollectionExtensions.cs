@@ -19,7 +19,7 @@ using Microsoft.Extensions.Hosting;
 
 using System;
 
-using Xpandables.Net.NotificationEvents;
+using Xpandables.Net.Events;
 using Xpandables.Net.Services;
 
 namespace Xpandables.Net.DependencyInjection

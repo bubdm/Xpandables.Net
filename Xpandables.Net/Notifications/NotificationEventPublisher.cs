@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Handlers;
 
-namespace Xpandables.Net.NotificationEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
     /// The default implementation of <see cref="INotificationEventPublisher"/>.

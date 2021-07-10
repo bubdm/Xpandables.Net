@@ -6,8 +6,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.EmailEvents;
 using Xpandables.Net.Entities;
+using Xpandables.Net.Events;
 
 namespace Xpandables.Net.UnitOfWorks
 {

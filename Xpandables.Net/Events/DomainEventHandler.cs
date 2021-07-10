@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
 
-namespace Xpandables.Net.DomainEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Represents a helper class that allows implementation of <see cref="IDomainEventHandler{TAggregateId, TEvent}"/> interface.

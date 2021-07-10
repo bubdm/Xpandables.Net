@@ -15,7 +15,7 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.EmailEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as email event holding 

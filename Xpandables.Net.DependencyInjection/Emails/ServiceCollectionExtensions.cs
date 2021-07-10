@@ -20,7 +20,7 @@ using Microsoft.Extensions.Hosting;
 
 using System;
 
-using Xpandables.Net.EmailEvents;
+using Xpandables.Net.Events;
 using Xpandables.Net.Services;
 
 namespace Xpandables.Net.DependencyInjection

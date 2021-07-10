@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 
 using Xpandables.Net.Handlers;
 
-namespace Xpandables.Net.DomainEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
     /// The domain event publisher.

@@ -20,9 +20,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
-using Xpandables.Net.DomainEvents;
 
-namespace Xpandables.Net.NotificationEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Allows an application author to define a handler for notification.

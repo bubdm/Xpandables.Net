@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.DomainEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Defines a method to automatically dispatch <see cref="IDomainEvent{TAggregateId}"/>.

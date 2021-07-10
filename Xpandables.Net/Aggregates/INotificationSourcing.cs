@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.Linq;
 
-using Xpandables.Net.NotificationEvents;
+using Xpandables.Net.Events;
 
 namespace Xpandables.Net.Aggregates
 {

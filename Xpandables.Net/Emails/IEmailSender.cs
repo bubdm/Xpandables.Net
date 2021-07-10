@@ -18,7 +18,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.EmailEvents
+namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Provides with a method to send emails.

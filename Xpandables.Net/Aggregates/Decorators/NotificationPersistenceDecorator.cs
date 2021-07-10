@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.NotificationEvents;
+using Xpandables.Net.Events;
 using Xpandables.Net.UnitOfWorks;
 
 namespace Xpandables.Net.Aggregates.Decorators
