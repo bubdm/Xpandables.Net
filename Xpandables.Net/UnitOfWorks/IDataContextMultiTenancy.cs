@@ -25,9 +25,9 @@ namespace Xpandables.Net.UnitOfWorks
     public interface IDataContextMultiTenancy
     {
         /// <summary>
-        /// The factory used to retrieve an implementation of <see cref="DataContext"/>.
+        /// The factory used to retrieve an implementation of <see cref="IDataContext"/>.
         /// </summary>
-        Func<DataContext> Factory { get; }
+        Func<IDataContext> Factory { get; }
 
         /// <summary>
         /// Gets the unique identifier for the tenant.
@@ -40,7 +40,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// </summary>
     /// <typeparam name="TDataContext">The type of the data context.</typeparam>
     public interface IDataContextMultiTenancy<out TDataContext> : IDataContextMultiTenancy
-        where TDataContext : DataContext
+        where TDataContext : class, IDataContext
     {
         /// <summary>
         /// The factory used to retrieve an instance of <typeparamref name="TDataContext"/>.

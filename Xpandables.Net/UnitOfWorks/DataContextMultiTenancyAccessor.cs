@@ -41,14 +41,14 @@ namespace Xpandables.Net.UnitOfWorks
         }
 
         ///<inheritdoc/>
-        public DataContext? this[string name] =>
+        public IDataContext? this[string name] =>
             _entityUnitOfWorkFactories.TryGetValue(name, out var factory) ? factory.Factory() : default;
 
         ///<inheritdoc/>
         public string? TenantName { get; private set; }
 
         ///<inheritdoc/>
-        public DataContext GetDataContext()
+        public IDataContext GetDataContext()
         {
             _ = TenantName ?? throw new ArgumentException("The tenant name has not been set.");
 
@@ -72,7 +72,7 @@ namespace Xpandables.Net.UnitOfWorks
 
         ///<inheritdoc/>
         public void SetTenantName<TDataContext>()
-            where TDataContext : DataContext => TenantName = typeof(TDataContext).Name;
+            where TDataContext : class, IDataContext => TenantName = typeof(TDataContext).Name;
 
         ///<inheritdoc/>
         public void SetTenantName(string name) => TenantName = name ?? throw new ArgumentNullException(nameof(name));

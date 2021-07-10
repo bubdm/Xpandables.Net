@@ -36,20 +36,20 @@ namespace Xpandables.Net.UnitOfWorks
         /// <returns><see cref="IUnitOfWork"/> derived class.</returns>
         /// <exception cref="InvalidOperationException">The data context tenant matching the current name has not been registered.</exception>
         /// <exception cref="ArgumentException">The tenant name is null.</exception>
-        DataContext GetDataContext();
+        IDataContext GetDataContext();
 
         /// <summary>
         /// Returns the data context matching the specified tenant name. If not found returns null.
         /// </summary>
         /// <param name="name">The tenant name to search for.</param>
         /// <returns>The requested data context or null if not present.</returns>
-        DataContext? this[string name] { get; }
+        IDataContext? this[string name] { get; }
 
         /// <summary>
         /// Sets the ambient tenant name from the specified type name for the current scope.
         /// </summary>
         /// <typeparam name="TDataContext">The type of the data context.</typeparam>
-        void SetTenantName<TDataContext>() where TDataContext : DataContext;
+        void SetTenantName<TDataContext>() where TDataContext : class, IDataContext;
 
         /// <summary>
         /// Sets the ambient tenant name for the current scope.

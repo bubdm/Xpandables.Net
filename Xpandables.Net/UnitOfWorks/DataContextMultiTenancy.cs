@@ -24,7 +24,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// </summary>
     /// <typeparam name="TDataContext">The type of data context.</typeparam>
     public sealed class DataContextMultiTenancy<TDataContext> : IDataContextMultiTenancy<TDataContext>
-        where TDataContext : DataContext
+        where TDataContext : class, IDataContext
     {
         ///<inheritdoc/>
         public Func<TDataContext> Factory { get; }
@@ -54,6 +54,6 @@ namespace Xpandables.Net.UnitOfWorks
         ///<inheritdoc/>
         public string Name { get; }
 
-        Func<DataContext> IDataContextMultiTenancy.Factory => () => Factory();
+        Func<IDataContext> IDataContextMultiTenancy.Factory => () => Factory();
     }
 }

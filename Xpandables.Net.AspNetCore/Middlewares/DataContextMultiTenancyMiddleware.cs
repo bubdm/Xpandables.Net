@@ -25,10 +25,10 @@ using Xpandables.Net.UnitOfWorks;
 namespace Xpandables.Net.Middlewares
 {
     /// <summary>
-    /// Defines the unit of work scope using the <see cref="UnitOfWorkMultiTenancyAttribute"/> found in the current endpoint.
+    /// Defines the data context scope using the <see cref="DataContextMultiTenancyAttribute"/> found in the current endpoint.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
-    public class UnitOfWorkMultiTenancyMiddleware : IMiddleware
+    public class DataContextMultiTenancyMiddleware : IMiddleware
     {
         /// <summary>
         /// Request handling method.
@@ -38,9 +38,9 @@ namespace Xpandables.Net.Middlewares
         /// <returns>A <see cref="Task" /> that represents the execution of this middleware.</returns>
         public virtual async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (context.GetEndpoint() is { } endpoint && endpoint.Metadata.GetMetadata<UnitOfWorkMultiTenancyAttribute>() is { } unitOfWorkMultiTenancyAttribute)
+            if (context.GetEndpoint() is { } endpoint && endpoint.Metadata.GetMetadata<DataContextMultiTenancyAttribute>() is { } unitOfWorkMultiTenancyAttribute)
             {
-                var unitOfWorkMultitenancyAccessor = context.RequestServices.GetRequiredService<IUnitOfWorkMultiTenancyAccessor>();
+                var unitOfWorkMultitenancyAccessor = context.RequestServices.GetRequiredService<IDataContextMultiTenancyAccessor>();
                 unitOfWorkMultitenancyAccessor.SetTenantName(unitOfWorkMultiTenancyAttribute.TenantName);
             }
 
