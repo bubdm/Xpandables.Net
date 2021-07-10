@@ -23,26 +23,32 @@ using Xpandables.Net.Aggregates;
 namespace Xpandables.Net.EmailEvents
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IEmailEvent{ TEmail}"/> interface.
+    /// Represents a helper class that allows implementation of <see cref="IEmailEvent{TEmail}"/> interface.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TEmailMessage">the type of the email message. The type must be serializable.</typeparam>
-    public abstract class EmailEvent<TAggregateId, TEmailMessage> : Event<TAggregateId>, IEmailEvent<TEmailMessage>
-        where TAggregateId : notnull, AggregateId
-        where TEmailMessage : notnull
+    public abstract class EmailEvent<TEmailMessage> : IEmailEvent<TEmailMessage>
+        where TEmailMessage : class
     {
         /// <summary>
-        /// Initializes a default instance of the <see cref="EmailEvent{TAggregateId, TEmail}"/>.
+        /// Initializes a default instance of the <see cref="EmailEvent{TEmail}"/>.
         /// </summary>
         /// <param name="aggregateId">The aggregate id.</param>
         /// <param name="emailMessage">The target email event.</param>
         [JsonConstructor]
-        protected EmailEvent(TAggregateId aggregateId, TEmailMessage emailMessage)
-            : base(aggregateId)
-            => EmailMessage = emailMessage ?? throw new ArgumentNullException(nameof(emailMessage));
+        protected EmailEvent(IAggregateId aggregateId, TEmailMessage emailMessage)
+        {
+            AggregateId = aggregateId ?? throw new ArgumentNullException(nameof(aggregateId));
+            EmailMessage = emailMessage ?? throw new ArgumentNullException(nameof(emailMessage));
+        }
 
         ///<inheritdoc/>
         public TEmailMessage EmailMessage { get; }
+
+        ///<inheritdoc/>
+        public IAggregateId AggregateId { get; protected set; }
+
+        ///<inheritdoc/>
+        public Guid Guid { get; } = Guid.NewGuid();
 
         object IEmailEvent.EmailMessage => EmailMessage;
     }

@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Aggregates;
 using Xpandables.Net.Entities;
 using Xpandables.Net.UnitOfWorks;
 
@@ -13,11 +12,7 @@ namespace Xpandables.Net.EmailEvents
     /// <summary>
     /// Represents a set of methods to read/write email event to/from an event store.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public interface IEmailEventRepository<TAggregateId, TAggregate> : IRepository<EmailEventStoreEntity>
-        where TAggregate : class, IAggregate<TAggregateId>
-        where TAggregateId : class, IAggregateId
+    public interface IEmailEventRepository : IRepository<EmailEventStoreEntity>
     {
         /// <summary>
         /// Gets or sets the current <see cref="JsonSerializerOptions"/> to be used for serialization.

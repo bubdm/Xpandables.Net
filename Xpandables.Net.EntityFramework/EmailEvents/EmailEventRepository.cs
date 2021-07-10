@@ -7,20 +7,15 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Aggregates;
 using Xpandables.Net.Entities;
 using Xpandables.Net.UnitOfWorks;
 
 namespace Xpandables.Net.EmailEvents
 {
     /// <summary>
-    /// Represents the EFCore implementation of <see cref="IEmailEventRepository{TAggregateId, TAggregate}"/>.
+    /// Represents the EFCore implementation of <see cref="IEmailEventRepository"/>.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    /// <typeparam name="TAggregate">The type of the target aggregate.</typeparam>
-    public class EmailEventRepository<TAggregateId, TAggregate> : Repository<EmailEventStoreEntity>, IEmailEventRepository<TAggregateId, TAggregate>
-        where TAggregate : class, IAggregate<TAggregateId>
-        where TAggregateId : class, IAggregateId
+    public class EmailEventRepository : Repository<EmailEventStoreEntity>, IEmailEventRepository
     {
         ///<inheritdoc/>
         protected override EmailEventDataContext Context { get; }
@@ -32,7 +27,7 @@ namespace Xpandables.Net.EmailEvents
         public JsonDocumentOptions DocumentOptions { get; set; } = default;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="EmailEventRepository{TAggregateId, TAggregate}"/>.
+        /// Constructs a new instance of <see cref="EmailEventRepository"/>.
         /// </summary>
         /// <param name="context">The db context to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
@@ -63,7 +58,7 @@ namespace Xpandables.Net.EmailEvents
             where TEmailMessage : class
         {
             var aggregateId = @event.AggregateId.AsString();
-            var aggregateTypeName = typeof(TAggregate).GetNameWithoutGenericArity();
+            var aggregateTypeName = @event.AggregateId.GetType().GetNameWithoutGenericArity();
             var eventTypeFullName = @event.GetType().AssemblyQualifiedName!;
             var eventTypeName = @event.GetType().GetNameWithoutGenericArity();
 
