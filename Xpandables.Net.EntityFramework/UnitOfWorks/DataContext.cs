@@ -19,12 +19,12 @@ using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net
+namespace Xpandables.Net.UnitOfWorks
 {
     /// <summary>
     /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/>.
     /// </summary>
-    public abstract class DataContext : DbContext
+    public abstract class DataContext : DbContext, IDataContext
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataContext"/> class
