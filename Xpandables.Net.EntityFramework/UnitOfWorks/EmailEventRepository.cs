@@ -15,7 +15,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// Represents the EFCore implementation of <see cref="IEmailEventRepository{TEmailMessage}"/>.
     /// </summary>
     /// <typeparam name="TEmailMessage">The type of the message.</typeparam>
-    public class EmailEventRepository<TEmailMessage> : Repository<EmailEventStoreEntity>, IEmailEventRepository<TEmailMessage>
+    public class EmailEventRepository<TEmailMessage> : EventRepository<EmailEventStoreEntity>, IEmailEventRepository<TEmailMessage>
         where TEmailMessage : class
     {
         /// <summary>

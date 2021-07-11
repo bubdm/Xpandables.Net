@@ -7,7 +7,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// <summary>
     /// Provides with the base unit of work interface.
     /// </summary>
-    public interface IUnitOfWork : IAsyncDisposable
+    public interface IUnitOfWork : IAsyncDisposable, IDisposable
     {
         /// <summary>
         /// Persists all pending domain objects to the data storage according to the database provider/ORM.

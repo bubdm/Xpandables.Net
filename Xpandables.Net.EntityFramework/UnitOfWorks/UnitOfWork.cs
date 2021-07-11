@@ -10,7 +10,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// <summary>
     /// Represents the base EFCore implementation of <see cref="IUnitOfWork"/>.
     /// </summary>
-    public abstract class UnitOfWork<TContext> : IUnitOfWork
+    public abstract class UnitOfWork<TContext> : Disposable, IUnitOfWork
         where TContext : DataContext
     {
         /// <summary>
@@ -39,11 +39,35 @@ namespace Xpandables.Net.UnitOfWorks
             }
         }
 
+        private bool _isDisposed;
+
         ///<inheritdoc/>
-        public virtual async ValueTask DisposeAsync()
+        protected override void Dispose(bool disposing)
         {
-            await Context.DisposeAsync().ConfigureAwait(false);
-            GC.SuppressFinalize(this);
+            if (!_isDisposed)
+            {
+                _isDisposed = true;
+
+                if (disposing)
+                {
+                    Context?.Dispose();
+                }
+
+                base.Dispose(disposing);
+            }
+        }
+
+        ///<inheritdoc/>
+        protected override async ValueTask DisposeAsync(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                _isDisposed = true;
+
+                await Context.DisposeAsync().ConfigureAwait(false);
+
+                await base.DisposeAsync(disposing).ConfigureAwait(false);
+            }
         }
     }
 }

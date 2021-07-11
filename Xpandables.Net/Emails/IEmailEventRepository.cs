@@ -21,7 +21,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Entities;
-using Xpandables.Net.UnitOfWorks;
 
 namespace Xpandables.Net.Events
 {
@@ -29,7 +28,7 @@ namespace Xpandables.Net.Events
     /// Represents a set of methods to read/write email event to/from an event store.
     /// </summary>
     /// <typeparam name="TEmailMessage">the type of the message.</typeparam>
-    public interface IEmailEventRepository<TEmailMessage> : IRepository<EmailEventStoreEntity>
+    public interface IEmailEventRepository<TEmailMessage> : IEventRepository<EmailEventStoreEntity>
         where TEmailMessage : class
     {
         /// <summary>
