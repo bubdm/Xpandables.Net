@@ -115,8 +115,9 @@ namespace Xpandables.Net.UnitOfWorks
             TDocument document,
             JsonSerializerOptions? serializerOptions,
             JsonDocumentOptions documentOptions)
+            where TDocument : notnull
         {
-            var eventString = JsonSerializer.Serialize(document, documentOptions.GetType(), serializerOptions);
+            var eventString = JsonSerializer.Serialize(document, document.GetType(), serializerOptions);
             return JsonDocument.Parse(eventString, documentOptions);
         }
     }
