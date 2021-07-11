@@ -115,8 +115,18 @@ namespace Xpandables.Net
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
         public void Add(string key, Exception exception)
         {
-            var resultError = new OperationError(key, exception);
-            Add(resultError);
+            _ = key ?? throw new ArgumentNullException(nameof(key));
+            _ = exception ?? throw new ArgumentNullException(nameof(exception));
+
+            if (this[key] is { } error)
+            {
+                error.Exception = error.Exception is not null ? new AggregateException(error.Exception, exception) : exception;
+            }
+            else
+            {
+                var resultError = new OperationError(key, exception);
+                Add(resultError);
+            }
         }
 
         /// <summary>
@@ -128,8 +138,18 @@ namespace Xpandables.Net
         /// <exception cref="ArgumentNullException">The <paramref name="errorMessages"/> is null.</exception>
         public void Add(string key, params string[] errorMessages)
         {
-            var resultError = new OperationError(key, errorMessages);
-            Add(resultError);
+            _ = key ?? throw new ArgumentNullException(nameof(key));
+            _ = errorMessages ?? throw new ArgumentNullException(nameof(errorMessages));
+
+            if (this[key] is { } error)
+            {
+                error.ErrorMessages = error.ErrorMessages.Union(errorMessages).ToArray();
+            }
+            else
+            {
+                var resultError = new OperationError(key, errorMessages);
+                Add(resultError);
+            }
         }
 
         /// <summary>
