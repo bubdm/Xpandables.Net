@@ -16,7 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Net;
 
 namespace Xpandables.Net
@@ -56,7 +55,7 @@ namespace Xpandables.Net
         /// <summary>
         /// Gets the collection of errors.
         /// </summary>
-        IReadOnlyCollection<OperationError> Errors { get; }
+        OperationErrorCollection Errors { get; }
 
         /// <summary>
         /// Gets the operation HTTP status code.
@@ -156,45 +155,45 @@ namespace Xpandables.Net
         /// <summary>
         /// Gets the collection of errors.
         /// </summary>
-        public IReadOnlyCollection<OperationError> Errors { get; }
-
-        /// <summary>
-        /// Gets the operation HTTP status code.
-        /// </summary>
-        public HttpStatusCode StatusCode { get; }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="OperationResult"/> with the specified status and specified errors collection.
-        /// </summary>
-        /// <param name="status">The operation status.</param>
-        /// <param name="statusCode">The HTTP operation status code.</param>
-        /// <param name="errors">The errors collection.</param>
-        /// <param name="value">The value of the result.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
-        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, IReadOnlyCollection<OperationError> errors, object value)
-            => (Status, StatusCode, Value, Errors) = (status, statusCode, value, errors ?? throw new ArgumentNullException(nameof(errors)));
-    }
+        public OperationErrorCollection Errors { get; } = new();
 
     /// <summary>
-    /// The <see cref="OperationResult{TValue}"/> represents the status of an operation and implements the <see cref="IOperationResult{TValue}"/> interface with a value.
+    /// Gets the operation HTTP status code.
     /// </summary>
-    /// <typeparam name="TValue">the type of the value.</typeparam>
-    public abstract class OperationResult<TValue> : OperationResult, IOperationResult<TValue>
-    {
-        /// <summary>
-        /// Gets a user-defined object that qualifies or contains information about an operation return.
-        /// </summary>
-        public new TValue Value { get; }
+    public HttpStatusCode StatusCode { get; }
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="OperationResult{TValue}"/> with the specified status, the specified error collection and the target value.
-        /// </summary>
-        /// <param name="state">The status of the operation result.</param>
-        /// <param name="statusCode">The HTTP operation status code.</param>
-        /// <param name="errors">The errors collection.</param>
-        /// <param name="value">The value of the specific type.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
-        protected OperationResult(OperationStatus state, HttpStatusCode statusCode, IReadOnlyCollection<OperationError> errors, TValue value)
-            : base(state, statusCode, errors, value!) => Value = value;
-    }
+    /// <summary>
+    /// Initializes a new instance of <see cref="OperationResult"/> with the specified status and specified errors collection.
+    /// </summary>
+    /// <param name="status">The operation status.</param>
+    /// <param name="statusCode">The HTTP operation status code.</param>
+    /// <param name="errors">The errors collection.</param>
+    /// <param name="value">The value of the result.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
+    protected OperationResult(OperationStatus status, HttpStatusCode statusCode, OperationErrorCollection errors, object value)
+        => (Status, StatusCode, Value, Errors) = (status, statusCode, value, errors ?? throw new ArgumentNullException(nameof(errors)));
+}
+
+/// <summary>
+/// The <see cref="OperationResult{TValue}"/> represents the status of an operation and implements the <see cref="IOperationResult{TValue}"/> interface with a value.
+/// </summary>
+/// <typeparam name="TValue">the type of the value.</typeparam>
+public abstract class OperationResult<TValue> : OperationResult, IOperationResult<TValue>
+{
+    /// <summary>
+    /// Gets a user-defined object that qualifies or contains information about an operation return.
+    /// </summary>
+    public new TValue Value { get; }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="OperationResult{TValue}"/> with the specified status, the specified error collection and the target value.
+    /// </summary>
+    /// <param name="state">The status of the operation result.</param>
+    /// <param name="statusCode">The HTTP operation status code.</param>
+    /// <param name="errors">The errors collection.</param>
+    /// <param name="value">The value of the specific type.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
+    protected OperationResult(OperationStatus state, HttpStatusCode statusCode, OperationErrorCollection errors, TValue value)
+        : base(state, statusCode, errors, value!) => Value = value;
+}
 }

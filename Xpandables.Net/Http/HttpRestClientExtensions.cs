@@ -265,7 +265,7 @@ namespace Xpandables.Net.Http
                         (kvp, value) => new OperationError(kvp.Key, kvp.Value.ToArray()))
                         .ToArray();
 
-                    return new FailureOperationResult(response.StatusCode, operationErrors);
+                    return new FailureOperationResult(response.StatusCode, new OperationErrorCollection(operationErrors));
                 }
                 else
                 {
