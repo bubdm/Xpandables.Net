@@ -30,6 +30,7 @@ namespace Xpandables.Net.DependencyInjection
     {
         /// <summary>
         /// Adds the <typeparamref name="TImplementation"/> for <typeparamref name="TInterface"/> unit of work to the services with scoped life time.
+        /// Do not use with multi-tenancy.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
@@ -40,6 +41,70 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.Services.AddScoped<TInterface, TImplementation>();
+            services.Services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<TInterface>());
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <typeparamref name="TUnitOfWork"/> type to the collection of tenants in multi-tenancy context.
+        /// The tenant will be named as the type of the unit of work.
+        /// </summary>
+        /// <typeparam name="TUnitOfWork">The type of unit of work.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXUnitOfWorkMultiTenancy<TUnitOfWork>(this IXpandableServiceBuilder services)
+            where TUnitOfWork : class, IUnitOfWork
+        {
+            var serviceDescriptor = new ServiceDescriptor(
+                typeof(IUnitOfWorkMultiTenancy),
+                provider => new UnitOfWorkMultiTenancy<TUnitOfWork>(() => provider.GetRequiredService<TUnitOfWork>()),
+                ServiceLifetime.Scoped);
+
+            services.Services.Add(serviceDescriptor);
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <typeparamref name="TUnitOfWork"/> type to the collection of tenants in multi-tenancy context.
+        /// </summary>
+        /// <typeparam name="TUnitOfWork">The type of unit of work.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="name">The unique identifier of the tenant.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXUnitOfWorkMultiTenancy<TUnitOfWork>(this IXpandableServiceBuilder services, string name)
+            where TUnitOfWork : class, IUnitOfWork
+        {
+            _ = name ?? throw new ArgumentNullException(nameof(name));
+
+            var serviceDescriptor = new ServiceDescriptor(
+                typeof(IUnitOfWorkMultiTenancy),
+                provider => new UnitOfWorkMultiTenancy<TUnitOfWork>(name, () => provider.GetRequiredService<TUnitOfWork>()),
+                ServiceLifetime.Scoped);
+
+            services.Services.Add(serviceDescriptor);
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IUnitOfWorkMultiTenancyAccessor"/> implementation type that get called to resolve <see cref="IUnitOfWork"/> in multi-tenancy context.
+        /// You have to register your unit of work(s) using the <see cref="AddXUnitOfWorkMultiTenancy{TUnitOfWork}(IXpandableServiceBuilder)"/>.
+        /// The type is registered with scoped life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXUnitOfWorkMultiTenancyAccessor(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<IUnitOfWorkMultiTenancyAccessor, UnitOfWorkMultiTenancyAccessor>();
+
+            var serviceDescriptor = new ServiceDescriptor(
+                typeof(IUnitOfWork),
+                provider => provider.GetRequiredService<IUnitOfWorkMultiTenancyAccessor>().GetUnitOfWork(),
+                ServiceLifetime.Scoped);
+
+            services.Services.Add(serviceDescriptor);
+
             return services;
         }
     }

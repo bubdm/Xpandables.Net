@@ -24,7 +24,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// <summary>
     /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/>.
     /// </summary>
-    public abstract class DataContext : DbContext, IDataContext
+    public abstract class DataContext : DbContext
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataContext"/> class
