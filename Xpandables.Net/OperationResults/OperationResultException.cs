@@ -19,7 +19,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Xpandables.Net.OperationResults
+namespace Xpandables.Net
 {
     /// <summary>
     /// Represents an exception that holds an <see cref="IOperationResult"/>.

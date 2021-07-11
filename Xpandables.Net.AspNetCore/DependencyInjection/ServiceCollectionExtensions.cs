@@ -135,7 +135,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="ExceptionController"/> to the services.
+        /// Adds the <see cref="OperationResultExceptionController"/> to the services.
         /// This controller is used to handle exceptions before target controller get called.
         /// </summary>
         /// <param name="services">The collection of services.</param>
@@ -144,8 +144,38 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddScoped<ExceptionController>();
+            services.Services.AddScoped<OperationResultExceptionController>();
             return services;
+        }
+
+        /// <summary>
+        /// Registers the <see cref="OperationResultExceptionMiddleware"/> to the services.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXOperationResultExceptionMiddleware(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<OperationResultExceptionController>();
+            services.Services.AddScoped<OperationResultExceptionMiddleware>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="OperationResultExceptionMiddleware"/>  type to the application's request pipeline.
+        /// <para></para>
+        /// <para>Make sure to register the <see cref="OperationResultExceptionMiddleware"/> using the <see cref="AddXOperationResultExceptionMiddleware(IXpandableServiceBuilder)"/> method.</para>
+        /// </summary>
+        /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
+        /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
+        public static IXpandableApplicationBuilder UseXOperationResultExceptionMiddleware(this IXpandableApplicationBuilder builder)
+        {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+
+            builder.Builder.UseMiddleware<OperationResultExceptionMiddleware>();
+
+            return builder;
         }
 
         /// <summary>

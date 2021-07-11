@@ -110,7 +110,7 @@ namespace Xpandables.Net
                     var controller = (ControllerBase)context.Controller;
                     if (controller is null)
                     {
-                        controller = context.HttpContext.RequestServices.GetRequiredService<ExceptionController>();
+                        controller = context.HttpContext.RequestServices.GetRequiredService<OperationResultExceptionController>();
                         controller.ControllerContext = new ControllerContext(
                             new ActionContext(
                                 context.HttpContext,
