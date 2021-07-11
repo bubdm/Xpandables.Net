@@ -97,6 +97,15 @@ namespace Xpandables.Net.UnitOfWorks
         Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Marks the specified entity to be updated to the data storage on persistence according to the database provider/ORM.
+        /// </summary>
+        /// <param name="entity">The entity to be updated and persisted.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an  asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="entity"/> is null.</exception>
+        Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Marks the domain objects matching the predicate as deleted and will be removed according to the database provider/ORM.
         /// </summary>
         /// <param name="predicate">Defines a set of criteria that entity should meet to be deleted.</param>

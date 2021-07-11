@@ -97,6 +97,13 @@ namespace Xpandables.Net.UnitOfWorks
             .ConfigureAwait(false);
 
         ///<inheritdoc/>
+        public virtual async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        {
+            Context.Set<TEntity>().Update(entity);
+            await Task.CompletedTask.ConfigureAwait(false);
+        }
+
+        ///<inheritdoc/>
         public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
             await foreach (var entity in Context.Set<TEntity>().Where(predicate).AsAsyncEnumerable())
