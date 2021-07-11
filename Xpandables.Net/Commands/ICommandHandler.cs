@@ -38,6 +38,7 @@ namespace Xpandables.Net.Commands
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+        /// <remarks>You can throw an <see cref="OperationResultException"/> also.</remarks>
         Task<IOperationResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
     }
 
@@ -59,6 +60,7 @@ namespace Xpandables.Net.Commands
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="command"/> is null.</exception>
         /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+        /// <remarks>You can throw an <see cref="OperationResultException"/> also.</remarks>
         Task<IOperationResult<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
     }
 }
