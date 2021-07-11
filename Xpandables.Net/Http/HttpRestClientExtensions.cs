@@ -270,7 +270,7 @@ namespace Xpandables.Net.Http
                 else
                 {
                     var errorMessage = exception.Message;
-                    return new FailureOperationResult(response.StatusCode, "error", errorMessage);
+                    return new FailureOperationResult(response.StatusCode, new OperationErrorCollection("error", errorMessage));
                 }
             }
 

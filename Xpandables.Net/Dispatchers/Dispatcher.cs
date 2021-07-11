@@ -53,7 +53,7 @@ namespace Xpandables.Net.Dispatchers
             IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
                 => isValid switch
                 {
-                    false => InternalErrorOperation<TResult>(key, errorMessage),
+                    false => InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
                     _ => OkOperation<TResult>()
                 };
 
@@ -75,7 +75,7 @@ namespace Xpandables.Net.Dispatchers
             IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
                 => isValid switch
                 {
-                    false => InternalErrorOperation<TResult>(key, errorMessage),
+                    false => InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
                     _ => OkOperation<TResult>()
                 };
 
@@ -97,7 +97,7 @@ namespace Xpandables.Net.Dispatchers
             IOperationResult CreateResult(bool isValid, string key, string errorMessage)
                 => isValid switch
                 {
-                    false => InternalErrorOperation(key, errorMessage),
+                    false => InternalErrorOperation(new OperationErrorCollection(key, errorMessage)),
                     _ => OkOperation()
                 };
 
@@ -119,7 +119,7 @@ namespace Xpandables.Net.Dispatchers
             IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
                 => isValid switch
                 {
-                    false => InternalErrorOperation<TResult>(key, errorMessage),
+                    false => InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
                     _ => OkOperation<TResult>()
                 };
 
