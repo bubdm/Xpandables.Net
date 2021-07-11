@@ -59,6 +59,38 @@ namespace Xpandables.Net.Entities
         public JsonDocument EventData { get; internal init; }
 
         /// <summary>
+        /// Gets the exception.
+        /// </summary>
+        public string? Exception { get; private set; }
+
+        /// <summary>
+        /// Gets the exception full type name.
+        /// </summary>
+        public string? ExceptionTypeFullName { get; private set; }
+
+        /// <summary>
+        /// Adds the specified exception to the event store.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
+        public void AddException(Exception exception)
+        {
+            _ = exception ?? throw new ArgumentNullException(nameof(exception));
+
+            Exception = exception.ToString();
+            ExceptionTypeFullName = exception.GetType().AssemblyQualifiedName!;
+        }
+
+        /// <summary>
+        /// Remove the underlying exception.
+        /// </summary>
+        public void RemoveException()
+        {
+            Exception = default;
+            ExceptionTypeFullName = default;
+        }
+
+        /// <summary>
         /// Deserializes the content of <see cref="EventData"/> to the specified type.
         /// </summary>
         /// <typeparam name="T">The target type of the UTF-8 encoded text.</typeparam>
@@ -116,6 +148,8 @@ namespace Xpandables.Net.Entities
         /// <param name="eventTypeFullName">The full type name of the event.</param>
         /// <param name="eventTypeName">The type name of the event.</param>
         /// <param name="eventData">The string representation of the event content.</param>
+        /// <param name="exception"></param>
+        /// <param name="exceptionTypeFullName"></param>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateTypeName"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="eventTypeFullName"/> is null.</exception>
@@ -127,13 +161,17 @@ namespace Xpandables.Net.Entities
             string aggregateTypeName,
             string eventTypeFullName,
             string eventTypeName,
-            JsonDocument eventData)
+            JsonDocument eventData,
+            string? exception = default,
+            string? exceptionTypeFullName = default)
         {
             AggregateId = aggregateId ?? throw new ArgumentNullException(nameof(aggregateId));
             AggregateTypeName = aggregateTypeName ?? throw new ArgumentNullException(nameof(aggregateTypeName));
             EventTypeFullName = eventTypeFullName ?? throw new ArgumentNullException(nameof(eventTypeFullName));
             EventTypeName = eventTypeName ?? throw new ArgumentNullException(nameof(eventTypeName));
             EventData = eventData ?? throw new ArgumentNullException(nameof(eventData));
+            Exception = exception?.ToString();
+            ExceptionTypeFullName = exceptionTypeFullName;
         }
 
         ///<inheritdoc/>
