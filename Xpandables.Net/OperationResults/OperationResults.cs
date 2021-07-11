@@ -143,14 +143,6 @@ namespace Xpandables.Net
         protected virtual IOperationResult<TResult> BadOperation<TResult>() => new FailureOperationResult<TResult>();
 
         /// <summary>
-        /// Returns a <see cref="FailureOperationResult{TValue}"/> with the <see cref="HttpStatusCode.BadRequest"/> status code.
-        /// </summary>
-        /// <typeparam name="TResult">The type the result.</typeparam>
-        /// <param name="result">The operation result.</param>
-        /// <returns>A <see cref="FailureOperationResult{TValue}"/>.</returns>
-        protected virtual IOperationResult<TResult> BadOperation<TResult>(TResult result) => new FailureOperationResult<TResult>(result);
-
-        /// <summary>
         /// Returns a <see cref="FailureOperationResult"/> with <see cref="HttpStatusCode.BadRequest"/> and specified errors.
         /// </summary>
         /// <param name="errors">The collection of errors.</param>
