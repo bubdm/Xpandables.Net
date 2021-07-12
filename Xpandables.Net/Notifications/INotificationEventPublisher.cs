@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// Defines a method to automatically publish <see cref="INotificationEvent{TAggregateId}"/> type.
+    /// Defines a method to automatically publish <see cref="INotificationEvent"/> type.
     /// </summary>
     public interface INotificationEventPublisher
     {
@@ -33,8 +33,6 @@ namespace Xpandables.Net.Events
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="event"/> must implement 
-        /// <see cref="INotificationEvent{TAggregateId}"/> or <see cref="INotificationEvent{TAggregateId, TDomainEvent}"/> interface.</exception>
-        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
+        Task PublishAsync(INotificationEvent @event, CancellationToken cancellationToken = default);
     }
 }

@@ -22,26 +22,23 @@ using Xpandables.Net.Aggregates;
 namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// This is the <see langword="abstract"/> class that implements <see cref="IDomainEvent{TAggregateId}"/>.
+    /// This is the <see langword="abstract"/> class that implements <see cref="IDomainEvent"/>.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    [Serializable]
-    public abstract class DomainEvent<TAggregateId> : Event<TAggregateId>, IDomainEvent<TAggregateId>, IEquatable<DomainEvent<TAggregateId>>
-        where TAggregateId : notnull, AggregateId
+    public abstract class DomainEvent : Event, IDomainEvent, IEquatable<DomainEvent>
     {
         /// <summary>
-        /// Constructs a new instance of <see cref="DomainEvent{TAggregateId}"/>.
+        /// Constructs a new instance of <see cref="DomainEvent"/>.
         /// </summary>
         /// <param name="aggregateId">The aggregate identifier.</param>
         /// <param name="version">The version of the  related aggregate.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
-        protected DomainEvent(TAggregateId aggregateId, AggregateVersion version) : base(aggregateId) => Version = version;
+        protected DomainEvent(IAggregateId aggregateId, AggregateVersion version) : base(aggregateId) => Version = version;
 
         ///<inheritdoc/>
         public AggregateVersion Version { get; protected set; }
 
         ///<inheritdoc/>
-        public bool Equals(DomainEvent<TAggregateId>? other)
+        public bool Equals(DomainEvent? other)
         {
             if (other is null)
                 return false;
@@ -52,7 +49,7 @@ namespace Xpandables.Net.Events
         }
 
         ///<inheritdoc/>
-        public virtual IDomainEvent<TAggregateId> WithAggregate(TAggregateId aggregateId, AggregateVersion version)
+        public virtual IDomainEvent WithAggregate(IAggregateId aggregateId, AggregateVersion version)
         {
             AggregateId = aggregateId;
             Version = version;
@@ -60,7 +57,7 @@ namespace Xpandables.Net.Events
         }
 
         ///<inheritdoc/>
-        public override bool Equals(object? obj) => obj is DomainEvent<TAggregateId> domainEvent && Equals(domainEvent);
+        public override bool Equals(object? obj) => obj is DomainEvent domainEvent && Equals(domainEvent);
 
         ///<inheritdoc/>
         public override int GetHashCode() => HashCode.Combine(AggregateId.Value, Guid, Version);

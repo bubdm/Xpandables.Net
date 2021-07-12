@@ -30,11 +30,6 @@ namespace Xpandables.Net.Aggregates
     internal interface IDomainEventSourcing
     {
         /// <summary>
-        /// Gets the unique identifier of the aggregate.
-        /// </summary>
-        IAggregateId AggregateId { get; }
-
-        /// <summary>
         /// Marks all the domain events as committed.
         /// </summary>
         void MarkEventsAsCommitted();
@@ -73,66 +68,5 @@ namespace Xpandables.Net.Aggregates
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The expected handler is not registered.</exception>
         void Mutate(IDomainEvent @event);
-    }
-
-    /// <summary>
-    /// Event-sourcing pattern interface.
-    /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    internal interface IDomainEventSourcing<TAggregateId> : IDomainEventSourcing
-        where TAggregateId : notnull, IAggregateId
-    {
-        /// <summary>
-        /// Gets the unique identifier of the aggregate.
-        /// </summary>
-        new TAggregateId AggregateId { get; }
-
-        IAggregateId IDomainEventSourcing.AggregateId => AggregateId;
-
-        /// <summary>
-        /// Returns a collection of uncommitted events.
-        /// </summary>
-        /// <returns>A list of uncommitted events.</returns>
-        new IOrderedEnumerable<IDomainEvent<TAggregateId>> GetUncommittedEvents();
-
-        IOrderedEnumerable<IDomainEvent> IDomainEventSourcing.GetUncommittedEvents() => GetUncommittedEvents();
-
-        /// <summary>
-        /// Initializes the underlying aggregate with the specified history collection of events.
-        /// </summary>
-        /// <param name="events">The collection of events to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="events"/> is null.</exception>
-        void LoadFromHistory(IOrderedEnumerable<IDomainEvent<TAggregateId>> events);
-
-        void IDomainEventSourcing.LoadFromHistory(IOrderedEnumerable<IDomainEvent> events)
-            => LoadFromHistory((IOrderedEnumerable<IDomainEvent<TAggregateId>>)events);
-
-        /// <summary>
-        /// Applies the history specified domain event to the underlying aggregate.
-        /// </summary>
-        /// <param name="event">The event to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        void LoadFromHistory(IDomainEvent<TAggregateId> @event);
-
-        void IDomainEventSourcing.LoadFromHistory(IDomainEvent @event) => LoadFromHistory((IDomainEvent<TAggregateId>)@event);
-
-        /// <summary>
-        /// Applies the specified event to the current instance.
-        /// </summary>
-        /// <param name="event">The event to act with.</param>
-        /// <exception cref="ArgumentException">The <paramref name="event"/> is null.</exception>
-        void Apply(IDomainEvent<TAggregateId> @event);
-
-        void IDomainEventSourcing.Apply(IDomainEvent @event) => Apply((IDomainEvent<TAggregateId>)@event);
-
-        /// <summary>
-        /// Applies the mutation calling the handler that matches the specified event.
-        /// </summary>
-        /// <param name="event">The event to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The expected handler is not registered.</exception>
-        void Mutate(IDomainEvent<TAggregateId> @event);
-
-        void IDomainEventSourcing.Mutate(IDomainEvent @event) => Mutate((IDomainEvent<TAggregateId>)@event);
     }
 }

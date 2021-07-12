@@ -45,9 +45,7 @@ namespace Xpandables.Net.Events
         }
 
         ///<inheritdoc/>
-        public virtual async Task PublishAsync(
-            IEvent @event,
-            CancellationToken cancellationToken = default)
+        public virtual async Task PublishAsync(INotificationEvent @event, CancellationToken cancellationToken = default)
         {
             _ = @event ?? throw new ArgumentNullException(nameof(@event));
 
@@ -61,24 +59,9 @@ namespace Xpandables.Net.Events
 
         private IEnumerable<INotificationEventHandler> GetNotificationHandlers(IEvent @event)
         {
-            var genericInterfaceType = @event.GetType().GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType
-                    && (i.GetGenericTypeDefinition() == typeof(INotificationEvent<>)
-                    || i.GetGenericTypeDefinition() == typeof(INotificationEvent<,>)))
-                ?? throw new ArgumentException($"The type '{@event.GetType().Name}' must " +
-                $"implement one of '{typeof(INotificationEvent<>).Name}' interfaces.");
+            var genericHandlerType = typeof(INotificationEventHandler<>);
 
-            var aggregateIdType = genericInterfaceType.GetGenericArguments()[0];
-
-            var types = genericInterfaceType.GetGenericTypeDefinition() == typeof(INotificationEvent<>)
-                ? new[] { aggregateIdType, @event.GetType() }
-                : new[] { aggregateIdType, genericInterfaceType.GetGenericArguments()[1], @event.GetType() };
-
-            var genericHandlerType = genericInterfaceType.GetGenericTypeDefinition() == typeof(INotificationEvent<>)
-                ? typeof(INotificationEventHandler<,>) : typeof(INotificationEventHandler<,,>);
-
-            if (!genericHandlerType
-                .TryMakeGenericType(out var typeHandler, out var typeException, aggregateIdType, @event.GetType()))
+            if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, @event.GetType()))
             {
                 Trace.WriteLine(
                     new InvalidOperationException("Building notification Handler type failed.", typeException));

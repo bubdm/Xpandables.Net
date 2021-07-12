@@ -50,8 +50,8 @@ namespace Xpandables.Net.DependencyInjection
 
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandPersistenceDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandPersistenceDecorator<,>));
-            services.XTryDecorate(typeof(IDomainEventHandler<,>), typeof(DomainEventPersistenceDecorator<,>));
-            services.XTryDecorate(typeof(INotificationEventHandler<,>), typeof(NotificationPersistenceDecorator<,>));
+            services.XTryDecorate(typeof(IDomainEventHandler<>), typeof(DomainEventPersistenceDecorator<>));
+            services.XTryDecorate(typeof(INotificationEventHandler<>), typeof(NotificationPersistenceDecorator<>));
             return services;
         }
 

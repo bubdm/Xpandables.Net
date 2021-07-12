@@ -35,7 +35,7 @@ namespace Xpandables.Net.Aggregates
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="aggregate"/> must 
-        /// implement <see cref="IDomainEventSourcing{TAggregateId}"/> interface.</exception>
+        /// implement <see cref="IDomainEventSourcing"/> interface.</exception>
         Task AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default);
 
         /// <summary>

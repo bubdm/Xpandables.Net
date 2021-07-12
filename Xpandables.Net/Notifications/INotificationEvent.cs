@@ -17,36 +17,17 @@
 ************************************************************************************************************/
 using System.Text.Json.Serialization;
 
-using Xpandables.Net.Aggregates;
-
 namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as a notification event.
+    /// Defines a marker interface to be used to mark an object to act as a notification event that contains an <see cref="IDomainEvent"/>.
     /// </summary>
-    public interface INotificationEvent : IEvent { }
-
-    /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as a notification event.
-    /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    public interface INotificationEvent<TAggregateId> : INotificationEvent, IEvent<TAggregateId>
-        where TAggregateId : notnull, IAggregateId
-    { }
-
-    /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as notification holding a specific <see cref="IDomainEvent{TAggregateId}"/>.
-    /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
-    public interface INotificationEvent<TAggregateId, out TDomainEvent> : INotificationEvent<TAggregateId>
-        where TDomainEvent : notnull, IDomainEvent<TAggregateId>
-        where TAggregateId : notnull, IAggregateId
+    public interface INotificationEvent : IEvent
     {
         /// <summary>
         /// Gets the target domain event.
         /// </summary>
         [JsonIgnore]
-        TDomainEvent? DomainEvent { get; }
+        IDomainEvent? DomainEvent { get; }
     }
 }

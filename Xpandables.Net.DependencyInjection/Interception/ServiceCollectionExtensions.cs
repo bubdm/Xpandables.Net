@@ -122,8 +122,7 @@ namespace Xpandables.Net.DependencyInjection
             if (assemblies.Length == 0) throw new ArgumentNullException(nameof(assemblies));
 
             var genericHandlerInterfaceTypes = new[] { typeof(IQueryHandler<,>), typeof(ICommandHandler<>),
-                typeof(ICommandHandler<,>), typeof(IDomainEventHandler<,>), typeof(INotificationEventHandler<,>),
-                typeof(INotificationEventHandler<,,>)};
+                typeof(ICommandHandler<,>), typeof(IDomainEventHandler<>), typeof(INotificationEventHandler<>)};
 
             var handlers = assemblies
                 .SelectMany(ass => ass.GetExportedTypes())

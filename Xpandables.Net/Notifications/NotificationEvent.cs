@@ -15,7 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Text.Json.Serialization;
 
 using Xpandables.Net.Aggregates;
@@ -23,37 +22,16 @@ using Xpandables.Net.Aggregates;
 namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="INotificationEvent{TAggregateId}"/> interface.
+    /// Represents a helper class that allows implementation of <see cref="INotificationEvent"/> interface.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    [Serializable]
-    public abstract class NotificationEvent<TAggregateId> : Event<TAggregateId>, INotificationEvent<TAggregateId>
-        where TAggregateId : notnull, AggregateId
+    public abstract class NotificationEvent : Event, INotificationEvent
     {
         /// <summary>
-        /// Initializes a default instance of the <see cref="NotificationEvent{TAggregateId}"/>.
-        /// </summary>
-        /// <param name="aggregateId">The aggregate id.</param>
-        protected NotificationEvent(TAggregateId aggregateId) : base(aggregateId) { }
-    }
-
-    /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="INotificationEvent{TAggregateId, TEvent}"/> interface.
-    /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
-    [Serializable]
-    public abstract class NotificationEvent<TAggregateId, TDomainEvent>
-        : NotificationEvent<TAggregateId>, INotificationEvent<TAggregateId, TDomainEvent>
-        where TDomainEvent : notnull, IDomainEvent<TAggregateId>
-        where TAggregateId : notnull, AggregateId
-    {
-        /// <summary>
-        /// Initializes a default instance of the <see cref="NotificationEvent{TAggregateId, TEvent}"/>.
+        /// Initializes a default instance of the <see cref="NotificationEvent"/>.
         /// </summary>
         /// <param name="aggregateId">The aggregate id.</param>
         /// <param name="domainEvent">The target domain event.</param>
-        protected NotificationEvent(TAggregateId aggregateId, TDomainEvent? domainEvent = default)
+        protected NotificationEvent(IAggregateId aggregateId, IDomainEvent? domainEvent = default)
             : base(aggregateId)
         {
             DomainEvent = domainEvent;
@@ -61,6 +39,6 @@ namespace Xpandables.Net.Events
 
         ///<inheritdoc/>
         [JsonIgnore]
-        public TDomainEvent? DomainEvent { get; }
+        public IDomainEvent? DomainEvent { get; }
     }
 }

@@ -95,7 +95,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IDomainEventHandler{TAggregateId, TEvent}"/> implementations to the services with scope life time.
+        /// Adds the <see cref="IDomainEventHandler{TEvent}"/> implementations to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -115,13 +115,13 @@ namespace Xpandables.Net.DependencyInjection
                     && !type.IsGenericType
                     && type.GetInterfaces()
                         .Any(inter => inter.IsGenericType
-                            && inter.GetGenericTypeDefinition() == typeof(IDomainEventHandler<,>)))
+                            && inter.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)))
                 .Select(type => new
                 {
                     Type = type,
                     Interfaces = type.GetInterfaces()
                     .Where(inter => inter.IsGenericType
-                        && inter.GetGenericTypeDefinition() == typeof(IDomainEventHandler<,>))
+                        && inter.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>))
                 })
                 .ToList();
 
@@ -137,7 +137,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="INotificationEventHandler{TAggregateId, TNotification}"/> implementations to the services with scope life time.
+        /// Adds the <see cref="INotificationEventHandler{TNotificationEvent}"/> implementations to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types.</param>
@@ -157,13 +157,13 @@ namespace Xpandables.Net.DependencyInjection
                     && !type.IsGenericType
                     && type.GetInterfaces()
                         .Any(inter => inter.IsGenericType
-                            && inter.GetGenericTypeDefinition() == typeof(INotificationEventHandler<,>)))
+                            && inter.GetGenericTypeDefinition() == typeof(INotificationEventHandler<>)))
                 .Select(type => new
                 {
                     Type = type,
                     Interfaces = type.GetInterfaces()
                     .Where(inter => inter.IsGenericType
-                    && inter.GetGenericTypeDefinition() == typeof(INotificationEventHandler<,>))
+                    && inter.GetGenericTypeDefinition() == typeof(INotificationEventHandler<>))
                 })
                 .ToList();
 
@@ -252,8 +252,8 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds and configures the <see cref="ICommandHandler{TCommand}"/>, <see cref="INotificationEventHandler{TAggregateId, TNotificationEvent}"/>,
-        /// <see cref="IQueryHandler{TQuery, TResult}"/>, <see cref="IDomainEventHandler{TAggregateId, TEvent}"/>
+        /// Adds and configures the <see cref="ICommandHandler{TCommand}"/>, <see cref="INotificationEventHandler{TNotificationEvent}"/>,
+        /// <see cref="IQueryHandler{TQuery, TResult}"/>, <see cref="IDomainEventHandler{TEvent}"/>
         /// and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
         /// <param name="services">The collection of services.</param>

@@ -20,6 +20,7 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Defines properties of a snapshot for an aggregate.
     /// </summary>
+    [JsonInterfaceConverter(typeof(JsonInterfaceConverter<ISnapShot>))]
     public interface ISnapShot : IEvent
     {
         /// <summary>
@@ -32,12 +33,4 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         AggregateVersion Version { get; }
     }
-
-    /// <summary>
-    /// Defines properties of a snapshot for an aggregate.
-    /// </summary>
-    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
-    public interface ISnapShot<TAggregateId> : ISnapShot, IEvent<TAggregateId>
-        where TAggregateId : notnull, IAggregateId
-    { }
 }

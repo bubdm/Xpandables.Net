@@ -18,39 +18,19 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Aggregates;
-
 namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Represents a helper class that allows implementation of
-    /// <see cref="INotificationEventHandler{TAggregateId, TNotification}"/> interface.
+    /// <see cref="INotificationEventHandler{TNotificationEvent}"/> interface.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     /// <typeparam name="TNotificationEvent">Type of notification to act on.</typeparam>
-    public abstract class NotificationEventHandler<TAggregateId, TNotificationEvent>
-        : OperationResults, INotificationEventHandler<TAggregateId, TNotificationEvent>
-        where TNotificationEvent : class, INotificationEvent<TAggregateId>
-        where TAggregateId : notnull, AggregateId
+    public abstract class NotificationEventHandler<TNotificationEvent> : INotificationEventHandler<TNotificationEvent>
+        where TNotificationEvent : class, INotificationEvent
     {
         ///<inheritdoc/>
-        public abstract Task HandleAsync(TNotificationEvent notification, CancellationToken cancellationToken = default);
-    }
-
-    /// <summary>
-    /// Represents a helper class that allows implementation 
-    /// of <see cref="INotificationEventHandler{TAggregateId, TDomainEvent, TNotification}"/> interface.
-    /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    /// <typeparam name="TDomainEvent">The type of target domain event.</typeparam>
-    /// <typeparam name="TNotificationEvent">Type of notification to act on.</typeparam>
-    public abstract class NotificationEventHandler<TAggregateId, TDomainEvent, TNotificationEvent> :
-        OperationResults, INotificationEventHandler<TAggregateId, TDomainEvent, TNotificationEvent>
-        where TNotificationEvent : class, INotificationEvent<TAggregateId, TDomainEvent>
-        where TDomainEvent : class, IDomainEvent<TAggregateId>
-        where TAggregateId : notnull, AggregateId
-    {
-        ///<inheritdoc/>
-        public abstract Task HandleAsync(TNotificationEvent notification, CancellationToken cancellationToken = default);
+        public abstract Task HandleAsync(TNotificationEvent @event, CancellationToken cancellationToken = default);
+        Task INotificationEventHandler.HandleAsync(INotificationEvent @event, CancellationToken cancellationToken)
+            => HandleAsync((TNotificationEvent)@event, cancellationToken);
     }
 }

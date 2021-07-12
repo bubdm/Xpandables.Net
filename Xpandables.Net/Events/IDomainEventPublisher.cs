@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Events
 {
     /// <summary>
-    /// Defines a method to automatically dispatch <see cref="IDomainEvent{TAggregateId}"/>.
+    /// Defines a method to automatically dispatch <see cref="IDomainEvent"/>.
     /// </summary>
     public interface IDomainEventPublisher
     {
@@ -33,8 +33,8 @@ namespace Xpandables.Net.Events
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="event"/> must implement <see cref="IDomainEvent{TAggregateId}"/> interface.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="event"/> must implement <see cref="IDomainEvent"/> interface.</exception>
         /// <exception cref="InvalidOperationException">Publishing the event failed. See inner exception.</exception>
-        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
+        Task PublishAsync(IDomainEvent @event, CancellationToken cancellationToken = default);
     }
 }

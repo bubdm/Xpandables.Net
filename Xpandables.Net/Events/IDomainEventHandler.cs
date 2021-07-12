@@ -19,54 +19,44 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Aggregates;
-
 namespace Xpandables.Net.Events
 {
     /// <summary>
     /// Allows an application author to define a handler for a domain event.
-    /// The event must implement <see cref="IDomainEvent{TAggregateId}"/> interface.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
-    /// </summary>
+    /// </summary>    
     public interface IDomainEventHandler : ICanHandle
     {
         /// <summary>
         ///  Asynchronously handle the domain event.
         /// </summary>
-        /// <param name="domainEvent">The domain event instance to act on.</param>
+        /// <param name="event">The domain event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="domainEvent"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="domainEvent"/> does not implement <see cref="IDomainEvent{TAggregateId}"/>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="event"/> does not implement <see cref="IDomainEvent"/>.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task HandleAsync(object domainEvent, CancellationToken cancellationToken = default);
+        Task HandleAsync(IDomainEvent @event, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
-    /// Allows an application author to define a handler for specific type event.
-    /// The event must implement <see cref="IDomainEvent{TAggregateId}"/> interface.
+    /// Allows an application author to define a handler for a domain event.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    /// <typeparam name="TEvent">The event type to be handled.</typeparam>
-    public interface IDomainEventHandler<TAggregateId, in TEvent> : IDomainEventHandler, ICanHandle<TEvent>
-        where TEvent : class, IDomainEvent<TAggregateId>
-        where TAggregateId : notnull, IAggregateId
+    /// <typeparam name="TDomainEvent">The domain event type.</typeparam>
+    public interface IDomainEventHandler<TDomainEvent> : IDomainEventHandler
+        where TDomainEvent : class, IDomainEvent
     {
         /// <summary>
-        /// Asynchronously handles the domain event.
+        ///  Asynchronously handle the domain event.
         /// </summary>
-        /// <param name="domainEvent">The domain event instance to act on.</param>
+        /// <param name="event">The domain event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="domainEvent"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="event"/> does not implement <see cref="IDomainEvent"/>.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task HandleAsync(TEvent domainEvent, CancellationToken cancellationToken = default);
+        Task HandleAsync(TDomainEvent @event, CancellationToken cancellationToken = default);
 
-        Task IDomainEventHandler.HandleAsync(object domainEvent, CancellationToken cancellationToken)
-        {
-            if (domainEvent is TEvent eventInstance)
-                return HandleAsync(eventInstance, cancellationToken);
-
-            throw new ArgumentException($"The parameter does not implement {nameof(IDomainEvent<TAggregateId>)} interface.", nameof(domainEvent));
-        }
+        Task IDomainEventHandler.HandleAsync(IDomainEvent @event, CancellationToken cancellationToken)
+            => HandleAsync((TDomainEvent)@event, cancellationToken);
     }
 }

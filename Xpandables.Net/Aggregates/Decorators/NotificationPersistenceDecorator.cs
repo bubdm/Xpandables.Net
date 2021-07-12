@@ -31,33 +31,31 @@ namespace Xpandables.Net.Aggregates.Decorators
     /// The class decorates the target integration event handler with an implementation of <see cref="IUnitOfWork"/> and executes the
     /// the <see cref="IUnitOfWork.PersistAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
-    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
-    /// <typeparam name="TNotification">Type of integration event.</typeparam>
-    public sealed class NotificationPersistenceDecorator<TAggregateId, TNotification> : INotificationEventHandler<TAggregateId, TNotification>
-        where TNotification : class, INotificationEvent<TAggregateId>, IPersistenceDecorator
-        where TAggregateId : class, IAggregateId
+    /// <typeparam name="TNotificationEvent">Type of integration event.</typeparam>
+    public sealed class NotificationPersistenceDecorator<TNotificationEvent> : INotificationEventHandler<TNotificationEvent>
+        where TNotificationEvent : class, INotificationEvent, IPersistenceDecorator
     {
-        private readonly INotificationEventHandler<TAggregateId, TNotification> _decoratee;
+        private readonly INotificationEventHandler<TNotificationEvent> _decoratee;
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NotificationPersistenceDecorator{TAggregateId, TNotification}"/> class with
+        /// Initializes a new instance of the <see cref="NotificationPersistenceDecorator{TNotification}"/> class with
         /// the decorated handler and the unit of work to act on.
         /// </summary>
         /// <param name="unitOfWork">The unit of work to act on.</param>
         /// <param name="decoratee">The decorated integration event handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="unitOfWork"/> is null.</exception>
-        public NotificationPersistenceDecorator(INotificationEventHandler<TAggregateId, TNotification> decoratee, IUnitOfWork unitOfWork)
+        public NotificationPersistenceDecorator(INotificationEventHandler<TNotificationEvent> decoratee, IUnitOfWork unitOfWork)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
         ///<inheritdoc/>
-        public async Task HandleAsync(TNotification notification, CancellationToken cancellationToken = default)
-{
-            await _decoratee.HandleAsync(notification, cancellationToken).ConfigureAwait(false);
+        public async Task HandleAsync(TNotificationEvent @event, CancellationToken cancellationToken = default)
+        {
+            await _decoratee.HandleAsync(@event, cancellationToken).ConfigureAwait(false);
             await _unitOfWork.PersistAsync(cancellationToken).ConfigureAwait(false);
         }
     }
