@@ -41,5 +41,6 @@ namespace Xpandables.Net.Events
         /// Gets the target email message.
         /// </summary>
         new TEmailMessage EmailMessage { get; }
+        object IEmailEvent.EmailMessage => EmailMessage;
     }
 }
