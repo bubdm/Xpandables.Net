@@ -35,7 +35,7 @@ namespace Xpandables.Net.Events
         /// <param name="aggregateId">The aggregate id.</param>
         /// <param name="emailMessage">The target email event.</param>
         [JsonConstructor]
-        protected EmailEvent(IAggregateId aggregateId, TEmailMessage emailMessage)
+        protected EmailEvent(AggregateId aggregateId, TEmailMessage emailMessage)
             : base(aggregateId)
         {
             EmailMessage = emailMessage ?? throw new ArgumentNullException(nameof(emailMessage));

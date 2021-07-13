@@ -31,7 +31,7 @@ namespace Xpandables.Net.Events
         /// </summary>
         /// <param name="aggregateId">The aggregate id.</param>
         /// <param name="domainEvent">The target domain event.</param>
-        protected NotificationEvent(IAggregateId aggregateId, IDomainEvent? domainEvent = default)
+        protected NotificationEvent(AggregateId aggregateId, IDomainEvent? domainEvent = default)
             : base(aggregateId)
         {
             DomainEvent = domainEvent;

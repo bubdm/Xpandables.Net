@@ -53,14 +53,14 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         /// <param name="value">The value identifier.</param>
         [JsonConstructor]
-        protected AggregateId(Guid value) : base(value) { }
+        public AggregateId(Guid value) : base(value) { }
 
         /// <summary>
         /// Constructs a new instance of <see cref="AggregateId"/> with the string value identifier.
         /// </summary>
         /// <param name="value">The value identifier.</param>
         /// <exception cref="ArgumentException">The <paramref name="value"/> can not be converted to <see cref="Guid"/> type.</exception>
-        protected AggregateId(string value)
+        public AggregateId(string value)
             : base(Guid.TryParse(value, out var guid)
                   ? guid 
                   : throw new ArgumentException($"The specified value '{value}' can not be converted to '{nameof(Guid)}' type"))

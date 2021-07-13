@@ -32,7 +32,7 @@ namespace Xpandables.Net.Events
         /// <param name="aggregateId">The aggregate identifier.</param>
         /// <param name="version">The version of the  related aggregate.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
-        protected DomainEvent(IAggregateId aggregateId, AggregateVersion version) : base(aggregateId) => Version = version;
+        protected DomainEvent(AggregateId aggregateId, AggregateVersion version) : base(aggregateId) => Version = version;
 
         ///<inheritdoc/>
         public AggregateVersion Version { get; protected set; }
@@ -49,7 +49,7 @@ namespace Xpandables.Net.Events
         }
 
         ///<inheritdoc/>
-        public virtual IDomainEvent WithAggregate(IAggregateId aggregateId, AggregateVersion version)
+        public virtual IDomainEvent WithAggregate(AggregateId aggregateId, AggregateVersion version)
         {
             AggregateId = aggregateId;
             Version = version;

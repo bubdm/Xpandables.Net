@@ -36,6 +36,6 @@ namespace Xpandables.Net.Events
         /// <param name="aggregateId">The target aggregate identifier.</param>
         /// <param name="version">The aggregate version.</param>
         /// <returns>A new instance of the domain event.</returns>
-        IDomainEvent WithAggregate(IAggregateId aggregateId, AggregateVersion version);
+        IDomainEvent WithAggregate(AggregateId aggregateId, AggregateVersion version);
     }
 }

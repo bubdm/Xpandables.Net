@@ -36,7 +36,7 @@ namespace Xpandables.Net.Aggregates
         /// <exception cref="ArgumentException">The <paramref name="aggregateId"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="version"/> is null.</exception>
         [JsonConstructor]
-        public SnapShot(IMemento memento, IAggregateId aggregateId, AggregateVersion version)
+        public SnapShot(IMemento memento, AggregateId aggregateId, AggregateVersion version)
             : base(aggregateId)
         {
             Memento = memento ?? throw new ArgumentNullException(nameof(memento));

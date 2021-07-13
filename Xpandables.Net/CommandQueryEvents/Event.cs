@@ -33,7 +33,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="aggregateId">The target aggregate Id</param>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
-        protected Event(IAggregateId aggregateId) : base() => AggregateId = aggregateId;
+        protected Event(AggregateId aggregateId) : base() => AggregateId = aggregateId;
 
         /// <summary>
         /// Constructs a new instance of <see cref="Event"/> with its target aggregate id and event identifier.
@@ -42,7 +42,7 @@ namespace Xpandables.Net
         /// <param name="guid">The event identifier.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
         [JsonConstructor]
-        protected Event(IAggregateId aggregateId, Guid guid)
+        protected Event(AggregateId aggregateId, Guid guid)
             : base()
         {
             AggregateId = aggregateId ?? throw new ArgumentNullException(nameof(aggregateId));
@@ -50,7 +50,7 @@ namespace Xpandables.Net
         }
 
         ///<inheritdoc/>
-        public IAggregateId AggregateId { get; protected set; }
+        public AggregateId AggregateId { get; protected set; }
 
         ///<inheritdoc/>
         public Guid Guid { get; } = Guid.NewGuid();

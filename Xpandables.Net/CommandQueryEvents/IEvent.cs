@@ -30,7 +30,7 @@ namespace Xpandables.Net
         /// <summary>
         /// Gets the identifier of the target aggregate.
         /// </summary>
-        IAggregateId AggregateId { get; }
+        AggregateId AggregateId { get; }
 
         /// <summary>
         /// Gets the event identifier.

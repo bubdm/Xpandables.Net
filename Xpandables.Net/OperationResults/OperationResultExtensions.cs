@@ -37,7 +37,7 @@ namespace Xpandables.Net
         /// <param name="this">The source collection.</param>
         /// <returns>A <see cref="OperationErrorCollection"/> that contains values of <see cref="OperationError"/> selected from the collection.</returns>
         public static OperationErrorCollection ToOperationCollection(this IEnumerable<OperationError> @this)
-            => new OperationErrorCollection(@this.ToArray());
+            => new(@this.ToArray());
 
         /// <summary>
         /// Converts the value to a success operation result.

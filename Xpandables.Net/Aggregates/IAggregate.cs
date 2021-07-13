@@ -27,7 +27,7 @@ namespace Xpandables.Net.Aggregates
         /// <summary>
         /// Gets the unique identifier of the aggregate.
         /// </summary>
-        IAggregateId AggregateId { get; }
+        AggregateId AggregateId { get; }
 
         /// <summary>
         /// Gets the current version of the instance, the default value is -1.
@@ -48,13 +48,13 @@ namespace Xpandables.Net.Aggregates
     /// </summary>
     /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
     public interface IAggregate<TAggregateId> : IAggregate
-        where TAggregateId : class, IAggregateId
+        where TAggregateId : AggregateId
     {
         /// <summary>
         /// Gets the unique identifier of the aggregate.
         /// </summary>
         new TAggregateId AggregateId { get; }
 
-        IAggregateId IAggregate.AggregateId => AggregateId;
+        AggregateId IAggregate.AggregateId => AggregateId;
     }
 }
