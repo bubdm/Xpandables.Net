@@ -114,9 +114,16 @@ namespace Xpandables.Net.Aggregates
             if (!_eventHandlers.TryGetValue(@event.GetType(), out var eventHandler))
                 throw new InvalidOperationException($"The {@event.GetType().Name} requested handler is not registered.");
 
-            AggregateId = (TAggregateId)@event.AggregateId;
+            AggregateId = ConvertFrom(@event.AggregateId);
             eventHandler(@event);
         }
+
+        /// <summary>
+        /// Converts the <see cref="AggregateId"/> type to <typeparamref name="TAggregateId"/>.
+        /// </summary>
+        /// <param name="aggregateId">The aggregate Id to be converted.</param>
+        /// <returns>An instance of <typeparamref name="TAggregateId"/>.</returns>
+        protected abstract TAggregateId ConvertFrom(AggregateId aggregateId);
 
         /// <summary>
         /// Adds the specified notification to the entity collection of notifications.
