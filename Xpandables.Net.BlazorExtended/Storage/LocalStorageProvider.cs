@@ -42,7 +42,7 @@ namespace Xpandables.Net.Storage
             => await _jSRuntime.InvokeAsync<int>("eval", "localStorage.length", cancellationToken);
 
         public async Task<string?> ReadAsync(string key, CancellationToken cancellationToken = default)
-            => await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key, cancellationToken);
+            => await _jSRuntime.InvokeAsync<string?>("localStorage.getItem", key, cancellationToken);
 
         public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
             => await _jSRuntime.InvokeVoidAsync("localStorage.removeItem", key, cancellationToken);
