@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace Xpandables.Net.Alerts
 {
@@ -31,7 +31,7 @@ namespace Xpandables.Net.Alerts
         public event Action<Alert>? OnAlert;
 
         ///<inheritdoc/>
-        public ObservableCollection<Alert> Alerts { get; } = new();
+        public List<Alert> Alerts { get; } = new();
 
         ///<inheritdoc/>
         public IAlertPosition Position { get; set; } = AlertPosition.TopRight;

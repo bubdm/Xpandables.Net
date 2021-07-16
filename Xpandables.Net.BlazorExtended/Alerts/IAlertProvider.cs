@@ -17,6 +17,7 @@
 ************************************************************************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Xpandables.Net.Alerts
@@ -44,7 +45,7 @@ namespace Xpandables.Net.Alerts
         /// <summary>
         /// Gets the collection of registered alerts.
         /// </summary>
-        ObservableCollection<Alert> Alerts { get; }
+        List<Alert> Alerts { get; }
 
         /// <summary>
         /// Raised a <see cref="AlertLevel.Success"/> alert.
