@@ -1,0 +1,11 @@
+﻿<div class="@Alert.Level.LevelClass">
+    <div>
+        <button type="button" class="close"
+                @onclick="@(async () => await RemoveAlertAsync())">&times;</button>
+        <h4 class="alert-heading"><i class="@Alert.Icon.IconClass"></i> @Alert.Title</h4>
+    </div>
+    <p>@Alert.Header</p>
+    <hr />
+    <p>@Alert.Message</p>
+    <p>If you need any help just place the mouse pointer above info icon next to the form field.</p>
+</div>

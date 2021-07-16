@@ -1,0 +1,17 @@
+﻿body
+{
+	width:30rem;
+	border-radius: .25rem;
+	animation: fadein 1.5s;
+    box-shadow: rgba(0,0,0,0.25) 0px 10px 40px;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

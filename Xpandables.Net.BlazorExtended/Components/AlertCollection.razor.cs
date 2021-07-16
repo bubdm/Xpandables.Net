@@ -81,7 +81,7 @@ namespace Xpandables.Net.Components
                 if (alert.AutoClose)
                 {
                     await Task.Delay(AlertProvider.AlertOptions.Delay);
-                    RemoveNotificationAsync(alert);
+                    await RemoveAlertAsync(alert);
                 }
             }
 
@@ -104,7 +104,7 @@ namespace Xpandables.Net.Components
         /// Removes the specified alert.
         /// </summary>
         /// <param name="alert">The alert to be removed.</param>
-        public virtual async void RemoveNotificationAsync(Alert alert)
+        public virtual async Task RemoveAlertAsync(Alert alert)
         {
             // check if already removed to prevent error on auto close
             if (!AlertProvider.Alerts.Contains(alert)) return;
