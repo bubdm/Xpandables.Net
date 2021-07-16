@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Xpandables.Net.Alerts
 {
@@ -38,9 +37,9 @@ namespace Xpandables.Net.Alerts
         event Action<Alert>? OnAlert;
 
         /// <summary>
-        /// Gets the position of alert.
+        /// Gets or sets the alert options.
         /// </summary>
-        IAlertPosition Position { get; set; }
+        AlertOptions AlertOptions{ get; set; }
 
         /// <summary>
         /// Gets the collection of registered alerts.

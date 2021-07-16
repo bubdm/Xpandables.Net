@@ -34,7 +34,7 @@ namespace Xpandables.Net.Alerts
         public List<Alert> Alerts { get; } = new();
 
         ///<inheritdoc/>
-        public IAlertPosition Position { get; set; } = AlertPosition.TopRight;
+        public AlertOptions AlertOptions { get; set; } = new();
 
         ///<inheritdoc/>
         public virtual void Clear(string id = IAlertProvider.DefaultId) => OnAlert?.Invoke(new Alert { Id = id });

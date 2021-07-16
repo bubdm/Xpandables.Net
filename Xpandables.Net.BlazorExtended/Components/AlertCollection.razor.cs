@@ -36,25 +36,6 @@ namespace Xpandables.Net.Components
         [Inject]
         private NavigationManager NavigationManager { get; set; } = default!;
 
-        /// <summary>
-        /// Gets or sets the alert delay. The default value is 5000sec.
-        /// </summary>
-        [Parameter]
-        public int Delay { get; set; } = 5000;
-
-        /// <summary>
-        /// Determines whether Fade is out or not.
-        /// The default value is true.
-        /// </summary>
-        [Parameter]
-        public bool Fade { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets the alert delay after fade out. The default value is 250sec.
-        /// </summary>
-        [Parameter]
-        public int DelayFadeOut { get; set; } = 250;
-
         ///<inheritdoc/>
         public void Dispose()
         {
@@ -99,7 +80,7 @@ namespace Xpandables.Net.Components
                 // auto close alert if required
                 if (alert.AutoClose)
                 {
-                    await Task.Delay(Delay);
+                    await Task.Delay(AlertProvider.AlertOptions.Delay);
                     RemoveNotificationAsync(alert);
                 }
             }
@@ -128,13 +109,13 @@ namespace Xpandables.Net.Components
             // check if already removed to prevent error on auto close
             if (!AlertProvider.Alerts.Contains(alert)) return;
 
-            if (Fade)
+            if (AlertProvider.AlertOptions.FadeOut)
             {
                 // fade out alert
                 alert = alert.FadeOut();
 
                 // remove alert after faded out
-                await Task.Delay(DelayFadeOut);
+                await Task.Delay(AlertProvider.AlertOptions.FadeOutDelay);
                 AlertProvider.Alerts.Remove(alert);
             }
             else
