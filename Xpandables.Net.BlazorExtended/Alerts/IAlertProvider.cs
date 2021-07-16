@@ -17,12 +17,9 @@
 ************************************************************************************************************/
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using Xpandables.Net.Alerts;
-
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.Alerts
 {
     /// <summary>
     /// Provides the base authentication interface for client displaying alerts.
@@ -37,7 +34,7 @@ namespace Xpandables.Net.Notifications
         /// <summary>
         /// Defines the event raised when receive an alert.
         /// </summary>
-        event Action<Alert> OnAlert;
+        event Action<Alert>? OnAlert;
 
         /// <summary>
         /// Gets the collection of registered alerts.
@@ -45,60 +42,60 @@ namespace Xpandables.Net.Notifications
         ObservableCollection<Alert> Alerts { get; }
 
         /// <summary>
-        /// Raised a <see cref="AlertLevel.Success"/> notification.
+        /// Raised a <see cref="AlertLevel.Success"/> alert.
         /// </summary>
-        /// <param name="title">The notification title.</param>
-        /// <param name="header">The notification header.</param>
-        /// <param name="message">The message of the notification.</param>
+        /// <param name="title">The alert title.</param>
+        /// <param name="header">The alert header.</param>
+        /// <param name="message">The message of the alert.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="message"/> is null.</exception>
-        /// <param name="autoClose">if the notification auto-closes itself.</param>
-        /// <param name="keepAfterRouteChange">If the notification keeps after route change.</param>
+        /// <param name="autoClose">if the alert auto-closes itself.</param>
+        /// <param name="keepAfterRouteChange">If the alert keeps after route change.</param>
         void Success(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false);
 
         /// <summary>
-        /// Raised a <see cref="AlertLevel.Error"/> notification.
+        /// Raised a <see cref="AlertLevel.Error"/> alert.
         /// </summary>
-        /// <param name="title">The notification title.</param>
-        /// <param name="header">The notification header.</param>
-        /// <param name="message">The message of the notification.</param>
+        /// <param name="title">The alert title.</param>
+        /// <param name="header">The alert header.</param>
+        /// <param name="message">The message of the alert.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="message"/> is null.</exception>
-        /// <param name="autoClose">if the notification auto-closes itself.</param>
-        /// <param name="keepAfterRouteChange">If the notification keeps after route change.</param>
+        /// <param name="autoClose">if the alert auto-closes itself.</param>
+        /// <param name="keepAfterRouteChange">If the alert keeps after route change.</param>
         void Error(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false);
 
         /// <summary>
-        /// Raised a <see cref="AlertLevel.Info"/> notification.
+        /// Raised a <see cref="AlertLevel.Info"/> alert.
         /// </summary>
-        /// <param name="title">The notification title.</param>
-        /// <param name="header">The notification header.</param>
-        /// <param name="message">The message of the notification.</param>
+        /// <param name="title">The alert title.</param>
+        /// <param name="header">The alert header.</param>
+        /// <param name="message">The message of the alert.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="message"/> is null.</exception>
-        /// <param name="autoClose">if the notification auto-closes itself.</param>
-        /// <param name="keepAfterRouteChange">If the notification keeps after route change.</param>
+        /// <param name="autoClose">if the alert auto-closes itself.</param>
+        /// <param name="keepAfterRouteChange">If the alert keeps after route change.</param>
         void Information(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false);
 
         /// <summary>
-        /// Raised a <see cref="AlertLevel.Warning"/> notification.
+        /// Raised a <see cref="AlertLevel.Warning"/> alert.
         /// </summary>
-        /// <param name="title">The notification title.</param>
-        /// <param name="header">The notification header.</param>
-        /// <param name="message">The message of the notification.</param>
+        /// <param name="title">The alert title.</param>
+        /// <param name="header">The alert header.</param>
+        /// <param name="message">The message of the alert.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="message"/> is null.</exception>
-        /// <param name="autoClose">if the notification auto-closes itself.</param>
-        /// <param name="keepAfterRouteChange">If the notification keeps after route change.</param>
+        /// <param name="autoClose">if the alert auto-closes itself.</param>
+        /// <param name="keepAfterRouteChange">If the alert keeps after route change.</param>
         void Warning(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false);
 
         /// <summary>
-        /// Raised the specified notification.
+        /// Raised the specified alert.
         /// </summary>
-        /// <param name="notification">The notification to be raised.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="notification"/> is null.</exception>
-        void Notify(Alert notification);
+        /// <param name="alert">The alert to be raised.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="alert"/> is null.</exception>
+        void RaizeAlert(Alert alert);
 
         /// <summary>
-        /// Clears the notification matching the specified identifier.
+        /// Clears the alert matching the specified identifier.
         /// </summary>
-        /// <param name="id">The target notification identifier.</param>
+        /// <param name="id">The target alert identifier.</param>
         void Clear(string id = DefaultId);
     }
 }

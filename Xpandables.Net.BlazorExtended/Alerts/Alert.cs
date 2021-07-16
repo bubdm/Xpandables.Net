@@ -17,12 +17,6 @@
 ************************************************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Xpandables.Net.Notifications;
 
 namespace Xpandables.Net.Alerts
 {
@@ -117,69 +111,64 @@ namespace Xpandables.Net.Alerts
     /// <summary>
     /// Contains a <see cref="Alert"/> to be display.
     /// </summary>
-    public class Alert
+    public readonly struct Alert
     {
         /// <summary>
-        /// Initializes a default instance of the <see cref="Alert"/> class.
+        /// Gets the unique identifier of the alert.
         /// </summary>
-        public Alert() { }
+        public string Id { get; init; }
 
         /// <summary>
-        /// Gets or sets the unique identifier of the notification.
+        /// Gets the alert title.
         /// </summary>
-        public string Id { get; internal set; } = IAlertProvider.DefaultId;
+        public string Title { get; init; }
 
         /// <summary>
-        /// Gets or sets the notification title.
+        /// Gets the alert header.
         /// </summary>
-        public string Title { get; set; }
+        public string Header { get; init; }
 
         /// <summary>
-        /// Gets or sets the notification header.
+        /// Gets the created date, used for ordering alert.
         /// </summary>
-        public string Header { get; set; }
+        public DateTime CreatedOn { get; init; }
 
         /// <summary>
-        /// Gets or sets the created date, used for ordering notification.
+        /// Gets the alert level.
         /// </summary>
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public AlertLevel Level { get; init; }
 
         /// <summary>
-        /// Gets or sets the notification level.
+        /// Gets the alert icon.
         /// </summary>
-        public AlertLevel Level { get; set; }
+        public NotificationIcon Icon { get; init; }
 
         /// <summary>
-        /// Gets or sets the notification icon.
+        /// Gets the message content of th alert.
         /// </summary>
-        public NotificationIcon Icon { get; set; }
+        public string Message { get; init; }
 
         /// <summary>
-        /// Gets or sets the message content of th notification.
-        /// </summary>
-        public string Message { get; set; }
-
-        /// <summary>
-        /// Determines whether the notification auto-close itself.
+        /// Determines whether the alert auto-close itself.
         /// The default value is true.
         /// </summary>
-        public bool AutoClose { get; set; } = true;
+        public bool AutoClose { get; init; }
 
         /// <summary>
-        /// Determines whether the notification keep after route change.
+        /// Determines whether the alert keep after route change.
         /// The default value is false.
         /// </summary>
-        public bool KeepAfterRouteChange { get; set; } = false;
+        public bool KeepAfterRouteChange { get; init; }
 
         /// <summary>
-        /// Determines whether the notification fade out or not.
+        /// Determines whether the alert fade out or not.
         /// The default value is false.
         /// </summary>
-        public bool Fade { get; private set; } = false;
+        public bool Fade { get; init; }
 
         /// <summary>
-        /// Activate the Fade out of the notification.
+        /// Activate the Fade out of the alert.
         /// </summary>
-        public void FadeOut() => Fade = true;
+        public Alert FadeOut() => this with { Fade = true };
     }
 }

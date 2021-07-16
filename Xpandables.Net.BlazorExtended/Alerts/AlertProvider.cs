@@ -17,34 +17,29 @@
 ************************************************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
-using Xpandables.Net.Alerts;
-
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.Alerts
 {
     /// <summary>
     /// The default implementation of <see cref="IAlertProvider"/>.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
-    public class NotificationEngine : IAlertProvider
+    public class AlertProvider : IAlertProvider
     {
         ///<inheritdoc/>
-        public event Action<Alert> OnAlert;
+        public event Action<Alert>? OnAlert;
 
         ///<inheritdoc/>
-        public List<Alert> Notifications { get; } = new List<Alert>();
+        public ObservableCollection<Alert> Alerts { get; } = new();
 
         ///<inheritdoc/>
-        public virtual void Clear(string id = "default-notification") => OnAlert(new Alert { Id = id });
+        public virtual void Clear(string id = IAlertProvider.DefaultId) => OnAlert?.Invoke(new Alert { Id = id });
 
         ///<inheritdoc/>
         public virtual void Error(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false)
         {
-            var notification = CreateNotification(
+            var alert = CreateAlert(
                 title,
                 header,
                 message,
@@ -53,13 +48,13 @@ namespace Xpandables.Net.Notifications
                 autoClose,
                 keepAfterRouteChange);
 
-            Notify(notification);
+            RaizeAlert(alert);
         }
 
         ///<inheritdoc/>
         public virtual void Information(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false)
         {
-            var notification = CreateNotification(
+            var alert = CreateAlert(
                 title,
                 header,
                 message,
@@ -68,22 +63,13 @@ namespace Xpandables.Net.Notifications
                 autoClose,
                 keepAfterRouteChange);
 
-            Notify(notification);
-        }
-
-        ///<inheritdoc/>
-        public virtual void Notify(Alert notification)
-        {
-            _ = notification ?? throw new ArgumentNullException(nameof(notification));
-
-            notification.Id ??= INotificationService.DefaultId;
-            OnAlert?.Invoke(notification);
+            RaizeAlert(alert);
         }
 
         ///<inheritdoc/>
         public virtual void Success(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false)
         {
-            var notification = CreateNotification(
+            var alert = CreateAlert(
             title,
             header,
             message,
@@ -92,13 +78,13 @@ namespace Xpandables.Net.Notifications
             autoClose,
             keepAfterRouteChange);
 
-            Notify(notification);
+            RaizeAlert(alert);
         }
 
         ///<inheritdoc/>
         public virtual void Warning(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false)
         {
-            var notification = CreateNotification(
+            var alert = CreateAlert(
               title,
               header,
               message,
@@ -107,21 +93,21 @@ namespace Xpandables.Net.Notifications
               autoClose,
               keepAfterRouteChange);
 
-            Notify(notification);
+            RaizeAlert(alert);
         }
 
         /// <summary>
-        /// Creates a notification with arguments.
+        /// Creates a alert with arguments.
         /// </summary>
-        /// <param name="title">The notification title.</param>
-        /// <param name="header">The notification header.</param>
-        /// <param name="message">The message of the notification.</param>
-        /// <param name="level">The notification level.</param>
-        /// <param name="icon">The notification icon.</param>
-        /// <param name="autoClose">if the notification auto-closes itself.</param>
-        /// <param name="keepAfterRouteChange">If the notification keeps after route change.</param>
+        /// <param name="title">The alert title.</param>
+        /// <param name="header">The alert header.</param>
+        /// <param name="message">The message of the alert.</param>
+        /// <param name="level">The alert level.</param>
+        /// <param name="icon">The alert icon.</param>
+        /// <param name="autoClose">if the alert auto-closes itself.</param>
+        /// <param name="keepAfterRouteChange">If the alert keeps after route change.</param>
         /// <returns>A new instance of <see cref="Alert"/>.</returns>
-        protected static Alert CreateNotification(
+        protected static Alert CreateAlert(
             string title,
             string header,
             string message,
@@ -130,7 +116,7 @@ namespace Xpandables.Net.Notifications
             bool autoClose = true,
             bool keepAfterRouteChange = false)
         {
-            var notification = new Alert
+            var alert = new Alert
             {
                 Id = Guid.NewGuid().ToString(),
                 Title = title,
@@ -142,8 +128,16 @@ namespace Xpandables.Net.Notifications
                 KeepAfterRouteChange = keepAfterRouteChange
             };
 
-            return notification;
+            return alert;
+        }
 
+        ///<inheritdoc/>
+        public virtual void RaizeAlert(Alert alert)
+        {
+            if (alert.Id is null)
+                alert = alert with { Id = IAlertProvider.DefaultId };
+
+            OnAlert?.Invoke(alert);
         }
     }
 }
