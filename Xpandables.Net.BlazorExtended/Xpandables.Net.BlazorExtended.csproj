@@ -57,7 +57,11 @@
     <OutputPath>bin\AnyCPU\Release\</OutputPath>
     <DocumentationFile>bin\AnyCPU\Release\net6.0\Xpandables.Net.BlazorExtended.xml</DocumentationFile>
     <Optimize>false</Optimize>
-  </PropertyGroup> 
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Storage\InternalLocalStorage.cs" />
+  </ItemGroup> 
 
   <ItemGroup>
     <None Include="..\Xpandables.Net.png" Link="Xpandables.Net.png">

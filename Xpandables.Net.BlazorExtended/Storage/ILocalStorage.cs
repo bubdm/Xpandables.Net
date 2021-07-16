@@ -15,22 +15,23 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net.Storage
 {
     /// <summary>
-    /// Provides with methods to access a browser storage.
+    /// Provides with methods to access a browser local storage.
     /// </summary>
-    public interface ILocalStorageProvider
+    public interface ILocalStorage : IStorageEvent
     {
         /// <summary>
         /// Returns number of elements in the storage.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an int result.</returns>
-        Task<int> CountAsync(CancellationToken cancellationToken = default);
+        ValueTask<int> CountAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Determines whether of not the <paramref name="key"/> exists in local storage.
@@ -38,38 +39,46 @@ namespace Xpandables.Net.Storage
         /// <param name="key">A string value of the name in the storage to act with.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents a boolean result.</returns>
-        Task<bool> ContainKeyAsync(string key, CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
+        ValueTask<bool> ContainKeyAsync(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Reads the information matching the specified key from local storage.
         /// </summary>
+        /// <typeparam name="TValue">The type of the value to be serialized.</typeparam>
         /// <param name="key">A string value of the name in the storage to act with.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents a string result or null.</returns>
-        Task<string?> ReadAsync(string key, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an object of <typeparamref name="TValue"/> type result or null.</returns>
+        /// <remarks>The found value will be deserialized to the specified <typeparamref name="TValue"/> type.</remarks>
+        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
+        ValueTask<TValue?> ReadAsync<TValue>(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Writes the specified value in storage with the key. If key already exist, the value will be updated.
         /// </summary>
+        /// <typeparam name="TValue">The type of the value to be deserialized.</typeparam>
         /// <param name="key">A string value of the name in the storage to act with.</param>
-        /// <param name="value">The string value to be written</param>
+        /// <param name="value">The value to be written</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task WriteAsync(string key, string value, CancellationToken cancellationToken = default);
+        /// <remarks>The value will be serialized before writing.</remarks>
+        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
+        ValueTask WriteAsync<TValue>(string key, TValue value, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Removes the value matching the specified key from the storage.
+        /// Removes the value matching the specified key.
         /// </summary>
         /// <param name="key">A string value of the name in the storage to act with.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task RemoveAsync(string key, CancellationToken cancellationToken = default);
+        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
+        ValueTask RemoveAsync(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Clears all information from the storage.
         /// </summary>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task ClearAllAsync(CancellationToken cancellationToken = default);
+        ValueTask ClearAllAsync(CancellationToken cancellationToken = default);
     }
 }

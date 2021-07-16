@@ -48,7 +48,7 @@ namespace Xpandables.Net.Storage
     /// <summary>
     /// Provides with events for storage management.
     /// </summary>
-    public interface ILocalStorageEvent
+    public interface IStorageEvent
     {
         /// <summary>
         /// The event that will be asynchronously raised before the changes get applied.

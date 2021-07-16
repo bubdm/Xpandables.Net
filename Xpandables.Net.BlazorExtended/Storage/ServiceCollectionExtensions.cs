@@ -39,7 +39,7 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.Services
-                .AddScoped<ILocalStorageEngine, LocalStorageEngine>()
+                .AddScoped<ILocalStorage, InternalLocalStorage>()
                 .AddScoped<ILocalStorageProvider, LocalStorageProvider>()
                 .AddScoped<ILocalStorageSerializer, LocalStorageSerializer>();
 
@@ -49,12 +49,12 @@ namespace Xpandables.Net.DependencyInjection
         /// <summary>
         /// Adds local storage with the specific events hander.
         /// </summary>
-        /// <typeparam name="TLocalStorageEventHandler">The type that implement <see cref="LocalStorageEventHandler"/>.</typeparam>
+        /// <typeparam name="TLocalStorageEventHandler">The type that implement <see cref="StorageEventHandler"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <remarks>You can use an override to customize behaviors.</remarks>
         public static IXpandableServiceBuilder AddXLocalStorage<TLocalStorageEventHandler>(this IXpandableServiceBuilder services)
-            where TLocalStorageEventHandler : LocalStorageEventHandler
+            where TLocalStorageEventHandler : StorageEventHandler
         {
             return services.AddXLocalStorage<LocalStorageSerializer, TLocalStorageEventHandler>();
         }
@@ -63,21 +63,21 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds local storage with specifics serializer and events handler.
         /// </summary>
         /// <typeparam name="TLocalStorageSerializer">The type that implement <see cref="ILocalStorageSerializer"/>.</typeparam>
-        /// <typeparam name="TLocalStorageEventHandler">The type that implement <see cref="LocalStorageEventHandler"/>.</typeparam>
+        /// <typeparam name="TLocalStorageEventHandler">The type that implement <see cref="StorageEventHandler"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXLocalStorage<TLocalStorageSerializer, TLocalStorageEventHandler>(this IXpandableServiceBuilder services)
-            where TLocalStorageEventHandler : LocalStorageEventHandler
+            where TLocalStorageEventHandler : StorageEventHandler
             where TLocalStorageSerializer : class, ILocalStorageSerializer
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.Services
                 .AddScoped<TLocalStorageEventHandler>()
-                .AddScoped<LocalStorageEngine>()
-                .AddScoped<ILocalStorageEngine>(provider =>
+                .AddScoped<InternalLocalStorage>()
+                .AddScoped<ILocalStorage>(provider =>
                 {
-                    var localStorageEngine = provider.GetRequiredService<LocalStorageEngine>();
+                    var localStorageEngine = provider.GetRequiredService<InternalLocalStorage>();
                     var localStorageEventHandler = provider.GetRequiredService<TLocalStorageEventHandler>();
 
                     localStorageEngine.Changed += localStorageEventHandler.OnChanged;

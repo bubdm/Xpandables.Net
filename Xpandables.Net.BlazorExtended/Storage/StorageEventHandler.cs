@@ -18,19 +18,19 @@
 namespace Xpandables.Net.Storage
 {
     /// <summary>
-    /// Represents a base class to handle <see cref="ILocalStorageEngine"/> events.
+    /// Represents a base class to handle <see cref="IStorage"/> events.
     /// </summary>
-    public abstract class LocalStorageEventHandler
+    public abstract class StorageEventHandler
     {
         /// <summary>
-        /// When overridden, this method will handle the <see cref="ILocalStorageEvent.Changed"/> event.
+        /// When overridden, this method will handle the <see cref="IStorageEvent.Changed"/> event.
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="eventArgs">The event arguments.</param>
         public abstract void OnChanged(object? sender, StorageChangedEventArgs eventArgs);
 
         /// <summary>
-        /// When overridden, this method will handle the <see cref="ILocalStorageEvent.Changing"/> event.
+        /// When overridden, this method will handle the <see cref="IStorageEvent.Changing"/> event.
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="eventArgs">The event arguments to act on.</param>       
