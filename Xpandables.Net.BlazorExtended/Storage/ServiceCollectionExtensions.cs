@@ -15,9 +15,9 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-
 using Microsoft.Extensions.DependencyInjection;
+
+using System;
 
 using Xpandables.Net.Storage;
 
@@ -29,64 +29,60 @@ namespace Xpandables.Net.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds local storage with default values.
+        /// Adds local/session storage with default values.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <remarks>You can use an override to customize behaviors.</remarks>
-        public static IXpandableServiceBuilder AddXLocalStorage(this IXpandableServiceBuilder services)
+        public static IXpandableServiceBuilder AddXStorage(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.Services
+                .AddScoped<IStorage, InternalStorage>()
                 .AddScoped<ILocalStorage, InternalLocalStorage>()
-                .AddScoped<ILocalStorageProvider, LocalStorageProvider>()
-                .AddScoped<ILocalStorageSerializer, LocalStorageSerializer>();
+                .AddScoped<ISessionStorage, InternalSessionStorage>();
 
             return services;
         }
 
         /// <summary>
-        /// Adds local storage with the specific events hander.
+        /// Adds local/session storage with specific event handler.
         /// </summary>
-        /// <typeparam name="TLocalStorageEventHandler">The type that implement <see cref="StorageEventHandler"/>.</typeparam>
+        /// <typeparam name="TStorageEventHandler">The type that implement <see cref="StorageEventHandler"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        /// <remarks>You can use an override to customize behaviors.</remarks>
-        public static IXpandableServiceBuilder AddXLocalStorage<TLocalStorageEventHandler>(this IXpandableServiceBuilder services)
-            where TLocalStorageEventHandler : StorageEventHandler
-        {
-            return services.AddXLocalStorage<LocalStorageSerializer, TLocalStorageEventHandler>();
-        }
-
-        /// <summary>
-        /// Adds local storage with specifics serializer and events handler.
-        /// </summary>
-        /// <typeparam name="TLocalStorageSerializer">The type that implement <see cref="ILocalStorageSerializer"/>.</typeparam>
-        /// <typeparam name="TLocalStorageEventHandler">The type that implement <see cref="StorageEventHandler"/>.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXLocalStorage<TLocalStorageSerializer, TLocalStorageEventHandler>(this IXpandableServiceBuilder services)
-            where TLocalStorageEventHandler : StorageEventHandler
-            where TLocalStorageSerializer : class, ILocalStorageSerializer
+        public static IXpandableServiceBuilder AddXStorage<TStorageEventHandler>(this IXpandableServiceBuilder services)
+            where TStorageEventHandler : StorageEventHandler
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.Services
-                .AddScoped<TLocalStorageEventHandler>()
+                .AddScoped<TStorageEventHandler>()
+                .AddScoped<IStorage, InternalStorage>()
                 .AddScoped<InternalLocalStorage>()
+                .AddScoped<InternalSessionStorage>()
                 .AddScoped<ILocalStorage>(provider =>
                 {
-                    var localStorageEngine = provider.GetRequiredService<InternalLocalStorage>();
-                    var localStorageEventHandler = provider.GetRequiredService<TLocalStorageEventHandler>();
+                    var localStorage = provider.GetRequiredService<InternalLocalStorage>();
+                    var storageEventHandler = provider.GetRequiredService<TStorageEventHandler>();
 
-                    localStorageEngine.Changed += localStorageEventHandler.OnChanged;
-                    localStorageEngine.Changing += localStorageEventHandler.OnChanging;
+                    localStorage.Changed += storageEventHandler.OnChanged;
+                    localStorage.Changing += storageEventHandler.OnChanging;
 
-                    return localStorageEngine;
+                    return localStorage;
                 })
-                .AddScoped<ILocalStorageProvider, LocalStorageProvider>()
-                .AddScoped<ILocalStorageSerializer, TLocalStorageSerializer>();
+                .AddScoped<ISessionStorage>(provider =>
+                {
+                    var sessionStorage = provider.GetRequiredService<InternalSessionStorage>();
+                    var storageEventHandler = provider.GetRequiredService<TStorageEventHandler>();
+
+                    sessionStorage.Changed += storageEventHandler.OnChanged;
+                    sessionStorage.Changing += storageEventHandler.OnChanging;
+
+                    return sessionStorage;
+                });
+
 
             return services;
         }
