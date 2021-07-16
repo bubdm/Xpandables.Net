@@ -608,3 +608,77 @@ namespace Servitia.Net.RazorComponents.Components
         }
     }
 }
+
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1;
+}
+
+.position-topleft,
+.position-topright,
+.position-topcenter {
+    top: 0;
+}
+
+.position-bottomleft,
+.position-bottomright,
+.position-bottomcenter {
+    bottom: 0;
+}
+
+.notification-item {
+    animation: fadein 1.5s;
+    box-shadow: rgba(0,0,0,0.25) 0px 10px 40px;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (min-width: 576px) {
+
+    .position-topleft {
+        top: 2rem;
+        left: 2rem;
+    }
+
+    .position-topright {
+        top: 2rem;
+        right: 2rem;
+    }
+
+    .position-topcenter {
+        top: 2rem;
+        left: 50%;
+        margin-left: -15rem;
+    }
+
+    .position-bottomleft {
+        bottom: 2rem;
+        left: 2rem;
+    }
+
+    .position-bottomright {
+        bottom: 2rem;
+        right: 2rem;
+    }
+
+    .position-bottomcenter {
+        bottom: 2rem;
+        left: 50%;
+        margin-left: -15rem;
+    }
+
+    .notification-item {
+        width: 30rem;
+        border-radius: .25rem;
+    }
+}
