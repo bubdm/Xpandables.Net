@@ -37,6 +37,11 @@ namespace Xpandables.Net.Alerts
         event Action<Alert>? OnAlert;
 
         /// <summary>
+        /// Gets the position of alert.
+        /// </summary>
+        IAlertPosition Position { get; set; }
+
+        /// <summary>
         /// Gets the collection of registered alerts.
         /// </summary>
         ObservableCollection<Alert> Alerts { get; }
@@ -84,6 +89,50 @@ namespace Xpandables.Net.Alerts
         /// <param name="autoClose">if the alert auto-closes itself.</param>
         /// <param name="keepAfterRouteChange">If the alert keeps after route change.</param>
         void Warning(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false);
+
+        /// <summary>
+        /// Raised a <see cref="AlertLevel.Primary"/> alert.
+        /// </summary>
+        /// <param name="title">The alert title.</param>
+        /// <param name="header">The alert header.</param>
+        /// <param name="message">The message of the alert.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="message"/> is null.</exception>
+        /// <param name="autoClose">if the alert auto-closes itself.</param>
+        /// <param name="keepAfterRouteChange">If the alert keeps after route change.</param>
+        void Primary(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false);
+
+        /// <summary>
+        /// Raised a <see cref="AlertLevel.Secondary"/> alert.
+        /// </summary>
+        /// <param name="title">The alert title.</param>
+        /// <param name="header">The alert header.</param>
+        /// <param name="message">The message of the alert.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="message"/> is null.</exception>
+        /// <param name="autoClose">if the alert auto-closes itself.</param>
+        /// <param name="keepAfterRouteChange">If the alert keeps after route change.</param>
+        void Secondary(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false);
+
+        /// <summary>
+        /// Raised a <see cref="AlertLevel.Dark"/> alert.
+        /// </summary>
+        /// <param name="title">The alert title.</param>
+        /// <param name="header">The alert header.</param>
+        /// <param name="message">The message of the alert.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="message"/> is null.</exception>
+        /// <param name="autoClose">if the alert auto-closes itself.</param>
+        /// <param name="keepAfterRouteChange">If the alert keeps after route change.</param>
+        void Dark(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false);
+
+        /// <summary>
+        /// Raised a <see cref="AlertLevel.Light"/> alert.
+        /// </summary>
+        /// <param name="title">The alert title.</param>
+        /// <param name="header">The alert header.</param>
+        /// <param name="message">The message of the alert.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="message"/> is null.</exception>
+        /// <param name="autoClose">if the alert auto-closes itself.</param>
+        /// <param name="keepAfterRouteChange">If the alert keeps after route change.</param>
+        void Light(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false);
 
         /// <summary>
         /// Raised the specified alert.

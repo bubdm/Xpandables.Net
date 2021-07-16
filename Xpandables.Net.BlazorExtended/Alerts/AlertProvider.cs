@@ -34,6 +34,9 @@ namespace Xpandables.Net.Alerts
         public ObservableCollection<Alert> Alerts { get; } = new();
 
         ///<inheritdoc/>
+        public IAlertPosition Position { get; set; } = AlertPosition.TopRight;
+
+        ///<inheritdoc/>
         public virtual void Clear(string id = IAlertProvider.DefaultId) => OnAlert?.Invoke(new Alert { Id = id });
 
         ///<inheritdoc/>
@@ -44,7 +47,7 @@ namespace Xpandables.Net.Alerts
                 header,
                 message,
                 AlertLevel.Error,
-                NotificationIcon.Error,
+                AlertIcon.Error,
                 autoClose,
                 keepAfterRouteChange);
 
@@ -59,7 +62,7 @@ namespace Xpandables.Net.Alerts
                 header,
                 message,
                 AlertLevel.Info,
-                NotificationIcon.Info,
+                AlertIcon.Info,
                 autoClose,
                 keepAfterRouteChange);
 
@@ -74,7 +77,7 @@ namespace Xpandables.Net.Alerts
             header,
             message,
             AlertLevel.Success,
-            NotificationIcon.Success,
+            AlertIcon.Success,
             autoClose,
             keepAfterRouteChange);
 
@@ -89,12 +92,72 @@ namespace Xpandables.Net.Alerts
               header,
               message,
               AlertLevel.Warning,
-              NotificationIcon.Warning,
+              AlertIcon.Warning,
               autoClose,
               keepAfterRouteChange);
 
             RaizeAlert(alert);
         }
+        ///<inheritdoc/>
+        public virtual void Primary(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false)
+        {
+            var alert = CreateAlert(
+                title,
+                header,
+                message,
+                AlertLevel.Primary,
+                AlertIcon.Primary,
+                autoClose,
+                keepAfterRouteChange);
+
+            RaizeAlert(alert);
+        }
+
+        ///<inheritdoc/>
+        public virtual void Secondary(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false)
+        {
+            var alert = CreateAlert(
+                title,
+                header,
+                message,
+                AlertLevel.Secondary,
+                AlertIcon.Secondary,
+                autoClose,
+                keepAfterRouteChange);
+
+            RaizeAlert(alert);
+        }
+
+        ///<inheritdoc/>
+        public virtual void Dark(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false)
+        {
+            var alert = CreateAlert(
+            title,
+            header,
+            message,
+            AlertLevel.Dark,
+            AlertIcon.Dark,
+            autoClose,
+            keepAfterRouteChange);
+
+            RaizeAlert(alert);
+        }
+
+        ///<inheritdoc/>
+        public virtual void Light(string title, string header, string message, bool autoClose = true, bool keepAfterRouteChange = false)
+        {
+            var alert = CreateAlert(
+              title,
+              header,
+              message,
+              AlertLevel.Light,
+              AlertIcon.Light,
+              autoClose,
+              keepAfterRouteChange);
+
+            RaizeAlert(alert);
+        }
+
 
         /// <summary>
         /// Creates a alert with arguments.
@@ -111,8 +174,8 @@ namespace Xpandables.Net.Alerts
             string title,
             string header,
             string message,
-            AlertLevel level,
-            NotificationIcon icon,
+            IAlertLevel level,
+            IAlertIcon icon,
             bool autoClose = true,
             bool keepAfterRouteChange = false)
         {

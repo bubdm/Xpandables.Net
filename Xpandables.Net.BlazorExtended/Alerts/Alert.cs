@@ -21,94 +21,6 @@ using System;
 namespace Xpandables.Net.Alerts
 {
     /// <summary>
-    /// Determines the alert level.
-    /// </summary>
-    public enum AlertLevel
-    {
-        /// <summary>
-        /// Success level.
-        /// </summary>
-        Success,
-
-        /// <summary>
-        /// Error level.
-        /// </summary>
-        Error,
-
-        /// <summary>
-        /// Information level.
-        /// </summary>
-        Info,
-
-        /// <summary>
-        /// Warning level.
-        /// </summary>
-        Warning
-    }
-
-    /// <summary>
-    /// Determines the alert position.
-    /// </summary>
-    public enum AlertPosition
-    {
-        /// <summary>
-        /// Top Left.
-        /// </summary>
-        TopLeft,
-
-        /// <summary>
-        /// Top right.
-        /// </summary>
-        TopRight,
-
-        /// <summary>
-        /// Top center.
-        /// </summary>
-        TopCenter,
-
-        /// <summary>
-        /// Bottom Left.
-        /// </summary>
-        BottomLeft,
-
-        /// <summary>
-        /// Bottom right.
-        /// </summary>
-        BottomRight,
-
-        /// <summary>
-        /// Bottom center.
-        /// </summary>
-        BottomCenter
-    }
-
-    /// <summary>
-    /// Determines the alert icon.
-    /// </summary>
-    public enum NotificationIcon
-    {
-        /// <summary>
-        /// Success level.
-        /// </summary>
-        Success,
-
-        /// <summary>
-        /// Error level.
-        /// </summary>
-        Error,
-
-        /// <summary>
-        /// Information level.
-        /// </summary>
-        Info,
-
-        /// <summary>
-        /// Warning level.
-        /// </summary>
-        Warning
-    }
-
-    /// <summary>
     /// Contains a <see cref="Alert"/> to be display.
     /// </summary>
     public readonly struct Alert
@@ -136,12 +48,12 @@ namespace Xpandables.Net.Alerts
         /// <summary>
         /// Gets the alert level.
         /// </summary>
-        public AlertLevel Level { get; init; }
+        public IAlertLevel Level { get; init; }
 
         /// <summary>
         /// Gets the alert icon.
         /// </summary>
-        public NotificationIcon Icon { get; init; }
+        public IAlertIcon Icon { get; init; }
 
         /// <summary>
         /// Gets the message content of th alert.
