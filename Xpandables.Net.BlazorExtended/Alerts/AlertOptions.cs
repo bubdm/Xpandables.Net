@@ -35,9 +35,9 @@ namespace Xpandables.Net.Alerts
         public bool FadeOut { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets the alert delay after fade out. The default value is 250sec.
+        /// Gets or sets the alert delay after fade out (milleseconds). The default value is 10000sec.
         /// </summary>
-        public int FadeOutDelay { get; set; } = 250;
+        public int FadeOutDelay { get; set; } = 10000;
 
         /// <summary>
         /// Gets the position of alert.

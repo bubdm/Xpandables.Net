@@ -36,12 +36,12 @@ namespace Xpandables.Net.Components
         /// Gets or sets the current alert.
         /// </summary>
         [Parameter]
-        public Alert Alert { get; set; }
+        public Alert Alert { get; set; } = default!;
 
         /// <summary>
         /// Remove the alert.
         /// </summary>
-        protected async Task RemoveAlertAsync() => await AlertCollection.RemoveAlertAsync(Alert);
+        protected void RemoveAlertAsync() => AlertCollection.RemoveAlertAsync(Alert);
 
     }
 }

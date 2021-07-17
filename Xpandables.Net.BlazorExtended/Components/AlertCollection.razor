@@ -1,11 +1,11 @@
 ﻿@if (AlertProvider.Alerts.Any())
 {
-    <div class="@AlertProvider.AlertOptions.Position.PositionClass">
+    <div class="alert-collection @AlertProvider.AlertOptions.Position.PositionClass">
         <CascadingValue Value="this">
             @foreach (var alert in AlertProvider.Alerts.OrderBy(o => o.CreatedOn))
-            {
-                <AlertItem Alert="alert" />
-            }
-        </CascadingValue>
-    </div>
+        {
+            <AlertItem Alert="alert" />
+        }
+    </CascadingValue>
+</div>
 }

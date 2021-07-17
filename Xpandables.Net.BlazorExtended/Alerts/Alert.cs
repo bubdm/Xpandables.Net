@@ -23,22 +23,22 @@ namespace Xpandables.Net.Alerts
     /// <summary>
     /// Contains a <see cref="Alert"/> to be display.
     /// </summary>
-    public readonly struct Alert
+    public sealed class Alert
     {
         /// <summary>
         /// Gets the unique identifier of the alert.
         /// </summary>
-        public string Id { get; init; }
+        public string Id { get; internal set; } = default!;
 
         /// <summary>
         /// Gets the alert title.
         /// </summary>
-        public string Title { get; init; }
+        public string Title { get; init; } = default!;
 
         /// <summary>
         /// Gets the alert header.
         /// </summary>
-        public string Header { get; init; }
+        public string Header { get; init; } = default!;
 
         /// <summary>
         /// Gets the created date, used for ordering alert.
@@ -48,39 +48,44 @@ namespace Xpandables.Net.Alerts
         /// <summary>
         /// Gets the alert level.
         /// </summary>
-        public IAlertLevel Level { get; init; }
+        public IAlertLevel Level { get; init; } = AlertLevel.Success;
 
         /// <summary>
         /// Gets the alert icon.
         /// </summary>
-        public IAlertIcon Icon { get; init; }
+        public IAlertIcon Icon { get; init; } = AlertIcon.Success;
+
+        /// <summary>
+        /// Gets the fade css class.
+        /// </summary>
+        public string FadeClass => Fade ? "fade show" : string.Empty;
 
         /// <summary>
         /// Gets the message content of th alert.
         /// </summary>
-        public string Message { get; init; }
+        public string Message { get; init; } = default!;
 
         /// <summary>
         /// Determines whether the alert auto-close itself.
         /// The default value is true.
         /// </summary>
-        public bool AutoClose { get; init; }
+        public bool AutoClose { get; init; } = true;
 
         /// <summary>
         /// Determines whether the alert keep after route change.
         /// The default value is false.
         /// </summary>
-        public bool KeepAfterRouteChange { get; init; }
+        public bool KeepAfterRouteChange { get; internal set; }
 
         /// <summary>
         /// Determines whether the alert fade out or not.
         /// The default value is false.
         /// </summary>
-        public bool Fade { get; init; }
+        public bool Fade { get; internal set; } = false;
 
         /// <summary>
         /// Activate the Fade out of the alert.
         /// </summary>
-        public Alert FadeOut() => this with { Fade = true };
+        public void FadeOut() => Fade = true;
     }
 }

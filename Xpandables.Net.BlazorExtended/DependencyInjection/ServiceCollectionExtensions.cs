@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
+using Xpandables.Net.Alerts;
 using Xpandables.Net.Storage;
 
 namespace Xpandables.Net.DependencyInjection
@@ -29,11 +30,48 @@ namespace Xpandables.Net.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
+        /// Adds The <see cref="IAlertProvider"/> to the collection of services.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXAlertProvider(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddSingleton<IAlertProvider, AlertProvider>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds The <see cref="IAlertProvider"/> to the collection of services with the specified configuration.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <param name="configure">Allows service configuration.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXAlertProvider(this IXpandableServiceBuilder services, Action<AlertOptions> configure)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            var options = new AlertOptions();
+            configure.Invoke(options);
+
+            services.Services.AddSingleton<IAlertProvider>(_ =>
+            {
+                var alertProvider = new AlertProvider
+                {
+                    AlertOptions = options
+                };
+
+                return alertProvider;
+            });
+            return services;
+        }
+
+        /// <summary>
         /// Adds local/session storage with default values.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        /// <remarks>You can use an override to customize behaviors.</remarks>
         public static IXpandableServiceBuilder AddXStorage(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));

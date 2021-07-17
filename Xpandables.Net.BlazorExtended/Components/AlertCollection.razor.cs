@@ -68,24 +68,24 @@ namespace Xpandables.Net.Components
 
                 // set the 'KeepAfterRouteChange' flag to false for the 
                 // remaining alert so they are removed on the next clear
-                AlertProvider.Alerts.ForEach(x => x = x with { KeepAfterRouteChange = false });
+                AlertProvider.Alerts.ForEach(x => x.KeepAfterRouteChange = false);
             }
             else
             {
                 // add alert to array
                 AlertProvider.Alerts.Add(alert);
 
-                await InvokeAsync(StateHasChanged);
+                StateHasChanged();
 
                 // auto close alert if required
                 if (alert.AutoClose)
                 {
                     await Task.Delay(AlertProvider.AlertOptions.Delay);
-                    await RemoveAlertAsync(alert);
+                    RemoveAlertAsync(alert);
                 }
             }
 
-            await InvokeAsync(StateHasChanged);
+            StateHasChanged();
         }
 
 
@@ -104,7 +104,7 @@ namespace Xpandables.Net.Components
         /// Removes the specified alert.
         /// </summary>
         /// <param name="alert">The alert to be removed.</param>
-        public virtual async Task RemoveAlertAsync(Alert alert)
+        public virtual async void RemoveAlertAsync(Alert alert)
         {
             // check if already removed to prevent error on auto close
             if (!AlertProvider.Alerts.Contains(alert)) return;
@@ -112,7 +112,7 @@ namespace Xpandables.Net.Components
             if (AlertProvider.AlertOptions.FadeOut)
             {
                 // fade out alert
-                alert = alert.FadeOut();
+                alert.FadeOut();
 
                 // remove alert after faded out
                 await Task.Delay(AlertProvider.AlertOptions.FadeOutDelay);
@@ -124,7 +124,7 @@ namespace Xpandables.Net.Components
                 AlertProvider.Alerts.Remove(alert);
             }
 
-            await InvokeAsync(StateHasChanged);
+            StateHasChanged();
         }
     }
 }

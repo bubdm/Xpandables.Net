@@ -1,4 +1,4 @@
-﻿body {
+﻿.alert-collection {
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -15,6 +15,32 @@
 .position-bottomright,
 .position-bottomcenter {
     bottom: 0;
+}
+
+.alert-item {
+    -webkit-animation: fadeinout 2s;
+    animation: fadeinout 2s;
+    box-shadow: rgba(0,0,0,0.25) 0px 10px 40px;
+}
+
+@keyframes fadeinout {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeinout {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @media (min-width: 576px) {
@@ -51,10 +77,9 @@
         margin-left: -15rem;
     }
 
-    /*    .notification-item {
+    .alert-item {
         width: 30rem;
         border-radius: .25rem;
-    }*/
+    }
 }
-
 

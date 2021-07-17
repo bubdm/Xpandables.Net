@@ -197,8 +197,7 @@ namespace Xpandables.Net.Alerts
         ///<inheritdoc/>
         public virtual void RaizeAlert(Alert alert)
         {
-            if (alert.Id is null)
-                alert = alert with { Id = IAlertProvider.DefaultId };
+            alert.Id ??= IAlertProvider.DefaultId;
 
             OnAlert?.Invoke(alert);
         }
