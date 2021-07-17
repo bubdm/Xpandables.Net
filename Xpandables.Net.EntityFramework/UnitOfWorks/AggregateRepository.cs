@@ -35,7 +35,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// </summary>
     /// <typeparam name="TAggregate">The type of the aggregate.</typeparam>
     public class AggregateRepository<TAggregate> : Repository<TAggregate>, IAggregateRepository<TAggregate>
-        where TAggregate : class, IAggregate, new()
+        where TAggregate : class, IAggregate
     {
         /// <summary>
         /// Gets the instance creator.

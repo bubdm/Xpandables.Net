@@ -15,7 +15,7 @@ namespace Xpandables.Net.Aggregates
     /// </summary>
     /// <typeparam name="TAggregate">The type of the aggregate.</typeparam>
     public interface IAggregateRepository<TAggregate> : IRepository<TAggregate>
-        where TAggregate : class, IAggregate, new()
+        where TAggregate : class, IAggregate
     {
         /// <summary>
         /// Asynchronously returns the <typeparamref name="TAggregate"/> aggregate that matches the 
