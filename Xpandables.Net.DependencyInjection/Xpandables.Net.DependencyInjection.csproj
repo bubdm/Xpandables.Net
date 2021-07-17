@@ -18,8 +18,8 @@
     <Version>6.0.0</Version>
     <AssemblyVersion>6.0.0</AssemblyVersion>
     <FileVersion>6.0.0</FileVersion>
-    <PackageVersion>6.0.0-preview.1</PackageVersion>
-    <PackageReleaseNotes>Migration to .Net6.0</PackageReleaseNotes>
+    <PackageVersion>6.0.0-preview.2</PackageVersion>
+    <PackageReleaseNotes>Add alert component</PackageReleaseNotes>
     <PackageId>Xpandables.Net.DependencyInjection</PackageId>
     <PackageTags>XTryDecorate AddXHandlers AddXQueries AddXDataContext</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
