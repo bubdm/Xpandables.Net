@@ -43,6 +43,8 @@ namespace Xpandables.Net.Aggregates
         INotificationSourcing
         where TAggregateId : notnull, AggregateId
     {
+        private static readonly IInstanceCreator _instanceCreator = new InstanceCreator();
+
         private readonly ICollection<IDomainEvent> _events
             = new LinkedList<IDomainEvent>();
         private readonly ICollection<INotificationEvent> _notifications
@@ -56,7 +58,7 @@ namespace Xpandables.Net.Aggregates
         public AggregateVersion Version { get; protected set; } = -1;
 
         ///<inheritdoc/>
-        public TAggregateId AggregateId { get; protected set; } = default!;
+        public TAggregateId AggregateId { get; protected set; } = (TAggregateId)_instanceCreator.Create(typeof(TAggregateId), Guid.Empty)!;
 
         /// <summary>
         /// Constructs the default instance of an aggregate root.
@@ -114,16 +116,9 @@ namespace Xpandables.Net.Aggregates
             if (!_eventHandlers.TryGetValue(@event.GetType(), out var eventHandler))
                 throw new InvalidOperationException($"The {@event.GetType().Name} requested handler is not registered.");
 
-            AggregateId = ConvertFrom(@event.AggregateId);
+            AggregateId = (TAggregateId)_instanceCreator.Create(typeof(TAggregateId), @event.AggregateId.Value)!;
             eventHandler(@event);
         }
-
-        /// <summary>
-        /// Converts the <see cref="AggregateId"/> type to <typeparamref name="TAggregateId"/>.
-        /// </summary>
-        /// <param name="aggregateId">The aggregate Id to be converted.</param>
-        /// <returns>An instance of <typeparamref name="TAggregateId"/>.</returns>
-        protected abstract TAggregateId ConvertFrom(AggregateId aggregateId);
 
         /// <summary>
         /// Adds the specified notification to the entity collection of notifications.
