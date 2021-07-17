@@ -131,7 +131,7 @@ namespace Xpandables.Net.UnitOfWorks
                     aggregateEventSourcing.LoadFromHistory(domainEvent);
             }
 
-            return aggregate.IsEmpty ? default : aggregate;
+            return aggregate.AggregateId.IsEmpty() ? default : aggregate;
         }
 
         ///<inheritdoc/>
@@ -217,7 +217,7 @@ namespace Xpandables.Net.UnitOfWorks
             var entity = new SnapShotStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
 
             await Context.Set<SnapShotStoreEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
-        } 
+        }
 
         /// <summary>
         /// Creates a new instance of <typeparamref name="TAggregate"/>.
