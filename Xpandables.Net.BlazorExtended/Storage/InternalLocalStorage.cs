@@ -45,7 +45,7 @@ namespace Xpandables.Net.Storage
         public ValueTask<TValue?> ReadAsync<TValue>(string key, CancellationToken cancellationToken = default)
         {
             _ = key ?? throw new ArgumentNullException(nameof(key));
-            return _storage.ReadAsync<TValue>("localstorage.getItem", key, cancellationToken); ;
+            return _storage.ReadAsync<TValue>("localStorage.getItem", key, cancellationToken); ;
         }
 
         public async ValueTask RemoveAsync(string key, CancellationToken cancellationToken = default)
@@ -75,7 +75,7 @@ namespace Xpandables.Net.Storage
             if (eventArgs.IsCanceled)
                 return;
 
-            await _storage.WriteAsync("localstorage.setItem", key, value, cancellationToken).ConfigureAwait(false);
+            await _storage.WriteAsync("localStorage.setItem", key, value, cancellationToken).ConfigureAwait(false);
 
             OnStorageChangedEventArgs(key, oldValue, value, StorageAction.Written);
         }
