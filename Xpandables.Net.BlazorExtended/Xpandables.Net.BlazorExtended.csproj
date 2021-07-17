@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <StaticWebAssetBasePath>_content/$(PackageId)</StaticWebAssetBasePath>
     <Platforms>AnyCPU</Platforms>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
@@ -41,7 +42,7 @@
     <AnalysisLevel>preview</AnalysisLevel>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
-  
+ 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors />
     <NoWarn />

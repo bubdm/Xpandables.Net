@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Api", "Xpand
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.StateTest", "Xpandables.Net.StateTest\Xpandables.Net.StateTest.csproj", "{94705081-80CC-434C-AD25-6DC13C519F41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.Web", "Xpandables.Net.Web\Xpandables.Net.Web.csproj", "{43E4AA9A-4DB0-4058-B3F6-3610A1C0B1DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Web", "Xpandables.Net.Web\Xpandables.Net.Web.csproj", "{43E4AA9A-4DB0-4058-B3F6-3610A1C0B1DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
