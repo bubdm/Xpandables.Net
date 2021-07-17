@@ -135,6 +135,21 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the <typeparamref name="TCorrelationMiddleware"/> as <see cref="CorrelationMiddleware"/> type to the application's request pipeline.
+        /// </summary>
+        /// <typeparam name="TCorrelationMiddleware">The type of the correlation middleware.</typeparam>
+        /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
+        /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
+        public static IXpandableApplicationBuilder UseXCorrelationMiddleware<TCorrelationMiddleware>(this IXpandableApplicationBuilder builder)
+            where TCorrelationMiddleware : CorrelationMiddleware
+        {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+            builder.Builder.UseMiddleware<TCorrelationMiddleware>();
+
+            return builder;
+        }
+
+        /// <summary>
         /// Adds the <see cref="OperationResultExceptionController"/> to the services.
         /// This controller is used to handle exceptions before target controller get called.
         /// </summary>
