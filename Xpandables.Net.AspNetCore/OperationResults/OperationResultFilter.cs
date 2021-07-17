@@ -141,6 +141,11 @@ namespace Xpandables.Net
                         await PictureExecuteAsync(context, valuePicture).ConfigureAwait(false);
                         return;
                     }
+
+                    if (operationResult.LocationUrl is not null)
+                    {
+                        context.HttpContext.Response.Headers.Location = new Microsoft.Extensions.Primitives.StringValues(operationResult.LocationUrl);
+                    }
                 }
             }
 
