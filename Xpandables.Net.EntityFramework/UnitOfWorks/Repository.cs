@@ -34,7 +34,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// You must derive from this class to customize its behaviors.
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
-    public abstract class Repository<TEntity> : IRepository<TEntity>
+    public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class
     {
         ///<inheritdoc/>
@@ -53,7 +53,7 @@ namespace Xpandables.Net.UnitOfWorks
         /// </summary>
         /// <param name="context">The data context to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        protected Repository(DataContext context)
+        public Repository(DataContext context)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
         }
