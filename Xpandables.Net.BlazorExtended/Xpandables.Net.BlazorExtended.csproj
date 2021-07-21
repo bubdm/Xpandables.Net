@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <StaticWebAssetBasePath>_content/$(PackageId)</StaticWebAssetBasePath>
     <Platforms>AnyCPU</Platforms>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
     <Product>Xpandables Net BlazorExtended</Product>
