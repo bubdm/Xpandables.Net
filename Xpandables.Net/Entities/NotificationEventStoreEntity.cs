@@ -18,14 +18,12 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Xpandables.Net.Entities;
-
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// Represents the domain event store entity.
+    /// Represents the notification event store entity.
     /// </summary>
-    public class DomainEventStoreEntity : EventStoreEntity
+    public class NotificationEventStoreEntity : EventStoreEntity
     {
         /// <summary>
         /// 
@@ -35,15 +33,20 @@ namespace Xpandables.Net.Events
         /// <param name="eventTypeFullName"></param>
         /// <param name="eventTypeName"></param>
         /// <param name="eventData"></param>
+        /// <param name="exceptionTypeFullName"></param>
+        /// <param name="exception"></param>
         [JsonConstructor]
-        public DomainEventStoreEntity(
+        public NotificationEventStoreEntity(
             string aggregateId,
             string aggregateTypeName,
             string eventTypeFullName,
             string eventTypeName,
-            JsonDocument eventData)
-            : base(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData)
+            JsonDocument eventData,
+            string? exceptionTypeFullName = default,
+            string? exception = default)
+            : base(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData, exception, exceptionTypeFullName)
         {
+
         }
     }
 }

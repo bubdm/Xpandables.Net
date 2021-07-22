@@ -15,22 +15,30 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
-namespace Xpandables.Net.Events
+using Xpandables.Net.Aggregates.Events;
+
+namespace Xpandables.Net.Aggregates.Notifications
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IDomainEventHandler"/> interface.
+    /// Represents a helper class that allows implementation of <see cref="INotificationEvent"/> interface.
     /// </summary>
-    /// <typeparam name="TDomainEvent">Type of event to act on.</typeparam>
-    public abstract class DomainEventHandler<TDomainEvent> : IDomainEventHandler<TDomainEvent>
-        where TDomainEvent : class, IDomainEvent
+    public abstract class NotificationEvent : Event, INotificationEvent
     {
-        ///<inheritdoc/>
-        public abstract Task HandleAsync(TDomainEvent @event, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Initializes a default instance of the <see cref="NotificationEvent"/>.
+        /// </summary>
+        /// <param name="aggregateId">The aggregate id.</param>
+        /// <param name="domainEvent">The target domain event.</param>
+        protected NotificationEvent(AggregateId aggregateId, IDomainEvent? domainEvent = default)
+            : base(aggregateId)
+        {
+            DomainEvent = domainEvent;
+        }
 
-        Task IDomainEventHandler.HandleAsync(IDomainEvent @event, CancellationToken cancellationToken)
-            => HandleAsync((TDomainEvent)@event, cancellationToken);
+        ///<inheritdoc/>
+        [JsonIgnore]
+        public IDomainEvent? DomainEvent { get; }
     }
 }

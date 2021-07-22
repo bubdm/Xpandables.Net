@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.Aggregates.Events
 {
     /// <summary>
     /// Allows an application author to define a handler for a domain event.

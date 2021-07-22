@@ -18,7 +18,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.Aggregates.Notifications
 {
     /// <summary>
     /// Represents a helper class that allows implementation of

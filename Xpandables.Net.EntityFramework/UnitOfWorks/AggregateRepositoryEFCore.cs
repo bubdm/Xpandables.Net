@@ -26,8 +26,9 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Aggregates;
+using Xpandables.Net.Aggregates.Events;
+using Xpandables.Net.Aggregates.Notifications;
 using Xpandables.Net.Entities;
-using Xpandables.Net.Events;
 
 namespace Xpandables.Net.UnitOfWorks
 {

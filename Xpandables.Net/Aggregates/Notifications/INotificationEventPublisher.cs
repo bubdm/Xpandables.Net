@@ -15,26 +15,24 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Linq;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-using Xpandables.Net.Aggregates.Notifications;
-
-namespace Xpandables.Net.Aggregates
+namespace Xpandables.Net.Aggregates.Notifications
 {
     /// <summary>
-    /// Out-box pattern interface (notification).
+    /// Defines a method to automatically publish <see cref="INotificationEvent"/> type.
     /// </summary>
-    internal interface INotificationSourcing
+    public interface INotificationEventPublisher
     {
         /// <summary>
-        /// Marks all notifications as committed.
+        /// Publishes notifications.
         /// </summary>
-        void MarkNotificationsAsCommitted();
-
-        /// <summary>
-        /// Returns a collection of notifications.
-        /// </summary>
-        /// <returns>A list of notifications.</returns>
-        IOrderedEnumerable<INotificationEvent> GetNotifications();
+        /// <param name="event">The notification to be published.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+        Task PublishAsync(INotificationEvent @event, CancellationToken cancellationToken = default);
     }
 }

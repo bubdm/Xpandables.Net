@@ -15,17 +15,16 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Xpandables.Net.Entities;
-
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// Represents the notification event store entity.
+    /// Represents the snapShot store entity.
     /// </summary>
-    public class NotificationEventStoreEntity : EventStoreEntity
+    public class SnapShotStoreEntity : EventStoreEntity
     {
         /// <summary>
         /// 
@@ -35,20 +34,15 @@ namespace Xpandables.Net.Events
         /// <param name="eventTypeFullName"></param>
         /// <param name="eventTypeName"></param>
         /// <param name="eventData"></param>
-        /// <param name="exceptionTypeFullName"></param>
-        /// <param name="exception"></param>
         [JsonConstructor]
-        public NotificationEventStoreEntity(
+        public SnapShotStoreEntity(
             string aggregateId,
             string aggregateTypeName,
             string eventTypeFullName,
             string eventTypeName,
-            JsonDocument eventData,
-            string? exceptionTypeFullName = default,
-            string? exception = default)
-            : base(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData, exception, exceptionTypeFullName)
+            JsonDocument eventData)
+            : base(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData)
         {
-
         }
     }
 }

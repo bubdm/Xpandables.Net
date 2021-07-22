@@ -15,19 +15,33 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as a notification event that contains an <see cref="IDomainEvent"/>.
+    /// Represents the domain event store entity.
     /// </summary>
-    public interface INotificationEvent : IEvent
+    public class DomainEventStoreEntity : EventStoreEntity
     {
         /// <summary>
-        /// Gets the target domain event.
+        /// 
         /// </summary>
-        [JsonIgnore]
-        IDomainEvent? DomainEvent { get; }
+        /// <param name="aggregateId"></param>
+        /// <param name="aggregateTypeName"></param>
+        /// <param name="eventTypeFullName"></param>
+        /// <param name="eventTypeName"></param>
+        /// <param name="eventData"></param>
+        [JsonConstructor]
+        public DomainEventStoreEntity(
+            string aggregateId,
+            string aggregateTypeName,
+            string eventTypeFullName,
+            string eventTypeName,
+            JsonDocument eventData)
+            : base(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData)
+        {
+        }
     }
 }

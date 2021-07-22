@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +14,8 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Xpandables.Net.Aggregates;
 
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.Aggregates.Events
 {
     /// <summary>
     /// Defines a marker interface to be used to mark an object to act as a event domain for <see cref="IAggregate"/>.

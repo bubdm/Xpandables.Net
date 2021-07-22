@@ -20,7 +20,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using Xpandables.Net.Events;
+using Xpandables.Net.Aggregates.Events;
+using Xpandables.Net.Aggregates.Notifications;
 
 namespace Xpandables.Net.Aggregates
 {
