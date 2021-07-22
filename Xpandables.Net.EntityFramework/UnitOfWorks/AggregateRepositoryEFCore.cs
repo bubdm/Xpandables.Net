@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,20 +35,31 @@ namespace Xpandables.Net.UnitOfWorks
     /// Represents the EFCore implementation of <see cref="IAggregateRepository{TAggregate}"/>.
     /// </summary>
     /// <typeparam name="TAggregate">The type of the aggregate.</typeparam>
-    public class AggregateRepository<TAggregate> : Repository<TAggregate>, IAggregateRepository<TAggregate>
+    public class AggregateRepositoryEFCore<TAggregate> : IAggregateRepository<TAggregate>
         where TAggregate : class, IAggregate
     {
+        ///<inheritdoc/>
+        public JsonSerializerOptions? SerializerOptions { get; set; } = new() { PropertyNameCaseInsensitive = true };
+
+        ///<inheritdoc/>
+        public JsonDocumentOptions DocumentOptions { get; set; } = default;
+
         /// <summary>
         /// Gets the instance creator.
         /// </summary>
         protected static readonly IInstanceCreator InstanceCreator = new InstanceCreator();
 
         /// <summary>
-        /// Constructs a new instance of <see cref="AggregateRepository{Taggregate}"/>.
+        /// Gets the current context instance.
+        /// </summary>
+        protected virtual ContextEFCore Context { get; }
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="AggregateRepositoryEFCore{Taggregate}"/>.
         /// </summary>
         /// <param name="context">The db context to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public AggregateRepository(DataContext context) : base(context) { }
+        public AggregateRepositoryEFCore(ContextEFCore context) => Context = context ?? throw new ArgumentNullException(nameof(context));
 
         ///<inheritdoc/>
         public virtual async Task AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
@@ -236,6 +248,24 @@ namespace Xpandables.Net.UnitOfWorks
             }
 
             return aggregate;
+        }
+
+        /// <summary>
+        /// Returns the <see cref="JsonDocument"/> from the specified document.
+        /// </summary>
+        /// <typeparam name="TDocument">The type of document.</typeparam>
+        /// <param name="document">An instance of document to parse.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
+        /// <param name="documentOptions">Options to control the reader behavior during parsing.</param>
+        /// <returns>An instance of <see cref="JsonDocument"/>.</returns>
+        protected virtual JsonDocument GetJsonDocument<TDocument>(
+            TDocument document,
+            JsonSerializerOptions? serializerOptions,
+            JsonDocumentOptions documentOptions)
+            where TDocument : notnull
+        {
+            var eventString = JsonSerializer.Serialize(document, document.GetType(), serializerOptions);
+            return JsonDocument.Parse(eventString, documentOptions);
         }
     }
 }

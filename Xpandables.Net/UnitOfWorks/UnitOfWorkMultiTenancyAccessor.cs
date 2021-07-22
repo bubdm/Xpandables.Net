@@ -65,11 +65,7 @@ namespace Xpandables.Net.UnitOfWorks
 
         ///<inheritdoc/>
         public TUnitOfWork GetUnitOfWork<TUnitOfWork>()
-            where TUnitOfWork : class, IUnitOfWork
-        {
-            _ = TenantName ?? throw new ArgumentException("The tenant name has not been set.");
-            return GetUnitOfWork<TUnitOfWork>(TenantName);
-        }
+            where TUnitOfWork : class, IUnitOfWork => GetUnitOfWork<TUnitOfWork>(typeof(TUnitOfWork).Name);
 
         ///<inheritdoc/>
         public TUnitOfWork GetUnitOfWork<TUnitOfWork>(string name)

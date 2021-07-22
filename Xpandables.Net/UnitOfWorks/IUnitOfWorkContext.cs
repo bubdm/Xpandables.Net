@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,26 +16,10 @@
 ************************************************************************************************************/
 using System;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.UnitOfWorks
 {
     /// <summary>
-    /// Adds creation information to an entity.
+    /// Provides with the base unit of work context interface.
     /// </summary>
-    public interface IEntityCreate
-    {
-        /// <summary>
-        /// Gets the creation date of the underlying instance. This property is automatically set by the <see cref="Created"/>.
-        /// </summary>
-        DateTime CreatedOn { get; }
-
-        /// <summary>
-        /// Sets the creation date time for underlying instance.
-        /// </summary>
-        void Created();
-
-        /// <summary>
-        /// Determines whether the instance is a new one.
-        /// </summary>
-        bool IsCreated { get; }
-    }
+    public interface IUnitOfWorkContext : IDisposable, IAsyncDisposable { }
 }

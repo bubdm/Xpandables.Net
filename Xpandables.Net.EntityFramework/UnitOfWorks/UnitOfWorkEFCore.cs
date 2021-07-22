@@ -1,4 +1,19 @@
-﻿
+﻿/************************************************************************************************************
+ * Copyright (C) 2020 Francis-Black EWANE
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+************************************************************************************************************/
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -10,24 +25,19 @@ namespace Xpandables.Net.UnitOfWorks
     /// <summary>
     /// Represents the base EFCore implementation of <see cref="IUnitOfWork"/>.
     /// </summary>
-    public abstract class UnitOfWork<TContext> : Disposable, IUnitOfWork
-        where TContext : DataContext
+    public abstract class UnitOfWorkEFCore<TContext> : UnitOfWork<TContext>
+        where TContext : ContextEFCore
     {
         /// <summary>
-        /// Gets the current <typeparamref name="TContext"/> instance.
+        /// Constructs a new instance of <see cref="UnitOfWorkEFCore{TContext}"/>.
         /// </summary>
-        protected TContext Context { get; }
-
-
-        /// <summary>
-        /// Constructs a new instance of <see cref="UnitOfWork{TContext}"/>.
-        /// </summary>
-        /// <param name="context">The db context to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        protected UnitOfWork(TContext context) => Context = context ?? throw new ArgumentNullException(nameof(context));
+        /// <param name="unitOfWorkContextFactory">The db context factory to act with.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="unitOfWorkContextFactory"/> is null.</exception>
+        protected UnitOfWorkEFCore(IUnitOfWorkContextFactory unitOfWorkContextFactory)
+            : base(unitOfWorkContextFactory) { }
 
         ///<inheritdoc/>
-        public virtual async Task<int> PersistAsync(CancellationToken cancellationToken)
+        public override async Task<int> PersistAsync(CancellationToken cancellationToken)
         {
             try
             {

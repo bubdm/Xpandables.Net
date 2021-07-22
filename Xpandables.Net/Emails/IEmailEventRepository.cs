@@ -16,11 +16,11 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Entities;
+using Xpandables.Net.UnitOfWorks;
 
 namespace Xpandables.Net.Events
 {
@@ -32,16 +32,14 @@ namespace Xpandables.Net.Events
         where TEmailMessage : class
     {
         /// <summary>
-        /// Asynchronously returns a collection of email events matching the criteria.
-        /// if not found, returns an empty collection.
+        /// Gets or sets the current <see cref="JsonSerializerOptions"/> to be used for serialization.
         /// </summary>
-        /// <param name="criteria">The criteria to be applied to entities.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <see cref="IEmailEvent{TEmailMessage}"/> that can be asynchronously enumerated.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        IAsyncEnumerable<EmailEventStoreEntity> ReadEventsAsync(
-            EventStoreEntityCriteria<EmailEventStoreEntity> criteria,
-            CancellationToken cancellationToken = default);
+        JsonSerializerOptions? SerializerOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current <see cref="JsonDocumentOptions"/> to be used for <see cref="JsonDocument"/> parsing.
+        /// </summary>
+        JsonDocumentOptions DocumentOptions { get; set; }
 
         /// <summary>
         /// Asynchronously appends the specified email event.

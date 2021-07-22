@@ -20,5 +20,7 @@ namespace Xpandables.Net.Entities
     /// <summary>
     ///  The domain object base definition.
     /// </summary>
-    public interface IEntity : IEntityKey, IEntityActive, IEntityCreate, IEntityDelete, IEntityUpdate { }
+    public interface IEntity : IEntityKey, IEntityActive, IEntityCreate, IEntityDelete, IEntityUpdate 
+    { 
+    }
 }

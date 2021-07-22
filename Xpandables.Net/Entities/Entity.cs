@@ -31,9 +31,9 @@ namespace Xpandables.Net.Entities
     public abstract class Entity : OperationResults, IEntity
     {
         /// <summary>
-        /// Initializes the Id key with <see cref="KeyGenerator"/>.
+        /// Initializes a new instance of <see cref="Entity"/>.
         /// </summary>
-        public Entity() => Id = KeyGenerator();
+        public Entity() => Id = string.Empty;
 
         /// <summary>
         /// Gets the domain object identity.
@@ -58,6 +58,9 @@ namespace Xpandables.Net.Entities
         public DateTime? DeletedOn { get; protected set; }
 
         ///<inheritdoc/>
+        public virtual bool IsCreated => Id is null;
+
+        ///<inheritdoc/>
         public virtual void Deactivated()
         {
             IsActive = false;
@@ -79,7 +82,11 @@ namespace Xpandables.Net.Entities
         }
 
         ///<inheritdoc/>
-        public virtual void Created() => CreatedOn = DateTime.UtcNow;
+        public virtual void Created()
+        {
+            Id = KeyGenerator();
+            CreatedOn = DateTime.UtcNow;
+        }
 
         ///<inheritdoc/>
         public void Updated() => UpdatedOn = DateTime.UtcNow;

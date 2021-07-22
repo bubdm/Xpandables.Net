@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +14,20 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Xpandables.Net.Entities;
-using Xpandables.Net.UnitOfWorks;
 
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.UnitOfWorks
 {
     /// <summary>
-    /// Represents a set of methods to read/write events to/from an event store.
-    /// For persistence, decorate your event with <see cref="IPersistenceDecorator"/> interface.
+    /// Represents a method to create a unit of work context.
     /// </summary>
-    /// <typeparam name="TEventStoreEntity">The type of the event.</typeparam>
-    public interface IEventRepository<TEventStoreEntity> : IRepository<TEventStoreEntity>
-        where TEventStoreEntity : EventStoreEntity
+    public interface IUnitOfWorkContextFactory
     {
+        /// <summary>
+        /// Creates a new instance of <typeparamref name="TUnitOfWorkContext"/> type.
+        /// </summary>
+        /// <typeparam name="TUnitOfWorkContext">The type of the expected context.</typeparam>
+        /// <returns>An instance of <typeparamref name="TUnitOfWorkContext"/> type.</returns>
+        TUnitOfWorkContext CreateUnitOfWorkContext<TUnitOfWorkContext>()
+            where TUnitOfWorkContext : class, IUnitOfWorkContext;
     }
 }
