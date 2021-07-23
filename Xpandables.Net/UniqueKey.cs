@@ -23,70 +23,70 @@ using System.Text.Json.Serialization;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// Represents a helper class to implement an identity of a specific type.
+    /// Represents a helper class to implement a key of a specific type.
     /// </summary>
-    /// <typeparam name="TId">The type of the identity value.</typeparam>
+    /// <typeparam name="TId">The type of the key value.</typeparam>
     [Serializable]
-    public abstract class IdentityId<TId> : IEqualityComparer<IdentityId<TId>>, IEquatable<IdentityId<TId>>, IComparable<IdentityId<TId>>, IIdentityId<TId>
+    public abstract class UniqueKey<TId> : IEqualityComparer<UniqueKey<TId>>, IEquatable<UniqueKey<TId>>, IComparable<UniqueKey<TId>>, IUniqueKey<TId>
         where TId : notnull, IComparable
     {
         ///<inheritdoc/>
         public TId Value { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="IdentityId{TId}"/> with the specified value.
+        /// Initializes a new instance of <see cref="UniqueKey{TId}"/> with the specified value.
         /// </summary>
         /// <param name="value">The value for the new instance.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         [JsonConstructor]
-        protected IdentityId(TId value) => Value = value ?? throw new ArgumentNullException(nameof(value));
+        protected UniqueKey(TId value) => Value = value ?? throw new ArgumentNullException(nameof(value));
 
         ///<inheritdoc/>
-        public bool Equals(IdentityId<TId>? x, IdentityId<TId>? y) => x?.Equals(y) ?? false;
+        public bool Equals(UniqueKey<TId>? x, UniqueKey<TId>? y) => x?.Equals(y) ?? false;
 
         ///<inheritdoc/>
-        public int GetHashCode([DisallowNull] IdentityId<TId> obj) => Value.GetHashCode();
+        public int GetHashCode([DisallowNull] UniqueKey<TId> obj) => Value.GetHashCode();
 
         ///<inheritdoc/>
-        public bool Equals(IdentityId<TId>? other) => other is not null && GetType() == other.GetType() && Value.Equals(other.Value);
+        public bool Equals(UniqueKey<TId>? other) => other is not null && GetType() == other.GetType() && Value.Equals(other.Value);
 
         ///<inheritdoc/>
-        public int CompareTo(IdentityId<TId>? other) => other is null ? -1 : Value.CompareTo(other.Value);
+        public int CompareTo(UniqueKey<TId>? other) => other is null ? -1 : Value.CompareTo(other.Value);
 
         ///<inheritdoc/>
-        public override bool Equals(object? obj) => Equals(obj as IdentityId<TId>);
+        public override bool Equals(object? obj) => Equals(obj as UniqueKey<TId>);
 
         ///<inheritdoc/>
         public override int GetHashCode() => Value.GetHashCode();
 
         /// <summary>
-        /// When overridden, this method should determine whether or not the identity contains a valid value or not.
+        /// When overridden, this method should determine whether or not the key contains a valid value or not.
         /// </summary>
         /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>
         public abstract bool IsEmpty();
 
         /// <summary>
-        /// When overridden, this method should return the <see cref="string"/> representation of the identity value.
+        /// When overridden, this method should return the <see cref="string"/> representation of the key value.
         /// </summary>
         /// <returns>A <see cref="string"/> value.</returns>
         public abstract string AsString();
 
         ///<inheritdoc/>
-        public static bool operator ==(IdentityId<TId> left, IdentityId<TId> right) => left?.Equals(right) ?? right is null;
+        public static bool operator ==(UniqueKey<TId> left, UniqueKey<TId> right) => left?.Equals(right) ?? right is null;
 
         ///<inheritdoc/>
-        public static bool operator !=(IdentityId<TId> left, IdentityId<TId> right) => !(left == right);
+        public static bool operator !=(UniqueKey<TId> left, UniqueKey<TId> right) => !(left == right);
 
         ///<inheritdoc/>
-        public static bool operator <(IdentityId<TId> left, IdentityId<TId> right) => left is null ? !(right is null) : left.CompareTo(right) < 0;
+        public static bool operator <(UniqueKey<TId> left, UniqueKey<TId> right) => left is null ? !(right is null) : left.CompareTo(right) < 0;
 
         ///<inheritdoc/>
-        public static bool operator <=(IdentityId<TId> left, IdentityId<TId> right) => left is null || left.CompareTo(right) <= 0;
+        public static bool operator <=(UniqueKey<TId> left, UniqueKey<TId> right) => left is null || left.CompareTo(right) <= 0;
 
         ///<inheritdoc/>
-        public static bool operator >(IdentityId<TId> left, IdentityId<TId> right) => !(left is null) && left.CompareTo(right) > 0;
+        public static bool operator >(UniqueKey<TId> left, UniqueKey<TId> right) => !(left is null) && left.CompareTo(right) > 0;
 
         ///<inheritdoc/>
-        public static bool operator >=(IdentityId<TId> left, IdentityId<TId> right) => left is null ? right is null : left.CompareTo(right) >= 0;
+        public static bool operator >=(UniqueKey<TId> left, UniqueKey<TId> right) => left is null ? right is null : left.CompareTo(right) >= 0;
     }
 }

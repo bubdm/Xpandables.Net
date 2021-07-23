@@ -25,7 +25,7 @@ namespace Xpandables.Net.Aggregates
     /// Represents a helper class to implement an identity for an aggregate type.
     /// </summary>
     [DebuggerDisplay("{" + nameof(Value) + "}")]
-    public class AggregateId : IdentityId<Guid>, IAggregateId
+    public class AggregateId : UniqueKey<Guid>, IAggregateId
     {
         /// <summary>
         /// Returns the string representation of the target <see cref="AggregateId"/>.

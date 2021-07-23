@@ -20,25 +20,25 @@ using System;
 namespace Xpandables.Net
 {
     /// <summary>
-    /// Represents a property to implement an identity.
+    /// Represents a property to implement a key.
     /// </summary>
-    /// <typeparam name="TId">The type of the identity.</typeparam>
-    public interface IIdentityId<TId>
-        where TId : notnull, IComparable
+    /// <typeparam name="TKey">The type of the key.</typeparam>
+    public interface IUniqueKey<TKey>
+        where TKey : notnull, IComparable
     {
         /// <summary>
-        /// Gets the value of the identity.
+        /// Gets the value of the key.
         /// </summary>
-        TId Value { get; }
+        TKey Value { get; }
 
         /// <summary>
-        /// Returns the <see cref="string"/> representation of the identity value.
+        /// Returns the <see cref="string"/> representation of the key value.
         /// </summary>
         /// <returns>A <see cref="string"/> value.</returns>
         string AsString();
 
         /// <summary>
-        /// Returns a value that determine whether or not the identity is defined or empty.
+        /// Returns a value that determine whether or not the key is defined or empty.
         /// </summary>
         /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>
         bool IsEmpty();

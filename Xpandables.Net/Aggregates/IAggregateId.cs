@@ -23,13 +23,13 @@ namespace Xpandables.Net.Aggregates
     /// Represents the unique identifier for an aggregate.
     /// </summary>
     [JsonInterfaceConverter(typeof(JsonInterfaceConverter<IAggregateId>))]
-    public interface IAggregateId : IIdentityId<Guid>
+    public interface IAggregateId : IUniqueKey<Guid>
     {
         /// <summary>
         /// Returns a value that determines whether or not the aggregate identity is defined or empty.
         /// </summary>
         /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>
         public virtual new bool IsEmpty() => Value == Guid.Empty;
-        bool IIdentityId<Guid>.IsEmpty() => IsEmpty();
+        bool IUniqueKey<Guid>.IsEmpty() => IsEmpty();
     }
 }

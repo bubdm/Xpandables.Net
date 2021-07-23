@@ -38,7 +38,7 @@ namespace Xpandables.Net.DependencyInjection
         public HandlerOptions UseVisitDecorator() => this.With(cq => cq.IsVisitorEnabled = true);
 
         /// <summary>
-        /// Enables persistence behavior to commands that are decorated with the <see cref="IPersistenceDecorator"/> .
+        /// Enables persistence behavior to commands/events that are decorated with the <see cref="IPersistenceDecorator"/> .
         /// </summary>
         public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
 
