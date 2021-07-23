@@ -44,15 +44,14 @@ namespace Xpandables.Net.UnitOfWorks
         Task<TEntity?> TryFindAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Returns an enumerable of <typeparamref name="TResult"/> type that match the criteria and that can be asynchronously enumerated.
+        /// Returns an enumerable of <typeparamref name="TEntity"/> type that match the criteria and that can be asynchronously enumerated.
         /// If no result found, returns an empty enumerable.
         /// </summary>
-        /// <typeparam name="TResult">Anonymous type to be returned.</typeparam>
         /// <param name="criteria">Defines a set of criteria that entity should meet to be returned.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A collection of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
+        /// <returns>A collection of <typeparamref name="TEntity"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        IAsyncEnumerable<TEntity> FetchAllAsync<TResult>(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<TEntity> FetchAllAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously returns the number of elements in a sequence that satisfy a condition.

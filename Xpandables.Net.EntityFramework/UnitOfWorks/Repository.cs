@@ -54,7 +54,7 @@ namespace Xpandables.Net.UnitOfWorks
             => await Context.Set<TEntity>().FirstOrDefaultAsync(criteria, cancellationToken).ConfigureAwait(false);
 
         ///<inheritdoc/>
-        public virtual IAsyncEnumerable<TEntity> FetchAllAsync<TResult>(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
+        public virtual IAsyncEnumerable<TEntity> FetchAllAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
             => Context.Set<TEntity>().Where(criteria).AsAsyncEnumerable();
 
         ///<inheritdoc/>
