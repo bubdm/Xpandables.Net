@@ -104,19 +104,35 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
+            services.AddXCorrelationCollection();
             services.Services.AddScoped<ICorrelationContext, CorrelationContext>();
             return services;
         }
 
         /// <summary>
-        /// Adds the default <see cref="DataContextMultiTenancyMiddleware"/> type to the application's request pipeline.
+        /// Adds the default <see cref="UnitOfWorkMultiTenancyMiddleware"/> type to the application's request pipeline.
         /// </summary>
         /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
         /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
-        public static IXpandableApplicationBuilder UseXDataContextMultiTenancyMiddleware(this IXpandableApplicationBuilder builder)
+        public static IXpandableApplicationBuilder UseXUnitOfWorkMultiTenancyMiddleware(this IXpandableApplicationBuilder builder)
         {
             _ = builder ?? throw new ArgumentNullException(nameof(builder));
-            builder.Builder.UseMiddleware<DataContextMultiTenancyMiddleware>();
+            builder.Builder.UseMiddleware<UnitOfWorkMultiTenancyMiddleware>();
+
+            return builder;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="UnitOfWorkMultiTenancyMiddleware"/> type to the application's request pipeline.
+        /// </summary>
+        /// <typeparam name="TUnitOfWorkMultiTenancyMiddleware">The type of the unit of work multitenancy middleware.</typeparam>
+        /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
+        /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
+        public static IXpandableApplicationBuilder UseXUnitOfWorkMultiTenancyMiddleware<TUnitOfWorkMultiTenancyMiddleware>(this IXpandableApplicationBuilder builder)
+            where TUnitOfWorkMultiTenancyMiddleware : UnitOfWorkMultiTenancyMiddleware
+        {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+            builder.Builder.UseMiddleware<TUnitOfWorkMultiTenancyMiddleware>();
 
             return builder;
         }

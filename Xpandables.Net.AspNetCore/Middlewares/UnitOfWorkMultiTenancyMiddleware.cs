@@ -25,10 +25,10 @@ using Xpandables.Net.UnitOfWorks;
 namespace Xpandables.Net.Middlewares
 {
     /// <summary>
-    /// Defines the data context scope using the <see cref="UnitOfWorkMultiTenancyAttribute"/> found in the current endpoint.
+    /// Defines the unit of work scope using the <see cref="UnitOfWorkMultiTenancyAttribute"/> found in the current endpoint.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
-    public class DataContextMultiTenancyMiddleware : IMiddleware
+    public class UnitOfWorkMultiTenancyMiddleware : IMiddleware
     {
         /// <summary>
         /// Request handling method.
