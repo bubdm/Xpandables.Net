@@ -24,12 +24,12 @@ using Xpandables.Net.Entities;
 namespace Xpandables.Net.TypeConfigurations
 {
     /// <summary>
-    /// EFCore configuration for email event.
+    /// EFCore configuration for notification event.
     /// </summary>
-    public sealed class EmailEventEntityTypeConfiguration : IEntityTypeConfiguration<EmailEventStoreEntity>
+    public sealed class NotificationEntityTypeConfiguration : IEntityTypeConfiguration<NotificationStoreEntity>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<EmailEventStoreEntity> builder)
+        public void Configure(EntityTypeBuilder<NotificationStoreEntity> builder)
         {
             builder.HasKey(p => p.Id);
             builder.HasIndex(p => new { p.Id, p.AggregateId });
@@ -41,7 +41,6 @@ namespace Xpandables.Net.TypeConfigurations
             builder.Property(p => p.EventTypeName);
             builder.Property(p => p.ExceptionTypeFullName);
             builder.Property(p => p.Exception);
-            builder.Property(p => p.State);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Xpandables.Net.Entities
     /// <summary>
     /// Represents the notification event store entity.
     /// </summary>
-    public class NotificationEventStoreEntity : EventStoreEntity
+    public class NotificationStoreEntity : StoreEntity
     {
         /// <summary>
         /// 
@@ -36,7 +36,7 @@ namespace Xpandables.Net.Entities
         /// <param name="exceptionTypeFullName"></param>
         /// <param name="exception"></param>
         [JsonConstructor]
-        public NotificationEventStoreEntity(
+        public NotificationStoreEntity(
             string aggregateId,
             string aggregateTypeName,
             string eventTypeFullName,

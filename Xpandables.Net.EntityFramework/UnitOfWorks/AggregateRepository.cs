@@ -35,7 +35,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// Represents the EFCore implementation of <see cref="IAggregateRepository{TAggregate}"/>.
     /// </summary>
     /// <typeparam name="TAggregate">The type of the aggregate.</typeparam>
-    public class EFCoreAggregateRepository<TAggregate> : EFCoreEventRepository<DomainEventStoreEntity>, IAggregateRepository<TAggregate>
+    public class AggregateRepository<TAggregate> : EventRepository<DomainStoreEntity>, IAggregateRepository<TAggregate>
         where TAggregate : class, IAggregate
     {
         ///<inheritdoc/>
@@ -50,11 +50,11 @@ namespace Xpandables.Net.UnitOfWorks
         protected static readonly IInstanceCreator InstanceCreator = new InstanceCreator();
 
         /// <summary>
-        /// Constructs a new instance of <see cref="EFCoreAggregateRepository{Taggregate}"/>.
+        /// Constructs a new instance of <see cref="AggregateRepository{Taggregate}"/>.
         /// </summary>
         /// <param name="context">The db context to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public EFCoreAggregateRepository(EFCoreContext context) : base(context) { }
+        public AggregateRepository(Context context) : base(context) { }
 
         ///<inheritdoc/>
         public virtual async Task AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
@@ -73,9 +73,9 @@ namespace Xpandables.Net.UnitOfWorks
                 var eventTypeName = @event.GetType().GetNameWithoutGenericArity();
 
                 var eventData = GetJsonDocument(@event, SerializerOptions, DocumentOptions);
-                var entity = new DomainEventStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
+                var entity = new DomainStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
 
-                await Context.Set<DomainEventStoreEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
+                await Context.Set<DomainStoreEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
             }
 
             if (aggregate is INotificationSourcing aggregateOutbox)
@@ -86,9 +86,9 @@ namespace Xpandables.Net.UnitOfWorks
                     var eventTypeName = @event.GetType().GetNameWithoutGenericArity();
 
                     var eventData = GetJsonDocument(@event, SerializerOptions, DocumentOptions);
-                    var entity = new NotificationEventStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData, default);
+                    var entity = new NotificationStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData, default);
 
-                    await Context.Set<NotificationEventStoreEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
+                    await Context.Set<NotificationStoreEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
                 }
 
                 aggregateOutbox.MarkNotificationsAsCommitted();
@@ -106,9 +106,9 @@ namespace Xpandables.Net.UnitOfWorks
             var eventTypeName = @event.GetType().GetNameWithoutGenericArity();
 
             var eventData = GetJsonDocument(@event, SerializerOptions, DocumentOptions);
-            var entity = new NotificationEventStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
+            var entity = new NotificationStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
 
-            await Context.Set<NotificationEventStoreEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            await Context.Set<NotificationStoreEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
@@ -118,12 +118,12 @@ namespace Xpandables.Net.UnitOfWorks
             if (aggregate is not IDomainEventSourcing aggregateEventSourcing)
                 throw new InvalidOperationException($"{typeof(TAggregate).Name} must implement {nameof(IDomainEventSourcing)}");
 
-            var criteria = new EventStoreEntityCriteria<DomainEventStoreEntity>
+            var criteria = new StoreEntityCriteria<DomainStoreEntity>
             {
                 AggregateId = aggregateId.AsString()
             };
 
-            await foreach (var @event in Context.Set<DomainEventStoreEntity>().Where(criteria).AsNoTracking().AsAsyncEnumerable().ConfigureAwait(false))
+            await foreach (var @event in Context.Set<DomainStoreEntity>().Where(criteria).AsNoTracking().AsAsyncEnumerable().ConfigureAwait(false))
             {
                 if (@event.ToObject(SerializerOptions) is IDomainEvent domainEvent)
                     aggregateEventSourcing.LoadFromHistory(domainEvent);
@@ -140,10 +140,10 @@ namespace Xpandables.Net.UnitOfWorks
             if (aggregate is not IOriginator originator)
                 throw new ArgumentException($"{typeof(TAggregate).Name} must implement {typeof(IOriginator).Name}");
 
-            var criteria = new EventStoreEntityCriteria<SnapShotStoreEntity>()
+            var criteria = new StoreEntityCriteria<SnapShotStoreEntity>()
             {
                 AggregateId = aggregateId.AsString(),
-                EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() != -1
+                DataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() != -1
             };
 
             var result = await Context.Set<SnapShotStoreEntity>()
@@ -169,10 +169,10 @@ namespace Xpandables.Net.UnitOfWorks
                 throw new InvalidOperationException($"{aggregate.GetType().Name} must implement '{nameof(IOriginator)}' interface");
 
             long version = aggregate.Version;
-            var criteria = new EventStoreEntityCriteria<SnapShotStoreEntity>
+            var criteria = new StoreEntityCriteria<SnapShotStoreEntity>
             {
                 AggregateId = aggregate.AggregateId.AsString(),
-                EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() == version
+                DataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() == version
             };
 
             var oldSnapShot = await Context.Set<SnapShotStoreEntity>()

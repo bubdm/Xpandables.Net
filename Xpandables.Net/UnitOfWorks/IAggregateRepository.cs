@@ -31,7 +31,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// For persistence, decorate your command/event with <see cref="IPersistenceDecorator"/> interface.
     /// </summary>
     /// <typeparam name="TAggregate">The type of the aggregate.</typeparam>
-    public interface IAggregateRepository<TAggregate> : IEventRepository<DomainEventStoreEntity>
+    public interface IAggregateRepository<TAggregate> : IEventRepository<DomainStoreEntity>
         where TAggregate : class, IAggregate
     {
         /// <summary>

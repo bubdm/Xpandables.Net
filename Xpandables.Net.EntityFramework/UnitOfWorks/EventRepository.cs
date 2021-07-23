@@ -30,23 +30,23 @@ namespace Xpandables.Net.UnitOfWorks
     /// Represents the EFCore implementation of <see cref="IEventRepository{TEventStoreEntity}"/>.
     /// </summary>
     /// <typeparam name="TEventStoreEntity">The type of the event.</typeparam>
-    public class EFCoreEventRepository<TEventStoreEntity> : IEventRepository<TEventStoreEntity>
-        where TEventStoreEntity : EventStoreEntity
+    public class EventRepository<TEventStoreEntity> : IEventRepository<TEventStoreEntity>
+        where TEventStoreEntity : StoreEntity
     {
         /// <summary>
         /// Gets the current context instance.
         /// </summary>
-        protected virtual EFCoreContext Context { get; }
+        protected virtual Context Context { get; }
 
         /// <summary>
-        /// Constructs a new instance of <see cref="EFCoreEventRepository{TEventStoreEntity}"/>.
+        /// Constructs a new instance of <see cref="EventRepository{TEventStoreEntity}"/>.
         /// </summary>
         /// <param name="context">The db context to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public EFCoreEventRepository(EFCoreContext context) => Context = context ?? throw new ArgumentNullException(nameof(context));
+        public EventRepository(Context context) => Context = context ?? throw new ArgumentNullException(nameof(context));
 
         ///<inheritdoc/>
-        public virtual IAsyncEnumerable<TEventStoreEntity> ReadEventsAsync(EventStoreEntityCriteria<TEventStoreEntity> criteria, CancellationToken cancellationToken = default)
+        public virtual IAsyncEnumerable<TEventStoreEntity> ReadEventsAsync(StoreEntityCriteria<TEventStoreEntity> criteria, CancellationToken cancellationToken = default)
         {
             _ = criteria ?? throw new ArgumentNullException(nameof(criteria));
 
@@ -62,7 +62,7 @@ namespace Xpandables.Net.UnitOfWorks
         }
 
         ///<inheritdoc/>
-        public virtual async Task<int> CountEventsAsync(EventStoreEntityCriteria<TEventStoreEntity> criteria, CancellationToken cancellationToken = default)
+        public virtual async Task<int> CountEventsAsync(StoreEntityCriteria<TEventStoreEntity> criteria, CancellationToken cancellationToken = default)
             => await Context.Set<TEventStoreEntity>().CountAsync(criteria, cancellationToken).ConfigureAwait(false);
 
     }

@@ -25,7 +25,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// Represents the base implementation of <see cref="IUnitOfWork"/>.
     /// </summary>
     /// <typeparam name="TUnitOfWorkContext">The type of the context.</typeparam>
-    public abstract class UnitOfWork<TUnitOfWorkContext> : Disposable, IUnitOfWork
+    public abstract class UnitOfWorkBase<TUnitOfWorkContext> : Disposable, IUnitOfWork
         where TUnitOfWorkContext : class, IUnitOfWorkContext
     {
         /// <summary>
@@ -34,11 +34,11 @@ namespace Xpandables.Net.UnitOfWorks
         protected TUnitOfWorkContext Context { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnitOfWork{TUnitOfWorkContext}"/> class with the factory.
+        /// Initializes a new instance of the <see cref="UnitOfWorkBase{TUnitOfWorkContext}"/> class with the factory.
         /// </summary>
         /// <param name="unitOfWorkContextFactory">The factory to create the context.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="unitOfWorkContextFactory"/> is null.</exception>
-        protected UnitOfWork(IUnitOfWorkContextFactory unitOfWorkContextFactory)
+        protected UnitOfWorkBase(IUnitOfWorkContextFactory unitOfWorkContextFactory)
             => Context = unitOfWorkContextFactory.CreateUnitOfWorkContext<TUnitOfWorkContext>();
 
 

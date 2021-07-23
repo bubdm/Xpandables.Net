@@ -22,18 +22,18 @@ using Xpandables.Net.Entities;
 namespace Xpandables.Net.UnitOfWorks
 {
     /// <summary>
-    /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/>.
+    /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/> and implements <see cref="IUnitOfWorkContext"/>.
     /// </summary>
-    public abstract class EFCoreContext : DbContext, IUnitOfWorkContext
+    public abstract class Context : DbContext, IUnitOfWorkContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EFCoreContext"/> class
+        /// Initializes a new instance of the <see cref="Context"/> class
         /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
         /// method will still be called to allow further configuration of the options.
         /// Applies the tracked delegate for automatically set <see cref="Entity.CreatedOn"/>, <see cref="Entity.UpdatedOn"/> and <see cref="Entity.DeletedOn"/> properties.
         /// </summary>
         /// <param name="contextOptions">The options for this context.</param>
-        protected EFCoreContext(DbContextOptions contextOptions)
+        protected Context(DbContextOptions contextOptions)
             : base(contextOptions)
         {
             ChangeTracker.Tracked += (sender, e) =>

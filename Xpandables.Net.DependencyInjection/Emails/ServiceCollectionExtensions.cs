@@ -20,7 +20,7 @@ using Microsoft.Extensions.Hosting;
 
 using System;
 
-using Xpandables.Net.Events;
+using Xpandables.Net.Entities;
 using Xpandables.Net.Services;
 
 namespace Xpandables.Net.DependencyInjection
@@ -31,39 +31,39 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="IEmailEventService"/> type implementation to the services with scope life time.
+        /// Adds the <see cref="IEmailService"/> type implementation to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TEmailEventService">The notification event service type implementation.</typeparam>
+        /// <typeparam name="TEmailService">The email service type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEmailEventService<TEmailEventService>(this IXpandableServiceBuilder services)
-            where TEmailEventService : class, IHostedService, IEmailEventService
+        public static IXpandableServiceBuilder AddXEmailService<TEmailService>(this IXpandableServiceBuilder services)
+            where TEmailService : class, IHostedService, IEmailService
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddSingleton<IEmailEventService, TEmailEventService>();
-            services.Services.AddHostedService(provider => provider.GetRequiredService<IEmailEventService>() as TEmailEventService);
+            services.Services.AddSingleton<IEmailService, TEmailService>();
+            services.Services.AddHostedService(provider => provider.GetRequiredService<IEmailService>() as TEmailService);
             return services;
         }
 
         /// <summary>
-        /// Adds the specified <see cref="IEmailSender{TEmailMessage}"/> implementation 
+        /// Adds the specified <see cref="IEmailSender{TMessage}"/> implementation 
         /// to the services with scope life time.
         /// </summary>
-        /// <typeparam name="TEmailMessage">the type of message.</typeparam>
+        /// <typeparam name="TMessage">the type of message.</typeparam>
         /// <typeparam name="TEmailSender">The type of the email sender.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEmailSender<TEmailMessage, TEmailSender>(
+        public static IXpandableServiceBuilder AddXEmailSender<TMessage, TEmailSender>(
             this IXpandableServiceBuilder services)
-            where TEmailMessage : notnull
-            where TEmailSender : class, IEmailSender<TEmailMessage>
+            where TMessage : class, IEntity
+            where TEmailSender : class, IEmailSender<TMessage>
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddScoped<IEmailSender<TEmailMessage>, TEmailSender>();
-            services.Services.AddScoped(provider => (IEmailSender)provider.GetRequiredService<IEmailSender<TEmailMessage>>());
+            services.Services.AddScoped<IEmailSender<TMessage>, TEmailSender>();
+            services.Services.AddScoped(provider => (IEmailSender)provider.GetRequiredService<IEmailSender<TMessage>>());
             return services;
         }
     }

@@ -20,5 +20,5 @@ namespace Xpandables.Net.Services
     /// <summary>
     /// Defines the email host service.
     /// </summary>
-    public interface IEmailEventService : IBackgroundService { }
+    public interface IEmailService : IBackgroundService { }
 }

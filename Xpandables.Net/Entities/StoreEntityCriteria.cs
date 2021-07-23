@@ -27,13 +27,13 @@ namespace Xpandables.Net.Entities
     /// Provides with criteria to search for store entities.
     /// This class derives from <see cref="QueryExpression{TSource}"/>.
     /// </summary>
-    public sealed class EventStoreEntityCriteria<TEventStoreEntity> : QueryExpression<TEventStoreEntity>
-        where TEventStoreEntity : EventStoreEntity
+    public sealed class StoreEntityCriteria<TStoreEntity> : QueryExpression<TStoreEntity>
+        where TStoreEntity : StoreEntity
     {
         /// <summary>
-        /// Returns an of <see cref="EventStoreEntityCriteria{TEventStoreEntity}"/> with default values.
+        /// Returns an of <see cref="StoreEntityCriteria{TEventStoreEntity}"/> with default values.
         /// </summary>
-        public static EventStoreEntityCriteria<TEventStoreEntity> Default => new();
+        public static StoreEntityCriteria<TStoreEntity> Default => new();
 
         /// <summary>
         /// Gets or sets the string representation of the aggregate identifier.
@@ -88,7 +88,7 @@ namespace Xpandables.Net.Entities
         /// EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() == version
         /// This is because Version is parsed as "Version": { "Value": 1 }
         /// </remarks>
-        public Expression<Func<TEventStoreEntity, bool>>? EventDataCriteria { get; init; }
+        public Expression<Func<TStoreEntity, bool>>? DataCriteria { get; init; }
 
         /// <summary>
         /// Gets the number of entities to be returned.
@@ -101,9 +101,9 @@ namespace Xpandables.Net.Entities
         public int? Index { get; init; }
 
         ///<inheritdoc/>
-        public override Expression<Func<TEventStoreEntity, bool>> GetExpression()
+        public override Expression<Func<TStoreEntity, bool>> GetExpression()
         {
-            var expression = QueryExpressionFactory.Create<TEventStoreEntity>();
+            var expression = QueryExpressionFactory.Create<TStoreEntity>();
 
             if (EventTypeName is not null)
                 expression = expression.And(x => Regex.IsMatch(x.EventTypeName, EventTypeName));
@@ -123,8 +123,8 @@ namespace Xpandables.Net.Entities
                 expression = expression.And(x => x.IsActive == IsActive.Value);
             if (IsDeleted is not null)
                 expression = expression.And(x => x.IsDeleted == IsDeleted.Value);
-            if (EventDataCriteria is not null)
-                expression = expression.And(EventDataCriteria);
+            if (DataCriteria is not null)
+                expression = expression.And(DataCriteria);
 
             return expression;
         }

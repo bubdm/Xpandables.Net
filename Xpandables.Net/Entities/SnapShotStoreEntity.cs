@@ -24,7 +24,7 @@ namespace Xpandables.Net.Entities
     /// <summary>
     /// Represents the snapShot store entity.
     /// </summary>
-    public class SnapShotStoreEntity : EventStoreEntity
+    public class SnapShotStoreEntity : StoreEntity
     {
         /// <summary>
         /// 

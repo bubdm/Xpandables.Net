@@ -15,35 +15,33 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Xpandables.Net.Aggregates;
-
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.Entities
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IEmailEvent{TEmail}"/> interface.
+    /// Represents the domain event store entity.
     /// </summary>
-    /// <typeparam name="TEmailMessage">the type of the email message. The type must be serializable.</typeparam>
-    public abstract class EmailEvent<TEmailMessage> : Event, IEmailEvent<TEmailMessage>
-        where TEmailMessage : class
+    public class DomainStoreEntity : StoreEntity
     {
         /// <summary>
-        /// Initializes a default instance of the <see cref="EmailEvent{TEmail}"/>.
+        /// 
         /// </summary>
-        /// <param name="aggregateId">The aggregate id.</param>
-        /// <param name="emailMessage">The target email event.</param>
+        /// <param name="aggregateId"></param>
+        /// <param name="aggregateTypeName"></param>
+        /// <param name="eventTypeFullName"></param>
+        /// <param name="eventTypeName"></param>
+        /// <param name="eventData"></param>
         [JsonConstructor]
-        protected EmailEvent(AggregateId aggregateId, TEmailMessage emailMessage)
-            : base(aggregateId)
+        public DomainStoreEntity(
+            string aggregateId,
+            string aggregateTypeName,
+            string eventTypeFullName,
+            string eventTypeName,
+            JsonDocument eventData)
+            : base(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData)
         {
-            EmailMessage = emailMessage ?? throw new ArgumentNullException(nameof(emailMessage));
         }
-
-        ///<inheritdoc/>
-        public TEmailMessage EmailMessage { get; }
-
-        object IEmailEvent.EmailMessage => EmailMessage;
     }
 }

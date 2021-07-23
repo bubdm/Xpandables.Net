@@ -29,7 +29,7 @@ namespace Xpandables.Net.Entities
     /// <summary>
     /// Represents an event entity to be written.
     /// </summary>
-    public abstract class EventStoreEntity : Entity, IDisposable
+    public abstract class StoreEntity : Entity, IDisposable
     {
         /// <summary>
         /// Gets the string representation of the aggregate related identifier.
@@ -141,7 +141,7 @@ namespace Xpandables.Net.Entities
             => Type.GetType(EventTypeFullName, true) is { } returnType ? EventData.ToObject(returnType, options) : default;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="EventStoreEntity"/> with the specified properties.
+        /// Constructs a new instance of <see cref="StoreEntity"/> with the specified properties.
         /// </summary>
         /// <param name="aggregateId">The aggregate identifier.</param>
         /// <param name="aggregateTypeName">The type name of the aggregate.</param>
@@ -156,7 +156,7 @@ namespace Xpandables.Net.Entities
         /// <exception cref="ArgumentNullException">The <paramref name="eventTypeName"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="eventData"/> is null.</exception>
         [JsonConstructor]
-        protected EventStoreEntity(
+        protected StoreEntity(
             string aggregateId,
             string aggregateTypeName,
             string eventTypeFullName,

@@ -26,9 +26,9 @@ namespace Xpandables.Net.UnitOfWorks
     /// <summary>
     /// Represents a methods to read event from an event store.
     /// </summary>
-    /// <typeparam name="TEventStoreEntity">The type of the event.</typeparam>
-    public interface IEventRepository<TEventStoreEntity>
-        where TEventStoreEntity : EventStoreEntity
+    /// <typeparam name="TStoreEntity">The type of the event.</typeparam>
+    public interface IEventRepository<TStoreEntity>
+        where TStoreEntity : StoreEntity
     {
         /// <summary>
         /// Asynchronously returns a collection of events matching the criteria.
@@ -36,9 +36,9 @@ namespace Xpandables.Net.UnitOfWorks
         /// </summary>
         /// <param name="criteria">The criteria to be applied to entities.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <typeparamref name="TEventStoreEntity"/> that can be asynchronously enumerated.</returns>
+        /// <returns>An enumerator of <typeparamref name="TStoreEntity"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        IAsyncEnumerable<TEventStoreEntity> ReadEventsAsync(EventStoreEntityCriteria<TEventStoreEntity> criteria, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<TStoreEntity> ReadEventsAsync(StoreEntityCriteria<TStoreEntity> criteria, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously returns the number of event store entities matching the criteria.
@@ -47,6 +47,6 @@ namespace Xpandables.Net.UnitOfWorks
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the number of event store entities matching the criteria.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        Task<int> CountEventsAsync(EventStoreEntityCriteria<TEventStoreEntity> criteria, CancellationToken cancellationToken = default);
+        Task<int> CountEventsAsync(StoreEntityCriteria<TStoreEntity> criteria, CancellationToken cancellationToken = default);
     }
 }

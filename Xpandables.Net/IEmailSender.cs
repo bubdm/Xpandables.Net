@@ -15,40 +15,42 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xpandables.Net.Entities;
-using Xpandables.Net.Events;
 
-namespace Xpandables.Net.UnitOfWorks
+namespace Xpandables.Net
 {
     /// <summary>
-    /// Represents a set of methods to read/write email event to/from an event store.
+    /// Provides with a method to send emails.
     /// </summary>
-    /// <typeparam name="TEmailMessage">the type of the message.</typeparam>
-    public interface IEmailEventRepository<TEmailMessage> : IEventRepository<EmailEventStoreEntity>
-        where TEmailMessage : class
+    public interface IEmailSender
     {
         /// <summary>
-        /// Gets or sets the current <see cref="JsonSerializerOptions"/> to be used for serialization.
+        /// Asynchronously sends the specified message via mail.
         /// </summary>
-        JsonSerializerOptions? SerializerOptions { get; set; }
-
-        /// <summary>
-        /// Gets or sets the current <see cref="JsonDocumentOptions"/> to be used for <see cref="JsonDocument"/> parsing.
-        /// </summary>
-        JsonDocumentOptions DocumentOptions { get; set; }
-
-        /// <summary>
-        /// Asynchronously appends the specified email event.
-        /// </summary>
-        /// <param name="event">Then target email to be appended.</param>
+        /// <param name="email">The email message instance.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        Task AppendEventAsync(IEmailEvent<TEmailMessage> @event, CancellationToken cancellationToken = default);
+        Task SendEmailAsync(object email, CancellationToken cancellationToken = default);
+    }
+
+    /// <summary>
+    /// Provides with a method to send emails.
+    /// </summary>
+    /// <typeparam name="TMessage">The type of the email  message content.</typeparam>
+    public interface IEmailSender<TMessage> : IEmailSender
+        where TMessage : class, IEntity
+    {
+        /// <summary>
+        /// Asynchronously sends the specified email message via mail.
+        /// </summary>
+        /// <param name="email">The email message instance.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task SendEmailAsync(TMessage email, CancellationToken cancellationToken = default);
+        Task IEmailSender.SendEmailAsync(object email, CancellationToken cancellationToken)
+            => SendEmailAsync((TMessage)email, cancellationToken);
     }
 }

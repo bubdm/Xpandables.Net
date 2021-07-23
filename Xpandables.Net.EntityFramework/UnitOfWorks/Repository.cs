@@ -34,20 +34,20 @@ namespace Xpandables.Net.UnitOfWorks
     /// You must derive from this class to customize its behaviors.
     /// </summary>
     /// <typeparam name="TEntity">The Domain object type.</typeparam>
-    public class EFCoreRepository<TEntity> : IRepository<TEntity>
+    public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity
     {
         /// <summary>
         /// Gets the current context instance.
         /// </summary>
-        protected virtual EFCoreContext Context { get; }
+        protected virtual Context Context { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="EFCoreRepository{TEntity}"/> with the context to act on.
+        /// Initializes a new instance of <see cref="Repository{TEntity}"/> with the context to act on.
         /// </summary>
         /// <param name="context">The data context to act on.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public EFCoreRepository(EFCoreContext context) => Context = context ?? throw new ArgumentNullException(nameof(context));
+        public Repository(Context context) => Context = context ?? throw new ArgumentNullException(nameof(context));
 
         ///<inheritdoc/>
         public virtual async Task<TEntity?> TryFindAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)

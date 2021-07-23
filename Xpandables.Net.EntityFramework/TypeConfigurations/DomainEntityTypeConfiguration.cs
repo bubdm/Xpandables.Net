@@ -15,33 +15,30 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
-namespace Xpandables.Net.Entities
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+using Xpandables.Net.Entities;
+
+namespace Xpandables.Net.TypeConfigurations
 {
     /// <summary>
-    /// Represents the domain event store entity.
+    /// EFCore configuration for domain event.
     /// </summary>
-    public class DomainEventStoreEntity : EventStoreEntity
+    public sealed class DomainEntityTypeConfiguration : IEntityTypeConfiguration<DomainStoreEntity>
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aggregateId"></param>
-        /// <param name="aggregateTypeName"></param>
-        /// <param name="eventTypeFullName"></param>
-        /// <param name="eventTypeName"></param>
-        /// <param name="eventData"></param>
-        [JsonConstructor]
-        public DomainEventStoreEntity(
-            string aggregateId,
-            string aggregateTypeName,
-            string eventTypeFullName,
-            string eventTypeName,
-            JsonDocument eventData)
-            : base(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData)
+        ///<inheritdoc/>
+        public void Configure(EntityTypeBuilder<DomainStoreEntity> builder)
         {
+            builder.HasKey(p => p.Id);
+            builder.HasIndex(p => new { p.Id, p.AggregateId });
+
+            builder.Property(p => p.AggregateId);
+            builder.Property(p => p.AggregateTypeName);
+            builder.Property(p => p.EventData);
+            builder.Property(p => p.EventTypeFullName);
+            builder.Property(p => p.EventTypeName);
         }
     }
 }
