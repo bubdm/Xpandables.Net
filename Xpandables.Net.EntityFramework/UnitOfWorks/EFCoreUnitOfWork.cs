@@ -25,15 +25,15 @@ namespace Xpandables.Net.UnitOfWorks
     /// <summary>
     /// Represents the base EFCore implementation of <see cref="IUnitOfWork"/>.
     /// </summary>
-    public abstract class UnitOfWorkEFCore<TContext> : UnitOfWork<TContext>
-        where TContext : ContextEFCore
+    public abstract class EFCoreUnitOfWork<TContext> : UnitOfWork<TContext>
+        where TContext : EFCoreContext
     {
         /// <summary>
-        /// Constructs a new instance of <see cref="UnitOfWorkEFCore{TContext}"/>.
+        /// Constructs a new instance of <see cref="EFCoreUnitOfWork{TContext}"/>.
         /// </summary>
         /// <param name="unitOfWorkContextFactory">The db context factory to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="unitOfWorkContextFactory"/> is null.</exception>
-        protected UnitOfWorkEFCore(IUnitOfWorkContextFactory unitOfWorkContextFactory)
+        protected EFCoreUnitOfWork(IUnitOfWorkContextFactory unitOfWorkContextFactory)
             : base(unitOfWorkContextFactory) { }
 
         ///<inheritdoc/>

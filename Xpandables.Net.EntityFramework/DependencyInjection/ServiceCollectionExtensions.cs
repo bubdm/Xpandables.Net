@@ -30,10 +30,9 @@ namespace Xpandables.Net.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <typeparamref name="TDataContext"/> type class reference implementation derives from <see cref="ContextEFCore"/> to the services with scoped life time.
-        /// Caution : Do not use with multi-tenancy.
+        /// Adds the <typeparamref name="TDataContext"/> type class reference implementation derives from <see cref="EFCoreContext"/> to the services with scoped life time.
         /// </summary>
-        /// <typeparam name="TDataContext">The type of the data context that derives from <see cref="ContextEFCore"/>.</typeparam>
+        /// <typeparam name="TDataContext">The type of the data context that derives from <see cref="EFCoreContext"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
         /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
@@ -44,7 +43,7 @@ namespace Xpandables.Net.DependencyInjection
             Action<DbContextOptionsBuilder>? optionsAction = null,
             ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
             ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
-            where TDataContext : ContextEFCore
+            where TDataContext : EFCoreContext
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 

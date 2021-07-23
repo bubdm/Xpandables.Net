@@ -27,7 +27,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// Represents the EFCore implementation of <see cref="IEmailEventRepository{TEmailMessage}"/>.
     /// </summary>
     /// <typeparam name="TEmailMessage">The type of the message.</typeparam>
-    public class EmailEventRepositoryEFCore<TEmailMessage> : EventRepositoryEFCore<EmailEventStoreEntity>, IEmailEventRepository<TEmailMessage>
+    public class EFCoreEmailEventRepository<TEmailMessage> : EFCoreEventRepository<EmailEventStoreEntity>, IEmailEventRepository<TEmailMessage>
         where TEmailMessage : class
     {
         ///<inheritdoc/>
@@ -37,11 +37,11 @@ namespace Xpandables.Net.UnitOfWorks
         public JsonDocumentOptions DocumentOptions { get; set; } = default;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="EmailEventRepositoryEFCore{TEmailMessage}"/>.
+        /// Constructs a new instance of <see cref="EFCoreEmailEventRepository{TEmailMessage}"/>.
         /// </summary>
         /// <param name="context">The db context to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public EmailEventRepositoryEFCore(ContextEFCore context) : base(context) { }
+        public EFCoreEmailEventRepository(EFCoreContext context) : base(context) { }
 
         ///<inheritdoc/>
         public virtual async Task AppendEventAsync(

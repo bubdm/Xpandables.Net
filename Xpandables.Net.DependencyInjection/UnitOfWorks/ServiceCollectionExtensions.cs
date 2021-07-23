@@ -29,19 +29,19 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <typeparamref name="TImplementation"/> for <typeparamref name="TInterface"/> unit of work to the services with scoped life time.
+        /// Adds the <typeparamref name="TUnitOfWorkImplementation"/> for <typeparamref name="TUnitOfWorkInterface"/> unit of work to the services with scoped life time.
         /// Do not use with multi-tenancy.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXUnitOfWork<TInterface, TImplementation>(this IXpandableServiceBuilder services)
-            where TInterface : class, IUnitOfWork
-            where TImplementation : class, TInterface
+        public static IXpandableServiceBuilder AddXUnitOfWork<TUnitOfWorkInterface, TUnitOfWorkImplementation>(this IXpandableServiceBuilder services)
+            where TUnitOfWorkInterface : class, IUnitOfWork
+            where TUnitOfWorkImplementation : class, TUnitOfWorkInterface
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddScoped<TInterface, TImplementation>();
-            services.Services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<TInterface>());
+            services.Services.AddScoped<TUnitOfWorkInterface, TUnitOfWorkImplementation>();
+            services.Services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<TUnitOfWorkInterface>());
             return services;
         }
 

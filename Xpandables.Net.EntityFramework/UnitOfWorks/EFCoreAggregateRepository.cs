@@ -18,7 +18,6 @@
 using Microsoft.EntityFrameworkCore;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Text.Json;
@@ -36,7 +35,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// Represents the EFCore implementation of <see cref="IAggregateRepository{TAggregate}"/>.
     /// </summary>
     /// <typeparam name="TAggregate">The type of the aggregate.</typeparam>
-    public class AggregateRepositoryEFCore<TAggregate> : IAggregateRepository<TAggregate>
+    public class EFCoreAggregateRepository<TAggregate> : EFCoreEventRepository<DomainEventStoreEntity>, IAggregateRepository<TAggregate>
         where TAggregate : class, IAggregate
     {
         ///<inheritdoc/>
@@ -51,16 +50,11 @@ namespace Xpandables.Net.UnitOfWorks
         protected static readonly IInstanceCreator InstanceCreator = new InstanceCreator();
 
         /// <summary>
-        /// Gets the current context instance.
-        /// </summary>
-        protected virtual ContextEFCore Context { get; }
-
-        /// <summary>
-        /// Constructs a new instance of <see cref="AggregateRepositoryEFCore{Taggregate}"/>.
+        /// Constructs a new instance of <see cref="EFCoreAggregateRepository{Taggregate}"/>.
         /// </summary>
         /// <param name="context">The db context to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        public AggregateRepositoryEFCore(ContextEFCore context) => Context = context ?? throw new ArgumentNullException(nameof(context));
+        public EFCoreAggregateRepository(EFCoreContext context) : base(context) { }
 
         ///<inheritdoc/>
         public virtual async Task AppendAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
@@ -118,15 +112,6 @@ namespace Xpandables.Net.UnitOfWorks
         }
 
         ///<inheritdoc/>
-        public virtual async Task<int> CountEventsAsync<TEventStoreEntity>(
-            EventStoreEntityCriteria<TEventStoreEntity> criteria,
-            CancellationToken cancellationToken = default)
-            where TEventStoreEntity : EventStoreEntity
-            => await Context.Set<TEventStoreEntity>()
-                .CountAsync(criteria, cancellationToken)
-                .ConfigureAwait(false);
-
-        ///<inheritdoc/>
         public virtual async Task<TAggregate?> ReadAsync(IAggregateId aggregateId, CancellationToken cancellationToken = default)
         {
             var aggregate = CreateInstance();
@@ -145,24 +130,6 @@ namespace Xpandables.Net.UnitOfWorks
             }
 
             return aggregate.AggregateId.IsEmpty() ? default : aggregate;
-        }
-
-        ///<inheritdoc/>
-        public virtual IAsyncEnumerable<TEventStoreEntity> ReadEventsAsync<TEventStoreEntity>(
-            EventStoreEntityCriteria<TEventStoreEntity> criteria,
-            CancellationToken cancellationToken = default) where TEventStoreEntity : EventStoreEntity
-        {
-            _ = criteria ?? throw new ArgumentNullException(nameof(criteria));
-
-            IQueryable<TEventStoreEntity> selector = (criteria.Size, criteria.Index) switch
-            {
-                (null, null) => Context.Set<TEventStoreEntity>().Where(criteria).OrderBy(o => o.CreatedOn),
-                (null, { }) => Context.Set<TEventStoreEntity>().Where(criteria).OrderBy(o => o.CreatedOn).Skip(criteria.Index.Value),
-                ({ }, null) => Context.Set<TEventStoreEntity>().Where(criteria).OrderBy(o => o.CreatedOn).Take(criteria.Size.Value),
-                (_, _) => Context.Set<TEventStoreEntity>().Where(criteria).OrderBy(o => o.CreatedOn).Skip(criteria.Index.Value * criteria.Size.Value).Take(criteria.Size.Value)
-            };
-
-            return selector.AsNoTracking().AsAsyncEnumerable();
         }
 
         ///<inheritdoc/>

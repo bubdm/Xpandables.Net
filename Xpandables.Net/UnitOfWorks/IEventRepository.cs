@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Xpandables.Net.Entities;
 
@@ -38,5 +39,14 @@ namespace Xpandables.Net.UnitOfWorks
         /// <returns>An enumerator of <typeparamref name="TEventStoreEntity"/> that can be asynchronously enumerated.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         IAsyncEnumerable<TEventStoreEntity> ReadEventsAsync(EventStoreEntityCriteria<TEventStoreEntity> criteria, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Asynchronously returns the number of event store entities matching the criteria.
+        /// </summary>
+        /// <param name="criteria">The criteria to be applied to entities.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the number of event store entities matching the criteria.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
+        Task<int> CountEventsAsync(EventStoreEntityCriteria<TEventStoreEntity> criteria, CancellationToken cancellationToken = default);
     }
 }

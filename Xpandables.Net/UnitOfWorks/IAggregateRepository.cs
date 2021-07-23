@@ -16,7 +16,6 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ namespace Xpandables.Net.UnitOfWorks
     /// For persistence, decorate your command/event with <see cref="IPersistenceDecorator"/> interface.
     /// </summary>
     /// <typeparam name="TAggregate">The type of the aggregate.</typeparam>
-    public interface IAggregateRepository<TAggregate>
+    public interface IAggregateRepository<TAggregate> : IEventRepository<DomainEventStoreEntity>
         where TAggregate : class, IAggregate
     {
         /// <summary>
@@ -93,32 +92,5 @@ namespace Xpandables.Net.UnitOfWorks
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         Task AppendNotificationAsync(INotificationEvent @event, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Asynchronously returns a collection of event store entities matching the criteria.
-        /// if not found, returns an empty collection.
-        /// </summary>
-        /// <typeparam name="TEventStoreEntity">The type of the event store entity.</typeparam>
-        /// <param name="criteria">The criteria to be applied to entities.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>An enumerator of <typeparamref name="TEventStoreEntity"/> that can be asynchronously enumerated.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        IAsyncEnumerable<TEventStoreEntity> ReadEventsAsync<TEventStoreEntity>(
-            EventStoreEntityCriteria<TEventStoreEntity> criteria,
-            CancellationToken cancellationToken = default)
-            where TEventStoreEntity : EventStoreEntity;
-
-        /// <summary>
-        /// Asynchronously returns the number of event store entities matching the criteria.
-        /// </summary>
-        /// <typeparam name="TEventStoreEntity">The type of the event store entity.</typeparam>
-        /// <param name="criteria">The criteria to be applied to entities.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the number of event store entities matching the criteria.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-        Task<int> CountEventsAsync<TEventStoreEntity>(
-            EventStoreEntityCriteria<TEventStoreEntity> criteria,
-            CancellationToken cancellationToken = default)
-            where TEventStoreEntity : EventStoreEntity;
     }
 }
