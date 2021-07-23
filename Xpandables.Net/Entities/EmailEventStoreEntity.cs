@@ -19,9 +19,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Xpandables.Net.Entities;
-
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.Entities
 {
     /// <summary>
     /// Represents the email event store entity.

@@ -58,7 +58,7 @@ namespace Xpandables.Net.Entities
         public DateTime? DeletedOn { get; protected set; }
 
         ///<inheritdoc/>
-        public virtual bool IsCreated => Id is null;
+        public virtual bool IsCreated => string.IsNullOrWhiteSpace(Id);
 
         ///<inheritdoc/>
         public virtual void Deactivated()

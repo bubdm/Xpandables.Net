@@ -19,6 +19,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Entities;
 using Xpandables.Net.Events;
 
 namespace Xpandables.Net.UnitOfWorks

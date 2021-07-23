@@ -20,9 +20,10 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.UnitOfWorks;
+using Xpandables.Net.Entities;
+using Xpandables.Net.Events;
 
-namespace Xpandables.Net.Events
+namespace Xpandables.Net.UnitOfWorks
 {
     /// <summary>
     /// Represents a set of methods to read/write email event to/from an event store.
