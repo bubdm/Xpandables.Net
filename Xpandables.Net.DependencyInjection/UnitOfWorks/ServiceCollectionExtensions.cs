@@ -46,6 +46,19 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the <typeparamref name="TUnitOfWorkContextFactory"/> as <see cref="IUnitOfWorkContextFactory"/> type to the collection of services.
+        /// </summary>
+        /// <typeparam name="TUnitOfWorkContextFactory">The type of unit of work context factory.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXUnitOfWorkContextFactory<TUnitOfWorkContextFactory>(this IXpandableServiceBuilder services)
+            where TUnitOfWorkContextFactory : class, IUnitOfWorkContextFactory
+        {
+            services.Services.AddScoped<IUnitOfWorkContextFactory, TUnitOfWorkContextFactory>();
+            return services;
+        }
+
+        /// <summary>
         /// Adds the <typeparamref name="TUnitOfWork"/> type to the collection of tenants in multi-tenancy context.
         /// The tenant will be named as the type of the unit of work.
         /// </summary>
