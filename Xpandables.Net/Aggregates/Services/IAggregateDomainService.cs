@@ -55,6 +55,18 @@ namespace Xpandables.Net.Aggregates.Services
             where TAggregate : class, IAggregate;
 
         /// <summary>
+        /// Asynchronously returns the <typeparamref name="TAggregate"/> aggregate that matches the 
+        /// specified criteria.
+        /// </summary>
+        /// <typeparam name="TAggregate">The type of the aggregate to be returned.</typeparam>
+        /// <param name="criteria">The criteria to be applied to entities.</param>
+        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents an object of <typeparamref name="TAggregate"/> type if found or null.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
+        Task<TAggregate?> ReadAsync<TAggregate>(StoreEntityCriteria<DomainStoreEntity> criteria, CancellationToken cancellationToken = default)
+            where TAggregate : class, IAggregate;
+
+        /// <summary>
         /// Asynchronously appends the specified aggregate to the event store.
         /// </summary>
         /// <typeparam name="TAggregate">The type of aggregate.</typeparam>

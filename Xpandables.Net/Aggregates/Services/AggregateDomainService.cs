@@ -109,14 +109,21 @@ namespace Xpandables.Net.Aggregates.Services
         public virtual async Task<TAggregate?> ReadAsync<TAggregate>(IAggregateId aggregateId, CancellationToken cancellationToken = default)
             where TAggregate : class, IAggregate
         {
-            var aggregate = CreateInstance<TAggregate>();
-            if (aggregate is not IDomainEventSourcing aggregateEventSourcing)
-                throw new InvalidOperationException($"{typeof(TAggregate).Name} must implement {nameof(IDomainEventSourcing)}");
-
             var criteria = new StoreEntityCriteria<DomainStoreEntity>
             {
                 AggregateId = aggregateId.AsString()
             };
+
+            return await ReadAsync<TAggregate>(criteria, cancellationToken).ConfigureAwait(false);
+        }
+
+        ///<inheritdoc/>
+        public virtual async Task<TAggregate?> ReadAsync<TAggregate>(StoreEntityCriteria<DomainStoreEntity> criteria, CancellationToken cancellationToken = default)
+         where TAggregate : class, IAggregate
+        {
+            var aggregate = CreateInstance<TAggregate>();
+            if (aggregate is not IDomainEventSourcing aggregateEventSourcing)
+                throw new InvalidOperationException($"{typeof(TAggregate).Name} must implement {nameof(IDomainEventSourcing)}");
 
             await foreach (var @event in AggregateUnitOfWork.Events.FetchAllAsync(criteria, cancellationToken).ConfigureAwait(false))
             {
