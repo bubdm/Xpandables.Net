@@ -30,6 +30,12 @@ namespace Xpandables.Net.TypeConfigurations
         ///<inheritdoc/>
         public virtual void Configure(EntityTypeBuilder<SnapShotStoreEntity> builder)
         {
+            builder.Property(p => p.Id).ValueGeneratedOnAdd();
+            builder.Property(p => p.Index).ValueGeneratedOnAdd();
+
+            builder.HasKey(p => p.Id);
+            builder.HasIndex(p => p.Index).IsUnique();
+
             builder.Property(p => p.AggregateId);
             builder.Property(p => p.AggregateTypeName);
             builder.Property(p => p.EventData);
