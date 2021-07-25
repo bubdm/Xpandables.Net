@@ -54,8 +54,24 @@ namespace Xpandables.Net.UnitOfWorks
             => await Context.Set<TEntity>().FirstOrDefaultAsync(criteria, cancellationToken).ConfigureAwait(false);
 
         ///<inheritdoc/>
+        public virtual async Task<TEntity?> TryFindAsync<TKey>(Expression<Func<TEntity, bool>> criteria, Expression<Func<TEntity, TKey>> orderBy, CancellationToken cancellationToken = default)
+            => await Context.Set<TEntity>().OrderBy(orderBy).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+
+        ///<inheritdoc/>
         public virtual IAsyncEnumerable<TEntity> FetchAllAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
             => Context.Set<TEntity>().Where(criteria).AsAsyncEnumerable();
+
+        ///<inheritdoc/>
+        public virtual IAsyncEnumerable<TEntity> FetchAllAsync<TKey>(Expression<Func<TEntity, bool>> criteria, Expression<Func<TEntity, TKey>> orderBy, CancellationToken cancellationToken = default)
+            => Context.Set<TEntity>().OrderBy(orderBy).AsAsyncEnumerable();
+
+        ///<inheritdoc/>
+        public virtual IAsyncEnumerable<TEntity> FetchAllAsync<TKey>(
+        Expression<Func<TEntity, bool>> criteria, Expression<Func<TEntity, TKey>> orderBy, int pageIndex, int pageSize, CancellationToken cancellationToken = default)
+             => Context.Set<TEntity>()
+                 .OrderBy(orderBy)
+                 .Skip(pageIndex * pageSize).Take(pageSize)
+                .AsAsyncEnumerable();
 
         ///<inheritdoc/>
         public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
@@ -64,7 +80,7 @@ namespace Xpandables.Net.UnitOfWorks
         ///<inheritdoc/>
         public virtual async Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            if (entity.IsCreated)
+            if (entity.IsNew)
                 await Context.Set<TEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
             else
                 Context.Set<TEntity>().Update(entity);

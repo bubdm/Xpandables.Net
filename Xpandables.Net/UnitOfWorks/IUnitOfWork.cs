@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Entities;
+
 namespace Xpandables.Net.UnitOfWorks
 {
     /// <summary>
@@ -17,5 +19,12 @@ namespace Xpandables.Net.UnitOfWorks
         /// <exception cref="InvalidOperationException">All exceptions related to the operation.</exception>
         /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
         Task<int> PersistAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Returns the repository implementation that matches the specified entity type.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <returns>An implementation of <see cref="IRepository{TEntity}"/>.</returns>
+        IRepository<TEntity> GetRepository<TEntity>() where TEntity : class, IEntity;
     }
 }

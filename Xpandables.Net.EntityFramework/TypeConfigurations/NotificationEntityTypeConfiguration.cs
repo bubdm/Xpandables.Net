@@ -26,14 +26,11 @@ namespace Xpandables.Net.TypeConfigurations
     /// <summary>
     /// EFCore configuration for notification event.
     /// </summary>
-    public sealed class NotificationEntityTypeConfiguration : IEntityTypeConfiguration<NotificationStoreEntity>
+    public class NotificationEntityTypeConfiguration : IEntityTypeConfiguration<NotificationStoreEntity>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<NotificationStoreEntity> builder)
+        public virtual void Configure(EntityTypeBuilder<NotificationStoreEntity> builder)
         {
-            builder.HasKey(p => p.Id);
-            builder.HasIndex(p => new { p.Id, p.AggregateId });
-
             builder.Property(p => p.AggregateId);
             builder.Property(p => p.AggregateTypeName);
             builder.Property(p => p.EventData);

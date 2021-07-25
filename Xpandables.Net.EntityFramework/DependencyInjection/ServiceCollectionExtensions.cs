@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
+using Xpandables.Net.Aggregates.Services;
 using Xpandables.Net.UnitOfWorks;
 
 namespace Xpandables.Net.DependencyInjection
@@ -49,6 +50,22 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.Services.AddDbContext<TDataContext>(optionsAction, contextLifetime, optionsLifetime);
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <typeparamref name="TAggregateUnitOfWork"/> as <see cref="IAggregateUnitOfWork"/> to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TAggregateUnitOfWork">The type of aggregate unit of work.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXAggregateUnitOfWork<TAggregateUnitOfWork>(this IXpandableServiceBuilder services)
+            where TAggregateUnitOfWork : class, IAggregateUnitOfWork
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<IAggregateUnitOfWork, TAggregateUnitOfWork>();
             return services;
         }
     }

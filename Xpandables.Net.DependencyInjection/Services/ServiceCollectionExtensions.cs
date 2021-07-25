@@ -19,6 +19,7 @@ using Microsoft.Extensions.Hosting;
 
 using System;
 
+using Xpandables.Net.Aggregates.Services;
 using Xpandables.Net.Services;
 
 namespace Xpandables.Net.DependencyInjection
@@ -128,6 +129,36 @@ namespace Xpandables.Net.DependencyInjection
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.Services.AddScoped<TDomainServiceInterface, TDomainServiceImplementation>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IAggregateDomainService"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXAggregateDomainService(this IXpandableServiceBuilder services)
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<IAggregateDomainService, AggregateDomainService>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IAggregateDomainService"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TAggregateDomainService">The type of aggregate domain service.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXAggregateDomainService<TAggregateDomainService>(this IXpandableServiceBuilder services)
+            where TAggregateDomainService : class, IAggregateDomainService
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<IAggregateDomainService, TAggregateDomainService>();
             return services;
         }
     }

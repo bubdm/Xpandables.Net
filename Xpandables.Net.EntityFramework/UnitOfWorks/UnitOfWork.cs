@@ -19,25 +19,32 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using System.Threading;
+using Xpandables.Net.Entities;
 
 namespace Xpandables.Net.UnitOfWorks
 {
     /// <summary>
     /// Represents the base EFCore implementation of <see cref="IUnitOfWork"/>.
     /// </summary>
-    public abstract class UnitOfWork<TContext> : UnitOfWorkBase<TContext>
-        where TContext : Context
+    /// <typeparam name="TUnitOfWorkContext">The type of the context.</typeparam>
+    public abstract class UnitOfWork<TUnitOfWorkContext> : Disposable, IUnitOfWork
+        where TUnitOfWorkContext : Context
     {
+        /// <summary>
+        /// Gets the current <typeparamref name="TUnitOfWorkContext"/> instance.
+        /// </summary>
+        protected TUnitOfWorkContext Context { get; }
+
         /// <summary>
         /// Constructs a new instance of <see cref="UnitOfWork{TContext}"/>.
         /// </summary>
         /// <param name="unitOfWorkContextFactory">The db context factory to act with.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="unitOfWorkContextFactory"/> is null.</exception>
         protected UnitOfWork(IUnitOfWorkContextFactory unitOfWorkContextFactory)
-            : base(unitOfWorkContextFactory) { }
+              => Context = unitOfWorkContextFactory.CreateUnitOfWorkContext<TUnitOfWorkContext>();
 
         ///<inheritdoc/>
-        public override async Task<int> PersistAsync(CancellationToken cancellationToken)
+        public virtual async Task<int> PersistAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -79,5 +86,9 @@ namespace Xpandables.Net.UnitOfWorks
                 await base.DisposeAsync(disposing).ConfigureAwait(false);
             }
         }
+
+        ///<inheritdoc/>
+        public virtual IRepository<TEntity> GetRepository<TEntity>()
+            where TEntity : class, IEntity => new Repository<TEntity>(Context);
     }
 }

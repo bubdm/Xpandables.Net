@@ -17,8 +17,8 @@
 ************************************************************************************************************/
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
-using System.Security.Cryptography;
 
 namespace Xpandables.Net.Entities
 {
@@ -33,14 +33,14 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Initializes a new instance of <see cref="Entity"/>.
         /// </summary>
-        public Entity() => Id = string.Empty;
+        public Entity() { }
 
-        /// <summary>
-        /// Gets the domain object identity.
-        /// The value comes from <see cref="KeyGenerator"/>.
-        /// </summary>
-        [Key]
-        public string Id { get; protected set; }
+        ///<inheritdoc/>
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; } = Guid.Empty;
+
+        ///<inheritdoc/>
+        public long Index { get; }
 
         ///<inheritdoc/>
         public bool IsActive { get; protected set; } = true;
@@ -58,7 +58,7 @@ namespace Xpandables.Net.Entities
         public DateTime? DeletedOn { get; protected set; }
 
         ///<inheritdoc/>
-        public virtual bool IsCreated => string.IsNullOrWhiteSpace(Id);
+        public virtual bool IsNew => Id == Guid.Empty;
 
         ///<inheritdoc/>
         public virtual void Deactivated()
@@ -84,28 +84,11 @@ namespace Xpandables.Net.Entities
         ///<inheritdoc/>
         public virtual void Created()
         {
-            Id = KeyGenerator();
             CreatedOn = DateTime.UtcNow;
         }
 
         ///<inheritdoc/>
         public void Updated() => UpdatedOn = DateTime.UtcNow;
-
-        /// <summary>
-        /// Returns the unique signature of string type for an instance.
-        /// This signature value will be used as identifier for the underlying instance.
-        /// <para>When overridden in the derived class, it will set or get the concrete identity for the domain object.</para>
-        /// </summary>
-        /// <returns>A string value as identifier.</returns>
-        protected virtual string KeyGenerator()
-        {
-            using var rnd = RandomNumberGenerator.Create();
-            var salt = new byte[32];
-            var guid = Guid.NewGuid().ToString();
-            rnd.GetBytes(salt);
-
-            return $"{guid}{BitConverter.ToString(salt)}";
-        }
 
         ///<inheritdoc/>
         public override bool Equals(object? obj)
@@ -119,7 +102,7 @@ namespace Xpandables.Net.Entities
             if (GetType() != other.GetType())
                 return false;
 
-            return !string.IsNullOrWhiteSpace(Id) && !string.IsNullOrWhiteSpace(other.Id) && Id == other.Id;
+            return Id == other.Id;
         }
 
         ///<inheritdoc/>

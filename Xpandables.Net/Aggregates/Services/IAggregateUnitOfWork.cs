@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,27 +14,29 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Xpandables.Net.Entities;
+using Xpandables.Net.UnitOfWorks;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Aggregates.Services
 {
     /// <summary>
-    /// Adds keys information to an entity.
+    /// Provides with base unit of work for aggregates.
     /// </summary>
-    public interface IEntityKey
+    public interface IAggregateUnitOfWork : IUnitOfWork
     {
         /// <summary>
-        /// Gets the domain object unique identity.
+        /// Gets the repository for <see cref="DomainStoreEntity"/> entities.
         /// </summary>
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; }
+        IRepository<DomainStoreEntity> Events { get; }
 
         /// <summary>
-        /// Gets the domain object unique index.
+        /// Gets the repository for <see cref="NotificationStoreEntity"/> entities.
         /// </summary>
-        public long Index { get; }
+        IRepository<NotificationStoreEntity> Notifications { get; }
 
+        /// <summary>
+        /// Gets the repository for <see cref="SnapShotStoreEntity"/> entities.
+        /// </summary>
+        IRepository<SnapShotStoreEntity> SnapShots { get; }
     }
 }

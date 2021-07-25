@@ -18,9 +18,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -172,24 +170,6 @@ namespace Xpandables.Net.Entities
             EventData = eventData ?? throw new ArgumentNullException(nameof(eventData));
             Exception = exception?.ToString();
             ExceptionTypeFullName = exceptionTypeFullName;
-        }
-
-        ///<inheritdoc/>
-        protected override string KeyGenerator()
-        {
-            var stringBuilder = new StringBuilder();
-
-            Enumerable
-               .Range(65, 26)
-                .Select(e => ((char)e).ToString())
-                .Concat(Enumerable.Range(97, 26).Select(e => ((char)e).ToString()))
-                .Concat(Enumerable.Range(0, 10).Select(e => e.ToString()))
-                .OrderBy(_ => Guid.NewGuid())
-                .Take(32)
-                .ToList()
-                .ForEach(e => stringBuilder.Append(e));
-
-            return stringBuilder.ToString().ToUpperInvariant();
         }
 
         ///<inheritdoc/>

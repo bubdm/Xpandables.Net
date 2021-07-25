@@ -25,14 +25,11 @@ namespace Xpandables.Net.TypeConfigurations
     /// <summary>
     /// EFCore configuration for snapShot entity.
     /// </summary>
-    public sealed class SnapShotEntityTypeConfiguration : IEntityTypeConfiguration<SnapShotStoreEntity>
+    public class SnapShotEntityTypeConfiguration : IEntityTypeConfiguration<SnapShotStoreEntity>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<SnapShotStoreEntity> builder)
+        public virtual void Configure(EntityTypeBuilder<SnapShotStoreEntity> builder)
         {
-            builder.HasKey(p => p.Id);
-            builder.HasIndex(p => new { p.Id, p.AggregateId });
-
             builder.Property(p => p.AggregateId);
             builder.Property(p => p.AggregateTypeName);
             builder.Property(p => p.EventData);

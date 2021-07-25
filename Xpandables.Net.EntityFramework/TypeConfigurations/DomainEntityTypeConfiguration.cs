@@ -26,14 +26,11 @@ namespace Xpandables.Net.TypeConfigurations
     /// <summary>
     /// EFCore configuration for domain event.
     /// </summary>
-    public sealed class DomainEntityTypeConfiguration : IEntityTypeConfiguration<DomainStoreEntity>
+    public class DomainEntityTypeConfiguration : IEntityTypeConfiguration<DomainStoreEntity>
     {
         ///<inheritdoc/>
-        public void Configure(EntityTypeBuilder<DomainStoreEntity> builder)
+        public virtual void Configure(EntityTypeBuilder<DomainStoreEntity> builder)
         {
-            builder.HasKey(p => p.Id);
-            builder.HasIndex(p => new { p.Id, p.AggregateId });
-
             builder.Property(p => p.AggregateId);
             builder.Property(p => p.AggregateTypeName);
             builder.Property(p => p.EventData);

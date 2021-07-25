@@ -37,6 +37,6 @@ namespace Xpandables.Net.Entities
         /// <summary>
         /// Determines whether the instance is a new one.
         /// </summary>
-        bool IsCreated { get; }
+        bool IsNew { get; }
     }
 }
