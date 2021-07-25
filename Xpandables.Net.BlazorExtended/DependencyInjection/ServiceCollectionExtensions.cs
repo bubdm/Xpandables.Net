@@ -33,6 +33,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds The <see cref="IAlertProvider"/> to the collection of services.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXAlertProvider(this IXpandableServiceBuilder services)
         {
@@ -47,6 +48,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="configure">Allows service configuration.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXAlertProvider(this IXpandableServiceBuilder services, Action<AlertOptions> configure)
         {
@@ -71,6 +73,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds local/session storage with default values.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXStorage(this IXpandableServiceBuilder services)
         {
@@ -89,6 +92,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TStorageEventHandler">The type that implement <see cref="StorageEventHandler"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXStorage<TStorageEventHandler>(this IXpandableServiceBuilder services)
             where TStorageEventHandler : StorageEventHandler

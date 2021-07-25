@@ -31,11 +31,11 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="IEmailService"/> type implementation to the services with scope life time.
+        /// Adds the <typeparamref name="TEmailService"/> as <see cref="IEmailService"/> type implementation to the services with singleton life time.
         /// </summary>
         /// <typeparam name="TEmailService">The email service type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXEmailService<TEmailService>(this IXpandableServiceBuilder services)
             where TEmailService : class, IHostedService, IEmailService
@@ -48,12 +48,13 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the specified <see cref="IEmailSender{TMessage}"/> implementation 
+        /// Adds the specified <typeparamref name="TMessage"/> and <typeparamref name="TEmailSender"/> implementation 
         /// to the services with scope life time.
         /// </summary>
         /// <typeparam name="TMessage">the type of message.</typeparam>
         /// <typeparam name="TEmailSender">The type of the email sender.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXEmailSender<TMessage, TEmailSender>(
             this IXpandableServiceBuilder services)

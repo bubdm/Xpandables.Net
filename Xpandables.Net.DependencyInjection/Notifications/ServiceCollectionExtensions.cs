@@ -30,11 +30,11 @@ namespace Xpandables.Net.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the <see cref="INotificationService"/> type implementation to the services with scope life time.
+        /// Adds the <see cref="INotificationService"/> as <see cref="INotificationService"/> type implementation to the services with scope life time.
         /// </summary>
         /// <typeparam name="TNotificationService">The notification event service type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXNotificationService<TNotificationService>(this IXpandableServiceBuilder services)
             where TNotificationService : class, IHostedService, INotificationService
@@ -47,11 +47,11 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="INotificationEventPublisher"/> type implementation to the services with scope life time.
+        /// Adds the <typeparamref name="TNotificationEventPublisher"/> as <see cref="INotificationEventPublisher"/> type implementation to the services with scope life time.
         /// </summary>
         /// <typeparam name="TNotificationEventPublisher">The notification publisher type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXNotificationEventPublisher<TNotificationEventPublisher>(this IXpandableServiceBuilder services)
             where TNotificationEventPublisher : class, INotificationEventPublisher
@@ -66,7 +66,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the default <see cref="INotificationEventPublisher"/> type implementation to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXNotificationEventPublisher(this IXpandableServiceBuilder services)
             => services.AddXNotificationEventPublisher<NotificationEventPublisher>();

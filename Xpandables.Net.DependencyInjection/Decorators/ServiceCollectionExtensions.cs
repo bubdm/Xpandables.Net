@@ -44,6 +44,7 @@ namespace Xpandables.Net.DependencyInjection
         /// with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXPersistenceDecorator(this IXpandableServiceBuilder services)
         {
@@ -61,6 +62,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TTransactionScopeProvider">The type transaction scope provider.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXTransactionScopeProvider<TTransactionScopeProvider>(this IXpandableServiceBuilder services)
             where TTransactionScopeProvider : class, ITransactionScopeProvider
@@ -75,9 +77,10 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds default transaction type provider to the services.
+        /// Adds default <see cref="TransactionScopeProvider"/> transaction type provider to the services.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXTransactionScopeProvider(this IXpandableServiceBuilder services)
         {
@@ -95,6 +98,7 @@ namespace Xpandables.Net.DependencyInjection
         /// to the services
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXTransactionDecorator(this IXpandableServiceBuilder services)
         {
@@ -113,6 +117,7 @@ namespace Xpandables.Net.DependencyInjection
         /// with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXValidationDecorator(this IXpandableServiceBuilder services)
         {
@@ -131,6 +136,7 @@ namespace Xpandables.Net.DependencyInjection
         /// with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXVisitorDecorator(this IXpandableServiceBuilder services)
         {

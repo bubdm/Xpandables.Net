@@ -35,6 +35,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the <see cref="CorrelationCollection{TKey, TValue}"/> to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXCorrelationCollection(this IXpandableServiceBuilder services)
         {
@@ -45,10 +46,11 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the implementation type of <see cref="ICorrelationContext"/> to the services with scoped life time.
+        /// Adds the implementation type <typeparamref name="TCorrelationContext"/> as <see cref="ICorrelationContext"/> to the services with scoped life time.
         /// </summary>
         /// <typeparam name="TCorrelationContext">the correlation context type.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXCorrelationContext<TCorrelationContext>(this IXpandableServiceBuilder services)
             where TCorrelationContext : class, ICorrelationContext
@@ -63,6 +65,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the <see cref="ICorrelationEvent"/> to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXCorrelationEvent(this IXpandableServiceBuilder services)
         {
@@ -77,6 +80,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds correlation behavior to commands and queries that are decorated with the <see cref="ICorrelationDecorator"/> to the services
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXCorrelationEventDecorator(this IXpandableServiceBuilder services)
         {

@@ -33,6 +33,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the default <see cref="IDispatcher"/> implementations to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXDispatcher(this IXpandableServiceBuilder services)
         {
@@ -46,6 +47,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the default <see cref="IHandlerAccessor"/> implementations to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXHandlerAccessor(this IXpandableServiceBuilder services)
         {

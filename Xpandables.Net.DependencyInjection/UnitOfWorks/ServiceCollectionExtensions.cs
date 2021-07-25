@@ -33,6 +33,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Do not use with multi-tenancy.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXUnitOfWork<TUnitOfWorkInterface, TUnitOfWorkImplementation>(this IXpandableServiceBuilder services)
             where TUnitOfWorkInterface : class, IUnitOfWork
@@ -50,6 +51,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TUnitOfWorkContextFactory">The type of unit of work context factory.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXUnitOfWorkContextFactory<TUnitOfWorkContextFactory>(this IXpandableServiceBuilder services)
             where TUnitOfWorkContextFactory : class, IUnitOfWorkContextFactory
@@ -64,6 +66,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TUnitOfWork">The type of unit of work.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXUnitOfWorkMultiTenancy<TUnitOfWork>(this IXpandableServiceBuilder services)
             where TUnitOfWork : class, IUnitOfWork
@@ -83,6 +86,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <typeparam name="TUnitOfWork">The type of unit of work.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <param name="name">The unique identifier of the tenant.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXUnitOfWorkMultiTenancy<TUnitOfWork>(this IXpandableServiceBuilder services, string name)
             where TUnitOfWork : class, IUnitOfWork
@@ -104,6 +108,7 @@ namespace Xpandables.Net.DependencyInjection
         /// The type is registered with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXUnitOfWorkMultiTenancyAccessor(this IXpandableServiceBuilder services)
         {

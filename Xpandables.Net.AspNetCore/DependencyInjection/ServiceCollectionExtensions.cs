@@ -45,6 +45,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="builder">The configuration builder to act on.</param>
         /// <returns>The Xpandable application builder.</returns>
+        /// <returns>The <see cref="IXpandableApplicationBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
         public static IXpandableApplicationBuilder UseXpandableApplications(this IApplicationBuilder builder)
             => new XpandableApplicationBuilder(builder);
@@ -53,6 +54,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the default <see cref="OperationResultConfigureJsonOptions"/> to the services.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXOperationResultConfigureJsonOptions(this IXpandableServiceBuilder services)
             => services.AddXOperationResultConfigureJsonOptions<OperationResultConfigureJsonOptions>();
@@ -62,6 +64,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TOperationResultConfigureJsonOptions">the type of operation result JSON configure.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXOperationResultConfigureJsonOptions<TOperationResultConfigureJsonOptions>(this IXpandableServiceBuilder services)
             where TOperationResultConfigureJsonOptions : OperationResultConfigureJsonOptions
@@ -76,6 +79,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the default <see cref="OperationResultConfigureMvcOptions"/> to the services.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXOperationResultConfigureMvcOptions(this IXpandableServiceBuilder services)
             => services.AddXOperationResultConfigureMvcOptions<OperationResultConfigureMvcOptions>();
@@ -85,6 +89,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TOperationResultConfigureMvcOptions">the type of operation result MVC configure.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXOperationResultConfigureMvcOptions<TOperationResultConfigureMvcOptions>(this IXpandableServiceBuilder services)
             where TOperationResultConfigureMvcOptions : OperationResultConfigureMvcOptions
@@ -99,6 +104,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the default correlation context implementation type to the services with scoped life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXCorrelationContext(this IXpandableServiceBuilder services)
         {
@@ -113,7 +119,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the default <see cref="UnitOfWorkMultiTenancyMiddleware"/> type to the application's request pipeline.
         /// </summary>
         /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
-        /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
+        /// <returns>The <see cref="IXpandableApplicationBuilder"/> instance.</returns>
         public static IXpandableApplicationBuilder UseXUnitOfWorkMultiTenancyMiddleware(this IXpandableApplicationBuilder builder)
         {
             _ = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -127,7 +133,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TUnitOfWorkMultiTenancyMiddleware">The type of the unit of work multitenancy middleware.</typeparam>
         /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
-        /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
+        /// <returns>The <see cref="IXpandableApplicationBuilder"/> instance.</returns>
         public static IXpandableApplicationBuilder UseXUnitOfWorkMultiTenancyMiddleware<TUnitOfWorkMultiTenancyMiddleware>(this IXpandableApplicationBuilder builder)
             where TUnitOfWorkMultiTenancyMiddleware : UnitOfWorkMultiTenancyMiddleware
         {
@@ -141,7 +147,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the default <see cref="CorrelationMiddleware"/> type to the application's request pipeline.
         /// </summary>
         /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
-        /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
+        /// <returns>The <see cref="IXpandableApplicationBuilder"/> instance.</returns>
         public static IXpandableApplicationBuilder UseXCorrelationMiddleware(this IXpandableApplicationBuilder builder)
         {
             _ = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -155,7 +161,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TCorrelationMiddleware">The type of the correlation middleware.</typeparam>
         /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
-        /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
+        /// <returns>The <see cref="IXpandableApplicationBuilder"/> instance.</returns>
         public static IXpandableApplicationBuilder UseXCorrelationMiddleware<TCorrelationMiddleware>(this IXpandableApplicationBuilder builder)
             where TCorrelationMiddleware : CorrelationMiddleware
         {
@@ -170,6 +176,7 @@ namespace Xpandables.Net.DependencyInjection
         /// This controller is used to handle exceptions before target controller get called.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXOperationResultExceptionController(this IXpandableServiceBuilder services)
         {
@@ -183,6 +190,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Registers the <see cref="OperationResultExceptionMiddleware"/> to the services.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXOperationResultExceptionMiddleware(this IXpandableServiceBuilder services)
         {
@@ -199,7 +207,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <para>Make sure to register the <see cref="OperationResultExceptionMiddleware"/> using the <see cref="AddXOperationResultExceptionMiddleware(IXpandableServiceBuilder)"/> method.</para>
         /// </summary>
         /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
-        /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
+        /// <returns>The <see cref="IXpandableApplicationBuilder"/> instance.</returns>
         public static IXpandableApplicationBuilder UseXOperationResultExceptionMiddleware(this IXpandableApplicationBuilder builder)
         {
             _ = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -213,6 +221,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the HTTP context header values accessor that implements the <see cref="IHttpHeaderAccessor"/>.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXHttpHeaderAccessor(this IXpandableServiceBuilder services)
         {
@@ -226,6 +235,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the default <see cref="IRazorViewRenderer"/> implementation.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXRazorViewRenderer(this IXpandableServiceBuilder services)
         {
@@ -242,6 +252,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="application">The collection of services.</param>
         /// <param name="environment">The web hosting environment instance.</param>
+        /// <returns>The <see cref="IXpandableApplicationBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="application"/> is null.</exception>
         /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
         public static IXpandableApplicationBuilder UseXServiceExport(this IXpandableApplicationBuilder application, IWebHostEnvironment environment)
@@ -257,6 +268,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="application">The application builder instance.</param>
         /// <param name="environment">The </param>
         /// <param name="configureOptions">A delegate to configure the <see cref="ExportServiceOptions"/>.</param>
+        /// <returns>The <see cref="IXpandableApplicationBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="application"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="environment"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="configureOptions"/> is null.</exception>

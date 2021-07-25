@@ -37,15 +37,16 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the <see cref="ICommandHandler{TCommand}"/>, <see cref="ICommandHandler{TCommand, TResult}"/> and to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types. If not set, the calling assembly will be used.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXCommandHandlers(this IXpandableServiceBuilder services, Assembly[] assemblies)
+        public static IXpandableServiceBuilder AddXCommandHandlers(this IXpandableServiceBuilder services, params Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies.Length == 0)
             {
-                throw new ArgumentNullException(nameof(assemblies));
+                assemblies = new[] { Assembly.GetCallingAssembly() };
             }
 
             services.AddXCommandHandlerWrapper();
@@ -99,15 +100,16 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the <see cref="IDomainEventHandler{TEvent}"/> implementations to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types. If not set, the calling assembly will be used.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXDomainEventHandlers(this IXpandableServiceBuilder services, Assembly[] assemblies)
+        public static IXpandableServiceBuilder AddXDomainEventHandlers(this IXpandableServiceBuilder services, params Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies.Length == 0)
             {
-                throw new ArgumentNullException(nameof(assemblies));
+                assemblies = new[] { Assembly.GetCallingAssembly() };
             }
 
             var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
@@ -141,15 +143,16 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the <see cref="INotificationEventHandler{TNotificationEvent}"/> implementations to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types. If not set, the calling assembly will be used.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationHandlers(this IXpandableServiceBuilder services, Assembly[] assemblies)
+        public static IXpandableServiceBuilder AddXNotificationHandlers(this IXpandableServiceBuilder services, params Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies.Length == 0)
             {
-                throw new ArgumentNullException(nameof(assemblies));
+                assemblies = new[] { Assembly.GetCallingAssembly() };
             }
 
             var genericHandlers = assemblies.SelectMany(ass => ass.GetExportedTypes())
@@ -183,15 +186,16 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the <see cref="IAsyncQueryHandler{TQuery, TResult}"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types. if not set, the calling assembly will be used.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXQueryHandlers(this IXpandableServiceBuilder services, Assembly[] assemblies)
+        public static IXpandableServiceBuilder AddXQueryHandlers(this IXpandableServiceBuilder services, params Assembly[] assemblies)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             if (assemblies.Length == 0)
             {
-                throw new ArgumentNullException(nameof(assemblies));
+                assemblies = new[] { Assembly.GetCallingAssembly() };
             }
 
             services.AddXQueryHandlerWrapper();
@@ -229,6 +233,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the command handler wrapper necessary to resolve handlers using type inference.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXCommandHandlerWrapper(this IXpandableServiceBuilder services)
         {
@@ -242,6 +247,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the query handler wrapper necessary to resolve handlers using type inference.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXQueryHandlerWrapper(this IXpandableServiceBuilder services)
         {
@@ -258,11 +264,12 @@ namespace Xpandables.Net.DependencyInjection
         /// and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
-        /// <param name="configureOptions">A delegate to configure the <see cref="HandlerOptions"/>.</param>///
+        /// <param name="assemblies">The assemblies to scan for implemented types. If not set, the calling assembly will be used.</param>
+        /// <param name="configureOptions">A delegate to configure the <see cref="HandlerOptions"/>.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXHandlers(
-            this IXpandableServiceBuilder services, Assembly[] assemblies, Action<HandlerOptions> configureOptions)
+            this IXpandableServiceBuilder services, Action<HandlerOptions> configureOptions, params Assembly[] assemblies)
         {
             if (services is null)
             {
@@ -271,7 +278,7 @@ namespace Xpandables.Net.DependencyInjection
 
             if (assemblies.Length == 0)
             {
-                throw new ArgumentNullException(nameof(assemblies));
+                assemblies = new[] { Assembly.GetCallingAssembly() };
             }
 
             if (configureOptions == null)
@@ -318,11 +325,11 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="IDomainEventPublisher"/> type implementation to the services with scope life time.
+        /// Adds the <typeparamref name="TDomainEventPublisher"/> as <see cref="IDomainEventPublisher"/> type implementation to the services with scope life time.
         /// </summary>
         /// <typeparam name="TDomainEventPublisher">The domain event publisher type implementation.</typeparam>
         /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXDomainEventPublisher<TDomainEventPublisher>(this IXpandableServiceBuilder services)
             where TDomainEventPublisher : class, IDomainEventPublisher
@@ -337,6 +344,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the default <see cref="IDomainEventPublisher"/> implementation to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXDomainEventPublisher(this IXpandableServiceBuilder services)
             => services.AddXDomainEventPublisher<DomainEventPublisher>();

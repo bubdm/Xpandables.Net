@@ -34,6 +34,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Ensures that any <see cref="Lazy{T}"/> requested service will return <see cref="LazyResolved{T}"/> wrapping the original registered type.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXLazyTransient(this IXpandableServiceBuilder services)
         {
@@ -49,7 +50,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <typeparam name="TOptions">The type of options being configured.</typeparam>
         /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
         /// <param name="configuration">The configuration instance.</param>
-        /// <returns> The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         public static IXpandableServiceBuilder XConfigureOptions<TOptions>(this IXpandableServiceBuilder services, IConfiguration configuration)
             where TOptions : class
         {
@@ -109,6 +110,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <typeparam name="TDecorator">The decorator type that will be used to wrap the original service type.
         /// </typeparam>
         /// <param name="services">The collection of services to act on.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
         public static IXpandableServiceBuilder XTryDecorate<TService, TDecorator>(this IXpandableServiceBuilder services)
             where TService : class
@@ -137,6 +139,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <paramref name="decorator"/>.</typeparam>
         /// <param name="services">The collection of services to act on.</param>
         /// <param name="decorator">The decorator function type that will be used to wrap the original service type.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="decorator"/> argument is <c>null</c>.</exception>
         public static IXpandableServiceBuilder XTryDecorate<TService>(
@@ -169,6 +172,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="serviceType">The service type that will be wrapped by the given
         /// <paramref name="decorator"/>.</param>
         /// <param name="decorator">The decorator function type that will be used to wrap the original service type.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="serviceType"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="decorator"/> argument is <c>null</c>.</exception>
@@ -202,6 +206,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <paramref name="decorator"/>.</typeparam>
         /// <param name="services">The collection of services to act on.</param>
         /// <param name="decorator">The decorator function type that will be used to wrap the original service type.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="decorator"/> argument is <c>null</c>.</exception>
         public static IXpandableServiceBuilder XTryDecorate<TService>(
@@ -234,6 +239,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="serviceType">The service type that will be wrapped by the given
         /// <paramref name="decorator"/>.</param>
         /// <param name="decorator">The decorator function type that will be used to wrap the original service type.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="serviceType"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="decorator"/> argument is <c>null</c>.</exception>
@@ -267,6 +273,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="services">The collection of services to act on.</param>
         /// <param name="serviceType">The service type that will be wrapped by the given decorator.</param>
         /// <param name="decoratorType">The decorator type that will be used to wrap the original service type.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="serviceType"/> argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">If the <paramref name="decoratorType"/> argument is <c>null</c>.</exception>
