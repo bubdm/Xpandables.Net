@@ -43,8 +43,8 @@ namespace Xpandables.Net.Components
         /// <summary>
         /// Gets or sets the notifcations collection parameters.
         /// </summary>
-        [Parameter, Required]
-        public NotificationOptions Options { get; set; } = default!;
+        [Parameter]
+        public NotificationOptions Options { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the unique collection identifier.
