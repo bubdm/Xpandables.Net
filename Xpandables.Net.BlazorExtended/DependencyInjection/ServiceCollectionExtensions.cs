@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-using Xpandables.Net.Alerts;
+using Xpandables.Net.Notifications;
 using Xpandables.Net.Storage;
 
 namespace Xpandables.Net.DependencyInjection
@@ -30,42 +30,16 @@ namespace Xpandables.Net.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds The <see cref="IAlertProvider"/> to the collection of services.
+        /// Adds The <see cref="INotificationDispatcher"/> to the collection of services.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXAlertProvider(this IXpandableServiceBuilder services)
+        public static IXpandableServiceBuilder AddXNotificationDispatcher(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddSingleton<IAlertProvider, AlertProvider>();
-            return services;
-        }
-
-        /// <summary>
-        /// Adds The <see cref="IAlertProvider"/> to the collection of services with the specified configuration.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <param name="configure">Allows service configuration.</param>
-        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXAlertProvider(this IXpandableServiceBuilder services, Action<AlertOptions> configure)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            var options = new AlertOptions();
-            configure.Invoke(options);
-
-            services.Services.AddSingleton<IAlertProvider>(_ =>
-            {
-                var alertProvider = new AlertProvider
-                {
-                    AlertOptions = options
-                };
-
-                return alertProvider;
-            });
+            services.Services.AddSingleton<INotificationDispatcher, NotificationDispatcher>();
             return services;
         }
 

@@ -1,0 +1,11 @@
+﻿@if (Notifications.Any())
+{
+    <div class="notification-collection @Options.Position.PositionClass">
+        <CascadingValue Value="this">
+            @foreach (var notification in Notifications.OrderBy(o => o.CreatedOn))
+        {
+            <NotificationItem Notification="notification" />
+        }
+    </CascadingValue>
+</div>
+}

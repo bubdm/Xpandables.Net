@@ -1,0 +1,22 @@
+﻿<div>
+    <div class="notification-item @Notification.Level.LevelClass  @Notification.FadeClass" role="alert">
+        <div>
+            <h4 class="alert-heading d-inline-block"><i class="@Notification.Icon.IconClass"></i>&ensp;@Notification.Title</h4>
+
+            <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"
+                    @onclick="@(() => RemoveNotificationAsync())">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @if (Notification.Header is not null)
+        {
+            <p>@Notification.Header</p>
+        }
+        <hr />
+        <p>@Notification.Message</p>
+        @if (Notification.Helper is not null)
+        {
+            <p>If you need any help just place the mouse pointer above info icon next to the form field.</p>
+        }
+    </div>
+</div>
