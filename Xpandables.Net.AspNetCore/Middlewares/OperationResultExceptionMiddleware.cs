@@ -205,9 +205,12 @@ namespace Xpandables.Net.Middlewares
         {
             if (context.RequestServices.GetService<IAuthenticationSchemeProvider>() is { } authenticationSchemeProvider)
             {
-                var schemes = await authenticationSchemeProvider.GetRequestHandlerSchemesAsync().ConfigureAwait(false);
+                var requestSchemes = await authenticationSchemeProvider.GetRequestHandlerSchemesAsync().ConfigureAwait(false);
+                var defaultSchemes = await authenticationSchemeProvider.GetDefaultAuthenticateSchemeAsync().ConfigureAwait(false);
+                var allSchemes = await authenticationSchemeProvider.GetAllSchemesAsync().ConfigureAwait(false);
 
-                if (schemes.FirstOrDefault() is { } scheme)
+                var scheme = requestSchemes.FirstOrDefault() ?? defaultSchemes ?? allSchemes.FirstOrDefault();
+                if (scheme is not null)
                     return scheme.Name;
             }
 
