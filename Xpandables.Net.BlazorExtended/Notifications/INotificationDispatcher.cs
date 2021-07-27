@@ -41,6 +41,31 @@ namespace Xpandables.Net.Notifications
         event Action<Notification>? OnNotification;
 
         /// <summary>
+        /// Raizes a new notification using the provided argument.
+        /// </summary>
+        /// <param name="title">The title of the notification.</param>
+        /// <param name="message">The message of the notification.</param>
+        /// <param name="level">The level of the notification.</param>
+        /// <param name="icon">The icon of the notification.</param>
+        /// <param name="header">The header message of the notification.</param>
+        /// <param name="helper">The helper message of the notification.</param>
+        /// <param name="isAutoClose">is notification auto closed.</param>
+        /// <param name="isKeepAfterRouteChange">is notification kept after route change.</param>
+        /// <param name="isFade">is notification fade.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="title"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="message"/> is null.</exception>
+        void Notify(
+            string title,
+            string message,
+            INotificationLevel level,
+            INotificationIcon icon,
+            string? header = default,
+            string? helper = default,
+            bool isAutoClose = true,
+            bool isKeepAfterRouteChange = false,
+            bool isFade = true);
+
+        /// <summary>
         /// Raised the specified notification.
         /// </summary>
         /// <param name="notification">The notification to be raised.</param>

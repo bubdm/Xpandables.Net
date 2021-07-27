@@ -114,23 +114,23 @@ namespace Xpandables.Net.Notifications
         /// <summary>
         /// Activate the Fade out of the notification.
         /// </summary>
-        /// <param name="fade">The fade state, default value is true.</param>
+        /// <param name="isFade">The fade state, default value is true.</param>
         /// <returns>The current instance.</returns>
-        public Notification Fade(bool fade = true) => this.With(x => x.IsFade = fade);
+        public Notification Fade(bool isFade = true) => this.With(x => x.IsFade = isFade);
 
         /// <summary>
         /// Activate the AutoClose of the notification.
         /// </summary>
-        /// <param name="autoClose">The autoclose state, default value is true.</param>
+        /// <param name="isAutoClose">The autoclose state, default value is true.</param>
         /// <returns>The current instance.</returns>
-        public Notification AutoClose(bool autoClose = true) => this.With(x => x.IsAutoClose = autoClose);
+        public Notification AutoClose(bool isAutoClose = true) => this.With(x => x.IsAutoClose = isAutoClose);
 
         /// <summary>
         /// Activate the KeepAfterRouteChange of the notification.
         /// </summary>
-        /// <param name="keepAfterRoutechange">The keepAfterRouteChange state, default value is true.</param>
+        /// <param name="isKeepAfterRoutechange">The keepAfterRouteChange state, default value is true.</param>
         /// <returns>The current instance.</returns>
-        public Notification KeepAfterRouteChange(bool keepAfterRoutechange = true) => this.With(x => x.IsKeepAfterRouteChange = keepAfterRoutechange);
+        public Notification KeepAfterRouteChange(bool isKeepAfterRoutechange = true) => this.With(x => x.IsKeepAfterRouteChange = isKeepAfterRoutechange);
 
         /// <summary>
         /// Activate the header message of the notification.

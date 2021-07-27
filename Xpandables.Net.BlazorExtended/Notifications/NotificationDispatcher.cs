@@ -33,6 +33,37 @@ namespace Xpandables.Net.Notifications
         public string ComponentId { get; set; } = default!;
 
         ///<inheritdoc/>
+        public void Notify(
+                  string title,
+                  string message,
+                  INotificationLevel level,
+                  INotificationIcon icon,
+                  string? header = default,
+                  string? helper = default,
+                  bool isAutoClose = true,
+                  bool isKeepAfterRouteChange = false,
+                  bool isFade = true)
+        {
+            _ = title ?? throw new ArgumentNullException(nameof(title));
+            _ = message ?? throw new ArgumentNullException(nameof(message));
+
+            var notification = Notification.With(title, message)
+                .WithIcon(icon)
+                .WithLevel(level)
+                .AutoClose(isAutoClose)
+                .KeepAfterRouteChange(isKeepAfterRouteChange)
+                .Fade(isFade);
+
+            if (header is not null)
+                notification = notification.WithHeader(header);
+
+            if (helper is not null)
+                notification = notification.WithHelper(helper);
+
+            RaizeNotification(notification);
+        }
+
+        ///<inheritdoc/>
         public virtual void Clear(string id = INotificationDispatcher.DefaultId) => OnNotification?.Invoke(Notification.None(id));
 
         ///<inheritdoc/>
