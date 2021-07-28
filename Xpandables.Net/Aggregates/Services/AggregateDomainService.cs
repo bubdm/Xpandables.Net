@@ -85,7 +85,7 @@ namespace Xpandables.Net.Aggregates.Services
                 var eventTypeFullName = @event.GetType().AssemblyQualifiedName!;
                 var eventTypeName = @event.GetType().GetNameWithoutGenericArity();
 
-                var eventData = GetJsonDocument(@event, SerializerOptions, DocumentOptions);
+                var eventData = @event.GetJsonDocument(SerializerOptions, DocumentOptions);
                 var entity = new DomainStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
 
                 await AggregateUnitOfWork.Events.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
@@ -99,7 +99,7 @@ namespace Xpandables.Net.Aggregates.Services
                     var eventTypeFullName = @event.GetType().AssemblyQualifiedName!;
                     var eventTypeName = @event.GetType().GetNameWithoutGenericArity();
 
-                    var eventData = GetJsonDocument(@event, SerializerOptions, DocumentOptions);
+                    var eventData = @event.GetJsonDocument(SerializerOptions, DocumentOptions);
                     var entity = new NotificationStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData, default);
 
                     await AggregateUnitOfWork.Notifications.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
@@ -195,7 +195,7 @@ namespace Xpandables.Net.Aggregates.Services
             var eventTypeFullName = snapShot.GetType().AssemblyQualifiedName!;
             var eventTypeName = snapShot.GetType().GetNameWithoutGenericArity();
 
-            var eventData = GetJsonDocument(snapShot, SerializerOptions, DocumentOptions);
+            var eventData = snapShot.GetJsonDocument(SerializerOptions, DocumentOptions);
             var entity = new SnapShotStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
 
             await AggregateUnitOfWork.SnapShots.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
@@ -242,24 +242,6 @@ namespace Xpandables.Net.Aggregates.Services
             }
 
             return aggregate;
-        }
-
-        /// <summary>
-        /// Returns the <see cref="JsonDocument"/> from the specified document.
-        /// </summary>
-        /// <typeparam name="TDocument">The type of document.</typeparam>
-        /// <param name="document">An instance of document to parse.</param>
-        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
-        /// <param name="documentOptions">Options to control the reader behavior during parsing.</param>
-        /// <returns>An instance of <see cref="JsonDocument"/>.</returns>
-        protected virtual JsonDocument GetJsonDocument<TDocument>(
-            TDocument document,
-            JsonSerializerOptions? serializerOptions,
-            JsonDocumentOptions documentOptions)
-            where TDocument : notnull
-        {
-            var eventString = JsonSerializer.Serialize(document, document.GetType(), serializerOptions);
-            return JsonDocument.Parse(eventString, documentOptions);
         }
     }
 }
