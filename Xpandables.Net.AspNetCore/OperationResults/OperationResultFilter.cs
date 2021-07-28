@@ -60,7 +60,7 @@ namespace Xpandables.Net
         protected virtual string GetValidationProblemDetail(HttpStatusCode statusCode)
              => statusCode switch
              {
-                 HttpStatusCode.InternalServerError => "Please refer to the errors for additional details",
+                 HttpStatusCode.InternalServerError or HttpStatusCode.Unauthorized => "Please refer to the errors for additional details",
                  _ => "Please refer to the errors property for additional details"
              };
 
@@ -122,12 +122,14 @@ namespace Xpandables.Net
                     }
 
                     var statusCode = operationResult.StatusCode;
+                    var modelStateDictionary = operationResult.Errors.GetModelStateDictionary();
+
                     context.Result = controller.ValidationProblem(
                         GetValidationProblemDetail(statusCode),
                         context.HttpContext.Request.Path,
                         (int)statusCode,
                         GetValidationProblemTitle(statusCode),
-                        modelStateDictionary: operationResult.Errors.GetModelStateDictionary());
+                        modelStateDictionary: operationResult.Errors.Count > 0 ? modelStateDictionary : null);
 
                     if (operationResult.StatusCode == HttpStatusCode.Unauthorized)
                     {

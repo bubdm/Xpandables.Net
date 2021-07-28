@@ -157,7 +157,7 @@ namespace Xpandables.Net.Middlewares
         /// <returns></returns>
         protected ActionResult GetProblemDetails(OperationResultExceptionController controller, HttpContext context, Exception exception)
         {
-            var statusCode = HttpStatusCode.InternalServerError;
+            var statusCode = exception is UnauthorizedAccessException ? HttpStatusCode.Unauthorized : HttpStatusCode.InternalServerError;
 
             var problemDetails = controller.Problem(
                 Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development" ? $"{exception}" : GetValidationProblemDetailMessage(statusCode),
@@ -192,7 +192,7 @@ namespace Xpandables.Net.Middlewares
         protected virtual string GetValidationProblemDetailMessage(HttpStatusCode statusCode)
              => statusCode switch
              {
-                 HttpStatusCode.InternalServerError => "Please refer to the errors for additional details",
+                 HttpStatusCode.InternalServerError or HttpStatusCode.Unauthorized => "Please refer to the errors for additional details",
                  _ => "Please refer to the errors property for additional details"
              };
 
