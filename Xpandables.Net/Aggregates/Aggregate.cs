@@ -39,19 +39,14 @@ namespace Xpandables.Net.Aggregates
     /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     [Serializable]
     [DebuggerDisplay("Guid = {" + nameof(AggregateId) + "} Version = {" + nameof(Version) + "}")]
-    public abstract class Aggregate<TAggregateId> :
-        OperationResults, IAggregate<TAggregateId>, IDomainEventSourcing,
-        INotificationSourcing
+    public abstract class Aggregate<TAggregateId> : OperationResults, IAggregate<TAggregateId>, IDomainEventSourcing, INotificationSourcing
         where TAggregateId : notnull, AggregateId
     {
         private static readonly IInstanceCreator _instanceCreator = new InstanceCreator();
 
-        private readonly ICollection<IDomainEvent> _events
-            = new LinkedList<IDomainEvent>();
-        private readonly ICollection<INotificationEvent> _notifications
-            = new LinkedList<INotificationEvent>();
-        private readonly IDictionary<Type, Action<IDomainEvent>> _eventHandlers
-            = new Dictionary<Type, Action<IDomainEvent>>();
+        private readonly ICollection<IDomainEvent> _events = new LinkedList<IDomainEvent>();
+        private readonly ICollection<INotificationEvent> _notifications = new LinkedList<INotificationEvent>();
+        private readonly IDictionary<Type, Action<IDomainEvent>> _eventHandlers = new Dictionary<Type, Action<IDomainEvent>>();
 
         /// <summary>
         /// Gets the current version of the instance, the default value is -1.

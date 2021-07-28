@@ -45,6 +45,11 @@ namespace Xpandables.Net.Aggregates.Services
         protected IInstanceCreator InstanceCreator { get; }
 
         /// <summary>
+        /// Gets the domain event publisher instance.
+        /// </summary>
+        protected IDomainEventPublisher DomainEventPublisher { get; }
+
+        /// <summary>
         /// Gets the instance of aggregate unit of work.
         /// </summary>
         protected IAggregateUnitOfWork AggregateUnitOfWork { get; }
@@ -53,12 +58,14 @@ namespace Xpandables.Net.Aggregates.Services
         /// Constructs a new instance of <see cref="AggregateDomainService"/> with the creator instance.
         /// </summary>
         /// <param name="aggregateUnitOfWork">The aggregate unit of work.</param>
+        /// <param name="domainEventPublisher">The domain event publisher</param>
         /// <param name="instanceCreator">The creator instance ot be used.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
-        public AggregateDomainService(IAggregateUnitOfWork aggregateUnitOfWork, IInstanceCreator instanceCreator)
+        public AggregateDomainService(IAggregateUnitOfWork aggregateUnitOfWork, IDomainEventPublisher domainEventPublisher, IInstanceCreator instanceCreator)
         {
             AggregateUnitOfWork = aggregateUnitOfWork ?? throw new ArgumentNullException(nameof(aggregateUnitOfWork));
             InstanceCreator = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
+            DomainEventPublisher = domainEventPublisher ?? throw new ArgumentNullException(nameof(domainEventPublisher));
         }
 
         ///<inheritdoc/>
@@ -82,6 +89,7 @@ namespace Xpandables.Net.Aggregates.Services
                 var entity = new DomainStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
 
                 await AggregateUnitOfWork.Events.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
+                await DomainEventPublisher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
             }
 
             if (aggregate is INotificationSourcing aggregateOutbox)
