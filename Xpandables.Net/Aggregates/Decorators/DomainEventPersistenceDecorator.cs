@@ -32,7 +32,7 @@ namespace Xpandables.Net.Aggregates.Decorators
     /// the <see cref="IUnitOfWork.PersistAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TDomainEvent">Type of domain event.</typeparam>
-    public sealed class DomainEventPersistenceDecorator<TDomainEvent> : IDomainEventHandler<TDomainEvent>
+    public sealed class DomainEventPersistenceDecorator<TDomainEvent> : DomainEventHandler<TDomainEvent>
         where TDomainEvent : class, IDomainEvent, IPersistenceDecorator
     {
         private readonly IDomainEventHandler<TDomainEvent> _decoratee;
@@ -53,7 +53,7 @@ namespace Xpandables.Net.Aggregates.Decorators
         }
 
         ///<inheritdoc/>
-        public async Task HandleAsync(TDomainEvent @event, CancellationToken cancellationToken = default)
+        public override async Task HandleAsync(TDomainEvent @event, CancellationToken cancellationToken = default)
         {
             await _decoratee.HandleAsync(@event, cancellationToken).ConfigureAwait(false);
             await _unitOfWork.PersistAsync(cancellationToken).ConfigureAwait(false);

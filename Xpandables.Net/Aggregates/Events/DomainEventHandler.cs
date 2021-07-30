@@ -21,16 +21,16 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Aggregates.Events
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IDomainEventHandler"/> interface.
+    /// Represents a helper class that allows implementation of <see cref="IDomainEventHandler{TDomainEvent}"/> interface.
     /// </summary>
-    /// <typeparam name="TDomainEvent">Type of event to act on.</typeparam>
+    /// <typeparam name="TDomainEvent">Type of domain event to act on.</typeparam>
     public abstract class DomainEventHandler<TDomainEvent> : IDomainEventHandler<TDomainEvent>
         where TDomainEvent : class, IDomainEvent
     {
         ///<inheritdoc/>
         public abstract Task HandleAsync(TDomainEvent @event, CancellationToken cancellationToken = default);
 
-        Task IDomainEventHandler.HandleAsync(IDomainEvent @event, CancellationToken cancellationToken)
+        Task IEventHandler.HandleAsync(object @event, CancellationToken cancellationToken)
             => HandleAsync((TDomainEvent)@event, cancellationToken);
     }
 }

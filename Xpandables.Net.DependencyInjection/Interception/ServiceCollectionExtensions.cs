@@ -22,7 +22,6 @@ using System.Linq;
 using System.Reflection;
 
 using Xpandables.Net.Aggregates.Events;
-using Xpandables.Net.Aggregates.Notifications;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Interception;
 using Xpandables.Net.Queries;
@@ -127,7 +126,7 @@ namespace Xpandables.Net.DependencyInjection
             if (assemblies.Length == 0) assemblies = new[] { Assembly.GetCallingAssembly() };
 
             var genericHandlerInterfaceTypes = new[] { typeof(IQueryHandler<,>), typeof(ICommandHandler<>),
-                typeof(ICommandHandler<,>), typeof(IDomainEventHandler<>), typeof(INotificationEventHandler<>)};
+                typeof(ICommandHandler<,>), typeof(IDomainEventHandler<>), typeof(INotificationHandler<>)};
 
             var handlers = assemblies
                 .SelectMany(ass => ass.GetExportedTypes())

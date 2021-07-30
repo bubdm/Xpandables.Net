@@ -19,22 +19,24 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Aggregates.Events
+using Xpandables.Net.Aggregates.Events;
+
+namespace Xpandables.Net.Dispatchers
 {
     /// <summary>
-    /// Defines a method to automatically dispatch <see cref="IDomainEvent"/>.
+    /// Defines a set of methods to automatically publish <see cref="IEvent"/> when targeting <see cref="IDomainEventHandler{TDomainEvent}"/> 
+    /// or <see cref="INotificationHandler{TNotificationEvent}"/>.
+    /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
-    public interface IDomainEventPublisher
+    public interface IPublisher
     {
         /// <summary>
-        /// Publishes the specified domain event.
+        /// Asynchronously publishes the specified event to all registered suscribers.
         /// </summary>
-        /// <param name="event">The event to be published.</param>
+        /// <param name="event">The event to publish.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="event"/> must implement <see cref="IDomainEvent"/> interface.</exception>
-        /// <exception cref="InvalidOperationException">Publishing the event failed. See inner exception.</exception>
-        Task PublishAsync(IDomainEvent @event, CancellationToken cancellationToken = default);
+        /// <returns>A task that represents an asynchronous operation.</returns>
+        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
     }
 }

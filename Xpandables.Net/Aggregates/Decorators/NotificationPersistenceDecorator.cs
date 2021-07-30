@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Aggregates.Notifications;
+using Xpandables.Net.Aggregates.Events;
 using Xpandables.Net.UnitOfWorks;
 
 namespace Xpandables.Net.Aggregates.Decorators
@@ -32,10 +32,10 @@ namespace Xpandables.Net.Aggregates.Decorators
     /// the <see cref="IUnitOfWork.PersistAsync(CancellationToken)"/> if available after the main one in the same control flow only
     /// </summary>
     /// <typeparam name="TNotificationEvent">Type of integration event.</typeparam>
-    public sealed class NotificationPersistenceDecorator<TNotificationEvent> : INotificationEventHandler<TNotificationEvent>
-        where TNotificationEvent : class, INotificationEvent, IPersistenceDecorator
+    public sealed class NotificationPersistenceDecorator<TNotificationEvent> : NotificationHandler<TNotificationEvent>
+        where TNotificationEvent : class, INotification, IPersistenceDecorator
     {
-        private readonly INotificationEventHandler<TNotificationEvent> _decoratee;
+        private readonly INotificationHandler<TNotificationEvent> _decoratee;
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
@@ -46,14 +46,14 @@ namespace Xpandables.Net.Aggregates.Decorators
         /// <param name="decoratee">The decorated integration event handler.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="unitOfWork"/> is null.</exception>
-        public NotificationPersistenceDecorator(INotificationEventHandler<TNotificationEvent> decoratee, IUnitOfWork unitOfWork)
+        public NotificationPersistenceDecorator(INotificationHandler<TNotificationEvent> decoratee, IUnitOfWork unitOfWork)
         {
             _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
         ///<inheritdoc/>
-        public async Task HandleAsync(TNotificationEvent @event, CancellationToken cancellationToken = default)
+        public override async Task HandleAsync(TNotificationEvent @event, CancellationToken cancellationToken = default)
         {
             await _decoratee.HandleAsync(@event, cancellationToken).ConfigureAwait(false);
             await _unitOfWork.PersistAsync(cancellationToken).ConfigureAwait(false);

@@ -21,7 +21,6 @@ using System;
 
 using Xpandables.Net.Aggregates.Decorators;
 using Xpandables.Net.Aggregates.Events;
-using Xpandables.Net.Aggregates.Notifications;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Commands.Decorators;
 using Xpandables.Net.Queries;
@@ -53,7 +52,7 @@ namespace Xpandables.Net.DependencyInjection
             services.XTryDecorate(typeof(ICommandHandler<>), typeof(CommandPersistenceDecorator<>));
             services.XTryDecorate(typeof(ICommandHandler<,>), typeof(CommandPersistenceDecorator<,>));
             services.XTryDecorate(typeof(IDomainEventHandler<>), typeof(DomainEventPersistenceDecorator<>));
-            services.XTryDecorate(typeof(INotificationEventHandler<>), typeof(NotificationPersistenceDecorator<>));
+            services.XTryDecorate(typeof(INotificationHandler<>), typeof(NotificationPersistenceDecorator<>));
             return services;
         }
 

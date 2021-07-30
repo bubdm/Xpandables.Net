@@ -22,7 +22,6 @@ using System.Linq;
 using System.Reflection;
 
 using Xpandables.Net.Aggregates.Events;
-using Xpandables.Net.Aggregates.Notifications;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Queries;
 
@@ -140,7 +139,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the <see cref="INotificationEventHandler{TNotificationEvent}"/> implementations to the services with scope life time.
+        /// Adds the <see cref="INotificationHandler{TNotificationEvent}"/> implementations to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="assemblies">The assemblies to scan for implemented types. If not set, the calling assembly will be used.</param>
@@ -161,13 +160,13 @@ namespace Xpandables.Net.DependencyInjection
                     && !type.IsGenericType
                     && type.GetInterfaces()
                         .Any(inter => inter.IsGenericType
-                            && inter.GetGenericTypeDefinition() == typeof(INotificationEventHandler<>)))
+                            && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<>)))
                 .Select(type => new
                 {
                     Type = type,
                     Interfaces = type.GetInterfaces()
                     .Where(inter => inter.IsGenericType
-                    && inter.GetGenericTypeDefinition() == typeof(INotificationEventHandler<>))
+                    && inter.GetGenericTypeDefinition() == typeof(INotificationHandler<>))
                 })
                 .ToList();
 
@@ -259,7 +258,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds and configures the <see cref="ICommandHandler{TCommand}"/>, <see cref="INotificationEventHandler{TNotificationEvent}"/>,
+        /// Adds and configures the <see cref="ICommandHandler{TCommand}"/>, <see cref="INotificationHandler{TNotificationEvent}"/>,
         /// <see cref="IQueryHandler{TQuery, TResult}"/>, <see cref="IDomainEventHandler{TEvent}"/>
         /// and <see cref="IAsyncQueryHandler{TQuery, TResult}"/> behaviors.
         /// </summary>
@@ -323,30 +322,5 @@ namespace Xpandables.Net.DependencyInjection
 
             return services;
         }
-
-        /// <summary>
-        /// Adds the <typeparamref name="TDomainEventPublisher"/> as <see cref="IDomainEventPublisher"/> type implementation to the services with scope life time.
-        /// </summary>
-        /// <typeparam name="TDomainEventPublisher">The domain event publisher type implementation.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXDomainEventPublisher<TDomainEventPublisher>(this IXpandableServiceBuilder services)
-            where TDomainEventPublisher : class, IDomainEventPublisher
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.Services.AddScoped<IDomainEventPublisher, TDomainEventPublisher>();
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the default <see cref="IDomainEventPublisher"/> implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXDomainEventPublisher(this IXpandableServiceBuilder services)
-            => services.AddXDomainEventPublisher<DomainEventPublisher>();
     }
 }

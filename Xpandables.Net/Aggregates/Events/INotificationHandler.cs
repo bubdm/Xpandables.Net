@@ -22,45 +22,46 @@ using System.Threading.Tasks;
 namespace Xpandables.Net.Aggregates.Events
 {
     /// <summary>
-    /// Allows an application author to define a handler for a domain event.
+    /// Allows an application author to define a handler for notification.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
-    /// </summary>    
-    public interface IDomainEventHandler : IEventHandler
+    /// </summary>
+    public interface INotificationHandler : IEventHandler
     {
         /// <summary>
-        ///  Asynchronously handles the domain event.
+        ///  Asynchronously handles the notification.
         /// </summary>
-        /// <param name="event">The domain event instance to act on.</param>
+        /// <param name="event">The notification instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task HandleAsync(IDomainEvent @event, CancellationToken cancellationToken = default);
+        Task HandleAsync(INotification @event, CancellationToken cancellationToken = default);
 
         Task IEventHandler.HandleAsync(object @event, CancellationToken cancellationToken)
-            => HandleAsync((IDomainEvent)@event, cancellationToken);
+            => HandleAsync((INotification)@event, cancellationToken);
     }
 
     /// <summary>
-    /// Allows an application author to define a handler for a domain event.
+    /// Allows an application author to define a handler for specific type notification.
+    /// The notification must implement <see cref="INotification"/> interface.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
-    /// <typeparam name="TDomainEvent">The domain event type.</typeparam>
-    public interface IDomainEventHandler<TDomainEvent> : IDomainEventHandler, IEventHandler<TDomainEvent>
-        where TDomainEvent : class, IDomainEvent
+    /// <typeparam name="TNotification">The notification type to be handled.</typeparam>
+    public interface INotificationHandler<TNotification> : INotificationHandler, IEventHandler<TNotification>
+        where TNotification : class, INotification
     {
         /// <summary>
-        ///  Asynchronously handles the domain event of specific type.
+        /// Asynchronously handles the notification of specific type.
         /// </summary>
-        /// <param name="event">The domain event instance to act on.</param>
+        /// <param name="event">The notification instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        new Task HandleAsync(TDomainEvent @event, CancellationToken cancellationToken = default);
+        new Task HandleAsync(TNotification @event, CancellationToken cancellationToken = default);
 
-        Task IEventHandler<TDomainEvent>.HandleAsync(TDomainEvent @event, CancellationToken cancellationToken)
+        Task IEventHandler<TNotification>.HandleAsync(TNotification @event, CancellationToken cancellationToken)
             => HandleAsync(@event, cancellationToken);
 
-        Task IDomainEventHandler.HandleAsync(IDomainEvent @event, CancellationToken cancellationToken)
-            => HandleAsync((TDomainEvent)@event, cancellationToken);
+        Task INotificationHandler.HandleAsync(INotification @event, CancellationToken cancellationToken)
+            => HandleAsync((TNotification)@event, cancellationToken);
     }
 }

@@ -21,17 +21,16 @@ using System.Diagnostics;
 using System.Linq;
 
 using Xpandables.Net.Aggregates.Events;
-using Xpandables.Net.Aggregates.Notifications;
 
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
     /// Represents a helper class that allows implementation of <see cref="IAggregate{TAggregateId}"/>.
-    /// It contains a collection of <see cref="IDomainEvent"/>, <see cref="INotificationEvent"/>,
+    /// It contains a collection of <see cref="IDomainEvent"/>, <see cref="INotification"/>,
     /// and a dictionary of domain event handlers. You must register event handlers using 
     /// the <see cref="RegisterEventHandler{TEvent}(Action{TEvent})"/>
     /// method when overriding the <see cref="RegisterEventHandlers"/> method. 
-    /// You can add a notification using the <see cref="AddNotification(INotificationEvent)"/>
+    /// You can add a notification using the <see cref="AddNotification(INotification)"/>
     /// method and you may use the <see cref="RaiseEvent{TDomainEvent}(TDomainEvent)"/> method to raise the specified event.
     /// When creating an event (<see cref="IDomainEvent"/>), you may use of <see cref="GetNewVersion()"/> 
     /// function to get the new version number according to the event creation.
@@ -45,7 +44,7 @@ namespace Xpandables.Net.Aggregates
         private static readonly IInstanceCreator _instanceCreator = new InstanceCreator();
 
         private readonly ICollection<IDomainEvent> _events = new LinkedList<IDomainEvent>();
-        private readonly ICollection<INotificationEvent> _notifications = new LinkedList<INotificationEvent>();
+        private readonly ICollection<INotification> _notifications = new LinkedList<INotification>();
         private readonly IDictionary<Type, Action<IDomainEvent>> _eventHandlers = new Dictionary<Type, Action<IDomainEvent>>();
 
         /// <summary>
@@ -66,7 +65,7 @@ namespace Xpandables.Net.Aggregates
 
         void INotificationSourcing.MarkNotificationsAsCommitted() => _notifications.Clear();
 
-        IOrderedEnumerable<INotificationEvent> INotificationSourcing.GetNotifications()
+        IOrderedEnumerable<INotification> INotificationSourcing.GetNotifications()
             => _notifications.OrderBy(o => o.OccurredOn);
 
         void IDomainEventSourcing.MarkEventsAsCommitted() => _events.Clear();
@@ -123,7 +122,7 @@ namespace Xpandables.Net.Aggregates
         /// <param name="notification">The notification to be added.</param>
         /// <exception cref=" ArgumentNullException">The <paramref name="notification"/> is null. </exception>
         /// <exception cref="InvalidOperationException">The target notification already exist in the collection.</exception>
-        protected void AddNotification(INotificationEvent notification)
+        protected void AddNotification(INotification notification)
         {
             _ = notification ?? throw new ArgumentNullException(nameof(notification));
 

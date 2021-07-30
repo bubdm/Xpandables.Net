@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System.Linq;
 
-using Xpandables.Net.Aggregates.Notifications;
+using Xpandables.Net.Aggregates.Events;
 
 namespace Xpandables.Net.Aggregates
 {
@@ -35,6 +35,6 @@ namespace Xpandables.Net.Aggregates
         /// Returns a collection of notifications.
         /// </summary>
         /// <returns>A list of notifications.</returns>
-        IOrderedEnumerable<INotificationEvent> GetNotifications();
+        IOrderedEnumerable<INotification> GetNotifications();
     }
 }

@@ -19,45 +19,42 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xpandables.Net.Aggregates.Notifications
+namespace Xpandables.Net.Aggregates.Events
 {
     /// <summary>
-    /// Allows an application author to define a handler for notification.
+    /// Allows an application author to define a handler for an event.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
-    /// </summary>
-    public interface INotificationEventHandler : ICanHandle
+    /// </summary>    
+    public interface IEventHandler : ICanHandle
     {
         /// <summary>
-        ///  Asynchronously handles the notification.
+        ///  Asynchronously handles the event.
         /// </summary>
-        /// <param name="event">The notification instance to act on.</param>
+        /// <param name="event">The event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <exception cref="ArgumentException">The <paramref name="event"/> does 
-        /// not implement <see cref="INotificationEvent"/>.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task HandleAsync(INotificationEvent @event, CancellationToken cancellationToken = default);
+        Task HandleAsync(object @event, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
-    /// Allows an application author to define a handler for specific type notification.
-    /// The notification must implement <see cref="INotificationEvent"/> interface.
+    /// Allows an application author to define a handler for a generic event.
     /// The implementation must be thread-safe when working in a multi-threaded environment.
     /// </summary>
-    /// <typeparam name="TNotificationEvent">The notification type to be handled.</typeparam>
-    public interface INotificationEventHandler<in TNotificationEvent> : INotificationEventHandler, ICanHandle<TNotificationEvent>
-        where TNotificationEvent : class, INotificationEvent
+    /// <typeparam name="TEvent">The event type.</typeparam>
+    public interface IEventHandler<TEvent> : IEventHandler
+        where TEvent : class, IEvent
     {
         /// <summary>
-        /// Asynchronously handles the notification of specific type.
+        ///  Asynchronously handles the event.
         /// </summary>
-        /// <param name="event">The notification instance to act on.</param>
+        /// <param name="event">The event instance to act on.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        Task HandleAsync(TNotificationEvent @event, CancellationToken cancellationToken = default);
+        Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default);
 
-        Task INotificationEventHandler.HandleAsync(INotificationEvent @event, CancellationToken cancellationToken)
-            => HandleAsync((TNotificationEvent)@event, cancellationToken);
+        Task IEventHandler.HandleAsync(object @event, CancellationToken cancellationToken)
+            => HandleAsync((TEvent)@event, cancellationToken);
     }
 }
