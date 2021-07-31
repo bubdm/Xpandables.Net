@@ -57,5 +57,54 @@ namespace Xpandables.Net.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Adds the <typeparamref name="TDomainEventDispatcher"/> as <see cref="IDomainEventDispatcher"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TDomainEventDispatcher">The domain event dispatcher type implementation.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXDomainEventDispatcher<TDomainEventDispatcher>(this IXpandableServiceBuilder services)
+            where TDomainEventDispatcher : class, IDomainEventDispatcher
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<IDomainEventDispatcher, TDomainEventDispatcher>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="IDomainEventDispatcher"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXDomainEventDispatcher(this IXpandableServiceBuilder services)
+            => services.AddXDomainEventDispatcher<DomainEventDispatcher>();
+
+        /// <summary>
+        /// Adds the <typeparamref name="TNotificationDispatcher"/> as <see cref="INotificationDispatcher"/> type implementation to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TNotificationDispatcher">The notification dispatcher type implementation.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXNotificationDispatcher<TNotificationDispatcher>(this IXpandableServiceBuilder services)
+            where TNotificationDispatcher : class, INotificationDispatcher
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<INotificationDispatcher, TNotificationDispatcher>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the default <see cref="INotificationDispatcher"/> implementation to the services with scope life time.
+        /// </summary>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXNotificationDispatcher(this IXpandableServiceBuilder services)
+            => services.AddXNotificationDispatcher<NotificationDispatcher>();
     }
 }
