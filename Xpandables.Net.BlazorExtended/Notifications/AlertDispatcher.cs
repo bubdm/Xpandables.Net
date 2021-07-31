@@ -18,16 +18,16 @@
 
 using System;
 
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.Alerts
 {
     /// <summary>
-    /// The default implementation of <see cref="INotificationDispatcher"/>.
+    /// The default implementation of <see cref="IAlertDispatcher"/>.
     /// You can derive from this class to customize its behaviors.
     /// </summary>
-    public class NotificationDispatcher : INotificationDispatcher
+    public class AlertDispatcher : IAlertDispatcher
     {
         ///<inheritdoc/>
-        public event Action<Notification>? OnNotification;
+        public event Action<Alert>? OnAlert;
 
         ///<inheritdoc/>
         public string ComponentId { get; set; } = default!;
@@ -36,8 +36,8 @@ namespace Xpandables.Net.Notifications
         public void Notify(
                   string title,
                   string message,
-                  INotificationLevel level,
-                  INotificationIcon icon,
+                  IAlertLevel level,
+                  IAlertIcon icon,
                   string? header = default,
                   string? helper = default,
                   bool isAutoClose = true,
@@ -47,7 +47,7 @@ namespace Xpandables.Net.Notifications
             _ = title ?? throw new ArgumentNullException(nameof(title));
             _ = message ?? throw new ArgumentNullException(nameof(message));
 
-            var notification = Notification.With(title, message)
+            var alert = Alert.With(title, message)
                 .WithIcon(icon)
                 .WithLevel(level)
                 .AutoClose(isAutoClose)
@@ -55,24 +55,24 @@ namespace Xpandables.Net.Notifications
                 .Fade(isFade);
 
             if (header is not null)
-                notification = notification.WithHeader(header);
+                alert = alert.WithHeader(header);
 
             if (helper is not null)
-                notification = notification.WithHelper(helper);
+                alert = alert.WithHelper(helper);
 
-            RaizeNotification(notification);
+            RaizeAlert(alert);
         }
 
         ///<inheritdoc/>
-        public virtual void Clear(string id = INotificationDispatcher.DefaultId) => OnNotification?.Invoke(Notification.None(id));
+        public virtual void Clear(string id = IAlertDispatcher.DefaultId) => OnAlert?.Invoke(Alert.None(id));
 
         ///<inheritdoc/>
-        public virtual void RaizeNotification(Notification notification)
+        public virtual void RaizeAlert(Alert alert)
         {
-            if (notification.Id == INotificationDispatcher.DefaultId)
-                notification.Id = ComponentId;
+            if (alert.Id == IAlertDispatcher.DefaultId)
+                alert.Id = ComponentId;
 
-            OnNotification?.Invoke(notification);
+            OnAlert?.Invoke(alert);
         }
     }
 }

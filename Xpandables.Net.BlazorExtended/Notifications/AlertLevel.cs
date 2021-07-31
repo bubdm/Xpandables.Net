@@ -15,132 +15,132 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.Alerts
 {
     /// <summary>
-    /// Defines the base interface for an notification level.
+    /// Defines the base interface for an alert level.
     /// </summary>
-    public interface INotificationLevel
+    public interface IAlertLevel
     {
         /// <summary>
-        /// Gets the css class fo the notification.
+        /// Gets the css class fo the alert.
         /// </summary>
         string LevelClass { get; }
     }
 
     /// <summary>
-    /// Provides with the notification level.
+    /// Provides with the alert level.
     /// </summary>
-    public readonly struct NotificationLevel
+    public readonly struct AlertLevel
     {
         /// <summary>
-        /// Gets the <see cref="NotificationLevelInformation"/>.
+        /// Gets the <see cref="AlertLevelInformation"/>.
         /// </summary>
-        public static INotificationLevel Info => new NotificationLevelInformation();
+        public static IAlertLevel Info => new AlertLevelInformation();
 
         /// <summary>
-        /// Gets the <see cref="NotificationLevelDark"/>.
+        /// Gets the <see cref="AlertLevelDark"/>.
         /// </summary>
-        public static INotificationLevel Dark => new NotificationLevelDark();
+        public static IAlertLevel Dark => new AlertLevelDark();
 
         /// <summary>
-        /// Gets the <see cref="NotificationLevelLight"/>.
+        /// Gets the <see cref="AlertLevelLight"/>.
         /// </summary>
-        public static INotificationLevel Light => new NotificationLevelLight();
+        public static IAlertLevel Light => new AlertLevelLight();
 
         /// <summary>
-        /// Gets the <see cref="NotificationLevelError"/>.
+        /// Gets the <see cref="AlertLevelError"/>.
         /// </summary>
-        public static INotificationLevel Error => new NotificationLevelError();
+        public static IAlertLevel Error => new AlertLevelError();
 
         /// <summary>
-        /// Gets the <see cref="NotificationLevelPrimay"/>.
+        /// Gets the <see cref="AlertLevelPrimay"/>.
         /// </summary>
-        public static INotificationLevel Primary => new NotificationLevelPrimay();
+        public static IAlertLevel Primary => new AlertLevelPrimay();
 
         /// <summary>
-        /// Gets the <see cref="NotificationLevelSecondary"/>.
+        /// Gets the <see cref="AlertLevelSecondary"/>.
         /// </summary>
-        public static INotificationLevel Secondary => new NotificationLevelSecondary();
+        public static IAlertLevel Secondary => new AlertLevelSecondary();
 
         /// <summary>
-        /// Gets the <see cref="NotificationLevelSuccess"/>.
+        /// Gets the <see cref="AlertLevelSuccess"/>.
         /// </summary>
-        public static INotificationLevel Success => new NotificationLevelSuccess();
+        public static IAlertLevel Success => new AlertLevelSuccess();
 
         /// <summary>
-        /// Gets the <see cref="NotificationLevelWarning"/>.
+        /// Gets the <see cref="AlertLevelWarning"/>.
         /// </summary>
-        public static INotificationLevel Warning => new NotificationLevelWarning();
+        public static IAlertLevel Warning => new AlertLevelWarning();
     }
 
     /// <summary>
-    /// The Information notification level.
+    /// The Information alert level.
     /// </summary>
-    public class NotificationLevelInformation : INotificationLevel
+    public class AlertLevelInformation : IAlertLevel
     {
         ///<inheritdoc/>
         public string LevelClass => "alert alert-info alert-dismissable";
     }
 
     /// <summary>
-    /// The Error notification level.
+    /// The Error alert level.
     /// </summary>
-    public class NotificationLevelError : INotificationLevel
+    public class AlertLevelError : IAlertLevel
     {
         ///<inheritdoc/>
         public string LevelClass => "alert alert-danger alert-dismissable";
     }
 
     /// <summary>
-    /// The Warning notification level.
+    /// The Warning alert level.
     /// </summary>
-    public class NotificationLevelWarning : INotificationLevel
+    public class AlertLevelWarning : IAlertLevel
     {
         ///<inheritdoc/>
         public string LevelClass => "alert alert-warning alert-dismissable";
     }
 
     /// <summary>
-    /// The Success notification level.
+    /// The Success alert level.
     /// </summary>
-    public class NotificationLevelSuccess : INotificationLevel
+    public class AlertLevelSuccess : IAlertLevel
     {
         ///<inheritdoc/>
         public string LevelClass => "alert alert-success alert-dismissable";
     }
 
     /// <summary>
-    /// The Secondary notification level.
+    /// The Secondary alert level.
     /// </summary>
-    public class NotificationLevelSecondary : INotificationLevel
+    public class AlertLevelSecondary : IAlertLevel
     {
         ///<inheritdoc/>
         public string LevelClass => "alert alert-secondary alert-dismissable";
     }
 
     /// <summary>
-    /// The Primay notification level.
+    /// The Primay alert level.
     /// </summary>
-    public class NotificationLevelPrimay : INotificationLevel
+    public class AlertLevelPrimay : IAlertLevel
     {
         ///<inheritdoc/>
         public string LevelClass => "alert alert-primary alert-dismissable";
     }
 
     /// <summary>
-    /// The light notification level.
+    /// The light alert level.
     /// </summary>
-    public class NotificationLevelLight : INotificationLevel
+    public class AlertLevelLight : IAlertLevel
     {
         ///<inheritdoc/>
         public string LevelClass => "alert alert-light alert-dismissable";
     }
 
     /// <summary>
-    /// The Dark notification level.
+    /// The Dark alert level.
     /// </summary>
-    public class NotificationLevelDark : INotificationLevel
+    public class AlertLevelDark : IAlertLevel
     {
         ///<inheritdoc/>
         public string LevelClass => "alert alert-dark alert-dismissable";

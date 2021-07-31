@@ -65,7 +65,7 @@
       <PackagePath></PackagePath>
       <Pack>True</Pack>
     </None>
-    <None Include="wwwroot\component\css\notification.css" />
+    <None Include="wwwroot\component\css\alert.css" />
   </ItemGroup> 
 
   <ItemGroup>

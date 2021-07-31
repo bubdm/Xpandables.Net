@@ -20,27 +20,27 @@ using Microsoft.AspNetCore.Components;
 
 using System.ComponentModel.DataAnnotations;
 
-using Xpandables.Net.Notifications;
+using Xpandables.Net.Alerts;
 
 namespace Xpandables.Net.Components
 {
     /// <summary>
-    /// The notification item component.
+    /// The alert item component.
     /// </summary>
-    public partial class NotificationItem
+    public partial class AlertItem
     {
         [CascadingParameter]
-        private NotificationCollection NotificationComponents { get; set; } = default!;
+        private AlertCollection AlertComponents { get; set; } = default!;
 
         /// <summary>
-        /// Gets or sets the current notification.
+        /// Gets or sets the current alert.
         /// </summary>
         [Parameter, Required]
-        public Notification Notification { get; set; } = default!;
+        public Alert Alert { get; set; } = default!;
 
         /// <summary>
         /// Remove the alert.
         /// </summary>
-        protected void RemoveNotificationAsync() => NotificationComponents.RemoveNotificationAsync(Notification);
+        protected void RemoveAlertAsync() => AlertComponents.RemoveAlertAsync(Alert);
     }
 }

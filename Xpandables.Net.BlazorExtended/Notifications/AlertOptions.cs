@@ -15,15 +15,15 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.Alerts
 {
     /// <summary>
-    /// Defines the <see cref="INotificationDispatcher"/> options.
+    /// Defines the <see cref="IAlertDispatcher"/> options.
     /// </summary>
-    public sealed class NotificationOptions
+    public sealed class AlertOptions
     {
         /// <summary>
-        /// Gets or sets the notification delay. The default value is 5000sec.
+        /// Gets or sets the alert delay. The default value is 5000sec.
         /// </summary>
         public int Delay { get; set; } = 5000;
 
@@ -34,13 +34,13 @@ namespace Xpandables.Net.Notifications
         public bool FadeOut { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets the notification delay after fade out (milleseconds). The default value is 10000sec.
+        /// Gets or sets the alert delay after fade out (milleseconds). The default value is 10000sec.
         /// </summary>
         public int FadeOutDelay { get; set; } = 10000;
 
         /// <summary>
-        /// Gets the position of notification. The de fault value is <see cref="NotificationPosition.TopRight"/>.
+        /// Gets the position of alert. The de fault value is <see cref="AlertPosition.TopRight"/>.
         /// </summary>
-        public INotificationPosition Position { get; set; } = NotificationPosition.TopRight;
+        public IAlertPosition Position { get; set; } = AlertPosition.TopRight;
     }
 }

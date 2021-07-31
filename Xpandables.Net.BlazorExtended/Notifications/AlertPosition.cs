@@ -15,59 +15,59 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Notifications
+namespace Xpandables.Net.Alerts
 {
     /// <summary>
-    /// Defines the base interface for an notification position.
+    /// Defines the base interface for an alert position.
     /// </summary>
-    public interface INotificationPosition
+    public interface IAlertPosition
     {
         /// <summary>
-        /// Gets the css class for the notification.
+        /// Gets the css class for the alert.
         /// </summary>
         string PositionClass { get; }
     }
 
     /// <summary>
-    ///  Provides with the notification position.
+    ///  Provides with the alert position.
     /// </summary>
-    public readonly struct NotificationPosition
+    public readonly struct AlertPosition
     {
         /// <summary>
-        /// Gets the <see cref="NotificationPositionTopRight"/>.
+        /// Gets the <see cref="AlertPositionTopRight"/>.
         /// </summary>
-        public static INotificationPosition TopRight => new NotificationPositionTopRight();
+        public static IAlertPosition TopRight => new AlertPositionTopRight();
 
         /// <summary>
-        /// Gets the <see cref="NotificationPositionTopRight"/>.
+        /// Gets the <see cref="AlertPositionTopRight"/>.
         /// </summary>
-        public static INotificationPosition TopLeft => new NotificationPositionTopLeft();
+        public static IAlertPosition TopLeft => new AlertPositionTopLeft();
 
         /// <summary>
-        /// Gets the <see cref="NotificationPositionTopRight"/>.
+        /// Gets the <see cref="AlertPositionTopRight"/>.
         /// </summary>
-        public static INotificationPosition TopCenter => new NotificationPositionTopCenter();
+        public static IAlertPosition TopCenter => new AlertPositionTopCenter();
 
         /// <summary>
-        /// Gets the <see cref="NotificationPositionTopRight"/>.
+        /// Gets the <see cref="AlertPositionTopRight"/>.
         /// </summary>
-        public static INotificationPosition BottomRight => new NotificationPositionBottomRight();
+        public static IAlertPosition BottomRight => new AlertPositionBottomRight();
 
         /// <summary>
-        /// Gets the <see cref="NotificationPositionTopRight"/>.
+        /// Gets the <see cref="AlertPositionTopRight"/>.
         /// </summary>
-        public static INotificationPosition BottomLeft => new NotificationPositionBottomLeft();
+        public static IAlertPosition BottomLeft => new AlertPositionBottomLeft();
 
         /// <summary>
-        /// Gets the <see cref="NotificationPositionTopRight"/>.
+        /// Gets the <see cref="AlertPositionTopRight"/>.
         /// </summary>
-        public static INotificationPosition BottomCenter => new NotificationPositionBottomCenter();
+        public static IAlertPosition BottomCenter => new AlertPositionBottomCenter();
     }
 
     /// <summary>
     /// The top right position.
     /// </summary>
-    public struct NotificationPositionTopRight : INotificationPosition
+    public struct AlertPositionTopRight : IAlertPosition
     {
         ///<inheritdoc/>
         public string PositionClass => "position-topright";
@@ -76,7 +76,7 @@ namespace Xpandables.Net.Notifications
     /// <summary>
     /// The top left position.
     /// </summary>
-    public struct NotificationPositionTopLeft : INotificationPosition
+    public struct AlertPositionTopLeft : IAlertPosition
     {
         ///<inheritdoc/>
         public string PositionClass => "position-topleft";
@@ -85,7 +85,7 @@ namespace Xpandables.Net.Notifications
     /// <summary>
     /// The top center position.
     /// </summary>
-    public struct NotificationPositionTopCenter : INotificationPosition
+    public struct AlertPositionTopCenter : IAlertPosition
     {
         ///<inheritdoc/>
         public string PositionClass => "position-topcenter";
@@ -94,7 +94,7 @@ namespace Xpandables.Net.Notifications
     /// <summary>
     /// The bottom right position.
     /// </summary>
-    public struct NotificationPositionBottomRight : INotificationPosition
+    public struct AlertPositionBottomRight : IAlertPosition
     {
         ///<inheritdoc/>
         public string PositionClass => "position-bottomright";
@@ -103,7 +103,7 @@ namespace Xpandables.Net.Notifications
     /// <summary>
     /// The bottom left position.
     /// </summary>
-    public struct NotificationPositionBottomLeft : INotificationPosition
+    public struct AlertPositionBottomLeft : IAlertPosition
     {
         ///<inheritdoc/>
         public string PositionClass => "position-bottomleft";
@@ -112,7 +112,7 @@ namespace Xpandables.Net.Notifications
     /// <summary>
     /// The bottom center position.
     /// </summary>
-    public struct NotificationPositionBottomCenter : INotificationPosition
+    public struct AlertPositionBottomCenter : IAlertPosition
     {
         ///<inheritdoc/>
         public string PositionClass => "position-bottomcenter";

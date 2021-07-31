@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-using Xpandables.Net.Notifications;
+using Xpandables.Net.Alerts;
 using Xpandables.Net.Storage;
 
 namespace Xpandables.Net.DependencyInjection
@@ -30,16 +30,16 @@ namespace Xpandables.Net.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds The <see cref="INotificationDispatcher"/> to the collection of services.
+        /// Adds The <see cref="IAlertDispatcher"/> to the collection of services.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationDispatcher(this IXpandableServiceBuilder services)
+        public static IXpandableServiceBuilder AddXAlertDispatcher(this IXpandableServiceBuilder services)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddSingleton<INotificationDispatcher, NotificationDispatcher>();
+            services.Services.AddSingleton<IAlertDispatcher, AlertDispatcher>();
             return services;
         }
 
