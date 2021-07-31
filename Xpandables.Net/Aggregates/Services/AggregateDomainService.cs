@@ -42,7 +42,7 @@ namespace Xpandables.Net.Aggregates.Services
 
         private readonly IInstanceCreator _instanceCreator;
 
-        private readonly IDispatcher _dispatcher;
+        private readonly IDomainEventDispatcher _dispatcher;
 
         private readonly IAggregateUnitOfWork _aggregateUnitOfWork;
 
@@ -53,7 +53,7 @@ namespace Xpandables.Net.Aggregates.Services
         /// <param name="dispatcher">The domain event publisher</param>
         /// <param name="instanceCreator">The creator instance ot be used.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="instanceCreator"/> is null.</exception>
-        public AggregateDomainService(IAggregateUnitOfWork aggregateUnitOfWork, IDispatcher dispatcher, IInstanceCreator instanceCreator)
+        public AggregateDomainService(IAggregateUnitOfWork aggregateUnitOfWork, IDomainEventDispatcher dispatcher, IInstanceCreator instanceCreator)
         {
             _aggregateUnitOfWork = aggregateUnitOfWork ?? throw new ArgumentNullException(nameof(aggregateUnitOfWork));
             _instanceCreator = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));

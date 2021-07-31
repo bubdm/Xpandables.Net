@@ -24,20 +24,22 @@ using Xpandables.Net.Aggregates.Events;
 namespace Xpandables.Net.Dispatchers
 {
     /// <summary>
-    /// Defines a set of methods to automatically publish <see cref="IEvent"/> when targeting <see cref="IDomainEventHandler{TDomainEvent}"/> 
-    /// or <see cref="INotificationHandler{TNotificationEvent}"/>.
-    /// The implementation must be thread-safe when working in a multi-threaded environment.
+    /// The default implementation of <see cref="INotificationDispatcher"/>.
+    /// You can derive from this class in order to customize its behaviors.
     /// </summary>
-    public interface IPublisher
+    public class NotificationDispatcher : INotificationDispatcher
     {
+        private readonly IDispatcher _dispatcher;
+
         /// <summary>
-        /// Asynchronously publishes the specified event to all registered suscribers.
+        /// Constructs a new instance of <see cref="NotificationDispatcher"/>.
         /// </summary>
-        /// <param name="event">The event to publish.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        /// <exception cref="InvalidOperationException">Publishing the event failed. See inner exception.</exception>
-        Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
+        /// <param name="dispatcher">The dispather.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="dispatcher"/> is null.</exception>
+        public NotificationDispatcher(IDispatcher dispatcher) => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+
+        ///<inheritdoc/>
+        public virtual async Task PublishAsync(INotification @event, CancellationToken cancellationToken = default)
+            => await _dispatcher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
     }
 }
