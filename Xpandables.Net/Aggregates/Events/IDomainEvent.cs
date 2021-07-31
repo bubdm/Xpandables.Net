@@ -18,7 +18,7 @@
 namespace Xpandables.Net.Aggregates.Events
 {
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as a event domain for <see cref="IAggregate"/>.
+    /// Defines a marker interface to be used to mark an object to act as a event domain for <see cref="IAggregateRoot"/>.
     /// In case of exception in target event handlers, you can rollback the operation using transaction.
     /// </summary>   
     public interface IDomainEvent : IEvent

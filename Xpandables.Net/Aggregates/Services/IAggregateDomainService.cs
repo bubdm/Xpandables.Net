@@ -52,7 +52,7 @@ namespace Xpandables.Net.Aggregates.Services
         /// <returns>A task that represents an object of <typeparamref name="TAggregate"/> type if found or null.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
         Task<TAggregate?> ReadAsync<TAggregate>(IAggregateId aggregateId, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate;
+            where TAggregate : class, IAggregateRoot;
 
         /// <summary>
         /// Asynchronously returns the <typeparamref name="TAggregate"/> aggregate that matches the 
@@ -64,7 +64,7 @@ namespace Xpandables.Net.Aggregates.Services
         /// <returns>A task that represents an object of <typeparamref name="TAggregate"/> type if found or null.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
         Task<TAggregate?> ReadAsync<TAggregate>(StoreEntityCriteria<DomainStoreEntity> criteria, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate;
+            where TAggregate : class, IAggregateRoot;
 
         /// <summary>
         /// Asynchronously appends the specified aggregate to the event store.
@@ -77,7 +77,7 @@ namespace Xpandables.Net.Aggregates.Services
         /// <exception cref="ArgumentException">The <paramref name="aggregate"/> must 
         /// implement <see cref="IDomainEventSourcing"/> interface.</exception>
         Task AppendAsync<TAggregate>(TAggregate aggregate, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate;
+            where TAggregate : class, IAggregateRoot;
 
         /// <summary>
         /// Asynchronously returns the <typeparamref name="TAggregate"/> aggregate that matches the specified
@@ -89,7 +89,7 @@ namespace Xpandables.Net.Aggregates.Services
         /// <returns>A task that represents an object of <typeparamref name="TAggregate"/> type if found or null.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
         Task<TAggregate?> ReadFromSnapShot<TAggregate>(IAggregateId aggregateId, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate;
+            where TAggregate : class, IAggregateRoot;
 
         /// <summary>
         /// Asynchronously appends the specified aggregate as snapshot.
@@ -100,7 +100,7 @@ namespace Xpandables.Net.Aggregates.Services
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregate"/> is null.</exception>
         Task AppendAsSnapShotAsync<TAggregate>(TAggregate aggregate, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate;
+            where TAggregate : class, IAggregateRoot;
 
         /// <summary>
         /// Asynchronously returns a collection of events matching the criteria.

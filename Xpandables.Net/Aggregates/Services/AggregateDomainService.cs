@@ -62,7 +62,7 @@ namespace Xpandables.Net.Aggregates.Services
 
         ///<inheritdoc/>
         public virtual async Task AppendAsync<TAggregate>(TAggregate aggregate, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate
+            where TAggregate : class, IAggregateRoot
         {
             _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
 
@@ -107,7 +107,7 @@ namespace Xpandables.Net.Aggregates.Services
 
         ///<inheritdoc/>
         public virtual async Task<TAggregate?> ReadAsync<TAggregate>(IAggregateId aggregateId, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate
+            where TAggregate : class, IAggregateRoot
         {
             var criteria = new StoreEntityCriteria<DomainStoreEntity>
             {
@@ -119,7 +119,7 @@ namespace Xpandables.Net.Aggregates.Services
 
         ///<inheritdoc/>
         public virtual async Task<TAggregate?> ReadAsync<TAggregate>(StoreEntityCriteria<DomainStoreEntity> criteria, CancellationToken cancellationToken = default)
-         where TAggregate : class, IAggregate
+         where TAggregate : class, IAggregateRoot
         {
             var aggregate = CreateInstance<TAggregate>();
             if (aggregate is not IDomainEventSourcing aggregateEventSourcing)
@@ -136,7 +136,7 @@ namespace Xpandables.Net.Aggregates.Services
 
         ///<inheritdoc/>
         public virtual async Task<TAggregate?> ReadFromSnapShot<TAggregate>(IAggregateId aggregateId, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate
+            where TAggregate : class, IAggregateRoot
         {
             var aggregate = CreateInstance<TAggregate>();
 
@@ -162,7 +162,7 @@ namespace Xpandables.Net.Aggregates.Services
 
         ///<inheritdoc/>
         public virtual async Task AppendAsSnapShotAsync<TAggregate>(TAggregate aggregate, CancellationToken cancellationToken = default)
-            where TAggregate : class, IAggregate
+            where TAggregate : class, IAggregateRoot
         {
             _ = aggregate ?? throw new ArgumentNullException(nameof(aggregate));
 
@@ -220,7 +220,7 @@ namespace Xpandables.Net.Aggregates.Services
         /// <typeparam name="TAggregate">the type of the aggregate.</typeparam>
         /// <returns>An instance of <typeparamref name="TAggregate"/> type or throws exception.</returns>
         protected virtual TAggregate CreateInstance<TAggregate>()
-            where TAggregate : class, IAggregate
+            where TAggregate : class, IAggregateRoot
         {
             var instanceCreatorException = default(ExceptionDispatchInfo?);
             _instanceCreator.OnException = ex => instanceCreatorException = ex;

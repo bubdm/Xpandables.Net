@@ -18,11 +18,11 @@
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
-    /// Defines base properties for an aggregate that is identified by a property of <see cref="IAggregateId"/> type.
+    /// Defines base properties for an aggregate root that is identified by a property of <see cref="IAggregateId"/> type.
     /// Aggregate is a pattern in Domain-Driven Design.
     /// A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
     /// </summary>
-    public interface IAggregate : ICommandQueryEvent
+    public interface IAggregateRoot : ICommandQueryEvent
     {
         /// <summary>
         /// Gets the unique identifier of the aggregate.
@@ -47,7 +47,7 @@ namespace Xpandables.Net.Aggregates
     /// A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
     /// </summary>
     /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
-    public interface IAggregate<TAggregateId> : IAggregate
+    public interface IAggregateRoot<TAggregateId> : IAggregateRoot
         where TAggregateId : AggregateId
     {
         /// <summary>
@@ -55,6 +55,6 @@ namespace Xpandables.Net.Aggregates
         /// </summary>
         new TAggregateId AggregateId { get; }
 
-        AggregateId IAggregate.AggregateId => AggregateId;
+        AggregateId IAggregateRoot.AggregateId => AggregateId;
     }
 }
