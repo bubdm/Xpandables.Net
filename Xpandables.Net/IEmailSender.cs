@@ -18,8 +18,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using Xpandables.Net.Entities;
-
 namespace Xpandables.Net
 {
     /// <summary>
@@ -37,11 +35,11 @@ namespace Xpandables.Net
     }
 
     /// <summary>
-    /// Provides with a method to send emails.
+    /// Provides with a method to send emails using a specific type.
     /// </summary>
     /// <typeparam name="TMessage">The type of the email  message content.</typeparam>
     public interface IEmailSender<TMessage> : IEmailSender
-        where TMessage : class, IEntity
+        where TMessage : class
     {
         /// <summary>
         /// Asynchronously sends the specified email message via mail.

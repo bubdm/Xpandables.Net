@@ -58,7 +58,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXEmailSender<TMessage, TEmailSender>(
             this IXpandableServiceBuilder services)
-            where TMessage : class, IEntity
+            where TMessage : class
             where TEmailSender : class, IEmailSender<TMessage>
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));

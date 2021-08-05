@@ -8,9 +8,7 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\fewan\\.nuget\\packages\\": {},
-    "D:\\Applications\\VisualStudio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\fewan\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "6.0.0-preview.2",
@@ -21,15 +19,9 @@
       "packagesPath": "C:\\Users\\fewan\\.nuget\\packages\\",
       "outputPath": "D:\\GitHub\\Xpandables.Net\\Xpandables.Net\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "D:\\Applications\\VisualStudio\\Shared\\NuGetPackages",
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
-      ],
       "configFilePaths": [
         "C:\\Users\\fewan\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
