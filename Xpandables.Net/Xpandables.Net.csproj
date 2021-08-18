@@ -18,7 +18,7 @@
     <Version>6.0.0</Version>
     <AssemblyVersion>6.0.0</AssemblyVersion>
     <FileVersion>6.0.0</FileVersion>
-    <PackageVersion>6.0.0-preview.2</PackageVersion>
+    <PackageVersion>6.0.0-preview.3</PackageVersion>
     <PackageReleaseNotes>Add alert component</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand IAggregate{TAggregateId} IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>

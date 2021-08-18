@@ -87,9 +87,9 @@ namespace Xpandables.Net.Components
             AlertDispatcher.ComponentId = Id;
         }
 
-        private void Notifications_ListChanged(object sender, ListChangedEventArgs e)
+        private void Notifications_ListChanged(object? sender, ListChangedEventArgs e)
         {
-            if (e.ListChangedType == ListChangedType.ItemChanged && e.PropertyDescriptor.Name != nameof(Alert.IsKeepAfterRouteChange))
+            if (e.ListChangedType == ListChangedType.ItemChanged && e.PropertyDescriptor is not null && e.PropertyDescriptor.Name != nameof(Alert.IsKeepAfterRouteChange))
                 InvokeAsync(StateHasChanged);
 
             if (e.ListChangedType == ListChangedType.ItemDeleted)
