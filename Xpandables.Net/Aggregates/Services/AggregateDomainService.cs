@@ -74,6 +74,8 @@ namespace Xpandables.Net.Aggregates.Services
 
             foreach (var @event in aggregateEventSourcing.GetUncommittedEvents())
             {
+                await _dispatcher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
+
                 var eventTypeFullName = @event.GetType().AssemblyQualifiedName!;
                 var eventTypeName = @event.GetType().GetNameWithoutGenericArity();
 
@@ -81,7 +83,6 @@ namespace Xpandables.Net.Aggregates.Services
                 var entity = new DomainStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
 
                 await _aggregateUnitOfWork.Events.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
-                await _dispatcher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
             }
 
             if (aggregate is INotificationSourcing aggregateOutbox)
