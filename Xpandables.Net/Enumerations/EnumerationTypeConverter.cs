@@ -15,9 +15,11 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System;
 using System.ComponentModel;
 using System.ComponentModel.Design.Serialization;
 using System.Globalization;
+using System.Linq;
 
 namespace Xpandables.Net
 {

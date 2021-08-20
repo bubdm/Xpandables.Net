@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Platforms>AnyCPU</Platforms>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Francis-Black EWANE</Authors>
     <Product>Xpandables Net</Product>
-    <Description>A utility library in .Net6.0 to easily add patterns such as Command, Query, Dispatcher, Interception...</Description>
+    <Description>A utility library in .Net5.0 to easily add patterns such as Command, Query, Dispatcher, Interception...</Description>
     <Copyright>Copyright © 2020 Francis-Black EWANE</Copyright>
     <PackageProjectUrl>https://github.com/Francescolis/Xpandables.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Francescolis/Xpandables.Net</RepositoryUrl>
@@ -15,10 +15,10 @@
     <PackageIcon>Xpandables.Net.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>6.0.0</Version>
-    <AssemblyVersion>6.0.0</AssemblyVersion>
-    <FileVersion>6.0.0</FileVersion>
-    <PackageVersion>6.0.0-preview.3</PackageVersion>
+    <Version>5.7.0</Version>
+    <AssemblyVersion>5.7.0</AssemblyVersion>
+    <FileVersion>5.7.0</FileVersion>
+    <PackageVersion>5.7.0</PackageVersion>
     <PackageReleaseNotes>Add alert component</PackageReleaseNotes>    
     <PackageId>Xpandables.Net</PackageId>
     <PackageTags>ICommand IAggregate{TAggregateId} IDispatcher IQuery{TResult} Enumeration Interception ICommandHandler{TCommand} IQueryHandler{TQuery, TResult}</PackageTags>
@@ -29,7 +29,7 @@
     <RootNamespace>Xpandables.Net</RootNamespace>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <summary>A utility library in .Net6.0 to easily add patterns such as Command, Query, Dispatcher, Interception...</summary>
+    <summary>A utility library in .Net5.0 to easily add patterns such as Command, Query, Dispatcher, Interception...</summary>
     <language>en-GB</language>
     <NeutralLanguage>en-GB</NeutralLanguage>
     <SignAssembly>true</SignAssembly>
@@ -46,7 +46,7 @@
     <WarningsAsErrors />
     <NoWarn />
     <OutputPath>bin\AnyCPU\Debug\</OutputPath>
-    <DocumentationFile>bin\AnyCPU\Debug\net6.0\Xpandables.Net.xml</DocumentationFile>
+    <DocumentationFile>bin\AnyCPU\Debug\net5.0\Xpandables.Net.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
@@ -55,7 +55,7 @@
     <NoWarn />
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <OutputPath>bin\AnyCPU\Release\</OutputPath>
-    <DocumentationFile>bin\AnyCPU\Release\net6.0\Xpandables.Net.xml</DocumentationFile>
+    <DocumentationFile>bin\AnyCPU\Release\net5.0\Xpandables.Net.xml</DocumentationFile>
     <Optimize>false</Optimize>
   </PropertyGroup> 
 
