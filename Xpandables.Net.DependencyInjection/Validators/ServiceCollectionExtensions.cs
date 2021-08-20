@@ -34,6 +34,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds <see cref="IMetadataDescriptionProvider"/> to the services collection.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXMetadataDescriptionProvider(this IXpandableServiceBuilder services)
         {
@@ -44,13 +45,14 @@ namespace Xpandables.Net.DependencyInjection
 
 
         /// <summary>
-        /// Adds the <see cref="IValidator{TArgument}"/> to the services with transient life time.
+        /// Adds the <see cref="IValidator{TArgument}"/> to the services with scope life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types. If not set, the calling assembly will be used.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXValidators(this IXpandableServiceBuilder services, Assembly[] assemblies)
+        public static IXpandableServiceBuilder AddXValidators(this IXpandableServiceBuilder services, params Assembly[] assemblies)
         {
             if (services is null)
             {
@@ -59,12 +61,16 @@ namespace Xpandables.Net.DependencyInjection
 
             if (assemblies.Length == 0)
             {
-                throw new ArgumentNullException(nameof(assemblies));
+                assemblies = new[] { Assembly.GetCallingAssembly() };
             }
 
             var genericValidators = assemblies.SelectMany(ass => ass.GetExportedTypes())
-                .Where(type => !type.IsAbstract && !type.IsInterface && !type.IsGenericType && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidator<>)))
-                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidator<>)) })
+                .Where(type => !type.IsAbstract
+                               && !type.IsInterface
+                               && !type.IsGenericType
+                               && type.GetInterfaces().Any(inter => inter.IsGenericType && inter.GetGenericTypeDefinition() == typeof(IValidator<>)))
+                .Select(type => new { Type = type, Interfaces = type.GetInterfaces().Where(inter => inter.IsGenericType
+                                                                                                    && inter.GetGenericTypeDefinition() == typeof(IValidator<>)) })
                 .ToList();
 
             foreach (var validator in genericValidators)

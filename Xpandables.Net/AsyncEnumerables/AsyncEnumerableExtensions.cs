@@ -24,7 +24,7 @@ namespace Xpandables.Net
     /// Provides with helper methods for <see cref="IAsyncEnumerable{T}"/>.
     /// </summary>
     public static partial class AsyncEnumerableExtensions
-    {
+    { 
         /// <summary>
         /// Converts the collection to exposes an enumerator that provides asynchronous iteration over values of <typeparamref name="T"/> type.
         /// </summary>

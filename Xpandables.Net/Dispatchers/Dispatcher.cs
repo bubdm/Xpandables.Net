@@ -17,9 +17,12 @@
 ************************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xpandables.Net.Aggregates.Events;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Handlers;
 using Xpandables.Net.Queries;
@@ -53,7 +56,7 @@ namespace Xpandables.Net.Dispatchers
             IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
                 => isValid switch
                 {
-                    false => InternalErrorOperation<TResult>(key, errorMessage),
+                    false => InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
                     _ => OkOperation<TResult>()
                 };
 
@@ -75,7 +78,7 @@ namespace Xpandables.Net.Dispatchers
             IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
                 => isValid switch
                 {
-                    false => InternalErrorOperation<TResult>(key, errorMessage),
+                    false => InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
                     _ => OkOperation<TResult>()
                 };
 
@@ -97,7 +100,7 @@ namespace Xpandables.Net.Dispatchers
             IOperationResult CreateResult(bool isValid, string key, string errorMessage)
                 => isValid switch
                 {
-                    false => InternalErrorOperation(key, errorMessage),
+                    false => InternalErrorOperation(new OperationErrorCollection(key, errorMessage)),
                     _ => OkOperation()
                 };
 
@@ -119,7 +122,7 @@ namespace Xpandables.Net.Dispatchers
             IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
                 => isValid switch
                 {
-                    false => InternalErrorOperation<TResult>(key, errorMessage),
+                    false => InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
                     _ => OkOperation<TResult>()
                 };
 
@@ -129,6 +132,47 @@ namespace Xpandables.Net.Dispatchers
                 return canHandleResult;
 
             return await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
+        }
+
+        ///<inheritdoc/>
+        public virtual async Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default)
+        {
+            _ = @event ?? throw new ArgumentNullException(nameof(@event));
+
+            var handlers = GetEventHandlers(@event);
+            if (!handlers.Any()) return;
+
+            var tasks = handlers.Select(handler => handler.HandleAsync(@event, cancellationToken));
+
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+        }
+
+        private IEnumerable<IEventHandler> GetEventHandlers(IEvent @event)
+        {
+            var genericHandlerType = @event switch
+            {
+                INotification => typeof(INotificationHandler<>),
+                IDomainEvent => typeof(IDomainEventHandler<>),
+                _ => throw new NotSupportedException($"{@event.GetType().Name} is not supported.")
+            };
+
+            if (!genericHandlerType.TryMakeGenericType(out var typeHandler, out var typeException, @event.GetType()))
+            {
+                Trace.WriteLine(
+                    new InvalidOperationException("Building event Handler type failed.", typeException));
+
+                return Enumerable.Empty<IEventHandler>();
+            }
+
+            if (!_handlerAccessor.TryGetHandlers(typeHandler, out var foundHandlers, out var ex))
+            {
+                Trace.WriteLine(new InvalidOperationException($"Matching event handlers " +
+                    $"for {@event.GetType().Name} are missing.", ex));
+
+                return Enumerable.Empty<IEventHandler>();
+            }
+
+            return (IEnumerable<IEventHandler>)foundHandlers;
         }
 
         private static TReturn CanHandle<TReturn>(CreateResult<TReturn> createResult, ICanHandle handler, object argument)

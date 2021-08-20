@@ -17,7 +17,7 @@
 ************************************************************************************************************/
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Xpandables.Net.Entities
 {
@@ -28,24 +28,14 @@ namespace Xpandables.Net.Entities
     {
         /// <summary>
         /// Gets the domain object unique identity.
-        /// You can use the <see cref="KeyGenerator"/> for the value.
         /// </summary>
-        [Key]
-        public string Id { get; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; }
 
         /// <summary>
-        /// Returns the unique signature of string type for an instance.
-        /// This signature value will be used as identifier for the underlying instance.
+        /// Gets the domain object unique index.
         /// </summary>
-        /// <returns>A string value as identifier.</returns>
-        public virtual string KeyGenerator()
-        {
-            using var rnd = RandomNumberGenerator.Create();
-            var salt = new byte[32];
-            var guid = Guid.NewGuid().ToString();
-            rnd.GetBytes(salt);
+        public long Index { get; }
 
-            return $"{guid}{BitConverter.ToString(salt)}";
-        }
     }
 }

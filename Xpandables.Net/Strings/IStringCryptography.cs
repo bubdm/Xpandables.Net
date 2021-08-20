@@ -82,16 +82,16 @@ namespace Xpandables.Net
 
                 await using (var memoryStream = new MemoryStream())
                 {
-                    using var rijndaelManaged = new RijndaelManaged();
+                    using var aes = Aes.Create();
                     using var rfcKey = new Rfc2898DeriveBytes(keyBytes, saltBytes, 1000, HashAlgorithmName.SHA256);
 
-                    rijndaelManaged.Padding = PaddingMode.PKCS7;
-                    rijndaelManaged.KeySize = 256;
-                    rijndaelManaged.BlockSize = 128;
-                    rijndaelManaged.Key = rfcKey.GetBytes(rijndaelManaged.KeySize / 8);
-                    rijndaelManaged.IV = rfcKey.GetBytes(rijndaelManaged.BlockSize / 8);
-                    rijndaelManaged.Mode = CipherMode.CBC;
-                    await using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateEncryptor(), CryptoStreamMode.Write))
+                    aes.Padding = PaddingMode.PKCS7;
+                    aes.KeySize = 256;
+                    aes.BlockSize = 128;
+                    aes.Key = rfcKey.GetBytes(aes.KeySize / 8);
+                    aes.IV = rfcKey.GetBytes(aes.BlockSize / 8);
+                    aes.Mode = CipherMode.CBC;
+                    await using (var cryptoStream = new CryptoStream(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
                     {
                         await cryptoStream.WriteAsync(toBeEncrypted.AsMemory(0, toBeEncrypted.Length), CancellationToken.None).ConfigureAwait(false);
                     }
@@ -150,15 +150,15 @@ namespace Xpandables.Net
 
                 await using (var memoryStream = new MemoryStream())
                 {
-                    using var rijndaelManaged = new RijndaelManaged();
+                    using var aes = Aes.Create();
                     using var rfcKey = new Rfc2898DeriveBytes(keyBytes, saltBytes, 1000, HashAlgorithmName.SHA256);
 
-                    rijndaelManaged.KeySize = 256;
-                    rijndaelManaged.BlockSize = 128;
-                    rijndaelManaged.Key = rfcKey.GetBytes(rijndaelManaged.KeySize / 8);
-                    rijndaelManaged.IV = rfcKey.GetBytes(rijndaelManaged.BlockSize / 8);
-                    rijndaelManaged.Mode = CipherMode.CBC;
-                    await using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(), CryptoStreamMode.Write))
+                    aes.KeySize = 256;
+                    aes.BlockSize = 128;
+                    aes.Key = rfcKey.GetBytes(aes.KeySize / 8);
+                    aes.IV = rfcKey.GetBytes(aes.BlockSize / 8);
+                    aes.Mode = CipherMode.CBC;
+                    await using (var cryptoStream = new CryptoStream(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Write))
                     {
                         await cryptoStream.WriteAsync(toBeDecrypted.AsMemory(0, toBeDecrypted.Length), CancellationToken.None).ConfigureAwait(false);
                     }

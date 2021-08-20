@@ -15,11 +15,9 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.ComponentModel;
 using System.ComponentModel.Design.Serialization;
 using System.Globalization;
-using System.Linq;
 
 namespace Xpandables.Net
 {
@@ -46,7 +44,7 @@ namespace Xpandables.Net
         /// <param name="context">An <see cref="ITypeDescriptorContext"></see> that provides a format context.</param>
         /// <param name="sourceType">A <see cref="Type"></see> that represents the type you wish to convert from.</param>
         /// <returns>true if this converter can perform the conversion; otherwise, false.</returns>
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             _ = sourceType ?? throw new ArgumentNullException(nameof(sourceType));
             return sourceType == typeof(string) || sourceType == typeof(int) || sourceType.IsSubclassOf(typeof(EnumerationType)) || base.CanConvertFrom(context, sourceType);
@@ -57,7 +55,7 @@ namespace Xpandables.Net
         /// <param name="context">An <see cref="ITypeDescriptorContext"></see> that provides a format context.</param>
         /// <param name="destinationType">A <see cref="Type"></see> that represents the type you wish to convert to.</param>
         /// <returns>true if this converter can perform the conversion; otherwise, false.</returns>
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
         {
             _ = destinationType ?? throw new ArgumentNullException(nameof(destinationType));
             return destinationType == typeof(InstanceDescriptor)
@@ -76,7 +74,7 @@ namespace Xpandables.Net
         /// <exception cref="FormatException"><paramref name="value">value</paramref> is not a valid value
         /// for the target type.</exception>
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
-        public override object? ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             if (value is string valueString)
                 return EnumerationType.FromName(EnumType, valueString);
@@ -103,31 +101,15 @@ namespace Xpandables.Net
         /// <exception cref="ArgumentException"><paramref name="value">value</paramref> is not a valid value
         /// for the enumeration.</exception>
         /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
         {
-            if (!value.GetType().IsSubclassOf(typeof(EnumerationType)))
-            {
-                return value switch
-                {
-                    string valueString when destinationType == typeof(string) => (EnumerationType.FromName(EnumType,
-                        valueString) as EnumerationType)!.Name,
-                    int valueInt when destinationType == typeof(int) =>
-                        (EnumerationType.FromValue(EnumType, valueInt) as EnumerationType)!.Value,
-                    _ => base.ConvertTo(context, culture, value, destinationType)!
-                };
-            }
-
-            if (destinationType == typeof(string))
-                return ((EnumerationType)value).Name;
-
-            if (destinationType == typeof(int))
-                return ((EnumerationType)value).Value;
+            if (value is null) return default;
 
             return value switch
             {
-                string valueString when destinationType == typeof(string) => (EnumerationType.FromName(EnumType, valueString) as EnumerationType)!.Name,
-                int valueInt when destinationType == typeof(int) => (EnumerationType.FromValue(EnumType, valueInt) as EnumerationType)!.Value,
-                _ => base.ConvertTo(context, culture, value, destinationType)!
+                string valueString when destinationType == typeof(string) => (EnumerationType.FromName(EnumType, valueString) as EnumerationType)?.Name,
+                int valueInt when destinationType == typeof(int) => (EnumerationType.FromValue(EnumType, valueInt) as EnumerationType)?.Value,
+                _ => base.ConvertTo(context, culture, value, destinationType)
             };
         }
     }

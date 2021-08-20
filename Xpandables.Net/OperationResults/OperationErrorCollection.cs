@@ -87,7 +87,7 @@ namespace Xpandables.Net
         /// </summary>
         /// <param name="errors">the other collection of errors to merge to.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
-        public void Merge(IReadOnlyCollection<OperationError> errors)
+        public void Merge(OperationErrorCollection errors)
         {
             _ = errors ?? throw new ArgumentNullException(nameof(errors));
             foreach (var error in errors)
@@ -115,8 +115,18 @@ namespace Xpandables.Net
         /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
         public void Add(string key, Exception exception)
         {
-            var resultError = new OperationError(key, exception);
-            Add(resultError);
+            _ = key ?? throw new ArgumentNullException(nameof(key));
+            _ = exception ?? throw new ArgumentNullException(nameof(exception));
+
+            if (this[key] is { } error)
+            {
+                error.Exception = error.Exception is not null ? new AggregateException(error.Exception, exception) : exception;
+            }
+            else
+            {
+                var resultError = new OperationError(key, exception);
+                Add(resultError);
+            }
         }
 
         /// <summary>
@@ -128,8 +138,18 @@ namespace Xpandables.Net
         /// <exception cref="ArgumentNullException">The <paramref name="errorMessages"/> is null.</exception>
         public void Add(string key, params string[] errorMessages)
         {
-            var resultError = new OperationError(key, errorMessages);
-            Add(resultError);
+            _ = key ?? throw new ArgumentNullException(nameof(key));
+            _ = errorMessages ?? throw new ArgumentNullException(nameof(errorMessages));
+
+            if (this[key] is { } error)
+            {
+                error.ErrorMessages = error.ErrorMessages.Union(errorMessages).ToArray();
+            }
+            else
+            {
+                var resultError = new OperationError(key, errorMessages);
+                Add(resultError);
+            }
         }
 
         /// <summary>
@@ -143,6 +163,31 @@ namespace Xpandables.Net
         /// <param name="errors">The list or errors that is wrapped by the new collection.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
         public OperationErrorCollection(IList<OperationError> errors) : base(errors) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperationErrorCollection"/> class as a wrapper for the specified error.
+        /// </summary>
+        /// <param name="error">The list or errors that is wrapped by the new collection.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="error"/> is null.</exception>
+        public OperationErrorCollection(OperationError error) : this(new[] { error }) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperationErrorCollection"/> class as a wrapper for the specified error.
+        /// </summary>
+        /// <param name="key">The key of <see cref="OperationError"/> to add errors to.</param>
+        /// <param name="errorMessages">The associated error messages.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="errorMessages"/> is null.</exception>
+        public OperationErrorCollection(string key, params string[] errorMessages) : this(new OperationError(key, errorMessages)) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperationErrorCollection"/> class as a wrapper for the specified error.
+        /// </summary>
+        /// <param name="key">The key of <see cref="OperationError"/> to add errors to.</param>
+        /// <param name="exception">The associated exception.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
+        public OperationErrorCollection(string key, Exception exception) : this(new OperationError(key, exception)) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OperationErrorCollection"/> class as a wrapper for the specified array.

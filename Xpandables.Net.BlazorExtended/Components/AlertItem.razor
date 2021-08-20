@@ -1,0 +1,21 @@
+﻿<div>
+    <div class="alert-item @Alert.Level.LevelClass  @Alert.FadeClass" role="alert">
+        <div>
+            <h4 class="alert-heading d-inline-block"><i class="@Alert.Icon.IconClass"></i>&ensp;@Alert.Title</h4>
+
+            <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" @onclick="@(() => RemoveAlertAsync())">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @if (Alert.Header is not null)
+        {
+            <p>@Alert.Header</p>
+        }
+        <hr />
+        <p>@Alert.Message</p>
+        @if (Alert.Helper is not null)
+        {
+            <p>@Alert.Helper</p>
+        }
+    </div>
+</div>

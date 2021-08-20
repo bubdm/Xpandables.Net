@@ -39,11 +39,9 @@ namespace Xpandables.Net
     /// Defines a generic marker interface for state pattern that allows an object to alter 
     /// its behavior when its internal state changes for specific type.
     /// </summary>
-    /// <typeparam name="TState">The type of the state.</typeparam>
     /// <typeparam name="TStateContext">The type of the state context.</typeparam>
     /// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
-    public interface IState<TState, TStateContext> : IState
-        where TState : class, IState
+    public interface IState<TStateContext> : IState
         where TStateContext : class, IStateContext
     {
         /// <summary>

@@ -21,11 +21,9 @@ using System;
 using System.Linq;
 using System.Reflection;
 
+using Xpandables.Net.Aggregates.Events;
 using Xpandables.Net.Commands;
-using Xpandables.Net.Decorators;
-using Xpandables.Net.DomainEvents;
 using Xpandables.Net.Interception;
-using Xpandables.Net.NotificationEvents;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.DependencyInjection
@@ -41,6 +39,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <typeparam name="TInterface">The service type interface for which implementation will be wrapped by the given <typeparamref name="TInterceptor"/>.</typeparam>
         /// <typeparam name="TInterceptor">The interceptor type that will be used to wrap the original service type.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentException">The <typeparamref name="TInterface"/> must be an interface.</exception>
         public static IXpandableServiceBuilder AddXInterceptor<TInterface, TInterceptor>(this IXpandableServiceBuilder services)
@@ -66,6 +65,7 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="interfaceType">The interface service type that will be wrapped by the given <paramref name="interceptorType"/>.</param>
         /// <param name="interceptorType">The interceptor type that will be used to wrap the original service type
         /// and should implement <see cref="IInterceptor"/>.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="interfaceType"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="interceptorType"/> is null.</exception>
@@ -96,7 +96,8 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TInterceptor">The type of interceptor.</typeparam>
         /// <param name="services">The collection of services.</param>
-        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types. If not set, the calling assembly will be used.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
         public static IXpandableServiceBuilder AddXInterceptorHandlers<TInterceptor>(this IXpandableServiceBuilder services, params Assembly[] assemblies)
@@ -109,7 +110,8 @@ namespace Xpandables.Net.DependencyInjection
         /// <param name="services">The collection of services.</param>
         /// <param name="interceptorType">The interceptor type that will be used to wrap the original service type
         /// and should implement <see cref="IInterceptor"/>.</param>
-        /// <param name="assemblies">The assemblies to scan for implemented types.</param>
+        /// <param name="assemblies">The assemblies to scan for implemented types. If not set, the calling assembly will be used.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="assemblies"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="interceptorType"/> must implement <see cref="IInterceptor"/>.</exception>
@@ -121,11 +123,10 @@ namespace Xpandables.Net.DependencyInjection
             if (!typeof(IInterceptor).IsAssignableFrom(interceptorType))
                 throw new ArgumentException($"{nameof(interceptorType)} must implement {nameof(IInterceptor)}.");
 
-            if (assemblies.Length == 0) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Length == 0) assemblies = new[] { Assembly.GetCallingAssembly() };
 
             var genericHandlerInterfaceTypes = new[] { typeof(IQueryHandler<,>), typeof(ICommandHandler<>),
-                typeof(ICommandHandler<,>), typeof(IDomainEventHandler<,>), typeof(INotificationEventHandler<,>),
-                typeof(INotificationEventHandler<,,>)};
+                typeof(ICommandHandler<,>), typeof(IDomainEventHandler<>), typeof(INotificationHandler<>)};
 
             var handlers = assemblies
                 .SelectMany(ass => ass.GetExportedTypes())

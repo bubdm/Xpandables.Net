@@ -265,16 +265,33 @@ namespace Xpandables.Net.Http
                         (kvp, value) => new OperationError(kvp.Key, kvp.Value.ToArray()))
                         .ToArray();
 
-                    return new FailureOperationResult(response.StatusCode, operationErrors);
+                    return new FailureOperationResult(response.StatusCode, new OperationErrorCollection(operationErrors));
                 }
                 else
                 {
                     var errorMessage = exception.Message;
-                    return new FailureOperationResult(response.StatusCode, "error", errorMessage);
+                    return new FailureOperationResult(response.StatusCode, new OperationErrorCollection("error", errorMessage));
                 }
             }
 
             return new FailureOperationResult(response.StatusCode);
+        }
+
+        /// <summary>
+        /// Determines whether or not the errors collection contains an key named 'error' for exception.
+        /// if so, returns the error.
+        /// </summary>
+        /// <param name="operationResult">The target operation result to act on.</param>
+        /// <param name="error">the output error if found.</param>
+        /// <remarks>This method must be used  after a call to <see cref="GetBadOperationResult(HttpRestClientResponse, JsonSerializerOptions?)"/>.</remarks>
+        /// <returns><see langword="true"/> if collection contains key named 'error', otherwise <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="operationResult"/> is null.</exception>
+        public static bool TryGetError(this IOperationResult operationResult, [NotNullWhen(true)] out OperationError? error)
+        {
+            _ = operationResult ?? throw new ArgumentNullException(nameof(operationResult));
+
+            error = operationResult.Errors["error"];
+            return error is not null;
         }
     }
 }

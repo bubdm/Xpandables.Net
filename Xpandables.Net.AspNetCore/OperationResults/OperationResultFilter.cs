@@ -60,7 +60,7 @@ namespace Xpandables.Net
         protected virtual string GetValidationProblemDetail(HttpStatusCode statusCode)
              => statusCode switch
              {
-                 HttpStatusCode.InternalServerError => "Please refer to the errors for additional details",
+                 HttpStatusCode.InternalServerError or HttpStatusCode.Unauthorized => "Please refer to the errors for additional details",
                  _ => "Please refer to the errors property for additional details"
              };
 
@@ -73,9 +73,12 @@ namespace Xpandables.Net
         {
             if (context.RequestServices.GetService<IAuthenticationSchemeProvider>() is { } authenticationSchemeProvider)
             {
-                var schemes = await authenticationSchemeProvider.GetRequestHandlerSchemesAsync().ConfigureAwait(false);
+                var requestSchemes = await authenticationSchemeProvider.GetRequestHandlerSchemesAsync().ConfigureAwait(false);
+                var defaultSchemes = await authenticationSchemeProvider.GetDefaultAuthenticateSchemeAsync().ConfigureAwait(false);
+                var allSchemes = await authenticationSchemeProvider.GetAllSchemesAsync().ConfigureAwait(false);
 
-                if (schemes.FirstOrDefault() is { } scheme)
+                var scheme = requestSchemes.FirstOrDefault() ?? defaultSchemes ?? allSchemes.FirstOrDefault();
+                if (scheme is not null)
                     return scheme.Name;
             }
 
@@ -110,7 +113,7 @@ namespace Xpandables.Net
                     var controller = (ControllerBase)context.Controller;
                     if (controller is null)
                     {
-                        controller = context.HttpContext.RequestServices.GetRequiredService<ExceptionController>();
+                        controller = context.HttpContext.RequestServices.GetRequiredService<OperationResultExceptionController>();
                         controller.ControllerContext = new ControllerContext(
                             new ActionContext(
                                 context.HttpContext,
@@ -119,12 +122,14 @@ namespace Xpandables.Net
                     }
 
                     var statusCode = operationResult.StatusCode;
+                    var modelStateDictionary = operationResult.Errors.GetModelStateDictionary();
+
                     context.Result = controller.ValidationProblem(
                         GetValidationProblemDetail(statusCode),
                         context.HttpContext.Request.Path,
                         (int)statusCode,
                         GetValidationProblemTitle(statusCode),
-                        modelStateDictionary: operationResult.Errors.GetModelStateDictionary());
+                        modelStateDictionary: operationResult.Errors.Count > 0 ? modelStateDictionary : null);
 
                     if (operationResult.StatusCode == HttpStatusCode.Unauthorized)
                     {
@@ -140,6 +145,11 @@ namespace Xpandables.Net
                     {
                         await PictureExecuteAsync(context, valuePicture).ConfigureAwait(false);
                         return;
+                    }
+
+                    if (operationResult.LocationUrl is not null)
+                    {
+                        context.HttpContext.Response.Headers.Location = new Microsoft.Extensions.Primitives.StringValues(operationResult.LocationUrl);
                     }
                 }
             }

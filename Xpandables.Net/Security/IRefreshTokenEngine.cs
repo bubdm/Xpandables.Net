@@ -33,13 +33,13 @@ namespace Xpandables.Net.Security
         IOperationResult<RefreshToken> WriteToken();
 
         /// <summary>
-        /// Uses the source object to build a string refresh token. The default behavior returns a refresh token with non-usable values.
+        /// Uses the source object to build a string refresh token. The default behavior throws an <see cref="OperationResultException"/>.
         /// </summary>
         /// <param name="source">The source to be used.</param>
         /// <returns>An instance of refresh token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public virtual IOperationResult<RefreshToken> WriteToken(object source)
-            => new FailureOperationResult<RefreshToken>(new RefreshToken("REFRESH TOKEN VALUE", DateTime.UtcNow));
+            => throw new OperationResultException(new FailureOperationResult<RefreshToken>(new OperationErrorCollection("WriteToken", "Method not implemented")));
 
         /// <summary>
         /// Returns the collection of claims from the expired token.

@@ -32,6 +32,14 @@ namespace Xpandables.Net
         public static IDictionary<string, string[]> ToDictionary(this IReadOnlyCollection<OperationError> @this) => @this.ToDictionary(d => d.Key, d => d.ErrorMessages);
 
         /// <summary>
+        /// Converts the enumerable collection of errors to <see cref="OperationErrorCollection"/>.
+        /// </summary>
+        /// <param name="this">The source collection.</param>
+        /// <returns>A <see cref="OperationErrorCollection"/> that contains values of <see cref="OperationError"/> selected from the collection.</returns>
+        public static OperationErrorCollection ToOperationCollection(this IEnumerable<OperationError> @this)
+            => new(@this.ToArray());
+
+        /// <summary>
         /// Converts the value to a success operation result.
         /// </summary>
         /// <typeparam name="TValue">The type of the value.</typeparam>

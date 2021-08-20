@@ -51,7 +51,8 @@ namespace Xpandables.Net
     }
 
     /// <summary>
-    /// When placed on an interface or type, specifies the converter type to use.
+    /// When placed on an interface or type, specifies the converter type to use : 
+    /// <see langword="typeof(JsonInterfaceConverter{TInterface})"/> where TInterface is the decorated interface.
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false)]
     public class JsonInterfaceConverterAttribute : JsonConverterAttribute

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31423.177
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net", "Xpandables.Net\Xpandables.Net.csproj", "{F750226E-B0C4-4C2D-8B43-BDA4CAAEFC52}"
 EndProject
@@ -20,7 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Api", "Xpandables.Net.Api\Xpandables.Net.Api.csproj", "{D14502D9-67E0-466B-818F-8E228B581FD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.StateTest", "Xpandables.Net.StateTest\Xpandables.Net.StateTest.csproj", "{94705081-80CC-434C-AD25-6DC13C519F41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.StateTest", "Xpandables.Net.StateTest\Xpandables.Net.StateTest.csproj", "{94705081-80CC-434C-AD25-6DC13C519F41}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Web", "Xpandables.Net.Web\Xpandables.Net.Web.csproj", "{43E4AA9A-4DB0-4058-B3F6-3610A1C0B1DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +58,10 @@ Global
 		{94705081-80CC-434C-AD25-6DC13C519F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94705081-80CC-434C-AD25-6DC13C519F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94705081-80CC-434C-AD25-6DC13C519F41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43E4AA9A-4DB0-4058-B3F6-3610A1C0B1DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E4AA9A-4DB0-4058-B3F6-3610A1C0B1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E4AA9A-4DB0-4058-B3F6-3610A1C0B1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E4AA9A-4DB0-4058-B3F6-3610A1C0B1DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,32 +16,43 @@
  *
 ************************************************************************************************************/
 using System;
+using System.Text.Json.Serialization;
 
 using Xpandables.Net.Aggregates;
 
 namespace Xpandables.Net
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IEvent{TAggreagate}"/> interface. 
+    /// Represents a helper class that allows implementation of <see cref="IEvent"/> interface. 
     /// </summary>
-    /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
     [Serializable]
-    public abstract class Event<TAggregateId> : CommandQueryEvent, IEvent<TAggregateId>
-        where TAggregateId : notnull, AggregateId
+    public abstract class Event : CommandQueryEvent, IEvent
     {
         /// <summary>
-        /// Constructs a new instance of <see cref="Event{TAggregateId}"/> with its target aggregate id.
+        /// Constructs a new instance of <see cref="Event"/> with its target aggregate id.
         /// </summary>
         /// <param name="aggregateId">The target aggregate Id</param>
         /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
-        protected Event(TAggregateId aggregateId) : base() => AggregateId = aggregateId;
+        protected Event(AggregateId aggregateId) : base() => AggregateId = aggregateId;
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="Event"/> with its target aggregate id and event identifier.
+        /// </summary>
+        /// <param name="aggregateId">The target aggregate Id</param>
+        /// <param name="guid">The event identifier.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
+        [JsonConstructor]
+        protected Event(AggregateId aggregateId, Guid guid)
+            : base()
+        {
+            AggregateId = aggregateId ?? throw new ArgumentNullException(nameof(aggregateId));
+            Guid = guid;
+        }
 
         ///<inheritdoc/>
-        public TAggregateId AggregateId { get; protected set; }
+        public AggregateId AggregateId { get; protected set; }
 
         ///<inheritdoc/>
         public Guid Guid { get; } = Guid.NewGuid();
-
-        IAggregateId IEvent.AggregateId => AggregateId;
     }
 }

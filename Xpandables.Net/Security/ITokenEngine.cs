@@ -36,16 +36,16 @@ namespace Xpandables.Net.Security
         IOperationResult<AccessToken> WriteToken(IEnumerable<Claim> claims);
 
         /// <summary>
-        /// Uses the source object to build a string token. The default behavior returns an access token with non-usable values.
+        /// Uses the source object to build a string token. The default behavior throws an <see cref="OperationResultException"/>.
         /// </summary>
         /// <param name="source">The source to be used.</param>
         /// <returns>An instance of string token if OK.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
         public virtual IOperationResult<AccessToken> WriteToken(object source)
-            => new FailureOperationResult<AccessToken>(new AccessToken("TOKEN VALUE", "TOKEN TYPE", DateTime.UtcNow));
+            => throw new OperationResultException(new FailureOperationResult<AccessToken>(new OperationErrorCollection("WriteToken", "Method not implemented")));
 
         /// <summary>
-        /// Returns the collection of claims from the specified token.
+        /// Returns after validation the collection of claims from the specified token.
         /// </summary>
         /// <param name="token">The token string.</param>
         /// <returns>An collection of claims if OK.</returns>
@@ -53,7 +53,15 @@ namespace Xpandables.Net.Security
         IOperationResult<IEnumerable<Claim>> ReadToken(string token);
 
         /// <summary>
-        /// Returns the collection of claims from the specified token.
+        /// Returns without validation the collection of claims from the specified token.
+        /// </summary>
+        /// <param name="token">The token string.</param>
+        /// <returns>An collection of claims if OK.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
+        IOperationResult<IEnumerable<Claim>> ReadUnsafeToken(string token);
+
+        /// <summary>
+        /// Returns after validation the collection of claims from the specified token.
         /// </summary>
         /// <param name="token">The token string.</param>
         /// <returns>An collection of claims if OK.</returns>

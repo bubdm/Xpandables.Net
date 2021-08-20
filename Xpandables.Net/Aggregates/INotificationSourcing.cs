@@ -17,16 +17,14 @@
 ************************************************************************************************************/
 using System.Linq;
 
-using Xpandables.Net.NotificationEvents;
+using Xpandables.Net.Aggregates.Events;
 
 namespace Xpandables.Net.Aggregates
 {
     /// <summary>
     /// Out-box pattern interface (notification).
     /// </summary>
-    /// /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
-    internal interface INotificationSourcing<TAggregateId>
-        where TAggregateId : notnull, IAggregateId
+    internal interface INotificationSourcing
     {
         /// <summary>
         /// Marks all notifications as committed.
@@ -37,6 +35,6 @@ namespace Xpandables.Net.Aggregates
         /// Returns a collection of notifications.
         /// </summary>
         /// <returns>A list of notifications.</returns>
-        IOrderedEnumerable<INotificationEvent<TAggregateId>> GetNotifications();
+        IOrderedEnumerable<INotification> GetNotifications();
     }
 }

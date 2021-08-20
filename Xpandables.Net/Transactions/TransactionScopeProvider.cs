@@ -18,8 +18,6 @@
 using System;
 using System.Transactions;
 
-using Xpandables.Net.Decorators;
-
 namespace Xpandables.Net.Transactions
 {
     /// <summary>

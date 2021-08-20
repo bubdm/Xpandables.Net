@@ -19,13 +19,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
-using System.Linq;
 
-using Xpandables.Net.Aggregates;
-using Xpandables.Net.Database;
-using Xpandables.Net.EmailEvents;
-using Xpandables.Net.NotificationEvents;
-using Xpandables.Net.Services;
+using Xpandables.Net.Aggregates.Services;
+using Xpandables.Net.UnitOfWorks;
 
 namespace Xpandables.Net.DependencyInjection
 {
@@ -35,134 +31,41 @@ namespace Xpandables.Net.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the default <see cref="INotificationEventService"/> type implementation to the services with scope life time.
+        /// Adds the <typeparamref name="TDataContext"/> type class reference implementation derives from <see cref="Context"/> to the services with scoped life time.
         /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationEventService(this IXpandableServiceBuilder services)
-            => services.AddXNotificationEventService<NotificationEventService>();
-
-        /// <summary>
-        /// Adds the default <see cref="IEmailEventService"/> type implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEmailEventService(this IXpandableServiceBuilder services)
-            => services.AddXEmailEventService<EmailEventService>();
-
-        /// <summary>
-        /// Adds the default <see cref="IAggregateAccessor{TAggregateId, TAggregate}"/> implementation 
-        /// to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXAggregateAccessor(this IXpandableServiceBuilder services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped(typeof(IAggregateAccessor<,>), typeof(AggregateAccessor<,>));
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the default <see cref="IAggregateDataContext"/> implementation to the services with scoped life time.
-        /// </summary>
+        /// <typeparam name="TDataContext">The type of the data context that derives from <see cref="Context"/>.</typeparam>
         /// <param name="services">The collection of services.</param>
         /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
         /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
         /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXAggregateDataContext(
-            this IXpandableServiceBuilder services,
-            Action<DbContextOptionsBuilder>? optionsAction = null,
-            ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
-            ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.Services.AddDbContext<AggregateDataContext>(optionsAction, contextLifetime, optionsLifetime);
-            services.Services.AddScoped<IAggregateDataContext, AggregateDataContext>();
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the <typeparamref name="TAggregateDataContext"/> type as <see cref="IAggregateDataContext"/> 
-        /// implementation to the services with scoped life time.
-        /// </summary>
-        /// <typeparam name="TAggregateDataContext">The type of the event store data context.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
-        /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
-        /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXAggregateDataContext<TAggregateDataContext>(
-            this IXpandableServiceBuilder services,
-            Action<DbContextOptionsBuilder>? optionsAction = null,
-            ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
-            ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
-            where TAggregateDataContext : AggregateDataContext
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-
-            services.Services.AddDbContext<TAggregateDataContext>(optionsAction, contextLifetime, optionsLifetime);
-            services.Services.AddScoped<IAggregateDataContext, TAggregateDataContext>();
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the default <see cref="IEntityAccessor{TEntity}"/> implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEntityAccessor(this IXpandableServiceBuilder services)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            services.Services.AddScoped(typeof(IEntityAccessor<>), typeof(EntityAccessor<>));
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the default <see cref="IEntityAccessor{TEntity}"/> implementation to the services with scope life time.
-        /// </summary>
-        /// <param name="services">The collection of services.</param>
-        /// <param name="entityAccessorType">The generic entity accessor that implements <see cref="IEntityAccessor{TEntity}"/> interface.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="entityAccessorType"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEntityAccessor(this IXpandableServiceBuilder services, Type entityAccessorType)
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
-            _ = entityAccessorType ?? throw new ArgumentNullException(nameof(entityAccessorType));
-
-            if (!entityAccessorType.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityAccessor<>)))
-                throw new ArgumentException(
-                    $"the type '{nameof(entityAccessorType)}' must implement the '{typeof(IEntityAccessor<>).GetNameWithoutGenericArity()}' interface.");
-
-            services.Services.AddScoped(typeof(IEntityAccessor<>), entityAccessorType);
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the <typeparamref name="TDataContext"/> type class reference implementation as <see cref="IDataContext"/> to the services with scoped life time.
-        /// Caution : Do not use with multi-tenancy.
-        /// </summary>
-        /// <typeparam name="TDataContext">The type of the data context that implements <see cref="IDataContext"/>.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <param name="optionsAction">An optional action to configure the Microsoft.EntityFrameworkCore.DbContextOptions for the context.</param>
-        /// <param name="contextLifetime">The lifetime with which to register the context service in the container.</param>
-        /// <param name="optionsLifetime">The lifetime with which to register the DbContextOptions service in the container.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXDataContext<TDataContext>(
             this IXpandableServiceBuilder services,
             Action<DbContextOptionsBuilder>? optionsAction = null,
             ServiceLifetime contextLifetime = ServiceLifetime.Scoped,
             ServiceLifetime optionsLifetime = ServiceLifetime.Scoped)
-            where TDataContext : DbContext, IDataContext
+            where TDataContext : Context
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
             services.Services.AddDbContext<TDataContext>(optionsAction, contextLifetime, optionsLifetime);
-            services.Services.AddScoped<IDataContext, TDataContext>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <typeparamref name="TAggregateUnitOfWork"/> as <see cref="IAggregateUnitOfWork"/> to the services with scope life time.
+        /// </summary>
+        /// <typeparam name="TAggregateUnitOfWork">The type of aggregate unit of work.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXAggregateUnitOfWork<TAggregateUnitOfWork>(this IXpandableServiceBuilder services)
+            where TAggregateUnitOfWork : class, IAggregateUnitOfWork
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<IAggregateUnitOfWork, TAggregateUnitOfWork>();
             return services;
         }
     }

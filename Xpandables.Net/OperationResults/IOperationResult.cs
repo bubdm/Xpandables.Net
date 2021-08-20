@@ -16,7 +16,7 @@
  *
 ************************************************************************************************************/
 using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace Xpandables.Net
@@ -56,12 +56,18 @@ namespace Xpandables.Net
         /// <summary>
         /// Gets the collection of errors.
         /// </summary>
-        IReadOnlyCollection<OperationError> Errors { get; }
+        OperationErrorCollection Errors { get; }
 
         /// <summary>
         /// Gets the operation HTTP status code.
         /// </summary>
         HttpStatusCode StatusCode { get; }
+
+        /// <summary>
+        /// Gets the URL for location header.
+        /// Mostly used with <see cref="HttpStatusCode.Created"/>.
+        /// </summary>
+        string? LocationUrl { get; }
 
         /// <summary>
         /// Determines whether or not the <see cref="Value"/> has a content.
@@ -86,6 +92,13 @@ namespace Xpandables.Net
         /// </summary>
         /// <returns><see langword="true"/> if the operation is failed; otherwise, <see langword="true"/>.</returns>
         public sealed bool IsFailed => Status == OperationStatus.Failure;
+
+        /// <summary>
+        /// Defines the <see cref="LocationUrl"/> value.
+        /// </summary>
+        /// <param name="url">The location URL value.</param>
+        /// <returns>The current instance.</returns>
+        IOperationResult AddLocationUrl([Url] string url);
 
         /// <summary>
         /// Converts the current success operation instance to the generic success operation with the specified value.
@@ -126,6 +139,13 @@ namespace Xpandables.Net
         bool IOperationResult.IsGeneric => IsGeneric;
 
         /// <summary>
+        /// Defines the <see cref="IOperationResult.LocationUrl"/> value.
+        /// </summary>
+        /// <param name="url">The location URL value.</param>
+        /// <returns>The current instance.</returns>
+        new IOperationResult<TValue> AddLocationUrl([Url] string url);
+
+        /// <summary>
         /// Converts the current generic success operation instance to the non-generic success operation.
         /// </summary>
         /// <returns>A new instance of <see cref="SuccessOperationResult"/> with the status code of the current success operation.</returns>
@@ -143,24 +163,19 @@ namespace Xpandables.Net
     /// </summary>
     public abstract class OperationResult : IOperationResult
     {
-        /// <summary>
-        /// Gets a object that qualifies or contains information about an operation return.
-        /// </summary>
+        ///<inheritdoc/>
         public object Value { get; }
 
-        /// <summary>
-        /// Gets the operation result status.
-        /// </summary>
+        /// <inheritdoc/>
+        public string? LocationUrl { get; protected set; }
+
+        /// <inheritdoc/>
         public OperationStatus Status { get; }
 
-        /// <summary>
-        /// Gets the collection of errors.
-        /// </summary>
-        public IReadOnlyCollection<OperationError> Errors { get; }
+        /// <inheritdoc/>
+        public OperationErrorCollection Errors { get; } = new();
 
-        /// <summary>
-        /// Gets the operation HTTP status code.
-        /// </summary>
+        /// <inheritdoc/>
         public HttpStatusCode StatusCode { get; }
 
         /// <summary>
@@ -171,8 +186,16 @@ namespace Xpandables.Net
         /// <param name="errors">The errors collection.</param>
         /// <param name="value">The value of the result.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
-        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, IReadOnlyCollection<OperationError> errors, object value)
+        protected OperationResult(OperationStatus status, HttpStatusCode statusCode, OperationErrorCollection errors, object value)
             => (Status, StatusCode, Value, Errors) = (status, statusCode, value, errors ?? throw new ArgumentNullException(nameof(errors)));
+
+        /// <inheritdoc/>
+        public IOperationResult AddLocationUrl([Url] string url)
+        {
+            _ = url ?? throw new ArgumentNullException(nameof(url));
+            LocationUrl = url;
+            return this;
+        }
     }
 
     /// <summary>
@@ -186,6 +209,14 @@ namespace Xpandables.Net
         /// </summary>
         public new TValue Value { get; }
 
+        /// <inheritdoc/>
+        public new IOperationResult<TValue> AddLocationUrl([Url] string url)
+        {
+            _ = url ?? throw new ArgumentNullException(nameof(url));
+            LocationUrl = url;
+            return this;
+        }
+
         /// <summary>
         /// Initializes a new instance of <see cref="OperationResult{TValue}"/> with the specified status, the specified error collection and the target value.
         /// </summary>
@@ -194,7 +225,7 @@ namespace Xpandables.Net
         /// <param name="errors">The errors collection.</param>
         /// <param name="value">The value of the specific type.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="errors"/> is null.</exception>
-        protected OperationResult(OperationStatus state, HttpStatusCode statusCode, IReadOnlyCollection<OperationError> errors, TValue value)
+        protected OperationResult(OperationStatus state, HttpStatusCode statusCode, OperationErrorCollection errors, TValue value)
             : base(state, statusCode, errors, value!) => Value = value;
     }
 }

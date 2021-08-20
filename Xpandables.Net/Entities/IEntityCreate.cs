@@ -33,5 +33,10 @@ namespace Xpandables.Net.Entities
         /// Sets the creation date time for underlying instance.
         /// </summary>
         void Created();
+
+        /// <summary>
+        /// Determines whether the instance is a new one.
+        /// </summary>
+        bool IsNew { get; }
     }
 }

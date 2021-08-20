@@ -45,9 +45,8 @@ namespace Xpandables.Net
     /// its behavior when its internal state changes.
     /// </summary>
     /// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
-    public interface IStateContext<TState, TStateContext> : IStateContext
-        where TState : class, IState<TState, TStateContext>
-        where TStateContext : class, IStateContext
+    public interface IStateContext<TState> : IStateContext
+        where TState : class, IState
     {
         /// <summary>
         /// Gets the active state in the context.

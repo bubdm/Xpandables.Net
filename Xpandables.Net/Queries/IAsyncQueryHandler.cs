@@ -38,6 +38,7 @@ namespace Xpandables.Net.Queries
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
         /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
+        /// <remarks>You can throw an <see cref="OperationResultException"/> on error.</remarks>
         IAsyncEnumerable<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
     }
 }

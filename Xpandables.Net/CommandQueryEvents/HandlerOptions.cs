@@ -15,8 +15,9 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using Xpandables.Net.Decorators;
+using Xpandables.Net.Correlations;
 using Xpandables.Net.Transactions;
+using Xpandables.Net.Validators;
 using Xpandables.Net.Visitors;
 
 namespace Xpandables.Net.DependencyInjection
@@ -37,20 +38,9 @@ namespace Xpandables.Net.DependencyInjection
         public HandlerOptions UseVisitDecorator() => this.With(cq => cq.IsVisitorEnabled = true);
 
         /// <summary>
-        /// Enables persistence behavior to commands that are decorated with the <see cref="IPersistenceDecorator"/> .
+        /// Enables persistence behavior to commands/events that are decorated with the <see cref="IPersistenceDecorator"/> .
         /// </summary>
         public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
-
-        /// <summary>
-        /// Enables aggregate persistence behavior to commands that are decorated with the <see cref="IAggregatePersistenceDecorator"/>.
-        /// </summary>
-        public HandlerOptions UseAggregatePersistenceDecorator() => this.With(cq => cq.IsAggregatePersistenceEnabled = true);
-
-        /// <summary>
-        /// Enables logging behavior to commands/queries that are decorated with the <see cref="ILoggingDecorator"/> .
-        /// You must provide with an implementation of <see cref="ICommandQueryLogger"/>.
-        /// </summary>
-        public HandlerOptions UseCommandQueryLoggerDecorator() => this.With(cq => cq.IsLoggingEnabled = true);
 
         /// <summary>
         /// Enables correlation behavior to operations that are decorated with the <see cref="ICorrelationDecorator"/>.
@@ -67,8 +57,6 @@ namespace Xpandables.Net.DependencyInjection
         internal bool IsVisitorEnabled { get; private set; }
         internal bool IsTransactionEnabled { get; private set; }
         internal bool IsPersistenceEnabled { get; private set; }
-        internal bool IsAggregatePersistenceEnabled { get; private set; }
         internal bool IsCorrelationEnabled { get; private set; }
-        internal bool IsLoggingEnabled { get; private set; }
     }
 }

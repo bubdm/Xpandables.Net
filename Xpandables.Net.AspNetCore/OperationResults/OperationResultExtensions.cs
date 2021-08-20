@@ -39,7 +39,7 @@ namespace Xpandables.Net
         /// <exception cref="ArgumentException">The <paramref name="modelState"/> is valid.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="modelState"/> is null.</exception>
         public static IOperationResult GetBadOperationResult(
-            this ModelStateDictionary modelState, 
+            this ModelStateDictionary modelState,
             HttpStatusCode statusCode = HttpStatusCode.BadRequest)
         {
             _ = modelState ?? throw new ArgumentNullException(nameof(modelState));
@@ -49,9 +49,10 @@ namespace Xpandables.Net
                 statusCode,
                 modelState
                     .Keys
-                    .Where(key => modelState[key].Errors.Count > 0)
-                    .Select(key => new OperationError(key, modelState[key].Errors.Select(error => error.ErrorMessage).ToArray()))
-                    .ToList());
+                    .Where(key => modelState[key]!.Errors.Count > 0)
+                    .Select(key => new OperationError(key, modelState[key]!.Errors.Select(error => error.ErrorMessage).ToArray()))
+                    .ToList()
+                    .ToOperationCollection());
         }
 
         /// <summary>

@@ -69,7 +69,7 @@ namespace Xpandables.Net.Razors.ModelBinders
                 var attributeValue = RequestAttributeModelReader[new TAttribute()](bindingContext.HttpContext, modelName);
                 if (attributeValue is not null)
                 {
-                    var model = JsonSerializer.Deserialize(attributeValue, modelType, new(JsonSerializerDefaults.Web));
+                    var model = JsonSerializer.Deserialize(attributeValue, modelType, new JsonSerializerOptions(JsonSerializerDefaults.Web));
                     bindingContext.Result = ModelBindingResult.Success(model);
                 }
             }
@@ -83,7 +83,7 @@ namespace Xpandables.Net.Razors.ModelBinders
                 }
 
                 var dictString = JsonSerializer.Serialize(dictionary);
-                var model = JsonSerializer.Deserialize(dictString, modelType, new(JsonSerializerDefaults.Web));
+                var model = JsonSerializer.Deserialize(dictString, modelType, new JsonSerializerOptions(JsonSerializerDefaults.Web));
                 bindingContext.Result = ModelBindingResult.Success(model);
             }
 

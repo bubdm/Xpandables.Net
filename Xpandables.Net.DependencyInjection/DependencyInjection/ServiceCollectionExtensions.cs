@@ -47,7 +47,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Allows registration of Xpandable Services.
         /// </summary>
         /// <param name="services">The service collection to act on.</param>
-        /// <returns>The Xpandable service builder.</returns>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXpandableServices(this IServiceCollection services)
             => new XpandableServiceBuilder(services);
@@ -56,7 +56,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the <see cref="IServiceScopeFactory{TService}"/> needed to resolve the <see cref="IServiceScope{TService}"/> to the services with singleton life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> instance.</returns>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXServiceScopeFactory(this IXpandableServiceBuilder services)
         {
@@ -70,6 +70,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the default <see cref="IInstanceCreator"/> implementation to the services with singleton life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXInstanceCreator(this IXpandableServiceBuilder services)
         {
@@ -84,6 +85,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TInstanceCreator">The type of instance creator.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXInstanceCreator<TInstanceCreator>(this IXpandableServiceBuilder services)
             where TInstanceCreator : class, IInstanceCreator
@@ -98,6 +100,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the <see cref="IStringCryptography"/> and <see cref="IStringGenerator"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXStringGeneratorCryptography(this IXpandableServiceBuilder services)
         {
@@ -112,6 +115,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the <see cref="IStringGenerator"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXStringGenerator(this IXpandableServiceBuilder services)
         {
@@ -126,6 +130,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TStringGenerator">The string generator type.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXStringGenerator<TStringGenerator>(this IXpandableServiceBuilder services)
             where TStringGenerator : class, IStringGenerator
@@ -140,6 +145,7 @@ namespace Xpandables.Net.DependencyInjection
         /// Adds the <see cref="IStringCryptography"/> to the services with transient life time.
         /// </summary>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXStringCryptography(this IXpandableServiceBuilder services)
         {
@@ -154,6 +160,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TStringCryptography">The string cryptography type.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXStringCryptography<TStringCryptography>(this IXpandableServiceBuilder services)
             where TStringCryptography : class, IStringCryptography
@@ -169,6 +176,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <typeparam name="TTokenEngine">The token engine type.</typeparam>
         /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         public static IXpandableServiceBuilder AddXTokenEngine<TTokenEngine>(this IXpandableServiceBuilder services)
             where TTokenEngine : class, ITokenEngine
@@ -184,6 +192,7 @@ namespace Xpandables.Net.DependencyInjection
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <param name="tokenEngineType">The type that implements <see cref="ITokenEngine"/>.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="tokenEngineType"/> is null.</exception>
         public static IXpandableServiceBuilder AddXTokenEngine(this IXpandableServiceBuilder services, Type tokenEngineType)
@@ -192,6 +201,22 @@ namespace Xpandables.Net.DependencyInjection
             _ = tokenEngineType ?? throw new ArgumentNullException(nameof(tokenEngineType));
 
             services.Services.AddScoped(typeof(ITokenEngine), tokenEngineType);
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the specified refresh token engine to the services collection with scoped life time..
+        /// </summary>
+        /// <typeparam name="TRefreshTokenEngine">The refresh token engine type.</typeparam>
+        /// <param name="services">The collection of services.</param>
+        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+        public static IXpandableServiceBuilder AddXRefreshTokenEngine<TRefreshTokenEngine>(this IXpandableServiceBuilder services)
+            where TRefreshTokenEngine : class, IRefreshTokenEngine
+        {
+            _ = services ?? throw new ArgumentNullException(nameof(services));
+
+            services.Services.AddScoped<IRefreshTokenEngine, TRefreshTokenEngine>();
             return services;
         }
     }

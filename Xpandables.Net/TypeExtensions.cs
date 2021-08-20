@@ -25,6 +25,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Xpandables.Net
@@ -691,5 +692,27 @@ namespace Xpandables.Net
         /// <param name="exception">The exception to be re-thrown.</param>
         /// <exception cref="ArgumentException">The <paramref name="exception"/> is null.</exception>
         public static void ReThrow(this Exception exception) => ExceptionDispatchInfo.Capture(exception).Throw();
+
+        /// <summary>
+        /// Returns the <see cref="JsonDocument"/> from the specified document.
+        /// </summary>
+        /// <typeparam name="TDocument">The type of document.</typeparam>
+        /// <param name="document">An instance of document to parse.</param>
+        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
+        /// <param name="documentOptions">Options to control the reader behavior during parsing.</param>
+        /// <returns>An instance of <see cref="JsonDocument"/>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="document"/> is null.</exception>
+        /// <exception cref="NotSupportedException">There is no compatible <see cref="System.Text.Json.Serialization.JsonConverter"/> for <typeparamref name="TDocument"/> 
+        /// or its serializable members.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="documentOptions"/> contains unsupported options.</exception>
+        public static JsonDocument GetJsonDocument<TDocument>(this TDocument document, JsonSerializerOptions? serializerOptions = default, JsonDocumentOptions documentOptions = default)
+            where TDocument : notnull
+        {
+            _ = document ?? throw new ArgumentNullException(nameof(document));
+
+            var eventString = JsonSerializer.Serialize(document, document.GetType(), serializerOptions);
+            return JsonDocument.Parse(eventString, documentOptions);
+        }
+
     }
 }

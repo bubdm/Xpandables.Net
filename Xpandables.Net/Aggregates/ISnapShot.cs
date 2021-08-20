@@ -20,9 +20,8 @@ namespace Xpandables.Net.Aggregates
     /// <summary>
     /// Defines properties of a snapshot for an aggregate.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
-    public interface ISnapShot<TAggregateId> : IEvent<TAggregateId>
-        where TAggregateId : notnull, IAggregateId
+    [JsonInterfaceConverter(typeof(JsonInterfaceConverter<ISnapShot>))]
+    public interface ISnapShot : IEvent
     {
         /// <summary>
         /// Gets the memento linked to the aggregate.

@@ -36,7 +36,7 @@ namespace Xpandables.Net.Services
         public virtual async Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default)
         {
             if (IsRunning)
-                return new FailureOperationResult("status", $"{nameof(TBackgroundService)} is already up.");
+                return new FailureOperationResult(new OperationErrorCollection("status", $"{nameof(TBackgroundService)} is already up."));
 
             IsRunning = true;
             await StartAsync(cancellationToken).ConfigureAwait(false);
@@ -47,7 +47,7 @@ namespace Xpandables.Net.Services
         public virtual async Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default)
         {
             if (!IsRunning)
-                return new FailureOperationResult("status", $"{nameof(TBackgroundService)} is already down.");
+                return new FailureOperationResult(new OperationErrorCollection("status", $"{nameof(TBackgroundService)} is already down."));
 
             await StopAsync(cancellationToken).ConfigureAwait(false);
             IsRunning = false;

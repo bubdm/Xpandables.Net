@@ -27,7 +27,7 @@ namespace Xpandables.Net.Correlations
     /// <summary>
     /// Default implementation of <see cref="ICorrelationContext"/>.
     /// </summary>
-    public sealed class CorrelationContext : ICorrelationContext
+    public class CorrelationContext : ICorrelationContext
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
