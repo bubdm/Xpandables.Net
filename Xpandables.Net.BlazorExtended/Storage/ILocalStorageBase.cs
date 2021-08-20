@@ -63,7 +63,8 @@ namespace Xpandables.Net.Storage
         /// <returns>A task that represents an asynchronous operation.</returns>
         /// <remarks>The value will be serialized before writing.</remarks>
         /// <exception cref="ArgumentNullException">The <paramref name="key"/> is null.</exception>
-        ValueTask WriteAsync<TValue>(string key, TValue value, CancellationToken cancellationToken = default);
+        ValueTask WriteAsync<TValue>(string key, TValue value, CancellationToken cancellationToken = default)
+            where TValue : notnull;
 
         /// <summary>
         /// Removes the value matching the specified key.

@@ -32,7 +32,7 @@ namespace Xpandables.Net.Storage
         /// <param name="key">A string value of the name in the storage to act with.</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an int result.</returns>
-        ValueTask<int> CountAsync(string command,  string key, CancellationToken cancellationToken = default);
+        ValueTask<int> CountAsync(string command, string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Determines whether of not the <paramref name="key"/> exists in local storage.
@@ -60,7 +60,8 @@ namespace Xpandables.Net.Storage
         /// <param name="value">The string value to be written</param>
         /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents an asynchronous operation.</returns>
-        ValueTask WriteAsync<TValue>(string command, string key, TValue value, CancellationToken cancellationToken = default);
+        ValueTask WriteAsync<TValue>(string command, string key, TValue value, CancellationToken cancellationToken = default)
+            where TValue : notnull;
 
         /// <summary>
         /// Removes the value matching the specified key from the storage.

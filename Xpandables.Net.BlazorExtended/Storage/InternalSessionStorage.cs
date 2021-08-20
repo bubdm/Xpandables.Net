@@ -65,6 +65,7 @@ namespace Xpandables.Net.Storage
         }
 
         public async ValueTask WriteAsync<TValue>(string key, TValue value, CancellationToken cancellationToken = default)
+            where TValue : notnull
         {
             _ = key ?? throw new ArgumentNullException(nameof(key));
 

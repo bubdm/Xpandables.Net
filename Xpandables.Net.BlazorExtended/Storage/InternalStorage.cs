@@ -48,6 +48,7 @@ namespace Xpandables.Net.Storage
             => _jSRuntime.InvokeVoidAsync(command, cancellationToken, key);
 
         public ValueTask WriteAsync<TValue>(string command, string key, TValue value, CancellationToken cancellationToken = default)
+            where TValue : notnull
             => _jSRuntime.InvokeVoidAsync(command, cancellationToken, key, value);
     }
 }

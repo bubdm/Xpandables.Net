@@ -15,6 +15,7 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -149,7 +150,7 @@ namespace Xpandables.Net
 
                     if (operationResult.LocationUrl is not null)
                     {
-                        context.HttpContext.Response.Headers.Location = new Microsoft.Extensions.Primitives.StringValues(operationResult.LocationUrl);
+                        context.HttpContext.Response.GetTypedHeaders().Location = new System.Uri(operationResult.LocationUrl);
                     }
                 }
             }
