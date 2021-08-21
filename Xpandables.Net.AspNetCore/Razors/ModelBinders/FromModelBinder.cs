@@ -19,75 +19,70 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net.Razors.ModelBinders
+namespace Xpandables.Net.Razors.ModelBinders;
+
+/// <summary>
+/// Abstract class that holds the <see cref="FromModelBinder"/> dictionary.
+/// </summary>
+public abstract class FromModelBinder
 {
     /// <summary>
-    /// Abstract class that holds the <see cref="FromModelBinder"/> dictionary.
+    /// Creates an instance of <see cref="FromModelBinder"/>.
     /// </summary>
-    public abstract class FromModelBinder
-    {
-        /// <summary>
-        /// Creates an instance of <see cref="FromModelBinder"/>.
-        /// </summary>
-        protected FromModelBinder() { }
+    protected FromModelBinder() { }
 
-        /// <summary>
-        /// Contains a dictionary with key as attribute and the request path values matching the specified name.
-        /// </summary>
-        protected static IDictionary<Attribute, Func<HttpContext, string, string?>> RequestAttributeModelReader => new Dictionary<Attribute, Func<HttpContext, string, string?>>
+    /// <summary>
+    /// Contains a dictionary with key as attribute and the request path values matching the specified name.
+    /// </summary>
+    protected static IDictionary<Attribute, Func<HttpContext, string, string?>> RequestAttributeModelReader => new Dictionary<Attribute, Func<HttpContext, string, string?>>
         {
             { new FromHeaderAttribute(), (context, name) => context.Request.Headers[name].FirstOrDefault() },
             { new FromRouteAttribute(), (context, name) => context.Request.RouteValues[name]?.ToString() },
             { new FromQueryAttribute(), (context, name) => context.Request.Query[CultureInfo.CurrentCulture.TextInfo.ToTitleCase( name)].FirstOrDefault() }
         };
-    }
+}
 
-    /// <summary>
-    /// Model binder used to bind models from the specified attributes : <see cref="FromHeaderAttribute"/>, <see cref="FromRouteAttribute"/> and <see cref="FromQueryAttribute"/>.
-    /// </summary>
-    /// <typeparam name="TAttribute">the type of the attribute.</typeparam>
-    public sealed class FromModelBinder<TAttribute> : FromModelBinder, IModelBinder
-         where TAttribute : Attribute, new()
+/// <summary>
+/// Model binder used to bind models from the specified attributes : <see cref="FromHeaderAttribute"/>, <see cref="FromRouteAttribute"/> and <see cref="FromQueryAttribute"/>.
+/// </summary>
+/// <typeparam name="TAttribute">the type of the attribute.</typeparam>
+public sealed class FromModelBinder<TAttribute> : FromModelBinder, IModelBinder
+     where TAttribute : Attribute, new()
+{
+    ///<inheritdoc/>
+    public Task BindModelAsync(ModelBindingContext bindingContext)
     {
-        ///<inheritdoc/>
-        public Task BindModelAsync(ModelBindingContext bindingContext)
+        _ = bindingContext ?? throw new ArgumentNullException(nameof(bindingContext));
+
+        var modelName = bindingContext.ModelMetadata.BinderModelName;
+        var modelType = bindingContext.ModelMetadata.ModelType;
+
+        if (modelName is not null)
         {
-            _ = bindingContext ?? throw new ArgumentNullException(nameof(bindingContext));
-
-            var modelName = bindingContext.ModelMetadata.BinderModelName;
-            var modelType = bindingContext.ModelMetadata.ModelType;
-
-            if (modelName is not null)
+            var attributeValue = RequestAttributeModelReader[new TAttribute()](bindingContext.HttpContext, modelName);
+            if (attributeValue is not null)
             {
-                var attributeValue = RequestAttributeModelReader[new TAttribute()](bindingContext.HttpContext, modelName);
-                if (attributeValue is not null)
-                {
-                    var model = JsonSerializer.Deserialize(attributeValue, modelType, new JsonSerializerOptions(JsonSerializerDefaults.Web));
-                    bindingContext.Result = ModelBindingResult.Success(model);
-                }
-            }
-            else
-            {
-                var dictionary = new Dictionary<string, string?>();
-                foreach (var property in modelType.GetProperties().Where(p => p.GetSetMethod()?.IsPublic == true))
-                {
-                    var attributeValue = RequestAttributeModelReader[new TAttribute()](bindingContext.HttpContext, property.Name);
-                    dictionary.Add(property.Name, attributeValue);
-                }
-
-                var dictString = JsonSerializer.Serialize(dictionary);
-                var model = JsonSerializer.Deserialize(dictString, modelType, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+                var model = JsonSerializer.Deserialize(attributeValue, modelType, new JsonSerializerOptions(JsonSerializerDefaults.Web));
                 bindingContext.Result = ModelBindingResult.Success(model);
             }
-
-            return Task.CompletedTask;
         }
+        else
+        {
+            var dictionary = new Dictionary<string, string?>();
+            foreach (var property in modelType.GetProperties().Where(p => p.GetSetMethod()?.IsPublic == true))
+            {
+                var attributeValue = RequestAttributeModelReader[new TAttribute()](bindingContext.HttpContext, property.Name);
+                dictionary.Add(property.Name, attributeValue);
+            }
+
+            var dictString = JsonSerializer.Serialize(dictionary);
+            var model = JsonSerializer.Deserialize(dictString, modelType, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+            bindingContext.Result = ModelBindingResult.Success(model);
+        }
+
+        return Task.CompletedTask;
     }
 }

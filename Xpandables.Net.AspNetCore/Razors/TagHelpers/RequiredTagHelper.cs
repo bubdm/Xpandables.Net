@@ -19,41 +19,39 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
-namespace Xpandables.Net.Razors.TagHelpers
+namespace Xpandables.Net.Razors.TagHelpers;
+
+/// <summary>
+/// A helper that uses the <see cref="RequiredAttribute"/> to add required tag.
+/// </summary>
+[HtmlTargetElement("input", Attributes = "asp-for")]
+public class RequiredTagHelper : TagHelper
 {
-    /// <summary>
-    /// A helper that uses the <see cref="RequiredAttribute"/> to add required tag.
-    /// </summary>
-    [HtmlTargetElement("input", Attributes = "asp-for")]
-    public class RequiredTagHelper : TagHelper
+    ///<inheritdoc/>
+    public override int Order
     {
-        ///<inheritdoc/>
-        public override int Order
+        get { return int.MaxValue; }
+    }
+
+    /// <summary>
+    /// Gets or sets the asp-for expression.
+    /// </summary>
+    [HtmlAttributeName("asp-for")]
+    public ModelExpression For { get; set; } = default!;
+
+    ///<inheritdoc/>
+    public override void Process(TagHelperContext context, TagHelperOutput output)
+    {
+        base.Process(context, output);
+
+        if (context.AllAttributes["required"] == null)
         {
-            get { return int.MaxValue; }
-        }
-
-        /// <summary>
-        /// Gets or sets the asp-for expression.
-        /// </summary>
-        [HtmlAttributeName("asp-for")]
-        public ModelExpression For { get; set; } = default!;
-
-        ///<inheritdoc/>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            base.Process(context, output);
-
-            if (context.AllAttributes["required"] == null)
+            var isRequired = For.ModelExplorer.Metadata.ValidatorMetadata.Any(a => a is RequiredAttribute);
+            if (isRequired)
             {
-                var isRequired = For.ModelExplorer.Metadata.ValidatorMetadata.Any(a => a is RequiredAttribute);
-                if (isRequired)
-                {
-                    var requiredAttribute = new TagHelperAttribute("required");
-                    output.Attributes.Add(requiredAttribute);
-                }
+                var requiredAttribute = new TagHelperAttribute("required");
+                output.Attributes.Add(requiredAttribute);
             }
         }
     }

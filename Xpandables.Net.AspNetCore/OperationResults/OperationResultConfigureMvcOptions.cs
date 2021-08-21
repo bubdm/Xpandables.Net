@@ -18,32 +18,29 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-using System;
-
 using Xpandables.Net.Razors.ModelBinders;
 
-namespace Xpandables.Net
-{
-    /// <summary>
-    /// Adds <see cref="IOperationResult"/>/<see cref="IOperationResult{TValue}"/> filters to <see cref="MvcOptions"/>.
-    /// You can derive from this class to customize its behavior.
-    /// </summary>
-    /// <remarks>Adds filters <see cref="OperationResultValidationFilterAttribute"/>, <see cref="OperationResultFilter"/>
-    /// and model binder provider <see cref="FromModelBinderProvider"/>.
-    /// </remarks>
-    public class OperationResultConfigureMvcOptions : IConfigureOptions<MvcOptions>
-    {
-        ///<inheritdoc/>
-        public virtual void Configure(MvcOptions options)
-        {
-            _ = options ?? throw new ArgumentNullException(nameof(options));
+namespace Xpandables.Net;
 
-            options.EnableEndpointRouting = false;
-            options.RespectBrowserAcceptHeader = true;
-            options.ReturnHttpNotAcceptable = true;
-            options.Filters.Add<OperationResultValidationFilterAttribute>();
-            options.Filters.Add<OperationResultFilter>(int.MinValue);
-            options.ModelBinderProviders.Insert(0, new FromModelBinderProvider());
-        }
+/// <summary>
+/// Adds <see cref="IOperationResult"/>/<see cref="IOperationResult{TValue}"/> filters to <see cref="MvcOptions"/>.
+/// You can derive from this class to customize its behavior.
+/// </summary>
+/// <remarks>Adds filters <see cref="OperationResultValidationFilterAttribute"/>, <see cref="OperationResultFilter"/>
+/// and model binder provider <see cref="FromModelBinderProvider"/>.
+/// </remarks>
+public class OperationResultConfigureMvcOptions : IConfigureOptions<MvcOptions>
+{
+    ///<inheritdoc/>
+    public virtual void Configure(MvcOptions options)
+    {
+        _ = options ?? throw new ArgumentNullException(nameof(options));
+
+        options.EnableEndpointRouting = false;
+        options.RespectBrowserAcceptHeader = true;
+        options.ReturnHttpNotAcceptable = true;
+        options.Filters.Add<OperationResultValidationFilterAttribute>();
+        options.Filters.Add<OperationResultFilter>(int.MinValue);
+        options.ModelBinderProviders.Insert(0, new FromModelBinderProvider());
     }
 }

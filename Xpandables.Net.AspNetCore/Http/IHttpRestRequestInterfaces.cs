@@ -19,21 +19,20 @@
 
 // Waiting for migration to System.Text.Json
 
-namespace Xpandables.Net.Http
-{
-    /// <summary>    
-    /// Provides with a method to retrieve the request patch content for <see cref="BodyFormat.String"/> type.
-    /// You may use <see cref="ContentType.JsonPatch"/> as content type.
-    /// </summary>
-    /// <typeparam name="TDocument">The target object type.</typeparam>
-    internal interface IPatchRequest<TDocument> : IHttpClientPatchRequest
-        where TDocument : class, new()
-    {
-        ///// <summary>
-        ///// Returns the patch document.
-        ///// </summary>
-        //new JsonPatchDocument<TDocument> GetPatchDocument();
+namespace Xpandables.Net.Http;
 
-        object IHttpClientPatchRequest.GetPatchDocument() => GetPatchDocument();
-    }
+/// <summary>    
+/// Provides with a method to retrieve the request patch content for <see cref="BodyFormat.String"/> type.
+/// You may use <see cref="ContentType.JsonPatch"/> as content type.
+/// </summary>
+/// <typeparam name="TDocument">The target object type.</typeparam>
+internal interface IPatchRequest<TDocument> : IHttpClientPatchRequest
+    where TDocument : class, new()
+{
+    ///// <summary>
+    ///// Returns the patch document.
+    ///// </summary>
+    //new JsonPatchDocument<TDocument> GetPatchDocument();
+
+    object IHttpClientPatchRequest.GetPatchDocument() => GetPatchDocument();
 }

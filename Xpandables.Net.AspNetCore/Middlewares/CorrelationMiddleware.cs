@@ -15,33 +15,29 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Http;
 
 using Xpandables.Net.Correlations;
 
-namespace Xpandables.Net.Middlewares
+namespace Xpandables.Net.Middlewares;
+
+/// <summary>
+/// Adds the correlation header id to the current request.
+/// You can derive from this class to customize its behaviors.
+/// </summary>
+public class CorrelationMiddleware : IMiddleware
 {
     /// <summary>
-    /// Adds the correlation header id to the current request.
-    /// You can derive from this class to customize its behaviors.
+    /// Request handling method after setting the correlation header id.
     /// </summary>
-    public class CorrelationMiddleware : IMiddleware
+    /// <param name="context">The <see cref="HttpContext" /> for the current request.</param>
+    /// <param name="next">The delegate representing the remaining middleware in the request pipeline.</param>
+    /// <returns>A <see cref="Task" /> that represents the execution of this middleware.</returns>
+    public virtual Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        /// <summary>
-        /// Request handling method after setting the correlation header id.
-        /// </summary>
-        /// <param name="context">The <see cref="HttpContext" /> for the current request.</param>
-        /// <param name="next">The delegate representing the remaining middleware in the request pipeline.</param>
-        /// <returns>A <see cref="Task" /> that represents the execution of this middleware.</returns>
-        public virtual Task InvokeAsync(HttpContext context, RequestDelegate next)
-        {
-            var correlationId = Guid.NewGuid().ToString();
-            context.Request.Headers.Add(ICorrelationContext.DefaultHeader, correlationId);
+        var correlationId = Guid.NewGuid().ToString();
+        context.Request.Headers.Add(ICorrelationContext.DefaultHeader, correlationId);
 
-            return next(context);
-        }
+        return next(context);
     }
 }

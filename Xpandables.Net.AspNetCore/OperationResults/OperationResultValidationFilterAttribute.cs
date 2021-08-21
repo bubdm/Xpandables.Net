@@ -18,21 +18,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Applies validation filter attribute and returns a bad request result if necessary using <see cref="IOperationResult"/>.
+/// </summary>
+public sealed class OperationResultValidationFilterAttribute : ActionFilterAttribute
 {
-    /// <summary>
-    /// Applies validation filter attribute and returns a bad request result if necessary using <see cref="IOperationResult"/>.
-    /// </summary>
-    public sealed class OperationResultValidationFilterAttribute : ActionFilterAttribute
+    /// <inheritdoc />
+    public override void OnActionExecuting(ActionExecutingContext context)
     {
-        /// <inheritdoc />
-        public override void OnActionExecuting(ActionExecutingContext context)
+        if (!context.ModelState.IsValid)
         {
-            if (!context.ModelState.IsValid)
-            {
-                var operationResult = context.ModelState.GetBadOperationResult();
-                context.Result = new BadRequestObjectResult(operationResult);
-            }
+            var operationResult = context.ModelState.GetBadOperationResult();
+            context.Result = new BadRequestObjectResult(operationResult);
         }
     }
 }

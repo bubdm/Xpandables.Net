@@ -17,18 +17,17 @@
 ************************************************************************************************************/
 using Microsoft.AspNetCore.Routing;
 
-namespace Xpandables.Net.Razors.ModelBinders
+namespace Xpandables.Net.Razors.ModelBinders;
+
+/// <summary>
+/// The <see cref="string"/> parameter transformer.
+/// </summary>
+public sealed class StringConstraintMap : IOutboundParameterTransformer
 {
     /// <summary>
-    /// The <see cref="string"/> parameter transformer.
+    /// Transforms the specified route value to a string for inclusion in a URI.
     /// </summary>
-    public sealed class StringConstraintMap : IOutboundParameterTransformer
-    {
-        /// <summary>
-        /// Transforms the specified route value to a string for inclusion in a URI.
-        /// </summary>
-        /// <param name="value">The route value to transform.</param>
-        /// <returns>The transformed value.</returns>
-        public string? TransformOutbound(object? value) => value as string;
-    }
+    /// <param name="value">The route value to transform.</param>
+    /// <returns>The transformed value.</returns>
+    public string? TransformOutbound(object? value) => value as string;
 }

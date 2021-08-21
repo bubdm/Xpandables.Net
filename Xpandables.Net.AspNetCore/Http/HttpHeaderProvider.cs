@@ -17,46 +17,42 @@
 ************************************************************************************************************/
 using Microsoft.AspNetCore.Http;
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 
-namespace Xpandables.Net.Http
+namespace Xpandables.Net.Http;
+
+/// <summary>
+/// Default implementation of <see cref="IHttpHeaderProvider"/> that uses an <see cref="IHeaderDictionary"/> to access header information.
+/// </summary>
+public class HttpHeaderProvider : IHttpHeaderProvider
 {
+    private readonly IHeaderDictionary _headerDictionary;
+
     /// <summary>
-    /// Default implementation of <see cref="IHttpHeaderProvider"/> that uses an <see cref="IHeaderDictionary"/> to access header information.
+    /// Initializes a new instance of <see cref="HttpHeaderProvider"/>.
     /// </summary>
-    public class HttpHeaderProvider : IHttpHeaderProvider
+    /// <param name="headerDictionary">The header dictionary to act on.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="headerDictionary"/> is null.</exception>
+    public HttpHeaderProvider(IHeaderDictionary headerDictionary)
     {
-        private readonly IHeaderDictionary _headerDictionary;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="HttpHeaderProvider"/>.
-        /// </summary>
-        /// <param name="headerDictionary">The header dictionary to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="headerDictionary"/> is null.</exception>
-        public HttpHeaderProvider(IHeaderDictionary headerDictionary)
-        {
-            _headerDictionary = headerDictionary ?? throw new ArgumentNullException(nameof(headerDictionary));
-        }
-
-        /// <summary>
-        /// Gets all HTTP header values from the current HTTP context.
-        /// If not found, returns an empty dictionary.
-        /// </summary>
-        public IReadOnlyDictionary<string, IReadOnlyList<string>> ReadValues()
-        {
-            if (_headerDictionary.Count > 0)
-                return _headerDictionary.ToDictionary(d => d.Key, d => (IReadOnlyList<string>)d.Value);
-
-            return ImmutableDictionary<string, IReadOnlyList<string>>.Empty;
-        }
-
-        ///<inheritdoc/>
-        public void WriteValue(string key, string value) => _headerDictionary.Add(key, value);
-
-        ///<inheritdoc/>
-        public void WriteValues(string key, string[] values) => _headerDictionary.Add(key, values);
+        _headerDictionary = headerDictionary ?? throw new ArgumentNullException(nameof(headerDictionary));
     }
+
+    /// <summary>
+    /// Gets all HTTP header values from the current HTTP context.
+    /// If not found, returns an empty dictionary.
+    /// </summary>
+    public IReadOnlyDictionary<string, IReadOnlyList<string>> ReadValues()
+    {
+        if (_headerDictionary.Count > 0)
+            return _headerDictionary.ToDictionary(d => d.Key, d => (IReadOnlyList<string>)d.Value);
+
+        return ImmutableDictionary<string, IReadOnlyList<string>>.Empty;
+    }
+
+    ///<inheritdoc/>
+    public void WriteValue(string key, string value) => _headerDictionary.Add(key, value);
+
+    ///<inheritdoc/>
+    public void WriteValues(string key, string[] values) => _headerDictionary.Add(key, values);
 }

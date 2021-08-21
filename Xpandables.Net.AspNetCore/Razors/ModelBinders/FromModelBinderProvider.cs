@@ -20,40 +20,36 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
-using System;
-using System.Linq;
+namespace Xpandables.Net.Razors.ModelBinders;
 
-namespace Xpandables.Net.Razors.ModelBinders
+/// <summary>
+/// Provides with the binder matching one of the attributes : <see cref="FromHeaderAttribute"/>, <see cref="FromQueryAttribute"/> or <see cref="FromRouteAttribute"/>.
+/// </summary>
+public sealed class FromModelBinderProvider : IModelBinderProvider
 {
     /// <summary>
-    /// Provides with the binder matching one of the attributes : <see cref="FromHeaderAttribute"/>, <see cref="FromQueryAttribute"/> or <see cref="FromRouteAttribute"/>.
+    /// Creates a <see cref="IModelBinder" /> based on <see cref="ModelBinderProviderContext" />.
     /// </summary>
-    public sealed class FromModelBinderProvider : IModelBinderProvider
+    /// <param name="context">The <see cref="ModelBinderProviderContext" />.</param>
+    /// <returns>An <see cref="IModelBinder" />.</returns>
+    public IModelBinder? GetBinder(ModelBinderProviderContext context)
     {
-        /// <summary>
-        /// Creates a <see cref="IModelBinder" /> based on <see cref="ModelBinderProviderContext" />.
-        /// </summary>
-        /// <param name="context">The <see cref="ModelBinderProviderContext" />.</param>
-        /// <returns>An <see cref="IModelBinder" />.</returns>
-        public IModelBinder? GetBinder(ModelBinderProviderContext context)
+        _ = context ?? throw new ArgumentNullException(nameof(context));
+
+        if (context.Metadata.IsComplexType)
         {
-            _ = context ?? throw new ArgumentNullException(nameof(context));
+            var metaData = (DefaultModelMetadata)context.Metadata;
 
-            if (context.Metadata.IsComplexType)
-            {
-                var metaData = (DefaultModelMetadata)context.Metadata;
+            if (metaData.Attributes.Attributes.OfType<FromHeaderAttribute>().FirstOrDefault() is not null)
+                return new BinderTypeModelBinder(typeof(FromModelBinder<FromHeaderAttribute>));
 
-                if (metaData.Attributes.Attributes.OfType<FromHeaderAttribute>().FirstOrDefault() is not null)
-                    return new BinderTypeModelBinder(typeof(FromModelBinder<FromHeaderAttribute>));
+            if (metaData.Attributes.Attributes.OfType<FromQueryAttribute>().FirstOrDefault() is not null)
+                return new BinderTypeModelBinder(typeof(FromModelBinder<FromQueryAttribute>));
 
-                if (metaData.Attributes.Attributes.OfType<FromQueryAttribute>().FirstOrDefault() is not null)
-                    return new BinderTypeModelBinder(typeof(FromModelBinder<FromQueryAttribute>));
-
-                if (metaData.Attributes.Attributes.OfType<FromRouteAttribute>().FirstOrDefault() is not null)
-                    return new BinderTypeModelBinder(typeof(FromModelBinder<FromRouteAttribute>));
-            }
-
-            return default;
+            if (metaData.Attributes.Attributes.OfType<FromRouteAttribute>().FirstOrDefault() is not null)
+                return new BinderTypeModelBinder(typeof(FromModelBinder<FromRouteAttribute>));
         }
+
+        return default;
     }
 }

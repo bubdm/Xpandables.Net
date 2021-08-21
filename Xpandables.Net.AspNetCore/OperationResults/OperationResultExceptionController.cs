@@ -18,15 +18,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// A controller used to return error happened before the target controller get called.
+/// </summary>
+[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+[ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
+[ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ValidationProblemDetails))]
+public class OperationResultExceptionController : Controller
 {
-    /// <summary>
-    /// A controller used to return error happened before the target controller get called.
-    /// </summary>
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ValidationProblemDetails))]
-    public class OperationResultExceptionController : Controller
-    {
-    }
 }

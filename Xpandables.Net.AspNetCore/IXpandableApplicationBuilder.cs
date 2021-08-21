@@ -17,37 +17,34 @@
 ************************************************************************************************************/
 using Microsoft.AspNetCore.Builder;
 
-using System;
+namespace Xpandables.Net.DependencyInjection;
 
-namespace Xpandables.Net.DependencyInjection
+/// <summary>
+/// Allows integration of Xpandables.Net to the services collection.
+/// </summary>
+public interface IXpandableApplicationBuilder
 {
-    /// <summary>
-    /// Allows integration of Xpandables.Net to the services collection.
-    /// </summary>
-    public interface IXpandableApplicationBuilder
-    {
-        internal IApplicationBuilder Builder { get; }
-
-        /// <summary>
-        /// Returns the <see cref="IApplicationBuilder"/>.
-        /// </summary>
-        /// <returns>The current instance of <see cref="IApplicationBuilder"/>.</returns>
-        public IApplicationBuilder Build() => Builder;
-    }
+    internal IApplicationBuilder Builder { get; }
 
     /// <summary>
-    /// The <see cref="IXpandableServiceBuilder"/> implementation
+    /// Returns the <see cref="IApplicationBuilder"/>.
     /// </summary>
-    internal sealed class XpandableApplicationBuilder : IXpandableApplicationBuilder
-    {
-        private readonly IApplicationBuilder _builder;
-        IApplicationBuilder IXpandableApplicationBuilder.Builder => _builder;
+    /// <returns>The current instance of <see cref="IApplicationBuilder"/>.</returns>
+    public IApplicationBuilder Build() => Builder;
+}
 
-        /// <summary>
-        /// Constructs a new instance of <see cref="XpandableApplicationBuilder"/>.
-        /// </summary>
-        /// <param name="builder">The service collection</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
-        public XpandableApplicationBuilder(IApplicationBuilder builder) => _builder = builder ?? throw new ArgumentNullException(nameof(builder));
-    }
+/// <summary>
+/// The <see cref="IXpandableServiceBuilder"/> implementation
+/// </summary>
+internal sealed class XpandableApplicationBuilder : IXpandableApplicationBuilder
+{
+    private readonly IApplicationBuilder _builder;
+    IApplicationBuilder IXpandableApplicationBuilder.Builder => _builder;
+
+    /// <summary>
+    /// Constructs a new instance of <see cref="XpandableApplicationBuilder"/>.
+    /// </summary>
+    /// <param name="builder">The service collection</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="builder"/> is null.</exception>
+    public XpandableApplicationBuilder(IApplicationBuilder builder) => _builder = builder ?? throw new ArgumentNullException(nameof(builder));
 }

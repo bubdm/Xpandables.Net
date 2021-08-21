@@ -15,10 +15,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,133 +24,134 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 
-namespace Xpandables.Net
+using System.Net;
+
+namespace Xpandables.Net;
+
+/// <summary>
+/// When used as a filter, it'll automatically convert bad operation result to MVC Core <see cref="ValidationProblemDetails"/>.
+/// And exceptionally, convert <see cref="IOperationResult{TValue}"/> where TValue is <see cref="ValuePicture"/> to <see cref="FileContentResult"/>.
+/// You can derive from this class to customize its behaviors.
+/// </summary>
+public class OperationResultFilter : IAsyncAlwaysRunResultFilter
 {
     /// <summary>
-    /// When used as a filter, it'll automatically convert bad operation result to MVC Core <see cref="ValidationProblemDetails"/>.
-    /// And exceptionally, convert <see cref="IOperationResult{TValue}"/> where TValue is <see cref="ValuePicture"/> to <see cref="FileContentResult"/>.
-    /// You can derive from this class to customize its behaviors.
+    /// Returns the title value for the <see cref="ValidationProblemDetails"/>.
     /// </summary>
-    public class OperationResultFilter : IAsyncAlwaysRunResultFilter
+    /// <param name="statusCode">The status code to act with.</param>
+    /// <returns>A string value.</returns>
+    protected virtual string GetValidationProblemTitle(HttpStatusCode statusCode)
+         => statusCode switch
+         {
+             HttpStatusCode.NotFound => "Request Not Found",
+             HttpStatusCode.Locked => "Request Locked",
+             HttpStatusCode.Conflict => "Request Conflict",
+             HttpStatusCode.Unauthorized => "Unauthorized Access",
+             _ => "Request Validation Errors"
+         };
+
+    /// <summary>
+    /// Returns the detail value for the <see cref="ValidationProblemDetails"/>.
+    /// </summary>
+    /// <param name="statusCode">The status code to act with.</param>
+    /// <returns>A string value.</returns>
+    protected virtual string GetValidationProblemDetail(HttpStatusCode statusCode)
+         => statusCode switch
+         {
+             HttpStatusCode.InternalServerError or HttpStatusCode.Unauthorized => "Please refer to the errors for additional details",
+             _ => "Please refer to the errors property for additional details"
+         };
+
+    /// <summary>
+    /// Returns the authentication scheme name.
+    /// </summary>
+    /// <param name="context">The current HTTP context.</param>
+    /// <returns>if found, the authentication scheme name or null.</returns>
+    protected virtual async Task<string?> GetAuthenticateSchemeAsync(HttpContext context)
     {
-        /// <summary>
-        /// Returns the title value for the <see cref="ValidationProblemDetails"/>.
-        /// </summary>
-        /// <param name="statusCode">The status code to act with.</param>
-        /// <returns>A string value.</returns>
-        protected virtual string GetValidationProblemTitle(HttpStatusCode statusCode)
-             => statusCode switch
-             {
-                 HttpStatusCode.NotFound => "Request Not Found",
-                 HttpStatusCode.Locked => "Request Locked",
-                 HttpStatusCode.Conflict => "Request Conflict",
-                 HttpStatusCode.Unauthorized => "Unauthorized Access",
-                 _ => "Request Validation Errors"
-             };
-
-        /// <summary>
-        /// Returns the detail value for the <see cref="ValidationProblemDetails"/>.
-        /// </summary>
-        /// <param name="statusCode">The status code to act with.</param>
-        /// <returns>A string value.</returns>
-        protected virtual string GetValidationProblemDetail(HttpStatusCode statusCode)
-             => statusCode switch
-             {
-                 HttpStatusCode.InternalServerError or HttpStatusCode.Unauthorized => "Please refer to the errors for additional details",
-                 _ => "Please refer to the errors property for additional details"
-             };
-
-        /// <summary>
-        /// Returns the authentication scheme name.
-        /// </summary>
-        /// <param name="context">The current HTTP context.</param>
-        /// <returns>if found, the authentication scheme name or null.</returns>
-        protected virtual async Task<string?> GetAuthenticateSchemeAsync(HttpContext context)
+        if (context.RequestServices.GetService<IAuthenticationSchemeProvider>() is { } authenticationSchemeProvider)
         {
-            if (context.RequestServices.GetService<IAuthenticationSchemeProvider>() is { } authenticationSchemeProvider)
-            {
-                var requestSchemes = await authenticationSchemeProvider.GetRequestHandlerSchemesAsync().ConfigureAwait(false);
-                var defaultSchemes = await authenticationSchemeProvider.GetDefaultAuthenticateSchemeAsync().ConfigureAwait(false);
-                var allSchemes = await authenticationSchemeProvider.GetAllSchemesAsync().ConfigureAwait(false);
+            var requestSchemes = await authenticationSchemeProvider.GetRequestHandlerSchemesAsync().ConfigureAwait(false);
+            var defaultSchemes = await authenticationSchemeProvider.GetDefaultAuthenticateSchemeAsync().ConfigureAwait(false);
+            var allSchemes = await authenticationSchemeProvider.GetAllSchemesAsync().ConfigureAwait(false);
 
-                var scheme = requestSchemes.FirstOrDefault() ?? defaultSchemes ?? allSchemes.FirstOrDefault();
-                if (scheme is not null)
-                    return scheme.Name;
-            }
-
-            return default;
+            var scheme = requestSchemes.FirstOrDefault() ?? defaultSchemes ?? allSchemes.FirstOrDefault();
+            if (scheme is not null)
+                return scheme.Name;
         }
 
-        /// <summary>
-        /// Executes the result operation for a <see cref="ValuePicture"/> content.
-        /// </summary>
-        /// <param name="context">The context to act with.</param>
-        /// <param name="operationResult">The operation result that contains the picture.</param>
-        /// <returns>A task that represents the asynchronous picture execute operation.</returns>
-        protected virtual async Task PictureExecuteAsync(ActionContext context, IOperationResult<ValuePicture> operationResult)
-        {
-            var pictureResult = new FileContentResult(
-                operationResult.Value.Content,
-                new MediaTypeHeaderValue($"image/{operationResult.Value.Extension.ToLowerInvariant()}"))
-            {
-                FileDownloadName = operationResult.Value.Title
-            };
+        return default;
+    }
 
-            await pictureResult.ExecuteResultAsync(context).ConfigureAwait(false);
-        }
-
-        ///<inheritdoc/>
-        public virtual async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+    /// <summary>
+    /// Executes the result operation for a <see cref="ValuePicture"/> content.
+    /// </summary>
+    /// <param name="context">The context to act with.</param>
+    /// <param name="operationResult">The operation result that contains the picture.</param>
+    /// <returns>A task that represents the asynchronous picture execute operation.</returns>
+    protected virtual async Task PictureExecuteAsync(ActionContext context, IOperationResult<ValuePicture> operationResult)
+    {
+        var pictureResult = new FileContentResult(
+            operationResult.Value.Content,
+            new MediaTypeHeaderValue($"image/{operationResult.Value.Extension.ToLowerInvariant()}"))
         {
-            if (context.Result is ObjectResult objectResult && objectResult.Value is IOperationResult operationResult)
+            FileDownloadName = operationResult.Value.Title
+        };
+
+        await pictureResult.ExecuteResultAsync(context).ConfigureAwait(false);
+    }
+
+    ///<inheritdoc/>
+    public virtual async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+    {
+        if (context.Result is ObjectResult objectResult && objectResult.Value is IOperationResult operationResult)
+        {
+            if (operationResult.IsFailed)
             {
-                if (operationResult.IsFailed)
+                var controller = (ControllerBase)context.Controller;
+                if (controller is null)
                 {
-                    var controller = (ControllerBase)context.Controller;
-                    if (controller is null)
-                    {
-                        controller = context.HttpContext.RequestServices.GetRequiredService<OperationResultExceptionController>();
-                        controller.ControllerContext = new ControllerContext(
-                            new ActionContext(
-                                context.HttpContext,
-                                context.HttpContext.GetRouteData(),
-                                new ControllerActionDescriptor()));
-                    }
-
-                    var statusCode = operationResult.StatusCode;
-                    var modelStateDictionary = operationResult.Errors.GetModelStateDictionary();
-
-                    context.Result = controller.ValidationProblem(
-                        GetValidationProblemDetail(statusCode),
-                        context.HttpContext.Request.Path,
-                        (int)statusCode,
-                        GetValidationProblemTitle(statusCode),
-                        modelStateDictionary: operationResult.Errors.Count > 0 ? modelStateDictionary : null);
-
-                    if (operationResult.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-                        if (await GetAuthenticateSchemeAsync(context.HttpContext).ConfigureAwait(false) is { } scheme)
-                        {
-                            context.HttpContext.Response.Headers.Append(HeaderNames.WWWAuthenticate, scheme);
-                        }
-                    }
+                    controller = context.HttpContext.RequestServices.GetRequiredService<OperationResultExceptionController>();
+                    controller.ControllerContext = new ControllerContext(
+                        new ActionContext(
+                            context.HttpContext,
+                            context.HttpContext.GetRouteData(),
+                            new ControllerActionDescriptor()));
                 }
-                else
-                {
-                    if (operationResult is IOperationResult<ValuePicture> valuePicture)
-                    {
-                        await PictureExecuteAsync(context, valuePicture).ConfigureAwait(false);
-                        return;
-                    }
 
-                    if (operationResult.LocationUrl is not null)
+                var statusCode = operationResult.StatusCode;
+                var modelStateDictionary = operationResult.Errors.GetModelStateDictionary();
+
+                context.Result = controller.ValidationProblem(
+                    GetValidationProblemDetail(statusCode),
+                    context.HttpContext.Request.Path,
+                    (int)statusCode,
+                    GetValidationProblemTitle(statusCode),
+                    modelStateDictionary: operationResult.Errors.Count > 0 ? modelStateDictionary : null);
+
+                if (operationResult.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    if (await GetAuthenticateSchemeAsync(context.HttpContext).ConfigureAwait(false) is { } scheme)
                     {
-                        context.HttpContext.Response.Headers.Location = new Microsoft.Extensions.Primitives.StringValues(operationResult.LocationUrl);
+                        context.HttpContext.Response.Headers.Append(HeaderNames.WWWAuthenticate, scheme);
                     }
                 }
             }
+            else
+            {
+                if (operationResult is IOperationResult<ValuePicture> valuePicture)
+                {
+                    await PictureExecuteAsync(context, valuePicture).ConfigureAwait(false);
+                    return;
+                }
 
-            await next().ConfigureAwait(false);
+                if (operationResult.LocationUrl is not null)
+                {
+                    context.HttpContext.Response.Headers.Location = new Microsoft.Extensions.Primitives.StringValues(operationResult.LocationUrl);
+                }
+            }
         }
+
+        await next().ConfigureAwait(false);
     }
 }

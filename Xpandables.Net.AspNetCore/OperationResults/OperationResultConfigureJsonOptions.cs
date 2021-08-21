@@ -18,29 +18,27 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-using System;
 using System.Text.Json.Serialization;
 
-namespace Xpandables.Net
-{
-    /// <summary>
-    /// Add <see cref="IOperationResult"/>/<see cref="IOperationResult{TValue}"/> converters
-    /// to <see cref="JsonOptions"/>. You can derive from this class to customize its behavior.
-    /// </summary>
-    /// <remarks>
-    /// Adds the <see cref="JsonStringEnumConverter"/>, <see cref="OperationResultConverterFactory"/> and
-    /// the <see cref="EnumerationTypeJsonConverterFactory"/>.
-    /// </remarks>
-    public class OperationResultConfigureJsonOptions : IConfigureOptions<JsonOptions>
-    {
-        ///<inheritdoc/>
-        public virtual void Configure(JsonOptions options)
-        {
-            _ = options ?? throw new ArgumentNullException(nameof(options));
+namespace Xpandables.Net;
 
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            options.JsonSerializerOptions.Converters.Add(new OperationResultConverterFactory());
-            options.JsonSerializerOptions.Converters.Add(new EnumerationTypeJsonConverterFactory());
-        }
+/// <summary>
+/// Add <see cref="IOperationResult"/>/<see cref="IOperationResult{TValue}"/> converters
+/// to <see cref="JsonOptions"/>. You can derive from this class to customize its behavior.
+/// </summary>
+/// <remarks>
+/// Adds the <see cref="JsonStringEnumConverter"/>, <see cref="OperationResultConverterFactory"/> and
+/// the <see cref="EnumerationTypeJsonConverterFactory"/>.
+/// </remarks>
+public class OperationResultConfigureJsonOptions : IConfigureOptions<JsonOptions>
+{
+    ///<inheritdoc/>
+    public virtual void Configure(JsonOptions options)
+    {
+        _ = options ?? throw new ArgumentNullException(nameof(options));
+
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new OperationResultConverterFactory());
+        options.JsonSerializerOptions.Converters.Add(new EnumerationTypeJsonConverterFactory());
     }
 }

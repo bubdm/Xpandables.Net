@@ -20,74 +20,70 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Razor.Hosting;
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Xpandables.Net.Razors
+namespace Xpandables.Net.Razors;
+
+/// <summary>
+/// Implementation of <see cref="IRazorModelViewCollection"/>.
+/// </summary>
+public sealed class RazorModelViewCollection : IRazorModelViewCollection
 {
+    private readonly IEnumerable<(Type ModelType, string Identifier)> _modelIdentifiers;
+
     /// <summary>
-    /// Implementation of <see cref="IRazorModelViewCollection"/>.
+    /// Initializes a new instance of <see cref="RazorModelViewCollection"/>.
     /// </summary>
-    public sealed class RazorModelViewCollection : IRazorModelViewCollection
+    /// <param name="applicationPartManager">The application part manager.</param>
+    public RazorModelViewCollection(ApplicationPartManager applicationPartManager)
     {
-        private readonly IEnumerable<(Type ModelType, string Identifier)> _modelIdentifiers;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="RazorModelViewCollection"/>.
-        /// </summary>
-        /// <param name="applicationPartManager">The application part manager.</param>
-        public RazorModelViewCollection(ApplicationPartManager applicationPartManager)
-        {
-            _modelIdentifiers = BuildModelViews(applicationPartManager);
-        }
-
-        private IEnumerable<(Type Model, string Identifier)> BuildModelViews(ApplicationPartManager applicationPartManager)
-        {
-            var feature = new ViewsFeature();
-            applicationPartManager.PopulateFeature(feature);
-
-            var views = feature.ViewDescriptors
-                .Select(descr => GetModelType(descr.Item))
-                .Where(item => item.HasModel)
-                .Select(item => (item.Model, item.Identifier));
-
-            foreach (var (model, identifier) in views)
-            {
-                if (model is { } && identifier is { })
-                    yield return (model, identifier);
-            }
-        }
-
-        private (bool HasModel, string Identifier, Type? Model) GetModelType(RazorCompiledItem item)
-        {
-            var (hasModel, model) = GetModelType(item.Type);
-            return (hasModel, item.Identifier, model);
-        }
-
-        private (bool hasModel, Type? Model) GetModelType(Type type)
-        {
-            if (type.BaseType is null || type == typeof(object))
-                return (false, default);
-
-            if (type.IsGenericType)
-            {
-                var genericType = type.GetGenericTypeDefinition();
-                if (genericType == typeof(RazorPage<>))
-                {
-                    var genericArguments = type.GetGenericArguments();
-                    if (genericArguments.Length == 1)
-                        return (true, genericArguments[0]);
-                }
-            }
-
-            return GetModelType(type.BaseType);
-        }
-
-        /// <inheritdoc />
-        public IEnumerator<(Type ModelType, string Identifier)> GetEnumerator() => _modelIdentifiers.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        _modelIdentifiers = BuildModelViews(applicationPartManager);
     }
+
+    private IEnumerable<(Type Model, string Identifier)> BuildModelViews(ApplicationPartManager applicationPartManager)
+    {
+        var feature = new ViewsFeature();
+        applicationPartManager.PopulateFeature(feature);
+
+        var views = feature.ViewDescriptors
+            .Select(descr => GetModelType(descr.Item))
+            .Where(item => item.HasModel)
+            .Select(item => (item.Model, item.Identifier));
+
+        foreach (var (model, identifier) in views)
+        {
+            if (model is { } && identifier is { })
+                yield return (model, identifier);
+        }
+    }
+
+    private (bool HasModel, string Identifier, Type? Model) GetModelType(RazorCompiledItem item)
+    {
+        var (hasModel, model) = GetModelType(item.Type);
+        return (hasModel, item.Identifier, model);
+    }
+
+    private (bool hasModel, Type? Model) GetModelType(Type type)
+    {
+        if (type.BaseType is null || type == typeof(object))
+            return (false, default);
+
+        if (type.IsGenericType)
+        {
+            var genericType = type.GetGenericTypeDefinition();
+            if (genericType == typeof(RazorPage<>))
+            {
+                var genericArguments = type.GetGenericArguments();
+                if (genericArguments.Length == 1)
+                    return (true, genericArguments[0]);
+            }
+        }
+
+        return GetModelType(type.BaseType);
+    }
+
+    /// <inheritdoc />
+    public IEnumerator<(Type ModelType, string Identifier)> GetEnumerator() => _modelIdentifiers.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

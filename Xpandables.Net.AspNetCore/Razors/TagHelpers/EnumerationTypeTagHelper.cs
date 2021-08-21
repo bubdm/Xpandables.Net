@@ -20,57 +20,54 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Localization;
 
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net.Razors.TagHelpers
+namespace Xpandables.Net.Razors.TagHelpers;
+
+/// <summary>
+/// A helper that uses the <see cref="DisplayAttribute.Name"/> of an <see cref="EnumerationType.Name"/> with localization
+/// value for value tag.
+/// The behavior is available only for label
+/// </summary>
+[HtmlTargetElement("label", Attributes = aspEnumAttributeName)]
+public sealed class EnumerationTypeTagHelper : TagHelper
 {
+    private const string aspEnumAttributeName = "asp-enum";
+    private readonly IStringLocalizer _localization;
+
     /// <summary>
-    /// A helper that uses the <see cref="DisplayAttribute.Name"/> of an <see cref="EnumerationType.Name"/> with localization
-    /// value for value tag.
-    /// The behavior is available only for label
+    /// Initializes a new instance of <see cref="EnumerationTypeTagHelper"/> with the localization view model source.
     /// </summary>
-    [HtmlTargetElement("label", Attributes = aspEnumAttributeName)]
-    public sealed class EnumerationTypeTagHelper : TagHelper
+    /// <param name="localization">The localization view-model source to act with.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="localization"/> is null.</exception>
+    public EnumerationTypeTagHelper(IStringLocalizer localization) => _localization = localization;
+
+    ///<inheritdoc/>
+    public override int Order => int.MaxValue;
+
+    /// <summary>
+    /// Gets or sets the asp-enum type expression
+    /// </summary>
+    [HtmlAttributeName(aspEnumAttributeName)]
+    public EnumerationType? EnumType { get; set; }
+
+    /// <summary>
+    /// Gets or sets the view context.
+    /// </summary>
+    [ViewContext]
+    public ViewContext ViewContext { get; set; } = default!;
+
+    ///<inheritdoc/>
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
-        private const string aspEnumAttributeName = "asp-enum";
-        private readonly IStringLocalizer _localization;
+        await base.ProcessAsync(context, output).ConfigureAwait(false);
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="EnumerationTypeTagHelper"/> with the localization view model source.
-        /// </summary>
-        /// <param name="localization">The localization view-model source to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="localization"/> is null.</exception>
-        public EnumerationTypeTagHelper(IStringLocalizer localization) => _localization = localization;
+        if (EnumType is null) throw new ArgumentException($"{nameof(EnumType)} is null");
+        var enumTranslated = _localization[EnumType.Name];
 
-        ///<inheritdoc/>
-        public override int Order => int.MaxValue;
+        var childContentTag = await output.GetChildContentAsync().ConfigureAwait(false);
+        childContentTag.Append(enumTranslated);
 
-        /// <summary>
-        /// Gets or sets the asp-enum type expression
-        /// </summary>
-        [HtmlAttributeName(aspEnumAttributeName)]
-        public EnumerationType? EnumType { get; set; }
-
-        /// <summary>
-        /// Gets or sets the view context.
-        /// </summary>
-        [ViewContext]
-        public ViewContext ViewContext { get; set; } = default!;
-
-        ///<inheritdoc/>
-        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-        {
-            await base.ProcessAsync(context, output).ConfigureAwait(false);
-
-            if (EnumType is null) throw new ArgumentException($"{nameof(EnumType)} is null");
-            var enumTranslated = _localization[EnumType.Name];
-
-            var childContentTag = await output.GetChildContentAsync().ConfigureAwait(false);
-            childContentTag.Append(enumTranslated);
-
-            output.Content.SetHtmlContent(childContentTag.GetContent());
-        }
+        output.Content.SetHtmlContent(childContentTag.GetContent());
     }
 }
