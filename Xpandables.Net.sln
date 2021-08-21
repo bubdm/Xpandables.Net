@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.EntityFramew
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.AspNetCore", "Xpandables.Net.AspNetCore\Xpandables.Net.AspNetCore.csproj", "{6907542F-D6AB-412A-9741-7EF1EBFEC7A3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.BlazorExtended", "Xpandables.Net.BlazorExtended\Xpandables.Net.BlazorExtended.csproj", "{91107337-9F92-4C19-B0E0-88D970F0FA88}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CA1CAAA4-A8C6-45C4-8612-04F5CAFE6DCE}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -23,6 +21,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.StateTest", "Xpandables.Net.StateTest\Xpandables.Net.StateTest.csproj", "{94705081-80CC-434C-AD25-6DC13C519F41}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpandables.Net.Web", "Xpandables.Net.Web\Xpandables.Net.Web.csproj", "{43E4AA9A-4DB0-4058-B3F6-3610A1C0B1DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xpandables.Net.BlazorExtended", "Xpandables.Net.BlazorExtended\Xpandables.Net.BlazorExtended.csproj", "{75779D59-F81A-482C-81DD-57B6D10C3DB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,10 +46,6 @@ Global
 		{6907542F-D6AB-412A-9741-7EF1EBFEC7A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6907542F-D6AB-412A-9741-7EF1EBFEC7A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6907542F-D6AB-412A-9741-7EF1EBFEC7A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91107337-9F92-4C19-B0E0-88D970F0FA88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91107337-9F92-4C19-B0E0-88D970F0FA88}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91107337-9F92-4C19-B0E0-88D970F0FA88}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91107337-9F92-4C19-B0E0-88D970F0FA88}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D14502D9-67E0-466B-818F-8E228B581FD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D14502D9-67E0-466B-818F-8E228B581FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D14502D9-67E0-466B-818F-8E228B581FD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -62,6 +58,10 @@ Global
 		{43E4AA9A-4DB0-4058-B3F6-3610A1C0B1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43E4AA9A-4DB0-4058-B3F6-3610A1C0B1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43E4AA9A-4DB0-4058-B3F6-3610A1C0B1DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75779D59-F81A-482C-81DD-57B6D10C3DB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75779D59-F81A-482C-81DD-57B6D10C3DB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75779D59-F81A-482C-81DD-57B6D10C3DB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75779D59-F81A-482C-81DD-57B6D10C3DB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
