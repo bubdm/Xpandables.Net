@@ -15,10 +15,9 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Storage
-{
-    /// <summary>
-    /// Provides with methods to access a browser session storage.
-    /// </summary>
-    public interface ISessionStorage : ILocalStorageBase { }
-}
+namespace Xpandables.Net.Storage;
+
+/// <summary>
+/// Provides with methods to access a browser session storage.
+/// </summary>
+public interface ISessionStorage : ILocalStorageBase { }

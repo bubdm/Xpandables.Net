@@ -15,61 +15,58 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace Xpandables.Net.Components
+namespace Xpandables.Net.Components;
+
+/// <summary>
+/// Adds <see cref="IOperationResult"/> Data Annotations validation support to an <see cref="EditContext"/>.
+/// </summary>
+public class DataAnnotationsValidatorExtended : DataAnnotationsValidator
 {
-    /// <summary>
-    /// Adds <see cref="IOperationResult"/> Data Annotations validation support to an <see cref="EditContext"/>.
-    /// </summary>
-    public class DataAnnotationsValidatorExtended : DataAnnotationsValidator
+    private ValidationMessageStore _validationMessageStore = default!;
+
+    [CascadingParameter]
+    private EditContext AnnotationEditContext { get; set; } = default!;
+
+    ///<inheritdoc/>
+    protected override void OnInitialized()
     {
-        private ValidationMessageStore _validationMessageStore = default!;
+        base.OnInitialized();
 
-        [CascadingParameter]
-        private EditContext AnnotationEditContext { get; set; } = default!;
+        _validationMessageStore = new(AnnotationEditContext);
+        AnnotationEditContext.OnValidationRequested += (s, e) => _validationMessageStore.Clear();
+        AnnotationEditContext.OnFieldChanged += (s, e) => _validationMessageStore.Clear(e.FieldIdentifier);
+    }
 
-        ///<inheritdoc/>
-        protected override void OnInitialized()
+    /// <summary>
+    /// Applies <see cref="IOperationResult"/> errors to the context.
+    /// </summary>
+    /// <param name="result">The operation result to act with.</param>
+    /// <remarks>Only available for failed result.</remarks>
+    /// <exception cref="ArgumentNullException">The <paramref name="result"/> is null.</exception>
+    public virtual void ValidateModel(IOperationResult result)
+    {
+        _ = result ?? throw new ArgumentNullException(nameof(result));
+
+        if (result.IsSucceeded)
+            return;
+
+        foreach (var error in result.Errors)
         {
-            base.OnInitialized();
-
-            _validationMessageStore = new(AnnotationEditContext);
-            AnnotationEditContext.OnValidationRequested += (s, e) => _validationMessageStore.Clear();
-            AnnotationEditContext.OnFieldChanged += (s, e) => _validationMessageStore.Clear(e.FieldIdentifier);
+            _validationMessageStore.Add(AnnotationEditContext.Field(error.Key), error.ErrorMessages);
         }
 
-        /// <summary>
-        /// Applies <see cref="IOperationResult"/> errors to the context.
-        /// </summary>
-        /// <param name="result">The operation result to act with.</param>
-        /// <remarks>Only available for failed result.</remarks>
-        /// <exception cref="ArgumentNullException">The <paramref name="result"/> is null.</exception>
-        public virtual void ValidateModel(IOperationResult result)
-        {
-            _ = result ?? throw new ArgumentNullException(nameof(result));
+        AnnotationEditContext.NotifyValidationStateChanged();
+    }
 
-            if (result.IsSucceeded)
-                return;
-
-            foreach (var error in result.Errors)
-            {
-                _validationMessageStore.Add(AnnotationEditContext.Field(error.Key), error.ErrorMessages);
-            }
-
-            AnnotationEditContext.NotifyValidationStateChanged();
-        }
-
-        /// <summary>
-        /// Removes the notifications from the context and notify changes.
-        /// </summary>
-        public virtual void ClearModel()
-        {
-            _validationMessageStore.Clear();
-            AnnotationEditContext.NotifyValidationStateChanged();
-        }
+    /// <summary>
+    /// Removes the notifications from the context and notify changes.
+    /// </summary>
+    public virtual void ClearModel()
+    {
+        _validationMessageStore.Clear();
+        AnnotationEditContext.NotifyValidationStateChanged();
     }
 }

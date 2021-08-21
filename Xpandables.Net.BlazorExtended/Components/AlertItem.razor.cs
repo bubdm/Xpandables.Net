@@ -22,25 +22,24 @@ using System.ComponentModel.DataAnnotations;
 
 using Xpandables.Net.Alerts;
 
-namespace Xpandables.Net.Components
+namespace Xpandables.Net.Components;
+
+/// <summary>
+/// The alert item component.
+/// </summary>
+public partial class AlertItem
 {
+    [CascadingParameter]
+    private AlertCollection AlertComponents { get; set; } = default!;
+
     /// <summary>
-    /// The alert item component.
+    /// Gets or sets the current alert.
     /// </summary>
-    public partial class AlertItem
-    {
-        [CascadingParameter]
-        private AlertCollection AlertComponents { get; set; } = default!;
+    [Parameter, Required]
+    public Alert Alert { get; set; } = default!;
 
-        /// <summary>
-        /// Gets or sets the current alert.
-        /// </summary>
-        [Parameter, Required]
-        public Alert Alert { get; set; } = default!;
-
-        /// <summary>
-        /// Remove the alert.
-        /// </summary>
-        protected void RemoveAlertAsync() => AlertComponents.RemoveAlertAsync(Alert);
-    }
+    /// <summary>
+    /// Remove the alert.
+    /// </summary>
+    protected void RemoveAlertAsync() => AlertComponents.RemoveAlertAsync(Alert);
 }

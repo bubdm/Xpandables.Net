@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,55 +14,53 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net.Storage
+namespace Xpandables.Net.Storage;
+
+/// <summary>
+/// Represents storage information before changes apply.
+/// This event allows cancellation of the process.
+/// </summary>
+public sealed class StorageChangingEventArgs : EventArgs
 {
     /// <summary>
-    /// Represents storage information before changes apply.
-    /// This event allows cancellation of the process.
+    /// Constructs a new event for storage changing.
     /// </summary>
-    public sealed class StorageChangingEventArgs : EventArgs
+    /// <param name="key">The target key in the storage.</param>
+    /// <param name="oldValue">The old value.</param>
+    /// <param name="newValue">The new value.</param>
+    /// <param name="storageAction">The action being processed.</param>
+    internal StorageChangingEventArgs(string key, object? oldValue, object? newValue, StorageAction storageAction)
     {
-        /// <summary>
-        /// Constructs a new event for storage changing.
-        /// </summary>
-        /// <param name="key">The target key in the storage.</param>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        /// <param name="storageAction">The action being processed.</param>
-        internal StorageChangingEventArgs(string key, object? oldValue, object? newValue, StorageAction storageAction)
-        {
-            Key = key ?? throw new ArgumentNullException(nameof(key));
-            OldValue = oldValue;
-            NewValue = newValue;
-            StorageAction = storageAction;
-        }
-
-        /// <summary>
-        /// Gets the storage key.
-        /// </summary>
-        public string Key { get; }
-
-        /// <summary>
-        /// Gets the storage old value before change.
-        /// </summary>
-        public object? OldValue { get; }
-
-        /// <summary>
-        /// Gets the storage new value after change.
-        /// </summary>
-        public object? NewValue { get; }
-
-        /// <summary>
-        /// Gets the action being processed.
-        /// </summary>
-        public StorageAction StorageAction { get; }
-
-        /// <summary>
-        /// Determines whether or not the change should be canceled.
-        /// The default value is <see langword="false"/>.
-        /// </summary>
-        public bool IsCanceled { get; set; }
+        Key = key ?? throw new ArgumentNullException(nameof(key));
+        OldValue = oldValue;
+        NewValue = newValue;
+        StorageAction = storageAction;
     }
+
+    /// <summary>
+    /// Gets the storage key.
+    /// </summary>
+    public string Key { get; }
+
+    /// <summary>
+    /// Gets the storage old value before change.
+    /// </summary>
+    public object? OldValue { get; }
+
+    /// <summary>
+    /// Gets the storage new value after change.
+    /// </summary>
+    public object? NewValue { get; }
+
+    /// <summary>
+    /// Gets the action being processed.
+    /// </summary>
+    public StorageAction StorageAction { get; }
+
+    /// <summary>
+    /// Determines whether or not the change should be canceled.
+    /// The default value is <see langword="false"/>.
+    /// </summary>
+    public bool IsCanceled { get; set; }
 }

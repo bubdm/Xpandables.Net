@@ -15,32 +15,31 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Alerts
+namespace Xpandables.Net.Alerts;
+
+/// <summary>
+/// Defines the <see cref="IAlertDispatcher"/> options.
+/// </summary>
+public sealed class AlertOptions
 {
     /// <summary>
-    /// Defines the <see cref="IAlertDispatcher"/> options.
+    /// Gets or sets the alert delay. The default value is 5000sec.
     /// </summary>
-    public sealed class AlertOptions
-    {
-        /// <summary>
-        /// Gets or sets the alert delay. The default value is 5000sec.
-        /// </summary>
-        public int Delay { get; set; } = 5000;
+    public int Delay { get; set; } = 5000;
 
-        /// <summary>
-        /// Determines whether Fade is out or not.
-        /// The default value is true.
-        /// </summary>
-        public bool FadeOut { get; set; } = true;
+    /// <summary>
+    /// Determines whether Fade is out or not.
+    /// The default value is true.
+    /// </summary>
+    public bool FadeOut { get; set; } = true;
 
-        /// <summary>
-        /// Gets or sets the alert delay after fade out (milleseconds). The default value is 10000sec.
-        /// </summary>
-        public int FadeOutDelay { get; set; } = 10000;
+    /// <summary>
+    /// Gets or sets the alert delay after fade out (milleseconds). The default value is 10000sec.
+    /// </summary>
+    public int FadeOutDelay { get; set; } = 10000;
 
-        /// <summary>
-        /// Gets the position of alert. The de fault value is <see cref="AlertPosition.TopRight"/>.
-        /// </summary>
-        public IAlertPosition Position { get; set; } = AlertPosition.TopRight;
-    }
+    /// <summary>
+    /// Gets the position of alert. The de fault value is <see cref="AlertPosition.TopRight"/>.
+    /// </summary>
+    public IAlertPosition Position { get; set; } = AlertPosition.TopRight;
 }

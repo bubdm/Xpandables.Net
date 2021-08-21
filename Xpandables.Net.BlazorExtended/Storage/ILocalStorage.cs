@@ -15,10 +15,9 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Storage
-{
-    /// <summary>
-    /// Provides with methods to access a browser local storage.
-    /// </summary>
-    public interface ILocalStorage : ILocalStorageBase { }
-}
+namespace Xpandables.Net.Storage;
+
+/// <summary>
+/// Provides with methods to access a browser local storage.
+/// </summary>
+public interface ILocalStorage : ILocalStorageBase { }

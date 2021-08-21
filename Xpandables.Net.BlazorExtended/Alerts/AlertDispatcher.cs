@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,63 +15,60 @@
  *
 ************************************************************************************************************/
 
-using System;
+namespace Xpandables.Net.Alerts;
 
-namespace Xpandables.Net.Alerts
+/// <summary>
+/// The default implementation of <see cref="IAlertDispatcher"/>.
+/// You can derive from this class to customize its behaviors.
+/// </summary>
+public class AlertDispatcher : IAlertDispatcher
 {
-    /// <summary>
-    /// The default implementation of <see cref="IAlertDispatcher"/>.
-    /// You can derive from this class to customize its behaviors.
-    /// </summary>
-    public class AlertDispatcher : IAlertDispatcher
+    ///<inheritdoc/>
+    public event Action<Alert>? OnAlert;
+
+    ///<inheritdoc/>
+    public string ComponentId { get; set; } = default!;
+
+    ///<inheritdoc/>
+    public void Notify(
+              string title,
+              string message,
+              IAlertLevel level,
+              IAlertIcon icon,
+              string? header = default,
+              string? helper = default,
+              bool isAutoClose = true,
+              bool isKeepAfterRouteChange = false,
+              bool isFade = true)
     {
-        ///<inheritdoc/>
-        public event Action<Alert>? OnAlert;
+        _ = title ?? throw new ArgumentNullException(nameof(title));
+        _ = message ?? throw new ArgumentNullException(nameof(message));
 
-        ///<inheritdoc/>
-        public string ComponentId { get; set; } = default!;
+        var alert = Alert.With(title, message)
+            .WithIcon(icon)
+            .WithLevel(level)
+            .AutoClose(isAutoClose)
+            .KeepAfterRouteChange(isKeepAfterRouteChange)
+            .Fade(isFade);
 
-        ///<inheritdoc/>
-        public void Notify(
-                  string title,
-                  string message,
-                  IAlertLevel level,
-                  IAlertIcon icon,
-                  string? header = default,
-                  string? helper = default,
-                  bool isAutoClose = true,
-                  bool isKeepAfterRouteChange = false,
-                  bool isFade = true)
-        {
-            _ = title ?? throw new ArgumentNullException(nameof(title));
-            _ = message ?? throw new ArgumentNullException(nameof(message));
+        if (header is not null)
+            alert = alert.WithHeader(header);
 
-            var alert = Alert.With(title, message)
-                .WithIcon(icon)
-                .WithLevel(level)
-                .AutoClose(isAutoClose)
-                .KeepAfterRouteChange(isKeepAfterRouteChange)
-                .Fade(isFade);
+        if (helper is not null)
+            alert = alert.WithHelper(helper);
 
-            if (header is not null)
-                alert = alert.WithHeader(header);
+        RaizeAlert(alert);
+    }
 
-            if (helper is not null)
-                alert = alert.WithHelper(helper);
+    ///<inheritdoc/>
+    public virtual void Clear(string id = IAlertDispatcher.DefaultId) => OnAlert?.Invoke(Alert.None(id));
 
-            RaizeAlert(alert);
-        }
+    ///<inheritdoc/>
+    public virtual void RaizeAlert(Alert alert)
+    {
+        if (alert.Id == IAlertDispatcher.DefaultId)
+            alert.Id = ComponentId;
 
-        ///<inheritdoc/>
-        public virtual void Clear(string id = IAlertDispatcher.DefaultId) => OnAlert?.Invoke(Alert.None(id));
-
-        ///<inheritdoc/>
-        public virtual void RaizeAlert(Alert alert)
-        {
-            if (alert.Id == IAlertDispatcher.DefaultId)
-                alert.Id = ComponentId;
-
-            OnAlert?.Invoke(alert);
-        }
+        OnAlert?.Invoke(alert);
     }
 }

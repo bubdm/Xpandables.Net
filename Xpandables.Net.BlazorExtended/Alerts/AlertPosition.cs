@@ -15,106 +15,105 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Alerts
+namespace Xpandables.Net.Alerts;
+
+/// <summary>
+/// Defines the base interface for an alert position.
+/// </summary>
+public interface IAlertPosition
 {
     /// <summary>
-    /// Defines the base interface for an alert position.
+    /// Gets the css class for the alert.
     /// </summary>
-    public interface IAlertPosition
-    {
-        /// <summary>
-        /// Gets the css class for the alert.
-        /// </summary>
-        string PositionClass { get; }
-    }
+    string PositionClass { get; }
+}
+
+/// <summary>
+///  Provides with the alert position.
+/// </summary>
+public readonly struct AlertPosition
+{
+    /// <summary>
+    /// Gets the <see cref="AlertPositionTopRight"/>.
+    /// </summary>
+    public static IAlertPosition TopRight => new AlertPositionTopRight();
 
     /// <summary>
-    ///  Provides with the alert position.
+    /// Gets the <see cref="AlertPositionTopRight"/>.
     /// </summary>
-    public readonly struct AlertPosition
-    {
-        /// <summary>
-        /// Gets the <see cref="AlertPositionTopRight"/>.
-        /// </summary>
-        public static IAlertPosition TopRight => new AlertPositionTopRight();
-
-        /// <summary>
-        /// Gets the <see cref="AlertPositionTopRight"/>.
-        /// </summary>
-        public static IAlertPosition TopLeft => new AlertPositionTopLeft();
-
-        /// <summary>
-        /// Gets the <see cref="AlertPositionTopRight"/>.
-        /// </summary>
-        public static IAlertPosition TopCenter => new AlertPositionTopCenter();
-
-        /// <summary>
-        /// Gets the <see cref="AlertPositionTopRight"/>.
-        /// </summary>
-        public static IAlertPosition BottomRight => new AlertPositionBottomRight();
-
-        /// <summary>
-        /// Gets the <see cref="AlertPositionTopRight"/>.
-        /// </summary>
-        public static IAlertPosition BottomLeft => new AlertPositionBottomLeft();
-
-        /// <summary>
-        /// Gets the <see cref="AlertPositionTopRight"/>.
-        /// </summary>
-        public static IAlertPosition BottomCenter => new AlertPositionBottomCenter();
-    }
+    public static IAlertPosition TopLeft => new AlertPositionTopLeft();
 
     /// <summary>
-    /// The top right position.
+    /// Gets the <see cref="AlertPositionTopRight"/>.
     /// </summary>
-    public struct AlertPositionTopRight : IAlertPosition
-    {
-        ///<inheritdoc/>
-        public string PositionClass => "position-topright";
-    }
+    public static IAlertPosition TopCenter => new AlertPositionTopCenter();
 
     /// <summary>
-    /// The top left position.
+    /// Gets the <see cref="AlertPositionTopRight"/>.
     /// </summary>
-    public struct AlertPositionTopLeft : IAlertPosition
-    {
-        ///<inheritdoc/>
-        public string PositionClass => "position-topleft";
-    }
+    public static IAlertPosition BottomRight => new AlertPositionBottomRight();
 
     /// <summary>
-    /// The top center position.
+    /// Gets the <see cref="AlertPositionTopRight"/>.
     /// </summary>
-    public struct AlertPositionTopCenter : IAlertPosition
-    {
-        ///<inheritdoc/>
-        public string PositionClass => "position-topcenter";
-    }
+    public static IAlertPosition BottomLeft => new AlertPositionBottomLeft();
 
     /// <summary>
-    /// The bottom right position.
+    /// Gets the <see cref="AlertPositionTopRight"/>.
     /// </summary>
-    public struct AlertPositionBottomRight : IAlertPosition
-    {
-        ///<inheritdoc/>
-        public string PositionClass => "position-bottomright";
-    }
+    public static IAlertPosition BottomCenter => new AlertPositionBottomCenter();
+}
 
-    /// <summary>
-    /// The bottom left position.
-    /// </summary>
-    public struct AlertPositionBottomLeft : IAlertPosition
-    {
-        ///<inheritdoc/>
-        public string PositionClass => "position-bottomleft";
-    }
+/// <summary>
+/// The top right position.
+/// </summary>
+public struct AlertPositionTopRight : IAlertPosition
+{
+    ///<inheritdoc/>
+    public string PositionClass => "position-topright";
+}
 
-    /// <summary>
-    /// The bottom center position.
-    /// </summary>
-    public struct AlertPositionBottomCenter : IAlertPosition
-    {
-        ///<inheritdoc/>
-        public string PositionClass => "position-bottomcenter";
-    }
+/// <summary>
+/// The top left position.
+/// </summary>
+public struct AlertPositionTopLeft : IAlertPosition
+{
+    ///<inheritdoc/>
+    public string PositionClass => "position-topleft";
+}
+
+/// <summary>
+/// The top center position.
+/// </summary>
+public struct AlertPositionTopCenter : IAlertPosition
+{
+    ///<inheritdoc/>
+    public string PositionClass => "position-topcenter";
+}
+
+/// <summary>
+/// The bottom right position.
+/// </summary>
+public struct AlertPositionBottomRight : IAlertPosition
+{
+    ///<inheritdoc/>
+    public string PositionClass => "position-bottomright";
+}
+
+/// <summary>
+/// The bottom left position.
+/// </summary>
+public struct AlertPositionBottomLeft : IAlertPosition
+{
+    ///<inheritdoc/>
+    public string PositionClass => "position-bottomleft";
+}
+
+/// <summary>
+/// The bottom center position.
+/// </summary>
+public struct AlertPositionBottomCenter : IAlertPosition
+{
+    ///<inheritdoc/>
+    public string PositionClass => "position-bottomcenter";
 }

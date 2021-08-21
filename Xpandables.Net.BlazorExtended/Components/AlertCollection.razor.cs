@@ -19,161 +19,157 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 
-using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 using Xpandables.Net.Alerts;
 
-namespace Xpandables.Net.Components
+namespace Xpandables.Net.Components;
+
+/// <summary>
+/// The collection of alert components.
+/// </summary>
+public partial class AlertCollection : IDisposable
 {
+    [Inject]
+    private IAlertDispatcher AlertDispatcher { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
     /// <summary>
-    /// The collection of alert components.
+    /// Gets or sets the alerts collection parameters.
     /// </summary>
-    public partial class AlertCollection : IDisposable
+    [Parameter]
+    public AlertOptions Options { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the unique collection identifier.
+    /// The default value is <see cref="Guid.NewGuid"/>.
+    /// </summary>
+    [Parameter]
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+
+    /// <summary>
+    /// Gets the collection of registered alerts.
+    /// </summary>
+    protected BindingList<Alert> AlertList { get; } = new BindingList<Alert>
     {
-        [Inject]
-        private IAlertDispatcher AlertDispatcher { get; set; } = default!;
+        AllowEdit = true,
+        AllowNew = true,
+        AllowRemove = true
+    };
 
-        [Inject]
-        private NavigationManager NavigationManager { get; set; } = default!;
+    ///<inheritdoc/>
+    public void Dispose()
+    {
+        // unsubscribe from alert and location change events
 
-        /// <summary>
-        /// Gets or sets the alerts collection parameters.
-        /// </summary>
-        [Parameter]
-        public AlertOptions Options { get; set; } = new();
+        AlertDispatcher.OnAlert -= OnAlert;
+        NavigationManager.LocationChanged -= OnLocationChange;
 
-        /// <summary>
-        /// Gets or sets the unique collection identifier.
-        /// The default value is <see cref="Guid.NewGuid"/>.
-        /// </summary>
-        [Parameter]
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        AlertList.ListChanged -= Notifications_ListChanged;
+        AlertList.Clear();
 
-        /// <summary>
-        /// Gets the collection of registered alerts.
-        /// </summary>
-        protected BindingList<Alert> AlertList { get; } = new BindingList<Alert>
+        GC.SuppressFinalize(this);
+    }
+
+    ///<inheritdoc/>
+    protected override void OnInitialized()
+    {
+        // subscribe to new alerts and location change events
+        AlertDispatcher.OnAlert += OnAlert;
+        NavigationManager.LocationChanged += OnLocationChange;
+
+        AlertList.ListChanged += Notifications_ListChanged;
+        AlertDispatcher.ComponentId = Id;
+    }
+
+    private void Notifications_ListChanged(object? sender, ListChangedEventArgs e)
+    {
+        if (e.ListChangedType == ListChangedType.ItemChanged && e.PropertyDescriptor is not null && e.PropertyDescriptor.Name != nameof(Alert.IsKeepAfterRouteChange))
+            InvokeAsync(StateHasChanged);
+
+        if (e.ListChangedType == ListChangedType.ItemDeleted)
+            InvokeAsync(StateHasChanged);
+    }
+
+    /// <summary>
+    /// Displays the specified alert.
+    /// </summary>
+    /// <param name="alert">The alert to act on.</param>
+    protected virtual async void OnAlert(Alert alert)
+    {
+        // ignoe alert sent to other components
+        if (alert.Id != Id)
+            return;
+
+        // clear alerts when an empty alert is received
+        if (alert.Message == "NONE")
         {
-            AllowEdit = true,
-            AllowNew = true,
-            AllowRemove = true
-        };
+            // remove alert without the 'KeepAfterRouteChange' flag set to true
+            var alertsToBeRemoved = AlertList.Where(x => !x.IsKeepAfterRouteChange).ToList();
+            foreach (var item in alertsToBeRemoved)
+                AlertList.Remove(item);
 
-        ///<inheritdoc/>
-        public void Dispose()
-        {
-            // unsubscribe from alert and location change events
-
-            AlertDispatcher.OnAlert -= OnAlert;
-            NavigationManager.LocationChanged -= OnLocationChange;
-
-            AlertList.ListChanged -= Notifications_ListChanged;
-            AlertList.Clear();
-
-            GC.SuppressFinalize(this);
+            // set the 'KeepAfterRouteChange' flag to false for the 
+            // remaining alert so they are removed on the next clear
+            foreach (var item in AlertList)
+                item.KeepAfterRouteChange(false);
         }
-
-        ///<inheritdoc/>
-        protected override void OnInitialized()
+        else
         {
-            // subscribe to new alerts and location change events
-            AlertDispatcher.OnAlert += OnAlert;
-            NavigationManager.LocationChanged += OnLocationChange;
-
-            AlertList.ListChanged += Notifications_ListChanged;
-            AlertDispatcher.ComponentId = Id;
-        }
-
-        private void Notifications_ListChanged(object? sender, ListChangedEventArgs e)
-        {
-            if (e.ListChangedType == ListChangedType.ItemChanged && e.PropertyDescriptor is not null && e.PropertyDescriptor.Name != nameof(Alert.IsKeepAfterRouteChange))
-                InvokeAsync(StateHasChanged);
-
-            if (e.ListChangedType == ListChangedType.ItemDeleted)
-                InvokeAsync(StateHasChanged);
-        }
-
-        /// <summary>
-        /// Displays the specified alert.
-        /// </summary>
-        /// <param name="alert">The alert to act on.</param>
-        protected virtual async void OnAlert(Alert alert)
-        {
-            // ignoe alert sent to other components
-            if (alert.Id != Id)
-                return;
-
-            // clear alerts when an empty alert is received
-            if (alert.Message == "NONE")
-            {
-                // remove alert without the 'KeepAfterRouteChange' flag set to true
-                var alertsToBeRemoved = AlertList.Where(x => !x.IsKeepAfterRouteChange).ToList();
-                foreach (var item in alertsToBeRemoved)
-                    AlertList.Remove(item);
-
-                // set the 'KeepAfterRouteChange' flag to false for the 
-                // remaining alert so they are removed on the next clear
-                foreach (var item in AlertList)
-                    item.KeepAfterRouteChange(false);
-            }
-            else
-            {
-                // add alert to array
-                AlertList.Add(alert);
-
-                await InvokeAsync(StateHasChanged);
-
-                // auto close alert if required
-                if (alert.IsAutoClose)
-                {
-                    await Task.Delay(Options.Delay);
-                    RemoveAlertAsync(alert);
-                }
-            }
+            // add alert to array
+            AlertList.Add(alert);
 
             await InvokeAsync(StateHasChanged);
-        }
 
-
-        /// <summary>
-        /// Clears the visible alert on navigation change.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected virtual void OnLocationChange(object? sender, LocationChangedEventArgs e)
-        {
-            foreach (var alert in AlertList)
-                AlertDispatcher.Clear(alert.Id);
-        }
-
-        /// <summary>
-        /// Removes the specified alert.
-        /// </summary>
-        /// <param name="alert">The alert to be removed.</param>
-        public virtual async void RemoveAlertAsync(Alert alert)
-        {
-            // check if already removed to prevent error on auto close
-            if (!AlertList.Contains(alert)) return;
-
-            if (Options.FadeOut)
+            // auto close alert if required
+            if (alert.IsAutoClose)
             {
-                // fade out alert
-                alert.Fade();
-
-                // remove alert after faded out
-                await Task.Delay(Options.FadeOutDelay);
-                AlertList.Remove(alert);
+                await Task.Delay(Options.Delay);
+                RemoveAlertAsync(alert);
             }
-            else
-            {
-                // remove alert
-                AlertList.Remove(alert);
-            }
-
-            await InvokeAsync(StateHasChanged);
         }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+
+    /// <summary>
+    /// Clears the visible alert on navigation change.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected virtual void OnLocationChange(object? sender, LocationChangedEventArgs e)
+    {
+        foreach (var alert in AlertList)
+            AlertDispatcher.Clear(alert.Id);
+    }
+
+    /// <summary>
+    /// Removes the specified alert.
+    /// </summary>
+    /// <param name="alert">The alert to be removed.</param>
+    public virtual async void RemoveAlertAsync(Alert alert)
+    {
+        // check if already removed to prevent error on auto close
+        if (!AlertList.Contains(alert)) return;
+
+        if (Options.FadeOut)
+        {
+            // fade out alert
+            alert.Fade();
+
+            // remove alert after faded out
+            await Task.Delay(Options.FadeOutDelay);
+            AlertList.Remove(alert);
+        }
+        else
+        {
+            // remove alert
+            AlertList.Remove(alert);
+        }
+
+        await InvokeAsync(StateHasChanged);
     }
 }

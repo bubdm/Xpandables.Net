@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,76 +14,72 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net.Storage
+namespace Xpandables.Net.Storage;
+
+internal class InternalSessionStorage : ISessionStorage
 {
-    internal class InternalSessionStorage : ISessionStorage
+    private readonly IStorage _storage;
+
+    public event EventHandler<StorageChangingEventArgs>? Changing;
+    public event EventHandler<StorageChangedEventArgs>? Changed;
+
+    public InternalSessionStorage(IStorage storage)
     {
-        private readonly IStorage _storage;
+        _storage = storage ?? throw new ArgumentNullException(nameof(storage));
+    }
 
-        public event EventHandler<StorageChangingEventArgs>? Changing;
-        public event EventHandler<StorageChangedEventArgs>? Changed;
+    public ValueTask ClearAllAsync(CancellationToken cancellationToken = default)
+        => _storage.ClearAllAsync("sessionStorage.clear", cancellationToken);
 
-        public InternalSessionStorage(IStorage storage)
-        {
-            _storage = storage ?? throw new ArgumentNullException(nameof(storage));
-        }
+    public ValueTask<bool> ContainKeyAsync(string key, CancellationToken cancellationToken = default)
+        => _storage.ContainKeyAsync("sessionStorage.hasOwnProperty", key, cancellationToken);
 
-        public ValueTask ClearAllAsync(CancellationToken cancellationToken = default)
-            => _storage.ClearAllAsync("sessionStorage.clear", cancellationToken);
+    public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+        => _storage.CountAsync("sessionStorage.length", "eval", cancellationToken);
 
-        public ValueTask<bool> ContainKeyAsync(string key, CancellationToken cancellationToken = default)
-            => _storage.ContainKeyAsync("sessionStorage.hasOwnProperty", key, cancellationToken);
+    public ValueTask<TValue?> ReadAsync<TValue>(string key, CancellationToken cancellationToken = default)
+    {
+        _ = key ?? throw new ArgumentNullException(nameof(key));
+        return _storage.ReadAsync<TValue>("sessionStorage.getItem", key, cancellationToken); ;
+    }
 
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => _storage.CountAsync("sessionStorage.length", "eval", cancellationToken);
+    public async ValueTask RemoveAsync(string key, CancellationToken cancellationToken = default)
+    {
+        _ = key ?? throw new ArgumentNullException(nameof(key));
 
-        public ValueTask<TValue?> ReadAsync<TValue>(string key, CancellationToken cancellationToken = default)
-        {
-            _ = key ?? throw new ArgumentNullException(nameof(key));
-            return _storage.ReadAsync<TValue>("sessionStorage.getItem", key, cancellationToken); ;
-        }
+        var oldValue = await ReadAsync<object>(key, cancellationToken).ConfigureAwait(false);
+        var eventArgs = new StorageChangingEventArgs(key, oldValue, null, StorageAction.Removing);
 
-        public async ValueTask RemoveAsync(string key, CancellationToken cancellationToken = default)
-        {
-            _ = key ?? throw new ArgumentNullException(nameof(key));
+        Changing?.Invoke(this, eventArgs);
+        if (eventArgs.IsCanceled)
+            return;
 
-            var oldValue = await ReadAsync<object>(key, cancellationToken).ConfigureAwait(false);
-            var eventArgs = new StorageChangingEventArgs(key, oldValue, null, StorageAction.Removing);
+        await _storage.RemoveAsync("sessionStorage.removeItem", key, cancellationToken).ConfigureAwait(false);
 
-            Changing?.Invoke(this, eventArgs);
-            if (eventArgs.IsCanceled)
-                return;
+        OnStorageChangedEventArgs(key, oldValue, default, StorageAction.Removed);
+    }
 
-            await _storage.RemoveAsync("sessionStorage.removeItem", key, cancellationToken).ConfigureAwait(false);
+    public async ValueTask WriteAsync<TValue>(string key, TValue value, CancellationToken cancellationToken = default)
+    {
+        _ = key ?? throw new ArgumentNullException(nameof(key));
 
-            OnStorageChangedEventArgs(key, oldValue, default, StorageAction.Removed);
-        }
+        var oldValue = await ReadAsync<TValue>(key, cancellationToken).ConfigureAwait(false);
+        var eventArgs = new StorageChangingEventArgs(key, oldValue, value, StorageAction.Writing);
 
-        public async ValueTask WriteAsync<TValue>(string key, TValue value, CancellationToken cancellationToken = default)
-        {
-            _ = key ?? throw new ArgumentNullException(nameof(key));
+        Changing?.Invoke(this, eventArgs);
+        if (eventArgs.IsCanceled)
+            return;
 
-            var oldValue = await ReadAsync<TValue>(key, cancellationToken).ConfigureAwait(false);
-            var eventArgs = new StorageChangingEventArgs(key, oldValue, value, StorageAction.Writing);
+        await _storage.WriteAsync("sessionStorage.setItem", key, value, cancellationToken).ConfigureAwait(false);
 
-            Changing?.Invoke(this, eventArgs);
-            if (eventArgs.IsCanceled)
-                return;
+        OnStorageChangedEventArgs(key, oldValue, value, StorageAction.Written);
+    }
 
-            await _storage.WriteAsync("sessionStorage.setItem", key, value, cancellationToken).ConfigureAwait(false);
+    void OnStorageChangedEventArgs(string key, object? oldValue, object? newValue, StorageAction storageAction)
+    {
+        var eventArgs = new StorageChangedEventArgs(key, oldValue, newValue, storageAction);
 
-            OnStorageChangedEventArgs(key, oldValue, value, StorageAction.Written);
-        }
-
-        void OnStorageChangedEventArgs(string key, object? oldValue, object? newValue, StorageAction storageAction)
-        {
-            var eventArgs = new StorageChangedEventArgs(key, oldValue, newValue, storageAction);
-
-            Changed?.Invoke(this, eventArgs);
-        }
+        Changed?.Invoke(this, eventArgs);
     }
 }

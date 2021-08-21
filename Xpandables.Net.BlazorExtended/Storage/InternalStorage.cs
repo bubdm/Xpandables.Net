@@ -17,37 +17,32 @@
 
 using Microsoft.JSInterop;
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+namespace Xpandables.Net.Storage;
 
-namespace Xpandables.Net.Storage
+internal class InternalStorage : IStorage
 {
-    internal class InternalStorage : IStorage
+    private readonly IJSRuntime _jSRuntime;
+
+    public InternalStorage(IJSRuntime jSRuntime)
     {
-        private readonly IJSRuntime _jSRuntime;
-
-        public InternalStorage(IJSRuntime jSRuntime)
-        {
-            _jSRuntime = jSRuntime ?? throw new ArgumentNullException(nameof(jSRuntime));
-        }
-
-        public ValueTask ClearAllAsync(string command, CancellationToken cancellationToken = default)
-            => _jSRuntime.InvokeVoidAsync(command, cancellationToken);
-
-        public ValueTask<bool> ContainKeyAsync(string command, string key, CancellationToken cancellationToken = default)
-            => _jSRuntime.InvokeAsync<bool>(command, cancellationToken, key);
-
-        public ValueTask<int> CountAsync(string command, string key, CancellationToken cancellationToken = default)
-            => _jSRuntime.InvokeAsync<int>(key, cancellationToken, command);
-
-        public ValueTask<TValue?> ReadAsync<TValue>(string command, string key, CancellationToken cancellationToken = default)
-            => _jSRuntime.InvokeAsync<TValue?>(command, cancellationToken, key);
-
-        public ValueTask RemoveAsync(string command, string key, CancellationToken cancellationToken = default)
-            => _jSRuntime.InvokeVoidAsync(command, cancellationToken, key);
-
-        public ValueTask WriteAsync<TValue>(string command, string key, TValue value, CancellationToken cancellationToken = default)
-            => _jSRuntime.InvokeVoidAsync(command, cancellationToken, key, value);
+        _jSRuntime = jSRuntime ?? throw new ArgumentNullException(nameof(jSRuntime));
     }
+
+    public ValueTask ClearAllAsync(string command, CancellationToken cancellationToken = default)
+        => _jSRuntime.InvokeVoidAsync(command, cancellationToken);
+
+    public ValueTask<bool> ContainKeyAsync(string command, string key, CancellationToken cancellationToken = default)
+        => _jSRuntime.InvokeAsync<bool>(command, cancellationToken, key);
+
+    public ValueTask<int> CountAsync(string command, string key, CancellationToken cancellationToken = default)
+        => _jSRuntime.InvokeAsync<int>(key, cancellationToken, command);
+
+    public ValueTask<TValue?> ReadAsync<TValue>(string command, string key, CancellationToken cancellationToken = default)
+        => _jSRuntime.InvokeAsync<TValue?>(command, cancellationToken, key);
+
+    public ValueTask RemoveAsync(string command, string key, CancellationToken cancellationToken = default)
+        => _jSRuntime.InvokeVoidAsync(command, cancellationToken, key);
+
+    public ValueTask WriteAsync<TValue>(string command, string key, TValue value, CancellationToken cancellationToken = default)
+        => _jSRuntime.InvokeVoidAsync(command, cancellationToken, key, value);
 }

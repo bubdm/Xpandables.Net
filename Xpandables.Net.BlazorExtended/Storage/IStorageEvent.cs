@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,52 +14,50 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net.Storage
+namespace Xpandables.Net.Storage;
+
+/// <summary>
+/// Defines the event action applying to the storage.
+/// </summary>
+public enum StorageAction
 {
     /// <summary>
-    /// Defines the event action applying to the storage.
+    /// The action is a writing event.
     /// </summary>
-    public enum StorageAction
-    {
-        /// <summary>
-        /// The action is a writing event.
-        /// </summary>
-        Writing,
-
-        /// <summary>
-        /// The action is a written event.
-        /// </summary>
-        Written,
-
-        /// <summary>
-        /// The action is a removing event.
-        /// </summary>
-        Removing,
-
-        /// <summary>
-        /// The action is a removed event.
-        /// </summary>
-        Removed
-    }
+    Writing,
 
     /// <summary>
-    /// Provides with events for storage management.
+    /// The action is a written event.
     /// </summary>
-    public interface IStorageEvent
-    {
-        /// <summary>
-        /// The event that will be asynchronously raised before the changes get applied.
-        /// The event will contain values being processed.
-        /// By setting the <see cref="StorageChangingEventArgs.IsCanceled"/> to <see langword="true"/>, you can cancel the process.
-        /// </summary>
-        event EventHandler<StorageChangingEventArgs>? Changing;
+    Written,
 
-        /// <summary>
-        /// The event that will be asynchronously raised after the changes applied.
-        /// The event will contain values processed.
-        /// </summary>
-        event EventHandler<StorageChangedEventArgs>? Changed;
-    }
+    /// <summary>
+    /// The action is a removing event.
+    /// </summary>
+    Removing,
+
+    /// <summary>
+    /// The action is a removed event.
+    /// </summary>
+    Removed
+}
+
+/// <summary>
+/// Provides with events for storage management.
+/// </summary>
+public interface IStorageEvent
+{
+    /// <summary>
+    /// The event that will be asynchronously raised before the changes get applied.
+    /// The event will contain values being processed.
+    /// By setting the <see cref="StorageChangingEventArgs.IsCanceled"/> to <see langword="true"/>, you can cancel the process.
+    /// </summary>
+    event EventHandler<StorageChangingEventArgs>? Changing;
+
+    /// <summary>
+    /// The event that will be asynchronously raised after the changes applied.
+    /// The event will contain values processed.
+    /// </summary>
+    event EventHandler<StorageChangedEventArgs>? Changed;
 }

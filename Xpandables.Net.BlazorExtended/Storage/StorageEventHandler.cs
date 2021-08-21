@@ -15,25 +15,24 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Storage
+namespace Xpandables.Net.Storage;
+
+/// <summary>
+/// Represents a base class to handle <see cref="IStorage"/> events.
+/// </summary>
+public abstract class StorageEventHandler
 {
     /// <summary>
-    /// Represents a base class to handle <see cref="IStorage"/> events.
+    /// When overridden, this method will handle the <see cref="IStorageEvent.Changed"/> event.
     /// </summary>
-    public abstract class StorageEventHandler
-    {
-        /// <summary>
-        /// When overridden, this method will handle the <see cref="IStorageEvent.Changed"/> event.
-        /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="eventArgs">The event arguments.</param>
-        public abstract void OnChanged(object? sender, StorageChangedEventArgs eventArgs);
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="eventArgs">The event arguments.</param>
+    public abstract void OnChanged(object? sender, StorageChangedEventArgs eventArgs);
 
-        /// <summary>
-        /// When overridden, this method will handle the <see cref="IStorageEvent.Changing"/> event.
-        /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="eventArgs">The event arguments to act on.</param>       
-        public abstract void OnChanging(object? sender, StorageChangingEventArgs eventArgs);
-    }
+    /// <summary>
+    /// When overridden, this method will handle the <see cref="IStorageEvent.Changing"/> event.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="eventArgs">The event arguments to act on.</param>       
+    public abstract void OnChanging(object? sender, StorageChangingEventArgs eventArgs);
 }

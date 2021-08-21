@@ -15,134 +15,133 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Alerts
+namespace Xpandables.Net.Alerts;
+
+/// <summary>
+/// Defines the base interface for an alert icon.
+/// </summary>
+public interface IAlertIcon
 {
     /// <summary>
-    /// Defines the base interface for an alert icon.
+    /// Gets the css class for an alert icon.
     /// </summary>
-    public interface IAlertIcon
-    {
-        /// <summary>
-        /// Gets the css class for an alert icon.
-        /// </summary>
-        string IconClass { get; }
-    }
+    string IconClass { get; }
+}
+
+/// <summary>
+/// Provides with the alert icon.
+/// </summary>
+public readonly struct AlertIcon
+{
+    /// <summary>
+    /// Gets the <see cref="AlertIconDark"/>.
+    /// </summary>
+    public static IAlertIcon Dark => new AlertIconDark();
 
     /// <summary>
-    /// Provides with the alert icon.
+    /// Gets the <see cref="AlertIconError"/>.
     /// </summary>
-    public readonly struct AlertIcon
-    {
-        /// <summary>
-        /// Gets the <see cref="AlertIconDark"/>.
-        /// </summary>
-        public static IAlertIcon Dark => new AlertIconDark();
-
-        /// <summary>
-        /// Gets the <see cref="AlertIconError"/>.
-        /// </summary>
-        public static IAlertIcon Error => new AlertIconError();
-
-        /// <summary>
-        /// Gets the <see cref="AlertIconInformation"/>.
-        /// </summary>
-        public static IAlertIcon Info => new AlertIconInformation();
-
-        /// <summary>
-        /// Gets the <see cref="AlertIconLight"/>.
-        /// </summary>
-        public static IAlertIcon Light => new AlertIconLight();
-
-        /// <summary>
-        /// Gets the <see cref="AlertIconPrimary"/>.
-        /// </summary>
-        public static IAlertIcon Primary => new AlertIconPrimary();
-
-        /// <summary>
-        /// Gets the <see cref="AlertIconSecondary"/>.
-        /// </summary>
-        public static IAlertIcon Secondary => new AlertIconSecondary();
-
-        /// <summary>
-        /// Gets the <see cref="AlertIconSuccess"/>.
-        /// </summary>
-        public static IAlertIcon Success => new AlertIconSuccess();
-
-        /// <summary>
-        /// Gets the <see cref="AlertIconWarning"/>.
-        /// </summary>
-        public static IAlertIcon Warning => new AlertIconWarning();
-    }
+    public static IAlertIcon Error => new AlertIconError();
 
     /// <summary>
-    /// The Warning alert icon.
+    /// Gets the <see cref="AlertIconInformation"/>.
     /// </summary>
-    public class AlertIconWarning : IAlertIcon
-    {
-        ///<inheritdoc/>
-        public string IconClass => "fas fa-exclamation-circle";
-    }
+    public static IAlertIcon Info => new AlertIconInformation();
 
     /// <summary>
-    /// The Error alert icon.
+    /// Gets the <see cref="AlertIconLight"/>.
     /// </summary>
-    public class AlertIconError : IAlertIcon
-    {
-        ///<inheritdoc/>
-        public string IconClass => "fas fa-meh";
-    }
+    public static IAlertIcon Light => new AlertIconLight();
 
     /// <summary>
-    /// The Information alert icon.
+    /// Gets the <see cref="AlertIconPrimary"/>.
     /// </summary>
-    public class AlertIconInformation : IAlertIcon
-    {
-        ///<inheritdoc/>
-        public string IconClass => "fas fa-info-circle";
-    }
+    public static IAlertIcon Primary => new AlertIconPrimary();
 
     /// <summary>
-    /// The Primary alert icon.
+    /// Gets the <see cref="AlertIconSecondary"/>.
     /// </summary>
-    public class AlertIconPrimary : IAlertIcon
-    {
-        ///<inheritdoc/>
-        public string IconClass => "fas fa-info-circle";
-    }
+    public static IAlertIcon Secondary => new AlertIconSecondary();
 
     /// <summary>
-    /// The Secondary alert icon.
+    /// Gets the <see cref="AlertIconSuccess"/>.
     /// </summary>
-    public class AlertIconSecondary : IAlertIcon
-    {
-        ///<inheritdoc/>
-        public string IconClass => "fas fa-info-circle";
-    }
+    public static IAlertIcon Success => new AlertIconSuccess();
 
     /// <summary>
-    /// The Success alert icon.
+    /// Gets the <see cref="AlertIconWarning"/>.
     /// </summary>
-    public class AlertIconSuccess : IAlertIcon
-    {
-        ///<inheritdoc/>
-        public string IconClass => "fas fa-check-circle";
-    }
+    public static IAlertIcon Warning => new AlertIconWarning();
+}
 
-    /// <summary>
-    /// The Dark alert icon.
-    /// </summary>
-    public class AlertIconDark : IAlertIcon
-    {
-        ///<inheritdoc/>
-        public string IconClass => "fas fa-moon";
-    }
+/// <summary>
+/// The Warning alert icon.
+/// </summary>
+public class AlertIconWarning : IAlertIcon
+{
+    ///<inheritdoc/>
+    public string IconClass => "fas fa-exclamation-circle";
+}
 
-    /// <summary>
-    /// The Light alert icon.
-    /// </summary>
-    public class AlertIconLight : IAlertIcon
-    {
-        ///<inheritdoc/>
-        public string IconClass => "fas fa-sun";
-    }
+/// <summary>
+/// The Error alert icon.
+/// </summary>
+public class AlertIconError : IAlertIcon
+{
+    ///<inheritdoc/>
+    public string IconClass => "fas fa-meh";
+}
+
+/// <summary>
+/// The Information alert icon.
+/// </summary>
+public class AlertIconInformation : IAlertIcon
+{
+    ///<inheritdoc/>
+    public string IconClass => "fas fa-info-circle";
+}
+
+/// <summary>
+/// The Primary alert icon.
+/// </summary>
+public class AlertIconPrimary : IAlertIcon
+{
+    ///<inheritdoc/>
+    public string IconClass => "fas fa-info-circle";
+}
+
+/// <summary>
+/// The Secondary alert icon.
+/// </summary>
+public class AlertIconSecondary : IAlertIcon
+{
+    ///<inheritdoc/>
+    public string IconClass => "fas fa-info-circle";
+}
+
+/// <summary>
+/// The Success alert icon.
+/// </summary>
+public class AlertIconSuccess : IAlertIcon
+{
+    ///<inheritdoc/>
+    public string IconClass => "fas fa-check-circle";
+}
+
+/// <summary>
+/// The Dark alert icon.
+/// </summary>
+public class AlertIconDark : IAlertIcon
+{
+    ///<inheritdoc/>
+    public string IconClass => "fas fa-moon";
+}
+
+/// <summary>
+/// The Light alert icon.
+/// </summary>
+public class AlertIconLight : IAlertIcon
+{
+    ///<inheritdoc/>
+    public string IconClass => "fas fa-sun";
 }
