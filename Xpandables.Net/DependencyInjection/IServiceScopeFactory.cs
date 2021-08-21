@@ -15,19 +15,18 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.DependencyInjection
+namespace Xpandables.Net.DependencyInjection;
+
+/// <summary>
+/// A factory for creating instance of <see cref="IServiceScope{TService}"/> which is used to create instances of <typeparamref name="TService"/> within a scope.
+/// </summary>
+/// <typeparam name="TService">The type of service object to get.</typeparam>
+public interface IServiceScopeFactory<out TService>
+    where TService : notnull
 {
     /// <summary>
-    /// A factory for creating instance of <see cref="IServiceScope{TService}"/> which is used to create instances of <typeparamref name="TService"/> within a scope.
+    /// Creates a new <see cref="IServiceScope{TService}"/> that can be used to resolve scoped <typeparamref name="TService"/>.
     /// </summary>
-    /// <typeparam name="TService">The type of service object to get.</typeparam>
-    public interface IServiceScopeFactory<out TService>
-        where TService : notnull
-    {
-        /// <summary>
-        /// Creates a new <see cref="IServiceScope{TService}"/> that can be used to resolve scoped <typeparamref name="TService"/>.
-        /// </summary>
-        /// <returns>An <see cref="IServiceScope{TService}"/>  that can be used to resolve scoped <typeparamref name="TService"/>.</returns>
-        IServiceScope<TService> CreateScope();
-    }
+    /// <returns>An <see cref="IServiceScope{TService}"/>  that can be used to resolve scoped <typeparamref name="TService"/>.</returns>
+    IServiceScope<TService> CreateScope();
 }

@@ -15,32 +15,30 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Linq.Expressions;
 
-namespace Xpandables.Net.Expressions
+namespace Xpandables.Net.Expressions;
+
+/// <summary>
+/// Provides the generic class to build <see cref="QueryExpression{TSource, TResult}"/> instance.
+/// </summary>
+/// <typeparam name="TSource">the target instance type.</typeparam>
+/// <typeparam name="TResult">The property type to be used for result.</typeparam>
+public sealed class QueryExpressionBuilder<TSource, TResult> : QueryExpression<TSource, TResult>
+    where TSource : notnull
 {
+    private readonly Expression<Func<TSource, TResult>> _expression;
+
     /// <summary>
-    /// Provides the generic class to build <see cref="QueryExpression{TSource, TResult}"/> instance.
+    /// Returns  new instance of <see cref="QueryExpressionBuilder{TSource, TResult}"/> class with the specified expression.
     /// </summary>
-    /// <typeparam name="TSource">the target instance type.</typeparam>
-    /// <typeparam name="TResult">The property type to be used for result.</typeparam>
-    public sealed class QueryExpressionBuilder<TSource, TResult> : QueryExpression<TSource, TResult>
-        where TSource : notnull
-    {
-        private readonly Expression<Func<TSource, TResult>> _expression;
+    /// <param name="expression">The expression to be used by the instance.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="expression"/> can not be null.</exception>
+    public QueryExpressionBuilder(Expression<Func<TSource, TResult>> expression)
+        => _expression = expression ?? throw new ArgumentNullException(nameof(expression));
 
-        /// <summary>
-        /// Returns  new instance of <see cref="QueryExpressionBuilder{TSource, TResult}"/> class with the specified expression.
-        /// </summary>
-        /// <param name="expression">The expression to be used by the instance.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="expression"/> can not be null.</exception>
-        public QueryExpressionBuilder(Expression<Func<TSource, TResult>> expression)
-            => _expression = expression ?? throw new ArgumentNullException(nameof(expression));
-
-        /// <summary>
-        /// Returns the expression to be used for the clause <see langword="Where"/> in a query.
-        /// </summary>
-        public override Expression<Func<TSource, TResult>> GetExpression() => _expression;
-    }
+    /// <summary>
+    /// Returns the expression to be used for the clause <see langword="Where"/> in a query.
+    /// </summary>
+    public override Expression<Func<TSource, TResult>> GetExpression() => _expression;
 }

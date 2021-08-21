@@ -18,35 +18,34 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Entities;
+
+/// <summary>
+/// Represents the notification event store entity.
+/// </summary>
+public class NotificationStoreEntity : StoreEntity
 {
     /// <summary>
-    /// Represents the notification event store entity.
+    /// 
     /// </summary>
-    public class NotificationStoreEntity : StoreEntity
+    /// <param name="aggregateId"></param>
+    /// <param name="aggregateTypeName"></param>
+    /// <param name="eventTypeFullName"></param>
+    /// <param name="eventTypeName"></param>
+    /// <param name="eventData"></param>
+    /// <param name="exceptionTypeFullName"></param>
+    /// <param name="exception"></param>
+    [JsonConstructor]
+    public NotificationStoreEntity(
+        string aggregateId,
+        string aggregateTypeName,
+        string eventTypeFullName,
+        string eventTypeName,
+        JsonDocument eventData,
+        string? exceptionTypeFullName = default,
+        string? exception = default)
+        : base(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData, exception, exceptionTypeFullName)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aggregateId"></param>
-        /// <param name="aggregateTypeName"></param>
-        /// <param name="eventTypeFullName"></param>
-        /// <param name="eventTypeName"></param>
-        /// <param name="eventData"></param>
-        /// <param name="exceptionTypeFullName"></param>
-        /// <param name="exception"></param>
-        [JsonConstructor]
-        public NotificationStoreEntity(
-            string aggregateId,
-            string aggregateTypeName,
-            string eventTypeFullName,
-            string eventTypeName,
-            JsonDocument eventData,
-            string? exceptionTypeFullName = default,
-            string? exception = default)
-            : base(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData, exception, exceptionTypeFullName)
-        {
 
-        }
     }
 }

@@ -15,30 +15,28 @@
  *
 ************************************************************************************************************/
 
-using System;
 using System.Linq.Expressions;
 
-namespace Xpandables.Net.Expressions.Specifications
+namespace Xpandables.Net.Expressions.Specifications;
+
+/// <summary>
+/// Provides the specification factory that contains methods to create generic specifications.
+/// </summary>
+public static class SpecificationFactory
 {
     /// <summary>
-    /// Provides the specification factory that contains methods to create generic specifications.
+    /// Creates a new instance of <see cref="Specification{TSource}"/> with <see cref="bool"/> result that return <see langword="true"/>.
     /// </summary>
-    public static class SpecificationFactory
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref="Specification{TSource}"/> with <see cref="bool"/> result that return <see langword="true"/>.
-        /// </summary>
-        /// <typeparam name="TSource">The data type source.</typeparam>
-        /// <returns>a new instance of <see cref="Specification{TSource}"/> with boolean result.</returns>
-        public static Specification<TSource> Create<TSource>() where TSource : notnull => new SpecificationBuilder<TSource>(_ => true);
+    /// <typeparam name="TSource">The data type source.</typeparam>
+    /// <returns>a new instance of <see cref="Specification{TSource}"/> with boolean result.</returns>
+    public static Specification<TSource> Create<TSource>() where TSource : notnull => new SpecificationBuilder<TSource>(_ => true);
 
-        /// <summary>
-        /// Creates a new instance of <see cref="Specification{TSource}"/> from the specified expression.
-        /// </summary>
-        /// <typeparam name="TSource">The data type source.</typeparam>
-        /// <param name="expression">The expression to be wrapped.</param>
-        /// <returns>a new instance of <see cref="Specification{TSource}"/> with boolean result.</returns>
-        public static Specification<TSource> Create<TSource>(Expression<Func<TSource, bool>> expression)
-            where TSource : notnull => new SpecificationBuilder<TSource>(expression);
-    }
+    /// <summary>
+    /// Creates a new instance of <see cref="Specification{TSource}"/> from the specified expression.
+    /// </summary>
+    /// <typeparam name="TSource">The data type source.</typeparam>
+    /// <param name="expression">The expression to be wrapped.</param>
+    /// <returns>a new instance of <see cref="Specification{TSource}"/> with boolean result.</returns>
+    public static Specification<TSource> Create<TSource>(Expression<Func<TSource, bool>> expression)
+        where TSource : notnull => new SpecificationBuilder<TSource>(expression);
 }

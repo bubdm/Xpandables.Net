@@ -15,27 +15,25 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Entities;
+
+/// <summary>
+/// Adds keys information to an entity.
+/// </summary>
+public interface IEntityKey
 {
     /// <summary>
-    /// Adds keys information to an entity.
+    /// Gets the domain object unique identity.
     /// </summary>
-    public interface IEntityKey
-    {
-        /// <summary>
-        /// Gets the domain object unique identity.
-        /// </summary>
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; }
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id { get; }
 
-        /// <summary>
-        /// Gets the domain object unique index.
-        /// </summary>
-        public long Index { get; }
+    /// <summary>
+    /// Gets the domain object unique index.
+    /// </summary>
+    public long Index { get; }
 
-    }
 }

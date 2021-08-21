@@ -15,53 +15,51 @@
  *
 ************************************************************************************************************/
 
-using System;
 using System.ComponentModel;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Defines the context interface for state pattern that allows an object to alter 
+/// its behavior when its internal state changes.
+/// </summary>
+/// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
+public interface IStateContext : INotifyPropertyChanged
 {
     /// <summary>
-    /// Defines the context interface for state pattern that allows an object to alter 
-    /// its behavior when its internal state changes.
+    /// Gets the active state in the context.
     /// </summary>
-    /// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
-    public interface IStateContext : INotifyPropertyChanged
-    {
-        /// <summary>
-        /// Gets the active state in the context.
-        /// </summary>
-        IState CurrentState { get; }
-
-        /// <summary>
-        /// Allows changing the State object at runtime.
-        /// </summary>
-        /// <param name="state">The target state.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="state"/> is null.</exception>
-        internal void TransitionState(IState state);
-    }
+    IState CurrentState { get; }
 
     /// <summary>
-    /// Defines the generic context interface for state pattern that allows an object to alter 
-    /// its behavior when its internal state changes.
+    /// Allows changing the State object at runtime.
     /// </summary>
-    /// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
-    public interface IStateContext<TState> : IStateContext
-        where TState : class, IState
-    {
-        /// <summary>
-        /// Gets the active state in the context.
-        /// </summary>
-        new TState CurrentState { get; }
+    /// <param name="state">The target state.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="state"/> is null.</exception>
+    internal void TransitionState(IState state);
+}
 
-        IState IStateContext.CurrentState { get => CurrentState; }
+/// <summary>
+/// Defines the generic context interface for state pattern that allows an object to alter 
+/// its behavior when its internal state changes.
+/// </summary>
+/// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
+public interface IStateContext<TState> : IStateContext
+    where TState : class, IState
+{
+    /// <summary>
+    /// Gets the active state in the context.
+    /// </summary>
+    new TState CurrentState { get; }
 
-        /// <summary>
-        /// Allows changing the State object at runtime.
-        /// </summary>
-        /// <param name="state">The target state.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="state"/> is null.</exception>
-        void TransitionState(TState state);
+    IState IStateContext.CurrentState { get => CurrentState; }
 
-        void IStateContext.TransitionState(IState state) => TransitionState(state.As<TState>());
-    }
+    /// <summary>
+    /// Allows changing the State object at runtime.
+    /// </summary>
+    /// <param name="state">The target state.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="state"/> is null.</exception>
+    void TransitionState(TState state);
+
+    void IStateContext.TransitionState(IState state) => TransitionState(state.As<TState>());
 }

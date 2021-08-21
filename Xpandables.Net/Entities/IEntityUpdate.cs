@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,23 +14,21 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Entities;
+
+/// <summary>
+/// Adds update information to an entity.
+/// </summary>
+public interface IEntityUpdate
 {
     /// <summary>
-    /// Adds update information to an entity.
+    /// Gets the last update date of the underlying instance if exist. This property is automatically set by the <see cref="Updated"/> method.
     /// </summary>
-    public interface IEntityUpdate
-    {
-        /// <summary>
-        /// Gets the last update date of the underlying instance if exist. This property is automatically set by the <see cref="Updated"/> method.
-        /// </summary>
-        DateTime? UpdatedOn { get; }
+    DateTime? UpdatedOn { get; }
 
-        /// <summary>
-        /// Sets the last update date time for underlying instance.
-        /// </summary>
-        void Updated();
-    }
+    /// <summary>
+    /// Sets the last update date time for underlying instance.
+    /// </summary>
+    void Updated();
 }

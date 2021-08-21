@@ -15,42 +15,40 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.ComponentModel;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Defines a marker interface for state pattern that allows an object to alter 
+/// its behavior when its internal state changes.
+/// </summary>
+/// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
+public interface IState : INotifyPropertyChanged
 {
     /// <summary>
-    /// Defines a marker interface for state pattern that allows an object to alter 
-    /// its behavior when its internal state changes.
+    /// Allows applying state-specific behavior to the state context at runtime.
     /// </summary>
-    /// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
-    public interface IState : INotifyPropertyChanged
-    {
-        /// <summary>
-        /// Allows applying state-specific behavior to the state context at runtime.
-        /// </summary>
-        /// <param name="stateContext">The target state context to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="stateContext"/> is null.</exception>
-        void EnterState(IStateContext stateContext);
-    }
+    /// <param name="stateContext">The target state context to act with.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="stateContext"/> is null.</exception>
+    void EnterState(IStateContext stateContext);
+}
 
+/// <summary>
+/// Defines a generic marker interface for state pattern that allows an object to alter 
+/// its behavior when its internal state changes for specific type.
+/// </summary>
+/// <typeparam name="TStateContext">The type of the state context.</typeparam>
+/// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
+public interface IState<TStateContext> : IState
+    where TStateContext : class, IStateContext
+{
     /// <summary>
-    /// Defines a generic marker interface for state pattern that allows an object to alter 
-    /// its behavior when its internal state changes for specific type.
+    /// Allows applying state-specific behavior to the state context at runtime.
     /// </summary>
-    /// <typeparam name="TStateContext">The type of the state context.</typeparam>
-    /// <remarks>Inherits from <see cref="INotifyPropertyChanged"/>.</remarks>
-    public interface IState<TStateContext> : IState
-        where TStateContext : class, IStateContext
-    {
-        /// <summary>
-        /// Allows applying state-specific behavior to the state context at runtime.
-        /// </summary>
-        /// <param name="context">The target state context to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
-        void EnterState(TStateContext context);
+    /// <param name="context">The target state context to act with.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="context"/> is null.</exception>
+    void EnterState(TStateContext context);
 
-        void IState.EnterState(IStateContext stateContext) => EnterState(stateContext.As<TStateContext>());
-    }
+    void IState.EnterState(IStateContext stateContext) => EnterState(stateContext.As<TStateContext>());
 }

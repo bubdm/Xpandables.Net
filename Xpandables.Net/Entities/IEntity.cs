@@ -15,12 +15,11 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Entities;
+
+/// <summary>
+///  The domain object base definition.
+/// </summary>
+public interface IEntity : IEntityKey, IEntityActive, IEntityCreate, IEntityDelete, IEntityUpdate
 {
-    /// <summary>
-    ///  The domain object base definition.
-    /// </summary>
-    public interface IEntity : IEntityKey, IEntityActive, IEntityCreate, IEntityDelete, IEntityUpdate 
-    { 
-    }
 }

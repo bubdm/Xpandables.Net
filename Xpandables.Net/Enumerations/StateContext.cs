@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,37 +14,35 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// The <see cref="StateContext{TState}"/> maintains a reference to an instance 
+/// of a State subclass, which represents the current state of the Context.
+/// </summary>
+/// <typeparam name="TState">The type of the state.</typeparam>
+/// <remarks>Derives from <see cref="NotifyPropertyChanged{T}"/></remarks>
+public abstract class StateContext<TState> :
+    NotifyPropertyChanged<StateContext<TState>>, IStateContext<TState>
+    where TState : class, IState
 {
+    ///<inheritdoc/>
+    public TState CurrentState { get; protected set; } = default!;
+
     /// <summary>
-    /// The <see cref="StateContext{TState}"/> maintains a reference to an instance 
-    /// of a State subclass, which represents the current state of the Context.
+    /// Constructs a new instance of the state context with its initial state.
     /// </summary>
-    /// <typeparam name="TState">The type of the state.</typeparam>
-    /// <remarks>Derives from <see cref="NotifyPropertyChanged{T}"/></remarks>
-    public abstract class StateContext<TState> :
-        NotifyPropertyChanged<StateContext<TState>>, IStateContext<TState>
-        where TState : class, IState
+    /// <param name="state">The initial state to be used.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="state"/> is null.</exception>
+    protected StateContext(TState state) => TransitionState(state);
+
+    ///<inheritdoc/>
+    public void TransitionState(TState state)
     {
-        ///<inheritdoc/>
-        public TState CurrentState { get; protected set; } = default!;
+        _ = state ?? throw new ArgumentNullException(nameof(state));
 
-        /// <summary>
-        /// Constructs a new instance of the state context with its initial state.
-        /// </summary>
-        /// <param name="state">The initial state to be used.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="state"/> is null.</exception>
-        protected StateContext(TState state) => TransitionState(state);
-
-        ///<inheritdoc/>
-        public void TransitionState(TState state)
-        {
-            _ = state ?? throw new ArgumentNullException(nameof(state));
-
-            CurrentState = state;
-            state.EnterState(this);
-        }
+        CurrentState = state;
+        state.EnterState(this);
     }
 }

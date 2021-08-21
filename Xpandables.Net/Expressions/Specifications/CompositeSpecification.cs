@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,35 +14,31 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Xpandables.Net.Expressions.Specifications
+namespace Xpandables.Net.Expressions.Specifications;
+
+/// <summary>
+/// The composite specification class used to wrap all specifications for a specific type.
+/// </summary>
+/// <typeparam name="TSource">The type of the object to check for.</typeparam>
+[Serializable]
+public class CompositeSpecification<TSource> : Specification<TSource>, ICompositeSpecification<TSource>
+    where TSource : notnull
 {
+    private readonly IEnumerable<ISpecification<TSource>> _specificationInstances;
+
     /// <summary>
-    /// The composite specification class used to wrap all specifications for a specific type.
+    /// Initializes the composite specification with all specification instances for the argument.
     /// </summary>
-    /// <typeparam name="TSource">The type of the object to check for.</typeparam>
-    [Serializable]
-    public class CompositeSpecification<TSource> : Specification<TSource>, ICompositeSpecification<TSource>
-        where TSource : notnull
-    {
-        private readonly IEnumerable<ISpecification<TSource>> _specificationInstances;
+    /// <param name="specificationInstances">The collection of specifications to act with.</param>
+    public CompositeSpecification(IEnumerable<ISpecification<TSource>> specificationInstances)
+        => _specificationInstances = specificationInstances;
 
-        /// <summary>
-        /// Initializes the composite specification with all specification instances for the argument.
-        /// </summary>
-        /// <param name="specificationInstances">The collection of specifications to act with.</param>
-        public CompositeSpecification(IEnumerable<ISpecification<TSource>> specificationInstances)
-            => _specificationInstances = specificationInstances;
-
-        /// <summary>
-        /// Returns a value that determines whether or not the specification is satisfied by the source object.
-        /// </summary>
-        /// <param name="source">The target source to check specification on.</param>
-        /// <returns><see langword="true" /> if the specification is satisfied, otherwise <see langword="false" /></returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source" /> is null.</exception>
-        public override bool IsSatisfiedBy(TSource source) => _specificationInstances.All(spec => spec.IsSatisfiedBy(source));
-    }
+    /// <summary>
+    /// Returns a value that determines whether or not the specification is satisfied by the source object.
+    /// </summary>
+    /// <param name="source">The target source to check specification on.</param>
+    /// <returns><see langword="true" /> if the specification is satisfied, otherwise <see langword="false" /></returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="source" /> is null.</exception>
+    public override bool IsSatisfiedBy(TSource source) => _specificationInstances.All(spec => spec.IsSatisfiedBy(source));
 }

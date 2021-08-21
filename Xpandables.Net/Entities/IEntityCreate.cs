@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,28 +14,26 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Entities;
+
+/// <summary>
+/// Adds creation information to an entity.
+/// </summary>
+public interface IEntityCreate
 {
     /// <summary>
-    /// Adds creation information to an entity.
+    /// Gets the creation date of the underlying instance. This property is automatically set by the <see cref="Created"/>.
     /// </summary>
-    public interface IEntityCreate
-    {
-        /// <summary>
-        /// Gets the creation date of the underlying instance. This property is automatically set by the <see cref="Created"/>.
-        /// </summary>
-        DateTime CreatedOn { get; }
+    DateTime CreatedOn { get; }
 
-        /// <summary>
-        /// Sets the creation date time for underlying instance.
-        /// </summary>
-        void Created();
+    /// <summary>
+    /// Sets the creation date time for underlying instance.
+    /// </summary>
+    void Created();
 
-        /// <summary>
-        /// Determines whether the instance is a new one.
-        /// </summary>
-        bool IsNew { get; }
-    }
+    /// <summary>
+    /// Determines whether the instance is a new one.
+    /// </summary>
+    bool IsNew { get; }
 }

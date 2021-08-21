@@ -15,47 +15,45 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Linq.Expressions;
 
-namespace Xpandables.Net.Expressions
+namespace Xpandables.Net.Expressions;
+
+/// <summary>
+/// Provides the query expression factory that contains methods to create generic query expressions.
+/// </summary>
+public static class QueryExpressionFactory
 {
     /// <summary>
-    /// Provides the query expression factory that contains methods to create generic query expressions.
+    /// Creates a new instance of <see cref="QueryExpression{TSource, TResult}"/> with <see cref="bool"/> result that return <see langword="true"/>.
     /// </summary>
-    public static class QueryExpressionFactory
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref="QueryExpression{TSource, TResult}"/> with <see cref="bool"/> result that return <see langword="true"/>.
-        /// </summary>
-        /// <typeparam name="TSource">The data type source.</typeparam>
-        /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/> with boolean result.</returns>
-        public static QueryExpression<TSource, bool> Create<TSource>() where TSource : notnull => new QueryExpressionBuilder<TSource, bool>(_ => true);
-
-        /// <summary>
-        /// Creates a new instance of <see cref="QueryExpression{TSource, TResult}"/> from the specified expression.
-        /// </summary>
-        /// <typeparam name="TSource">The data type source.</typeparam>
-        /// <param name="expression">The expression to be wrapped.</param>
-        /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/> with boolean result.</returns>
-        public static QueryExpression<TSource, bool> Create<TSource>(Expression<Func<TSource, bool>> expression)
-            where TSource : notnull => new QueryExpressionBuilder<TSource, bool>(expression);
-    }
+    /// <typeparam name="TSource">The data type source.</typeparam>
+    /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/> with boolean result.</returns>
+    public static QueryExpression<TSource, bool> Create<TSource>() where TSource : notnull => new QueryExpressionBuilder<TSource, bool>(_ => true);
 
     /// <summary>
-    /// Provides the query expression factory that contains methods to create generic query expressions.
+    /// Creates a new instance of <see cref="QueryExpression{TSource, TResult}"/> from the specified expression.
     /// </summary>
-    /// <typeparam name="TResult">The result type.</typeparam>
-    public static class QueryExpressionFactory<TResult>
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref="QueryExpression{TSource, TResult}"/> with the specified expression.
-        /// </summary>
-        /// <typeparam name="TSource">The data type source.</typeparam>
-        /// <param name="expression">The expression to be used by the instance.</param>
-        /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/></returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="expression"/> is null.</exception>
-        public static QueryExpression<TSource, TResult> Create<TSource>(Expression<Func<TSource, TResult>> expression)
-            where TSource : notnull => new QueryExpressionBuilder<TSource, TResult>(expression);
-    }
+    /// <typeparam name="TSource">The data type source.</typeparam>
+    /// <param name="expression">The expression to be wrapped.</param>
+    /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/> with boolean result.</returns>
+    public static QueryExpression<TSource, bool> Create<TSource>(Expression<Func<TSource, bool>> expression)
+        where TSource : notnull => new QueryExpressionBuilder<TSource, bool>(expression);
+}
+
+/// <summary>
+/// Provides the query expression factory that contains methods to create generic query expressions.
+/// </summary>
+/// <typeparam name="TResult">The result type.</typeparam>
+public static class QueryExpressionFactory<TResult>
+{
+    /// <summary>
+    /// Creates a new instance of <see cref="QueryExpression{TSource, TResult}"/> with the specified expression.
+    /// </summary>
+    /// <typeparam name="TSource">The data type source.</typeparam>
+    /// <param name="expression">The expression to be used by the instance.</param>
+    /// <returns>a new instance of <see cref="QueryExpression{TSource, TResult}"/></returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="expression"/> is null.</exception>
+    public static QueryExpression<TSource, TResult> Create<TSource>(Expression<Func<TSource, TResult>> expression)
+        where TSource : notnull => new QueryExpressionBuilder<TSource, TResult>(expression);
 }

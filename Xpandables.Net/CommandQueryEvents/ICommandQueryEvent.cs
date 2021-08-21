@@ -34,6 +34,7 @@ public interface ICommandQueryEvent
     public string CreatedBy => Environment.UserName;
 }
 
+/// <summary>
 /// Represents a helper class that allows implementation of <see cref="ICommandQueryEvent"/> interface.
 /// </summary>
 public abstract class CommandQueryEvent : ICommandQueryEvent

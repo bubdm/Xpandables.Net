@@ -15,114 +15,112 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
-namespace Xpandables.Net.Expressions
+namespace Xpandables.Net.Expressions;
+
+/// <summary>
+/// The base class to define a class expression.
+/// </summary>
+/// <typeparam name="TSource">The data type to apply expression to.</typeparam>
+/// <typeparam name="TResult">The type of the result of expression.</typeparam>
+public abstract class QueryExpression<TSource, TResult> : IQueryExpression<TSource, TResult>
+    where TSource : notnull
 {
     /// <summary>
-    /// The base class to define a class expression.
+    /// Gets the expression tree for the underlying instance.
     /// </summary>
-    /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
-    /// <typeparam name="TResult">The type of the result of expression.</typeparam>
-    public abstract class QueryExpression<TSource, TResult> : IQueryExpression<TSource, TResult>
-        where TSource : notnull
+    public abstract Expression<Func<TSource, TResult>> GetExpression();
+
+    /// <summary>
+    /// Returns the unique hash code for the current instance.
+    /// </summary>
+    /// <returns><see cref="int"/> value.</returns>
+    public override int GetHashCode()
     {
-        /// <summary>
-        /// Gets the expression tree for the underlying instance.
-        /// </summary>
-        public abstract Expression<Func<TSource, TResult>> GetExpression();
-
-        /// <summary>
-        /// Returns the unique hash code for the current instance.
-        /// </summary>
-        /// <returns><see cref="int"/> value.</returns>
-        public override int GetHashCode()
+        var hash = GetExpression().GetHashCode();
+        hash = (hash * 17) + GetExpression().Parameters.Count;
+        foreach (var param in GetExpression().Parameters)
         {
-            var hash = GetExpression().GetHashCode();
-            hash = (hash * 17) + GetExpression().Parameters.Count;
-            foreach (var param in GetExpression().Parameters)
-            {
-                hash *= 17;
-                if (param != null) hash += param.GetHashCode();
-            }
-
-            return hash;
+            hash *= 17;
+            if (param != null) hash += param.GetHashCode();
         }
 
-        /// <summary>
-        /// Determines whether the current instance equals the specified one.
-        /// </summary>
-        /// <param name="obj">The object to be compared to.</param>
-        /// <returns><see cref="bool"/> value.</returns>
-        public override bool Equals(object? obj)
-        {
-            if (obj is not QueryExpression<TSource, TResult> objVal) return false;
-            return ReferenceEquals(this, objVal) || ExpressionComparer.AreEqual(GetExpression(), objVal.GetExpression());
-        }
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-        [return: NotNull]
-        public static implicit operator Expression<Func<TSource, TResult>>(
-             QueryExpression<TSource, TResult> queryExpression)
-            => queryExpression.GetExpression();
-
-        [return: NotNull]
-        public static implicit operator Func<TSource, TResult>(
-             QueryExpression<TSource, TResult> queryExpression)
-            => queryExpression.GetExpression().Compile();
-
-        [return: NotNull]
-        public static implicit operator QueryExpression<TSource, TResult>(
-             Expression<Func<TSource, TResult>> expression)
-            => QueryExpressionFactory<TResult>.Create(expression);
-
-        [return: NotNull]
-        public static QueryExpression<TSource, TResult> operator &(
-             QueryExpression<TSource, TResult> left,
-             QueryExpression<TSource, TResult> right)
-          => new QueryExpressionAnd<TSource, TResult>(left, right: right);
-
-        [return: NotNull]
-        public static QueryExpression<TSource, TResult> operator |(
-             QueryExpression<TSource, TResult> left,
-             QueryExpression<TSource, TResult> right)
-            => new QueryExpressionOr<TSource, TResult>(left, right: right);
-
-        [return: NotNull]
-        public static QueryExpression<TSource, TResult> operator !(
-             QueryExpression<TSource, TResult> left)
-            => new QueryExpressionNot<TSource, TResult>(expression: left);
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        return hash;
     }
 
     /// <summary>
-    /// This class is a helper that provides a default implementation for <see cref="IQueryExpression{TSource}"/> with <see cref="bool"/> as result.
+    /// Determines whether the current instance equals the specified one.
     /// </summary>
-    /// <typeparam name="TSource">The data source type.</typeparam>
-    public class QueryExpression<TSource> : QueryExpression<TSource, bool>, IQueryExpression<TSource>
-        where TSource : notnull
+    /// <param name="obj">The object to be compared to.</param>
+    /// <returns><see cref="bool"/> value.</returns>
+    public override bool Equals(object? obj)
     {
-        /// <summary>
-        /// When implemented in derived class, this method will return the expression
-        /// to be used for the <see langword="Where"/> clause in a query.
-        /// </summary>
-        [return: NotNull]
-        public override Expression<Func<TSource, bool>> GetExpression() => _ => true;
+        if (obj is not QueryExpression<TSource, TResult> objVal) return false;
+        return ReferenceEquals(this, objVal) || ExpressionComparer.AreEqual(GetExpression(), objVal.GetExpression());
+    }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        [return: NotNull]
-        public static implicit operator Expression<Func<TSource, bool>>(
-              QueryExpression<TSource> queryExpression)
-             => queryExpression.GetExpression();
 
-        [return: NotNull]
-        public static implicit operator Func<TSource, bool>(
-             QueryExpression<TSource> queryExpression)
-            => queryExpression.GetExpression().Compile();
+    [return: NotNull]
+    public static implicit operator Expression<Func<TSource, TResult>>(
+         QueryExpression<TSource, TResult> queryExpression)
+        => queryExpression.GetExpression();
+
+    [return: NotNull]
+    public static implicit operator Func<TSource, TResult>(
+         QueryExpression<TSource, TResult> queryExpression)
+        => queryExpression.GetExpression().Compile();
+
+    [return: NotNull]
+    public static implicit operator QueryExpression<TSource, TResult>(
+         Expression<Func<TSource, TResult>> expression)
+        => QueryExpressionFactory<TResult>.Create(expression);
+
+    [return: NotNull]
+    public static QueryExpression<TSource, TResult> operator &(
+         QueryExpression<TSource, TResult> left,
+         QueryExpression<TSource, TResult> right)
+      => new QueryExpressionAnd<TSource, TResult>(left, right: right);
+
+    [return: NotNull]
+    public static QueryExpression<TSource, TResult> operator |(
+         QueryExpression<TSource, TResult> left,
+         QueryExpression<TSource, TResult> right)
+        => new QueryExpressionOr<TSource, TResult>(left, right: right);
+
+    [return: NotNull]
+    public static QueryExpression<TSource, TResult> operator !(
+         QueryExpression<TSource, TResult> left)
+        => new QueryExpressionNot<TSource, TResult>(expression: left);
+
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-    }
+}
+
+/// <summary>
+/// This class is a helper that provides a default implementation for <see cref="IQueryExpression{TSource}"/> with <see cref="bool"/> as result.
+/// </summary>
+/// <typeparam name="TSource">The data source type.</typeparam>
+public class QueryExpression<TSource> : QueryExpression<TSource, bool>, IQueryExpression<TSource>
+    where TSource : notnull
+{
+    /// <summary>
+    /// When implemented in derived class, this method will return the expression
+    /// to be used for the <see langword="Where"/> clause in a query.
+    /// </summary>
+    [return: NotNull]
+    public override Expression<Func<TSource, bool>> GetExpression() => _ => true;
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [return: NotNull]
+    public static implicit operator Expression<Func<TSource, bool>>(
+          QueryExpression<TSource> queryExpression)
+         => queryExpression.GetExpression();
+
+    [return: NotNull]
+    public static implicit operator Func<TSource, bool>(
+         QueryExpression<TSource> queryExpression)
+        => queryExpression.GetExpression().Compile();
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

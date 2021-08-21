@@ -15,31 +15,26 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 using Xpandables.Net.Aggregates.Events;
 
-namespace Xpandables.Net.Dispatchers
+namespace Xpandables.Net.Dispatchers;
+
+/// <summary>
+/// The default implementation of <see cref="IDomainEventDispatcher"/>.
+/// You can derive from this class in order to customize its behaviors.
+/// </summary>
+public class DomainEventDispatcher : IDomainEventDispatcher
 {
+    private readonly IDispatcher _dispatcher;
+
     /// <summary>
-    /// The default implementation of <see cref="IDomainEventDispatcher"/>.
-    /// You can derive from this class in order to customize its behaviors.
+    /// Constructs a new instance of <see cref="DomainEventDispatcher"/>.
     /// </summary>
-    public class DomainEventDispatcher : IDomainEventDispatcher
-    {
-        private readonly IDispatcher _dispatcher;
+    /// <param name="dispatcher">The dispatcher.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="dispatcher"/> is null.</exception>
+    public DomainEventDispatcher(IDispatcher dispatcher) => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
 
-        /// <summary>
-        /// Constructs a new instance of <see cref="DomainEventDispatcher"/>.
-        /// </summary>
-        /// <param name="dispatcher">The dispather.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="dispatcher"/> is null.</exception>
-        public DomainEventDispatcher(IDispatcher dispatcher) => _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
-
-        ///<inheritdoc/>
-        public virtual async Task PublishAsync(IDomainEvent @event, CancellationToken cancellationToken = default)
-            => await _dispatcher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
-    }
+    ///<inheritdoc/>
+    public virtual async Task PublishAsync(IDomainEvent @event, CancellationToken cancellationToken = default)
+        => await _dispatcher.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
 }

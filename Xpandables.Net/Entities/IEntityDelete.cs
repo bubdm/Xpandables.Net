@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,28 +14,26 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Entities;
+
+/// <summary>
+/// Adds delete information to an entity.
+/// </summary>
+public interface IEntityDelete
 {
     /// <summary>
-    /// Adds delete information to an entity.
+    /// Gets a value indicating whether or not the underlying instance is marked as deleted.
     /// </summary>
-    public interface IEntityDelete
-    {
-        /// <summary>
-        /// Gets a value indicating whether or not the underlying instance is marked as deleted.
-        /// </summary>
-        bool IsDeleted { get; }
+    bool IsDeleted { get; }
 
-        /// <summary>
-        /// Gets the deleted date of the underlying instance if exist. This property is automatically set by the <see cref="Deleted"/> method.
-        /// </summary>
-        public DateTime? DeletedOn { get; }
+    /// <summary>
+    /// Gets the deleted date of the underlying instance if exist. This property is automatically set by the <see cref="Deleted"/> method.
+    /// </summary>
+    public DateTime? DeletedOn { get; }
 
-        /// <summary>
-        /// Marks the underlying instance as deleted and sets the deleted date.
-        /// </summary>
-        void Deleted();
-    }
+    /// <summary>
+    /// Marks the underlying instance as deleted and sets the deleted date.
+    /// </summary>
+    void Deleted();
 }

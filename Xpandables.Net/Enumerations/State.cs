@@ -15,38 +15,35 @@
  *
 ************************************************************************************************************/
 
-using System;
+namespace Xpandables.Net;
 
-namespace Xpandables.Net
+/// <summary>
+/// The base State class declares methods that all Concrete State should
+/// implement and also provides a back reference to the Context object,
+/// associated with the State. This back reference can be used by States to
+/// transition the Context to another State.
+/// </summary>
+/// <typeparam name="TStateContext">The type of the context.</typeparam>
+/// <remarks>Derives from <see cref="NotifyPropertyChanged{T}"/>.</remarks>
+public abstract class State<TStateContext> :
+    NotifyPropertyChanged<State<TStateContext>>, IState<TStateContext>
+    where TStateContext : class, IStateContext
 {
     /// <summary>
-    /// The base State class declares methods that all Concrete State should
-    /// implement and also provides a back reference to the Context object,
-    /// associated with the State. This back reference can be used by States to
-    /// transition the Context to another State.
+    /// Gets the state context.
     /// </summary>
-    /// <typeparam name="TStateContext">The type of the context.</typeparam>
-    /// <remarks>Derives from <see cref="NotifyPropertyChanged{T}"/>.</remarks>
-    public abstract class State<TStateContext> :
-        NotifyPropertyChanged<State<TStateContext>>, IState<TStateContext>
-        where TStateContext : class, IStateContext
+    protected TStateContext Context { get; set; } = default!;
+
+    ///<inheritdoc/>
+    public void EnterState(TStateContext context)
     {
-        /// <summary>
-        /// Gets the state context.
-        /// </summary>
-        protected TStateContext Context { get; set; } = default!;
-
-        ///<inheritdoc/>
-        public void EnterState(TStateContext context)
-        {
-            EnterStateContext(context);
-            Context = context ?? throw new ArgumentNullException(nameof(context));
-        }
-
-        /// <summary>
-        /// When overridden in derived class, it'll apply state-specific behavior to the state context at runtime.
-        /// </summary>
-        /// <param name="context">The target state context to act with.</param>
-        protected virtual void EnterStateContext(TStateContext context) { }
+        EnterStateContext(context);
+        Context = context ?? throw new ArgumentNullException(nameof(context));
     }
+
+    /// <summary>
+    /// When overridden in derived class, it'll apply state-specific behavior to the state context at runtime.
+    /// </summary>
+    /// <param name="context">The target state context to act with.</param>
+    protected virtual void EnterStateContext(TStateContext context) { }
 }

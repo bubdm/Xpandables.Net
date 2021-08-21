@@ -15,19 +15,17 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Linq.Expressions;
 
-namespace Xpandables.Net.Expressions.Specifications
+namespace Xpandables.Net.Expressions.Specifications;
+
+internal class SpecificationExpression<TSource> : Specification<TSource>
+    where TSource : notnull
 {
-    internal class SpecificationExpression<TSource> : Specification<TSource>
-        where TSource : notnull
-    {
-        private readonly Expression<Func<TSource, bool>> _expression;
+    private readonly Expression<Func<TSource, bool>> _expression;
 
-        public SpecificationExpression(Expression<Func<TSource, bool>> expression) =>
-            _expression = expression ?? throw new ArgumentNullException(nameof(expression));
+    public SpecificationExpression(Expression<Func<TSource, bool>> expression) =>
+        _expression = expression ?? throw new ArgumentNullException(nameof(expression));
 
-        public override Expression<Func<TSource, bool>> GetExpression() => _expression;
-    }
+    public override Expression<Func<TSource, bool>> GetExpression() => _expression;
 }

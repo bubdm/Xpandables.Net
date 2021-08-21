@@ -15,53 +15,51 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Linq.Expressions;
 
-namespace Xpandables.Net.Expressions
+namespace Xpandables.Net.Expressions;
+
+/// <summary>
+/// Provides the <see cref="QueryExpression{TSource, TResult}"/> "And" profile.
+/// </summary>
+/// <typeparam name="TSource">The data type to apply expression to.</typeparam>
+/// <typeparam name="TResult">The type of the result of expression.</typeparam>
+public sealed class QueryExpressionAnd<TSource, TResult> : QueryExpression<TSource, TResult>
+    where TSource : notnull
 {
+    private readonly IQueryExpression<TSource, TResult> _left;
+    private readonly IQueryExpression<TSource, TResult> _right;
+    private Expression<Func<TSource, TResult>>? _cache;
+
     /// <summary>
-    /// Provides the <see cref="QueryExpression{TSource, TResult}"/> "And" profile.
+    /// Returns a new instance of <see cref="QueryExpressionAnd{TSource, TResult}"/> class with the query expressions for composition.
     /// </summary>
-    /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
-    /// <typeparam name="TResult">The type of the result of expression.</typeparam>
-    public sealed class QueryExpressionAnd<TSource, TResult> : QueryExpression<TSource, TResult>
-        where TSource : notnull
+    /// <param name="left">The query expression for the left side.</param>
+    /// <param name="right">The query expression for the right side.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
+    public QueryExpressionAnd(IQueryExpression<TSource, TResult> left, IQueryExpression<TSource, TResult> right)
     {
-        private readonly IQueryExpression<TSource, TResult> _left;
-        private readonly IQueryExpression<TSource, TResult> _right;
-        private Expression<Func<TSource, TResult>>? _cache;
-
-        /// <summary>
-        /// Returns a new instance of <see cref="QueryExpressionAnd{TSource, TResult}"/> class with the query expressions for composition.
-        /// </summary>
-        /// <param name="left">The query expression for the left side.</param>
-        /// <param name="right">The query expression for the right side.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="right"/> is null.</exception>
-        public QueryExpressionAnd(IQueryExpression<TSource, TResult> left, IQueryExpression<TSource, TResult> right)
-        {
-            _left = left ?? throw new ArgumentNullException(nameof(left));
-            _right = right ?? throw new ArgumentNullException(nameof(right));
-        }
-
-        /// <summary>
-        /// Returns a new instance of <see cref="QueryExpressionAnd{TSource, TResult}"/> class with the expressions for composition.
-        /// </summary>
-        /// <param name="left">The query expression  for the left side.</param>
-        /// <param name="rightExpression">The expression for the right side.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="rightExpression"/> is null.</exception>
-        public QueryExpressionAnd(IQueryExpression<TSource, TResult> left, Expression<Func<TSource, TResult>> rightExpression)
-        {
-            _left = left ?? throw new ArgumentNullException(nameof(left));
-            _right = new QueryExpressionBuilder<TSource, TResult>(rightExpression ?? throw new ArgumentNullException(nameof(rightExpression)));
-        }
-
-        /// <summary>
-        /// Returns the expression to be used for the clause <see langword="Where"/> in a query.
-        /// </summary>
-        public override Expression<Func<TSource, TResult>> GetExpression()
-            => _cache ??= ExpressionFactory<TResult>.And(_left.GetExpression(), _right.GetExpression());
+        _left = left ?? throw new ArgumentNullException(nameof(left));
+        _right = right ?? throw new ArgumentNullException(nameof(right));
     }
+
+    /// <summary>
+    /// Returns a new instance of <see cref="QueryExpressionAnd{TSource, TResult}"/> class with the expressions for composition.
+    /// </summary>
+    /// <param name="left">The query expression  for the left side.</param>
+    /// <param name="rightExpression">The expression for the right side.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="left"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="rightExpression"/> is null.</exception>
+    public QueryExpressionAnd(IQueryExpression<TSource, TResult> left, Expression<Func<TSource, TResult>> rightExpression)
+    {
+        _left = left ?? throw new ArgumentNullException(nameof(left));
+        _right = new QueryExpressionBuilder<TSource, TResult>(rightExpression ?? throw new ArgumentNullException(nameof(rightExpression)));
+    }
+
+    /// <summary>
+    /// Returns the expression to be used for the clause <see langword="Where"/> in a query.
+    /// </summary>
+    public override Expression<Func<TSource, TResult>> GetExpression()
+        => _cache ??= ExpressionFactory<TResult>.And(_left.GetExpression(), _right.GetExpression());
 }

@@ -15,26 +15,25 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Entities
+namespace Xpandables.Net.Entities;
+
+/// <summary>
+/// Adds active information to an entity.
+/// </summary>
+public interface IEntityActive
 {
     /// <summary>
-    /// Adds active information to an entity.
+    /// Gets a value indicating whether or not the underlying instance is marked as active.
     /// </summary>
-    public interface IEntityActive
-    {
-        /// <summary>
-        /// Gets a value indicating whether or not the underlying instance is marked as active.
-        /// </summary>
-        bool IsActive { get; }
+    bool IsActive { get; }
 
-        /// <summary>
-        /// Marks the underlying instance as deactivated.
-        /// </summary>
-        void Deactivated();
+    /// <summary>
+    /// Marks the underlying instance as deactivated.
+    /// </summary>
+    void Deactivated();
 
-        /// <summary>
-        /// Marks the underlying instance as activated.
-        /// </summary>
-        void Activated();
-    }
+    /// <summary>
+    /// Marks the underlying instance as activated.
+    /// </summary>
+    void Activated();
 }

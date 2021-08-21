@@ -15,37 +15,34 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
-namespace Xpandables.Net.Expressions
+namespace Xpandables.Net.Expressions;
+
+/// <summary>
+/// Defines a methods that returns an <see cref="Expression{TDelegate}"/> that can be used to query
+/// the <typeparamref name="TSource"/> instance and inherits from <see cref="ICanHandle{TArgument}"/>.
+/// This can significantly improve the use of the command/query pattern, allowing class conversion
+/// to an expression tree.
+/// </summary>
+/// <typeparam name="TSource">The data type to apply expression to.</typeparam>
+/// <typeparam name="TResult">The type of the result of expression.</typeparam>
+public interface IQueryExpression<TSource, TResult> : ICanHandle<TSource>
+    where TSource : notnull
 {
     /// <summary>
-    /// Defines a methods that returns an <see cref="Expression{TDelegate}"/> that can be used to query
-    /// the <typeparamref name="TSource"/> instance and inherits from <see cref="ICanHandle{TArgument}"/>.
-    /// This can significantly improve the use of the command/query pattern, allowing class conversion
-    /// to an expression tree.
+    /// Gets the expression tree for the underlying instance.
     /// </summary>
-    /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
-    /// <typeparam name="TResult">The type of the result of expression.</typeparam>
-    public interface IQueryExpression<TSource, TResult> : ICanHandle<TSource>
-        where TSource : notnull
-    {
-        /// <summary>
-        /// Gets the expression tree for the underlying instance.
-        /// </summary>
-        Expression<Func<TSource, TResult>> GetExpression();
-    }
-
-    /// <summary>
-    /// Defines a methods that returns an <see cref="Expression{TDelegate}"/> that can be used to query
-    /// the <typeparamref name="TSource"/> instance with <see cref="bool"/> result.
-    /// This can significantly improve the use of the command/query pattern, allowing class conversion
-    /// to an expression tree.
-    /// </summary>
-    /// <typeparam name="TSource">The data type to apply expression to.</typeparam>
-    public interface IQueryExpression<TSource> : IQueryExpression<TSource, bool>
-        where TSource : notnull
-    { }
+    Expression<Func<TSource, TResult>> GetExpression();
 }
+
+/// <summary>
+/// Defines a methods that returns an <see cref="Expression{TDelegate}"/> that can be used to query
+/// the <typeparamref name="TSource"/> instance with <see cref="bool"/> result.
+/// This can significantly improve the use of the command/query pattern, allowing class conversion
+/// to an expression tree.
+/// </summary>
+/// <typeparam name="TSource">The data type to apply expression to.</typeparam>
+public interface IQueryExpression<TSource> : IQueryExpression<TSource, bool>
+    where TSource : notnull
+{ }

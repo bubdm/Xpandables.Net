@@ -15,27 +15,22 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 using Xpandables.Net.Aggregates.Events;
 
-namespace Xpandables.Net.Dispatchers
+namespace Xpandables.Net.Dispatchers;
+
+/// <summary>
+/// Defines a method to automatically dispatch <see cref="IDomainEvent"/>.
+/// </summary>
+public interface IDomainEventDispatcher
 {
     /// <summary>
-    /// Defines a method to automatically dispatch <see cref="IDomainEvent"/>.
+    /// Publishes the specified domain event to all registered subscribers.
     /// </summary>
-    public interface IDomainEventDispatcher
-    {
-        /// <summary>
-        /// Publishes the specified domain event to all registered subscribers.
-        /// </summary>
-        /// <param name="event">The event to be published.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Publishing the event failed. See inner exception.</exception>
-        Task PublishAsync(IDomainEvent @event, CancellationToken cancellationToken = default);
-    }
+    /// <param name="event">The event to be published.</param>
+    /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+    /// <returns>A task that represents an asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Publishing the event failed. See inner exception.</exception>
+    Task PublishAsync(IDomainEvent @event, CancellationToken cancellationToken = default);
 }

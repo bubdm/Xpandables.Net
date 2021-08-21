@@ -15,27 +15,22 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 using Xpandables.Net.Aggregates.Events;
 
-namespace Xpandables.Net.Dispatchers
+namespace Xpandables.Net.Dispatchers;
+
+/// <summary>
+/// Defines a method to automatically dispatch <see cref="INotification"/>.
+/// </summary>
+public interface INotificationDispatcher
 {
     /// <summary>
-    /// Defines a method to automatically dispatch <see cref="INotification"/>.
+    /// Publishes the specified notification to all registered subscribers.
     /// </summary>
-    public interface INotificationDispatcher
-    {
-        /// <summary>
-        /// Publishes the specified notification to all registered subscribers.
-        /// </summary>
-        /// <param name="event">The notification to be published.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Publishing the notification failed. See inner exception.</exception>
-        Task PublishAsync(INotification @event, CancellationToken cancellationToken = default);
-    }
+    /// <param name="event">The notification to be published.</param>
+    /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+    /// <returns>A task that represents an asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Publishing the notification failed. See inner exception.</exception>
+    Task PublishAsync(INotification @event, CancellationToken cancellationToken = default);
 }
