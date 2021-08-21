@@ -15,26 +15,23 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Linq;
-
 using Xpandables.Net.Aggregates.Events;
 
-namespace Xpandables.Net.Aggregates
+namespace Xpandables.Net.Aggregates;
+
+/// <summary>
+/// Out-box pattern interface (notification).
+/// </summary>
+internal interface INotificationSourcing
 {
     /// <summary>
-    /// Out-box pattern interface (notification).
+    /// Marks all notifications as committed.
     /// </summary>
-    internal interface INotificationSourcing
-    {
-        /// <summary>
-        /// Marks all notifications as committed.
-        /// </summary>
-        void MarkNotificationsAsCommitted();
+    void MarkNotificationsAsCommitted();
 
-        /// <summary>
-        /// Returns a collection of notifications.
-        /// </summary>
-        /// <returns>A list of notifications.</returns>
-        IOrderedEnumerable<INotification> GetNotifications();
-    }
+    /// <summary>
+    /// Returns a collection of notifications.
+    /// </summary>
+    /// <returns>A list of notifications.</returns>
+    IOrderedEnumerable<INotification> GetNotifications();
 }

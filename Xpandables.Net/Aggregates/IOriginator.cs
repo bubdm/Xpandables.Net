@@ -15,26 +15,23 @@
  *
 ************************************************************************************************************/
 
-using System;
+namespace Xpandables.Net.Aggregates;
 
-namespace Xpandables.Net.Aggregates
+/// <summary>
+/// This interface is used for the Memento pattern to store and restore the internal state using a <see cref="ISnapShot"/>.
+/// </summary>
+public interface IOriginator
 {
     /// <summary>
-    /// This interface is used for the Memento pattern to store and restore the internal state using a <see cref="ISnapShot"/>.
+    /// Creates a memento containing a snapshot of its current internal state. 
     /// </summary>
-    public interface IOriginator
-    {
-        /// <summary>
-        /// Creates a memento containing a snapshot of its current internal state. 
-        /// </summary>
-        /// <returns>A memento of the underlying instance.</returns>
-        IMemento CreateMemento();
+    /// <returns>A memento of the underlying instance.</returns>
+    IMemento CreateMemento();
 
-        /// <summary>
-        /// Restores the state of the underlying instance using the specified memento.
-        /// </summary>
-        /// <param name="memento">the memento instance to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="memento"/> is null.</exception>
-        void SetMemento(IMemento memento);
-    }
+    /// <summary>
+    /// Restores the state of the underlying instance using the specified memento.
+    /// </summary>
+    /// <param name="memento">the memento instance to act with.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="memento"/> is null.</exception>
+    void SetMemento(IMemento memento);
 }

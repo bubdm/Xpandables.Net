@@ -17,26 +17,25 @@
 ************************************************************************************************************/
 using System.Text.Json.Serialization;
 
-namespace Xpandables.Net.Aggregates.Events
+namespace Xpandables.Net.Aggregates.Events;
+
+/// <summary>
+/// Represents a helper class that allows implementation of <see cref="INotification"/> interface.
+/// </summary>
+public abstract class Notification : Event, INotification
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="INotification"/> interface.
+    /// Initializes a default instance of the <see cref="Notification"/>.
     /// </summary>
-    public abstract class Notification : Event, INotification
+    /// <param name="aggregateId">The aggregate id.</param>
+    /// <param name="domainEvent">The target domain event.</param>
+    protected Notification(AggregateId aggregateId, IDomainEvent? domainEvent = default)
+        : base(aggregateId)
     {
-        /// <summary>
-        /// Initializes a default instance of the <see cref="Notification"/>.
-        /// </summary>
-        /// <param name="aggregateId">The aggregate id.</param>
-        /// <param name="domainEvent">The target domain event.</param>
-        protected Notification(AggregateId aggregateId, IDomainEvent? domainEvent = default)
-            : base(aggregateId)
-        {
-            DomainEvent = domainEvent;
-        }
-
-        ///<inheritdoc/>
-        [JsonIgnore]
-        public IDomainEvent? DomainEvent { get; }
+        DomainEvent = domainEvent;
     }
+
+    ///<inheritdoc/>
+    [JsonIgnore]
+    public IDomainEvent? DomainEvent { get; }
 }

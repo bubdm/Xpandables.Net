@@ -44,7 +44,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors />
-    <NoWarn />
+    <NoWarn>CA2252;</NoWarn>
     <OutputPath>bin\AnyCPU\Debug\</OutputPath>
     <DocumentationFile>bin\AnyCPU\Debug\net6.0\Xpandables.Net.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -52,7 +52,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningsAsErrors />
-    <NoWarn />
+    <NoWarn>CA2252;</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <OutputPath>bin\AnyCPU\Release\</OutputPath>
     <DocumentationFile>bin\AnyCPU\Release\net6.0\Xpandables.Net.xml</DocumentationFile>

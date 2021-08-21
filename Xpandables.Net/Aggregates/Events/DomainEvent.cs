@@ -15,51 +15,46 @@
  *
 ************************************************************************************************************/
 
-using System;
+namespace Xpandables.Net.Aggregates.Events;
 
-using Xpandables.Net.Aggregates;
-
-namespace Xpandables.Net.Aggregates.Events
+/// <summary>
+/// This is the <see langword="abstract"/> class that implements <see cref="IDomainEvent"/>.
+/// </summary>
+public abstract class DomainEvent : Event, IDomainEvent, IEquatable<DomainEvent>
 {
     /// <summary>
-    /// This is the <see langword="abstract"/> class that implements <see cref="IDomainEvent"/>.
+    /// Constructs a new instance of <see cref="DomainEvent"/>.
     /// </summary>
-    public abstract class DomainEvent : Event, IDomainEvent, IEquatable<DomainEvent>
+    /// <param name="aggregateId">The aggregate identifier.</param>
+    /// <param name="version">The version of the  related aggregate.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
+    protected DomainEvent(AggregateId aggregateId, AggregateVersion version) : base(aggregateId) => Version = version;
+
+    ///<inheritdoc/>
+    public AggregateVersion Version { get; protected set; }
+
+    ///<inheritdoc/>
+    public bool Equals(DomainEvent? other)
     {
-        /// <summary>
-        /// Constructs a new instance of <see cref="DomainEvent"/>.
-        /// </summary>
-        /// <param name="aggregateId">The aggregate identifier.</param>
-        /// <param name="version">The version of the  related aggregate.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
-        protected DomainEvent(AggregateId aggregateId, AggregateVersion version) : base(aggregateId) => Version = version;
+        if (other is null)
+            return false;
 
-        ///<inheritdoc/>
-        public AggregateVersion Version { get; protected set; }
-
-        ///<inheritdoc/>
-        public bool Equals(DomainEvent? other)
-        {
-            if (other is null)
-                return false;
-
-            return AggregateId.Equals(other.AggregateId)
-                && Guid.Equals(other.Guid)
-                && Version.Equals(other.Version);
-        }
-
-        ///<inheritdoc/>
-        public virtual IDomainEvent WithAggregate(AggregateId aggregateId, AggregateVersion version)
-        {
-            AggregateId = aggregateId;
-            Version = version;
-            return this;
-        }
-
-        ///<inheritdoc/>
-        public override bool Equals(object? obj) => obj is DomainEvent domainEvent && Equals(domainEvent);
-
-        ///<inheritdoc/>
-        public override int GetHashCode() => HashCode.Combine(AggregateId.Value, Guid, Version);
+        return AggregateId.Equals(other.AggregateId)
+            && Guid.Equals(other.Guid)
+            && Version.Equals(other.Version);
     }
+
+    ///<inheritdoc/>
+    public virtual IDomainEvent WithAggregate(AggregateId aggregateId, AggregateVersion version)
+    {
+        AggregateId = aggregateId;
+        Version = version;
+        return this;
+    }
+
+    ///<inheritdoc/>
+    public override bool Equals(object? obj) => obj is DomainEvent domainEvent && Equals(domainEvent);
+
+    ///<inheritdoc/>
+    public override int GetHashCode() => HashCode.Combine(AggregateId.Value, Guid, Version);
 }

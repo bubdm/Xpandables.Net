@@ -15,46 +15,45 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Aggregates
+namespace Xpandables.Net.Aggregates;
+
+/// <summary>
+/// Defines base properties for an aggregate root that is identified by a property of <see cref="IAggregateId"/> type.
+/// Aggregate is a pattern in Domain-Driven Design.
+/// A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
+/// </summary>
+public interface IAggregateRoot : ICommandQueryEvent
 {
     /// <summary>
-    /// Defines base properties for an aggregate root that is identified by a property of <see cref="IAggregateId"/> type.
-    /// Aggregate is a pattern in Domain-Driven Design.
-    /// A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
+    /// Gets the unique identifier of the aggregate.
     /// </summary>
-    public interface IAggregateRoot : ICommandQueryEvent
-    {
-        /// <summary>
-        /// Gets the unique identifier of the aggregate.
-        /// </summary>
-        AggregateId AggregateId { get; }
-
-        /// <summary>
-        /// Gets the current version of the instance, the default value is -1.
-        /// </summary>
-        AggregateVersion Version { get; }
-
-        /// <summary>
-        /// Determines whether or not the underlying instance is a empty one.
-        /// </summary>
-        /// <returns>Returns <see langword="true"/> if so, otherwise <see langword="false"/></returns>
-        public virtual bool IsEmpty => AggregateId?.IsEmpty() ?? true;
-    }
+    AggregateId AggregateId { get; }
 
     /// <summary>
-    /// Defines base properties for an aggregate that is identified by a property of <typeparamref name="TAggregateId"/> type.
-    /// Aggregate is a pattern in Domain-Driven Design.
-    /// A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
+    /// Gets the current version of the instance, the default value is -1.
     /// </summary>
-    /// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
-    public interface IAggregateRoot<TAggregateId> : IAggregateRoot
-        where TAggregateId : AggregateId
-    {
-        /// <summary>
-        /// Gets the unique identifier of the aggregate.
-        /// </summary>
-        new TAggregateId AggregateId { get; }
+    AggregateVersion Version { get; }
 
-        AggregateId IAggregateRoot.AggregateId => AggregateId;
-    }
+    /// <summary>
+    /// Determines whether or not the underlying instance is a empty one.
+    /// </summary>
+    /// <returns>Returns <see langword="true"/> if so, otherwise <see langword="false"/></returns>
+    public virtual bool IsEmpty => AggregateId?.IsEmpty() ?? true;
+}
+
+/// <summary>
+/// Defines base properties for an aggregate that is identified by a property of <typeparamref name="TAggregateId"/> type.
+/// Aggregate is a pattern in Domain-Driven Design.
+/// A DDD aggregate is a cluster of domain objects that can be treated as a single unit.
+/// </summary>
+/// <typeparam name="TAggregateId">The type the aggregate identity.</typeparam>
+public interface IAggregateRoot<TAggregateId> : IAggregateRoot
+    where TAggregateId : AggregateId
+{
+    /// <summary>
+    /// Gets the unique identifier of the aggregate.
+    /// </summary>
+    new TAggregateId AggregateId { get; }
+
+    AggregateId IAggregateRoot.AggregateId => AggregateId;
 }

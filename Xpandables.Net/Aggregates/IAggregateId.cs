@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,21 +14,19 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net.Aggregates
+namespace Xpandables.Net.Aggregates;
+
+/// <summary>
+/// Represents the unique identifier for an aggregate.
+/// </summary>
+[JsonInterfaceConverter(typeof(JsonInterfaceConverter<IAggregateId>))]
+public interface IAggregateId : IUniqueKey<Guid>
 {
     /// <summary>
-    /// Represents the unique identifier for an aggregate.
+    /// Returns a value that determines whether or not the aggregate identity is defined or empty.
     /// </summary>
-    [JsonInterfaceConverter(typeof(JsonInterfaceConverter<IAggregateId>))]
-    public interface IAggregateId : IUniqueKey<Guid>
-    {
-        /// <summary>
-        /// Returns a value that determines whether or not the aggregate identity is defined or empty.
-        /// </summary>
-        /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>
-        public virtual new bool IsEmpty() => Value == Guid.Empty;
-        bool IUniqueKey<Guid>.IsEmpty() => IsEmpty();
-    }
+    /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>
+    public virtual new bool IsEmpty() => Value == Guid.Empty;
+    bool IUniqueKey<Guid>.IsEmpty() => IsEmpty();
 }

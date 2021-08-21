@@ -15,58 +15,55 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 using Xpandables.Net.Aggregates.Events;
 
 [assembly: InternalsVisibleTo("Xpandables.Net.EntityFramework, PublicKey=0024000004800000940000000602000000240000525341310004000001000100410b9f6b317bb83c59c2727a39ad3e0c3aff55cbfc6f1328e2a925ab2e85d44b1815b23cea3f22924ea4226a6b3318eb90d1f28234e0116be8b70c29a41849a93e1baa680deae7f56e8d75d352d6f3b8457746223adf8cc2085a2d1d8c3f7be439bc53f1a032cc696f75afa378e0e054f3eb325fb9a7898a31c612c21e9c3cb8")]
-namespace Xpandables.Net.Aggregates
+namespace Xpandables.Net.Aggregates;
+
+/// <summary>
+/// Event-sourcing pattern interface.
+/// </summary>
+internal interface IDomainEventSourcing
 {
     /// <summary>
-    /// Event-sourcing pattern interface.
+    /// Marks all the domain events as committed.
     /// </summary>
-    internal interface IDomainEventSourcing
-    {
-        /// <summary>
-        /// Marks all the domain events as committed.
-        /// </summary>
-        void MarkEventsAsCommitted();
+    void MarkEventsAsCommitted();
 
-        /// <summary>
-        /// Returns a collection of uncommitted events.
-        /// </summary>
-        /// <returns>A list of uncommitted events.</returns>
-        IOrderedEnumerable<IDomainEvent> GetUncommittedEvents();
+    /// <summary>
+    /// Returns a collection of uncommitted events.
+    /// </summary>
+    /// <returns>A list of uncommitted events.</returns>
+    IOrderedEnumerable<IDomainEvent> GetUncommittedEvents();
 
-        /// <summary>
-        /// Initializes the underlying aggregate with the specified history collection of events.
-        /// </summary>
-        /// <param name="events">The collection of events to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="events"/> is null.</exception>
-        void LoadFromHistory(IOrderedEnumerable<IDomainEvent> events);
+    /// <summary>
+    /// Initializes the underlying aggregate with the specified history collection of events.
+    /// </summary>
+    /// <param name="events">The collection of events to act with.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="events"/> is null.</exception>
+    void LoadFromHistory(IOrderedEnumerable<IDomainEvent> events);
 
-        /// <summary>
-        /// Applies the history specified domain event to the underlying aggregate.
-        /// </summary>
-        /// <param name="event">The event to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        void LoadFromHistory(IDomainEvent @event);
+    /// <summary>
+    /// Applies the history specified domain event to the underlying aggregate.
+    /// </summary>
+    /// <param name="event">The event to be applied.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+    void LoadFromHistory(IDomainEvent @event);
 
-        /// <summary>
-        /// Applies the specified event to the current instance.
-        /// </summary>
-        /// <param name="event">The event to act with.</param>
-        /// <exception cref="ArgumentException">The <paramref name="event"/> is null.</exception>
-        void Apply(IDomainEvent @event);
+    /// <summary>
+    /// Applies the specified event to the current instance.
+    /// </summary>
+    /// <param name="event">The event to act with.</param>
+    /// <exception cref="ArgumentException">The <paramref name="event"/> is null.</exception>
+    void Apply(IDomainEvent @event);
 
-        /// <summary>
-        /// Applies the mutation calling the handler that matches the specified event.
-        /// </summary>
-        /// <param name="event">The event to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">The expected handler is not registered.</exception>
-        void Mutate(IDomainEvent @event);
-    }
+    /// <summary>
+    /// Applies the mutation calling the handler that matches the specified event.
+    /// </summary>
+    /// <param name="event">The event to be applied.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">The expected handler is not registered.</exception>
+    void Mutate(IDomainEvent @event);
 }

@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,22 +14,19 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net.Aggregates.Events
+namespace Xpandables.Net.Aggregates.Events;
+
+/// <summary>
+/// Represents a helper class that allows implementation of <see cref="IDomainEventHandler{TDomainEvent}"/> interface.
+/// </summary>
+/// <typeparam name="TDomainEvent">Type of domain event to act on.</typeparam>
+public abstract class DomainEventHandler<TDomainEvent> : IDomainEventHandler<TDomainEvent>
+    where TDomainEvent : class, IDomainEvent
 {
-    /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IDomainEventHandler{TDomainEvent}"/> interface.
-    /// </summary>
-    /// <typeparam name="TDomainEvent">Type of domain event to act on.</typeparam>
-    public abstract class DomainEventHandler<TDomainEvent> : IDomainEventHandler<TDomainEvent>
-        where TDomainEvent : class, IDomainEvent
-    {
-        ///<inheritdoc/>
-        public abstract Task HandleAsync(TDomainEvent @event, CancellationToken cancellationToken = default);
+    ///<inheritdoc/>
+    public abstract Task HandleAsync(TDomainEvent @event, CancellationToken cancellationToken = default);
 
-        Task IEventHandler.HandleAsync(object @event, CancellationToken cancellationToken)
-            => HandleAsync((TDomainEvent)@event, cancellationToken);
-    }
+    Task IEventHandler.HandleAsync(object @event, CancellationToken cancellationToken)
+        => HandleAsync((TDomainEvent)@event, cancellationToken);
 }

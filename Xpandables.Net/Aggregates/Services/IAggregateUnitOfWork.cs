@@ -17,26 +17,25 @@
 using Xpandables.Net.Entities;
 using Xpandables.Net.UnitOfWorks;
 
-namespace Xpandables.Net.Aggregates.Services
+namespace Xpandables.Net.Aggregates.Services;
+
+/// <summary>
+/// Provides with base unit of work for aggregates.
+/// </summary>
+public interface IAggregateUnitOfWork : IUnitOfWork
 {
     /// <summary>
-    /// Provides with base unit of work for aggregates.
+    /// Gets the repository for <see cref="DomainStoreEntity"/> entities.
     /// </summary>
-    public interface IAggregateUnitOfWork : IUnitOfWork
-    {
-        /// <summary>
-        /// Gets the repository for <see cref="DomainStoreEntity"/> entities.
-        /// </summary>
-        IRepository<DomainStoreEntity> Events { get; }
+    IRepository<DomainStoreEntity> Events { get; }
 
-        /// <summary>
-        /// Gets the repository for <see cref="NotificationStoreEntity"/> entities.
-        /// </summary>
-        IRepository<NotificationStoreEntity> Notifications { get; }
+    /// <summary>
+    /// Gets the repository for <see cref="NotificationStoreEntity"/> entities.
+    /// </summary>
+    IRepository<NotificationStoreEntity> Notifications { get; }
 
-        /// <summary>
-        /// Gets the repository for <see cref="SnapShotStoreEntity"/> entities.
-        /// </summary>
-        IRepository<SnapShotStoreEntity> SnapShots { get; }
-    }
+    /// <summary>
+    /// Gets the repository for <see cref="SnapShotStoreEntity"/> entities.
+    /// </summary>
+    IRepository<SnapShotStoreEntity> SnapShots { get; }
 }

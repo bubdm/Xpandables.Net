@@ -15,22 +15,21 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Aggregates
+namespace Xpandables.Net.Aggregates;
+
+/// <summary>
+/// Defines properties of a snapshot for an aggregate.
+/// </summary>
+[JsonInterfaceConverter(typeof(JsonInterfaceConverter<ISnapShot>))]
+public interface ISnapShot : IEvent
 {
     /// <summary>
-    /// Defines properties of a snapshot for an aggregate.
+    /// Gets the memento linked to the aggregate.
     /// </summary>
-    [JsonInterfaceConverter(typeof(JsonInterfaceConverter<ISnapShot>))]
-    public interface ISnapShot : IEvent
-    {
-        /// <summary>
-        /// Gets the memento linked to the aggregate.
-        /// </summary>
-        IMemento Memento { get; }
+    IMemento Memento { get; }
 
-        /// <summary>
-        /// Gets the version of the snapshot.
-        /// </summary>
-        AggregateVersion Version { get; }
-    }
+    /// <summary>
+    /// Gets the version of the snapshot.
+    /// </summary>
+    AggregateVersion Version { get; }
 }

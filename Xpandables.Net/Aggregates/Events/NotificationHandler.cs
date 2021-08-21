@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,23 +14,20 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net.Aggregates.Events
+namespace Xpandables.Net.Aggregates.Events;
+
+/// <summary>
+/// Represents a helper class that allows implementation of
+/// <see cref="INotificationHandler{TNotificationEvent}"/> interface.
+/// </summary>
+/// <typeparam name="TNotificationEvent">Type of notification to act on.</typeparam>
+public abstract class NotificationHandler<TNotificationEvent> : INotificationHandler<TNotificationEvent>
+    where TNotificationEvent : class, INotification
 {
-    /// <summary>
-    /// Represents a helper class that allows implementation of
-    /// <see cref="INotificationHandler{TNotificationEvent}"/> interface.
-    /// </summary>
-    /// <typeparam name="TNotificationEvent">Type of notification to act on.</typeparam>
-    public abstract class NotificationHandler<TNotificationEvent> : INotificationHandler<TNotificationEvent>
-        where TNotificationEvent : class, INotification
-    {
-        ///<inheritdoc/>
-        public abstract Task HandleAsync(TNotificationEvent @event, CancellationToken cancellationToken = default);
+    ///<inheritdoc/>
+    public abstract Task HandleAsync(TNotificationEvent @event, CancellationToken cancellationToken = default);
 
-        Task IEventHandler.HandleAsync(object @event, CancellationToken cancellationToken)
-            => HandleAsync((TNotificationEvent)@event, cancellationToken);
-    }
+    Task IEventHandler.HandleAsync(object @event, CancellationToken cancellationToken)
+        => HandleAsync((TNotificationEvent)@event, cancellationToken);
 }

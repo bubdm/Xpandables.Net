@@ -17,17 +17,16 @@
 ************************************************************************************************************/
 using System.Text.Json.Serialization;
 
-namespace Xpandables.Net.Aggregates.Events
+namespace Xpandables.Net.Aggregates.Events;
+
+/// <summary>
+/// Defines a marker interface to be used to mark an object to act as a notification event that contains an <see cref="IDomainEvent"/>.
+/// </summary>
+public interface INotification : IEvent
 {
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as a notification event that contains an <see cref="IDomainEvent"/>.
+    /// Gets the target domain event.
     /// </summary>
-    public interface INotification : IEvent
-    {
-        /// <summary>
-        /// Gets the target domain event.
-        /// </summary>
-        [JsonIgnore]
-        IDomainEvent? DomainEvent { get; }
-    }
+    [JsonIgnore]
+    IDomainEvent? DomainEvent { get; }
 }
