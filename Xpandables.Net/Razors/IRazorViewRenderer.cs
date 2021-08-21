@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,33 +14,30 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net.Razors
+namespace Xpandables.Net.Razors;
+
+/// <summary>
+/// Provides with methods to render a razor view to string.
+/// </summary>
+public interface IRazorViewRenderer
 {
     /// <summary>
-    /// Provides with methods to render a razor view to string.
+    /// Returns a string of a rendered view with the specified model.
     /// </summary>
-    public interface IRazorViewRenderer
-    {
-        /// <summary>
-        /// Returns a string of a rendered view with the specified model.
-        /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <param name="viewName">The path for the view.</param>
-        /// <param name="model">The model instance.</param>
-        /// <returns>A string that represents the rendered view.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="viewName"/> is null.</exception>
-        Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model);
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <param name="viewName">The path for the view.</param>
+    /// <param name="model">The model instance.</param>
+    /// <returns>A string that represents the rendered view.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="viewName"/> is null.</exception>
+    Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model);
 
-        /// <summary>
-        /// Returns a string of a rendered view that matches the specified model.
-        /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <param name="model">The model instance.</param>
-        /// <returns>A string that represents the rendered view.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="model"/> is null.</exception>
-        Task<string> RenderFromModelToStringAsync<TModel>(TModel model);
-    }
+    /// <summary>
+    /// Returns a string of a rendered view that matches the specified model.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <param name="model">The model instance.</param>
+    /// <returns>A string that represents the rendered view.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="model"/> is null.</exception>
+    Task<string> RenderFromModelToStringAsync<TModel>(TModel model);
 }

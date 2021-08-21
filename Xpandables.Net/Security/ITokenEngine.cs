@@ -15,57 +15,66 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
-namespace Xpandables.Net.Security
+namespace Xpandables.Net.Security;
+
+/// <summary>
+/// Contains properties for an access token.
+/// <para>Returns a new instance of <see cref="Xpandables.Net.Security.AccessToken"/> with its properties.</para>
+/// </summary>
+/// <param name="Value">The value of the token.</param>
+/// <param name="Type">The type of the token.</param>
+/// <param name="Expiry">The token expiry date.</param>
+/// <exception cref="ArgumentNullException">The <paramref name="Value"/> is null.</exception>
+/// <exception cref="ArgumentNullException">The <paramref name="Type"/> is null.</exception>
+public record AccessToken([Required, DataType(DataType.Text)] string Value, [Required, DataType(DataType.Text)] string Type, [Required, DataType(DataType.DateTime)] DateTime Expiry);
+
+/// <summary>
+///  Defines a set of methods that can be used to build a token from a collection of claims
+///  and return back this collection from that token.
+/// </summary>
+public interface ITokenEngine
 {
     /// <summary>
-    ///  Defines a set of methods that can be used to build a token from a collection of claims
-    ///  and return back this collection from that token.
+    /// Uses the collection of claims to build a token.
     /// </summary>
-    public interface ITokenEngine
-    {
-        /// <summary>
-        /// Uses the collection of claims to build a token.
-        /// </summary>
-        /// <param name="claims">collection of claims to be used to build token string.</param>
-        /// <returns>An instance of <see cref="AccessToken"/> token if OK.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="claims"/> is null.</exception>
-        IOperationResult<AccessToken> WriteToken(IEnumerable<Claim> claims);
+    /// <param name="claims">collection of claims to be used to build token string.</param>
+    /// <returns>An instance of <see cref="AccessToken"/> token if OK.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="claims"/> is null.</exception>
+    IOperationResult<AccessToken> WriteToken(IEnumerable<Claim> claims);
 
-        /// <summary>
-        /// Uses the source object to build a string token. The default behavior throws an <see cref="OperationResultException"/>.
-        /// </summary>
-        /// <param name="source">The source to be used.</param>
-        /// <returns>An instance of string token if OK.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public virtual IOperationResult<AccessToken> WriteToken(object source)
-            => throw new OperationResultException(new FailureOperationResult<AccessToken>(new OperationErrorCollection("WriteToken", "Method not implemented")));
+    /// <summary>
+    /// Uses the source object to build a string token. The default behavior throws an <see cref="OperationResultException"/>.
+    /// </summary>
+    /// <param name="source">The source to be used.</param>
+    /// <returns>An instance of string token if OK.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+    public virtual IOperationResult<AccessToken> WriteToken(object source)
+        => throw new OperationResultException(new FailureOperationResult<AccessToken>(new OperationErrorCollection("WriteToken", "Method not implemented")));
 
-        /// <summary>
-        /// Returns after validation the collection of claims from the specified token.
-        /// </summary>
-        /// <param name="token">The token string.</param>
-        /// <returns>An collection of claims if OK.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
-        IOperationResult<IEnumerable<Claim>> ReadToken(string token);
+    /// <summary>
+    /// Returns after validation the collection of claims from the specified token.
+    /// </summary>
+    /// <param name="token">The token string.</param>
+    /// <returns>An collection of claims if OK.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
+    IOperationResult<IEnumerable<Claim>> ReadToken(string token);
 
-        /// <summary>
-        /// Returns without validation the collection of claims from the specified token.
-        /// </summary>
-        /// <param name="token">The token string.</param>
-        /// <returns>An collection of claims if OK.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
-        IOperationResult<IEnumerable<Claim>> ReadUnsafeToken(string token);
+    /// <summary>
+    /// Returns without validation the collection of claims from the specified token.
+    /// </summary>
+    /// <param name="token">The token string.</param>
+    /// <returns>An collection of claims if OK.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="token"/> is null.</exception>
+    IOperationResult<IEnumerable<Claim>> ReadUnsafeToken(string token);
 
-        /// <summary>
-        /// Returns after validation the collection of claims from the specified token.
-        /// </summary>
-        /// <param name="token">The token string.</param>
-        /// <returns>An collection of claims if OK.</returns>
-        public virtual IOperationResult<IEnumerable<Claim>> ReadToken(AccessToken token)
-            => ReadToken(token.Value);
-    }
+    /// <summary>
+    /// Returns after validation the collection of claims from the specified token.
+    /// </summary>
+    /// <param name="token">The token string.</param>
+    /// <returns>An collection of claims if OK.</returns>
+    public virtual IOperationResult<IEnumerable<Claim>> ReadToken(AccessToken token)
+        => ReadToken(token.Value);
 }

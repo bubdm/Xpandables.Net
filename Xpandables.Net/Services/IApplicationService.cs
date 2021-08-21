@@ -15,10 +15,14 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Services
-{
-    /// <summary>
-    ///  This interface must be implemented by all application services to register and identify them by convention.
-    /// </summary>
-    public interface IApplicationService { }
-}
+namespace Xpandables.Net.Services;
+
+/// <summary>
+///  This interface must be implemented by all application services to register and identify them by convention.
+/// </summary>
+public interface IApplicationService { }
+
+/// <summary>
+/// Provides with extension methods for application services responses.
+/// </summary>
+public abstract class ApplicationService : IApplicationService { }

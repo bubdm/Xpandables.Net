@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,13 +14,10 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
 
-namespace Xpandables.Net.Razors
-{
-    /// <summary>
-    /// Provides with a collection of available model views.
-    /// </summary>
-    public interface IRazorModelViewCollection : IEnumerable<(Type ModelType, string Identifier)> { }
-}
+namespace Xpandables.Net.Razors;
+
+/// <summary>
+/// Provides with a collection of available model views.
+/// </summary>
+public interface IRazorModelViewCollection : IEnumerable<(Type ModelType, string Identifier)> { }

@@ -15,10 +15,9 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Services
-{
-    /// <summary>
-    /// Defines the out-box (notifications) host service.
-    /// </summary>
-    public interface INotificationService : IBackgroundService { }
-}
+namespace Xpandables.Net.Services;
+
+/// <summary>
+/// Defines the out-box (notifications) host service.
+/// </summary>
+public interface INotificationService : IBackgroundService { }

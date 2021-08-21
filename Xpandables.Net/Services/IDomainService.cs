@@ -15,10 +15,14 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Services
-{
-    /// <summary>
-    /// This interface can be implemented by all domain services to identify them by convention.
-    /// </summary>
-    public interface IDomainService { }
-}
+namespace Xpandables.Net.Services;
+
+/// <summary>
+/// This interface can be implemented by all domain services to identify them by convention.
+/// </summary>
+public interface IDomainService { }
+
+/// <summary>
+/// Provides with extension methods for domain services responses.
+/// </summary>
+public abstract class DomainService : IDomainService { }

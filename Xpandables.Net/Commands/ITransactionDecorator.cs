@@ -15,17 +15,11 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Queries
-{
-    /// <summary>
-    /// Represents a helper class that allows implementation of the <see cref="IQueryHandler{TQuery, TResult}"/> interface.
-    /// </summary>
-    /// <typeparam name="TQuery">Type of argument to act on.</typeparam>
-    /// <typeparam name="TResult">Type of result.</typeparam>
-    public abstract class QueryHandler<TQuery, TResult> : IQueryHandler<TQuery, TResult>
-        where TQuery : class, IQuery<TResult>
-    {
-        ///<inheritdoc/>
-        public abstract Task<IOperationResult<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
-    }
-}
+namespace Xpandables.Net.Commands;
+
+/// <summary>
+/// A marker interface that allows the command/query handler class implementation to be decorated with transaction behavior according to
+/// the decorated class type.
+/// You must implement the <see cref="ITransactionScopeProvider"/> to provide the transaction scope.
+/// </summary>
+public interface ITransactionDecorator { }

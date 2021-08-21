@@ -15,38 +15,45 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
-namespace Xpandables.Net.Security
+namespace Xpandables.Net.Security;
+
+/// <summary>
+/// Contains properties for a refresh token.
+/// <para>Returns a new instance of <see cref="Xpandables.Net.Security.RefreshToken"/> with its properties.</para>
+/// </summary>
+/// <param name="Value">The value of the refresh token.</param>
+/// <param name="Expiry">The token expiry date.</param>
+/// <exception cref="ArgumentNullException">The <paramref name="Value"/> is null.</exception>
+public sealed record RefreshToken([Required, DataType(DataType.Text)] string Value, [Required, DataType(DataType.DateTime)] DateTime Expiry);
+
+/// <summary>
+///  Defines a set of methods that can be used to build a refresh token.
+/// </summary>
+public interface IRefreshTokenEngine
 {
     /// <summary>
-    ///  Defines a set of methods that can be used to build a refresh token.
+    /// Writes a string token to be used as a refresh token.
     /// </summary>
-    public interface IRefreshTokenEngine
-    {
-        /// <summary>
-        /// Writes a string token to be used as a refresh token.
-        /// </summary>
-        /// <returns>An instance of refresh token if OK.</returns>
-        IOperationResult<RefreshToken> WriteToken();
+    /// <returns>An instance of refresh token if OK.</returns>
+    IOperationResult<RefreshToken> WriteToken();
 
-        /// <summary>
-        /// Uses the source object to build a string refresh token. The default behavior throws an <see cref="OperationResultException"/>.
-        /// </summary>
-        /// <param name="source">The source to be used.</param>
-        /// <returns>An instance of refresh token if OK.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public virtual IOperationResult<RefreshToken> WriteToken(object source)
-            => throw new OperationResultException(new FailureOperationResult<RefreshToken>(new OperationErrorCollection("WriteToken", "Method not implemented")));
+    /// <summary>
+    /// Uses the source object to build a string refresh token. The default behavior throws an <see cref="OperationResultException"/>.
+    /// </summary>
+    /// <param name="source">The source to be used.</param>
+    /// <returns>An instance of refresh token if OK.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+    public virtual IOperationResult<RefreshToken> WriteToken(object source)
+        => throw new OperationResultException(new FailureOperationResult<RefreshToken>(new OperationErrorCollection("WriteToken", "Method not implemented")));
 
-        /// <summary>
-        /// Returns the collection of claims from the expired token.
-        /// </summary>
-        /// <param name="expiredToken">The expired token string.</param>
-        /// <returns>An collection of claims if OK.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="expiredToken"/> is null.</exception>
-        IOperationResult<IEnumerable<Claim>> ReadExpiredToken(string expiredToken);
-    }
+    /// <summary>
+    /// Returns the collection of claims from the expired token.
+    /// </summary>
+    /// <param name="expiredToken">The expired token string.</param>
+    /// <returns>An collection of claims if OK.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="expiredToken"/> is null.</exception>
+    IOperationResult<IEnumerable<Claim>> ReadExpiredToken(string expiredToken);
 }

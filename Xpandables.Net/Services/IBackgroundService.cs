@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,43 +14,40 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net.Services
+namespace Xpandables.Net.Services;
+
+/// <summary>
+/// Provides with method to manage background service.
+/// </summary>
+public interface IBackgroundService
 {
     /// <summary>
-    /// Provides with method to manage background service.
+    /// Determines whether the service is running.
     /// </summary>
-    public interface IBackgroundService
+    bool IsRunning { get; }
+
+    /// <summary>
+    /// tries to stop the service.
+    /// </summary>
+    /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+    /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+    Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Tries to start the service.
+    /// </summary>
+    /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+    /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+    Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns the status of the service.
+    /// </summary>
+    /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
+    public virtual async Task<IOperationResult<string>> StatusServiceAsync()
     {
-        /// <summary>
-        /// Determines whether the service is running.
-        /// </summary>
-        bool IsRunning { get; }
-
-        /// <summary>
-        /// tries to stop the service.
-        /// </summary>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Tries to start the service.
-        /// </summary>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
-        Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Returns the status of the service.
-        /// </summary>
-        /// <returns>A task that represents an object of <see cref="IOperationResult{TValue}"/>.</returns>
-        public virtual async Task<IOperationResult<string>> StatusServiceAsync()
-        {
-            var response = IsRunning ? "Is Up" : "Is Down";
-            return await Task.FromResult(new SuccessOperationResult<string>(response)).ConfigureAwait(false);
-        }
+        var response = IsRunning ? "Is Up" : "Is Down";
+        return await Task.FromResult(new SuccessOperationResult<string>(response)).ConfigureAwait(false);
     }
 }
