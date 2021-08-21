@@ -14,12 +14,10 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net.UnitOfWorks
-{
-    /// <summary>
-    /// Provides with the base unit of work context interface.
-    /// </summary>
-    public interface IUnitOfWorkContext : IDisposable, IAsyncDisposable { }
-}
+namespace Xpandables.Net.UnitOfWorks;
+
+/// <summary>
+/// Provides with the base unit of work context interface.
+/// </summary>
+public interface IUnitOfWorkContext : IDisposable, IAsyncDisposable { }

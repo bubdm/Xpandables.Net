@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,34 +14,84 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net.Validators
+using System.ComponentModel.DataAnnotations;
+
+namespace Xpandables.Net.Validators;
+
+/// <summary>
+/// Defines method contracts used to validate a type-specific argument using a decorator.
+/// The implementation must be thread-safe when working in a multi-threaded environment.
+/// </summary>
+/// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
+public interface IValidator<in TArgument>
+    where TArgument : notnull
 {
     /// <summary>
-    /// Defines method contracts used to validate a type-specific argument using a decorator.
-    /// The implementation must be thread-safe when working in a multi-threaded environment.
+    /// Gets the zero-base order in which the validator will be executed.
+    /// The default value is zero.
     /// </summary>
-    /// <typeparam name="TArgument">Type of the argument to be validated.</typeparam>
-    public interface IValidator<in TArgument>
-        where TArgument : notnull
-    {
-        /// <summary>
-        /// Gets the zero-base order in which the validator will be executed.
-        /// The default value is zero.
-        /// </summary>
-        public virtual int Order => 0;
+    public virtual int Order => 0;
 
-        /// <summary>
-        /// Asynchronously validates the argument and returns validation state with errors if necessary.
-        /// </summary>
-        /// <param name="argument">The target argument to be validated.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
-        /// <returns>Returns a result state that contains validation information.</returns>
-        /// <remarks>You can throw an <see cref="OperationResultException"/> also.</remarks>
-        Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Asynchronously validates the argument and returns validation state with errors if necessary.
+    /// </summary>
+    /// <param name="argument">The target argument to be validated.</param>
+    /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
+    /// <returns>Returns a result state that contains validation information.</returns>
+    /// <remarks>You can throw an <see cref="OperationResultException"/> also.</remarks>
+    Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default);
+}
+
+/// <summary>
+/// Represents a helper class that allows implementation of the <see cref="IValidator{TArgument}"/>.
+/// The default behavior uses <see cref="Validator.TryValidateObject(object, ValidationContext, ICollection{ValidationResult}?, bool)"/>.
+/// </summary>
+/// <typeparam name="TArgument">Type of the argument.</typeparam>
+public abstract class Validator<TArgument> : IValidator<TArgument>
+    where TArgument : notnull
+{
+    /// <summary>
+    /// Asynchronously validates the argument and returns validation state with errors if necessary.
+    /// </summary>
+    /// <param name="argument">The target argument to be validated.</param>
+    /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="argument"/> is null.</exception>
+    /// <returns>Returns a result state that contains validation information.</returns>
+    /// <remarks>You can throw an <see cref="OperationResultException"/> also.</remarks>
+    public virtual async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
+    {
+        var validationResults = new List<ValidationResult>();
+        if (!Validator.TryValidateObject(argument, new ValidationContext(argument, null, null), validationResults, true))
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            var errors = new OperationErrorCollection();
+            foreach (var validationResult in validationResults)
+            {
+                foreach (var member in validationResult.MemberNames)
+                {
+                    if (validationResult.ErrorMessage is not null)
+                    {
+                        if (errors[member] is { } error)
+                        {
+                            errors[member]!.ErrorMessages = error.ErrorMessages.Union(new[] { validationResult.ErrorMessage }).ToArray();
+                        }
+                        else
+                        {
+                            errors.Add(member, validationResult.ErrorMessage);
+                        }
+                    }
+                }
+            }
+
+            return this.BadOperation(errors);
+        }
+
+        return await Task.FromResult(this.OkOperation()).ConfigureAwait(false);
     }
 }

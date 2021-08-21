@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,21 +14,18 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net.Visitors
+namespace Xpandables.Net.Visitors;
+
+/// <summary>
+/// Visitor when no explicit registration exist for a given type.
+/// </summary>
+/// <typeparam name="TElement">Type of element to be visited.</typeparam>
+public sealed class NullVisitor<TElement> : IVisitor<TElement>
+    where TElement : class, IVisitable<TElement>
 {
     /// <summary>
-    /// Visitor when no explicit registration exist for a given type.
+    /// Does nothing.
     /// </summary>
-    /// <typeparam name="TElement">Type of element to be visited.</typeparam>
-    public sealed class NullVisitor<TElement> : IVisitor<TElement>
-        where TElement : class, IVisitable<TElement>
-    {
-        /// <summary>
-        /// Does nothing.
-        /// </summary>
-        public async Task VisitAsync(TElement element, CancellationToken cancellationToken = default) => await Task.CompletedTask.ConfigureAwait(false);
-    }
+    public async Task VisitAsync(TElement element, CancellationToken cancellationToken = default) => await Task.CompletedTask.ConfigureAwait(false);
 }

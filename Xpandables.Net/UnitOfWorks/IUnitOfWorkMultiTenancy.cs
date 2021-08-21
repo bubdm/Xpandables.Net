@@ -15,36 +15,33 @@
  *
 ************************************************************************************************************/
 
-using System;
+namespace Xpandables.Net.UnitOfWorks;
 
-namespace Xpandables.Net.UnitOfWorks
+/// <summary>
+/// Provides with method for creating derived <see cref="IUnitOfWork"/> in multi-tenancy.
+/// </summary>
+public interface IUnitOfWorkMultiTenancy
 {
     /// <summary>
-    /// Provides with method for creating derived <see cref="IUnitOfWork"/> in multi-tenancy.
+    /// The factory used to retrieve an implementation of <see cref="IUnitOfWork"/>.
     /// </summary>
-    public interface IUnitOfWorkMultiTenancy
-    {
-        /// <summary>
-        /// The factory used to retrieve an implementation of <see cref="IUnitOfWork"/>.
-        /// </summary>
-        Func<IUnitOfWork> Factory { get; }
-
-        /// <summary>
-        /// Gets the unique identifier for the tenant.
-        /// </summary>
-        string Name { get; }
-    }
+    Func<IUnitOfWork> Factory { get; }
 
     /// <summary>
-    /// Provides with method for creating <typeparamref name="TUnitOfWork"/> in multi-tenancy.
+    /// Gets the unique identifier for the tenant.
     /// </summary>
-    /// <typeparam name="TUnitOfWork">The type of the unit of work.</typeparam>
-    public interface IUnitOfWorkMultiTenancy<out TUnitOfWork> : IUnitOfWorkMultiTenancy
-        where TUnitOfWork : class, IUnitOfWork
-    {
-        /// <summary>
-        /// The factory used to retrieve an instance of <typeparamref name="TUnitOfWork"/>.
-        /// </summary>
-        new Func<TUnitOfWork> Factory { get; }
-    }
+    string Name { get; }
+}
+
+/// <summary>
+/// Provides with method for creating <typeparamref name="TUnitOfWork"/> in multi-tenancy.
+/// </summary>
+/// <typeparam name="TUnitOfWork">The type of the unit of work.</typeparam>
+public interface IUnitOfWorkMultiTenancy<out TUnitOfWork> : IUnitOfWorkMultiTenancy
+    where TUnitOfWork : class, IUnitOfWork
+{
+    /// <summary>
+    /// The factory used to retrieve an instance of <typeparamref name="TUnitOfWork"/>.
+    /// </summary>
+    new Func<TUnitOfWork> Factory { get; }
 }

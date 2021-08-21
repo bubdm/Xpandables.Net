@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,29 +14,27 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net.UnitOfWorks
+namespace Xpandables.Net.UnitOfWorks;
+
+/// <summary>
+/// Specifies the name of the tenant.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public class UnitOfWorkMultiTenancyAttribute : Attribute
 {
     /// <summary>
-    /// Specifies the name of the tenant.
+    /// Initializes a new instance of <see cref="UnitOfWorkMultiTenancyAttribute"/> with the tenant name.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class UnitOfWorkMultiTenancyAttribute : Attribute
+    /// <param name="tenantName">The tenant name.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="tenantName"/> is null.</exception>
+    public UnitOfWorkMultiTenancyAttribute(string tenantName)
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="UnitOfWorkMultiTenancyAttribute"/> with the tenant name.
-        /// </summary>
-        /// <param name="tenantName">The tenant name.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="tenantName"/> is null.</exception>
-        public UnitOfWorkMultiTenancyAttribute(string tenantName)
-        {
-            TenantName = tenantName ?? throw new ArgumentNullException(nameof(tenantName));
-        }
-
-        /// <summary>
-        /// Gets the tenant name.
-        /// </summary>
-        public string TenantName { get; }
+        TenantName = tenantName ?? throw new ArgumentNullException(nameof(tenantName));
     }
+
+    /// <summary>
+    /// Gets the tenant name.
+    /// </summary>
+    public string TenantName { get; }
 }

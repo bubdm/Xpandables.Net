@@ -22,9 +22,7 @@ using Xpandables.Net.Aggregates.Events;
 using Xpandables.Net.Commands;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Validators;
-using Xpandables.Net.Validators.Decorators;
 using Xpandables.Net.Visitors;
-using Xpandables.Net.Visitors.Decorators;
 
 namespace Xpandables.Net.DependencyInjection
 {

@@ -15,19 +15,18 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.UnitOfWorks
+namespace Xpandables.Net.UnitOfWorks;
+
+/// <summary>
+/// Represents a method to create a unit of work context.
+/// </summary>
+public interface IUnitOfWorkContextFactory
 {
     /// <summary>
-    /// Represents a method to create a unit of work context.
+    /// Creates a new instance of <typeparamref name="TUnitOfWorkContext"/> type.
     /// </summary>
-    public interface IUnitOfWorkContextFactory
-    {
-        /// <summary>
-        /// Creates a new instance of <typeparamref name="TUnitOfWorkContext"/> type.
-        /// </summary>
-        /// <typeparam name="TUnitOfWorkContext">The type of the expected context.</typeparam>
-        /// <returns>An instance of <typeparamref name="TUnitOfWorkContext"/> type.</returns>
-        TUnitOfWorkContext CreateUnitOfWorkContext<TUnitOfWorkContext>()
-            where TUnitOfWorkContext : class, IUnitOfWorkContext;
-    }
+    /// <typeparam name="TUnitOfWorkContext">The type of the expected context.</typeparam>
+    /// <returns>An instance of <typeparamref name="TUnitOfWorkContext"/> type.</returns>
+    TUnitOfWorkContext CreateUnitOfWorkContext<TUnitOfWorkContext>()
+        where TUnitOfWorkContext : class, IUnitOfWorkContext;
 }

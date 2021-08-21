@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,22 +14,19 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net.Validators
+namespace Xpandables.Net.Validators;
+
+/// <summary>
+/// Validator when no explicit registration exist for a given type.
+/// </summary>
+/// <typeparam name="TArgument">Type of argument to be validated.</typeparam>
+public sealed class NullValidation<TArgument> : IValidator<TArgument>
+    where TArgument : notnull
 {
     /// <summary>
-    /// Validator when no explicit registration exist for a given type.
+    /// Does nothing.
     /// </summary>
-    /// <typeparam name="TArgument">Type of argument to be validated.</typeparam>
-    public sealed class NullValidation<TArgument> : IValidator<TArgument>
-        where TArgument : notnull
-    {
-        /// <summary>
-        /// Does nothing.
-        /// </summary>
-        public async Task<IOperationResult> ValidateAsync(TArgument _, CancellationToken cancellationToken = default)
-            => await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
-    }
+    public async Task<IOperationResult> ValidateAsync(TArgument _, CancellationToken cancellationToken = default)
+        => await Task.FromResult(new SuccessOperationResult()).ConfigureAwait(false);
 }
