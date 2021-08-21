@@ -36,7 +36,7 @@ namespace Xpandables.Net.Aggregates;
 /// <typeparam name="TAggregateId">The type of the aggregate identity.</typeparam>
 [Serializable]
 [DebuggerDisplay("Guid = {" + nameof(AggregateId) + "} Version = {" + nameof(Version) + "}")]
-public abstract class AggregateRoot<TAggregateId> : OperationResults, IAggregateRoot<TAggregateId>, IDomainEventSourcing, INotificationSourcing
+public abstract class AggregateRoot<TAggregateId> : IAggregateRoot<TAggregateId>, IDomainEventSourcing, INotificationSourcing
     where TAggregateId : notnull, AggregateId
 {
     private static readonly IInstanceCreator _instanceCreator = new InstanceCreator();

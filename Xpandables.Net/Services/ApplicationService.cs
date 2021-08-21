@@ -20,5 +20,5 @@ namespace Xpandables.Net.Services
     /// <summary>
     /// Provides with extension methods for application services responses.
     /// </summary>
-    public abstract class ApplicationService : OperationResults, IApplicationService { }
+    public abstract class ApplicationService : IApplicationService { }
 }

@@ -14,8 +14,6 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xpandables.Net.Queries
 {
@@ -24,7 +22,7 @@ namespace Xpandables.Net.Queries
     /// </summary>
     /// <typeparam name="TQuery">Type of argument to act on.</typeparam>
     /// <typeparam name="TResult">Type of result.</typeparam>
-    public abstract class QueryHandler<TQuery, TResult> : OperationResults, IQueryHandler<TQuery, TResult>
+    public abstract class QueryHandler<TQuery, TResult> : IQueryHandler<TQuery, TResult>
         where TQuery : class, IQuery<TResult>
     {
         ///<inheritdoc/>

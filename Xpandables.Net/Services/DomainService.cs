@@ -20,5 +20,5 @@ namespace Xpandables.Net.Services
     /// <summary>
     /// Provides with extension methods for domain services responses.
     /// </summary>
-    public abstract class DomainService : OperationResults, IDomainService { }
+    public abstract class DomainService : IDomainService { }
 }

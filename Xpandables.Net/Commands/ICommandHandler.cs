@@ -64,7 +64,7 @@ public interface ICommandHandler<in TCommand, TResult> : ICanHandle<TCommand>
 /// Represents a helper class that allows implementation of <see cref="ICommandHandler{TCommand}"/> interface.
 /// </summary>
 /// <typeparam name="TCommand">Type of command to act on.</typeparam>
-public abstract class CommandHandler<TCommand> : OperationResults, ICommandHandler<TCommand>
+public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand>
     where TCommand : class, ICommand
 {
     ///<inheritdoc/>
@@ -76,7 +76,7 @@ public abstract class CommandHandler<TCommand> : OperationResults, ICommandHandl
 /// </summary>
 /// <typeparam name="TCommand">Type of command to act on.</typeparam>
 /// <typeparam name="TResult">Type of the result.</typeparam>
-public abstract class CommandHandler<TCommand, TResult> : OperationResults, ICommandHandler<TCommand, TResult>
+public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TCommand, TResult>
     where TCommand : class, ICommand<TResult>
 {
     ///<inheritdoc/>

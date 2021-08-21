@@ -15,45 +15,42 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Supports converting <see cref="OperationResult"/> and <see cref="OperationResult{TValue}"/> using the appropriate converter.
+/// </summary>
+public sealed class OperationResultConverterFactory : JsonConverterFactory
 {
+    private readonly IInstanceCreator _instanceCreator = new InstanceCreator();
+
     /// <summary>
-    /// Supports converting <see cref="OperationResult"/> and <see cref="OperationResult{TValue}"/> using the appropriate converter.
+    /// Determines whether the converter instance can convert the specified object type.
     /// </summary>
-    public sealed class OperationResultConverterFactory : JsonConverterFactory
+    /// <param name="typeToConvert">The type of the object to check whether it can be converted by this converter instance.</param>
+    /// <returns>true if the instance can convert the specified object type; otherwise, false.</returns>
+    public override bool CanConvert(Type typeToConvert) => typeof(IOperationResult).IsAssignableFrom(typeToConvert);
+
+    /// <summary>
+    /// Creates a converter for a specified type.
+    /// </summary>
+    /// <param name="typeToConvert">The type handled by the converter.</param>
+    /// <param name="options">The serialization options to use.</param>
+    /// <returns> A converter for which <see cref="OperationResult"/> or <see cref="OperationResult{TValue}"/> 
+    /// is compatible with typeToConvert.</returns>
+    public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
-        private readonly IInstanceCreator _instanceCreator = new InstanceCreator();
-
-        /// <summary>
-        /// Determines whether the converter instance can convert the specified object type.
-        /// </summary>
-        /// <param name="typeToConvert">The type of the object to check whether it can be converted by this converter instance.</param>
-        /// <returns>true if the instance can convert the specified object type; otherwise, false.</returns>
-        public override bool CanConvert(Type typeToConvert) => typeof(IOperationResult).IsAssignableFrom(typeToConvert);
-
-        /// <summary>
-        /// Creates a converter for a specified type.
-        /// </summary>
-        /// <param name="typeToConvert">The type handled by the converter.</param>
-        /// <param name="options">The serialization options to use.</param>
-        /// <returns> A converter for which <see cref="OperationResult"/> or <see cref="OperationResult{TValue}"/> 
-        /// is compatible with typeToConvert.</returns>
-        public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+        if (!typeToConvert.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IOperationResult<>)))
         {
-            if (!typeToConvert.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IOperationResult<>)))
-            {
-                return _instanceCreator.Create(typeof(OperationResultConverter)) as OperationResultConverter;
-            }
-            else
-            {
-                Type elementType = typeToConvert.GetGenericArguments()[0];
-                return _instanceCreator.Create(typeof(OperationResultConverter<>).MakeGenericType(elementType)) as JsonConverter;
-            }
+            return _instanceCreator.Create(typeof(OperationResultConverter)) as OperationResultConverter;
+        }
+        else
+        {
+            Type elementType = typeToConvert.GetGenericArguments()[0];
+            return _instanceCreator.Create(typeof(OperationResultConverter<>).MakeGenericType(elementType)) as JsonConverter;
         }
     }
 }

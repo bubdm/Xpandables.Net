@@ -30,7 +30,7 @@ internal delegate TReturn CreateResult<TReturn>(bool isValid, string key, string
 /// Implements methods to execute the <see cref="IAsyncQueryHandler{TQuery, TResult}"/>, <see cref="IQueryHandler{TQuery, TResult}"/> and
 /// <see cref="ICommandHandler{TCommand}"/> process dynamically.
 /// </summary>
-public class Dispatcher : OperationResults, IDispatcher
+public class Dispatcher : IDispatcher
 {
     private readonly IHandlerAccessor _handlerAccessor;
 
@@ -50,8 +50,8 @@ public class Dispatcher : OperationResults, IDispatcher
         IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
             => isValid switch
             {
-                false => InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
-                _ => OkOperation<TResult>()
+                false => this.InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
+                _ => this.OkOperation<TResult>()
             };
 
         var canHandleResult = CanHandle(CreateResult, handler, query);
@@ -72,8 +72,8 @@ public class Dispatcher : OperationResults, IDispatcher
         IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
             => isValid switch
             {
-                false => InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
-                _ => OkOperation<TResult>()
+                false => this.InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
+                _ => this.OkOperation<TResult>()
             };
 
         var canHandleResult = CanHandle(CreateResult, handler, query);
@@ -94,8 +94,8 @@ public class Dispatcher : OperationResults, IDispatcher
         IOperationResult CreateResult(bool isValid, string key, string errorMessage)
             => isValid switch
             {
-                false => InternalErrorOperation(new OperationErrorCollection(key, errorMessage)),
-                _ => OkOperation()
+                false => this.InternalErrorOperation(new OperationErrorCollection(key, errorMessage)),
+                _ => this.OkOperation()
             };
 
         var canHandleResult = CanHandle(CreateResult, (ICanHandle)handler, command);
@@ -116,8 +116,8 @@ public class Dispatcher : OperationResults, IDispatcher
         IOperationResult<TResult> CreateResult(bool isValid, string key, string errorMessage)
             => isValid switch
             {
-                false => InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
-                _ => OkOperation<TResult>()
+                false => this.InternalErrorOperation<TResult>(new OperationErrorCollection(key, errorMessage)),
+                _ => this.OkOperation<TResult>()
             };
 
         var canHandleResult = CanHandle(CreateResult, handler, command);

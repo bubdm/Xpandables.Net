@@ -16,55 +16,53 @@
  *
 ************************************************************************************************************/
 
-using System;
 using System.Runtime.Serialization;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Represents an exception that holds an <see cref="IOperationResult"/>.
+/// Useful when you don't want to return an <see cref="IOperationResult"/>.
+/// </summary>
+[Serializable]
+public class OperationResultException : Exception
 {
     /// <summary>
-    /// Represents an exception that holds an <see cref="IOperationResult"/>.
-    /// Usefull when you don't want to return an <see cref="IOperationResult"/>.
+    /// Constructs a new instance of the <see cref="OperationResultException"/> class that
+    /// contains the specified operation result.
     /// </summary>
-    [Serializable]
-    public class OperationResultException : Exception
+    /// <param name="result">The result for the exception.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="result"/> is null.</exception>
+    public OperationResultException(IOperationResult result)
     {
-        /// <summary>
-        /// Constructs a new instance of the <see cref="OperationResultException"/> class that
-        /// contains the specified operation result.
-        /// </summary>
-        /// <param name="result">The result for the exception.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="result"/> is null.</exception>
-        public OperationResultException(IOperationResult result)
-        {
-            Result = result ?? throw new ArgumentNullException(nameof(result));
-        }
-
-        ///<inheritdoc/>
-        protected OperationResultException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            _ = info ?? throw new ArgumentNullException(nameof(info));
-
-            if (info.GetValue(nameof(Result), info.ObjectType) is not { } result)
-                throw new ArgumentNullException(nameof(info));
-
-            Result = (IOperationResult)result;
-        }
-
-        ///<inheritdoc/>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            _ = info ?? throw new ArgumentNullException(nameof(info));
-
-            info.SetType(Result.GetType());
-            info.AddValue("Result", Result, Result.GetType());
-
-            base.GetObjectData(info, context);
-        }
-
-        /// <summary>
-        /// Gets the operation result for the exception.
-        /// </summary>
-        public IOperationResult Result { get; }
+        Result = result ?? throw new ArgumentNullException(nameof(result));
     }
+
+    ///<inheritdoc/>
+    protected OperationResultException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
+        _ = info ?? throw new ArgumentNullException(nameof(info));
+
+        if (info.GetValue(nameof(Result), info.ObjectType) is not { } result)
+            throw new ArgumentNullException(nameof(info));
+
+        Result = (IOperationResult)result;
+    }
+
+    ///<inheritdoc/>
+    public override void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        _ = info ?? throw new ArgumentNullException(nameof(info));
+
+        info.SetType(Result.GetType());
+        info.AddValue("Result", Result, Result.GetType());
+
+        base.GetObjectData(info, context);
+    }
+
+    /// <summary>
+    /// Gets the operation result for the exception.
+    /// </summary>
+    public IOperationResult Result { get; }
 }

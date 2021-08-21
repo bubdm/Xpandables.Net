@@ -27,7 +27,7 @@ namespace Xpandables.Net.Entities;
 /// </summary>
 [DebuggerDisplay("Id = {" + nameof(Id) + "}")]
 [Serializable]
-public abstract class Entity : OperationResults, IEntity
+public abstract class Entity : IEntity
 {
     /// <summary>
     /// Initializes a new instance of <see cref="Entity"/>.

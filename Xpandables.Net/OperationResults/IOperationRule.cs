@@ -15,25 +15,24 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Defines method contract used to determines whether the implementation class is satisfied by the argument of a type-specific.
+/// </summary>
+/// <typeparam name="TArgument">Type of the argument to be checked.</typeparam>
+public interface IOperationRule<in TArgument>
+    where TArgument : notnull
 {
     /// <summary>
-    /// Defines method contract used to determines whether the implementation class is satisfied by the argument of a type-specific.
+    /// Returns a value that determines whether or not the instance is satisfied by the argument.
     /// </summary>
-    /// <typeparam name="TArgument">Type of the argument to be checked.</typeparam>
-    public interface IOperationRule<in TArgument>
-        where TArgument : notnull
-    {
-        /// <summary>
-        /// Returns a value that determines whether or not the instance is satisfied by the argument.
-        /// </summary>
-        /// <param name="argument">The target argument to be checked.</param>
-        /// <returns><see langword="true"/> if the argument satisfies the instance; otherwise returns <see langword="false"/>.</returns>
-        bool IsSatisfiedBy(TArgument argument);
+    /// <param name="argument">The target argument to be checked.</param>
+    /// <returns><see langword="true"/> if the argument satisfies the instance; otherwise returns <see langword="false"/>.</returns>
+    bool IsSatisfiedBy(TArgument argument);
 
-        /// <summary>
-        /// If <see cref="IsSatisfiedBy(TArgument)"/> is <see langword="false"/>, the property should be a <see cref="FailureOperationResult"/>.
-        /// </summary>
-        IOperationResult Result { get; }
-    }
+    /// <summary>
+    /// If <see cref="IsSatisfiedBy(TArgument)"/> is <see langword="false"/>, the property should be a <see cref="FailureOperationResult"/>.
+    /// </summary>
+    IOperationResult Result { get; }
 }

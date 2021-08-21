@@ -15,44 +15,41 @@
  *
 ************************************************************************************************************/
 
-using System.Diagnostics.CodeAnalysis;
+namespace Xpandables.Net;
 
-namespace Xpandables.Net
+/// <summary>
+/// Represents a helper class that allows implementation of the <see cref="IOperationRule{TArgument}"/>.
+/// </summary>
+/// <typeparam name="TArgument">Type of the argument to be checked.</typeparam>
+public abstract class OperationRule<TArgument> : IOperationRule<TArgument>
+     where TArgument : notnull
 {
     /// <summary>
-    /// Represents a helper class that allows implementation of the <see cref="IOperationRule{TArgument}"/>.
+    /// Initializes a new instance of <see cref="OperationRule{TArgument}"/> class that sets <see cref="Result"/> to <see cref="SuccessOperationResult"/>.
+    /// The default <see cref="Result"/> is <see cref="SuccessOperationResult"/>.
     /// </summary>
-    /// <typeparam name="TArgument">Type of the argument to be checked.</typeparam>
-    public abstract class OperationRule<TArgument> : OperationResults, IOperationRule<TArgument>
-         where TArgument : notnull
+    protected OperationRule() => Result = this.OkOperation();
+
+    /// <summary>
+    /// If <see cref="IsSatisfiedBy(TArgument)" /> is <see langword="false" />, the property should be a <see cref="FailureOperationResult" />.
+    /// </summary>
+    public IOperationResult Result { get; protected set; }
+
+    /// <summary>
+    /// Returns a value that determines whether or not the instance is satisfied by the argument, after calling the <see cref="ApplyRule(TArgument)"/> method.
+    /// </summary>
+    /// <param name="argument">The target argument to be checked.</param>
+    /// <returns><see langword="true"/> if the argument satisfies the instance; otherwise returns <see langword="false"/>.</returns>
+    public bool IsSatisfiedBy(TArgument argument)
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="OperationRule{TArgument}"/> class that sets <see cref="Result"/> to <see cref="SuccessOperationResult"/>.
-        /// The default <see cref="Result"/> is <see cref="SuccessOperationResult"/>.
-        /// </summary>
-        protected OperationRule() => Result = OkOperation();
-
-        /// <summary>
-        /// If <see cref="IsSatisfiedBy(TArgument)" /> is <see langword="false" />, the property should be a <see cref="FailureOperationResult" />.
-        /// </summary>
-        public IOperationResult Result { get; protected set; }
-
-        /// <summary>
-        /// Returns a value that determines whether or not the instance is satisfied by the argument, after calling the <see cref="ApplyRule(TArgument)"/> method.
-        /// </summary>
-        /// <param name="argument">The target argument to be checked.</param>
-        /// <returns><see langword="true"/> if the argument satisfies the instance; otherwise returns <see langword="false"/>.</returns>
-        public bool IsSatisfiedBy(TArgument argument)
-        {
-            ApplyRule(argument);
-            return Result.IsSucceeded;
-        }
-
-        /// <summary>
-        /// When overridden in derived class, this method will do the actual job of applying the rule and set the <see cref="Result"/> property to the expected value.
-        /// The default <see cref="Result"/> is <see cref="SuccessOperationResult"/>.
-        /// </summary>
-        /// <param name="argument">The target argument to be checked.</param>
-        protected abstract void ApplyRule(TArgument argument);
+        ApplyRule(argument);
+        return Result.IsSucceeded;
     }
+
+    /// <summary>
+    /// When overridden in derived class, this method will do the actual job of applying the rule and set the <see cref="Result"/> property to the expected value.
+    /// The default <see cref="Result"/> is <see cref="SuccessOperationResult"/>.
+    /// </summary>
+    /// <param name="argument">The target argument to be checked.</param>
+    protected abstract void ApplyRule(TArgument argument);
 }
