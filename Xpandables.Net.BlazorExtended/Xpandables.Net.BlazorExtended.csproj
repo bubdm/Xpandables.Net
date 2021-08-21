@@ -24,7 +24,7 @@
     <PackageId>Xpandables.Net.BlazorExtended</PackageId>
     <PackageTags>InputText</PackageTags>
     <PackageOutputPath>..\Packages\</PackageOutputPath>
-    <!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AssemblyName>Xpandables.Net.BlazorExtended</AssemblyName>
     <RootNamespace>Xpandables.Net</RootNamespace>
@@ -40,7 +40,8 @@
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <AnalysisLevel>preview</AnalysisLevel>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>    
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
