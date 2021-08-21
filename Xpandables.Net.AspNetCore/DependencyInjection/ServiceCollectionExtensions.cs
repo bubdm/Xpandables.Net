@@ -218,7 +218,7 @@ namespace Xpandables.Net.DependencyInjection
         }
 
         /// <summary>
-        /// Adds the HTTP context header values accessor that implements the <see cref="IHttpHeaderAccessor"/>.
+        /// Adds the HTTP context header values accessor that implements the <see cref="IHttpHeaderReader"/>.
         /// </summary>
         /// <param name="services">The collection of services.</param>
         /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
@@ -227,7 +227,7 @@ namespace Xpandables.Net.DependencyInjection
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddScoped<IHttpHeaderAccessor, HttpHeaderAccessor>();
+            services.Services.AddScoped<IHttpHeaderReader, HttpHeaderAccessor>();
             return services;
         }
 

@@ -15,21 +15,16 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Http
+namespace Xpandables.Net.Http;
+
+/// <summary>
+/// Provides with a method to retrieve 'Authorization' value.
+/// </summary>
+public interface IHttpClientAuthorizationProvider
 {
     /// <summary>
-    /// Provides with methods to get/set an HTTP request/response header value matching a specific key.
+    /// Returns the 'Authorization' value.
     /// </summary>
-    public interface IHttpHeaderAccessor
-    {
-        /// <summary>
-        /// The HTTP request header accessor.
-        /// </summary>
-        IHttpHeaderProvider Request { get; }
-
-        /// <summary>
-        /// The HTTP response header accessor.
-        /// </summary>
-        IHttpHeaderProvider Response { get; }
-    }
+    /// <returns>A string that represents the 'Authorization' value if found, or null.</returns>
+    Task<string?> ReadAuthorization();
 }

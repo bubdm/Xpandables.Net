@@ -15,21 +15,16 @@
  *
 ************************************************************************************************************/
 
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-
 namespace Xpandables.Net.Http
 {
     /// <summary>
     /// Provides with a method to retrieve the request content for <see cref="BodyFormat.String"/> type.
     /// </summary>
-    public interface IStringRequest
+    public interface IHttpClientStringRequest
     {
         /// <summary>
         /// Returns the body content that will be serialized.
         /// </summary>
-        [return: NotNull]
         object GetStringContent();
     }
 
@@ -37,7 +32,7 @@ namespace Xpandables.Net.Http
     /// Provides with a method to retrieve the request patch content for <see cref="BodyFormat.String"/> type.
     /// You may use the generic interface that provides with the Json Document type and make use of <see cref="ContentType.JsonPatch"/> as content type.
     /// </summary>
-    public interface IPatchRequest
+    public interface IHttpClientPatchRequest
     {
         /// <summary>
         /// Returns the patch document.
@@ -48,7 +43,7 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// Provides with a method to retrieve the request content for <see cref="BodyFormat.ByteArray"/> type.
     /// </summary>
-    public interface IByteArrayRequest
+    public interface IHttpClientByteArrayRequest
     {
         /// <summary>
         /// Returns the body content.
@@ -59,55 +54,51 @@ namespace Xpandables.Net.Http
     /// <summary>
     /// Provides with a method to retrieve the request content for <see cref="BodyFormat.Multipart"/> type.
     /// </summary>
-    public interface IMultipartRequest : IByteArrayRequest, IStringRequest { }
+    public interface IHttpClientMultipartRequest : IHttpClientByteArrayRequest, IHttpClientStringRequest { }
 
     /// <summary>
     /// Provides with a method to retrieve the request content for <see cref="BodyFormat.Stream"/> type.
     /// </summary>
-    public interface IStreamRequest
+    public interface IHttpClientStreamRequest
     {
         /// <summary>
         /// Returns the body content.
         /// </summary>
-        [return: NotNull]
         object GetStreamContent();
     }
 
     /// <summary>
     /// Provides with a method to retrieve the request content for <see cref="BodyFormat.FormUrlEncoded"/> type.
     /// </summary>
-    public interface IFormUrlEncodedRequest
+    public interface IHttpClientFormUrlEncodedRequest
     {
         /// <summary>
         /// Returns the body content.
         /// </summary>
-        [return: NotNull]
-        IDictionary<string?, string?> GetFormContent();
+        IDictionary<string?, string?> GetFormSource();
     }
 
     /// <summary>
     /// Provides with a method to retrieve the request content for <see cref="ParameterLocation.Cookie"/>.
     /// </summary>
-    public interface ICookieLocationRequest
+    public interface IHttpClientCookieLocationRequest
     {
         /// <summary>
         /// Returns the keys and values for the cookie content.
         /// If a key is already present, its value will be replaced with the new one.
         /// </summary>
-        [return: NotNull]
         IDictionary<string, object?> GetCookieSource();
     }
 
     /// <summary>
     /// Provides with a method to retrieve the request content for <see cref="ParameterLocation.Header"/>.
     /// </summary>
-    public interface IHeaderLocationRequest
+    public interface IHttpClientHeaderLocationRequest
     {
         /// <summary>
         /// Returns the keys and values for the header content.
         /// If a key is already present, its value will be replaced with the new one.
         /// </summary>
-        [return: NotNull]
         IDictionary<string, string?> GetHeaderSource();
 
         /// <summary>
@@ -121,7 +112,7 @@ namespace Xpandables.Net.Http
     /// Provides with a method to retrieve the query string content for query string Uri when using <see cref="ParameterLocation.Query"/>.
     /// This can be combined with other locations.
     /// </summary>
-    public interface IQueryStringLocationRequest
+    public interface IHttpClientQueryStringLocationRequest
     {
         /// <summary>
         /// Returns the keys and values for the query string Uri.
@@ -133,12 +124,11 @@ namespace Xpandables.Net.Http
     /// Provides with a method to retrieve the path string content for query string Uri when using <see cref="ParameterLocation.Path"/>.
     /// This can be combined with other locations.
     /// </summary>
-    public interface IPathStringLocationRequest
+    public interface IHttpClientPathStringLocationRequest
     {
         /// <summary>
         /// Returns the keys and values for the path string Uri.
         /// </summary>
-        [return: NotNull]
         IDictionary<string, string> GetPathStringSource();
     }
 }

@@ -15,17 +15,22 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Http
-{
-    /// <summary>
-    /// An interface representing an <see cref="HttpRestClientAttribute"/> to be dynamically applied on the implementing class.
-    /// This interface takes priority over the <see cref="HttpRestClientAttribute"/> declaration.
-    /// </summary>
-    public interface IHttpRestClientAttributeProvider
-    {
-        /// <summary>
-        /// Returns the <see cref="HttpRestClientAttribute"/> to be applied on the current instance.
-        /// </summary>
-        HttpRestClientAttribute ReadHttpRestClientAttribute();
-    }
-}
+namespace Xpandables.Net.Http;
+
+/// <summary>
+/// This interface is used as a marker for request without result.
+/// </summary>
+public interface IHttpClientRequest { }
+
+/// <summary>
+/// This interface is used as a marker for request that contains a specific-type result.
+/// </summary>
+/// <typeparam name="TResponse">Type of the result of the query.</typeparam>
+public interface IHttpClientRequest<TResponse> { }
+
+/// <summary>
+/// This interface is used as a marker for request when using the asynchronous query pattern
+/// that contains a <see cref="IAsyncEnumerable{TResult}"/> of specific-type result.
+/// </summary>
+/// <typeparam name="TResponse">Type of the result of the request.</typeparam>
+public interface IHttpClientAsyncRequest<TResponse> { }

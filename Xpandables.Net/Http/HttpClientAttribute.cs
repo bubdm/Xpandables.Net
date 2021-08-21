@@ -25,18 +25,18 @@ using static System.Net.Mime.MediaTypeNames;
 namespace Xpandables.Net.Http
 {
     /// <summary>
-    /// Describes the parameters for a request used with <see cref="IHttpRestClientHandler"/>.
-    /// The attribute should decorate implementations of <see cref="IHttpRestClientRequest"/>, <see cref="IHttpRestClientAsyncRequest{TResponse}"/> or <see cref="IHttpRestClientRequest{TResponse}"/>
-    /// in order to be used with <see cref="IHttpRestClientHandler"/>.
-    /// Your class can implement the <see cref="IHttpRestClientAttributeProvider"/> to dynamically return a <see cref="HttpRestClientAttribute"/>.
+    /// Describes the parameters for a request used with <see cref="IHttpClientDispatcher"/>.
+    /// The attribute should decorate implementations of <see cref="IHttpClientRequest"/>, <see cref="IHttpClientAsyncRequest{TResponse}"/> or <see cref="IHttpClientRequest{TResponse}"/>
+    /// in order to be used with <see cref="IHttpClientDispatcher"/>.
+    /// Your class can implement the <see cref="IHttpClientAttributeProvider"/> to dynamically return a <see cref="HttpClientAttribute"/>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class HttpRestClientAttribute : Attribute
+    public sealed class HttpClientAttribute : Attribute
     {
         /// <summary>
-        /// Initializes the default instance of <see cref="HttpRestClientAttribute"/>.
+        /// Initializes the default instance of <see cref="HttpClientAttribute"/>.
         /// </summary>
-        public HttpRestClientAttribute() { }
+        public HttpClientAttribute() { }
 
         /// <summary>
         /// Gets or sets the Uri path. If null, the root path will be set.
@@ -88,8 +88,8 @@ namespace Xpandables.Net.Http
         /// Gets the value indicating whether or not the request needs authorization.
         /// The default value is <see langword="true"/>.
         /// In this case, an <see cref="AuthenticationHeaderValue"/> with the <see cref="Scheme"/> value will be initialized and filled
-        /// with <see cref="IHttpHeaderAccessor"/> reading the "Authorization" key. You should add <see langword="ConfigureXPrimaryAuthorizationTokenHandler"/> extension method
-        /// when registering <see cref="IHttpRestClientHandler"/>.
+        /// with <see cref="IHttpHeaderReader"/> reading the "Authorization" key. You should add <see langword="ConfigureXPrimaryAuthorizationTokenHandler"/> extension method
+        /// when registering <see cref="IHttpClientDispatcher"/>.
         /// </summary>
         public bool IsSecured { get; set; } = true;
 
@@ -171,28 +171,28 @@ namespace Xpandables.Net.Http
     public enum ParameterLocation
     {
         /// <summary>
-        /// Used in the content of the request. You can use <see cref="IStringRequest"/>, <see cref="IPatchRequest"/>, <see cref="IStreamRequest"/>, <see cref="IByteArrayRequest"/>, 
-        /// <see cref="IMultipartRequest"/> or <see cref="IFormUrlEncodedRequest"/> to customize the body content, otherwise the whole class will be serialized.
+        /// Used in the content of the request. You can use <see cref="IHttpClientStringRequest"/>, <see cref="IHttpClientPatchRequest"/>, <see cref="IHttpClientStreamRequest"/>, <see cref="IHttpClientByteArrayRequest"/>, 
+        /// <see cref="IHttpClientMultipartRequest"/> or <see cref="IHttpClientFormUrlEncodedRequest"/> to customize the body content, otherwise the whole class will be serialized.
         /// </summary>
         Body = 0x0,
 
         /// <summary>
-        /// Parameters that are appended to the URL. You must implement <see cref="IQueryStringLocationRequest"/> to provide with content.
+        /// Parameters that are appended to the URL. You must implement <see cref="IHttpClientQueryStringLocationRequest"/> to provide with content.
         /// </summary>
         Query = 0x1,
 
         /// <summary>
-        /// Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="IPathStringLocationRequest"/> to provide with content.
+        /// Used together with Path Templating, where the parameter value is actually part of the operation's URL. You must implement <see cref="IHttpClientPathStringLocationRequest"/> to provide with content.
         /// </summary>
         Path = 0x2,
 
         /// <summary>
-        /// Custom headers that are expected as part of the request. You must implement <see cref="IHeaderLocationRequest"/> to provide with content.
+        /// Custom headers that are expected as part of the request. You must implement <see cref="IHttpClientHeaderLocationRequest"/> to provide with content.
         /// </summary>
         Header = 0x4,
 
         /// <summary>
-        /// Used to pass a specific cookie value to the API. You must <see cref="ICookieLocationRequest"/> to provide with content.
+        /// Used to pass a specific cookie value to the API. You must <see cref="IHttpClientCookieLocationRequest"/> to provide with content.
         /// </summary>
         Cookie = 0x8
     }
@@ -204,31 +204,31 @@ namespace Xpandables.Net.Http
     {
         /// <summary>
         /// Body content matching the <see cref="StringContent"/>.
-        /// The target class should implement <see cref="IStringRequest"/>, <see cref="IPatchRequest"/>, otherwise the whole class will be serialized.
+        /// The target class should implement <see cref="IHttpClientStringRequest"/>, <see cref="IHttpClientPatchRequest"/>, otherwise the whole class will be serialized.
         /// </summary>
         String,
 
         /// <summary>
         /// Body content matching the <see cref="ByteArrayContent"/>.
-        /// The target class should implement <see cref="IByteArrayRequest"/>.
+        /// The target class should implement <see cref="IHttpClientByteArrayRequest"/>.
         /// </summary>
         ByteArray,
 
         /// <summary>
         /// Body content matching the <see cref="MultipartFormDataContent"/>.
-        /// The target class should implement <see cref="IMultipartRequest"/>.
+        /// The target class should implement <see cref="IHttpClientMultipartRequest"/>.
         /// </summary>
         Multipart,
 
         /// <summary>
         /// Body content matching the <see cref="StreamContent"/>.
-        /// The target class should implement <see cref="IStreamRequest"/>.
+        /// The target class should implement <see cref="IHttpClientStreamRequest"/>.
         /// </summary>
         Stream,
 
         /// <summary>
         /// Body content matching the <see cref="FormUrlEncodedContent"/>.
-        /// The target class should implement <see cref="IFormUrlEncodedRequest"/>.
+        /// The target class should implement <see cref="IHttpClientFormUrlEncodedRequest"/>.
         /// </summary>
         FormUrlEncoded
     }

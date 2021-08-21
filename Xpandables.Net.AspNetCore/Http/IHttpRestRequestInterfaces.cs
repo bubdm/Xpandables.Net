@@ -26,7 +26,7 @@ namespace Xpandables.Net.Http
     /// You may use <see cref="ContentType.JsonPatch"/> as content type.
     /// </summary>
     /// <typeparam name="TDocument">The target object type.</typeparam>
-    internal interface IPatchRequest<TDocument> : IPatchRequest
+    internal interface IPatchRequest<TDocument> : IHttpClientPatchRequest
         where TDocument : class, new()
     {
         ///// <summary>
@@ -34,6 +34,6 @@ namespace Xpandables.Net.Http
         ///// </summary>
         //new JsonPatchDocument<TDocument> GetPatchDocument();
 
-        object IPatchRequest.GetPatchDocument() => GetPatchDocument();
+        object IHttpClientPatchRequest.GetPatchDocument() => GetPatchDocument();
     }
 }

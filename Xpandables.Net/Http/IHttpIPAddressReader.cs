@@ -17,22 +17,25 @@
 ************************************************************************************************************/
 using System.Net;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net.Http
+namespace Xpandables.Net.Http;
+
+/// <summary>
+/// Provides with a method to read IP address of the caller.
+/// </summary>
+public interface IHttpIPAddressReader
 {
     /// <summary>
-    /// Provides with a method to request IP address of the caller.
+    /// Asynchronously gets the IPAddress of the current caller.
     /// </summary>
-    public interface IHttpIPAddressAccessor
-    {
-        /// <summary>
-        /// Asynchronously gets the IPAddress of the current caller.
-        /// </summary>
-        /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(
-            JsonSerializerOptions? serializerOptions = default, CancellationToken cancellationToken = default);
-    }
+    /// <param name="serializerOptions">Options to control the behavior during parsing.</param>
+    /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+    Task<HttpRestClientResponse<IPAddress>> ReadIPAddressAsync(
+        JsonSerializerOptions? serializerOptions = default, CancellationToken cancellationToken = default);
 }
+
+/// <summary>
+/// Represents a query to request an <see cref="IPAddress"/>.
+/// </summary>
+[HttpClient(Path = "", IsNullable = true, IsSecured = false, Method = HttpMethodVerbs.Get)]
+public sealed class IPAddressRequest : IHttpClientRequest<string> { }

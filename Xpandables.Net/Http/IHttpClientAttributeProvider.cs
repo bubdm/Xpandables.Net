@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,13 +14,17 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Net;
 
-namespace Xpandables.Net.Http
+namespace Xpandables.Net.Http;
+
+/// <summary>
+/// An interface representing an <see cref="HttpClientAttribute"/> to be dynamically applied on the implementing class.
+/// This interface takes priority over the <see cref="HttpClientAttribute"/> declaration.
+/// </summary>
+public interface IHttpClientAttributeProvider
 {
     /// <summary>
-    /// Represents a query to request an <see cref="IPAddress"/>.
+    /// Returns the <see cref="HttpClientAttribute"/> to be applied on the implementing instance.
     /// </summary>
-    [HttpRestClient(Path = "", IsNullable = true, IsSecured = false, Method = HttpMethodVerbs.Get)]
-    public sealed class IPAddressRequest : IHttpRestClientRequest<string> { }
+    HttpClientAttribute ReadHttpClientAttribute();
 }

@@ -22,9 +22,9 @@ using System;
 namespace Xpandables.Net.Http
 {
     /// <summary>
-    /// Default implementation of <see cref="IHttpHeaderAccessor"/> that uses an <see cref="IHttpContextAccessor"/> to access context.
+    /// Default implementation of <see cref="IHttpHeaderReader"/> that uses an <see cref="IHttpContextAccessor"/> to access context.
     /// </summary>
-    public class HttpHeaderAccessor : IHttpHeaderAccessor
+    public class HttpHeaderAccessor : IHttpHeaderReader
     {
         /// <summary>
         /// Initializes a new instance of <see cref="HttpHeaderAccessor"/>.
