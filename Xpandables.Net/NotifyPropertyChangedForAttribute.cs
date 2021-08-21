@@ -15,28 +15,25 @@
  *
 ************************************************************************************************************/
 
-using System;
+namespace Xpandables.Net;
 
-namespace Xpandables.Net
+/// <summary>
+/// When used with <see cref="NotifyPropertyChanged{T}"/>, makes sure that the decorated property will be notified
+/// when the target specified property by <see cref="Name"/> has changed.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+public sealed class NotifyPropertyChangedForAttribute : Attribute
 {
     /// <summary>
-    /// When used with <see cref="NotifyPropertyChanged{T}"/>, makes sure that the decorated property will be notified
-    /// when the target specified property by <see cref="Name"/> has changed.
+    /// Specifies that the decorated property will be notified when the target specified by name has changed.
+    /// We advise the use of <see langword="nameof(propertyName)"/> as value.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class NotifyPropertyChangedForAttribute : Attribute
-    {
-        /// <summary>
-        /// Specifies that the decorated property will be notified when the target specified by name has changed.
-        /// We advise the use of <see langword="nameof(propertyName)"/> as value.
-        /// </summary>
-        /// <param name="name">The name of the target property which changes are notified to the decorated property.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="name"/> is null.</exception>
-        public NotifyPropertyChangedForAttribute(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
+    /// <param name="name">The name of the target property which changes are notified to the decorated property.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="name"/> is null.</exception>
+    public NotifyPropertyChangedForAttribute(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
 
-        /// <summary>
-        /// Gets the name of the target property which changes are notified to the decorated property.
-        /// </summary>
-        public string Name { get; }
-    }
+    /// <summary>
+    /// Gets the name of the target property which changes are notified to the decorated property.
+    /// </summary>
+    public string Name { get; }
 }

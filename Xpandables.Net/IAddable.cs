@@ -15,19 +15,18 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Represents collection which allows adding items.
+/// This interface is useful when implementing a serializable custom collection with JSON.
+/// </summary>
+/// <typeparam name="TItem">Type of items in collection.</typeparam>
+public interface IAddable<in TItem>
 {
     /// <summary>
-    /// Represents collection which allows adding items.
-    /// This interface is useful when implementing a serializable custom collection with JSON.
+    /// Adds item to collection.
     /// </summary>
-    /// <typeparam name="TItem">Type of items in collection.</typeparam>
-    public interface IAddable<in TItem>
-    {
-        /// <summary>
-        /// Adds item to collection.
-        /// </summary>
-        /// <param name="item">Item to be added.</param>
-        void Add(TItem item);
-    }
+    /// <param name="item">Item to be added.</param>
+    void Add(TItem item);
 }

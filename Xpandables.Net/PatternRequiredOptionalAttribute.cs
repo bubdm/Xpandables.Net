@@ -15,78 +15,76 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Specifies that the data field value is required according to a regular expression.
+/// When the <see cref="IsOptional"/> is <see langword="true"/>, the data field is only checked if there is a value.
+/// This is an <see langword="abstract"/> class.
+/// </summary>
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property)]
+public sealed class PatternRequiredOptionalAttribute : RequiredAttribute
 {
     /// <summary>
-    /// Specifies that the data field value is required according to a regular expression.
-    /// When the <see cref="IsOptional"/> is <see langword="true"/>, the data field is only checked if there is a value.
-    /// This is an <see langword="abstract"/> class.
+    /// Initializes a new instance of the <see cref="PatternRequiredOptionalAttribute"/> class with the regex pattern the value must match.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property)]
-    public sealed class PatternRequiredOptionalAttribute : RequiredAttribute
+    /// <param name="regexPattern">The regex pattern to be applied.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="regexPattern"/> is <see langword="null"/>.</exception>
+    public PatternRequiredOptionalAttribute(string regexPattern) => RegexPattern = regexPattern ?? throw new ArgumentNullException(nameof(regexPattern));
+
+    /// <summary>
+    /// Validates the specified value with respect to the current pattern validation attribute.
+    /// </summary>
+    /// <param name="value">The value to validate.</param>
+    /// <param name="validationContext">The context information about the validation operation.</param>
+    /// <returns>An instance of the <see cref="ValidationResult"/> class.</returns>
+    /// <exception cref="InvalidOperationException">The current attribute is malformed.</exception>
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PatternRequiredOptionalAttribute"/> class with the regex pattern the value must match.
-        /// </summary>
-        /// <param name="regexPattern">The regex pattern to be applied.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="regexPattern"/> is <see langword="null"/>.</exception>
-        public PatternRequiredOptionalAttribute(string regexPattern) => RegexPattern = regexPattern ?? throw new ArgumentNullException(nameof(regexPattern));
+        _ = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
 
-        /// <summary>
-        /// Validates the specified value with respect to the current pattern validation attribute.
-        /// </summary>
-        /// <param name="value">The value to validate.</param>
-        /// <param name="validationContext">The context information about the validation operation.</param>
-        /// <returns>An instance of the <see cref="ValidationResult"/> class.</returns>
-        /// <exception cref="InvalidOperationException">The current attribute is malformed.</exception>
-        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        var isValid = value is null && IsOptional;
+        var memberName = validationContext.MemberName switch
         {
-            _ = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
+            { } => new[] { validationContext.MemberName },
+            _ => Array.Empty<string>()
+        };
 
-            var isValid = value is null && IsOptional;
-            var memberName = validationContext.MemberName switch
-            {
-                { } => new[] { validationContext.MemberName },
-                _ => Array.Empty<string>()
-            };
+        if (isValid)
+            return ValidationResult.Success!;
 
-            if (isValid)
-                return ValidationResult.Success!;
+        var isRequiredValid = base.IsValid(value, validationContext);
+        if (isRequiredValid != ValidationResult.Success)
+            return isRequiredValid;
 
-            var isRequiredValid = base.IsValid(value, validationContext);
-            if (isRequiredValid != ValidationResult.Success)
-                return isRequiredValid;
+        if (value is not string stringValue)
+            return new ValidationResult(ErrorMessageString.StringFormat(validationContext.DisplayName, "string type expected !"), memberName);
 
-            if (value is not string stringValue)
-                return new ValidationResult(ErrorMessageString.StringFormat(validationContext.DisplayName, "string type expected !"), memberName);
-
-            try
-            {
-                isValid = Regex.IsMatch(stringValue, RegexPattern);
-            }
-            catch (Exception exception) when (exception is ArgumentException || exception is RegexMatchTimeoutException)
-            {
-                isValid = false;
-            }
-
-            return isValid
-                ? ValidationResult.Success
-                : new ValidationResult(ErrorMessageString.StringFormat(validationContext.DisplayName), memberName);
+        try
+        {
+            isValid = Regex.IsMatch(stringValue, RegexPattern);
+        }
+        catch (Exception exception) when (exception is ArgumentException || exception is RegexMatchTimeoutException)
+        {
+            isValid = false;
         }
 
-        /// <summary>
-        /// Gets or sets the value whether or not the decorated property/field/parameter can be null.
-        /// If <see langword="true"/>, the data field will only be checked when there is a value. The default behavior is <see langword="false"/>.
-        /// </summary>
-        public bool IsOptional { get; set; }
-
-        /// <summary>
-        /// Gets the Regex pattern the value must match.
-        /// </summary>
-        public string RegexPattern { get; }
+        return isValid
+            ? ValidationResult.Success
+            : new ValidationResult(ErrorMessageString.StringFormat(validationContext.DisplayName), memberName);
     }
+
+    /// <summary>
+    /// Gets or sets the value whether or not the decorated property/field/parameter can be null.
+    /// If <see langword="true"/>, the data field will only be checked when there is a value. The default behavior is <see langword="false"/>.
+    /// </summary>
+    public bool IsOptional { get; set; }
+
+    /// <summary>
+    /// Gets the Regex pattern the value must match.
+    /// </summary>
+    public string RegexPattern { get; }
 }

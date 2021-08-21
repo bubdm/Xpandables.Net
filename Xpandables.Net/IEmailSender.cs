@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,40 +14,37 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Provides with a method to send emails.
+/// </summary>
+public interface IEmailSender
 {
     /// <summary>
-    /// Provides with a method to send emails.
+    /// Asynchronously sends the specified message via mail.
     /// </summary>
-    public interface IEmailSender
-    {
-        /// <summary>
-        /// Asynchronously sends the specified message via mail.
-        /// </summary>
-        /// <param name="email">The email message instance.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        Task SendEmailAsync(object email, CancellationToken cancellationToken = default);
-    }
+    /// <param name="email">The email message instance.</param>
+    /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+    /// <returns>A task that represents an asynchronous operation.</returns>
+    Task SendEmailAsync(object email, CancellationToken cancellationToken = default);
+}
 
+/// <summary>
+/// Provides with a method to send emails using a specific type.
+/// </summary>
+/// <typeparam name="TMessage">The type of the email  message content.</typeparam>
+public interface IEmailSender<TMessage> : IEmailSender
+    where TMessage : class
+{
     /// <summary>
-    /// Provides with a method to send emails using a specific type.
+    /// Asynchronously sends the specified email message via mail.
     /// </summary>
-    /// <typeparam name="TMessage">The type of the email  message content.</typeparam>
-    public interface IEmailSender<TMessage> : IEmailSender
-        where TMessage : class
-    {
-        /// <summary>
-        /// Asynchronously sends the specified email message via mail.
-        /// </summary>
-        /// <param name="email">The email message instance.</param>
-        /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents an asynchronous operation.</returns>
-        Task SendEmailAsync(TMessage email, CancellationToken cancellationToken = default);
-        Task IEmailSender.SendEmailAsync(object email, CancellationToken cancellationToken)
-            => SendEmailAsync((TMessage)email, cancellationToken);
-    }
+    /// <param name="email">The email message instance.</param>
+    /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
+    /// <returns>A task that represents an asynchronous operation.</returns>
+    Task SendEmailAsync(TMessage email, CancellationToken cancellationToken = default);
+    Task IEmailSender.SendEmailAsync(object email, CancellationToken cancellationToken)
+        => SendEmailAsync((TMessage)email, cancellationToken);
 }

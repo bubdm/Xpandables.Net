@@ -15,66 +15,64 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.ComponentModel.DataAnnotations;
 
 using Xpandables.Net.Properties;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Defines the <see cref="ValuePicture"/> class that holds properties for an image.
+/// <para>Returns a new instance <see cref="ValuePicture"/> with all properties.</para>
+/// </summary>
+/// <param name="Title">The picture title.</param>
+/// <param name="Content">The picture byte content.</param>
+/// <param name="Height">The picture height, in pixels, of this picture..</param>
+/// <param name="Width">The picture width, in pixels, of this picture.</param>
+/// <param name="Extension">The picture file format of this picture.</param>
+/// <exception cref="ArgumentNullException">The <paramref name="Title"/> is null.</exception>
+/// <exception cref="ArgumentNullException">The <paramref name="Content"/> is null.</exception>
+/// <exception cref="ArgumentNullException">The <paramref name="Extension"/> is null.</exception>
+public sealed record ValuePicture([Required] string Title, byte[] Content, uint Height, uint Width, [Required] string Extension)
 {
     /// <summary>
-    /// Defines the <see cref="ValuePicture"/> class that holds properties for an image.
-    /// <para>Returns a new instance <see cref="ValuePicture"/> with all properties.</para>
+    /// Creates a <see cref="ValuePicture"/> with the default image content.
     /// </summary>
-    /// <param name="Title">The picture title.</param>
-    /// <param name="Content">The picture byte content.</param>
-    /// <param name="Height">The picture height, in pixels, of this picture..</param>
-    /// <param name="Width">The picture width, in pixels, of this picture.</param>
-    /// <param name="Extension">The picture file format of this picture.</param>
-    /// <exception cref="ArgumentNullException">The <paramref name="Title"/> is null.</exception>
-    /// <exception cref="ArgumentNullException">The <paramref name="Content"/> is null.</exception>
-    /// <exception cref="ArgumentNullException">The <paramref name="Extension"/> is null.</exception>
-    public sealed record ValuePicture([Required] string Title, byte[] Content, uint Height, uint Width, [Required] string Extension)
+    /// <returns>A new instance of <see cref="ValuePicture"/> with default image content.</returns>
+    public static ValuePicture Default() => new("Default", Resources.Default, 1500, 1500, "Png");
+
+    /// <summary>
+    /// Creates a new picture from another.
+    /// </summary>
+    /// <param name="source">the picture source.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+    public ValuePicture(ValuePicture source)
     {
-        /// <summary>
-        /// Creates a <see cref="ValuePicture"/> with the default image content.
-        /// </summary>
-        /// <returns>A new instance of <see cref="ValuePicture"/> with default image content.</returns>
-        public static ValuePicture Default() => new("Default", Resources.Default, 1500, 1500, "Png");
+        _ = source ?? throw new ArgumentNullException(nameof(source));
 
-        /// <summary>
-        /// Creates a new picture from another.
-        /// </summary>
-        /// <param name="source">the picture source.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public ValuePicture(ValuePicture source)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-
-            Title = source.Title;
-            Content = new byte[source.Content.Length];
-            source.Content.CopyTo(Content, 0);
-            Height = source.Height;
-            Width = source.Width;
-            Extension = source.Extension;
-        }
-
-        /// <summary>
-        /// Clears the content of the picture.
-        /// </summary>
-        /// <returns>The current instance without content.</returns>
-        public void Clear() => Array.Clear(Content, 0, Content.Length);
-
-        /// <summary>
-        /// Convert the picture content to base64 string.
-        /// </summary>
-        /// <returns>The string representation, in base 64, of the content.</returns>
-        public string ConvertToBase64String() => Convert.ToBase64String(Content);
-
-        /// <summary>
-        /// Returns the UTF8 encoded string of the image.
-        /// </summary>
-        /// <returns>An UTF8 string.</returns>
-        public override string ToString() => System.Text.Encoding.UTF8.GetString(Content, 0, Content.Length);
+        Title = source.Title;
+        Content = new byte[source.Content.Length];
+        source.Content.CopyTo(Content, 0);
+        Height = source.Height;
+        Width = source.Width;
+        Extension = source.Extension;
     }
+
+    /// <summary>
+    /// Clears the content of the picture.
+    /// </summary>
+    /// <returns>The current instance without content.</returns>
+    public void Clear() => Array.Clear(Content, 0, Content.Length);
+
+    /// <summary>
+    /// Convert the picture content to base64 string.
+    /// </summary>
+    /// <returns>The string representation, in base 64, of the content.</returns>
+    public string ConvertToBase64String() => Convert.ToBase64String(Content);
+
+    /// <summary>
+    /// Returns the UTF8 encoded string of the image.
+    /// </summary>
+    /// <returns>An UTF8 string.</returns>
+    public override string ToString() => System.Text.Encoding.UTF8.GetString(Content, 0, Content.Length);
 }

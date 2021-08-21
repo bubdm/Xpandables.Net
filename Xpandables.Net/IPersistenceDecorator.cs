@@ -18,15 +18,14 @@
 using Xpandables.Net.Correlations;
 using Xpandables.Net.UnitOfWorks;
 
-namespace Xpandables.Net
-{
-    /// <summary>
-    /// A marker interface that allows the handler class implementation to use persistence data across the control flow.
-    /// The behavior makes use of an implementation of <see cref="IUnitOfWork"/> in the handler class implementation
-    /// to persist data at the end of the control flow only if there is no exception.
-    /// In order to control the behavior, you can add the <see cref="ICorrelationDecorator"/> to the command/event class and reference
-    /// the <see cref="ICorrelationEvent"/> in the handler class implementation, to defines actions to be applied after the control flow with
-    /// <see cref="ICorrelationEvent.PostEvent"/> on success and <see cref="ICorrelationEvent.RollbackEvent"/> on exception.
-    /// </summary>
-    public interface IPersistenceDecorator { }
-}
+namespace Xpandables.Net;
+
+/// <summary>
+/// A marker interface that allows the handler class implementation to use persistence data across the control flow.
+/// The behavior makes use of an implementation of <see cref="IUnitOfWork"/> in the handler class implementation
+/// to persist data at the end of the control flow only if there is no exception.
+/// In order to control the behavior, you can add the <see cref="ICorrelationDecorator"/> to the command/event class and reference
+/// the <see cref="ICorrelationEvent"/> in the handler class implementation, to defines actions to be applied after the control flow with
+/// <see cref="ICorrelationEvent.PostEvent"/> on success and <see cref="ICorrelationEvent.RollbackEvent"/> on exception.
+/// </summary>
+public interface IPersistenceDecorator { }

@@ -15,47 +15,45 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Defines a pair of values, representing a segment.
+/// This class uses <see cref="ValueRangeTypeConverter"/> as type converter.
+/// <para>Returns a new instance of <see cref="ValueRange{TValue}"/> with the specified pair of values.</para>
+/// </summary>
+/// <param name="Min">The minimal value of range.</param>
+/// <param name="Max">The maximal value of range.</param>
+/// <typeparam name="TValue">The Type of each of two values of range.</typeparam>
+[Serializable]
+[DebuggerDisplay("Min = {Min} : Max = {Max}")]
+[TypeConverter(typeof(ValueRangeTypeConverter))]
+public sealed record ValueRange<TValue>(TValue Min, TValue Max)
+    where TValue : unmanaged, IComparable, IFormattable, IConvertible, IComparable<TValue>, IEquatable<TValue>
 {
     /// <summary>
-    /// Defines a pair of values, representing a segment.
-    /// This class uses <see cref="ValueRangeTypeConverter"/> as type converter.
-    /// <para>Returns a new instance of <see cref="ValueRange{TValue}"/> with the specified pair of values.</para>
+    /// Creates a string representation of the <see cref="ValueRange{T}"/> separated by ":".
     /// </summary>
-    /// <param name="Min">The minimal value of range.</param>
-    /// <param name="Max">The maximal value of range.</param>
-    /// <typeparam name="TValue">The Type of each of two values of range.</typeparam>
-    [Serializable]
-    [DebuggerDisplay("Min = {Min} : Max = {Max}")]
-    [TypeConverter(typeof(ValueRangeTypeConverter))]
-    public sealed record ValueRange<TValue>(TValue Min, TValue Max)
-        where TValue : unmanaged, IComparable, IFormattable, IConvertible, IComparable<TValue>, IEquatable<TValue>
-    {
-        /// <summary>
-        /// Creates a string representation of the <see cref="ValueRange{T}"/> separated by ":".
-        /// </summary>
-        public override string ToString() => $"{Min}:{Max}";
+    public override string ToString() => $"{Min}:{Max}";
 
-        /// <summary>
-        /// Creates a string representation of the string <see cref="ValueRange{TValue}"/> using the specified format and provider.
-        /// The format will received address properties in the following order : <see cref="Min"/> and <see cref="Max"/>.
-        /// </summary>
-        /// <param name="format">A composite format string.</param>
-        /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="format"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="formatProvider"/> is null.</exception>
-        /// <exception cref="FormatException">The <paramref name="format"/> is invalid or
-        /// the index of a format item is not zero or one.</exception>
-        public string ToString(string format, IFormatProvider formatProvider) => string.Format(formatProvider, format, Min, Max);
+    /// <summary>
+    /// Creates a string representation of the string <see cref="ValueRange{TValue}"/> using the specified format and provider.
+    /// The format will received address properties in the following order : <see cref="Min"/> and <see cref="Max"/>.
+    /// </summary>
+    /// <param name="format">A composite format string.</param>
+    /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="format"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="formatProvider"/> is null.</exception>
+    /// <exception cref="FormatException">The <paramref name="format"/> is invalid or
+    /// the index of a format item is not zero or one.</exception>
+    public string ToString(string format, IFormatProvider formatProvider) => string.Format(formatProvider, format, Min, Max);
 
-        /// <summary>
-        /// Determines whether this range is empty or not.
-        /// </summary>
-        /// <returns>Returns <see langword="true"/> if so, otherwise returns <see langword="false"/>.</returns>
-        public bool IsEmpty() => Min.CompareTo(Max) >= 0;
-    }
+    /// <summary>
+    /// Determines whether this range is empty or not.
+    /// </summary>
+    /// <returns>Returns <see langword="true"/> if so, otherwise returns <see langword="false"/>.</returns>
+    public bool IsEmpty() => Min.CompareTo(Max) >= 0;
 }

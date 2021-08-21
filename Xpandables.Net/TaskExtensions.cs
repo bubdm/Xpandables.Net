@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,59 +14,55 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Provides with methods used to execute asynchronous operation synchronously.
+/// </summary>
+public static partial class AsyncEnumerableExtensions
 {
+    // Defines the static task factory.
+    internal static readonly TaskFactory TaskFactory = new(
+        CancellationToken.None,
+        TaskCreationOptions.None,
+        TaskContinuationOptions.None,
+        TaskScheduler.Default);
+
     /// <summary>
-    /// Provides with methods used to execute asynchronous operation synchronously.
+    /// Executes the target asynchronous operation synchronously.
     /// </summary>
-    public static partial class AsyncEnumerableExtensions
+    /// <typeparam name="TResult">The type of result.</typeparam>
+    /// <param name="func">The asynchronous function to execute synchronously.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="func"/> is null.</exception>
+    /// <returns>An object of <typeparamref name="TResult"/> type.</returns>
+    public static TResult RunSync<TResult>(this Func<Task<TResult>> func)
     {
-        // Defines the static task factory.
-        internal static readonly TaskFactory TaskFactory = new(
-            CancellationToken.None,
-            TaskCreationOptions.None,
-            TaskContinuationOptions.None,
-            TaskScheduler.Default);
+        _ = func ?? throw new ArgumentNullException(nameof(func));
+        return TaskFactory.StartNew(func).Unwrap().GetAwaiter().GetResult();
+    }
 
-        /// <summary>
-        /// Executes the target asynchronous operation synchronously.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result.</typeparam>
-        /// <param name="func">The asynchronous function to execute synchronously.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="func"/> is null.</exception>
-        /// <returns>An object of <typeparamref name="TResult"/> type.</returns>
-        public static TResult RunSync<TResult>(this Func<Task<TResult>> func)
-        {
-            _ = func ?? throw new ArgumentNullException(nameof(func));
-            return TaskFactory.StartNew(func).Unwrap().GetAwaiter().GetResult();
-        }
+    /// <summary>
+    /// Executes the target asynchronous operation synchronously.
+    /// </summary>
+    /// <typeparam name="TResult">The type of result.</typeparam>
+    /// <param name="task">The asynchronous function to execute synchronously.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="task"/> is null.</exception>
+    /// <returns>An object of <typeparamref name="TResult"/> type.</returns>
+    public static TResult RunSync<TResult>(this Task<TResult> task)
+    {
+        _ = task ?? throw new ArgumentNullException(nameof(task));
+        return TaskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
+    }
 
-        /// <summary>
-        /// Executes the target asynchronous operation synchronously.
-        /// </summary>
-        /// <typeparam name="TResult">The type of result.</typeparam>
-        /// <param name="task">The asynchronous function to execute synchronously.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="task"/> is null.</exception>
-        /// <returns>An object of <typeparamref name="TResult"/> type.</returns>
-        public static TResult RunSync<TResult>(this Task<TResult> task)
-        {
-            _ = task ?? throw new ArgumentNullException(nameof(task));
-            return TaskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Executes the target asynchronous operation synchronously.
-        /// </summary>
-        /// <param name="task">The operation to be synchronously executed.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="task"/> is null.</exception>
-        public static void RunSync(this Task task)
-        {
-            _ = task ?? throw new ArgumentNullException(nameof(task));
-            TaskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
-        }
+    /// <summary>
+    /// Executes the target asynchronous operation synchronously.
+    /// </summary>
+    /// <param name="task">The operation to be synchronously executed.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="task"/> is null.</exception>
+    public static void RunSync(this Task task)
+    {
+        _ = task ?? throw new ArgumentNullException(nameof(task));
+        TaskFactory.StartNew(() => task).Unwrap().GetAwaiter().GetResult();
     }
 }

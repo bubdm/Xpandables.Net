@@ -15,78 +15,75 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Represents a helper class to implement a key of a specific type.
+/// </summary>
+/// <typeparam name="TId">The type of the key value.</typeparam>
+[Serializable]
+public abstract class UniqueKey<TId> : IEqualityComparer<UniqueKey<TId>>, IEquatable<UniqueKey<TId>>, IComparable<UniqueKey<TId>>, IUniqueKey<TId>
+    where TId : notnull, IComparable
 {
+    ///<inheritdoc/>
+    public TId Value { get; }
+
     /// <summary>
-    /// Represents a helper class to implement a key of a specific type.
+    /// Initializes a new instance of <see cref="UniqueKey{TId}"/> with the specified value.
     /// </summary>
-    /// <typeparam name="TId">The type of the key value.</typeparam>
-    [Serializable]
-    public abstract class UniqueKey<TId> : IEqualityComparer<UniqueKey<TId>>, IEquatable<UniqueKey<TId>>, IComparable<UniqueKey<TId>>, IUniqueKey<TId>
-        where TId : notnull, IComparable
-    {
-        ///<inheritdoc/>
-        public TId Value { get; }
+    /// <param name="value">The value for the new instance.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
+    [JsonConstructor]
+    protected UniqueKey(TId value) => Value = value ?? throw new ArgumentNullException(nameof(value));
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="UniqueKey{TId}"/> with the specified value.
-        /// </summary>
-        /// <param name="value">The value for the new instance.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
-        [JsonConstructor]
-        protected UniqueKey(TId value) => Value = value ?? throw new ArgumentNullException(nameof(value));
+    ///<inheritdoc/>
+    public bool Equals(UniqueKey<TId>? x, UniqueKey<TId>? y) => x?.Equals(y) ?? false;
 
-        ///<inheritdoc/>
-        public bool Equals(UniqueKey<TId>? x, UniqueKey<TId>? y) => x?.Equals(y) ?? false;
+    ///<inheritdoc/>
+    public int GetHashCode([DisallowNull] UniqueKey<TId> obj) => Value.GetHashCode();
 
-        ///<inheritdoc/>
-        public int GetHashCode([DisallowNull] UniqueKey<TId> obj) => Value.GetHashCode();
+    ///<inheritdoc/>
+    public bool Equals(UniqueKey<TId>? other) => other is not null && GetType() == other.GetType() && Value.Equals(other.Value);
 
-        ///<inheritdoc/>
-        public bool Equals(UniqueKey<TId>? other) => other is not null && GetType() == other.GetType() && Value.Equals(other.Value);
+    ///<inheritdoc/>
+    public int CompareTo(UniqueKey<TId>? other) => other is null ? -1 : Value.CompareTo(other.Value);
 
-        ///<inheritdoc/>
-        public int CompareTo(UniqueKey<TId>? other) => other is null ? -1 : Value.CompareTo(other.Value);
+    ///<inheritdoc/>
+    public override bool Equals(object? obj) => Equals(obj as UniqueKey<TId>);
 
-        ///<inheritdoc/>
-        public override bool Equals(object? obj) => Equals(obj as UniqueKey<TId>);
+    ///<inheritdoc/>
+    public override int GetHashCode() => Value.GetHashCode();
 
-        ///<inheritdoc/>
-        public override int GetHashCode() => Value.GetHashCode();
+    /// <summary>
+    /// When overridden, this method should determine whether or not the key contains a valid value or not.
+    /// </summary>
+    /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>
+    public abstract bool IsEmpty();
 
-        /// <summary>
-        /// When overridden, this method should determine whether or not the key contains a valid value or not.
-        /// </summary>
-        /// <returns><see langword="true"/> if it's defined, otherwise <see langword="false"/>.</returns>
-        public abstract bool IsEmpty();
+    /// <summary>
+    /// When overridden, this method should return the <see cref="string"/> representation of the key value.
+    /// </summary>
+    /// <returns>A <see cref="string"/> value.</returns>
+    public abstract string AsString();
 
-        /// <summary>
-        /// When overridden, this method should return the <see cref="string"/> representation of the key value.
-        /// </summary>
-        /// <returns>A <see cref="string"/> value.</returns>
-        public abstract string AsString();
+    ///<inheritdoc/>
+    public static bool operator ==(UniqueKey<TId> left, UniqueKey<TId> right) => left?.Equals(right) ?? right is null;
 
-        ///<inheritdoc/>
-        public static bool operator ==(UniqueKey<TId> left, UniqueKey<TId> right) => left?.Equals(right) ?? right is null;
+    ///<inheritdoc/>
+    public static bool operator !=(UniqueKey<TId> left, UniqueKey<TId> right) => !(left == right);
 
-        ///<inheritdoc/>
-        public static bool operator !=(UniqueKey<TId> left, UniqueKey<TId> right) => !(left == right);
+    ///<inheritdoc/>
+    public static bool operator <(UniqueKey<TId> left, UniqueKey<TId> right) => left is null ? !(right is null) : left.CompareTo(right) < 0;
 
-        ///<inheritdoc/>
-        public static bool operator <(UniqueKey<TId> left, UniqueKey<TId> right) => left is null ? !(right is null) : left.CompareTo(right) < 0;
+    ///<inheritdoc/>
+    public static bool operator <=(UniqueKey<TId> left, UniqueKey<TId> right) => left is null || left.CompareTo(right) <= 0;
 
-        ///<inheritdoc/>
-        public static bool operator <=(UniqueKey<TId> left, UniqueKey<TId> right) => left is null || left.CompareTo(right) <= 0;
+    ///<inheritdoc/>
+    public static bool operator >(UniqueKey<TId> left, UniqueKey<TId> right) => !(left is null) && left.CompareTo(right) > 0;
 
-        ///<inheritdoc/>
-        public static bool operator >(UniqueKey<TId> left, UniqueKey<TId> right) => !(left is null) && left.CompareTo(right) > 0;
-
-        ///<inheritdoc/>
-        public static bool operator >=(UniqueKey<TId> left, UniqueKey<TId> right) => left is null ? right is null : left.CompareTo(right) >= 0;
-    }
+    ///<inheritdoc/>
+    public static bool operator >=(UniqueKey<TId> left, UniqueKey<TId> right) => left is null ? right is null : left.CompareTo(right) >= 0;
 }

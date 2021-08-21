@@ -15,58 +15,56 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Defines a representation of an encrypted value, its key and its salt used with <see cref="IStringCryptography"/>.
+/// This class uses the <see cref="ValueEncryptedTypeConverter"/> type converter.
+/// <para>Returns a new instance of <see cref="ValueEncrypted"/> with the key and value.</para>
+/// </summary>
+/// <param name="Key">Contains the encryption key.</param>
+/// <param name="Value">Contains the base64 encrypted value.</param>
+/// <param name="Salt">Contains the base64 salt value.</param>
+/// <exception cref="ArgumentNullException">The <paramref name="Key"/> is null.</exception>
+/// <exception cref="ArgumentNullException">The <paramref name="Value"/> is null.</exception>
+/// <exception cref="ArgumentNullException">The <paramref name="Salt"/> is null.</exception>
+[Serializable]
+[DebuggerDisplay("Key = {Key}, Value = {Value}, Salt = {Salt}")]
+[TypeConverter(typeof(ValueEncryptedTypeConverter))]
+public sealed record ValueEncrypted([Required] string Key, [Required] string Value, [Required] string Salt)
 {
     /// <summary>
-    /// Defines a representation of an encrypted value, its key and its salt used with <see cref="IStringCryptography"/>.
-    /// This class uses the <see cref="ValueEncryptedTypeConverter"/> type converter.
-    /// <para>Returns a new instance of <see cref="ValueEncrypted"/> with the key and value.</para>
+    /// Creates a string representation of the <see cref="ValueEncrypted"/>.
     /// </summary>
-    /// <param name="Key">Contains the encryption key.</param>
-    /// <param name="Value">Contains the base64 encrypted value.</param>
-    /// <param name="Salt">Contains the base64 salt value.</param>
-    /// <exception cref="ArgumentNullException">The <paramref name="Key"/> is null.</exception>
-    /// <exception cref="ArgumentNullException">The <paramref name="Value"/> is null.</exception>
-    /// <exception cref="ArgumentNullException">The <paramref name="Salt"/> is null.</exception>
-    [Serializable]
-    [DebuggerDisplay("Key = {Key}, Value = {Value}, Salt = {Salt}")]
-    [TypeConverter(typeof(ValueEncryptedTypeConverter))]
-    public sealed record ValueEncrypted([Required] string Key, [Required] string Value, [Required] string Salt)
-    {
-        /// <summary>
-        /// Creates a string representation of the <see cref="ValueEncrypted"/>.
-        /// </summary>
-        public override string ToString() => $"{Key}:{Value}:{Salt}";
+    public override string ToString() => $"{Key}:{Value}:{Salt}";
 
-        /// <summary>
-        /// Creates a string representation of the <see cref="ValueEncrypted"/> using the specified format and provider.
-        /// </summary>
-        /// <param name="format">A composite format string.</param>
-        /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="format"/> is null.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="formatProvider"/> is null.</exception>
-        /// <exception cref="FormatException">The <paramref name="format"/> is invalid or
-        /// the index of a format item is not zero or one.</exception>
-        public string ToString(string format, IFormatProvider formatProvider) => string.Format(formatProvider, format, Key, Value, Salt);
+    /// <summary>
+    /// Creates a string representation of the <see cref="ValueEncrypted"/> using the specified format and provider.
+    /// </summary>
+    /// <param name="format">A composite format string.</param>
+    /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="format"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="formatProvider"/> is null.</exception>
+    /// <exception cref="FormatException">The <paramref name="format"/> is invalid or
+    /// the index of a format item is not zero or one.</exception>
+    public string ToString(string format, IFormatProvider formatProvider) => string.Format(formatProvider, format, Key, Value, Salt);
 
-        /// <summary>
-        /// Compares the encrypted object with the plain text one.
-        /// Returns <see langword="true"/> if equality otherwise <see langword="false"/>.
-        /// </summary>
-        /// <param name="stringCryptography">Contains methods to encrypt and decrypt string.</param>
-        /// <param name="compare">The value to compare with.</param>
-        /// <returns><see langword="true"/> if equality otherwise <see langword="false"/>.</returns>
-        public bool AreEqual(IStringCryptography stringCryptography, string compare) => stringCryptography.AreEqual(this, compare);
+    /// <summary>
+    /// Compares the encrypted object with the plain text one.
+    /// Returns <see langword="true"/> if equality otherwise <see langword="false"/>.
+    /// </summary>
+    /// <param name="stringCryptography">Contains methods to encrypt and decrypt string.</param>
+    /// <param name="compare">The value to compare with.</param>
+    /// <returns><see langword="true"/> if equality otherwise <see langword="false"/>.</returns>
+    public bool AreEqual(IStringCryptography stringCryptography, string compare) => stringCryptography.AreEqual(this, compare);
 
-        /// <summary>
-        /// Implicit converter from <see cref="ValueEncrypted"/> to <see cref="string"/>.
-        /// </summary>
-        /// <param name="valueEncrypted">The target value to act on.</param>
-        public static implicit operator string(ValueEncrypted valueEncrypted) => valueEncrypted.ToString();
-    }
+    /// <summary>
+    /// Implicit converter from <see cref="ValueEncrypted"/> to <see cref="string"/>.
+    /// </summary>
+    /// <param name="valueEncrypted">The target value to act on.</param>
+    public static implicit operator string(ValueEncrypted valueEncrypted) => valueEncrypted.ToString();
 }
