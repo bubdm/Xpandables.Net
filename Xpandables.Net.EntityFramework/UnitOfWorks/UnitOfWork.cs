@@ -16,79 +16,75 @@
 ************************************************************************************************************/
 using Microsoft.EntityFrameworkCore;
 
-using System;
-using System.Threading.Tasks;
-using System.Threading;
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.UnitOfWorks
+namespace Xpandables.Net.UnitOfWorks;
+
+/// <summary>
+/// Represents the base EFCore implementation of <see cref="IUnitOfWork"/>.
+/// </summary>
+/// <typeparam name="TUnitOfWorkContext">The type of the context.</typeparam>
+public class UnitOfWork<TUnitOfWorkContext> : Disposable, IUnitOfWork
+    where TUnitOfWorkContext : Context
 {
     /// <summary>
-    /// Represents the base EFCore implementation of <see cref="IUnitOfWork"/>.
+    /// Gets the current <typeparamref name="TUnitOfWorkContext"/> instance.
     /// </summary>
-    /// <typeparam name="TUnitOfWorkContext">The type of the context.</typeparam>
-    public abstract class UnitOfWork<TUnitOfWorkContext> : Disposable, IUnitOfWork
-        where TUnitOfWorkContext : Context
+    protected TUnitOfWorkContext Context { get; }
+
+    /// <summary>
+    /// Constructs a new instance of <see cref="UnitOfWork{TContext}"/>.
+    /// </summary>
+    /// <param name="unitOfWorkContextFactory">The db context factory to act with.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="unitOfWorkContextFactory"/> is null.</exception>
+    protected UnitOfWork(IUnitOfWorkContextFactory unitOfWorkContextFactory)
+          => Context = unitOfWorkContextFactory.CreateUnitOfWorkContext<TUnitOfWorkContext>();
+
+    ///<inheritdoc/>
+    public virtual async Task<int> PersistAsync(CancellationToken cancellationToken)
     {
-        /// <summary>
-        /// Gets the current <typeparamref name="TUnitOfWorkContext"/> instance.
-        /// </summary>
-        protected TUnitOfWorkContext Context { get; }
-
-        /// <summary>
-        /// Constructs a new instance of <see cref="UnitOfWork{TContext}"/>.
-        /// </summary>
-        /// <param name="unitOfWorkContextFactory">The db context factory to act with.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="unitOfWorkContextFactory"/> is null.</exception>
-        protected UnitOfWork(IUnitOfWorkContextFactory unitOfWorkContextFactory)
-              => Context = unitOfWorkContextFactory.CreateUnitOfWorkContext<TUnitOfWorkContext>();
-
-        ///<inheritdoc/>
-        public virtual async Task<int> PersistAsync(CancellationToken cancellationToken)
+        try
         {
-            try
-            {
-                return await Context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception exception) when (exception is DbUpdateException or DbUpdateConcurrencyException)
-            {
-                throw new InvalidOperationException($"Save changes failed. See inner exception.", exception);
-            }
+            return await Context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
-
-        private bool _isDisposed;
-
-        ///<inheritdoc/>
-        protected override void Dispose(bool disposing)
+        catch (Exception exception) when (exception is DbUpdateException or DbUpdateConcurrencyException)
         {
-            if (!_isDisposed)
-            {
-                _isDisposed = true;
-
-                if (disposing)
-                {
-                    Context?.Dispose();
-                }
-
-                base.Dispose(disposing);
-            }
+            throw new InvalidOperationException($"Save changes failed. See inner exception.", exception);
         }
-
-        ///<inheritdoc/>
-        protected override async ValueTask DisposeAsync(bool disposing)
-        {
-            if (!_isDisposed)
-            {
-                _isDisposed = true;
-
-                await Context.DisposeAsync().ConfigureAwait(false);
-
-                await base.DisposeAsync(disposing).ConfigureAwait(false);
-            }
-        }
-
-        ///<inheritdoc/>
-        public virtual IRepository<TEntity> GetRepository<TEntity>()
-            where TEntity : class, IEntity => new Repository<TEntity>(Context);
     }
+
+    private bool _isDisposed;
+
+    ///<inheritdoc/>
+    protected override void Dispose(bool disposing)
+    {
+        if (!_isDisposed)
+        {
+            _isDisposed = true;
+
+            if (disposing)
+            {
+                Context?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+    }
+
+    ///<inheritdoc/>
+    protected override async ValueTask DisposeAsync(bool disposing)
+    {
+        if (!_isDisposed)
+        {
+            _isDisposed = true;
+
+            await Context.DisposeAsync().ConfigureAwait(false);
+
+            await base.DisposeAsync(disposing).ConfigureAwait(false);
+        }
+    }
+
+    ///<inheritdoc/>
+    public virtual IRepository<TEntity> GetRepository<TEntity>()
+        where TEntity : class, IEntity => new Repository<TEntity>(Context);
 }

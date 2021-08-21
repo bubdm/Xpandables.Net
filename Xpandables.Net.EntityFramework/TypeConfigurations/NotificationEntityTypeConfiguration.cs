@@ -21,29 +21,28 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.TypeConfigurations
+namespace Xpandables.Net.TypeConfigurations;
+
+/// <summary>
+/// EFCore configuration for notification event.
+/// </summary>
+public class NotificationEntityTypeConfiguration : IEntityTypeConfiguration<NotificationStoreEntity>
 {
-    /// <summary>
-    /// EFCore configuration for notification event.
-    /// </summary>
-    public class NotificationEntityTypeConfiguration : IEntityTypeConfiguration<NotificationStoreEntity>
+    ///<inheritdoc/>
+    public virtual void Configure(EntityTypeBuilder<NotificationStoreEntity> builder)
     {
-        ///<inheritdoc/>
-        public virtual void Configure(EntityTypeBuilder<NotificationStoreEntity> builder)
-        {
-            builder.Property(p => p.Id).ValueGeneratedOnAdd();
-            builder.Property(p => p.Index).ValueGeneratedOnAdd();
+        builder.Property(p => p.Id).ValueGeneratedOnAdd();
+        builder.Property(p => p.Index).ValueGeneratedOnAdd();
 
-            builder.HasKey(p => p.Id);
-            builder.HasIndex(p => p.Index).IsUnique();
+        builder.HasKey(p => p.Id);
+        builder.HasIndex(p => p.Index).IsUnique();
 
-            builder.Property(p => p.AggregateId);
-            builder.Property(p => p.AggregateTypeName);
-            builder.Property(p => p.EventData);
-            builder.Property(p => p.EventTypeFullName);
-            builder.Property(p => p.EventTypeName);
-            builder.Property(p => p.ExceptionTypeFullName);
-            builder.Property(p => p.Exception);
-        }
+        builder.Property(p => p.AggregateId);
+        builder.Property(p => p.AggregateTypeName);
+        builder.Property(p => p.EventData);
+        builder.Property(p => p.EventTypeFullName);
+        builder.Property(p => p.EventTypeName);
+        builder.Property(p => p.ExceptionTypeFullName);
+        builder.Property(p => p.Exception);
     }
 }

@@ -15,40 +15,37 @@
  *
 ************************************************************************************************************/
 
-using System;
-
 using Xpandables.Net.Aggregates;
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.UnitOfWorks
+namespace Xpandables.Net.UnitOfWorks;
+
+/// <summary>
+/// Represents the default implementation of <see cref="IAggregateUnitOfWork"/>.
+/// </summary>
+/// <typeparam name="TContext">The type of the context.</typeparam>
+public class AggregateUnitOfWork<TContext> : UnitOfWork<TContext>, IAggregateUnitOfWork
+    where TContext : Context
 {
     /// <summary>
-    /// Represents the default implementation of <see cref="IAggregateUnitOfWork"/>.
+    /// Constructs a new instance of <see cref="AggregateUnitOfWork{TContext}"/> with the context factory.
     /// </summary>
-    /// <typeparam name="TContext">The type of the context.</typeparam>
-    public class AggregateUnitOfWork<TContext> : UnitOfWork<TContext>, IAggregateUnitOfWork
-        where TContext : Context
+    /// <param name="unitOfWorkContextFactory">The context factory.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="unitOfWorkContextFactory"/> is null.</exception>
+    public AggregateUnitOfWork(IUnitOfWorkContextFactory unitOfWorkContextFactory)
+        : base(unitOfWorkContextFactory)
     {
-        /// <summary>
-        /// Constructs a new instance of <see cref="AggregateUnitOfWork{TContext}"/> with the context factory.
-        /// </summary>
-        /// <param name="unitOfWorkContextFactory">The context factory.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="unitOfWorkContextFactory"/> is null.</exception>
-        public AggregateUnitOfWork(IUnitOfWorkContextFactory unitOfWorkContextFactory)
-            : base(unitOfWorkContextFactory)
-        {
-            Events = new Repository<DomainStoreEntity>(Context);
-            Notifications = new Repository<NotificationStoreEntity>(Context);
-            SnapShots = new Repository<SnapShotStoreEntity>(Context);
-        }
-
-        ///<inheritdoc/>
-        public IRepository<DomainStoreEntity> Events { get; }
-
-        ///<inheritdoc/>
-        public IRepository<NotificationStoreEntity> Notifications { get; }
-
-        ///<inheritdoc/>
-        public IRepository<SnapShotStoreEntity> SnapShots { get; }
+        Events = new Repository<DomainStoreEntity>(Context);
+        Notifications = new Repository<NotificationStoreEntity>(Context);
+        SnapShots = new Repository<SnapShotStoreEntity>(Context);
     }
+
+    ///<inheritdoc/>
+    public IRepository<DomainStoreEntity> Events { get; }
+
+    ///<inheritdoc/>
+    public IRepository<NotificationStoreEntity> Notifications { get; }
+
+    ///<inheritdoc/>
+    public IRepository<SnapShotStoreEntity> SnapShots { get; }
 }

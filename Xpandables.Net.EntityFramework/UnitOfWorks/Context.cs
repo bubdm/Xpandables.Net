@@ -19,39 +19,38 @@ using Microsoft.EntityFrameworkCore;
 
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.UnitOfWorks
+namespace Xpandables.Net.UnitOfWorks;
+
+/// <summary>
+/// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/> and implements <see cref="IUnitOfWorkContext"/>.
+/// </summary>
+public abstract class Context : DbContext, IUnitOfWorkContext
 {
     /// <summary>
-    /// This is the <see langword="abstract"/> db context class that inherits from <see cref="DbContext"/> and implements <see cref="IUnitOfWorkContext"/>.
+    /// Initializes a new instance of the <see cref="Context"/> class
+    /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
+    /// method will still be called to allow further configuration of the options.
+    /// Applies the tracked delegate for automatically set <see cref="Entity.CreatedOn"/>, <see cref="Entity.UpdatedOn"/> and <see cref="Entity.DeletedOn"/> properties.
     /// </summary>
-    public abstract class Context : DbContext, IUnitOfWorkContext
+    /// <param name="contextOptions">The options for this context.</param>
+    protected Context(DbContextOptions contextOptions)
+        : base(contextOptions)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Context"/> class
-        /// using the specified options. The <see cref="DbContext.OnConfiguring(DbContextOptionsBuilder)"/>
-        /// method will still be called to allow further configuration of the options.
-        /// Applies the tracked delegate for automatically set <see cref="Entity.CreatedOn"/>, <see cref="Entity.UpdatedOn"/> and <see cref="Entity.DeletedOn"/> properties.
-        /// </summary>
-        /// <param name="contextOptions">The options for this context.</param>
-        protected Context(DbContextOptions contextOptions)
-            : base(contextOptions)
+        ChangeTracker.Tracked += (sender, e) =>
         {
-            ChangeTracker.Tracked += (sender, e) =>
-            {
-                if (e.FromQuery || e.Entry.State != EntityState.Added || e.Entry.Entity is not IEntity entity) return;
+            if (e.FromQuery || e.Entry.State != EntityState.Added || e.Entry.Entity is not IEntity entity) return;
 
-                entity.Created();
-            };
+            entity.Created();
+        };
 
-            ChangeTracker.StateChanged += (sender, e) =>
-            {
-                if (e.NewState != EntityState.Modified || e.Entry.Entity is not IEntity entity) return;
+        ChangeTracker.StateChanged += (sender, e) =>
+        {
+            if (e.NewState != EntityState.Modified || e.Entry.Entity is not IEntity entity) return;
 
-                entity.Updated();
+            entity.Updated();
 
-                if (entity.IsDeleted)
-                    entity.Deleted();
-            };
-        }
+            if (entity.IsDeleted)
+                entity.Deleted();
+        };
     }
 }

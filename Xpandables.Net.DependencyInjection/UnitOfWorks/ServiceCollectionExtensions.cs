@@ -45,6 +45,22 @@ public static partial class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Adds the <typeparamref name="TUnitOfWorkImplementation"/> for <see cref="IUnitOfWork"/> to the services with scoped life time.
+    /// Do not use with multi-tenancy.
+    /// </summary>
+    /// <param name="services">The collection of services.</param>
+    /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+    public static IXpandableServiceBuilder AddXUnitOfWork<TUnitOfWorkImplementation>(this IXpandableServiceBuilder services)
+        where TUnitOfWorkImplementation : class, IUnitOfWork
+    {
+        _ = services ?? throw new ArgumentNullException(nameof(services));
+
+        services.Services.AddScoped<IUnitOfWork, TUnitOfWorkImplementation>();
+        return services;
+    }
+
+    /// <summary>
     /// Adds the <typeparamref name="TUnitOfWorkContextFactory"/> as <see cref="IUnitOfWorkContextFactory"/> type to the collection of services.
     /// </summary>
     /// <typeparam name="TUnitOfWorkContextFactory">The type of unit of work context factory.</typeparam>
