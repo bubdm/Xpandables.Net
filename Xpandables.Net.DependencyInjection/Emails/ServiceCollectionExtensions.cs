@@ -18,54 +18,50 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using System;
-
-using Xpandables.Net.Entities;
 using Xpandables.Net.Services;
 
-namespace Xpandables.Net.DependencyInjection
+namespace Xpandables.Net.DependencyInjection;
+
+/// <summary>
+/// Provides method to register Email objects.
+/// </summary>
+public static partial class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Provides method to register Email objects.
+    /// Adds the <typeparamref name="TEmailService"/> as <see cref="IEmailService"/> type implementation to the services with singleton life time.
     /// </summary>
-    public static partial class ServiceCollectionExtensions
+    /// <typeparam name="TEmailService">The email service type implementation.</typeparam>
+    /// <param name="services">The collection of services.</param>
+    /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+    public static IXpandableServiceBuilder AddXEmailService<TEmailService>(this IXpandableServiceBuilder services)
+        where TEmailService : class, IHostedService, IEmailService
     {
-        /// <summary>
-        /// Adds the <typeparamref name="TEmailService"/> as <see cref="IEmailService"/> type implementation to the services with singleton life time.
-        /// </summary>
-        /// <typeparam name="TEmailService">The email service type implementation.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEmailService<TEmailService>(this IXpandableServiceBuilder services)
-            where TEmailService : class, IHostedService, IEmailService
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
+        _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddSingleton<IEmailService, TEmailService>();
-            services.Services.AddHostedService(provider => provider.GetRequiredService<IEmailService>() as TEmailService);
-            return services;
-        }
+        services.Services.AddSingleton<IEmailService, TEmailService>();
+        services.Services.AddHostedService(provider => provider.GetRequiredService<IEmailService>() as TEmailService);
+        return services;
+    }
 
-        /// <summary>
-        /// Adds the specified <typeparamref name="TMessage"/> and <typeparamref name="TEmailSender"/> implementation 
-        /// to the services with scope life time.
-        /// </summary>
-        /// <typeparam name="TMessage">the type of message.</typeparam>
-        /// <typeparam name="TEmailSender">The type of the email sender.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXEmailSender<TMessage, TEmailSender>(
-            this IXpandableServiceBuilder services)
-            where TMessage : class
-            where TEmailSender : class, IEmailSender<TMessage>
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
+    /// <summary>
+    /// Adds the specified <typeparamref name="TMessage"/> and <typeparamref name="TEmailSender"/> implementation 
+    /// to the services with scope life time.
+    /// </summary>
+    /// <typeparam name="TMessage">the type of message.</typeparam>
+    /// <typeparam name="TEmailSender">The type of the email sender.</typeparam>
+    /// <param name="services">The collection of services.</param>
+    /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+    public static IXpandableServiceBuilder AddXEmailSender<TMessage, TEmailSender>(
+        this IXpandableServiceBuilder services)
+        where TMessage : class
+        where TEmailSender : class, IEmailSender<TMessage>
+    {
+        _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddScoped<IEmailSender<TMessage>, TEmailSender>();
-            services.Services.AddScoped(provider => (IEmailSender)provider.GetRequiredService<IEmailSender<TMessage>>());
-            return services;
-        }
+        services.Services.AddScoped<IEmailSender<TMessage>, TEmailSender>();
+        services.Services.AddScoped(provider => (IEmailSender)provider.GetRequiredService<IEmailSender<TMessage>>());
+        return services;
     }
 }

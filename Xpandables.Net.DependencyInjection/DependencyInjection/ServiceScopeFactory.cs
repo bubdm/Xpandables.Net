@@ -17,34 +17,31 @@
 ************************************************************************************************************/
 using Microsoft.Extensions.DependencyInjection;
 
-using System;
+namespace Xpandables.Net.DependencyInjection;
 
-namespace Xpandables.Net.DependencyInjection
+/// <summary>
+/// The implementation of <see cref="IServiceScopeFactory{TService}"/>.
+/// </summary>
+/// <typeparam name="TService">The type of service object to get.</typeparam>
+public sealed class ServiceScopeFactory<TService> : IServiceScopeFactory<TService>
+    where TService : notnull
 {
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
     /// <summary>
-    /// The implementation of <see cref="IServiceScopeFactory{TService}"/>.
+    /// Initializes a new instance of <see cref="ServiceScopeFactory{TService}"/> with the non-generic <see cref="IServiceScopeFactory"/>.
     /// </summary>
-    /// <typeparam name="TService">The type of service object to get.</typeparam>
-    public sealed class ServiceScopeFactory<TService> : IServiceScopeFactory<TService>
-        where TService : notnull
+    /// <param name="serviceScopeFactory">The service scope factory.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="serviceScopeFactory"/> is null.</exception>
+    public ServiceScopeFactory(IServiceScopeFactory serviceScopeFactory)
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="ServiceScopeFactory{TService}"/> with the non-generic <see cref="IServiceScopeFactory"/>.
-        /// </summary>
-        /// <param name="serviceScopeFactory">The service scope factory.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="serviceScopeFactory"/> is null.</exception>
-        public ServiceScopeFactory(IServiceScopeFactory serviceScopeFactory)
-        {
-            _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="IServiceScope{TService}" /> that can be used to resolve scoped <typeparamref name="TService" />.
-        /// </summary>
-        /// <returns>An <see cref="IServiceScope{TService}" />  that can be used to resolve scoped <typeparamref name="TService" />.</returns>
-        public IServiceScope<TService> CreateScope()
-            => new ServiceScope<TService>(_serviceScopeFactory.CreateScope());
+        _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
     }
+
+    /// <summary>
+    /// Creates a new <see cref="IServiceScope{TService}" /> that can be used to resolve scoped <typeparamref name="TService" />.
+    /// </summary>
+    /// <returns>An <see cref="IServiceScope{TService}" />  that can be used to resolve scoped <typeparamref name="TService" />.</returns>
+    public IServiceScope<TService> CreateScope()
+        => new ServiceScope<TService>(_serviceScopeFactory.CreateScope());
 }

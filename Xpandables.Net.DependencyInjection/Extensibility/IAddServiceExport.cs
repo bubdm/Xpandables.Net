@@ -18,21 +18,20 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Xpandables.Net.DependencyInjection
+namespace Xpandables.Net.DependencyInjection;
+
+/// <summary>
+/// Provides with an interface that allows external libraries to register types to the services collection.
+/// This interface is used with MEF : Managed Extensibility Framework.
+/// The implementation class must be decorated with the attribute <see cref="System.ComponentModel.Composition.ExportAttribute"/> attribute,
+/// with <see cref="IAddServiceExport"/> type as contract type.
+/// </summary>
+public interface IAddServiceExport
 {
     /// <summary>
-    /// Provides with an interface that allows external libraries to register types to the services collection.
-    /// This interface is used with MEF : Managed Extensibility Framework.
-    /// The implementation class must be decorated with the attribute <see cref="System.ComponentModel.Composition.ExportAttribute"/> attribute,
-    /// with <see cref="IAddServiceExport"/> type as contract type.
+    /// When implemented, this method should add types to the services collection.
     /// </summary>
-    public interface IAddServiceExport
-    {
-        /// <summary>
-        /// When implemented, this method should add types to the services collection.
-        /// </summary>
-        /// <param name="services">The services collection to act on.</param>
-        /// <param name="configuration">The application configuration.</param>
-        void AddServices(IServiceCollection services, IConfiguration configuration);
-    }
+    /// <param name="services">The services collection to act on.</param>
+    /// <param name="configuration">The application configuration.</param>
+    void AddServices(IServiceCollection services, IConfiguration configuration);
 }

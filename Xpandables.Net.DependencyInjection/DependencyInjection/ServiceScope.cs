@@ -17,79 +17,75 @@
 ************************************************************************************************************/
 using Microsoft.Extensions.DependencyInjection;
 
-using System;
-using System.Collections.Generic;
+namespace Xpandables.Net.DependencyInjection;
 
-namespace Xpandables.Net.DependencyInjection
+/// <summary>
+/// The implementation of <see cref="IServiceScope{TService}"/>.
+/// </summary>
+/// <typeparam name="TService">The type of service object to get.</typeparam>
+public sealed class ServiceScope<TService> : IServiceScope<TService>
+    where TService : notnull
 {
+    private readonly IServiceScope _serviceScope;
+    private bool disposedValue;
+
     /// <summary>
-    /// The implementation of <see cref="IServiceScope{TService}"/>.
+    /// Initializes a new instance of <see cref="ServiceScope{TService}"/> with the non generic <see cref="IServiceScope"/>.
     /// </summary>
-    /// <typeparam name="TService">The type of service object to get.</typeparam>
-    public sealed class ServiceScope<TService> : IServiceScope<TService>
-        where TService : notnull
+    /// <param name="serviceScope">The non generic service scope.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="serviceScope"/> is null.</exception>
+    public ServiceScope(IServiceScope serviceScope)
     {
-        private readonly IServiceScope _serviceScope;
-        private bool disposedValue;
+        _serviceScope = serviceScope ?? throw new ArgumentNullException(nameof(serviceScope));
+    }
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="ServiceScope{TService}"/> with the non generic <see cref="IServiceScope"/>.
-        /// </summary>
-        /// <param name="serviceScope">The non generic service scope.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="serviceScope"/> is null.</exception>
-        public ServiceScope(IServiceScope serviceScope)
-        {
-            _serviceScope = serviceScope ?? throw new ArgumentNullException(nameof(serviceScope));
-        }
+    /// <summary>
+    /// Get service of type <typeparamref name="TService" /> from the <see cref="IServiceProvider" />.
+    /// </summary>
+    /// <returns>A service object of type <typeparamref name="TService" />.</returns>
+    /// <exception cref="InvalidOperationException">There is no service of type <typeparamref name="TService" />.</exception>
+    public TService GetRequiredService()
+    {
+        return _serviceScope.ServiceProvider.GetRequiredService<TService>();
+    }
 
-        /// <summary>
-        /// Get service of type <typeparamref name="TService" /> from the <see cref="IServiceProvider" />.
-        /// </summary>
-        /// <returns>A service object of type <typeparamref name="TService" />.</returns>
-        /// <exception cref="InvalidOperationException">There is no service of type <typeparamref name="TService" />.</exception>
-        public TService GetRequiredService()
-        {
-            return _serviceScope.ServiceProvider.GetRequiredService<TService>();
-        }
+    /// <summary>
+    ///  Get service of type <typeparamref name="TService" /> from the <see cref="IServiceProvider" />.
+    /// </summary>
+    /// <returns> A service object of type <typeparamref name="TService" /> or null if there is no such service.</returns>
+    public TService? GetService()
+    {
+        return _serviceScope.ServiceProvider.GetService<TService>();
+    }
 
-        /// <summary>
-        ///  Get service of type <typeparamref name="TService" /> from the <see cref="IServiceProvider" />.
-        /// </summary>
-        /// <returns> A service object of type <typeparamref name="TService" /> or null if there is no such service.</returns>
-        public TService? GetService()
-        {
-            return _serviceScope.ServiceProvider.GetService<TService>();
-        }
+    /// <summary>
+    /// Get an enumeration of services of type <typeparamref name="TService" /> from the <see cref="IServiceProvider" />.
+    /// </summary>
+    /// <returns> An enumeration of services of type <typeparamref name="TService" />.</returns>
+    public IEnumerable<TService> GetServices()
+    {
+        return _serviceScope.ServiceProvider.GetServices<TService>();
+    }
 
-        /// <summary>
-        /// Get an enumeration of services of type <typeparamref name="TService" /> from the <see cref="IServiceProvider" />.
-        /// </summary>
-        /// <returns> An enumeration of services of type <typeparamref name="TService" />.</returns>
-        public IEnumerable<TService> GetServices()
+    private void Dispose(bool disposing)
+    {
+        if (!disposedValue)
         {
-            return _serviceScope.ServiceProvider.GetServices<TService>();
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposedValue)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    _serviceScope?.Dispose();
-                }
-
-                disposedValue = true;
+                _serviceScope?.Dispose();
             }
-        }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            disposedValue = true;
         }
+    }
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

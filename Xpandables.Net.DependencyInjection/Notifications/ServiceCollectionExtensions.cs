@@ -17,32 +17,29 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using System;
-
 using Xpandables.Net.Services;
 
-namespace Xpandables.Net.DependencyInjection
+namespace Xpandables.Net.DependencyInjection;
+
+/// <summary>
+/// Provides method to register services.
+/// </summary>
+public static partial class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Provides method to register services.
+    /// Adds the <see cref="INotificationService"/> as <see cref="INotificationService"/> type implementation to the services with scope life time.
     /// </summary>
-    public static partial class ServiceCollectionExtensions
+    /// <typeparam name="TNotificationService">The notification event service type implementation.</typeparam>
+    /// <param name="services">The collection of services.</param>
+    /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
+    public static IXpandableServiceBuilder AddXNotificationService<TNotificationService>(this IXpandableServiceBuilder services)
+        where TNotificationService : class, IHostedService, INotificationService
     {
-        /// <summary>
-        /// Adds the <see cref="INotificationService"/> as <see cref="INotificationService"/> type implementation to the services with scope life time.
-        /// </summary>
-        /// <typeparam name="TNotificationService">The notification event service type implementation.</typeparam>
-        /// <param name="services">The collection of services.</param>
-        /// <returns>The <see cref="IXpandableServiceBuilder"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="services"/> is null.</exception>
-        public static IXpandableServiceBuilder AddXNotificationService<TNotificationService>(this IXpandableServiceBuilder services)
-            where TNotificationService : class, IHostedService, INotificationService
-        {
-            _ = services ?? throw new ArgumentNullException(nameof(services));
+        _ = services ?? throw new ArgumentNullException(nameof(services));
 
-            services.Services.AddSingleton<INotificationService, TNotificationService>();
-            services.Services.AddHostedService(provider => provider.GetRequiredService<INotificationService>() as TNotificationService);
-            return services;
-        }
+        services.Services.AddSingleton<INotificationService, TNotificationService>();
+        services.Services.AddHostedService(provider => provider.GetRequiredService<INotificationService>() as TNotificationService);
+        return services;
     }
 }

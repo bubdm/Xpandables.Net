@@ -17,48 +17,44 @@
 ************************************************************************************************************/
 using Microsoft.Extensions.Hosting;
 
-using System.Threading;
-using System.Threading.Tasks;
+namespace Xpandables.Net.Services;
 
-namespace Xpandables.Net.Services
+/// <summary>
+/// Represents a helper class that allows implementation of <see cref="IBackgroundService"/>.
+/// </summary>
+/// <typeparam name="TBackgroundService">The type of target background service.</typeparam>
+public abstract class BackgroundServiceBase<TBackgroundService> : BackgroundService, IBackgroundService
+    where TBackgroundService : IBackgroundService
 {
-    /// <summary>
-    /// Represents a helper class that allows implementation of <see cref="IBackgroundService"/>.
-    /// </summary>
-    /// <typeparam name="TBackgroundService">The type of target background service.</typeparam>
-    public abstract class BackgroundServiceBase<TBackgroundService> : BackgroundService, IBackgroundService
-        where TBackgroundService : IBackgroundService
+    ///<inheritdoc/>
+    public bool IsRunning { get; protected set; }
+
+    ///<inheritdoc/>
+    public virtual async Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default)
     {
-        ///<inheritdoc/>
-        public bool IsRunning { get; protected set; }
+        if (IsRunning)
+            return new FailureOperationResult(new OperationErrorCollection("status", $"{nameof(TBackgroundService)} is already up."));
 
-        ///<inheritdoc/>
-        public virtual async Task<IOperationResult> StartServiceAsync(CancellationToken cancellationToken = default)
-        {
-            if (IsRunning)
-                return new FailureOperationResult(new OperationErrorCollection("status", $"{nameof(TBackgroundService)} is already up."));
+        IsRunning = true;
+        await StartAsync(cancellationToken).ConfigureAwait(false);
+        return new SuccessOperationResult();
+    }
 
-            IsRunning = true;
-            await StartAsync(cancellationToken).ConfigureAwait(false);
-            return new SuccessOperationResult();
-        }
+    ///<inheritdoc/>
+    public virtual async Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default)
+    {
+        if (!IsRunning)
+            return new FailureOperationResult(new OperationErrorCollection("status", $"{nameof(TBackgroundService)} is already down."));
 
-        ///<inheritdoc/>
-        public virtual async Task<IOperationResult> StopServiceAsync(CancellationToken cancellationToken = default)
-        {
-            if (!IsRunning)
-                return new FailureOperationResult(new OperationErrorCollection("status", $"{nameof(TBackgroundService)} is already down."));
+        await StopAsync(cancellationToken).ConfigureAwait(false);
+        IsRunning = false;
+        return new SuccessOperationResult();
+    }
 
-            await StopAsync(cancellationToken).ConfigureAwait(false);
-            IsRunning = false;
-            return new SuccessOperationResult();
-        }
-
-        ///<inheritdoc/>
-        public virtual async Task<IOperationResult<string>> StatusServiceAsync()
-        {
-            var response = $"{nameof(TBackgroundService)} {(IsRunning ? "Is Up" : "Is Down")}";
-            return await Task.FromResult(new SuccessOperationResult<string>(response)).ConfigureAwait(false);
-        }
+    ///<inheritdoc/>
+    public virtual async Task<IOperationResult<string>> StatusServiceAsync()
+    {
+        var response = $"{nameof(TBackgroundService)} {(IsRunning ? "Is Up" : "Is Down")}";
+        return await Task.FromResult(new SuccessOperationResult<string>(response)).ConfigureAwait(false);
     }
 }
