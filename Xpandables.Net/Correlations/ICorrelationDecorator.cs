@@ -15,18 +15,17 @@
  *
 ************************************************************************************************************/
 
-namespace Xpandables.Net.Correlations
-{
-    /// <summary>
-    /// A marker interface that allows the command/query class to add correlation decorator context event after control flow.
-    /// In the class handling the query or command, you should reference
-    /// the <see cref="ICorrelationEvent"/> and set the <see cref="ICorrelationEvent.PostEvent"/> and/or
-    /// <see cref="ICorrelationEvent.RollbackEvent"/>.
-    /// <para></para>
-    /// Note that <see cref="ICorrelationEvent.PostEvent"/> will be raised at the end of the control only if there is no exception,
-    /// giving you access to all data still alive on the control flow and the <see cref="ICorrelationEvent.RollbackEvent"/>
-    /// will only be raised when exception. The exception in that case in accessible through the
-    /// <see cref="ICorrelationEvent.RollbackEvent"/>.
-    /// </summary>
-    public interface ICorrelationDecorator { }
-}
+namespace Xpandables.Net.Correlations;
+
+/// <summary>
+/// A marker interface that allows the command/query class to add correlation decorator context event after control flow.
+/// In the class handling the query or command, you should reference
+/// the <see cref="ICorrelationEvent"/> and set the <see cref="ICorrelationEvent.PostEvent"/> and/or
+/// <see cref="ICorrelationEvent.RollbackEvent"/>.
+/// <para></para>
+/// Note that <see cref="ICorrelationEvent.PostEvent"/> will be raised at the end of the control only if there is no exception,
+/// giving you access to all data still alive on the control flow and the <see cref="ICorrelationEvent.RollbackEvent"/>
+/// will only be raised when exception. The exception in that case in accessible through the
+/// <see cref="ICorrelationEvent.RollbackEvent"/>.
+/// </summary>
+public interface ICorrelationDecorator { }

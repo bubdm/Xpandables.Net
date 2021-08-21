@@ -19,7 +19,7 @@ using Microsoft.Extensions.Hosting;
 
 using System;
 
-using Xpandables.Net.Aggregates.Services;
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Services;
 
 namespace Xpandables.Net.DependencyInjection

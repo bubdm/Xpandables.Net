@@ -17,7 +17,7 @@
 
 using System;
 
-using Xpandables.Net.Aggregates.Services;
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Entities;
 
 namespace Xpandables.Net.UnitOfWorks

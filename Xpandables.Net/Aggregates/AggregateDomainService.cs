@@ -22,7 +22,7 @@ using Xpandables.Net.Aggregates.Events;
 using Xpandables.Net.Dispatchers;
 using Xpandables.Net.Entities;
 
-namespace Xpandables.Net.Aggregates.Services;
+namespace Xpandables.Net.Aggregates;
 
 /// <summary>
 /// The default implementation of <see cref="IAggregateDomainService"/>.

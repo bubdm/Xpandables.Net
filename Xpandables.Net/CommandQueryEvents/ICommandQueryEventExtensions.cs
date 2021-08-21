@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,27 +14,25 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Provides with extension methods to access <see cref="ICommandQueryEvent"/> members.
+/// </summary>
+public static class ICommandQueryEventExtensions
 {
     /// <summary>
-    /// Provides with extension methods to access <see cref="ICommandQueryEvent"/> members.
+    /// Returns the created date of the current object.
     /// </summary>
-    public static class ICommandQueryEventExtensions
-    {
-        /// <summary>
-        /// Returns the created date of the current object.
-        /// </summary>
-        /// <param name="this">The target object.</param>
-        /// <returns>A <see cref="DateTimeOffset"/> value.</returns>
-        public static DateTimeOffset CreatedOn(this ICommandQueryEvent @this) => @this.OccurredOn;
+    /// <param name="this">The target object.</param>
+    /// <returns>A <see cref="DateTimeOffset"/> value.</returns>
+    public static DateTimeOffset CreatedOn(this ICommandQueryEvent @this) => @this.OccurredOn;
 
-        /// <summary>
-        /// Returns the name of the user running associated with the current object.
-        /// </summary>
-        /// <param name="this">The target object.</param>
-        /// <returns>A <see cref="string"/> value.</returns>
-        public static string CreatedBy(this ICommandQueryEvent @this) => @this.CreatedBy;
-    }
+    /// <summary>
+    /// Returns the name of the user running associated with the current object.
+    /// </summary>
+    /// <param name="this">The target object.</param>
+    /// <returns>A <see cref="string"/> value.</returns>
+    public static string CreatedBy(this ICommandQueryEvent @this) => @this.CreatedBy;
 }

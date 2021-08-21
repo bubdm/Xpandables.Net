@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,27 +14,24 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Provides with helper methods for <see cref="IAsyncEnumerable{T}"/>.
+/// </summary>
+public static partial class AsyncEnumerableExtensions
 {
     /// <summary>
-    /// Provides with helper methods for <see cref="IAsyncEnumerable{T}"/>.
+    /// Converts the collection to exposes an enumerator that provides asynchronous iteration over values of <typeparamref name="T"/> type.
     /// </summary>
-    public static partial class AsyncEnumerableExtensions
-    { 
-        /// <summary>
-        /// Converts the collection to exposes an enumerator that provides asynchronous iteration over values of <typeparamref name="T"/> type.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the collection.</typeparam>
-        /// <param name="source">The collection of elements.</param>
-        /// <returns>An async-enumerable sequence.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        public static IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> source)
-        {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            return new AsyncEnumerable<T>(source);
-        }
+    /// <typeparam name="T">The type of the elements in the collection.</typeparam>
+    /// <param name="source">The collection of elements.</param>
+    /// <returns>An async-enumerable sequence.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+    public static IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> source)
+    {
+        _ = source ?? throw new ArgumentNullException(nameof(source));
+        return new AsyncEnumerable<T>(source);
     }
 }

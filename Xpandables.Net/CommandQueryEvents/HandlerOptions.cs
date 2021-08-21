@@ -20,43 +20,42 @@ using Xpandables.Net.Transactions;
 using Xpandables.Net.Validators;
 using Xpandables.Net.Visitors;
 
-namespace Xpandables.Net.DependencyInjection
+namespace Xpandables.Net.DependencyInjection;
+
+/// <summary>
+/// Defines options to configure operations options.
+/// </summary>
+public sealed class HandlerOptions
 {
     /// <summary>
-    /// Defines options to configure operations options.
+    /// Enables validator behavior to operations that are decorated with the <see cref="IValidatorDecorator"/>.
     /// </summary>
-    public sealed class HandlerOptions
-    {
-        /// <summary>
-        /// Enables validator behavior to operations that are decorated with the <see cref="IValidatorDecorator"/>.
-        /// </summary>
-        public HandlerOptions UseValidatorDecorator() => this.With(cq => cq.IsValidatorEnabled = true);
+    public HandlerOptions UseValidatorDecorator() => this.With(cq => cq.IsValidatorEnabled = true);
 
-        /// <summary>
-        /// Enables visitor behavior to operations that implement the <see cref="IVisitable{TVisitable}"/> interface.
-        /// </summary>
-        public HandlerOptions UseVisitDecorator() => this.With(cq => cq.IsVisitorEnabled = true);
+    /// <summary>
+    /// Enables visitor behavior to operations that implement the <see cref="IVisitable{TVisitable}"/> interface.
+    /// </summary>
+    public HandlerOptions UseVisitDecorator() => this.With(cq => cq.IsVisitorEnabled = true);
 
-        /// <summary>
-        /// Enables persistence behavior to commands/events that are decorated with the <see cref="IPersistenceDecorator"/> .
-        /// </summary>
-        public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
+    /// <summary>
+    /// Enables persistence behavior to commands/events that are decorated with the <see cref="IPersistenceDecorator"/> .
+    /// </summary>
+    public HandlerOptions UsePersistenceDecorator() => this.With(cq => cq.IsPersistenceEnabled = true);
 
-        /// <summary>
-        /// Enables correlation behavior to operations that are decorated with the <see cref="ICorrelationDecorator"/>.
-        /// </summary>
-        public HandlerOptions UseCorrelationDecorator() => this.With(cq => cq.IsCorrelationEnabled = true);
+    /// <summary>
+    /// Enables correlation behavior to operations that are decorated with the <see cref="ICorrelationDecorator"/>.
+    /// </summary>
+    public HandlerOptions UseCorrelationDecorator() => this.With(cq => cq.IsCorrelationEnabled = true);
 
-        /// <summary>
-        /// Enables transaction behavior to commands that are decorated with the <see cref="ITransactionDecorator"/>.
-        /// You must provide with an implementation of <see cref="ITransactionScopeProvider"/>.
-        /// </summary>
-        public HandlerOptions UseTransactionDecorator() => this.With(cq => cq.IsTransactionEnabled = true);
+    /// <summary>
+    /// Enables transaction behavior to commands that are decorated with the <see cref="ITransactionDecorator"/>.
+    /// You must provide with an implementation of <see cref="ITransactionScopeProvider"/>.
+    /// </summary>
+    public HandlerOptions UseTransactionDecorator() => this.With(cq => cq.IsTransactionEnabled = true);
 
-        internal bool IsValidatorEnabled { get; private set; }
-        internal bool IsVisitorEnabled { get; private set; }
-        internal bool IsTransactionEnabled { get; private set; }
-        internal bool IsPersistenceEnabled { get; private set; }
-        internal bool IsCorrelationEnabled { get; private set; }
-    }
+    internal bool IsValidatorEnabled { get; private set; }
+    internal bool IsVisitorEnabled { get; private set; }
+    internal bool IsTransactionEnabled { get; private set; }
+    internal bool IsPersistenceEnabled { get; private set; }
+    internal bool IsCorrelationEnabled { get; private set; }
 }

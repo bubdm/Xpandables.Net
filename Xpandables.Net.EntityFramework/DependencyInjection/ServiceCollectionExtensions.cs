@@ -20,7 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-using Xpandables.Net.Aggregates.Services;
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.UnitOfWorks;
 
 namespace Xpandables.Net.DependencyInjection

@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,48 +14,44 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Represents a helper class that adds asynchronous iteration support to a generic collection.
+/// This class implements <see cref="IAsyncEnumerator{T}"/>.
+/// </summary>
+/// <typeparam name="T">The type of the elements in the collection.</typeparam>
+public sealed class AsyncEnumerator<T> : IAsyncEnumerator<T>
 {
+    private readonly IEnumerator<T> _inner;
+
     /// <summary>
-    /// Represents a helper class that adds asynchronous iteration support to a generic collection.
-    /// This class implements <see cref="IAsyncEnumerator{T}"/>.
+    /// Initializes a new instance of the <see cref="AsyncEnumerator{T}"/> class with the specified enumerator.
     /// </summary>
-    /// <typeparam name="T">The type of the elements in the collection.</typeparam>
-    public sealed class AsyncEnumerator<T> : IAsyncEnumerator<T>
+    /// <param name="inner">The enumerator to act on.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="inner"/> is null.</exception>
+    public AsyncEnumerator(IEnumerator<T> inner) => _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+
+    /// <summary>
+    /// Gets the element in the collection at the current position of the enumerator.
+    /// </summary>
+    public T Current => _inner.Current;
+
+    /// <summary>
+    ///  Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    public ValueTask DisposeAsync()
     {
-        private readonly IEnumerator<T> _inner;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncEnumerator{T}"/> class with the specified enumerator.
-        /// </summary>
-        /// <param name="inner">The enumerator to act on.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="inner"/> is null.</exception>
-        public AsyncEnumerator(IEnumerator<T> inner) => _inner = inner ?? throw new ArgumentNullException(nameof(inner));
-
-        /// <summary>
-        /// Gets the element in the collection at the current position of the enumerator.
-        /// </summary>
-        public T Current => _inner.Current;
-
-        /// <summary>
-        ///  Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources asynchronously.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous dispose operation.</returns>
-        public ValueTask DisposeAsync()
-        {
-            _inner.Dispose();
-            return new ValueTask(Task.CompletedTask);
-        }
-
-        /// <summary>
-        ///  Advances the enumerator asynchronously to the next element of the collection.
-        /// </summary>
-        /// <returns> A <see cref="ValueTask{TResult}"/>  that will complete with a result of <see langword="true"/> if the enumerator was successfully
-        /// advanced to the next element, or <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
-        public ValueTask<bool> MoveNextAsync() => new(_inner.MoveNext());
+        _inner.Dispose();
+        return new ValueTask(Task.CompletedTask);
     }
+
+    /// <summary>
+    ///  Advances the enumerator asynchronously to the next element of the collection.
+    /// </summary>
+    /// <returns> A <see cref="ValueTask{TResult}"/>  that will complete with a result of <see langword="true"/> if the enumerator was successfully
+    /// advanced to the next element, or <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
+    public ValueTask<bool> MoveNextAsync() => new(_inner.MoveNext());
 }

@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,24 +14,43 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Provides with shared members for commands, queries and events.
+/// </summary>
+public interface ICommandQueryEvent
 {
     /// <summary>
-    /// Provides with shared members for commands, queries and events.
+    /// Gets When the event occurred.
     /// </summary>
-    public interface ICommandQueryEvent
-    {
-        /// <summary>
-        /// Gets When the event occurred.
-        /// </summary>
-        public DateTimeOffset OccurredOn => DateTimeOffset.Now;
+    public DateTimeOffset OccurredOn => DateTimeOffset.Now;
 
-        /// <summary>
-        /// Gets the name of the user running associated with the current instance.
-        /// The default value is associated with the current thread.
-        /// </summary>
-        public string CreatedBy => Environment.UserName;
+    /// <summary>
+    /// Gets the name of the user running associated with the current instance.
+    /// The default value is associated with the current thread.
+    /// </summary>
+    public string CreatedBy => Environment.UserName;
+}
+
+/// Represents a helper class that allows implementation of <see cref="ICommandQueryEvent"/> interface.
+/// </summary>
+public abstract class CommandQueryEvent : ICommandQueryEvent
+{
+    /// <summary>
+    /// Constructs a default instance of <see cref="CommandQueryEvent"/> class
+    /// that initializes <see cref="OccurredOn"/> and <see cref="CreatedBy"/> properties.
+    /// </summary>
+    protected CommandQueryEvent()
+    {
+        OccurredOn = DateTime.UtcNow;
+        CreatedBy = Environment.UserName;
     }
+
+    ///<inheritdoc/>
+    public DateTimeOffset OccurredOn { get; protected set; }
+
+    ///<inheritdoc/>
+    public string CreatedBy { get; protected set; }
 }

@@ -15,44 +15,42 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Xpandables.Net.Correlations
+namespace Xpandables.Net.Correlations;
+
+/// <summary>
+/// Provides with properties that uniquely identify a control flow process.
+/// </summary>
+public interface ICorrelationContext
 {
     /// <summary>
-    /// Provides with properties that uniquely identify a control flow process.
+    /// Gets the default correlation context header name.
     /// </summary>
-    public interface ICorrelationContext
-    {
-        /// <summary>
-        /// Gets the default correlation context header name.
-        /// </summary>
-        public const string DefaultHeader = "X-Correlation-ID";
+    public const string DefaultHeader = "X-Correlation-ID";
 
-        /// <summary>
-        /// Gets a collection of claims for the current context.
-        /// </summary>
-        IEnumerable<Claim> Claims { get; }
+    /// <summary>
+    /// Gets a collection of claims for the current context.
+    /// </summary>
+    IEnumerable<Claim> Claims { get; }
 
-        /// <summary>
-        /// Gets the collection of objects for the current context.
-        /// </summary>
-        CorrelationCollection<string, object> Objects { get; }
+    /// <summary>
+    /// Gets the collection of objects for the current context.
+    /// </summary>
+    CorrelationCollection<string, object> Objects { get; }
 
-        /// <summary>
-        /// Gets the user identifier for the current context.
-        /// </summary>
-        string UserId { get; }
+    /// <summary>
+    /// Gets the user identifier for the current context.
+    /// </summary>
+    string UserId { get; }
 
-        /// <summary>
-        /// Gets the unique correlation identifier for the current context.
-        /// </summary>
-        string CorrelationId { get; }
+    /// <summary>
+    /// Gets the unique correlation identifier for the current context.
+    /// </summary>
+    string CorrelationId { get; }
 
-        /// <summary>
-        /// Determines whether or not correlation properties are available.
-        /// </summary>
-        bool IsAvailable { get; }
-    }
+    /// <summary>
+    /// Determines whether or not correlation properties are available.
+    /// </summary>
+    bool IsAvailable { get; }
 }

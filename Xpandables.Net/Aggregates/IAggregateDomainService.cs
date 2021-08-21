@@ -21,7 +21,7 @@ using System.Text.Json;
 using Xpandables.Net.Entities;
 using Xpandables.Net.Services;
 
-namespace Xpandables.Net.Aggregates.Services;
+namespace Xpandables.Net.Aggregates;
 
 /// <summary>
 /// Represents a set of commands to manage aggregates.

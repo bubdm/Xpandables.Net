@@ -17,7 +17,7 @@
 using Xpandables.Net.Entities;
 using Xpandables.Net.UnitOfWorks;
 
-namespace Xpandables.Net.Aggregates.Services;
+namespace Xpandables.Net.Aggregates;
 
 /// <summary>
 /// Provides with base unit of work for aggregates.

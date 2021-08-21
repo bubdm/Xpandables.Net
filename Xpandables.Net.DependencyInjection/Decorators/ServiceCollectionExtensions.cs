@@ -19,10 +19,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-using Xpandables.Net.Aggregates.Decorators;
+using Xpandables.Net.Aggregates;
 using Xpandables.Net.Aggregates.Events;
 using Xpandables.Net.Commands;
-using Xpandables.Net.Commands.Decorators;
 using Xpandables.Net.Queries;
 using Xpandables.Net.Transactions;
 using Xpandables.Net.Transactions.Decorators;

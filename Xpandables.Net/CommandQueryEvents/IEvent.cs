@@ -15,26 +15,59 @@
  *
 ************************************************************************************************************/
 
-using System;
+using System.Text.Json.Serialization;
 
 using Xpandables.Net.Aggregates;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Defines a marker interface to be used to mark an object to act as an event : Domain event or Integration event.
+/// The events can be raised using the differed approach described by "Jimmy Bogard"
+/// </summary>
+public interface IEvent : ICommandQueryEvent
 {
     /// <summary>
-    /// Defines a marker interface to be used to mark an object to act as an event : Domain event or Integration event.
-    /// The events can be raised using the differed approach described by "Jimmy Bogard"
+    /// Gets the identifier of the target aggregate.
     /// </summary>
-    public interface IEvent : ICommandQueryEvent
-    {
-        /// <summary>
-        /// Gets the identifier of the target aggregate.
-        /// </summary>
-        AggregateId AggregateId { get; }
+    AggregateId AggregateId { get; }
 
-        /// <summary>
-        /// Gets the event identifier.
-        /// </summary>
-        Guid Guid { get; }
+    /// <summary>
+    /// Gets the event identifier.
+    /// </summary>
+    Guid Guid { get; }
+}
+
+/// <summary>
+/// Represents a helper class that allows implementation of <see cref="IEvent"/> interface. 
+/// </summary>
+[Serializable]
+public abstract class Event : CommandQueryEvent, IEvent
+{
+    /// <summary>
+    /// Constructs a new instance of <see cref="Event"/> with its target aggregate id.
+    /// </summary>
+    /// <param name="aggregateId">The target aggregate Id</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
+    protected Event(AggregateId aggregateId) : base() => AggregateId = aggregateId;
+
+    /// <summary>
+    /// Constructs a new instance of <see cref="Event"/> with its target aggregate id and event identifier.
+    /// </summary>
+    /// <param name="aggregateId">The target aggregate Id</param>
+    /// <param name="guid">The event identifier.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
+    [JsonConstructor]
+    protected Event(AggregateId aggregateId, Guid guid)
+        : base()
+    {
+        AggregateId = aggregateId ?? throw new ArgumentNullException(nameof(aggregateId));
+        Guid = guid;
     }
+
+    ///<inheritdoc/>
+    public AggregateId AggregateId { get; protected set; }
+
+    ///<inheritdoc/>
+    public Guid Guid { get; } = Guid.NewGuid();
 }

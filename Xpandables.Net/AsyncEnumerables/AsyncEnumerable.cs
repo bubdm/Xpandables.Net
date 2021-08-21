@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,49 +14,44 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 
-namespace Xpandables.Net
+namespace Xpandables.Net;
+
+/// <summary>
+/// Represents a helper class that allows a generic collection to be asynchronously enumerated.
+/// This class implements <see cref="IAsyncEnumerable{T}"/>.
+/// </summary>
+/// <typeparam name="T">The type of the elements in the collection.</typeparam>
+public sealed class AsyncEnumerable<T> : IAsyncEnumerable<T>
 {
     /// <summary>
-    /// Represents a helper class that allows a generic collection to be asynchronously enumerated.
-    /// This class implements <see cref="IAsyncEnumerable{T}"/>.
+    /// Returns an empty async-enumerable.
     /// </summary>
-    /// <typeparam name="T">The type of the elements in the collection.</typeparam>
-    public sealed class AsyncEnumerable<T> : IAsyncEnumerable<T>
-    {
-        /// <summary>
-        /// Returns an empty async-enumerable.
-        /// </summary>
-        /// <returns>An async-enumerable sequence with no elements.</returns>
-        public static IAsyncEnumerable<T> Empty() => new AsyncEnumerable<T>(Enumerable.Empty<T>());
+    /// <returns>An async-enumerable sequence with no elements.</returns>
+    public static IAsyncEnumerable<T> Empty() => new AsyncEnumerable<T>(Enumerable.Empty<T>());
 
-        private readonly Func<CancellationToken, IAsyncEnumerator<T>> _asyncEnumerator;
+    private readonly Func<CancellationToken, IAsyncEnumerator<T>> _asyncEnumerator;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncEnumerable{T}"/> class with the collection to be asynchronously enumerated.
-        /// </summary>
-        /// <param name="collection">The collection to act on.</param>
-        public AsyncEnumerable(IEnumerable<T> collection)
-            => _asyncEnumerator = _ => new AsyncEnumerator<T>(collection.GetEnumerator());
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncEnumerable{T}"/> class with the collection to be asynchronously enumerated.
+    /// </summary>
+    /// <param name="collection">The collection to act on.</param>
+    public AsyncEnumerable(IEnumerable<T> collection)
+        => _asyncEnumerator = _ => new AsyncEnumerator<T>(collection.GetEnumerator());
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncEnumerable{T}"/> class with the enumerator to be asynchronously enumerated.
-        /// </summary>
-        /// <param name="asyncEnumerator">The delegate that provides the async enumerator.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="asyncEnumerator"/> is null.</exception>
-        public AsyncEnumerable(Func<CancellationToken, IAsyncEnumerator<T>> asyncEnumerator)
-            => _asyncEnumerator = asyncEnumerator ?? throw new ArgumentNullException(nameof(asyncEnumerator));
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncEnumerable{T}"/> class with the enumerator to be asynchronously enumerated.
+    /// </summary>
+    /// <param name="asyncEnumerator">The delegate that provides the async enumerator.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="asyncEnumerator"/> is null.</exception>
+    public AsyncEnumerable(Func<CancellationToken, IAsyncEnumerator<T>> asyncEnumerator)
+        => _asyncEnumerator = asyncEnumerator ?? throw new ArgumentNullException(nameof(asyncEnumerator));
 
-        /// <summary>
-        /// Returns an enumerator that iterates asynchronously through the collection.
-        /// </summary>
-        /// <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
-        /// <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
-        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
-            => _asyncEnumerator(cancellationToken);
-    }
+    /// <summary>
+    /// Returns an enumerator that iterates asynchronously through the collection.
+    /// </summary>
+    /// <param name="cancellationToken">A System.Threading.CancellationToken that may be used to cancel the asynchronous iteration.</param>
+    /// <returns>An enumerator that can be used to iterate asynchronously through the collection.</returns>
+    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+        => _asyncEnumerator(cancellationToken);
 }

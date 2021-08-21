@@ -18,38 +18,38 @@
 using Xpandables.Net.Aggregates.Events;
 using Xpandables.Net.UnitOfWorks;
 
-namespace Xpandables.Net.Aggregates.Decorators;
+namespace Xpandables.Net.Aggregates;
 
 /// <summary>
 /// This class allows the application author to add persistence support to integration event control flow with aggregate.
-/// The target event should implement the <see cref="IPersistenceDecorator"/> 
+/// The target event should implement the <see cref="IPersistenceDecorator"/>
 /// interface in order to activate the behavior.
 /// The class decorates the target integration event handler with an implementation of <see cref="IUnitOfWork"/> and executes the
-/// the <see cref="IUnitOfWork.PersistAsync(CancellationToken)"/> if available after the main one in the same control flow only
+/// the <see cref="IUnitOfWork.PersistAsync(CancellationToken)"/> if available after the main one in the same control flow.
 /// </summary>
-/// <typeparam name="TNotificationEvent">Type of integration event.</typeparam>
-public sealed class NotificationPersistenceDecorator<TNotificationEvent> : NotificationHandler<TNotificationEvent>
-    where TNotificationEvent : class, INotification, IPersistenceDecorator
+/// <typeparam name="TDomainEvent">Type of domain event.</typeparam>
+public sealed class DomainEventPersistenceDecorator<TDomainEvent> : DomainEventHandler<TDomainEvent>
+    where TDomainEvent : class, IDomainEvent, IPersistenceDecorator
 {
-    private readonly INotificationHandler<TNotificationEvent> _decoratee;
+    private readonly IDomainEventHandler<TDomainEvent> _decoratee;
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NotificationPersistenceDecorator{TNotification}"/> class with
+    /// Initializes a new instance of the <see cref="DomainEventPersistenceDecorator{TDomainEvent}"/> class with
     /// the decorated handler and the unit of work to act on.
     /// </summary>
     /// <param name="unitOfWork">The unit of work to act on.</param>
     /// <param name="decoratee">The decorated integration event handler.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="decoratee"/> is null.</exception>
     /// <exception cref="ArgumentNullException">The <paramref name="unitOfWork"/> is null.</exception>
-    public NotificationPersistenceDecorator(INotificationHandler<TNotificationEvent> decoratee, IUnitOfWork unitOfWork)
+    public DomainEventPersistenceDecorator(IUnitOfWork unitOfWork, IDomainEventHandler<TDomainEvent> decoratee)
     {
-        _decoratee = decoratee ?? throw new ArgumentNullException(nameof(decoratee));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _decoratee = decoratee;
+        _unitOfWork = unitOfWork;
     }
 
     ///<inheritdoc/>
-    public override async Task HandleAsync(TNotificationEvent @event, CancellationToken cancellationToken = default)
+    public override async Task HandleAsync(TDomainEvent @event, CancellationToken cancellationToken = default)
     {
         await _decoratee.HandleAsync(@event, cancellationToken).ConfigureAwait(false);
         await _unitOfWork.PersistAsync(cancellationToken).ConfigureAwait(false);
