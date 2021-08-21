@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,38 +14,36 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 
-namespace Xpandables.Net.Interception
+namespace Xpandables.Net.Interception;
+
+/// <summary>
+/// This helper class allows the application author to implement the <see cref="IInterceptor"/> interface.
+/// You must derive from this class in order to customize its behaviors.
+/// </summary>
+public abstract class Interceptor : IInterceptor
 {
     /// <summary>
-    /// This helper class allows the application author to implement the <see cref="IInterceptor"/> interface.
-    /// You must derive from this class in order to customize its behaviors.
+    /// Returns a flag indicating if this behavior will actually do anything when invoked.
+    /// This is used to optimize interception. If the behaviors won't actually do anything then the interception
+    /// mechanism can be skipped completely.
+    /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
+    /// The default behavior returns <see langword="true"/>.
     /// </summary>
-    public abstract class Interceptor : IInterceptor
-    {
-        /// <summary>
-        /// Returns a flag indicating if this behavior will actually do anything when invoked.
-        /// This is used to optimize interception. If the behaviors won't actually do anything then the interception
-        /// mechanism can be skipped completely.
-        /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
-        /// The default behavior returns <see langword="true"/>.
-        /// </summary>
-        /// <param name="argument">The argument to handle.</param>
-        /// <returns><see langword="true"/> if it can handle the argument, otherwise <see langword="false"/></returns>
-        public virtual bool CanHandle(IInvocation argument) => true;
+    /// <param name="argument">The argument to handle.</param>
+    /// <returns><see langword="true"/> if it can handle the argument, otherwise <see langword="false"/></returns>
+    public virtual bool CanHandle(IInvocation argument) => true;
 
-        /// <summary>
-        /// Method used to intercept the parameter method call.
-        /// You have to call the <see cref="IInvocation.Proceed"/> to execute the intercepted method.
-        /// The default implementation just call the <see cref="IInvocation.Proceed"/> method.
-        /// </summary>
-        /// <param name="invocation">The method argument to be called.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="invocation"/> is null.</exception>
-        public virtual void Intercept(IInvocation invocation)
-        {
-            _ = invocation ?? throw new ArgumentNullException(nameof(invocation));
-            invocation.Proceed();
-        }
+    /// <summary>
+    /// Method used to intercept the parameter method call.
+    /// You have to call the <see cref="IInvocation.Proceed"/> to execute the intercepted method.
+    /// The default implementation just call the <see cref="IInvocation.Proceed"/> method.
+    /// </summary>
+    /// <param name="invocation">The method argument to be called.</param>
+    /// <exception cref="ArgumentNullException">The <paramref name="invocation"/> is null.</exception>
+    public virtual void Intercept(IInvocation invocation)
+    {
+        _ = invocation ?? throw new ArgumentNullException(nameof(invocation));
+        invocation.Proceed();
     }
 }

@@ -15,83 +15,81 @@
  *
 ************************************************************************************************************/
 
-using System;
 using System.Reflection;
 
-namespace Xpandables.Net.Interception
+namespace Xpandables.Net.Interception;
+
+/// <summary>
+/// Provides the structure for an interception event.
+/// </summary>
+public interface IInvocation
 {
     /// <summary>
-    /// Provides the structure for an interception event.
+    /// Contains the invocation target method info.
     /// </summary>
-    public interface IInvocation
-    {
-        /// <summary>
-        /// Contains the invocation target method info.
-        /// </summary>
-        MethodInfo InvocationMethod { get; }
+    MethodInfo InvocationMethod { get; }
 
-        /// <summary>
-        /// Contains the invocation target instance.
-        /// </summary>
-        object InvocationInstance { get; }
+    /// <summary>
+    /// Contains the invocation target instance.
+    /// </summary>
+    object InvocationInstance { get; }
 
-        /// <summary>
-        /// Contains the arguments (position in signature, names and values) with which the method has been invoked.
-        /// This argument is provided only for target element with parameters.
-        /// </summary>
-        IParameterCollection Arguments { get; }
+    /// <summary>
+    /// Contains the arguments (position in signature, names and values) with which the method has been invoked.
+    /// This argument is provided only for target element with parameters.
+    /// </summary>
+    IParameterCollection Arguments { get; }
 
-        /// <summary>
-        /// Gets the exception handled on executing a method.
-        /// You can edit this value in order to return a custom exception or null.
-        /// If you set this value to null, the process will resume normally and
-        /// take care to provide a <see cref="ReturnValue"/> if necessary.
-        /// </summary>
-        Exception? Exception { get; }
+    /// <summary>
+    /// Gets the exception handled on executing a method.
+    /// You can edit this value in order to return a custom exception or null.
+    /// If you set this value to null, the process will resume normally and
+    /// take care to provide a <see cref="ReturnValue"/> if necessary.
+    /// </summary>
+    Exception? Exception { get; }
 
-        /// <summary>
-        /// Gets the executed method return value, only provided for non-void method and when no exception handled.
-        /// </summary>
-        object? ReturnValue { get; }
+    /// <summary>
+    /// Gets the executed method return value, only provided for non-void method and when no exception handled.
+    /// </summary>
+    object? ReturnValue { get; }
 
-        /// <summary>
-        /// Get the elapsed time execution for the underlying method.
-        /// </summary>
-        TimeSpan ElapsedTime { get; }
+    /// <summary>
+    /// Get the elapsed time execution for the underlying method.
+    /// </summary>
+    TimeSpan ElapsedTime { get; }
 
-        /// <summary>
-        /// Gets the invocation method return type.
-        /// </summary>
-        public sealed Type ReturnType => InvocationMethod.ReturnType;
+    /// <summary>
+    /// Gets the invocation method return type.
+    /// </summary>
+    public sealed Type ReturnType => InvocationMethod.ReturnType;
 
-        /// <summary>
-        /// Sets the exception value.
-        /// If you set this value to null, the process will resume normally and
-        /// take care to provide a <see cref="ReturnValue" /> if necessary.
-        /// </summary>
-        /// <param name="exception">The exception value.</param>
-        /// <returns>The current instance with exception value.</returns>
-        IInvocation AddException(Exception? exception);
+    /// <summary>
+    /// Sets the exception value.
+    /// If you set this value to null, the process will resume normally and
+    /// take care to provide a <see cref="ReturnValue" /> if necessary.
+    /// </summary>
+    /// <param name="exception">The exception value.</param>
+    /// <returns>The current instance with exception value.</returns>
+    IInvocation AddException(Exception? exception);
 
-        /// <summary>
-        /// Sets the executed method return value, only for non-void method.
-        /// Be aware to match the return value type.
-        /// Otherwise it will throw an exception.
-        /// </summary>
-        /// <param name="returnValue">The return value to be used.</param>
-        /// <returns>The current instance with return value.</returns>
-        IInvocation AddReturnValue(object? returnValue);
+    /// <summary>
+    /// Sets the executed method return value, only for non-void method.
+    /// Be aware to match the return value type.
+    /// Otherwise it will throw an exception.
+    /// </summary>
+    /// <param name="returnValue">The return value to be used.</param>
+    /// <returns>The current instance with return value.</returns>
+    IInvocation AddReturnValue(object? returnValue);
 
-        /// <summary>
-        /// Sets the executed method elapsed time.
-        /// </summary>
-        /// <param name="elapsedTime">The method elapsed.</param>
-        /// <returns>The current instance with the new elapsed time.</returns>
-        IInvocation AddElapsedTime(TimeSpan elapsedTime);
+    /// <summary>
+    /// Sets the executed method elapsed time.
+    /// </summary>
+    /// <param name="elapsedTime">The method elapsed.</param>
+    /// <returns>The current instance with the new elapsed time.</returns>
+    IInvocation AddElapsedTime(TimeSpan elapsedTime);
 
-        /// <summary>
-        /// Executes the underlying method.
-        /// </summary>
-        void Proceed();
-    }
+    /// <summary>
+    /// Executes the underlying method.
+    /// </summary>
+    void Proceed();
 }

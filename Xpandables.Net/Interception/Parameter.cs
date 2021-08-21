@@ -15,147 +15,145 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
 using System.Reflection;
 
-namespace Xpandables.Net.Interception
+namespace Xpandables.Net.Interception;
+
+/// <summary>
+/// Defines the structure of a argument of a method at runtime.
+/// </summary>
+public sealed class Parameter
 {
     /// <summary>
-    /// Defines the structure of a argument of a method at runtime.
+    /// Builds a new instance of <see cref="Parameter"/> with the position, name , value...
     /// </summary>
-    public sealed class Parameter
+    /// <param name="position">The parameter position in the method signature</param>
+    /// <param name="source">The parameter info to act on.</param>
+    /// <param name="value">The value of the parameter.</param>
+    /// <returns>An instance of new <see cref="Parameter"/>.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The <paramref name="position"/> must be greater
+    /// or equal to zero.</exception>
+    public static Parameter Build(int position, ParameterInfo source, object? value)
+    {
+        if (source is null) throw new ArgumentNullException(nameof(source));
+
+        return new Parameter(
+            position,
+            source.Name!,
+            value,
+            GetTypeFromParameterInfo(source),
+            GetPassedStatusFromParameterInfo(source));
+    }
+
+    private Parameter(int position, string name, object? value, Type type, PassingState isPassed)
+    {
+        if (position < 0)
+            throw new ArgumentOutOfRangeException($"{position} must be greater or equal to zero.");
+
+        Position = position;
+        Name = name ?? throw new ArgumentNullException(nameof(name));
+        Value = value;
+        Type = type ?? throw new ArgumentNullException(nameof(type));
+        PassingBy = isPassed;
+    }
+
+    /// <summary>
+    /// Gets the index position of the parameter in the method signature.
+    /// The value must be greater or equal to zero, otherwise the interface contract
+    /// will throw an <see cref="ArgumentOutOfRangeException"/>.
+    /// </summary>
+    public int Position { get; }
+
+    /// <summary>
+    /// Gets the name of the parameter as defined in the method signature.
+    /// The value can not be null, otherwise the interface contract will throw an <see cref="ArgumentNullException"/>.
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// Gets the value of the parameter at runtime.
+    /// </summary>
+    public object? Value { get; private set; }
+
+    /// <summary>
+    /// Gets the type of the argument.
+    /// </summary>
+    public Type Type { get; }
+
+    /// <summary>
+    /// Determines whether the argument is <see langword="out"/>, <see langword="in"/>
+    /// or by <see langword="ref"/> parameter.
+    /// </summary>
+    public PassingState PassingBy { get; }
+
+    /// <summary>
+    /// Sets a new value to the parameter.
+    /// The new value type must match the argument <see cref="Type"/>,
+    /// otherwise it will throw a <see cref="FormatException"/>
+    /// </summary>
+    /// <param name="newValue">The new value to be used.</param>
+    public Parameter ChangeValueTo(object? newValue)
+    {
+        Value = newValue;
+        return this;
+    }
+
+    /// <summary>
+    /// Determines whether the argument is <see langword="out"/>, <see langword="in"/>
+    /// or <see langword="ref"/> parameter.
+    /// </summary>
+    [Serializable]
+    public enum PassingState
     {
         /// <summary>
-        /// Builds a new instance of <see cref="Parameter"/> with the position, name , value...
+        /// Standard parameter.
         /// </summary>
-        /// <param name="position">The parameter position in the method signature</param>
-        /// <param name="source">The parameter info to act on.</param>
-        /// <param name="value">The value of the parameter.</param>
-        /// <returns>An instance of new <see cref="Parameter"/>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is null.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="position"/> must be greater
-        /// or equal to zero.</exception>
-        public static Parameter Build(int position, ParameterInfo source, object? value)
-        {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-
-            return new Parameter(
-                position,
-                source.Name!,
-                value,
-                GetTypeFromParameterInfo(source),
-                GetPassedStatusFromParameterInfo(source));
-        }
-
-        private Parameter(int position, string name, object? value, Type type, PassingState isPassed)
-        {
-            if (position < 0)
-                throw new ArgumentOutOfRangeException($"{position} must be greater or equal to zero.");
-
-            Position = position;
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Value = value;
-            Type = type ?? throw new ArgumentNullException(nameof(type));
-            PassingBy = isPassed;
-        }
+        In = 0,
 
         /// <summary>
-        /// Gets the index position of the parameter in the method signature.
-        /// The value must be greater or equal to zero, otherwise the interface contract
-        /// will throw an <see cref="ArgumentOutOfRangeException"/>.
+        /// <see langword="out"/> parameter.
         /// </summary>
-        public int Position { get; }
+        Out = 1,
 
         /// <summary>
-        /// Gets the name of the parameter as defined in the method signature.
-        /// The value can not be null, otherwise the interface contract will throw an <see cref="ArgumentNullException"/>.
+        /// <see langword="ref"/> parameter.
         /// </summary>
-        public string Name { get; }
+        Ref = 2
+    }
 
-        /// <summary>
-        /// Gets the value of the parameter at runtime.
-        /// </summary>
-        public object? Value { get; private set; }
+    /// <summary>
+    /// Returns the <see cref="PassingState"/> of the parameter.
+    /// </summary>
+    /// <param name="parameterInfo">The parameter to act on.</param>
+    /// <returns>A <see cref="PassingState"/> that matches the parameter.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="parameterInfo"/> is null.</exception>
+    private static PassingState GetPassedStatusFromParameterInfo(ParameterInfo parameterInfo)
+    {
+        if (parameterInfo is null)
+            throw new ArgumentNullException(nameof(parameterInfo));
 
-        /// <summary>
-        /// Gets the type of the argument.
-        /// </summary>
-        public Type Type { get; }
+        if (parameterInfo.IsOut)
+            return PassingState.Out;
 
-        /// <summary>
-        /// Determines whether the argument is <see langword="out"/>, <see langword="in"/>
-        /// or by <see langword="ref"/> parameter.
-        /// </summary>
-        public PassingState PassingBy { get; }
+        return parameterInfo.ParameterType.IsByRef
+                ? PassingState.Ref
+                : PassingState.In;
+    }
 
-        /// <summary>
-        /// Sets a new value to the parameter.
-        /// The new value type must match the argument <see cref="Type"/>,
-        /// otherwise it will throw a <see cref="FormatException"/>
-        /// </summary>
-        /// <param name="newValue">The new value to be used.</param>
-        public Parameter ChangeValueTo(object? newValue)
-        {
-            Value = newValue;
-            return this;
-        }
+    /// <summary>
+    /// Returns the type of the parameter.
+    /// </summary>
+    /// <param name="parameterInfo">The parameter to act on.</param>
+    /// <returns>The parameter type.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="parameterInfo"/> is null.</exception>
+    private static Type GetTypeFromParameterInfo(ParameterInfo parameterInfo)
+    {
+        if (parameterInfo is null)
+            throw new ArgumentNullException(nameof(parameterInfo));
 
-        /// <summary>
-        /// Determines whether the argument is <see langword="out"/>, <see langword="in"/>
-        /// or <see langword="ref"/> parameter.
-        /// </summary>
-        [Serializable]
-        public enum PassingState
-        {
-            /// <summary>
-            /// Standard parameter.
-            /// </summary>
-            In = 0,
-
-            /// <summary>
-            /// <see langword="out"/> parameter.
-            /// </summary>
-            Out = 1,
-
-            /// <summary>
-            /// <see langword="ref"/> parameter.
-            /// </summary>
-            Ref = 2
-        }
-
-        /// <summary>
-        /// Returns the <see cref="PassingState"/> of the parameter.
-        /// </summary>
-        /// <param name="parameterInfo">The parameter to act on.</param>
-        /// <returns>A <see cref="PassingState"/> that matches the parameter.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="parameterInfo"/> is null.</exception>
-        private static PassingState GetPassedStatusFromParameterInfo(ParameterInfo parameterInfo)
-        {
-            if (parameterInfo is null)
-                throw new ArgumentNullException(nameof(parameterInfo));
-
-            if (parameterInfo.IsOut)
-                return PassingState.Out;
-
-            return parameterInfo.ParameterType.IsByRef
-                    ? PassingState.Ref
-                    : PassingState.In;
-        }
-
-        /// <summary>
-        /// Returns the type of the parameter.
-        /// </summary>
-        /// <param name="parameterInfo">The parameter to act on.</param>
-        /// <returns>The parameter type.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="parameterInfo"/> is null.</exception>
-        private static Type GetTypeFromParameterInfo(ParameterInfo parameterInfo)
-        {
-            if (parameterInfo is null)
-                throw new ArgumentNullException(nameof(parameterInfo));
-
-            return parameterInfo.ParameterType.IsByRef
-                       ? parameterInfo.ParameterType.GetElementType()!
-                       : parameterInfo.ParameterType;
-        }
+        return parameterInfo.ParameterType.IsByRef
+                   ? parameterInfo.ParameterType.GetElementType()!
+                   : parameterInfo.ParameterType;
     }
 }

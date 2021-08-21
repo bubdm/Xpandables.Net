@@ -17,34 +17,33 @@
 
 using System.Reflection;
 
-namespace Xpandables.Net.DependencyInjection
+namespace Xpandables.Net.DependencyInjection;
+
+/// <summary>
+/// Defines options to configure export services.
+/// </summary>
+public sealed class ExportServiceOptions
 {
     /// <summary>
-    /// Defines options to configure export services.
+    /// Initializes a default instance of <see cref="ExportServiceOptions"/> class.
     /// </summary>
-    public sealed class ExportServiceOptions
-    {
-        /// <summary>
-        /// Initializes a default instance of <see cref="ExportServiceOptions"/> class.
-        /// </summary>
-        public ExportServiceOptions() { }
+    public ExportServiceOptions() { }
 
-        /// <summary>
-        /// Gets or sets the path to the directory to scan for assemblies to add to the catalog.
-        /// if not defined, the system will look to the application current directory.
-        /// </summary>
-        public string Path { get; set; } = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!;
+    /// <summary>
+    /// Gets or sets the path to the directory to scan for assemblies to add to the catalog.
+    /// if not defined, the system will look to the application current directory.
+    /// </summary>
+    public string Path { get; set; } = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!;
 
-        /// <summary>
-        /// Gets or sets the pattern to search with. The format of the pattern should be the same as specified for GetFiles.
-        /// If not defined, the system will use the <see langword="*.dll"/> pattern.
-        /// </summary>
-        public string SearchPattern { get; set; } = "*.dll";
+    /// <summary>
+    /// Gets or sets the pattern to search with. The format of the pattern should be the same as specified for GetFiles.
+    /// If not defined, the system will use the <see langword="*.dll"/> pattern.
+    /// </summary>
+    public string SearchPattern { get; set; } = "*.dll";
 
-        /// <summary>
-        /// Gets or sets whether or not to search in sub-directories.
-        /// The default value is <see langword="false"/>.
-        /// </summary>
-        public bool SearchSubDirectories { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets whether or not to search in sub-directories.
+    /// The default value is <see langword="false"/>.
+    /// </summary>
+    public bool SearchSubDirectories { get; set; }
 }

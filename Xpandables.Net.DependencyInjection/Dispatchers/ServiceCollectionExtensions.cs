@@ -20,7 +20,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 
 using Xpandables.Net.Dispatchers;
-using Xpandables.Net.Handlers;
 
 namespace Xpandables.Net.DependencyInjection
 {

@@ -1,5 +1,4 @@
-﻿
-/************************************************************************************************************
+﻿/************************************************************************************************************
  * Copyright (C) 2020 Francis-Black EWANE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,40 +14,37 @@
  * limitations under the License.
  *
 ************************************************************************************************************/
-using System;
-using System.Collections.Generic;
 
-namespace Xpandables.Net.Interception
+namespace Xpandables.Net.Interception;
+
+/// <summary>
+/// This interface represents a list of either input or output
+/// parameters. It implements a fixed size list.
+/// </summary>
+public interface IParameterCollection : IEnumerable<Parameter>
 {
     /// <summary>
-    /// This interface represents a list of either input or output
-    /// parameters. It implements a fixed size list.
+    /// Fetches a parameter's value by name.
     /// </summary>
-    public interface IParameterCollection : IEnumerable<Parameter>
-    {
-        /// <summary>
-        /// Fetches a parameter's value by name.
-        /// </summary>
-        /// <param name="parameterName">The parameter name.</param>
-        /// <returns>value of the named parameter.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="parameterName"/> is null.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="parameterName"/> does not exist</exception>
-        Parameter this[string parameterName] { get; set; }
+    /// <param name="parameterName">The parameter name.</param>
+    /// <returns>value of the named parameter.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="parameterName"/> is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The <paramref name="parameterName"/> does not exist</exception>
+    Parameter this[string parameterName] { get; set; }
 
-        /// <summary>
-        /// Fetches a parameter's value by index.
-        /// </summary>
-        /// <param name="parameterIndex">The parameter index.</param>
-        /// <returns>Value of the indexed parameter.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="parameterIndex"/> does not exist</exception>
-        Parameter this[int parameterIndex] { get; set; }
+    /// <summary>
+    /// Fetches a parameter's value by index.
+    /// </summary>
+    /// <param name="parameterIndex">The parameter index.</param>
+    /// <returns>Value of the indexed parameter.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">The <paramref name="parameterIndex"/> does not exist</exception>
+    Parameter this[int parameterIndex] { get; set; }
 
-        /// <summary>
-        /// Does this collection contain a parameter value with the given name?
-        /// </summary>
-        /// <param name="parameterName">Name of parameter to find.</param>
-        /// <returns>True if the parameter name is in the collection, false if not.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="parameterName"/> is null.</exception>
-        bool ContainsParameter(string parameterName);
-    }
+    /// <summary>
+    /// Does this collection contain a parameter value with the given name?
+    /// </summary>
+    /// <param name="parameterName">Name of parameter to find.</param>
+    /// <returns>True if the parameter name is in the collection, false if not.</returns>
+    /// <exception cref="ArgumentNullException">The <paramref name="parameterName"/> is null.</exception>
+    bool ContainsParameter(string parameterName);
 }

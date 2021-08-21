@@ -15,24 +15,21 @@
  *
 ************************************************************************************************************/
 
-using System;
+namespace Xpandables.Net.Interception;
 
-namespace Xpandables.Net.Interception
+/// <summary>
+/// Interceptors base attribute that allows developers to apply interceptor to classes and class members directly.
+/// </summary>
+[AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
+public abstract class InterceptorAttribute : Attribute
 {
     /// <summary>
-    /// Interceptors base attribute that allows developers to apply interceptor to classes and class members directly.
+    /// Derived classes implement this method. When called, it creates a new call handler as specified in the attribute configuration.
+    /// The parameter <paramref name="serviceProvider"/> specifies the <see cref="IServiceProvider"/> to be used when creating
+    /// handlers, if necessary.
+    /// Returns a new interceptor handler object.
     /// </summary>
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
-    public abstract class InterceptorAttribute : Attribute
-    {
-        /// <summary>
-        /// Derived classes implement this method. When called, it creates a new call handler as specified in the attribute configuration.
-        /// The parameter <paramref name="serviceProvider"/> specifies the <see cref="IServiceProvider"/> to be used when creating
-        /// handlers, if necessary.
-        /// Returns a new interceptor handler object.
-        /// </summary>
-        /// <param name="serviceProvider">The current instance of the collection of services.</param>
-        /// <returns>An implementation of <see cref="IInterceptor"/> interface.</returns>
-        public abstract IInterceptor Create(IServiceProvider serviceProvider);
-    }
+    /// <param name="serviceProvider">The current instance of the collection of services.</param>
+    /// <returns>An implementation of <see cref="IInterceptor"/> interface.</returns>
+    public abstract IInterceptor Create(IServiceProvider serviceProvider);
 }

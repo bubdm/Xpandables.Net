@@ -19,7 +19,6 @@ using System.Diagnostics;
 
 using Xpandables.Net.Aggregates.Events;
 using Xpandables.Net.Commands;
-using Xpandables.Net.Handlers;
 using Xpandables.Net.Queries;
 
 namespace Xpandables.Net.Dispatchers;
