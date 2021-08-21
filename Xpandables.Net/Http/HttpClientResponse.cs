@@ -16,6 +16,7 @@
  *
 ************************************************************************************************************/
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace Xpandables.Net.Http;
@@ -233,19 +234,14 @@ public class HttpRestClientResponse<TResult> : HttpClientResponse
     /// </summary>
     /// <param name="result">The result instance.</param>
     /// <param name="statusCode">The status code of the response.</param>
-    protected HttpRestClientResponse(TResult? result, HttpStatusCode statusCode)
+    protected HttpRestClientResponse([AllowNull] TResult result, HttpStatusCode statusCode)
         : base(statusCode) => Result = result;
 
     /// <summary>
     /// Gets the HTTP response content.
     /// </summary>
-    public TResult? Result { get; }
-
-    /// <summary>
-    /// Determines whether or no the response contains a result.
-    /// Returns <see langword="true"/> if so, otherwise <see langword="false"/>.
-    /// </summary>
-    public bool HasResult() => Result is not null;
+    [AllowNull]
+    public TResult Result { get; }
 
     /// <summary>
     /// Adds the reason phrase.
