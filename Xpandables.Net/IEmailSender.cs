@@ -27,8 +27,8 @@ public interface IEmailSender
     /// </summary>
     /// <param name="email">The email message instance.</param>
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-    /// <returns>A task that represents an asynchronous operation.</returns>
-    Task SendEmailAsync(object email, CancellationToken cancellationToken = default);
+    /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+    Task<IOperationResult> SendEmailAsync(object email, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -43,7 +43,7 @@ public interface IEmailSender<TMessage> : IEmailSender
     /// </summary>
     /// <param name="email">The email message instance.</param>
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-    /// <returns>A task that represents an asynchronous operation.</returns>
-    Task SendEmailAsync(TMessage email, CancellationToken cancellationToken = default);
-    Task IEmailSender.SendEmailAsync(object email, CancellationToken cancellationToken) => SendEmailAsync((TMessage)email, cancellationToken);
+    /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+    Task<IOperationResult> SendEmailAsync(TMessage email, CancellationToken cancellationToken = default);
+    Task<IOperationResult> IEmailSender.SendEmailAsync(object email, CancellationToken cancellationToken) => SendEmailAsync((TMessage)email, cancellationToken);
 }
