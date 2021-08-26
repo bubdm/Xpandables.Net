@@ -18,32 +18,32 @@
 namespace Xpandables.Net;
 
 /// <summary>
-/// Provides with a method to send emails.
+/// Provides with a method to send SMS.
 /// </summary>
-public interface IEmailSender
+public interface ISmsSender
 {
     /// <summary>
-    /// Asynchronously sends the specified message via mail.
+    /// Asynchronously sends the specified message via SMS.
     /// </summary>
-    /// <param name="email">The email message instance.</param>
+    /// <param name="sms">The message instance.</param>
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-    /// <returns>A task that represents an asynchronous operation.</returns>
-    Task SendEmailAsync(object email, CancellationToken cancellationToken = default);
+    /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+    Task<IOperationResult> SendSmsAsync(object sms, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
-/// Provides with a method to send emails using a specific type.
+/// Provides with a method to send SMS using a specific type.
 /// </summary>
-/// <typeparam name="TMessage">The type of the email  message content.</typeparam>
-public interface IEmailSender<TMessage> : IEmailSender
-    where TMessage : class
+/// <typeparam name="TSms">The type of the SMS message content.</typeparam>
+public interface ISmsSender<TSms> : ISmsSender
+    where TSms : class
 {
     /// <summary>
-    /// Asynchronously sends the specified email message type via mail.
+    /// Asynchronously sends the specified message type via SMS.
     /// </summary>
-    /// <param name="email">The email message instance.</param>
+    /// <param name="sms">The message instance.</param>
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
-    /// <returns>A task that represents an asynchronous operation.</returns>
-    Task SendEmailAsync(TMessage email, CancellationToken cancellationToken = default);
-    Task IEmailSender.SendEmailAsync(object email, CancellationToken cancellationToken) => SendEmailAsync((TMessage)email, cancellationToken);
+    /// <returns>A task that represents an object of <see cref="IOperationResult"/>.</returns>
+    Task<IOperationResult> SendSmsAsync(TSms sms, CancellationToken cancellationToken = default);
+    Task<IOperationResult> ISmsSender.SendSmsAsync(object sms, CancellationToken cancellationToken) => SendSmsAsync((TSms)sms, cancellationToken);
 }
