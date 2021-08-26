@@ -27,8 +27,8 @@ internal delegate TReturn CreateResult<TReturn>(bool isValid, string key, string
 
 /// <summary>
 /// The implementation for <see cref="IDispatcher"/>.
-/// Implements methods to execute the <see cref="IAsyncQueryHandler{TQuery, TResult}"/>, <see cref="IQueryHandler{TQuery, TResult}"/> and
-/// <see cref="ICommandHandler{TCommand}"/> process dynamically.
+/// Implements methods to run the <see cref="IAsyncQueryHandler{TQuery, TResult}"/>, <see cref="IQueryHandler{TQuery, TResult}"/>,
+/// <see cref="ICommandHandler{TCommand}"/>, <see cref="IDomainEventHandler{TDomainEvent}"/> and <see cref="INotificationHandler{TNotification}"/> process dynamically.
 /// </summary>
 public class Dispatcher : IDispatcher
 {

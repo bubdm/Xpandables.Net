@@ -27,12 +27,12 @@ namespace Xpandables.Net.Dispatchers;
 public interface IPublisher
 {
     /// <summary>
-    /// Asynchronously publishes the specified event to all registered suscribers.
+    /// Asynchronously publishes the specified event to all registered subscribers.
     /// </summary>
     /// <param name="event">The event to publish.</param>
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
     /// <returns>A task that represents an asynchronous operation.</returns>
-    /// <exception cref="InvalidOperationException">Publishing the event failed. See inner exception.</exception>
+    /// <exception cref="OperationResultException">The operation failed. See inner exception.</exception>
     Task PublishAsync(IEvent @event, CancellationToken cancellationToken = default);
 }

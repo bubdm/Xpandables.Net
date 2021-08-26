@@ -30,8 +30,7 @@ public interface IAsyncQueryHandlerWrapper<TResult> : ICanHandle
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
     /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
-    /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-    /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+    /// <exception cref="OperationResultException">The operation failed. See inner exception.</exception>
     /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
     IAsyncEnumerable<TResult> HandleAsync(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default);
 }
@@ -70,8 +69,7 @@ public sealed class AsyncQueryHandlerWrapper<TQuery, TResult> : IAsyncQueryHandl
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
     /// <exception cref="ArgumentException">The handler is unable to handle the <paramref name="query"/>.</exception>
-    /// <exception cref="InvalidOperationException">The operation failed. See inner exception.</exception>
-    /// <exception cref="OperationCanceledException">The operation has been canceled.</exception>
+    /// <exception cref="OperationResultException">The operation failed. See inner exception.</exception>
     /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
     public IAsyncEnumerable<TResult> HandleAsync(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default)
         => _decoratee.HandleAsync((TQuery)query, cancellationToken);

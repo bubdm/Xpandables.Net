@@ -20,7 +20,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Xpandables.Net.Dispatchers;
 
 /// <summary>
-/// Defines set of methods to retrieve handlers of specific type.
+/// Defines set of methods to retrieve handlers of specific type for <see cref="IDispatcher"/>.
 /// </summary>
 public interface IHandlerAccessor
 {

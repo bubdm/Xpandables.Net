@@ -31,6 +31,6 @@ public interface IDomainEventDispatcher
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>A task that represents an asynchronous operation.</returns>
     /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
-    /// <exception cref="InvalidOperationException">Publishing the event failed. See inner exception.</exception>
+    /// <exception cref="OperationResultException">The operation failed. See inner exception.</exception>
     Task PublishAsync(IDomainEvent @event, CancellationToken cancellationToken = default);
 }

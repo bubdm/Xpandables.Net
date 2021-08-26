@@ -33,6 +33,7 @@ public interface IAsyncQueryHandler<in TQuery, out TResult> : ICanHandle<TQuery>
     /// <param name="query">The query to act on.</param>
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+    /// <exception cref="OperationResultException">The operation failed. See inner exception.</exception>
     /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
     /// <remarks>You can throw an <see cref="OperationResultException"/> on error.</remarks>
     IAsyncEnumerable<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
@@ -52,6 +53,7 @@ public abstract class AsyncQueryHandler<TQuery, TResult> : IAsyncQueryHandler<TQ
     /// <param name="query">The query to act on.</param>
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+    /// <exception cref="OperationResultException">The operation failed. See inner exception.</exception>
     /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
     public virtual IAsyncEnumerable<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         => AsyncEnumerable<TResult>.Empty();

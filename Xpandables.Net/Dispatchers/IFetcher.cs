@@ -34,6 +34,7 @@ public interface IFetcher
     /// <param name="query">The query to act on.</param>
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="query"/> is null.</exception>
+    /// <exception cref="OperationResultException">The operation failed. See inner exception.</exception>
     /// <returns>An enumerator of <typeparamref name="TResult"/> that can be asynchronously enumerated.</returns>
     IAsyncEnumerable<TResult> FetchAsync<TResult>(IAsyncQuery<TResult> query, CancellationToken cancellationToken = default);
 

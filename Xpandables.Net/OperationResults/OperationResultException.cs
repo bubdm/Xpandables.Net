@@ -38,6 +38,30 @@ public class OperationResultException : Exception
         Result = result ?? throw new ArgumentNullException(nameof(result));
     }
 
+    /// <summary>
+    /// Constructs a new instance of the <see cref="OperationResultException"/> class that
+    /// contains the specified key and error messages.
+    /// </summary>
+    /// <param name="key">The key of <see cref="OperationError"/> to add errors to.</param>
+    /// <param name="errorMessages">The associated error messages.</param>
+    public OperationResultException(string key, params string[] errorMessages)
+        : base(key)
+    {
+        Result = new FailureOperationResult(new OperationErrorCollection(key, errorMessages));
+    }
+
+    /// <summary>
+    /// Constructs a new instance of the <see cref="OperationResultException"/> class that
+    /// contains the specified key and inner exception.
+    /// </summary>
+    /// <param name="key">The key of <see cref="OperationError"/> to add errors to.</param>
+    /// <param name="exception">The inner exception.</param>
+    public OperationResultException(string key, Exception exception)
+        : base(key, exception)
+    {
+        Result = new FailureOperationResult(new OperationErrorCollection(key, exception));
+    }
+
     ///<inheritdoc/>
     protected OperationResultException(SerializationInfo info, StreamingContext context)
         : base(info, context)
