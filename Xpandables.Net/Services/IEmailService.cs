@@ -21,3 +21,8 @@ namespace Xpandables.Net.Services;
 /// Defines the email host service.
 /// </summary>
 public interface IEmailService : IBackgroundService { }
+
+/// <summary>
+/// Defines the sms host service.
+/// </summary>
+public interface ISmsService : IBackgroundService { }
