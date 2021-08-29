@@ -75,9 +75,7 @@ public class AggregateDomainService : IAggregateDomainService
             var eventTypeFullName = @event.GetType().AssemblyQualifiedName!;
             var eventTypeName = @event.GetType().GetNameWithoutGenericArity();
 
-            var eventData = @event.GetJsonDocument(SerializerOptions, DocumentOptions);
-            var entity = new DomainStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
-
+            var entity = new DomainEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, @event);
             await _aggregateUnitOfWork.Events.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
@@ -88,9 +86,7 @@ public class AggregateDomainService : IAggregateDomainService
                 var eventTypeFullName = @event.GetType().AssemblyQualifiedName!;
                 var eventTypeName = @event.GetType().GetNameWithoutGenericArity();
 
-                var eventData = @event.GetJsonDocument(SerializerOptions, DocumentOptions);
-                var entity = new NotificationStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData, default);
-
+                var entity = new NotificationEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, @event, default, default);
                 await _aggregateUnitOfWork.Notifications.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
             }
 
@@ -106,16 +102,12 @@ public class AggregateDomainService : IAggregateDomainService
     public virtual async Task<TAggregate?> ReadAsync<TAggregate>(IAggregateId aggregateId, CancellationToken cancellationToken = default)
         where TAggregate : class, IAggregateRoot
     {
-        var criteria = new StoreEntityCriteria<DomainStoreEntity>
-        {
-            AggregateId = aggregateId.AsString()
-        };
-
+        var criteria = new DomainCriteria { AggregateId = aggregateId.AsString() };
         return await ReadAsync<TAggregate>(criteria, cancellationToken).ConfigureAwait(false);
     }
 
     ///<inheritdoc/>
-    public virtual async Task<TAggregate?> ReadAsync<TAggregate>(StoreEntityCriteria<DomainStoreEntity> criteria, CancellationToken cancellationToken = default)
+    public virtual async Task<TAggregate?> ReadAsync<TAggregate>(DomainCriteria criteria, CancellationToken cancellationToken = default)
      where TAggregate : class, IAggregateRoot
     {
         var aggregate = CreateInstance<TAggregate>();
@@ -124,7 +116,7 @@ public class AggregateDomainService : IAggregateDomainService
 
         await foreach (var @event in _aggregateUnitOfWork.Events.FetchAllAsync(criteria, cancellationToken).ConfigureAwait(false))
         {
-            if (@event.ToObject(SerializerOptions) is IDomainEvent domainEvent)
+            if (@event.Event is IDomainEvent domainEvent)
                 aggregateEventSourcing.LoadFromHistory(domainEvent);
         }
 
@@ -137,22 +129,16 @@ public class AggregateDomainService : IAggregateDomainService
     {
         var aggregate = CreateInstance<TAggregate>();
 
-        if (aggregate is not IOriginator originator)
-            throw new ArgumentException($"{typeof(TAggregate).Name} must implement {typeof(IOriginator).Name}");
+        if (aggregate is not IOriginator originator) throw new ArgumentException($"{typeof(TAggregate).Name} must implement {typeof(IOriginator).Name}");
 
-        var criteria = new StoreEntityCriteria<SnapShotStoreEntity>()
+        var criteria = new SnapShotCriteria
         {
             AggregateId = aggregateId.AsString(),
-            DataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() != -1
+            EventCriteria = x => x.Event.Version != -1
         };
 
-        var result = await _aggregateUnitOfWork.SnapShots
-            .TryFindAsync(criteria, o => o.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64(), cancellationToken)
-            .ConfigureAwait(false);
-
-        if (result is not null)
-            if (result.ToObject(SerializerOptions) is ISnapShot snapShot)
-                originator.SetMemento(snapShot.Memento);
+        var result = await _aggregateUnitOfWork.SnapShots.TryFindAsync(criteria, o => o.Event.Version, cancellationToken).ConfigureAwait(false);
+        if (result is not null) originator.SetMemento(result.Event.Memento);
 
         return aggregate.IsEmpty ? default : aggregate;
     }
@@ -167,25 +153,19 @@ public class AggregateDomainService : IAggregateDomainService
             throw new InvalidOperationException($"{aggregate.GetType().Name} must implement '{nameof(IOriginator)}' interface");
 
         long version = aggregate.Version;
-        var criteria = new StoreEntityCriteria<SnapShotStoreEntity>
+        var criteria = new SnapShotCriteria
         {
             AggregateId = aggregate.AggregateId.AsString(),
-            DataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() == version
+            EventCriteria = x => x.Event.Version == version
         };
 
-        await _aggregateUnitOfWork.SnapShots
-            .DeleteAsync(criteria, cancellationToken)
-            .ConfigureAwait(false);
+        await _aggregateUnitOfWork.SnapShots.DeleteAsync(criteria, cancellationToken).ConfigureAwait(false);
 
         var snapShot = new SnapShot(originator.CreateMemento(), aggregate.AggregateId, aggregate.Version);
 
         var aggregateId = aggregate.AggregateId.AsString();
         var aggregateTypeName = aggregate.GetType().GetNameWithoutGenericArity();
-        var eventTypeFullName = snapShot.GetType().AssemblyQualifiedName!;
-        var eventTypeName = snapShot.GetType().GetNameWithoutGenericArity();
-
-        var eventData = snapShot.GetJsonDocument(SerializerOptions, DocumentOptions);
-        var entity = new SnapShotStoreEntity(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, eventData);
+        var entity = new SnapShotEntity(aggregateId, aggregateTypeName, snapShot);
 
         await _aggregateUnitOfWork.SnapShots.InsertAsync(entity, cancellationToken).ConfigureAwait(false);
         await _aggregateUnitOfWork.PersistAsync(cancellationToken).ConfigureAwait(false);
@@ -193,7 +173,7 @@ public class AggregateDomainService : IAggregateDomainService
 
     ///<inheritdoc/>
     public virtual IAsyncEnumerable<TStoreEntity> ReadEventsAsync<TStoreEntity>(StoreEntityCriteria<TStoreEntity> criteria, CancellationToken cancellationToken = default)
-        where TStoreEntity : StoreEntity
+        where TStoreEntity : class, IStoreEntity
     {
         _ = criteria ?? throw new ArgumentNullException(nameof(criteria));
 
@@ -208,7 +188,7 @@ public class AggregateDomainService : IAggregateDomainService
 
     ///<inheritdoc/>
     public virtual async Task<int> CountEventsAsync<TStoreEntity>(StoreEntityCriteria<TStoreEntity> criteria, CancellationToken cancellationToken = default)
-        where TStoreEntity : StoreEntity
+        where TStoreEntity : class, IStoreEntity
         => await _aggregateUnitOfWork.GetRepository<TStoreEntity>().CountAsync(criteria, cancellationToken).ConfigureAwait(false);
 
     /// <summary>

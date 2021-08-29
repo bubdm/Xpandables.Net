@@ -26,8 +26,8 @@ namespace Xpandables.Net.Entities;
 /// Provides with criteria to search for store entities.
 /// This class derives from <see cref="QueryExpression{TSource}"/>.
 /// </summary>
-public sealed class StoreEntityCriteria<TStoreEntity> : QueryExpression<TStoreEntity>
-    where TStoreEntity : StoreEntity
+public class StoreEntityCriteria<TStoreEntity> : QueryExpression<TStoreEntity>
+    where TStoreEntity : class, IStoreEntity
 {
     /// <summary>
     /// Returns an of <see cref="StoreEntityCriteria{TEventStoreEntity}"/> with default values.
@@ -82,12 +82,7 @@ public sealed class StoreEntityCriteria<TStoreEntity> : QueryExpression<TStoreEn
     /// <summary>
     /// Gets or sets the predicate applied to the event data.
     /// </summary>
-    /// <remarks>
-    /// For example :
-    /// EventDataCriteria = x => x.EventData.RootElement.GetProperty("Version").GetProperty("Value").GetInt64() == version
-    /// This is because Version is parsed as "Version": { "Value": 1 }
-    /// </remarks>
-    public Expression<Func<TStoreEntity, bool>>? DataCriteria { get; init; }
+    public Expression<Func<TStoreEntity, bool>>? EventCriteria { get; init; }
 
     /// <summary>
     /// Gets the number of entities to be returned.
@@ -122,9 +117,24 @@ public sealed class StoreEntityCriteria<TStoreEntity> : QueryExpression<TStoreEn
             expression = expression.And(x => x.IsActive == IsActive.Value);
         if (IsDeleted is not null)
             expression = expression.And(x => x.IsDeleted == IsDeleted.Value);
-        if (DataCriteria is not null)
-            expression = expression.And(DataCriteria);
+        if (EventCriteria is not null)
+            expression = expression.And(EventCriteria);
 
         return expression;
     }
 }
+
+/// <summary>
+/// Provides with criteria to search for domain events.
+/// </summary>
+public sealed class DomainCriteria : StoreEntityCriteria<DomainEntity> { }
+
+/// <summary>
+/// Provides with criteria to search for notification events.
+/// </summary>
+public sealed class NotificationCriteria : StoreEntityCriteria<NotificationEntity> { }
+
+/// <summary>
+/// Provides with criteria to search for snapshot events.
+/// </summary>
+public sealed class SnapShotCriteria : StoreEntityCriteria<SnapShotEntity> { }

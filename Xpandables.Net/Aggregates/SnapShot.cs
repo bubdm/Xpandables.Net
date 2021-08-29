@@ -23,7 +23,7 @@ namespace Xpandables.Net.Aggregates;
 /// Represents a snapshot to be read.
 /// </summary>
 [Serializable]
-public class SnapShot : Event, ISnapShot
+public sealed class SnapShot : Event, ISnapShot
 {
     /// <summary>
     /// Constructs a new instance of <see cref="SnapShot"/>.

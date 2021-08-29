@@ -35,17 +35,17 @@ public class AggregateUnitOfWork<TContext> : UnitOfWork<TContext>, IAggregateUni
     public AggregateUnitOfWork(IUnitOfWorkContextFactory unitOfWorkContextFactory)
         : base(unitOfWorkContextFactory)
     {
-        Events = new Repository<DomainStoreEntity>(Context);
-        Notifications = new Repository<NotificationStoreEntity>(Context);
-        SnapShots = new Repository<SnapShotStoreEntity>(Context);
+        Events = new Repository<DomainEntity>(Context);
+        Notifications = new Repository<NotificationEntity>(Context);
+        SnapShots = new Repository<SnapShotEntity>(Context);
     }
 
     ///<inheritdoc/>
-    public IRepository<DomainStoreEntity> Events { get; }
+    public IRepository<DomainEntity> Events { get; }
 
     ///<inheritdoc/>
-    public IRepository<NotificationStoreEntity> Notifications { get; }
+    public IRepository<NotificationEntity> Notifications { get; }
 
     ///<inheritdoc/>
-    public IRepository<SnapShotStoreEntity> SnapShots { get; }
+    public IRepository<SnapShotEntity> SnapShots { get; }
 }

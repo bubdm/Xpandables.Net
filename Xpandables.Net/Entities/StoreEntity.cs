@@ -16,7 +16,6 @@
  *
 ************************************************************************************************************/
 using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -25,50 +24,100 @@ namespace Xpandables.Net.Entities;
 /// <summary>
 /// Represents an event entity to be written.
 /// </summary>
-public abstract class StoreEntity : Entity, IDisposable
+public interface IStoreEntity : IEntity, IDisposable
 {
     /// <summary>
     /// Gets the string representation of the aggregate related identifier.
     /// </summary>
-    [ConcurrencyCheck]
-    public string AggregateId { get; internal init; }
+    string AggregateId { get; }
 
     /// <summary>
     /// Gets the string representation of the aggregate type.
     /// </summary>
-    public string AggregateTypeName { get; internal init; }
+    string AggregateTypeName { get; }
 
     /// <summary>
     /// Gets the string representation of the .Net Framework event type full name.
     /// </summary>
-    public string EventTypeFullName { get; internal init; }
+    string EventTypeFullName { get; }
 
     /// <summary>
     /// Gets the string representation of the .Net Framework event type name
     /// (Without name space).
     /// </summary>
-    public string EventTypeName { get; internal init; }
+    string EventTypeName { get; }
 
     /// <summary>
-    /// Gets the string representation of the content of the event as <see cref="JsonDocument"/>.
+    /// Gets the event representation as <see cref="JsonDocument"/>.
     /// </summary>
-    public JsonDocument EventData { get; internal init; }
+    object Event { get; }
 
     /// <summary>
     /// Gets the exception.
     /// </summary>
-    public string? Exception { get; private set; }
+    string? Exception { get; }
 
     /// <summary>
     /// Gets the exception full type name.
     /// </summary>
-    public string? ExceptionTypeFullName { get; private set; }
+    string? ExceptionTypeFullName { get; }
 
     /// <summary>
     /// Adds the specified exception to the event store.
     /// </summary>
     /// <param name="exception">The exception.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="exception"/> is null.</exception>
+    void AddException(Exception exception);
+
+    /// <summary>
+    /// Remove the underlying exception.
+    /// </summary>
+    void RemoveException();
+}
+
+/// <summary>
+/// Represents a generic event entity to be written.
+/// </summary>
+/// <typeparam name="TEvent">The type the event.</typeparam>
+public interface IStoreEntity<TEvent> : IStoreEntity
+    where TEvent : class, IEvent
+{
+    /// <summary>
+    /// Gets the event representation as <see cref="JsonDocument"/>.
+    /// </summary>
+    new TEvent Event { get; }
+
+    object IStoreEntity.Event => Event;
+}
+
+/// <summary>
+/// Represents an event entity to be written.
+/// </summary>
+public abstract class StoreEntity : Entity, IStoreEntity, IDisposable
+{
+    ///<inheritdoc/>
+    public object Event { get; internal init; }
+
+    ///<inheritdoc/>
+    [ConcurrencyCheck]
+    public string AggregateId { get; internal init; }
+
+    ///<inheritdoc/>
+    public string AggregateTypeName { get; internal init; }
+
+    ///<inheritdoc/>
+    public string EventTypeFullName { get; internal init; }
+
+    ///<inheritdoc/>
+    public string EventTypeName { get; internal init; }
+
+    ///<inheritdoc/>
+    public string? Exception { get; internal set; }
+
+    ///<inheritdoc/>
+    public string? ExceptionTypeFullName { get; internal set; }
+
+    ///<inheritdoc/>
     public void AddException(Exception exception)
     {
         _ = exception ?? throw new ArgumentNullException(nameof(exception));
@@ -77,9 +126,7 @@ public abstract class StoreEntity : Entity, IDisposable
         ExceptionTypeFullName = exception.GetType().AssemblyQualifiedName!;
     }
 
-    /// <summary>
-    /// Remove the underlying exception.
-    /// </summary>
+    ///<inheritdoc/>
     public void RemoveException()
     {
         Exception = default;
@@ -87,77 +134,27 @@ public abstract class StoreEntity : Entity, IDisposable
     }
 
     /// <summary>
-    /// Deserializes the content of <see cref="EventData"/> to the specified type.
-    /// </summary>
-    /// <typeparam name="T">The target type of the UTF-8 encoded text.</typeparam>
-    /// <param name="options">Options to control the behavior during parsing.</param>
-    /// <returns>A <typeparamref name="T"/> representation of the JSON value or null.</returns>
-    /// <exception cref="InvalidOperationException">The JsonElement.ValueKind of this value is System.Text.Json.JsonValueKind.Undefined.</exception>
-    /// <exception cref="ObjectDisposedException">The parent System.Text.Json.JsonDocument has been disposed.</exception>
-    /// <exception cref="JsonException">The JSON is invalid. -or- returnType is not compatible with the JSON. -or- 
-    /// There is remaining data in the span beyond a single JSON value.</exception>
-    /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter 
-    /// for returnType or its serializable members.</exception>
-    public T? ToObject<T>(JsonSerializerOptions? options = default)
-        where T : class => EventData.ToObject<T>(options);
-
-    /// <summary>
-    /// Deserializes the content of <see cref="EventData"/> to the specified type.
-    /// </summary>
-    /// <param name="returnType">The type of the object to convert to and return.</param>
-    /// <param name="options">Options to control the behavior during parsing.</param>
-    /// <returns>A returnType representation of the JSON value or null if exception.</returns>
-    /// <exception cref="InvalidOperationException">The JsonElement.ValueKind of this value is System.Text.Json.JsonValueKind.Undefined.</exception>
-    /// <exception cref="ObjectDisposedException">The parent System.Text.Json.JsonDocument has been disposed.</exception>
-    /// <exception cref="JsonException">The JSON is invalid. -or- returnType is not compatible with the JSON. -or- 
-    /// There is remaining data in the span beyond a single JSON value.</exception>
-    /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter 
-    /// for returnType or its serializable members.</exception>
-    public object? ToObject(Type returnType, JsonSerializerOptions? options = default)
-        => EventData.ToObject(returnType, options);
-
-    /// <summary>
-    /// Deserializes the content of <see cref="EventData"/> to the <see cref="EventTypeFullName"/> type.
-    /// </summary>
-    /// <param name="options">Options to control the behavior during parsing.</param>
-    /// <returns>A returnType representation of the JSON value or null if exception.</returns>
-    /// <exception cref="InvalidOperationException">The JsonElement.ValueKind of this value is System.Text.Json.JsonValueKind.Undefined.</exception>
-    /// <exception cref="ObjectDisposedException">The parent System.Text.Json.JsonDocument has been disposed.</exception>
-    /// <exception cref="JsonException">The JSON is invalid. -or- returnType is not compatible with the JSON. -or- 
-    /// There is remaining data in the span beyond a single JSON value.</exception>
-    /// <exception cref="NotSupportedException">There is no compatible System.Text.Json.Serialization.JsonConverter 
-    /// for returnType or its serializable members.</exception>
-    /// <exception cref="TargetInvocationException"></exception>
-    /// <exception cref="TypeLoadException"></exception>
-    /// <exception cref="ArgumentException"></exception>
-    /// <exception cref="FileNotFoundException"></exception>
-    /// <exception cref="FileLoadException"></exception>
-    /// <exception cref="BadImageFormatException"></exception>
-    public object? ToObject(JsonSerializerOptions? options = default)
-        => Type.GetType(EventTypeFullName, true) is { } returnType ? EventData.ToObject(returnType, options) : default;
-
-    /// <summary>
     /// Constructs a new instance of <see cref="StoreEntity"/> with the specified properties.
     /// </summary>
-    /// <param name="aggregateId">The aggregate identifier.</param>
-    /// <param name="aggregateTypeName">The type name of the aggregate.</param>
-    /// <param name="eventTypeFullName">The full type name of the event.</param>
-    /// <param name="eventTypeName">The type name of the event.</param>
-    /// <param name="eventData">The string representation of the event content.</param>
-    /// <param name="exception"></param>
-    /// <param name="exceptionTypeFullName"></param>
+    /// <param name="aggregateId">The aggregate id.</param>
+    /// <param name="aggregateTypeName">The aggregate type name.</param>
+    /// <param name="eventTypeFullName">The event type full name.</param>
+    /// <param name="eventTypeName">The event type name.</param>
+    /// <param name="event">The event instance.</param>
+    /// <param name="exceptionTypeFullName">The exception full type name.</param>
+    /// <param name="exception">The exception instance.</param>
     /// <exception cref="ArgumentNullException">The <paramref name="aggregateId"/> is null.</exception>
     /// <exception cref="ArgumentNullException">The <paramref name="aggregateTypeName"/> is null.</exception>
     /// <exception cref="ArgumentNullException">The <paramref name="eventTypeFullName"/> is null.</exception>
     /// <exception cref="ArgumentNullException">The <paramref name="eventTypeName"/> is null.</exception>
-    /// <exception cref="ArgumentNullException">The <paramref name="eventData"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="event"/> is null.</exception>
     [JsonConstructor]
     protected StoreEntity(
         string aggregateId,
         string aggregateTypeName,
         string eventTypeFullName,
         string eventTypeName,
-        JsonDocument eventData,
+        object @event,
         string? exception = default,
         string? exceptionTypeFullName = default)
     {
@@ -165,7 +162,7 @@ public abstract class StoreEntity : Entity, IDisposable
         AggregateTypeName = aggregateTypeName ?? throw new ArgumentNullException(nameof(aggregateTypeName));
         EventTypeFullName = eventTypeFullName ?? throw new ArgumentNullException(nameof(eventTypeFullName));
         EventTypeName = eventTypeName ?? throw new ArgumentNullException(nameof(eventTypeName));
-        EventData = eventData ?? throw new ArgumentNullException(nameof(eventData));
+        Event = @event ?? throw new ArgumentNullException(nameof(@event));
         Exception = exception?.ToString();
         ExceptionTypeFullName = exceptionTypeFullName;
     }
@@ -173,7 +170,41 @@ public abstract class StoreEntity : Entity, IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        EventData?.Dispose();
+        (Event as IDisposable)?.Dispose();
         GC.SuppressFinalize(this);
+    }
+}
+
+/// <summary>
+///  Represents a generic event entity to be written.
+/// </summary>
+/// <typeparam name="TEvent">The type of the event.</typeparam>
+public abstract class StoreEntity<TEvent> : StoreEntity, IStoreEntity<TEvent>
+    where TEvent : class, IEvent
+{
+    ///<inheritdoc/>
+    public new TEvent Event { get; internal init; }
+
+    /// <summary>
+    /// Constructs a new instance of <see cref="StoreEntity{TEvent}"/>.
+    /// </summary>
+    /// <param name="aggregateId">The aggregate id.</param>
+    /// <param name="aggregateTypeName">The aggregate type name.</param>
+    /// <param name="eventTypeFullName">The event type full name.</param>
+    /// <param name="eventTypeName">The event type name.</param>
+    /// <param name="event">The event instance.</param>
+    /// <param name="exceptionTypeFullName">The exception full type name.</param>
+    /// <param name="exception">The exception instance.</param>
+    protected StoreEntity(
+        string aggregateId,
+        string aggregateTypeName,
+        string eventTypeFullName,
+        string eventTypeName,
+        TEvent @event,
+        string? exception = null,
+        string? exceptionTypeFullName = null)
+        : base(aggregateId, aggregateTypeName, eventTypeFullName, eventTypeName, @event, exception, exceptionTypeFullName)
+    {
+        Event = @event ?? throw new ArgumentNullException(nameof(@event));
     }
 }

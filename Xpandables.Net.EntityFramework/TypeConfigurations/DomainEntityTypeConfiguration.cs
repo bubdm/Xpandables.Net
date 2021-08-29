@@ -26,10 +26,10 @@ namespace Xpandables.Net.TypeConfigurations;
 /// <summary>
 /// EFCore configuration for domain event.
 /// </summary>
-public class DomainEntityTypeConfiguration : IEntityTypeConfiguration<DomainStoreEntity>
+public class DomainEntityTypeConfiguration : IEntityTypeConfiguration<DomainEntity>
 {
     ///<inheritdoc/>
-    public virtual void Configure(EntityTypeBuilder<DomainStoreEntity> builder)
+    public virtual void Configure(EntityTypeBuilder<DomainEntity> builder)
     {
         builder.Property(p => p.Id).ValueGeneratedOnAdd();
         builder.Property(p => p.Index).ValueGeneratedOnAdd();
@@ -39,7 +39,7 @@ public class DomainEntityTypeConfiguration : IEntityTypeConfiguration<DomainStor
 
         builder.Property(p => p.AggregateId);
         builder.Property(p => p.AggregateTypeName);
-        builder.Property(p => p.EventData);
+        builder.Property(p => p.Event).HasColumnType("jsonb");
         builder.Property(p => p.EventTypeFullName);
         builder.Property(p => p.EventTypeName);
     }

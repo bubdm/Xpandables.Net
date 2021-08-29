@@ -59,7 +59,7 @@ public interface IAggregateDomainService : IDomainService
     /// <param name="cancellationToken">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>A task that represents an object of <typeparamref name="TAggregate"/> type if found or null.</returns>
     /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
-    Task<TAggregate?> ReadAsync<TAggregate>(StoreEntityCriteria<DomainStoreEntity> criteria, CancellationToken cancellationToken = default)
+    Task<TAggregate?> ReadAsync<TAggregate>(DomainCriteria criteria, CancellationToken cancellationToken = default)
         where TAggregate : class, IAggregateRoot;
 
     /// <summary>
@@ -108,7 +108,7 @@ public interface IAggregateDomainService : IDomainService
     /// <returns>An enumerator of <typeparamref name="TStoreEntity"/> that can be asynchronously enumerated.</returns>
     /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
     IAsyncEnumerable<TStoreEntity> ReadEventsAsync<TStoreEntity>(StoreEntityCriteria<TStoreEntity> criteria, CancellationToken cancellationToken = default)
-        where TStoreEntity : StoreEntity;
+        where TStoreEntity : class, IStoreEntity;
 
     /// <summary>
     /// Asynchronously returns the number of event store entities matching the criteria.
@@ -119,5 +119,5 @@ public interface IAggregateDomainService : IDomainService
     /// <returns>A task that represents the number of event store entities matching the criteria.</returns>
     /// <exception cref="ArgumentNullException">The <paramref name="criteria"/> is null.</exception>
     Task<int> CountEventsAsync<TStoreEntity>(StoreEntityCriteria<TStoreEntity> criteria, CancellationToken cancellationToken = default)
-        where TStoreEntity : StoreEntity;
+        where TStoreEntity : class, IStoreEntity;
 }

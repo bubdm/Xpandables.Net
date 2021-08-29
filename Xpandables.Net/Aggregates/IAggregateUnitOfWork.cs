@@ -25,17 +25,17 @@ namespace Xpandables.Net.Aggregates;
 public interface IAggregateUnitOfWork : IUnitOfWork
 {
     /// <summary>
-    /// Gets the repository for <see cref="DomainStoreEntity"/> entities.
+    /// Gets the repository for <see cref="DomainEntity"/> entities.
     /// </summary>
-    IRepository<DomainStoreEntity> Events { get; }
+    IRepository<DomainEntity> Events { get; }
 
     /// <summary>
-    /// Gets the repository for <see cref="NotificationStoreEntity"/> entities.
+    /// Gets the repository for <see cref="NotificationEntity"/> entities.
     /// </summary>
-    IRepository<NotificationStoreEntity> Notifications { get; }
+    IRepository<NotificationEntity> Notifications { get; }
 
     /// <summary>
-    /// Gets the repository for <see cref="SnapShotStoreEntity"/> entities.
+    /// Gets the repository for <see cref="SnapShotEntity"/> entities.
     /// </summary>
-    IRepository<SnapShotStoreEntity> SnapShots { get; }
+    IRepository<SnapShotEntity> SnapShots { get; }
 }

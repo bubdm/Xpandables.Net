@@ -25,10 +25,10 @@ namespace Xpandables.Net.TypeConfigurations;
 /// <summary>
 /// EFCore configuration for snapShot entity.
 /// </summary>
-public class SnapShotEntityTypeConfiguration : IEntityTypeConfiguration<SnapShotStoreEntity>
+public class SnapShotEntityTypeConfiguration : IEntityTypeConfiguration<SnapShotEntity>
 {
     ///<inheritdoc/>
-    public virtual void Configure(EntityTypeBuilder<SnapShotStoreEntity> builder)
+    public virtual void Configure(EntityTypeBuilder<SnapShotEntity> builder)
     {
         builder.Property(p => p.Id).ValueGeneratedOnAdd();
         builder.Property(p => p.Index).ValueGeneratedOnAdd();
@@ -38,7 +38,7 @@ public class SnapShotEntityTypeConfiguration : IEntityTypeConfiguration<SnapShot
 
         builder.Property(p => p.AggregateId);
         builder.Property(p => p.AggregateTypeName);
-        builder.Property(p => p.EventData);
+        builder.Property(p => p.Event).HasColumnType("jsonb");
         builder.Property(p => p.EventTypeFullName);
         builder.Property(p => p.EventTypeName);
     }

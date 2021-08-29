@@ -26,10 +26,10 @@ namespace Xpandables.Net.TypeConfigurations;
 /// <summary>
 /// EFCore configuration for notification event.
 /// </summary>
-public class NotificationEntityTypeConfiguration : IEntityTypeConfiguration<NotificationStoreEntity>
+public class NotificationEntityTypeConfiguration : IEntityTypeConfiguration<NotificationEntity>
 {
     ///<inheritdoc/>
-    public virtual void Configure(EntityTypeBuilder<NotificationStoreEntity> builder)
+    public virtual void Configure(EntityTypeBuilder<NotificationEntity> builder)
     {
         builder.Property(p => p.Id).ValueGeneratedOnAdd();
         builder.Property(p => p.Index).ValueGeneratedOnAdd();
@@ -39,7 +39,7 @@ public class NotificationEntityTypeConfiguration : IEntityTypeConfiguration<Noti
 
         builder.Property(p => p.AggregateId);
         builder.Property(p => p.AggregateTypeName);
-        builder.Property(p => p.EventData);
+        builder.Property(p => p.Event).HasColumnType("jsonb");
         builder.Property(p => p.EventTypeFullName);
         builder.Property(p => p.EventTypeName);
         builder.Property(p => p.ExceptionTypeFullName);
