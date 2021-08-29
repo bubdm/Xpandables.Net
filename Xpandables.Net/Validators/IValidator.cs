@@ -52,6 +52,14 @@ public interface IValidator<in TArgument>
 public abstract class Validator<TArgument> : IValidator<TArgument>
     where TArgument : notnull
 {
+    private readonly IServiceProvider _serviceProvider;
+
+    /// <summary>
+    /// Constructs anew instance of <see cref="Validator{TArgument}"/> with the service provider.
+    /// </summary>
+    /// <param name="serviceProvider">The service provider to be used.</param>
+    protected Validator(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
+
     /// <summary>
     /// Asynchronously validates the argument and returns validation state with errors if necessary.
     /// </summary>
@@ -63,7 +71,7 @@ public abstract class Validator<TArgument> : IValidator<TArgument>
     public virtual async Task<IOperationResult> ValidateAsync(TArgument argument, CancellationToken cancellationToken = default)
     {
         var validationResults = new List<ValidationResult>();
-        if (!Validator.TryValidateObject(argument, new ValidationContext(argument, null, null), validationResults, true))
+        if (!Validator.TryValidateObject(argument, new ValidationContext(argument, _serviceProvider, null), validationResults, true))
         {
             if (cancellationToken.IsCancellationRequested)
             {

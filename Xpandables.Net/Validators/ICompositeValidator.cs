@@ -40,7 +40,9 @@ public class CompositeValidator<TArgument> : Validator<TArgument>, ICompositeVal
     /// Initializes the composite validation with all validation instances for the argument.
     /// </summary>
     /// <param name="validationInstances">The collection of validators to act with.</param>
-    public CompositeValidator(IEnumerable<IValidator<TArgument>> validationInstances)
+    /// <param name="serviceProvider">The service provider.</param>
+    public CompositeValidator(IEnumerable<IValidator<TArgument>> validationInstances, IServiceProvider serviceProvider)
+        : base(serviceProvider)
         => _validationInstances = validationInstances;
 
     /// <summary>
